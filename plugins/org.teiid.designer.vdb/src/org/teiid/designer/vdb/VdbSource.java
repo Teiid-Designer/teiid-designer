@@ -7,10 +7,11 @@
 */
 package org.teiid.designer.vdb;
 
-import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
+import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.util.StringUtilities;
 
 /**
@@ -109,4 +110,24 @@ public class VdbSource {
 
         return text.toString();
 	}
+	
+    /**
+     * {@inheritDoc}
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals( Object object ) {
+        if (this == object) {
+            return true;
+        }
+
+        if ((object == null) || !getClass().equals(object.getClass())) {
+            return false;
+        }
+
+        VdbSource other = (VdbSource)object;
+        return this.vdb.equals(other.vdb) && CoreStringUtil.equals(this.name, other.name) && CoreStringUtil.equals(this.translatorName, other.translatorName) && CoreStringUtil.equals(this.jndiName, other.jndiName) ;
+    }
+	
 }

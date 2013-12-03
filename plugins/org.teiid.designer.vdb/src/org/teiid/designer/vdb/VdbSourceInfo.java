@@ -9,14 +9,13 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCES;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.Iterator;
+import java.util.List;
 
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.StringUtilities;
-import org.teiid.designer.vdb.manifest.SourceElement;
 
 /**
  *
@@ -47,7 +46,7 @@ public class VdbSourceInfo {
 	
 	private Vdb vdb;
 	
-    private Map<String, VdbSource> sources;
+    private List<VdbSource> sources;
     
     private boolean supportsMultiSourceBindings;
     
@@ -62,20 +61,8 @@ public class VdbSourceInfo {
     public VdbSourceInfo(final Vdb vdb) {
     	super();
     	this.vdb = vdb;
-    	this.sources = new HashMap<String, VdbSource>();
+    	this.sources = new ArrayList<VdbSource>();
     }
-
-	/**
-	 * @param vdb
-	 * @param sources
-	 */
-	public VdbSourceInfo(final Vdb vdb, final Collection<SourceElement> sources) {
-    	 this(vdb);
-    	 
-    	 for( SourceElement element : sources ) {
-    		 sources.add(element);
-    	 }
-	}
 
 	/**
 	 * @return the vdb
@@ -88,7 +75,7 @@ public class VdbSourceInfo {
 	 * @return the sources
 	 */
 	public Collection<VdbSource> getSources() {
-		return this.sources.values();
+		return this.sources;
 	}
 	
 	/**
@@ -98,26 +85,10 @@ public class VdbSourceInfo {
 	 * @return true if new VdbSource added
 	 */
 	public boolean add(String name, String jndiName, String translatorName) {
-		if(this.sources.get(name) == null ) {
-			this.sources.put(name, new VdbSource(getVdb(), name, jndiName, translatorName));
-			getVdb().setModified(this, MODEL_SOURCES, null, this.sources.get(name));
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * @param name
-	 * @return true if new VdbSource removed
-	 */
-	public boolean remove(String name) {
-		CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-		
-		if(this.sources.get(name) != null ) {
-			VdbSource removedSource = this.sources.get(name);
-			this.sources.remove(name);
-			getVdb().setModified(this, MODEL_SOURCES, removedSource, null);
+		if( getSource(name) == null ) {
+			VdbSource vdbSource = new VdbSource(getVdb(), name, jndiName, translatorName);
+			this.sources.add(vdbSource);
+			getVdb().setModified(this, MODEL_SOURCES, null, vdbSource);
 			return true;
 		}
 		
@@ -131,26 +102,35 @@ public class VdbSourceInfo {
 	public boolean removeSource(VdbSource source) {
 		CoreArgCheck.isNotNull(source, "source"); //$NON-NLS-1$
 		
-		if(this.sources.get(source.getName()) != null ) {
-			this.sources.remove(source.getName());
-			getVdb().setModified(this, MODEL_SOURCES, source, null);
-			return true;
+		Iterator iter = this.sources.iterator();
+		while(iter.hasNext()) {
+			VdbSource theSource = (VdbSource)iter.next();
+			if(theSource.getName().equalsIgnoreCase(source.getName())) {
+				iter.remove();
+				getVdb().setModified(this, MODEL_SOURCES, theSource, null);
+				return true;
+			}
 		}
 		
 		return false;
 	}
-
-	/**
-	 * @param name
-	 * @return the VdbSource instance if it exists in the sources map
-	 */
-	public VdbSource getSource(String name) {
-		CoreArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-		CoreArgCheck.isNotEmpty(this.sources.values());
-		
-		return this.sources.get(name);
-	}
 	
+	/**
+	 * Get the source with the specified name.  If not in the source list, returns null
+	 * @param name the source name
+	 * @return the VdbSource
+	 */
+	private VdbSource getSource(String name) {
+		VdbSource result = null;
+		for(VdbSource source : this.sources) {
+			if(source.getName().equalsIgnoreCase(name)) {
+				result = source;
+				break;
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * @param index the source array index
 	 * @return the VdbSource instance if it exists in the sources map
@@ -159,11 +139,9 @@ public class VdbSourceInfo {
 		if( sources.isEmpty() ) {
 			add(DEFAULT_SOURCE_NAME, null, null);
 		}
-		if(index < sources.size()  ) {
-			for( int i=0; i<sources.size(); i++ ) {
-				VdbSource source = sources.values().iterator().next();
-				if( i == index ) return source;
-			}
+		if(index>=0 && index<sources.size()  ) {
+			VdbSource source = sources.get(index);
+			return source;
 		}
 		
 		return null;
