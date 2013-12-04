@@ -313,33 +313,33 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
     	    	descText.setText(Messages.createRelationalSourceFunctionDescription);
     		}
             
-    		{ // user defined function
-	            final Button userDefinedFunctionRB = new Button(panel, SWT.RADIO);
-	            userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-	            userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
-	            userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
-	                /**            		
-	                 * {@inheritDoc}
-	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-	                 */
-	                @Override
-	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged(true, false);
-	                }
-	            });
-
-                if (this.relationalProcedure.isFunction() && !this.relationalProcedure.isSourceFunction()) {
-                    userDefinedFunctionRB.setSelection(!relationalProcedure.isFunction());
-                }
-
-    	    	Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
-    	    	descText.setBackground(parent.getBackground());
-    	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
-                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
-                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
-    	    	descText.setText(Messages.createRelationalUserDefinedFunctionDescription);
-    		}
+//    		{ // user defined function
+//	            final Button userDefinedFunctionRB = new Button(panel, SWT.RADIO);
+//	            userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+//	            userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
+//	            userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
+//	                /**            		
+//	                 * {@inheritDoc}
+//	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+//	                 */
+//	                @Override
+//	                public void widgetSelected( SelectionEvent e ) {
+//	                	handleInfoChanged(true, false);
+//	                }
+//	            });
+//
+//                if (this.relationalProcedure.isFunction() && !this.relationalProcedure.isSourceFunction()) {
+//                    userDefinedFunctionRB.setSelection(!relationalProcedure.isFunction());
+//                }
+//
+//    	    	Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+//    	    	descText.setBackground(parent.getBackground());
+//    	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+//    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+//                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
+//                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
+//    	    	descText.setText(Messages.createRelationalUserDefinedFunctionDescription);
+//    		}
             return pnlOuter;
     	}
     	

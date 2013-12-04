@@ -458,34 +458,38 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().applyTo(thePanel);
-
-        Label label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.updateCountLabel);
-
-        this.updateCountCombo = new Combo(thePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.updateCountCombo);
-        for (String val : UPDATE_COUNT.AS_ARRAY) {
-            updateCountCombo.add(val);
+        Label label = null;
+        
+        boolean isFunction = this.getRelationalReference().isFunction() || this.getRelationalReference().isSourceFunction();
+        if( !isFunction ) {
+	        label = new Label(thePanel, SWT.NONE);
+	        label.setText(Messages.updateCountLabel);
+	
+	        this.updateCountCombo = new Combo(thePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
+	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.updateCountCombo);
+	        for (String val : UPDATE_COUNT.AS_ARRAY) {
+	            updateCountCombo.add(val);
+	        }
+	
+	        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
+	        
+	        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
+	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
+	        this.nonPreparedCB.setText(Messages.nonPreparedLabel);
+	        this.nonPreparedCB.addSelectionListener(new SelectionAdapter() {
+	            /**            		
+	             * {@inheritDoc}
+	             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	             */
+	            @Override
+	            public void widgetSelected(SelectionEvent e) {
+	                getRelationalReference().setNonPrepared(nonPreparedCB.getSelection());
+	                handleInfoChanged();
+	            }
+	        });
         }
 
-        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
-
-        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
-        this.nonPreparedCB.setText(Messages.nonPreparedLabel);
-        this.nonPreparedCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                getRelationalReference().setNonPrepared(nonPreparedCB.getSelection());
-                handleInfoChanged();
-            }
-        });
-
-        if (this.getRelationalReference().isFunction() && !this.getRelationalReference().isSourceFunction()) {
+        if (this.getRelationalReference().isFunction() || this.getRelationalReference().isSourceFunction()) {
             final Group functionGroup = WidgetFactory.createGroup(thePanel,
                                                                   Messages.functionPropertiesLabel,
                                                                   GridData.FILL_HORIZONTAL,
@@ -493,102 +497,104 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
                                                                   3);
 
             // Add java class and method fields
-            label = new Label(functionGroup, SWT.NONE);
-            label.setText(Messages.functionCategoryLabel);
-
-            this.functionCategoryText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
-            this.functionCategoryText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.functionCategoryText);
-            this.functionCategoryText.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(final ModifyEvent event) {
-                    String value = functionCategoryText.getText();
-                    if (value == null) {
-                        value = EMPTY_STRING;
-                    }
-
-                    getRelationalReference().setFunctionCategory(value);
-                    handleInfoChanged();
-                }
-            });
-
-            label = new Label(functionGroup, SWT.NONE);
-            label.setText(Messages.javaClassLabel);
-
-            this.javaClassText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
-            this.javaClassText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.javaClassText);
-            this.javaClassText.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(final ModifyEvent event) {
-                    String value = javaClassText.getText();
-                    if (value == null) {
-                        value = EMPTY_STRING;
-                    }
-
-                    getRelationalReference().setJavaClassName(value);
-                    handleInfoChanged();
-                }
-            });
-
-            label = new Label(functionGroup, SWT.NONE);
-            label.setText(Messages.javaMethodLabel);
-
-            this.javaMethodText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
-            this.javaMethodText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.javaMethodText);
-            this.javaMethodText.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(final ModifyEvent event) {
-                    String value = javaMethodText.getText();
-                    if (value == null) {
-                        value = EMPTY_STRING;
-                    }
-
-                    getRelationalReference().setJavaMethodName(value);
-                    handleInfoChanged();
-                }
-            });
-
-            label = new Label(functionGroup, SWT.NONE);
-            label.setText(Messages.udfJarPathLabel);
-
-            this.udfJarPathText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
-            this.udfJarPathText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().applyTo(this.udfJarPathText);
-            this.udfJarPathText.addModifyListener(new ModifyListener() {
-                @Override
-                public void modifyText(final ModifyEvent event) {
-                    String value = udfJarPathText.getText();
-                    if (value == null) {
-                        value = EMPTY_STRING;
-                    }
-
-                    getRelationalReference().setUdfJarPath(value);
-                    if (!isSynchronizing()) {
-                        handleInfoChanged();
-                    }
-                }
-            });
-
-            this.udfJarPathBrowse = new Button(functionGroup, SWT.PUSH | SWT.RIGHT);
-            this.udfJarPathBrowse.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
-            GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.udfJarPathBrowse);
-            this.udfJarPathBrowse.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    // Open dialog and get file
-                    String selectedFile = VdbFileDialogUtil.selectUdfOrFile(udfJarPathBrowse.getShell(),
-                                                                            getModelFile().getProject(),
-                                                                            true);
-                    getRelationalReference().setUdfJarPath(selectedFile);
-                    handleInfoChanged();
-                }
-            });
+            if( !this.getRelationalReference().isSourceFunction() ) {
+	            label = new Label(functionGroup, SWT.NONE);
+	            label.setText(Messages.functionCategoryLabel);
+	
+	            this.functionCategoryText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	            this.functionCategoryText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.functionCategoryText);
+	            this.functionCategoryText.addModifyListener(new ModifyListener() {
+	                @Override
+	                public void modifyText(final ModifyEvent event) {
+	                    String value = functionCategoryText.getText();
+	                    if (value == null) {
+	                        value = EMPTY_STRING;
+	                    }
+	
+	                    getRelationalReference().setFunctionCategory(value);
+	                    handleInfoChanged();
+	                }
+	            });
+	
+	            label = new Label(functionGroup, SWT.NONE);
+	            label.setText(Messages.javaClassLabel);
+	
+	            this.javaClassText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	            this.javaClassText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.javaClassText);
+	            this.javaClassText.addModifyListener(new ModifyListener() {
+	                @Override
+	                public void modifyText(final ModifyEvent event) {
+	                    String value = javaClassText.getText();
+	                    if (value == null) {
+	                        value = EMPTY_STRING;
+	                    }
+	
+	                    getRelationalReference().setJavaClassName(value);
+	                    handleInfoChanged();
+	                }
+	            });
+	
+	            label = new Label(functionGroup, SWT.NONE);
+	            label.setText(Messages.javaMethodLabel);
+	
+	            this.javaMethodText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	            this.javaMethodText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	            GridDataFactory.fillDefaults().span(2, 1).applyTo(this.javaMethodText);
+	            this.javaMethodText.addModifyListener(new ModifyListener() {
+	                @Override
+	                public void modifyText(final ModifyEvent event) {
+	                    String value = javaMethodText.getText();
+	                    if (value == null) {
+	                        value = EMPTY_STRING;
+	                    }
+	
+	                    getRelationalReference().setJavaMethodName(value);
+	                    handleInfoChanged();
+	                }
+	            });
+	
+	            label = new Label(functionGroup, SWT.NONE);
+	            label.setText(Messages.udfJarPathLabel);
+	
+	            this.udfJarPathText = new Text(functionGroup, SWT.BORDER | SWT.SINGLE);
+	            this.udfJarPathText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+	            GridDataFactory.fillDefaults().applyTo(this.udfJarPathText);
+	            this.udfJarPathText.addModifyListener(new ModifyListener() {
+	                @Override
+	                public void modifyText(final ModifyEvent event) {
+	                    String value = udfJarPathText.getText();
+	                    if (value == null) {
+	                        value = EMPTY_STRING;
+	                    }
+	
+	                    getRelationalReference().setUdfJarPath(value);
+	                    if (!isSynchronizing()) {
+	                        handleInfoChanged();
+	                    }
+	                }
+	            });
+	
+	            this.udfJarPathBrowse = new Button(functionGroup, SWT.PUSH | SWT.RIGHT);
+	            this.udfJarPathBrowse.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ELIPSIS));
+	            GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.udfJarPathBrowse);
+	            this.udfJarPathBrowse.addSelectionListener(new SelectionAdapter() {
+	                /**
+	                 * {@inheritDoc}
+	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                 */
+	                @Override
+	                public void widgetSelected(SelectionEvent e) {
+	                    // Open dialog and get file
+	                    String selectedFile = VdbFileDialogUtil.selectUdfOrFile(udfJarPathBrowse.getShell(),
+	                                                                            getModelFile().getProject(),
+	                                                                            true);
+	                    getRelationalReference().setUdfJarPath(selectedFile);
+	                    handleInfoChanged();
+	                }
+	            });
+            }
 
             Composite innerPanel = WidgetFactory.createPanel(functionGroup, SWT.NONE, GridData.FILL_HORIZONTAL, 3);
             GridLayoutFactory.fillDefaults().numColumns(3).applyTo(innerPanel);

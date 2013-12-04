@@ -466,31 +466,36 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
 		GridDataFactory.fillDefaults().applyTo(thePanel);
-        Label label = new Label(thePanel, SWT.NONE);
-        label.setText(Messages.updateCountLabel);
+        Label label = null;
         
-        this.updateCountCombo = new Combo(thePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.updateCountCombo);
-        for (String val : UPDATE_COUNT.AS_ARRAY) {
-        	updateCountCombo.add(val);
+        if (!this.getRelationalReference().isFunction()) {
+	        label = new Label(thePanel, SWT.NONE);
+	        label.setText(Messages.updateCountLabel);
+	        
+	        
+	        this.updateCountCombo = new Combo(thePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
+	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.updateCountCombo);
+	        for (String val : UPDATE_COUNT.AS_ARRAY) {
+	        	updateCountCombo.add(val);
+	        }
+	        
+	        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
+	        
+	        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
+	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
+	        this.nonPreparedCB.setText(Messages.nonPreparedLabel);
+	        this.nonPreparedCB.addSelectionListener(new SelectionAdapter() {
+	            /**            		
+	             * {@inheritDoc}
+	             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	             */
+	            @Override
+	            public void widgetSelected( SelectionEvent e ) {
+	            	getRelationalReference().setNonPrepared(nonPreparedCB.getSelection());
+	                handleInfoChanged();
+	            }
+	        });
         }
-        
-        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
-        
-        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
-        this.nonPreparedCB.setText(Messages.nonPreparedLabel);
-        this.nonPreparedCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-            	getRelationalReference().setNonPrepared(nonPreparedCB.getSelection());
-                handleInfoChanged();
-            }
-        });
 
         if (this.getRelationalReference().isFunction()) {
             final Group functionGroup = WidgetFactory.createGroup(thePanel,
