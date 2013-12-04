@@ -53,6 +53,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+import org.teiid.designer.vdb.manifest.SourceElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
 
@@ -420,6 +421,27 @@ public class VdbUtil {
 							statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
 									VdbPlugin.UTIL.getString("vdbValidationWarning_singleSourceModelHasMultipleSources", //$NON-NLS-1$
 									modelName))); 
+						}
+					}
+					
+					// Check for Missing Translator type and JNDI name and add WARNINGs
+					
+					if( model.getSources() != null ) {
+						for( SourceElement elem : model.getSources()) {
+							if( StringUtilities.isEmpty(elem.getTranslatorName()) ) {
+								statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+										VdbPlugin.UTIL.getString("vdbValidationWarning_sourceMissingTranslatorType", //$NON-NLS-1$
+										modelName, theVdb.getName())));
+								break;
+							}
+						}
+						for( SourceElement elem : model.getSources()) {
+							if( StringUtilities.isEmpty(elem.getJndiName()) ) {
+								statuses.add(new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+										VdbPlugin.UTIL.getString("vdbValidationWarning_sourceMissingJndiName", //$NON-NLS-1$
+										modelName, theVdb.getName())));
+								break;
+							}
 						}
 					}
 					

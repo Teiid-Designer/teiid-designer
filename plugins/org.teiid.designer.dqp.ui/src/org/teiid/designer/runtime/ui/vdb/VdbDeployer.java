@@ -185,24 +185,18 @@ public class VdbDeployer {
                     IFile model = modelEntry.findFileInWorkspace();
 
                     // Check that Source Model has Connection Info
-                    if (!hasConnectionInfo(model)) {  
+                    if (this.vdb.isPreview() && !hasConnectionInfo(model)) {  
                     	this.status = DeployStatus.SOURCE_CONNECTION_INFO_PROBLEM;
                     	break;
                     }
-
+                    
                     // check DS
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelDataSourceTask", modelName)); //$NON-NLS-1$
                     String sourceName = modelEntry.getSourceInfo().getSource(0).getName();
                     String jndiName = modelEntry.getSourceInfo().getSource(0).getJndiName();
 
-                    // DS is empty
-                    if (StringUtilities.isEmpty(jndiName)) {
-                        hasJndiProblems = true;
-                        continue; // go on to next model
-                    }
-
                     // DS not found on server
-                    if (!teiidServer.dataSourceExists(sourceName)) {
+                    if (!StringUtilities.isEmpty(jndiName) && !teiidServer.dataSourceExists(sourceName)) {
 
                         // auto-create if user did not change the default DS name
                         String defaultName = VdbModelEntry.createDefaultSourceName(modelEntry.getName());

@@ -53,6 +53,10 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	public static final String TOO_MANY_SOURCES = "tooManySources"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String DIFFERENT_VALIDATION_VERSION = "differentValidationVersion"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String MISSING_TRANSLATOR_TYPE = "missingTranslatorType"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String MISSING_JNDI_NAME = "missingJndiName"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -62,7 +66,9 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	MISSING_UUID,
     	MISSING_MODEL,
     	TOO_MANY_SOURCES,
-    	DIFFERENT_VALIDATION_VERSION;
+    	DIFFERENT_VALIDATION_VERSION,
+    	MISSING_TRANSLATOR_TYPE,
+    	MISSING_JNDI_NAME;
     }
     
     /**
@@ -170,9 +176,16 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("runtime validation version") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DIFFERENT_VALIDATION_VERSION);
     				}
+    				if( iStatus.getMessage().indexOf("no JNDI name defined") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_JNDI_NAME);
+    				}
     			} break;
     			case IStatus.ERROR: {
-    				createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
+    				if( iStatus.getMessage().indexOf("no translator type defined") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_TRANSLATOR_TYPE);
+    				} else {
+    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
+    				}
     			} break;
     			}
     		}
