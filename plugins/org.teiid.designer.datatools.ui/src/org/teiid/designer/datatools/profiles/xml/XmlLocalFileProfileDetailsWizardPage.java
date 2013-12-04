@@ -17,12 +17,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -66,12 +64,8 @@ public class XmlLocalFileProfileDetailsWizardPage  extends ConnectionProfileDeta
 	public void createCustomControl(Composite parent) {
         GridData gd;
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        FillLayout fillLayout = new FillLayout();
-        fillLayout.marginHeight = 10;
-        group.setLayout(fillLayout);
-        group.setFont(JFaceResources.getBannerFont());
+        Group group = WidgetFactory.createSimpleGroup(parent,
+                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
 
         scrolled = new Composite(group, SWT.SCROLL_PAGE);
         GridLayout gridLayout = new GridLayout();

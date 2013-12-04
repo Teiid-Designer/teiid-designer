@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -26,7 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -70,9 +68,8 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	public void createCustomControl(Composite parent) {
         GridData gd;
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        group.setLayout(new FillLayout());
+        Group group = WidgetFactory.createSimpleGroup(parent,
+                                                                    UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();

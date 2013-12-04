@@ -9,7 +9,6 @@ import org.eclipse.help.IContextProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -19,6 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, DatatoolsUiConstants {
 
@@ -68,11 +68,8 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
     protected void createCustomContents( Composite parent ) {
         GridData gd;
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        FillLayout fl = new FillLayout();
-        fl.type = SWT.HORIZONTAL;
-        group.setLayout(new FillLayout());
+        Group group = WidgetFactory.createSimpleGroup(parent,
+                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
