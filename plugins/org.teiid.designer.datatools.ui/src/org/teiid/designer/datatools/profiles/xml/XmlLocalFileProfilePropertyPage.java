@@ -9,7 +9,6 @@ package org.teiid.designer.datatools.profiles.xml;
 
 import java.io.File;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -22,7 +21,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
 public class XmlLocalFileProfilePropertyPage extends ProfileDetailsPropertyPage
@@ -83,11 +82,8 @@ public class XmlLocalFileProfilePropertyPage extends ProfileDetailsPropertyPage
 	protected void createCustomContents(Composite parent) {
 		GridData gd;
 
-		Group group = new Group(parent, SWT.BORDER);
-		group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-		FillLayout fl = new FillLayout();
-		fl.type = SWT.HORIZONTAL;
-		group.setLayout(new FillLayout());
+		Group group = WidgetFactory.createSimpleGroup(parent,
+                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
 		scrolled = new Composite(group, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();

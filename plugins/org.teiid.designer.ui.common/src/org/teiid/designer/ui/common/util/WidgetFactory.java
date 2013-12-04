@@ -39,7 +39,9 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -423,6 +425,34 @@ public final class WidgetFactory implements
         formText.setText(html, true, false);
         formText.addHyperlinkListener(listener);
         return formText;
+    }
+
+    /**
+     * Whereas {@link #createGroup(Composite, int)} family of functions creates
+     * a group assuming a parent with a {@link GridLayout}, this makes no assumptions
+     * on the parent and provides a simple {@link FillLayout} to the created {@link Group}.
+     *
+     * @param parent
+     * @param string
+     *
+     * @return {@link Group}
+     */
+    public static Group createSimpleGroup(Composite parent, String name) {
+        Group group = new Group(parent, SWT.BORDER);
+        FillLayout fillLayout = new FillLayout();
+
+        if (name != null) {
+            group.setText(name);
+            /**
+             * see issue comments in #createGroup(Composite, String, int, int, int)
+             */
+            fillLayout.marginHeight = 10;
+        }
+
+        group.setLayout(fillLayout);
+        group.setFont(JFaceResources.getBannerFont());
+
+        return group;
     }
 
     /**

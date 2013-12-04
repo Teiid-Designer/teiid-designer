@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.teiid.designer.core.ModelerCore;
@@ -27,6 +28,9 @@ public class RelatedResourceFinder {
     
     private static final ModelResourceFilter RESOURCE_FILTER = new ModelResourceFilter();
     
+    /**
+     * Types of relationship used in this finder
+     */
     public enum Relationship {
         /**
          * The relationship where resource A is imported by resource B
@@ -48,8 +52,19 @@ public class RelatedResourceFinder {
 
     private final IResource sourceResource;
     
+    /**
+     * @param sourceResource
+     */
     public RelatedResourceFinder(IResource sourceResource) {
         this.sourceResource = sourceResource;
+    }
+
+    private boolean isClosedProject(IResource resource) {
+        if (resource instanceof IProject && !((IProject) resource).isOpen()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -63,7 +78,13 @@ public class RelatedResourceFinder {
         Collection<IFile> dependentResources = Collections.emptyList();
 
         try {
-            if (resource instanceof IContainer) {
+            if (isClosedProject(resource)) {
+                /*
+                 * If the project is closed then it has no dependents since the members
+                 * are impossible to reach.
+                 */
+                return dependentResources;
+            } else if (resource instanceof IContainer) {
                 // sometimes this is getting called with a nonexistent resource...
                 // see defect 18558 for more details
                 if (resource.exists()) {
@@ -117,7 +138,13 @@ public class RelatedResourceFinder {
         Collection<IFile> dependencyResources = new HashSet<IFile>();
 
         try {
-            if (resource instanceof IContainer) {
+            if (isClosedProject(resource)) {
+                /*
+                 * If the project is closed then it has no dependencies since the members
+                 * are impossible to reach.
+                 */
+                return dependencyResources;
+            } else if (resource instanceof IContainer) {
                 IContainer folder = (IContainer)resource;
                 IResource[] resources = folder.members();
 
@@ -151,6 +178,12 @@ public class RelatedResourceFinder {
         return findDependencyResources(sourceResource);
     }
     
+    /**
+     * Find related resources associated by the given type of relationship
+     *
+     * @param typeOfRelationship
+     * @return collection of related resources
+     */
     public Collection<IFile> findRelatedResources(Relationship typeOfRelationship) {
         switch (typeOfRelationship) {
             case DEPENDENT:

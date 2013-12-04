@@ -8,7 +8,6 @@
 package org.teiid.designer.datatools.profiles.file;
 
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,7 +24,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,6 +36,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.teiid.designer.datatools.profiles.flatfile.IFlatFileProfileConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 
 public class FlatFileUrlProfilePropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -80,11 +79,8 @@ public class FlatFileUrlProfilePropertyPage extends ProfileDetailsPropertyPage i
 	protected void createCustomContents(Composite parent) {
 		GridData gd;
 
-		Group group = new Group(parent, SWT.BORDER);
-		group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-		FillLayout fl = new FillLayout();
-		fl.type = SWT.HORIZONTAL;
-		group.setLayout(new FillLayout());
+		Group group = WidgetFactory.createSimpleGroup(parent,
+                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
 		scrolled = new Composite(group, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();

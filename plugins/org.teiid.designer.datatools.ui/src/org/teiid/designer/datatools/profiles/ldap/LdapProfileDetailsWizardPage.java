@@ -13,7 +13,6 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -65,9 +64,7 @@ public class LdapProfileDetailsWizardPage extends ConnectionProfileDetailsPage i
     public void createCustomControl( Composite parent ) {
         GridData gd;
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        group.setLayout(new FillLayout());
+        Group group = WidgetFactory.createSimpleGroup(parent, UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();

@@ -570,7 +570,20 @@ public class RefactorResourcesUtils {
         }
         
     }
-    
+
+    /**
+     * Is the given resource a closed project
+     *
+     * @param resource
+     * @return true if the resource is a closed project
+     */
+    public static boolean isClosedProject(IResource resource) {
+        if (resource instanceof IProject && !((IProject) resource).isOpen())
+            return true;
+
+        return false;
+    }
+
     /**
      * Unload the model resource related to the given resource
      * 
@@ -578,6 +591,13 @@ public class RefactorResourcesUtils {
      * @throws CoreException
      */
     public static void unloadModelResource(IResource resource) throws CoreException {
+        if (isClosedProject(resource)) {
+            /*
+             * A closed project will not have any resources to unload
+             */
+            return;
+        }
+
         // Collect all IResources within all IProjects
         ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
         resource.accept(visitor);
@@ -710,8 +730,10 @@ public class RefactorResourcesUtils {
      *
      */
     public static void checkSavedResource(IResource resource, final RefactoringStatus status) {
-        if (resource instanceof IProject && !((IProject) resource).isOpen()) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.closeProjectError", resource.getName()))); //$NON-NLS-1$
+        if (isClosedProject(resource)) {
+            /*
+             * All resources in a closed project must already be saved
+             */
             return;
         }
 
@@ -760,8 +782,10 @@ public class RefactorResourcesUtils {
      *
      */
     public static void checkOpenEditors(IResource resource, final RefactoringStatus status) {
-        if (resource instanceof IProject && !((IProject) resource).isOpen()) {
-            status.merge(RefactoringStatus.createFatalErrorStatus(getString("ResourcesRefactoring.closeProjectError", resource.getName()))); //$NON-NLS-1$
+        if (isClosedProject(resource)) {
+            /*
+             * A closed project cannot have any open editors since its not open!
+             */
             return;
         }
 

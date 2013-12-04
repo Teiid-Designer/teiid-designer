@@ -640,6 +640,9 @@ public final class PreviewManager extends JobChangeAdapter
      */
     private void findPvdbs( IContainer container,
                             List<IPath> pvdbPaths ) throws Exception {
+        if (container instanceof IProject && ! ((IProject)container).isOpen())
+            return;
+
         for (IResource resource : container.members(IContainer.INCLUDE_HIDDEN)) {
             if (resource instanceof IContainer) {
                 findPvdbs((IContainer)resource, pvdbPaths);

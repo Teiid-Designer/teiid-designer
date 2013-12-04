@@ -27,7 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -77,8 +76,7 @@ public class WSSoapProfileDetailsWizardPage extends ConnectionProfileDetailsPage
         wizard = (WSSoapConnectionProfileWizard)getWizard();
         profileProperties = wizard.getProfileProperties();
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setLayout(new FillLayout());
+        Group group = WidgetFactory.createSimpleGroup(parent, null);
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 5).applyTo(scrolled);

@@ -15,7 +15,6 @@ import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -29,6 +28,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.ICredentialsCommon;
+import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
 /**
@@ -92,11 +92,8 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
     protected void createCustomContents(Composite parent) {
         GridData gd;
 
-        Group group = new Group(parent, SWT.BORDER);
-        group.setText(UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$
-        FillLayout fl = new FillLayout();
-        fl.type = SWT.HORIZONTAL;
-        group.setLayout(new FillLayout());
+        Group group = WidgetFactory.createSimpleGroup(parent,
+                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
