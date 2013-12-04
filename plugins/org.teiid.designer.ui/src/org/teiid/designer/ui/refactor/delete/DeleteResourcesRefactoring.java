@@ -150,9 +150,9 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
         if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkSavedResource(resource, status);
-      if (status.getSeverity() > IStatus.WARNING) return;
+        if (status.getSeverity() > IStatus.WARNING) return;
 
-      if (! getResources().contains(resource)) {
+        if (! getResources().contains(resource)) {
           /*
            * Its okay to delete a resource if an editor for it is open but can cause
            * problems for related resources, especially if the user previews then

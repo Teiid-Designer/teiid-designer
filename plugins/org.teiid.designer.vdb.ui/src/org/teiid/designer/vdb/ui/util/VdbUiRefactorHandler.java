@@ -26,6 +26,7 @@ import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 /**
@@ -35,7 +36,14 @@ public class VdbUiRefactorHandler extends AbstractRefactorModelHandler {
 
 	@Override
 	public boolean preProcess(RefactorType refactorType, IResource refactoredResource, IProgressMonitor monitor) {
-		// Find and show affected VDBs
+	    if (RefactorResourcesUtils.isClosedProject(refactoredResource)) {
+	        /*
+	         * By definition, a closed project will not contain any open VDB editors
+	         */
+            return true;
+        }
+
+	    // Find and show affected VDBs
 
 	    final Collection<IFile> allVdbResourcesInProject =
 	        WorkspaceResourceFinderUtil.getProjectFileResources(refactoredResource.getProject(),

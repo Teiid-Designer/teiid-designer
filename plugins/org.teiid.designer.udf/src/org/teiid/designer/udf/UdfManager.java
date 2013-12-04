@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -297,12 +296,27 @@ public final class UdfManager implements IResourceChangeListener {
     }
     
     private void modelProjectClosed(IProject project) {
-    	modelProjectDeleted(project);
+    	unregisterProject(project);
     }
     
     private void modelProjectDeleted(IProject project) {
     	//System.out.println(" Model Project " + project.getName() + " is being DELETED");
-    	try {
+        if (! project.isOpen()) {
+            /*
+             * project should already have been unregistered and we cannot
+             * analysis project members due to the project being closed
+             */
+            return;
+        }
+
+    	unregisterProject(project);
+    }
+
+    /**
+     * @param project
+     */
+    private void unregisterProject(IProject project) {
+        try {
 			for( IResource res : project.members()) {
 				if( res instanceof IFolder ) {
 					folderDeleted((IFolder)res);
