@@ -1,2 +1,4 @@
-modeshape-common-3.3.5.GA-redhat-2.jar
-modeshape-sequencer-ddl-3.3.5.GA-redhat-2.jar
+modeshape-common-3.3.6.GA-redhat-2
+modeshape-sequencer-ddl-3.3.6.GA-redhat-2
+
+Both taken from dv-6.0.0.ER5-redhat-1-repository
