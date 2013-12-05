@@ -29,7 +29,7 @@ Visit the project home page at:  http://www.teiid.org  for details.
     <category name="DataTools"/>
    </feature>
    -->
-   <category-def name="DataTools" label="Data Services">
-    <description>Tools related to data services such as persistence and transformation.</description>
+   <category-def name="DataTools" label="Data Virtualization">
+    <description>Tools related to data virtualization that enable federation, transformation, abstraction and persistance.</description>
    </category-def>
 </site>
