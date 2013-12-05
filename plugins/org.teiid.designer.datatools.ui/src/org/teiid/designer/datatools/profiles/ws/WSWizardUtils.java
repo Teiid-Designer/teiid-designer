@@ -56,6 +56,7 @@ public class WSWizardUtils {
             // Supply content type
             Map<String,String> connPropMap = new HashMap<String,String>();
             connPropMap.put("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
+            connPropMap.put("Content-Type", "application/xml"); //$NON-NLS-1$  //$NON-NLS-2$
             
             if (securityType == null || SecurityType.None.name().equals(securityType)) {
                 resolved = URLHelper.resolveUrl(url, null, null, connPropMap, true);
