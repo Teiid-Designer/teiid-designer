@@ -113,6 +113,10 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	protected RelationalViewProcedure getRelationalReference() {
 	    return (RelationalViewProcedure) super.getRelationalReference();
 	}
+	
+	private boolean isFunction() {
+		return getRelationalReference().isFunction();
+	}
 
 	@Override
 	protected void createPanel(Composite parent) {
@@ -125,8 +129,11 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		TabFolder tabFolder = createTabFolder(parent);
 		createGeneralPropertiesTab(tabFolder);
 		createParametersTab(tabFolder);
-		createSQLTab(tabFolder);
-		createResultSetTab(tabFolder);
+		if( !isFunction() ) {
+			createSQLTab(tabFolder);
+			createResultSetTab(tabFolder);
+		}
+
 		createDescriptionTab(tabFolder);
 		
 	}
@@ -186,40 +193,42 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         parametersTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.PARAMETER, getRelationalReference().getModelType(), maxStatus));
         
         // Result Set Tab
-        if( this.getRelationalReference().getResultSet() == null ) {
-        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
-        		this.includeResultSetCB.setSelection(false);
-        		this.addColumnButton.setEnabled(false);
-        	}
-        	
-        	this.resultSetNameText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(resultSetNameText, EMPTY_STRING)) {
-        		this.resultSetNameText.setText(EMPTY_STRING);
-        	}
-        	
-        	this.columnsViewer.getTable().removeAll();
-        	this.columnsViewer.getTable().setEnabled(false);
-        	this.resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, ModelType.VIRTUAL, Status.OK_STATUS));
-        } else {
-        	this.columnsViewer.getTable().setEnabled(true);
-        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, true)) {
-        		this.includeResultSetCB.setSelection(true);
-        	}
-        	this.resultSetNameText.setEnabled(true);
-        	if( this.getRelationalReference().getResultSet().getName() != null && WidgetUtil.widgetValueChanged(resultSetNameText, this.getRelationalReference().getResultSet().getName())) {
-        		this.resultSetNameText.setText(this.getRelationalReference().getResultSet().getName());
-        	}
-
-        	this.columnsViewer.getTable().removeAll();
-        	if( !this.getRelationalReference().getResultSet().getColumns().isEmpty() ) {
-        		for( RelationalColumn column : this.getRelationalReference().getResultSet().getColumns() ) {
-        			this.columnsViewer.add(column);
-        		}
-        	}
-        	resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, getRelationalReference().getResultSet().getModelType(), this.getRelationalReference().getResultSet().getStatus()));
+        if( !isFunction() ) {
+	        if( this.getRelationalReference().getResultSet() == null ) {
+	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, false)) {
+	        		this.includeResultSetCB.setSelection(false);
+	        		this.addColumnButton.setEnabled(false);
+	        	}
+	        	
+	        	this.resultSetNameText.setEnabled(false);
+	        	if( WidgetUtil.widgetValueChanged(resultSetNameText, EMPTY_STRING)) {
+	        		this.resultSetNameText.setText(EMPTY_STRING);
+	        	}
+	        	
+	        	this.columnsViewer.getTable().removeAll();
+	        	this.columnsViewer.getTable().setEnabled(false);
+	        	this.resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, ModelType.VIRTUAL, Status.OK_STATUS));
+	        } else {
+	        	this.columnsViewer.getTable().setEnabled(true);
+	        	if( WidgetUtil.widgetValueChanged(includeResultSetCB, true)) {
+	        		this.includeResultSetCB.setSelection(true);
+	        	}
+	        	this.resultSetNameText.setEnabled(true);
+	        	if( this.getRelationalReference().getResultSet().getName() != null && WidgetUtil.widgetValueChanged(resultSetNameText, this.getRelationalReference().getResultSet().getName())) {
+	        		this.resultSetNameText.setText(this.getRelationalReference().getResultSet().getName());
+	        	}
+	
+	        	this.columnsViewer.getTable().removeAll();
+	        	if( !this.getRelationalReference().getResultSet().getColumns().isEmpty() ) {
+	        		for( RelationalColumn column : this.getRelationalReference().getResultSet().getColumns() ) {
+	        			this.columnsViewer.add(column);
+	        		}
+	        	}
+	        	resultSetTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, getRelationalReference().getResultSet().getModelType(), this.getRelationalReference().getResultSet().getStatus()));
+	        }
         }
         
-        if( this.getRelationalReference().isFunction() ) {
+        if( this.isFunction() ) {
         	// Assume UDF
         	if( this.getRelationalReference().getUdfJarPath() != null ) {
         		this.udfJarPathText.setText(this.getRelationalReference().getUdfJarPath());
@@ -468,7 +477,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		GridDataFactory.fillDefaults().applyTo(thePanel);
         Label label = null;
         
-        if (!this.getRelationalReference().isFunction()) {
+        if (!this.isFunction()) {
 	        label = new Label(thePanel, SWT.NONE);
 	        label.setText(Messages.updateCountLabel);
 	        
@@ -497,7 +506,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	        });
         }
 
-        if (this.getRelationalReference().isFunction()) {
+        if (this.isFunction()) {
             final Group functionGroup = WidgetFactory.createGroup(thePanel,
                                                                   Messages.functionPropertiesLabel,
                                                                   GridData.FILL_HORIZONTAL,
@@ -1004,7 +1013,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     }
 	
 	private void setUiState() {
-		if( ! this.getRelationalReference().isFunction() ) {
+		if( ! this.isFunction() ) {
 			if( this.addColumnButton != null && this.includeResultSetCB != null ) {
 				boolean enable = this.includeResultSetCB.getSelection();
 				this.addColumnButton.setEnabled(enable);
@@ -1018,21 +1027,23 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			return;
 		}
 
+		if( isFunction() ) {
         boolean functionState = true;
-        this.deterministicCB.setEnabled(functionState);
-        this.returnsNullCB.setEnabled(functionState);
-        this.variableArgsCB.setEnabled(functionState);
-        this.aggregateCB.setEnabled(functionState);
-
-        boolean aggregateState = functionState;
-        if (aggregateState) {
-            aggregateState = aggregateCB.getSelection();
-        }
-        this.allowsDistinctCB.setEnabled(aggregateState);
-        this.allowsOrderByCB.setEnabled(aggregateState);
-        this.analyticCB.setEnabled(aggregateState);
-        this.decomposableCB.setEnabled(aggregateState);
-        this.useDistinctRowsCB.setEnabled(aggregateState);
+	        this.deterministicCB.setEnabled(functionState);
+	        this.returnsNullCB.setEnabled(functionState);
+	        this.variableArgsCB.setEnabled(functionState);
+	        this.aggregateCB.setEnabled(functionState);
+	
+	        boolean aggregateState = functionState;
+	        if (aggregateState) {
+	            aggregateState = aggregateCB.getSelection();
+	        }
+	        this.allowsDistinctCB.setEnabled(aggregateState);
+	        this.allowsOrderByCB.setEnabled(aggregateState);
+	        this.analyticCB.setEnabled(aggregateState);
+	        this.decomposableCB.setEnabled(aggregateState);
+	        this.useDistinctRowsCB.setEnabled(aggregateState);
+		}
         
 	}
 
