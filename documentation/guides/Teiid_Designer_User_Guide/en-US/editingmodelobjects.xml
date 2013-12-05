@@ -407,9 +407,9 @@
 			<para>The <emphasis role="bold">Create Relational Procedure Wizard</emphasis>, shown below, 
 				allows creating a complete relational Procedure including columns, unique keys, foreign keys definition and indexes.
 				The relational procedure object can represent different types of procedures, including a standard 
-				procedure, a source function or a user defined function. When the 
+				procedure and source function (pushdown function). When the 
 				<emphasis role="bold">New Child > Procedure...</emphasis>  action is launched the first dialog gives 
-				you the option of selecting the procedure type. 
+				you the option of selecting the procedure type. Note that user defined functions can be modeled in a view model.
 			</para>
 			<figure>
 				<title>Select Procedure Type Dialog</title>
@@ -442,22 +442,10 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<para>User Defined Functions require additional properties such as <emphasis role="bold">Java Class</emphasis> 
-				and <emphasis role="bold">Method</emphasis> as well as a path to the jar file containing the code 
-				as shown below.
-			</para>
-			<figure>
-				<title>Create Relational User Defined Fuction Dialog</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/new-procedure-wizard-udf-option.png" />
-					</imageobject>
-				</mediaobject>
-			</figure>
 		</section>
 		
 		<!-- Create Relational Index Wizard -->
-				<section id="create-relational-index-wizard-section">
+		<section id="create-relational-index-wizard-section">
 			<title>Create Relational Index Wizard</title>
 			<para>Indexes can be created at the same time as your relational table object (see Indexes tab in 
 				<emphasis role="bold">Create Relational Table</emphasis> image above) or via 
@@ -475,21 +463,52 @@
 		
 
 		<!-- Create View Model Wizards -->
-			<section id="create-view-model-children-section">
+		<section id="create-view-model-children-section">
 			<title>Create View Model Objects Wizards</title>
 			<para>For view models, only tables, procedures (standard procedures and user defined functions) and indexes 
 			can be created. For view tables and procedures, the primary difference in the wizards is that they 
 			include a SQL Transformation tab.
 			</para>
 			<figure>
-				<title>Create Relational Table Dialog</title>
+				<title>Create Relational View Table Dialog</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/new-view-table-wizard-transformation-tab.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>
+			<!-- Create User Defined Functions Wizards -->
+			<section id="create-user-defined-function-section">
+				<title>Create User Defined Functions Wizard</title>
+				<para>User-defined functions can be defined as view model procedures that of type "function".
+					 When the <emphasis role="bold">New Child > Procedure...</emphasis>  action is launched for a view 
+					 model, the first dialog gives you the option of selecting the procedure type which includes either
+					 a standard view procedure or a user-defined function.
+				</para>
+				<figure>
+					<title>Select Procedure Type Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/select-view-procedure-type-dialog.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+				<para>User Defined Functions require additional properties such as <emphasis role="bold">Java Class</emphasis> 
+					and <emphasis role="bold">Method</emphasis> as well as a path to the jar file containing the code 
+					as shown below.
+				</para>
+				<figure>
+					<title>Create Relational User Defined Fuction Dialog</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="images/screencaps/new-procedure-wizard-udf-option.png" />
+						</imageobject>
+					</mediaobject>
+				</figure>
+			</section>
 		</section>
+		
+
 		
 	</section>
 	
