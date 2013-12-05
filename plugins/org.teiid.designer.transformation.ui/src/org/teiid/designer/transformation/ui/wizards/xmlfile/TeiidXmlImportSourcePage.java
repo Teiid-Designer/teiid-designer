@@ -613,6 +613,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			
 			httpConn.setDoOutput(true);
             httpConn.setRequestProperty("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
+            httpConn.setRequestProperty("Content-Type", "application/xml"); //$NON-NLS-1$  //$NON-NLS-2$
 			InputStream is = httpConn.getInputStream();
 			xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
 			FileOutputStream os = new FileOutputStream(xmlFile);
