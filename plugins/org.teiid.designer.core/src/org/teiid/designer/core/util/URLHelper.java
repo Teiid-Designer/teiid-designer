@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -233,7 +234,7 @@ public class URLHelper {
      */
     public static boolean resolveUrl( final URL url,
                                       final boolean verifyHostname ) throws MalformedURLException, IOException {
-        return resolveUrl(url, null, null, verifyHostname);
+        return resolveUrl(url, null, null, null, verifyHostname);
     }
 
     /**
@@ -242,6 +243,7 @@ public class URLHelper {
      * @param url
      * @param userName
      * @param password
+     * @param connRequestPropMap Map of Connection RequestProperties
      * @param verifyHostname whether to verify hostname for HTTPS connection
      * @return resolved boolean
      * @throws MalformedURLException, IOException
@@ -250,6 +252,7 @@ public class URLHelper {
     public static boolean resolveUrl( final URL url,
                                       final String userName,
                                       final String password,
+                                      final Map<String,String> connRequestPropMap,
                                       final boolean verifyHostname ) throws MalformedURLException, IOException {
         boolean resolved = true;
         if (url == null) return resolved;
@@ -272,6 +275,13 @@ public class URLHelper {
                     return true;
                 }
             });
+            // Set any request properties
+            urlConn.setDoInput(true);
+            if(connRequestPropMap!=null) {
+            	for(String propName : connRequestPropMap.keySet()) {
+            		urlConn.setRequestProperty(propName,connRequestPropMap.get(propName));
+            	}
+            }
             
             inStream = new InputStreamReader(urlConn.getInputStream());
             buff = new BufferedReader(inStream);
