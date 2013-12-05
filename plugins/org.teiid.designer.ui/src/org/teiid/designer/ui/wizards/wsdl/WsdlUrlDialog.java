@@ -175,7 +175,7 @@ public class WsdlUrlDialog extends Dialog implements IHelpContextIds, UiConstant
             if (SecurityType.None.equals(getSecurityOption())) {
                 resolved = URLHelper.resolveUrl(this.urlObject);
             } else {
-                resolved = URLHelper.resolveUrl(this.urlObject, getUserName(), getPassword(), true);
+                resolved = URLHelper.resolveUrl(this.urlObject, getUserName(), getPassword(), null, true);
             }
         } catch (Exception e) {
             resolved = false;

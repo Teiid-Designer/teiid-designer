@@ -8,7 +8,10 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
@@ -49,13 +52,17 @@ public class WSWizardUtils {
             URL url = URLHelper.buildURL(xmlFile);
             String securityType = connProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
             boolean resolved = false;
-
+            
+            // Supply content type
+            Map<String,String> connPropMap = new HashMap<String,String>();
+            connPropMap.put("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
+            
             if (securityType == null || SecurityType.None.name().equals(securityType)) {
-                resolved = URLHelper.resolveUrl(url);
+                resolved = URLHelper.resolveUrl(url, null, null, connPropMap, true);
             } else {
                 String userName = connProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
                 String password = connProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
-                resolved = URLHelper.resolveUrl(url, userName, password, true);
+                resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);
             }
 
             if (!resolved) {

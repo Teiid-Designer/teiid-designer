@@ -146,7 +146,7 @@ public class XsdUrlDialog extends Dialog implements IHelpContextIds, ModelerXsdU
         try {
             this.userName = this.userText.getText();
             this.password = this.pwdText.getText();
-            resolved = URLHelper.resolveUrl(this.urlObject, this.getUserName(), this.getPassword(), verifyHostname);
+            resolved = URLHelper.resolveUrl(this.urlObject, this.getUserName(), this.getPassword(), null, verifyHostname);
         } catch (Exception e) {
             resolved = false;
             ModelerXsdUiConstants.Util.log(e);
