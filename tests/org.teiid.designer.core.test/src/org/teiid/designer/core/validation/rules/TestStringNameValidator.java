@@ -503,5 +503,42 @@ public class TestStringNameValidator extends TestCase {
         assertNotNull(newName);
         assertEquals(expectedName, newName);
     }
+    
+    public void testDoubleQuotedName() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("\"XXX.YYY\""); //$NON-NLS-1$
+    	assertNull(result);
+    }
+    
+    public void testInvalidDoubleQuotedName() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("\"XXX.YYY\"\""); //$NON-NLS-1$
+    	assertNotNull(result);
+    }
+    
+    public void testInvalidNameWithDelimiter() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("XXX.YYY"); //$NON-NLS-1$
+    	assertNotNull(result);
+    }
+    
+    public void testValidNestedDoubleQuotedName_1() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("\"X.Y.Z\""); //$NON-NLS-1$
+    	assertNull(result);
+    }
+    
+    public void testInvalidValidNameWithDQuote() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("XXX\"XXX"); //$NON-NLS-1$
+    	assertNotNull(result);
+    }
+    
+    public void testInvalidValidNameWithSQuote() {
+    	StringNameValidator val = new StringNameValidator(false);
+    	String result = val.checkValidName("XXX'XXX"); //$NON-NLS-1$
+    	assertNotNull(result);
+    }
+    
 
 }

@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -32,7 +33,6 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
  * @since 8.0
  */
 public class CoreValidationRulesUtil {
-    
     /**
      * Validate the given string against a maximum length and create any problems.
      * @param maxLength
@@ -214,6 +214,25 @@ public class CoreValidationRulesUtil {
         return validator.createValidName(name);
     }
 
+	/**
+	 * Validate for non-quoted delimiter string (i.e.  Table name = partssupplier.supplier)
+	 * 
+	 * @param ValidationResult to add problems for
+	 * @param stringToValidate
+	 */
+	public static void validateForNonQuotedNameWithDelimeter(final ValidationResult result, final String stringToValidate) {
+		CoreArgCheck.isNotNull(stringToValidate);                
+		CoreArgCheck.isNotNull(result);
+		
+		if( stringToValidate.contains(CoreStringUtil.Constants.DOT_STR) && !CoreStringUtil.isDoubleQuoted(stringToValidate) ) {
+			// create validation problem and add it to the result
+			String reasonInvalid = ModelerCore.Util.getString("StringNameValidator.unquotedNameWithDelimiter", stringToValidate); //$NON-NLS-1$
+			ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR, reasonInvalid);
+			result.addProblem(problem);
+		}
+	}
+
+    
 //    
 //    private static String getUniqueString(String name, Collection siblingNames) {
 //        Iterator siblingIter = siblingNames.iterator();

@@ -54,7 +54,6 @@ import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 import org.teiid.designer.core.transaction.UnitOfWork;
-import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.util.ModelResourceContainerFactory;
@@ -2594,10 +2593,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         
         if (uniqueName == null) {
             // name was already unique ...
-            entity.setName(convertName(convertedName, context));
+        	String finalName = addDoubleQuotesIfDotInName(convertName(convertedName, context));
+        	
+            entity.setName(finalName);
+//            entity.setName(convertName(convertedName, context));
         } else {
             // name had to be changed to be unique ...
-            entity.setName(convertName(uniqueName, context));
+        	String finalName = addDoubleQuotesIfDotInName(convertName(uniqueName, context));
+            entity.setName(finalName);
+//            entity.setName(convertName(convertedName, context));
             forceSetNameInSource = true;
         }
     }
@@ -2667,6 +2671,13 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             }
         }
         return name;
+    }
+    
+    private String addDoubleQuotesIfDotInName(final String originalName) {
+    	if( originalName.indexOf('.') > -1 ) {
+    		return '\"' + originalName + '\"';
+    	}
+    	return originalName;
     }
 
     /**

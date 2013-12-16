@@ -2,6 +2,7 @@ package org.teiid.designer.roles.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -10,6 +11,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 
@@ -20,6 +22,8 @@ import org.teiid.designer.roles.Permission;
 public class DataRoleResolver {
 	private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
 	private static final char B_SLASH = '/';
+	private static final String DQUOTE_STR = "\""; //$NON-NLS-1$
+	private static final char DQUOTE_CHAR = '"';
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
     private static final String PG_CATALOG_TARGET = "pg_catalog"; //$NON-NLS-1$
 	
@@ -72,7 +76,33 @@ public class DataRoleResolver {
 	}
 	
 	private String getTargetNamePath(String dotPath) {
-		return dotPath.replace(DELIM, B_SLASH);
+		if( dotPath.contains(DQUOTE_STR) ) {
+			StringBuilder sb = new StringBuilder();
+			boolean betweenDQuotes = false;
+			
+			for( char nextChar : dotPath.toCharArray() ) {
+				if( nextChar == DQUOTE_CHAR) {
+					if( !betweenDQuotes) {
+						betweenDQuotes = true;
+					} else {
+						betweenDQuotes = false;
+					}
+					sb.append(nextChar);
+				} else if( nextChar == DELIM ) {
+					if( !betweenDQuotes ) {
+						sb.append(B_SLASH);
+					} else {
+						sb.append(nextChar);
+					}
+				} else {
+					sb.append(nextChar);
+				}
+			}
+			return sb.toString();
+			
+		} else {
+			return dotPath.replace(DELIM, B_SLASH);
+		}
 	}
 	
 	private boolean targetStillExists(IPath path) {

@@ -39,6 +39,7 @@ public final class CoreStringUtil {
         char SPACE_CHAR = ' ';
         char DOT_CHAR = '.';
         char TAB_CHAR = '\t';
+        char DQUOTE_CHAR = '"';
 
         String CARRIAGE_RETURN = String.valueOf(CARRIAGE_RETURN_CHAR);
         String EMPTY_STRING = ""; //$NON-NLS-1$
@@ -48,6 +49,8 @@ public final class CoreStringUtil {
         String SPACE = String.valueOf(SPACE_CHAR);
         String DOT = String.valueOf(DOT_CHAR);
         String TAB = String.valueOf(TAB_CHAR);
+    	String DQUOTE_STR = "\""; //$NON-NLS-1$
+    	String DOT_STR = "."; //$NON-NLS-1$
 
         String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -930,6 +933,24 @@ public final class CoreStringUtil {
             return str.toLowerCase();
         }
         return newStr;
+    }
+    
+    public static boolean isDoubleQuoted( String str ) {
+    	return str.startsWith(Constants.DQUOTE_STR) && str.endsWith(Constants.DQUOTE_STR) && isTwoDoubleQuotes(str);
+    }
+    
+    public static boolean isTwoDoubleQuotes( String str ) {
+    	int result = 0;
+		for( char nextChar : str.toCharArray() ) {
+			if( nextChar == Constants.DQUOTE_CHAR) {
+				if( result == 2 ) {
+					result = 1;
+				} else {
+					result++;
+				}
+			}
+		}
+    	return result == 2;
     }
 
     /**

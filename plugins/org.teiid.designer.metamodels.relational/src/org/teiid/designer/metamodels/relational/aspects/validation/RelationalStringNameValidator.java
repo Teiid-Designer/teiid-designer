@@ -35,7 +35,11 @@ public class RelationalStringNameValidator extends StringNameValidator {
 	public boolean isValidNonLetterOrDigit(char c) {
 		if( !restrictChars ) {
 			if( isTable  ) {
-				return true;
+				// Check for double-quote char
+				if( c != '\"') {
+					return true;
+				}
+				return super.isValidNonLetterOrDigit(c);
 			} else if( c != '.' ) {
 				return true;
 			}

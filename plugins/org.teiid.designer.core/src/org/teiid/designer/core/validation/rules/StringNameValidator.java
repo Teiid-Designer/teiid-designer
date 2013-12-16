@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 
 
@@ -236,7 +237,15 @@ public class StringNameValidator {
         
         char c = name.charAt(0);
 
-        String msg = isValidInitialChar(c);
+        String msg = null;
+        boolean isDoubleQuoted = false;
+        
+        if( !CoreStringUtil.isDoubleQuoted(name) ) {
+        	msg = isValidInitialChar(c);
+        } else if( length > 1 ) {
+        	isDoubleQuoted = true;
+        	msg = isValidInitialChar(name.charAt(1));
+        }
         
         if (msg != null) {
         	return msg;
@@ -244,7 +253,13 @@ public class StringNameValidator {
         
         for (int index = 1; index < length; index++) {
         	c = name.charAt(index);
-            msg = isValidChar(c, index);
+        	if( isDoubleQuoted ) {
+        		if( index < length-1) {
+        			msg = isValidCharInDoubleQuotes(c, index);
+        		}
+        	} else {
+        		msg = isValidChar(c, index);
+        	}
             if (msg != null) {
             	return msg;
             }
@@ -255,8 +270,20 @@ public class StringNameValidator {
     }
 
 	protected String isValidChar(char c, int index) {
-		if ( isValidInitialChar(c) != null ) {
+		if ( !Character.isLetter(c)) {
 			if (!Character.isDigit(c) && !isValidNonLetterOrDigit(c) ) {
+			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
+			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
+			} 
+		} 
+		return null;
+	}
+	
+	protected String isValidCharInDoubleQuotes(char c, int index) {
+		if ( !Character.isLetter(c)) {
+			if (c != CoreStringUtil.Constants.DOT_CHAR && 
+				!Character.isDigit(c) && 
+				!isValidNonLetterOrDigit(c) ) {
 			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
 			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
 			} 
