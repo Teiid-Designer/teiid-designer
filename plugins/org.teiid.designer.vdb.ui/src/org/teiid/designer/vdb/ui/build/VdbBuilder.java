@@ -57,6 +57,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	public static final String MISSING_TRANSLATOR_TYPE = "missingTranslatorType"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String MISSING_JNDI_NAME = "missingJndiName"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String MODEL_WITH_ERRORS = "modelWithErrors"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -68,7 +70,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	TOO_MANY_SOURCES,
     	DIFFERENT_VALIDATION_VERSION,
     	MISSING_TRANSLATOR_TYPE,
-    	MISSING_JNDI_NAME;
+    	MISSING_JNDI_NAME,
+    	MODEL_WITH_ERRORS,;
     }
     
     /**
@@ -183,6 +186,8 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     			case IStatus.ERROR: {
     				if( iStatus.getMessage().indexOf("no translator type defined") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_TRANSLATOR_TYPE);
+    				} if( iStatus.getMessage().indexOf("and will not be ACTIVE") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MODEL_WITH_ERRORS);
     				} else {
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
     				}

@@ -52,7 +52,9 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.manifest.ModelElement;
+import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
+import org.teiid.designer.vdb.manifest.Severity;
 import org.teiid.designer.vdb.manifest.SourceElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
@@ -342,12 +344,23 @@ public class VdbUtil {
 				
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName();
-					String modelUuid = getUuid(model);
 					
+					// Check for models with ERRORS
+					for( ProblemElement problem : model.getProblems() ) {
+						if( problem.getSeverity() == Severity.ERROR ) {
+							statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, 
+									VdbPlugin.UTIL.getString("vdbValidationError_modelContainsErrors", modelName)) ); //$NON-NLS-1$
+							break;
+						}
+					}
+
 					IResource resource = null;
 					
 					// Check if model with that name exists in project
 					// first check if uuid == null
+
+					String modelUuid = getUuid(model);
+					
 					if( modelUuid == null ) {
 						
 						Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);

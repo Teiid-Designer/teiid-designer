@@ -7,13 +7,14 @@
 */
 package org.teiid.designer.vdb.ui.editor.panels;
 
+import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
-
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
@@ -37,6 +38,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -53,10 +55,12 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbModelEntry.Problem;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
+import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 /**
@@ -76,6 +80,7 @@ public class ModelDetailsPanel {
     Text columnAliasText;
     Label columnAliaslabel;
     TableViewer bindingsViewer;
+    TableViewer problemsViewer;
     VdbModelEntry selectedVdbModelEntry;
     
     VdbEditor vdbEditor;
@@ -345,6 +350,59 @@ public class ModelDetailsPanel {
 			}
 		}
 		
+        CTabItem problemsTab = new CTabItem(tabFolder, SWT.NONE);
+        problemsTab.setText(Messages.modelDetailsPanel_problemsTabLabel);
+        problemsTab.setToolTipText(Messages.modelDetailsPanel_problemsTabTooltip);
+        
+        Composite modelProblemsPanel = new Composite(tabFolder, SWT.NONE);
+        modelProblemsPanel.setLayout(new GridLayout(1, false));
+        modelProblemsPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		((GridData)modelProblemsPanel.getLayoutData()).widthHint = 200;
+		problemsTab.setControl(modelProblemsPanel);
+		
+		MODEL_PROBLEMS_PANEL : {
+			/*
+	<validation-error path=""PARTSSUPPLIER.PERSON"/AGE" severity="WARNING">Integer datatype would result in a bigInteger runtimetype.</validation-error>
+	<validation-error path=""PARTSSUPPLIER.PARTS" severity="ERROR">The name ("PARTSSUPPLIER.PARTS) contains the '.' delimiter. This name is required to be wrapped in double-quotes. </validation-error>
+			*/
+			// Need a table to display "PATH, SEVERITY, MESSAGE"
+			Composite subPanel_1 = WidgetFactory.createPanel(modelProblemsPanel, SWT.NONE, GridData.FILL_BOTH, 1, 1);
+			subPanel_1.setLayout(new GridLayout(1, false));
+			
+			PROBLEMS_TABLE : {
+		        // Create Table Viewer
+		        int tableStyle = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+		        problemsViewer = new TableViewer(subPanel_1, tableStyle);
+
+		        Table table = problemsViewer.getTable();
+		        table.setLayout(new TableLayout());
+
+		        final GridData tblGD = new GridData(GridData.FILL_BOTH); 
+		        tblGD.grabExcessHorizontalSpace = true;
+		        tblGD.grabExcessVerticalSpace = true;
+		        table.setLayoutData(tblGD);
+		        table.setHeaderVisible(true);
+		        table.setLinesVisible(true);		        
+
+		        // create columns
+		        TableViewerColumn column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        column.getColumn().setText(Messages.modelDetailsPanel_problemPathLabel + "                                    "); //$NON-NLS-1$
+		        column.setLabelProvider(new ProblemMarkerLabelProvider(0));
+		        column.getColumn().pack();
+		        
+		        column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        column.getColumn().setText("      "); //$NON-NLS-1$
+		        column.setLabelProvider(new ProblemMarkerLabelProvider(1));
+		        column.getColumn().pack();
+		        
+		        column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        column.getColumn().setText(Messages.modelDetailsPanel_problemDescriptionLabel + "            "); //$NON-NLS-1$
+		        column.setLabelProvider(new ProblemMarkerLabelProvider(2));
+		        column.getColumn().pack();
+			}
+
+		}
+		
 		tabFolder.setSelection(0);
 		
 		multiSourceCB.setEnabled(false);
@@ -372,6 +430,7 @@ public class ModelDetailsPanel {
     		deleteButton.setEnabled(false);
     		columnAliaslabel.setEnabled(false);
     		columnAliasText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+    		problemsViewer.getTable().removeAll();
         } else {
         	modelNameText.setText(selectedVdbModelEntry.getName().lastSegment());
         	modelLocationText.setText(selectedVdbModelEntry.getName().removeLastSegments(1).toString());
@@ -379,6 +438,10 @@ public class ModelDetailsPanel {
         	bindingsViewer.getTable().removeAll();
         	for( VdbSource vdbSource : selectedVdbModelEntry.getSourceInfo().getSources() ) {
         		bindingsViewer.add(vdbSource);
+        	}
+        	problemsViewer.getTable().removeAll();
+        	for( Problem prob : selectedVdbModelEntry.getProblems() ) {
+        		problemsViewer.add(prob);
         	}
         	
         	boolean enable = selectedVdbModelEntry.getSourceInfo().isMultiSource();
@@ -436,6 +499,57 @@ public class ModelDetailsPanel {
 			}
 			return EMPTY_STRING;
 		}
+	}
+	
+	class ProblemMarkerLabelProvider extends ColumnLabelProvider {
+
+		private final int columnNumber;
+
+		public ProblemMarkerLabelProvider(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+		 */
+		@Override
+		public String getText(Object element) {
+			if( element instanceof Problem ) {
+				switch (this.columnNumber) {
+					case 0: {
+						return ((Problem)element).getLocation();
+					}
+					case 2: {
+						return ((Problem)element).getMessage();
+					}
+				}
+			}
+			return EMPTY_STRING;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+		 */
+		@Override
+		public Image getImage(Object element) {
+			if( element instanceof Problem ) {
+				switch (this.columnNumber) {
+					case 1: {
+						int severity = ((Problem)element).getSeverity();
+			            if (severity == IMarker.SEVERITY_ERROR) {
+			                return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.ERROR_ICON);
+			            }
+			            return VdbUiPlugin.singleton.getImage(VdbUiConstants.Images.WARNING_ICON);
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		
 	}
 
     class TranslatorEditingSupport extends ResourceEditingSupport {

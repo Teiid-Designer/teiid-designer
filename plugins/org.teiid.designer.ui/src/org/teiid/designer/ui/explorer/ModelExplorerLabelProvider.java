@@ -336,7 +336,11 @@ public class ModelExplorerLabelProvider extends LabelProvider
         IMarker[] markers = null;
         boolean errorOccurred = false;
         try {
-            markers = resrc.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+        	if( ModelUtil.isVdbArchiveFile(resrc) ) {
+        		markers = resrc.findMarkers("org.teiid.designer.vdb.ui.vdbMarker", false, IResource.DEPTH_INFINITE); //$NON-NLS-1$
+        	} else {
+        		markers = resrc.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+        	}
         } catch (CoreException ex) {
             Util.log(ex);
             errorOccurred = true;

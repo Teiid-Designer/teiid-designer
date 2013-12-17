@@ -697,6 +697,7 @@ public final class VdbModelEntry extends VdbEntry {
             	// Note that this will index and validate the model in the workspace
             	getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
             }
+            problems.clear();
             // Synchronize model problems
             for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
                 Object attr = marker.getAttribute(IMarker.SEVERITY);

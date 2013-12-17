@@ -1306,6 +1306,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 dataRoleResolver.allSynchronized();
                                 VdbEditor.this.doSave(new NullProgressMonitor());
                                 showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                                modelDetailsPanel.refreshModelDetails();
                             }
                         });
                     }
@@ -1927,6 +1928,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             modelsGroup.getTable().getViewer().refresh();
             otherFilesGroup.getTable().getViewer().refresh();
             modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
+            modelDetailsPanel.refreshModelDetails();
         }
         if( DATA_POLICY_ADDED.equals(property) || DATA_POLICY_REMOVED.equals(property) ) {
         	dataRolesPanel.refresh();
