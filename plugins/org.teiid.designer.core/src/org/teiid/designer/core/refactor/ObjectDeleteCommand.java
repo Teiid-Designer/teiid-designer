@@ -7,16 +7,14 @@
  */
 package org.teiid.designer.core.refactor;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -29,12 +27,9 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.TransactionRunnable;
 import org.teiid.designer.core.builder.ModelBuildUtil;
 import org.teiid.designer.core.container.Container;
-import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.refactor.RelatedResourceFinder.Relationship;
 import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelResourceImpl;
-import org.teiid.designer.core.workspace.ModelUtil;
 
 
 /**
@@ -234,68 +229,6 @@ public class ObjectDeleteCommand implements RefactorCommand {
         return statusList.getHighestSeverity();
     }
 
-    /**
-     * Unload the given resource
-     *
-     * @param resource
-     * @throws CoreException
-     */
-    private void unloadModelResources( IResource resource ) throws CoreException {
-        // Collect all IResources within all IProjects
-        ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
-        resource.accept(visitor);
-
-        for (Iterator iter = visitor.getModelResources().iterator(); iter.hasNext();) {
-            ModelResource mResource = (ModelResource)iter.next();
-            mResource.unload();
-            mResource.close();
-            if (mResource instanceof ModelResourceImpl) {
-                ((ModelResourceImpl)mResource).removeEmfResource();
-            }
-        }
-
-        // The resources move/rename will trigger the event that will actually remove and create
-        // the corresponding resources, since these too are workspace management events
-        // they are processed after the refactoring is done. But since we need the index files at
-        // the old path to be deleted and the index files at the new path to be created,
-        // we do it explicitly.
-
-        // Delete the index files corresponding to the model resource at the old path
-        for (Iterator iter = visitor.getResources().iterator(); iter.hasNext();) {
-            IResource tmpResource = (IResource)iter.next();
-
-            if (ModelUtil.isModelFile(tmpResource) && tmpResource.getLocation() != null) {
-                // Remove the runtime index file associated with the resource being removed
-                String runtimeIndexFileName = IndexUtil.getRuntimeIndexFileName(tmpResource);
-                File runtimeIndexFile = new File(IndexUtil.INDEX_PATH, runtimeIndexFileName);
-                if (!runtimeIndexFile.delete()) {
-                    runtimeIndexFile.deleteOnExit();
-                }
-
-                // Remove the search index file associated with the resource being removed
-                String searchIndexFileName = IndexUtil.getSearchIndexFileName(tmpResource);
-                File searchIndexFile = new File(IndexUtil.INDEX_PATH, searchIndexFileName);
-                if (!searchIndexFile.delete()) {
-                    searchIndexFile.deleteOnExit();
-                }
-            }
-        }
-    }
-
-    /**
-     * Unload all the related resources
-     *
-     * @throws Exception
-     */
-    private void unloadRelatedResources() throws Exception {
-        if (relatedResources == null)
-            throw new Exception("Programming error: related resources should be calculated before trying to unload them"); //$NON-NLS-1$
-
-        for (Object resource : relatedResources) {
-            IFile file  = (IFile) resource;
-            unloadModelResources(file);
-        }
-    }
 
     /**
      * Calls the appropriate validate method to re-index the related resources.
@@ -352,11 +285,6 @@ public class ObjectDeleteCommand implements RefactorCommand {
                 msg = ModelerCore.Util.getString("ObjectDeleteCommand.Dependent_resource_error"); //$NON-NLS-1$
                 return new Status(severity, PID, ERROR_READONLY_RESOURCE, msg, null);
             }
-
-            // If dependent resources are loaded and the effected model resource
-            // is unloaded this can cause proxy references to be broken. This can
-            // be avoided by unloading the dependent resources first.
-            unloadRelatedResources();
 
             // Delete the objects
             try {
