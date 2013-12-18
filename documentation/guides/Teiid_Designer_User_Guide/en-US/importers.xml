@@ -354,7 +354,26 @@ FROM
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 3 </emphasis> - Select existing or previous 
+							<para><emphasis role="bold">Step 3 </emphasis> - On the first wizard page, select the flat
+								file mode you wish to import, either  
+								<emphasis role="bold">Flat file on local file system</emphasis> or  
+								<emphasis role="bold">Flat file via remote URL</emphasis></para>
+							<figure>
+								<title>Flat File Source Model Options</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/import-flat-file-url-source-selection-page.png"/>
+									</imageobject>
+								</mediaobject>
+							</figure>
+							<para>Note that the local file system connection specifies a folder containing one or more 
+							comma separated text data file : 
+							<emphasis role="bold">/home/jdoe/employees/</emphasis>. 
+							The remote URL connection will specify a URL to a single data file : 
+							<emphasis role="bold">http://download.jboss.org/teiid/designer/data/employees/file/EMPLOYEEDATA.txt</emphasis>.</para>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 </emphasis> - Select existing or previous 
 								connection profile from the drop-down selector or press <guibutton>New...</guibutton> button to launch 
 								the <guilabel>New Connection Profile</guilabel> dialog (See Eclipse Data Tools documentation)
 								or <guibutton>Edit...</guibutton> to modify/change an existing connection profile prior to selection.
@@ -386,7 +405,7 @@ FROM
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 4 </emphasis> - The next page, titled <emphasis role="bold">Flat File Column Format Definition</emphasis>, requires
+							<para><emphasis role="bold">Step 5 </emphasis> - The next page, titled <emphasis role="bold">Flat File Column Format Definition</emphasis>, requires
 							    defining the format of your column data in the file. The options are <guibutton>Character delimited</guibutton> and <guibutton>Fixed width</guibutton>.
 							    This page contains a preview of the contents of your file to aid in determining the format. The wizard defaults to displaying the first 20
 							    lines, but you can change that value if you wish.</para>
@@ -401,7 +420,7 @@ FROM
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5a : Character Delimited Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
+							<para><emphasis role="bold">Step 6a : Character Delimited Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
 							    the transformation required to query the user-defined data file.  This page presents a number of options you can use to customize
 							    the <emphasis role="bold">Generated SQL Statement</emphasis> , shown in the bottom panel, for the character delimited option. 
 							    Specify header options (Column names in header, header line number and first data line number), Parse selected row, 
@@ -434,7 +453,7 @@ FROM
 							</figure>
 						</listitem>
 						<listitem>
-							<para><emphasis role="bold">Step 5b : Fixed Column Width Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
+							<para><emphasis role="bold">Step 6b : Fixed Column Width Option </emphasis> - The primary purpose of this importer is to help you create a view table containing
 							    the transformation required to query the user-defined data file.  This page presents a number of options you can use to customize
 							    the <emphasis role="bold">Generated SQL Statement</emphasis> , shown in the bottom panel, for the fixed column width option. 
 							    Specify header options (Column names in header, header line number and first data line number), Parse selected row, 
@@ -456,7 +475,7 @@ FROM
 							</figure>
 						</listitem>
 						<listitem> 
-							<para><emphasis role="bold">Step 6 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
+							<para><emphasis role="bold">Step 7 </emphasis> - On the <emphasis role="bold">View Model Definition</emphasis>
 								page, select the target folder location where your new view model will be created. You can also select an existing 
 								model for your new view tables.
                             </para>
