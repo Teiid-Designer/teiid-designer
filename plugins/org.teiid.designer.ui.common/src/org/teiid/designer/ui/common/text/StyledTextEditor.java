@@ -967,7 +967,9 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
             } else if (this.id.equals(FIND_ID)) {
                 find();
             } else if (this.id.equals(PASTE_ID)) {
-                getTextWidget().paste();
+            	// Removed the paste() call below due an SWT change that results in it being redundant and paste being
+            	// performed twice
+            	// getTextWidget().paste();
             } else if (this.id.equals(SELECT_ALL_ID)) {
                 getTextWidget().selectAll();
             }
