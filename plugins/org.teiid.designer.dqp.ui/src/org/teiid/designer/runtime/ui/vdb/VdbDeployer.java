@@ -9,19 +9,25 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
+import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
@@ -35,6 +41,9 @@ import org.teiid.designer.vdb.VdbModelEntry;
 public class VdbDeployer {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(VdbDeployer.class);
+
+    private static final String JNDI_PROPERTY_KEY = "jndi-name"; //$NON-NLS-1$
+    private static final String JNDI_CONTEXT = "java:/"; //$NON-NLS-1$
 
     /**
      * A VDB deployment status.
@@ -195,8 +204,8 @@ public class VdbDeployer {
                     String sourceName = modelEntry.getSourceInfo().getSource(0).getName();
                     String jndiName = modelEntry.getSourceInfo().getSource(0).getJndiName();
 
-                    // DS not found on server
-                    if (!StringUtilities.isEmpty(jndiName) && !teiidServer.dataSourceExists(sourceName)) {
+                    // DS with matching jndi not found on server
+                    if (!StringUtilities.isEmpty(jndiName) && !dataSourceWithJndiExists(jndiName)) {
 
                         // auto-create if user did not change the default DS name
                         String defaultName = VdbModelEntry.createDefaultSourceName(modelEntry.getName());
@@ -292,6 +301,47 @@ public class VdbDeployer {
         } finally {
             monitor.done();
         }
+    }
+    
+    /*
+     * Check the server sources to see if a datasource with the provided JNDI name exists.
+     * @param jndiName the jndi name to check
+     * @return 'true' if a source with a matching name is found, 'false' if not.
+     */
+    private boolean dataSourceWithJndiExists(String jndiName) {
+    	if(jndiName==null || jndiName.isEmpty()) return false;
+    	
+    	boolean hasSourceWithJndi = false;
+    	
+    	Collection<ITeiidDataSource> serverSources = null; 
+    	try {
+    		serverSources = teiidServer.getDataSources();
+		} catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+		}
+    	
+    	if(serverSources!=null && !serverSources.isEmpty()) {
+    		for(ITeiidDataSource serverSource : serverSources) {
+                String serverJndiName = serverSource.getPropertyValue(JNDI_PROPERTY_KEY);
+                if(!CoreStringUtil.isEmpty(serverJndiName)) {
+                	// Straight check
+                	if(serverJndiName.equalsIgnoreCase(jndiName)) {
+                		hasSourceWithJndi = true;
+                		break;
+                	}
+                	// incoming jndiName may not have context, so try that also since server can match it
+                	if(!jndiName.startsWith(JNDI_CONTEXT)) {
+                		String jndiNameWithContext = JNDI_CONTEXT+jndiName;
+                		if(serverJndiName.equalsIgnoreCase(jndiNameWithContext)) {
+                			hasSourceWithJndi = true;
+                			break;
+                		}
+                	}
+                }
+    		}
+    	}
+    	
+    	return hasSourceWithJndi;
     }
     
     /*
