@@ -139,8 +139,15 @@ public final class VdbModelEntry extends VdbEntry {
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 String translator = helper.getTranslatorName(mr);
                 if( translator == null ) translator = EMPTY_STR;
-                // Defaults the jndiName to match the sourceName.
-                sourceInfo.add(defaultName, defaultName, translator);
+                
+                // Jndi defaults to source name, unless the property is found in the model.
+                String jndiName = defaultName;
+                String jndiProp = helper.getJndiProperty(mr);
+                if(!CoreStringUtil.isEmpty(jndiProp)) {
+                	jndiName = jndiProp;
+                }
+
+                sourceInfo.add(defaultName, jndiName, translator);
                 Properties translatorProps = helper.getTranslatorProperties(mr);
                 if( !translatorProps.isEmpty() ) {
                 	updateTranslatorOverrides(translatorProps);

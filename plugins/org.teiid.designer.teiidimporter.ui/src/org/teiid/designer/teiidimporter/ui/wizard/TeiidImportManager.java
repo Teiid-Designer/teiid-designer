@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -27,6 +28,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
@@ -39,6 +41,9 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
+import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -72,6 +77,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private String dataSourceDriverName = null;
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
+    private boolean createConnectionProfile = true;
     
     IStatus vdbDeploymentStatus = null;
     private ConnectionInfoHelper connectionInfoHelper = new ConnectionInfoHelper();
@@ -255,26 +261,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     }
     
     /**
-     * Inject the current Connection Profile into the supplied model, then save the model
-     * @param model the supplied ModelResourve
-     * @throws Exception the exception
-     */
-//    public void injectConnectionProfile(ModelResource model) throws Exception {
-//        if(this.connectionTemplateName!=null) {
-//            ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
-////            IConnectionInfoProvider connInfoProvider = manager.getProvider(connectionTemplate);
-////            // Inject the connection profile properties into the physical model
-////            connInfoProvider.setConnectionInfo(model, connectionProfile);
-//            
-//            model.save(new NullProgressMonitor(), false);
-//        }
-//    }
-    
-    /**
-     * Inject the translator name into the target model annotation.
+     * Inject the ConnectionProfile into the target model.
      * @param monitor the progress monitor
      */
-    private boolean injectTranslatorIntoTarget(final IProgressMonitor monitor) {
+    private boolean injectProfileIntoTarget(final IProgressMonitor monitor) {
         if( this.targetModelLocation == null ) {
             return false;
         }
@@ -286,10 +276,30 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         
         IResource targetModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
         ModelResource targetModelResc = ModelUtilities.getModelResourceForIFile((IFile)targetModel, false);
-        if( targetModelResc!=null && this.translatorName!=null) {
-            connectionInfoHelper.setTranslatorName(targetModelResc, this.translatorName);
+        if( targetModelResc!=null) {
+        	
+        	ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+        	IConnectionInfoProvider connInfoProvider = manager.getProviderFromProfileID("org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile");  //$NON-NLS-1$
+            ProfileManager pm = ProfileManager.getInstance();
+            Properties props = new Properties();
+            props.put(IJBossDsProfileConstants.JNDI_PROP_ID, getDataSourceName()); 
+            props.put(IJBossDsProfileConstants.TRANSLATOR_PROP_ID, getTranslatorName());
             try {
-            	targetModelResc.save(monitor, false);
+            	String dsName = getDataSourceName();
+            	String cpName = "TeiidImportCP_" + dsName; //$NON-NLS-1$
+            	// If connection profile with this name exists, delete it first
+            	IConnectionProfile cp = pm.getProfileByName(cpName); 
+            	if(cp!=null) pm.deleteProfile(cp);
+            	
+            	// Create a 'JBossDs' profile for use with this importer.  The only properties are the source JNDI name and translator.
+				cp = pm.createProfile(cpName, "JBoss DS Profile", "org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile", props); //$NON-NLS-1$ //$NON-NLS-2$ 
+				connInfoProvider.setConnectionInfo(targetModelResc,cp);
+			} catch (Exception ex) {
+	            UTIL.log(ex);
+			}
+        	
+            try {
+            	targetModelResc.save(monitor, true);
             } catch (Exception error) {
                 throw CoreModelerPlugin.toRuntimeException(error);
             }
@@ -469,6 +479,22 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         return false;
     }
     
+    /**
+     * Get the CreateConnectionProfile flag
+	 * @return 'true' if a connection profile is to be created, 'false' if not.
+	 */
+	public boolean isCreateConnectionProfile() {
+		return this.createConnectionProfile;
+	}
+
+	/**
+	 * Set the CreateConnectionProfile status flag
+	 * @param createConnectionProfile 'true' if a connection profile is to be created
+	 */
+	public void setCreateConnectionProfile(boolean createConnectionProfile) {
+		this.createConnectionProfile = createConnectionProfile;
+	}
+
     /**
      * Determine if the Target Model's Connection Profile is compatible with the currently selected data source.
      * If targetModel has a connection profile:
@@ -705,9 +731,9 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                     monitor.beginTask(Messages.TeiidImportManager_ImportingMsg, 100);
                     monitor.worked(50);
                     ddlImporter.save(monitor, 50);
-                    // Inject translator name into target
-                    if(translatorName!=null) {
-                    	injectTranslatorIntoTarget(monitor);
+                    // Create a ConnectionProfile and injects into model
+                    if(isCreateConnectionProfile()) {
+                    	injectProfileIntoTarget(monitor);
                     }
                     monitor.done();
                 }

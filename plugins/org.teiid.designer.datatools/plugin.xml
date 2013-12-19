@@ -220,4 +220,25 @@
             profile="org.teiid.designer.datatools.profiles.xml.fileurl"
             class="org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider"/>
    </extension>
+
+   <extension
+       id="org.teiid.designer.datatools.jbossds.ConnectionInfoProvider"
+       name="%jbossDsConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile"
+            class="org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionInfoProvider"/>
+   </extension>
+   <extension
+         point="org.eclipse.datatools.connectivity.connectionProfile">
+         <category
+            id="org.teiid.designer.import.category"
+            name="%teiidImporterConnectionsCategory"/>
+      <connectionProfile
+            category="org.teiid.designer.import.category"
+            id="org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile"
+            name="%jbossDsConnectionProfileName" 
+            propertiesPersistenceHook="org.teiid.designer.datatools.profiles.jbossds.JBossDsPersistanceHook"/>
+    </extension>
+   
 </plugin>

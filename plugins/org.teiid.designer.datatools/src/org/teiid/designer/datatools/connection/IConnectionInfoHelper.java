@@ -41,6 +41,8 @@ public interface IConnectionInfoHelper {
     public abstract Properties getProperties( IConnectionProfile connectionProfile );
 
     public abstract boolean hasConnectionInfo( ModelResource modelResource );
+    
+    public abstract String getJndiProperty( ModelResource modelResource );
 
     public abstract IConnectionProfile getConnectionProfile( ModelResource modelResource );
 

@@ -13,7 +13,10 @@ import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -22,6 +25,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -30,12 +34,15 @@ import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Activator;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
@@ -178,6 +185,10 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 	
     @Override
     public boolean finish() {
+    	// Get createConnectionProfile flag and provide to manager.  determines if CP is created or not.
+    	importManager.setCreateConnectionProfile(this.selectTranslatorAndTargetPage.isCreateConnectionProfile());
+    	
+    	// Saves the model
         importManager.saveUsingDdlDiffReport(getShell());
                 
         // Save user settings
@@ -186,9 +197,42 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 
         importManager.undeployDynamicVdb();
         importManager.deleteDdlTempFile();
+        
+        // Open the created Model in an Editor
+        openModelInEditor();
+
         return true;
     }
+    
+    /*
+     * Opens the created model in an editor
+     */
+    private void openModelInEditor() {
+    	String modelName = importManager.getTargetModelName();
+    	IPath modelLocation = importManager.getTargetModelLocation();
+    	if(!CoreStringUtil.isEmpty(modelName) && modelLocation!=null) {
+    		IPath modelPath = new Path(modelLocation.toOSString()).append(modelName);
+    		if( !modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
+    			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
+    		}
 
+    		IResource targetModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
+    		if(targetModel!=null) {
+    			final ModelResource targetModelResc = ModelUtilities.getModelResourceForIFile((IFile)targetModel, false);
+    			if(targetModelResc!=null) {
+    				UiUtil.runInSwtThread(new Runnable() {
+    					@Override
+    					public void run() {
+    						ModelEditorManager.openInEditMode(targetModelResc,
+    								true,
+    								org.teiid.designer.ui.UiConstants.ObjectEditor.IGNORE_OPEN_EDITOR);
+    					}
+    				}, true);
+    			}
+    		}
+    	}
+    }
+    
 	@Override
 	public void setProperties(Properties properties) {
     	this.designerProperties = properties;

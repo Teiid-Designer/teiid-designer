@@ -9,6 +9,7 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,6 +85,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
     private Text targetModelContainerText;
     private Text targetModelFileText;
     private Text targetModelInfoText;
+    private Button createConnProfileCB;
 
     /**
      * SelectedTranslatorAndTargetPage Constructor
@@ -363,6 +365,11 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         gd.horizontalSpan=3;
         targetModelInfoText.setLayoutData(gd);
         
+        // CheckBox for Connection Profile - defaults to checked
+        createConnProfileCB = WidgetFactory.createCheckBox(sourceGroup, Messages.SelectTranslatorPage_CreateConnectionProfileCB_Label, SWT.NONE, 3);
+        createConnProfileCB.setToolTipText(Messages.SelectTranslatorPage_CreateConnectionProfileCB_Label);
+        createConnProfileCB.setSelection(true);
+
     }
     
     /**
@@ -584,6 +591,18 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         } else {
             this.targetModelInfoText.setText(Messages.SelectTranslatorPage_SrcModelSelected+": "+targetModelName); //$NON-NLS-1$
         }
+    }
+    
+    /**
+     * Gets the Create Connection Profile status
+     * @return 'true' if the create checkbox is checked, 'false' if not.
+     */
+    public boolean isCreateConnectionProfile() {
+    	boolean isChecked = false;
+    	if(this.createConnProfileCB != null) {
+    		isChecked = this.createConnProfileCB.getSelection();
+    	}
+    	return isChecked;
     }
     
     /*

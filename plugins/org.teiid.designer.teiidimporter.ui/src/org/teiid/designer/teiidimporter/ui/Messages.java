@@ -110,6 +110,8 @@ public class Messages extends NLS {
     public static String SelectTranslatorPage_NoDataSourceNameMsg;
     public static String SelectTranslatorPage_NoDataSourceDriverMsg;
     public static String SelectTranslatorPage_NoTranslatorMsg;
+    public static String SelectTranslatorPage_CreateConnectionProfileCB_Label;
+    public static String SelectTranslatorPage_CreateConnectionProfileCB_ToolTip;
 
     public static String ShowDDLPage_title;
     public static String ShowDDLPage_DDLContentsGroup;
