@@ -504,16 +504,23 @@ public final class PreviewManager extends JobChangeAdapter
         IConnectionInfoHelper helper = new ConnectionInfoHelper();
 
         if (helper.hasConnectionInfo(modelResource)) {
-            String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
-            // create data source on server if we need to
-            if (!previewServer.dataSourceExists(jndiName)) {
-                TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-                factory.createDataSource(previewServer, model, jndiName, true);
-            }
-
-            if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
-                modelEntry.setJndiName(0, jndiName);
-            }
+        	// Get JBossDs JNDI name - if available, it is used
+        	String srcJndiName = helper.getJndiProperty(modelResource);
+        	// JBossDs JNDI found - use it
+        	if(!CoreStringUtil.isEmpty(srcJndiName)) {
+        		modelEntry.setJndiName(0,srcJndiName);
+        	// Not found - default to original method
+        	} else {
+        		String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
+        		// create data source on server if we need to
+        		if (!previewServer.dataSourceExists(jndiName)) {
+        			TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
+        			factory.createDataSource(previewServer, model, jndiName, true);
+        		}
+                if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
+                    modelEntry.setJndiName(0, jndiName);
+                }
+        	}
         } else {
             connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelDoesNotHaveConnectionInfoError,
                                                                                 model.getFullPath()), null);

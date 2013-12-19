@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -16,6 +17,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceAnnotationHelper;
 import org.teiid.designer.datatools.DatatoolsPlugin;
+import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
 import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
@@ -157,6 +159,33 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         }
 
         return true;
+    }
+    
+    /**
+     * Get the JBossDs JNDI property from the provided <code>ModelResource</code> 
+     * @param modelResource the <code>ModelResource</code>
+     * @return the JBossDs JNDI property.  If not found, returns null
+     */
+    @Override
+    public String getJndiProperty( ModelResource modelResource ) {
+        CoreArgCheck.isNotNull(modelResource, "modelResource"); //$NON-NLS-1$
+
+        Properties props = null;
+
+        try {
+            props = getHelper().getProperties(modelResource, CONNECTION_NAMESPACE);
+        } catch (Exception e) {
+            DatatoolsPlugin.Util.log(IStatus.ERROR,
+                                     e,
+                                     DatatoolsPlugin.Util.getString("errorFindingConnectionProfilePropertiesForModelResource", //$NON-NLS-1$
+                                                                    modelResource.getItemName()));
+        }
+        
+        if (props != null && !props.isEmpty()) {
+            return props.getProperty(CONNECTION_NAMESPACE+IJBossDsProfileConstants.JNDI_PROP_ID);
+        }
+
+        return null;
     }
 
     /**
