@@ -52,4 +52,8 @@ public interface DebugConstants {
      */
     String PREVIEW_JOB_DURATION = PREVIEW_JOBS + "/jobDuration"; //$NON-NLS-1$
 
+    /**
+     *  Option indicating if a trace message should be logged for the jboss host connection check 
+     */
+    String JBOSS_CONNECTION = DEBUG + "/jboss/connection"; //$NON-NLS-1$
 }
