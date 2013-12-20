@@ -1,0 +1,17 @@
+# Master debug switch for plugin
+org.teiid.designer.dqp/debug = false
+
+# Option indicating if a trace message should be logged when a preview job is asked if it should run.
+org.teiid.designer.dqp/debug/preview/jobs/jobShouldRun = false
+
+# Option indicating if a trace message should be logged when a preview job is started.
+org.teiid.designer.dqp/debug/preview/jobs/jobStart = false
+
+# Option indicating if a trace message should be logged when a preview job is finished running.
+org.teiid.designer.dqp/debug/preview/jobs/jobDone = false
+
+# Option indicating if a trace message should be logged for how long a preview job took to run.
+org.teiid.designer.dqp/debug/preview/jobs/jobDuration = false
+
+# Option indicating if a trace message should be logged for the jboss host connection check 
+org.teiid.designer.dqp/debug/jboss/connection = false
