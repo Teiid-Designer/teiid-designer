@@ -19,7 +19,9 @@ public class FlatFileUrlConnectionProfileWizard extends NewConnectionProfileWiza
 
 	@Override
 	public void addCustomPages() {
-		addPage(new FlatFileUrlProfileDetailsWizardPage(UTIL.getString("FlatFileUrlProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+		FlatFileUrlProfileDetailsWizardPage page = new FlatFileUrlProfileDetailsWizardPage(UTIL.getString("FlatFileUrlProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+		page.setPageComplete(false);
+		addPage(page);
 	}
 
 	@Override

@@ -19,7 +19,9 @@ public class ConnectionProfileWizard extends NewConnectionProfileWizard
 
 	@Override
 	public void addCustomPages() {
-		addPage(new WSProfileDetailsWizardPage(UTIL.getString("WSProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+		WSProfileDetailsWizardPage page = new WSProfileDetailsWizardPage(UTIL.getString("WSProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+		page.setPageComplete(false);
+		addPage(page);
 	}
 
 	@Override

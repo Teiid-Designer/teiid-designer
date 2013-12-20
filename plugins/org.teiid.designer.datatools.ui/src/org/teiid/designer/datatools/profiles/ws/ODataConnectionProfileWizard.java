@@ -19,7 +19,9 @@ public class ODataConnectionProfileWizard extends NewConnectionProfileWizard
 
 	@Override
 	public void addCustomPages() {
-		addPage(new ODataProfileDetailsWizardPage(UTIL.getString("WSProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+		ODataProfileDetailsWizardPage page = new ODataProfileDetailsWizardPage(UTIL.getString("WSProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+		page.setPageComplete(false);
+		addPage(page);
 	}
 
 	@Override

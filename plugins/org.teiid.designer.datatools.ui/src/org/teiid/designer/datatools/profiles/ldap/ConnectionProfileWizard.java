@@ -15,7 +15,9 @@ public class ConnectionProfileWizard extends NewConnectionProfileWizard implemen
      */
     @Override
     public void addCustomPages() {
-        addPage(new LdapProfileDetailsWizardPage(UTIL.getString("LdapProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+    	LdapProfileDetailsWizardPage page = new LdapProfileDetailsWizardPage(UTIL.getString("LdapProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+    	page.setPageComplete(false);
+        addPage(page);
     }
 
     /**

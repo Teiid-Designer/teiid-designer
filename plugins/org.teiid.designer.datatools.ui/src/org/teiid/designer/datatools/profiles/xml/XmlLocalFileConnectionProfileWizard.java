@@ -19,7 +19,9 @@ public class XmlLocalFileConnectionProfileWizard extends NewConnectionProfileWiz
 
 	@Override
 	public void addCustomPages() {
-		addPage(new XmlLocalFileProfileDetailsWizardPage(UTIL.getString("XmlLocalFileProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+		XmlLocalFileProfileDetailsWizardPage page = new XmlLocalFileProfileDetailsWizardPage(UTIL.getString("XmlLocalFileProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+		page.setPageComplete(false);
+		addPage(page);
 	}
 
 	@Override

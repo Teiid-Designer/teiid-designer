@@ -18,7 +18,9 @@ public class ConnectionProfileWizard extends NewConnectionProfileWizard implemen
      */
     @Override
     public void addCustomPages() {
-        addPage(new JBossDsProfileDetailsWizardPage(UTIL.getString("JBossDsProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+    	JBossDsProfileDetailsWizardPage page = new JBossDsProfileDetailsWizardPage(UTIL.getString("JBossDsProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+    	page.setPageComplete(false);
+        addPage(page);
     }
 
     /**

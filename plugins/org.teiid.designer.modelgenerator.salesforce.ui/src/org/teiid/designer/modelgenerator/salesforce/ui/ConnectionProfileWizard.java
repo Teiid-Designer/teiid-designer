@@ -17,7 +17,9 @@ public class ConnectionProfileWizard extends NewConnectionProfileWizard implemen
      */
     @Override
     public void addCustomPages() {
-        addPage(new SalesForceProfileDetailsWizardPage(UTIL.getString("SalesForceProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+    	SalesForceProfileDetailsWizardPage page = new SalesForceProfileDetailsWizardPage(UTIL.getString("SalesForceProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+        page.setPageComplete(false);
+    	addPage(page);
     }
 
     /**

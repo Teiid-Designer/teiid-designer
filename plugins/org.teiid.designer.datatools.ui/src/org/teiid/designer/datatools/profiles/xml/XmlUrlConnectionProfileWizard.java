@@ -19,7 +19,9 @@ public class XmlUrlConnectionProfileWizard extends NewConnectionProfileWizard
 
 	@Override
 	public void addCustomPages() {
-		addPage(new XmlUrlProfileDetailsWizardPage(UTIL.getString("XmlProfileDetailsWizardPage.Name"))); //$NON-NLS-1$
+		XmlUrlProfileDetailsWizardPage page = new XmlUrlProfileDetailsWizardPage(UTIL.getString("XmlProfileDetailsWizardPage.Name")); //$NON-NLS-1$
+		page.setPageComplete(false);
+		addPage(page);
 	}
 
 	@Override
