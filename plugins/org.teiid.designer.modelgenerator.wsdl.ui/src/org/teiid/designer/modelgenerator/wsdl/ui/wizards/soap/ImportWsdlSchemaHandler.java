@@ -47,6 +47,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
 import org.teiid.designer.query.proc.wsdl.IWsdlConstants.ProcedureType;
+import org.teiid.designer.query.proc.wsdl.IWsdlResponseInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.schema.tools.model.schema.SchemaModel;
 import org.teiid.designer.schema.tools.model.schema.SchemaObject;
@@ -515,8 +516,9 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addNamespace(ISQLConstants.ENVELOPE_NS_ALIAS,
 						ISQLConstants.ENVELOPE_NS);
 			}
-		//	//Add the default namespace.
-		//	responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());
+			// Add the namespace from schema tree model. We need to do this in case there is a namespace used for the message,
+			// but not a selected element.
+			responseInfo.addNamespace((String)((ModelImpl)wsdlModel).getReverseNamespaces().get(this.responseSchemaTreeModel.getNamespace()), this.responseSchemaTreeModel.getNamespace());
 			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
 			 
 			for (SchemaObject schemaObject : elements) {
