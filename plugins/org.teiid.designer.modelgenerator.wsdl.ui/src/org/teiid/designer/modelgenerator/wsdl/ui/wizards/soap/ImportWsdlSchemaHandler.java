@@ -515,9 +515,12 @@ public class ImportWsdlSchemaHandler {
 				responseInfo.addNamespace(ISQLConstants.ENVELOPE_NS_ALIAS,
 						ISQLConstants.ENVELOPE_NS);
 			}
-		//	//Add the default namespace.
-		//	responseInfo.addNamespace(ResponseInfo.DEFAULT_NS, this.responseSchemaTreeModel.getDefaultNamespace());
-			getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
+			// Add the namespace from schema tree model (if present). We need to do this in case there is a namespace used for the message,
+			// but not a selected element.
+			if (this.responseSchemaTreeModel.getNamespace()!=null) {
+				responseInfo.addNamespace((String)((ModelImpl)wsdlModel).getReverseNamespaces().get(this.responseSchemaTreeModel.getNamespace()), this.responseSchemaTreeModel.getNamespace());
+			}	
+		    getParentXpath(node, parentXpath, this.responseSchemaTreeModel);
 			 
 			for (SchemaObject schemaObject : elements) {
 				if (schemaObject.getName().equals(name)) {
