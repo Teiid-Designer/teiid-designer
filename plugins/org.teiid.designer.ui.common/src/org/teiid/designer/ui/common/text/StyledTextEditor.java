@@ -198,6 +198,7 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
 
     private ContextMenuAction undoAction;
 
+    private boolean alwaysAllowPaste = false;
     /**
      * The parent of the {@link StyledText} control. Will be <code>null</code> if the {@link StyledText} control is passed in at
      * construction.
@@ -773,7 +774,15 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         // synchronize key accelerator with focus
         if (this.selectAllAction != null) {
             this.selectAllAction.setAccelerator((this.allowSelectAll && getTextWidget().isFocusControl()) ? SWT.CTRL | 'A' : 0);
-        }
+        }//	@Override
+//    	public void keyPressed(KeyEvent e) {
+        //
+//        	}
+        //
+//        	@Override
+//        	public void keyReleased(KeyEvent e) {
+        //
+//        	}
     }
 
     /**
@@ -859,6 +868,14 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
         if (hasUndoManager()) {
             this.viewer.getUndoManager().setMaximalUndoLevel(limit);
         }
+    }
+    
+    public void setAlwaysAllowPaste(boolean value) {
+    	this.alwaysAllowPaste = value;
+    }
+    
+    protected boolean getAlwaysAllowPaste() {
+    	return this.alwaysAllowPaste;
     }
 
     private class ContextMenuAction extends Action {
@@ -969,7 +986,9 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
             } else if (this.id.equals(PASTE_ID)) {
             	// Removed the paste() call below due an SWT change that results in it being redundant and paste being
             	// performed twice
-            	// getTextWidget().paste();
+            	if( getAlwaysAllowPaste() ) {
+            		getTextWidget().paste();
+            	}
             } else if (this.id.equals(SELECT_ALL_ID)) {
                 getTextWidget().selectAll();
             }
