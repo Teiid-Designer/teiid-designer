@@ -312,6 +312,7 @@ public class SqlEditorPanel extends SashForm
         });
 
         this.textEditor = new StyledTextEditor(this.sqlTextViewer);
+        this.textEditor.setAlwaysAllowPaste(true);
         this.textEditor.addMenuListener(this);
 
         // sqlDocument.set("SELECT * FROM TABLE");
