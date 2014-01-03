@@ -99,6 +99,11 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
 		if (endPointURI != null) {
             connectionProps.put(CONNECTION_NAMESPACE + END_POINT_URI_PROP_ID, endPointURI);
         }
+              
+        String securityType = props.getProperty(SECURITY_TYPE_ID);
+        if (null != securityType) {
+            connectionProps.setProperty(CONNECTION_NAMESPACE + SECURITY_TYPE_ID, securityType);
+        }
 		
         if (props.getProperty(CONNECTION_CLASS_KEY) != null) {
             connectionProps.put(CONNECTION_NAMESPACE + CONNECTION_CLASS_KEY, props.getProperty(CONNECTION_CLASS_KEY));
@@ -139,6 +144,17 @@ public class WSSoapConnectionInfoProvider  extends ConnectionInfoHelper implemen
         
         if (rawConnectionProps.get(END_POINT_URI_PROP_ID) != null) {
             connectionProps.put(END_POINT_URI_PROP_ID, rawConnectionProps.get(END_POINT_URI_PROP_ID));
+        }
+        
+        
+        if (rawConnectionProps.get(SECURITY_TYPE_ID) != null) {
+            connectionProps.put(SECURITY_TYPE_ID, rawConnectionProps.get(SECURITY_TYPE_ID));
+        }
+        
+        Properties rawTranslatorConnectionProps = removeNamespaces(getHelper().getProperties(modelResource, TRANSLATOR_NAMESPACE));
+        
+        if( rawTranslatorConnectionProps.getProperty(SOAP_BINDING) != null) {
+        	connectionProps.put(SOAP_BINDING, rawTranslatorConnectionProps.getProperty(SOAP_BINDING));
         }
         
         // Security
