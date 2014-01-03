@@ -23,9 +23,10 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${project.basedir}</directory>
+                            <directory>${project.basedir}/src/org/teiid/runtime/client/lang/parser</directory>
                             <includes>
-                                <include>**/src/org/teiid/runtime/client/lang/parser</include>
+                                <include>**/v7/Teiid*Parser*.java</include>
+                                <include>**/v8/Teiid*Parser*.java</include>
                             </includes>
                         </fileset>
                     </filesets>
@@ -46,8 +47,23 @@
                 <configuration>
                     <sourceDirectory>${project.basedir}</sourceDirectory>
                     <includes>
-                        <include>src/javacc/*.jjt</include>
+                        <include>src/javacc/*Parser.jjt</include>
                     </includes>
+                    <isStatic>false</isStatic>
+                    <errorReporting>true</errorReporting>
+                    <javaUnicodeEscape>true</javaUnicodeEscape>
+                    <unicodeInput>false</unicodeInput>
+                    <ignoreCase>true</ignoreCase>
+                    <multi>true</multi>
+                    <nodePrefix></nodePrefix>
+                    <nodeFactory>TeiidNodeFactory</nodeFactory>
+                    <nodeScopeHook>true</nodeScopeHook>
+                    <nodeUsesParser>true</nodeUsesParser>
+                    <nodePackage>org.teiid.runtime.client.lang.ast</nodePackage>
+                    <visitor>true</visitor>
+                    <visitorReturnType>void</visitorReturnType>
+                    <grammarEncoding>UTF-8</grammarEncoding>
+                    <keepLineColumn>true</keepLineColumn>
                     <interimDirectory>${project.basedir}/src</interimDirectory>
                     <outputDirectory>${project.basedir}/src</outputDirectory>
                 </configuration>

@@ -28,7 +28,7 @@
 
 	</target>
 	
-	<target name="generate">
+	<target name="generate" depends="clean">
 
 		<echo message="Generating from maven ..." />
 

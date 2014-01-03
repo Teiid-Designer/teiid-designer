@@ -10,7 +10,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/RunParser.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/BuildParser.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
