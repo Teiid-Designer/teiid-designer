@@ -27,6 +27,7 @@ import org.teiid.core.types.XMLType;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.runtime.client.util.ArgCheck;
+import org.teiid.runtime.client.util.PropertiesUtil;
 
 /**
  *
@@ -35,7 +36,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     private static final String ARRAY_SUFFIX = "[]"; //$NON-NLS-1$
 
-    private enum DefaultDataTypes {
+    public enum DefaultDataTypes {
 
         STRING ("string", DataTypeName.STRING, String.class, 256), //$NON-NLS-1$
 
@@ -151,8 +152,20 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      */
     private static Map<DefaultDataTypes, Map<DefaultDataTypes, Transform>> transforms = new HashMap<DefaultDataTypes, Map<DefaultDataTypes, Transform>>(128);
 
+    private static DataTypeManagerService instance = null;
+
+    /**
+     * @return the singleton instance
+     */
+    public static DataTypeManagerService getInstance() {
+        if (instance == null)
+            instance = new DataTypeManagerService();
+
+        return instance;
+    }
+
     /** Utility to get Transform given srcType and targetType */
-    private static Transform getTransformFromMaps(DefaultDataTypes srcType, DefaultDataTypes targetType) {
+    private Transform getTransformFromMaps(DefaultDataTypes srcType, DefaultDataTypes targetType) {
         Map<DefaultDataTypes, Transform> innerMap = transforms.get(srcType);
         if (innerMap != null) {
             return innerMap.get(targetType);
@@ -160,7 +173,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
 
-    private static DefaultDataTypes findDefaultDataType(String id) {
+    private DefaultDataTypes findDefaultDataType(String id) {
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
             if (defaultDataType.getId().equals(id)) {
                 return defaultDataType;
@@ -170,7 +183,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
     
-    private static DefaultDataTypes findDefaultDataType(DataTypeName dataTypeName) {
+    private DefaultDataTypes findDefaultDataType(DataTypeName dataTypeName) {
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
             if (defaultDataType.getDataTypeName().equals(dataTypeName)) {
                 return defaultDataType;
@@ -180,7 +193,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
 
-    private static DefaultDataTypes findDefaultDataType(Class<?> typeClass) {
+    private DefaultDataTypes findDefaultDataType(Class<?> typeClass) {
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
             if (defaultDataType.getTypeClass().equals(typeClass) || defaultDataType.getTypeArrayClass().equals(typeClass)) {
                 return defaultDataType;
@@ -190,11 +203,11 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
 
-    private static boolean isArrayType(String name) {
+    private boolean isArrayType(String name) {
         return name.endsWith(ARRAY_SUFFIX);
     }
 
-    private static String getComponentType(String name) {
+    private String getComponentType(String name) {
         return name.substring(0, name.lastIndexOf(ARRAY_SUFFIX));
     }
     
@@ -297,7 +310,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return dataSourceType.id();
     }
 
-    private static Transform getTransform(String sourceTypeName, String targetTypeName) {
+    private Transform getTransform(String sourceTypeName, String targetTypeName) {
         if (sourceTypeName == null || targetTypeName == null) {
             throw new IllegalArgumentException(CorePlugin.Util.getString(
                     "ERR.003.029.0003", sourceTypeName, //$NON-NLS-1$
@@ -344,5 +357,34 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         }
 
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T transformValue(Object value, DefaultDataTypes defaultDataType) throws Exception {
+        if (value == null) {
+            return (T)value;
+        }
+        return transformValue(value, value.getClass(), defaultDataType);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T transformValue(Object value, Class<?> sourceType, DefaultDataTypes targetDataType) throws Exception {
+        if (value == null || sourceType == targetDataType.getTypeClass() || DefaultDataTypes.OBJECT == targetDataType) {
+            return (T) value;
+        }
+
+        DefaultDataTypes sourceDataType = findDefaultDataType(sourceType);
+        Transform transform = getTransformFromMaps(sourceDataType, targetDataType);
+        if (transform == null) {
+            Object[] params = new Object[] { sourceType, targetDataType, value};
+            throw new IllegalStateException();
+        }
+
+        T result = (T) transform.transform(value);
+        return result;
+    }
+
+    public boolean isDecimalAsDouble() {
+        return PropertiesUtil.getBooleanProperty(System.getProperties(), "org.teiid.decimalAsDouble", false); //$NON-NLS-1$
     }
 }
