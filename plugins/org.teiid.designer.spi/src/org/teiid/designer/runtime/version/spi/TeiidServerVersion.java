@@ -245,7 +245,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
             int myMinor = Integer.parseInt(getMinor());
             int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (myMinor > otherMinor)
+            if (((myMajor * 100) + (myMinor * 10)) > ((otherMajor * 100) + (otherMinor * 10)))
                 return true;
 
             if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
@@ -253,7 +253,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
             int myMicro = Integer.parseInt(getMicro());
             int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (myMicro > otherMicro)
+            if (((myMajor * 100) + (myMinor * 10) + myMicro) > ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
                 return true;
         }
         catch (Exception ex) {
@@ -276,7 +276,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
             int myMinor = Integer.parseInt(getMinor());
             int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (myMinor < otherMinor)
+            if (((myMajor * 100) + (myMinor * 10)) < ((otherMajor * 100) + (otherMinor * 10)))
                 return true;
 
             if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
@@ -284,7 +284,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
             int myMicro = Integer.parseInt(getMicro());
             int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (myMicro < otherMicro)
+            if (((myMajor * 100) + (myMinor * 10) + myMicro) < ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
                 return true;
         }
         catch (Exception ex) {

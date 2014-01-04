@@ -52,6 +52,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<module>org.teiid.designer.query.ui.test</module>
 		<module>org.teiid.designer.schema.tools.test</module>
 		<module>org.teiid.designer.sdt.test</module>
+		<module>org.teiid.designer.spi.test</module>
 		<module>org.teiid.designer.transformation.test</module>
 		<module>org.teiid.designer.ui.common.test</module>
 		<module>org.teiid.designer.ui.test</module>
