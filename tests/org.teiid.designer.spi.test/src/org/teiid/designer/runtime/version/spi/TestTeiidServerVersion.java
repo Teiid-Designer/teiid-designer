@@ -44,6 +44,26 @@ public class TestTeiidServerVersion extends TestCase {
     }
 
     /**
+     * Test {@link TeiidServerVersion#getMaximumVersion()}
+     */
+    public void testGetMaximum() {
+        assertEquals(version("8.0.0"), version("8.0.0").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.9.0"), version("8.x.0").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.9"), version("8.0.x").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.9.9"), version("8.x.x").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Test {@link TeiidServerVersion#getMinimumVersion()}
+     */
+    public void testGetMinimum() {
+        assertEquals(version("8.0.0"), version("8.0.0").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.x.0").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.0.x").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.x.x").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
      * Test {@link TeiidServerVersion#isGreaterThan(ITeiidServerVersion)}
      */
     public void testIsGreaterThan() {
