@@ -325,6 +325,10 @@ public class ModelRowElement {
      * @return the value object
      */
     public final Object getValue(int index){
+    	if( modelObject.eIsProxy()  ) {
+			return null;
+    	}
+    	
         Object result = null;
         Object propertyId = tableModel.getPropertyIdAtIndex(index);
         if (tableModel.isLocationColumn(propertyId)) {
