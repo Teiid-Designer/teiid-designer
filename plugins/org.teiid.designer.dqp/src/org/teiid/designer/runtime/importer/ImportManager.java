@@ -218,6 +218,26 @@ public final class ImportManager implements IExecutionConfigurationListener {
 
         return resultStatus;
     }
+    
+    public String createDynamicVdbString(String vdbName, String sourceName, String translatorName, Map<String,String> modelPropertyMap) {
+        // Deploy the desired source
+        String importSourceModel = vdbName+IMPORT_SRC_MODEL; 
+        
+        // Get the DataSource
+        ITeiidDataSource dataSource;
+        try {
+            dataSource = getDataSource(sourceName);
+        } catch (Exception ex) {
+            return Messages.ImportManagerDynamicVdbTextCannotBeGeneratedError;
+        }
+        
+        String sourceJndiName = dataSource.getPropertyValue(JNDI_PROPERTY_KEY);
+        if(CoreStringUtil.isEmpty(sourceJndiName)) {
+        	sourceJndiName=sourceName;
+        }
+        // Get Dynamic VDB string
+        return createDynamicVdb(vdbName,1,translatorName,importSourceModel,sourceJndiName,modelPropertyMap);
+    }
 
     /**
      * Get the Schema DDL for the import model in the supplied VDB
@@ -272,24 +292,24 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @param modelProps the model properties
      * @return the VDB deployment string
      */
-    private String createDynamicVdb(String vdbName, int vdbVersion,  String translatorName, String datasourceName, String datasourceJndiName, 
+    public String createDynamicVdb(String vdbName, int vdbVersion,  String translatorName, String datasourceName, String datasourceJndiName, 
     		                        Map<String,String> modelProps) {
         StringBuffer sb = new StringBuffer();
         String deploymentName = vdbName+DYNAMIC_VDB_SUFFIX;
         sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"); //$NON-NLS-1$
-        sb.append("<vdb name=\""+vdbName+"\" version=\""+vdbVersion+"\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        sb.append("<description>Importer VDB</description>"); //$NON-NLS-1$
-        sb.append("<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
-        sb.append("<property name=\"deployment-name\" value=\""+deploymentName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append("<model name=\""+datasourceName+"\" type=\"PHYSICAL\" visible=\"true\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\n<vdb name=\""+vdbName+"\" version=\""+vdbVersion+"\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        sb.append("\n\t<description>Importer VDB</description>"); //$NON-NLS-1$
+        sb.append("\n\t<property name=\"UseConnectorMetadata\" value=\"true\" />"); //$NON-NLS-1$
+        sb.append("\n\t<property name=\"deployment-name\" value=\""+deploymentName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\n\t<model name=\""+datasourceName+"\" type=\"PHYSICAL\" visible=\"true\">"); //$NON-NLS-1$ //$NON-NLS-2$
         Set<String> propNames = modelProps.keySet();
         for(String propName : propNames) {
         	String propValue = XmlUtil.escapeCharacterData(modelProps.get(propName));
-            sb.append("<property name=\""+propName+"\" value=\""+propValue+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            sb.append("\n\t\t<property name=\""+propName+"\" value=\""+propValue+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        sb.append("<source name=\""+datasourceName+"\" translator-name=\""+translatorName+"\" connection-jndi-name=\""+datasourceJndiName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        sb.append("</model>"); //$NON-NLS-1$
-        sb.append("</vdb>"); //$NON-NLS-1$
+        sb.append("\n\t\t<source name=\""+datasourceName+"\" translator-name=\""+translatorName+"\" connection-jndi-name=\""+datasourceJndiName+"\" />"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        sb.append("\n\t</model>"); //$NON-NLS-1$
+        sb.append("\n</vdb>"); //$NON-NLS-1$
         return sb.toString();
     }
     

@@ -149,6 +149,11 @@ public class Messages extends NLS {
     public static String AddGeneralPropertyDialog_invalidPropertyName;
     public static String AddGeneralPropertyDialog_emptyPropertyValue;
     
+    public static String ShowVdbXmlDialog_dynamic_vdb_text;
+    public static String ShowVdbXmlDialog_title;
+    public static String ShowVdbXmlAction_text;
+    public static String ShowVdbXmlAction_tooltip;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.teiidimporter.ui.messages", Messages.class); //$NON-NLS-1$
     }

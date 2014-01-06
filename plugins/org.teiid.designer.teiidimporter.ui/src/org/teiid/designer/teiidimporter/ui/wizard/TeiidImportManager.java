@@ -240,6 +240,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         
         return vdbDeploymentStatus;
     }
+    
+    public String getDynamicVdbString() {
+        return getServerImportManager().createDynamicVdbString(IMPORT_VDB_NAME, dataSourceName, translatorName, getOptionalImportProps());
+    }
 
     private String getTimeoutPrefSecs() {
         String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
