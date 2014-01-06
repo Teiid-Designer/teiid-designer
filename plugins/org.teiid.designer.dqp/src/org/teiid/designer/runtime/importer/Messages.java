@@ -24,6 +24,7 @@ public final class Messages extends NLS {
     public static String ImportManagerVdbGetStateError;
     public static String ImportManagerVdbInactiveStateError;
     public static String ImportManagerVdbLoadingNotCompleteError;
+    public static String ImportManagerDynamicVdbTextCannotBeGeneratedError;
     
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.importer.messages", Messages.class); //$NON-NLS-1$
