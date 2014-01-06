@@ -145,6 +145,12 @@ public final class ImportManager implements IExecutionConfigurationListener {
             resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerGetDatasourceError, sourceName));
             return resultStatus;
         }
+        
+        // data source could be null;
+        if( dataSource == null ) {
+        	return new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerGetDatasourceError, sourceName));
+        }
+        
         monitor.worked(10);
         workRemaining -= 10;
         
