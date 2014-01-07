@@ -70,7 +70,6 @@
       <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
       <import plugin="org.teiid.datatools.connectivity.ui" version="8.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.datatools.connectivity.oda.flatfile.ui" version="3.1.7" match="compatible"/>
-      <import plugin="org.apache.commons.logging"/>
    </requires>
 
    <plugin
