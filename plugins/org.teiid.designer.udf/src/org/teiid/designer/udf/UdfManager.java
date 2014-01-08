@@ -519,7 +519,9 @@ public final class UdfManager implements IResourceChangeListener {
                 boolean javaClassAndMethodEmpty = (javaClass==null && javaMethod==null) ? true : false;
                 
     			// For source pushdown function, set the category name as the Model Name
+                boolean isPushdown = false;
                 if(isPhysical && javaClassAndMethodEmpty) {
+                	isPushdown = true;
                     category = sourceModel.getItemName();
                     if( category.endsWith(".xmi")) { //$NON-NLS-1$
                         category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
@@ -536,7 +538,9 @@ public final class UdfManager implements IResourceChangeListener {
     			                                                                            outputParam,
     			                                                                            schema);
     			
-    			fMethodDescriptor.setPushDown(Boolean.toString(true));
+    			if( isPushdown) {
+    				fMethodDescriptor.setPushDown(Boolean.toString(true));
+    			}
     			fMethodDescriptor.setDeterministic(wrappedProcedure.isDeterministic());
     			
         	    boolean varArgs = false;

@@ -122,7 +122,7 @@ public final class UdfUiPlugin extends AbstractUiPlugin implements EventObjectLi
             } catch(Exception ex) {
         		UdfUiPlugin.UTIL.log(ex);
         	}
-        } else if( ModelIdentifier.isRelationalSourceModel(event.getModelResource()) ) {
+        } else if( ModelIdentifier.isRelationalSourceModel(event.getModelResource()) ||  ModelIdentifier.isRelationalViewModel(event.getModelResource())) {
         	// Only need to notify UdfManager if the changed resource is a Physical/source model.
         	// Relational View, XML view, WS view and XSD models do NOT and will not contain functions.
             try {
