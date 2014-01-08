@@ -4,9 +4,11 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+@Since("8.0.0")
 public class ObjectTable extends FromClause {
 
     private List<ObjectColumn> columns = new ArrayList<ObjectColumn>();

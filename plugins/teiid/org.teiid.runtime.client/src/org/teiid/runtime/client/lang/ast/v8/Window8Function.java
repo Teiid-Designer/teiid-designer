@@ -3,9 +3,9 @@
 package org.teiid.runtime.client.lang.ast.v8;
 
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
-import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.SimpleNode;
 import org.teiid.runtime.client.lang.ast.Teiid8ParserVisitor;
+import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
 import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 
@@ -58,6 +58,16 @@ public class Window8Function extends SimpleNode implements WindowFunction {
     @Override
     public Class<?> getType() {
         return function.getType();
+    }
+
+    @Override
+    public String getName() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setName(String name) {
+        throw new UnsupportedOperationException();
     }
 
     /** Accept the visitor. **/

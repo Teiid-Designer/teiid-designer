@@ -7,6 +7,7 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.annotation.Removed;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 
@@ -16,6 +17,12 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
 public class Symbol extends SimpleNode {
 
     private String shortName;
+
+    /** 
+     * upper case of name
+     */
+    @Removed("8.0.0")
+    private String canonicalShortName;
 
     /**
      * @param id
@@ -63,5 +70,21 @@ public class Symbol extends SimpleNode {
      */
     public String getName() {
         return getShortName();
+    }
+
+    /**
+     * @return the canonicalShortName
+     */
+    @Removed("8.0.0")
+    public String getCanonicalShortName() {
+        return this.canonicalShortName;
+    }
+
+    /**
+     * @param canonicalShortName the canonicalShortName to set
+     */
+    @Removed("8.0.0")
+    public void setCanonicalShortName(String canonicalShortName) {
+        this.canonicalShortName = canonicalShortName;
     }
 }

@@ -222,26 +222,45 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         throw new RuntimeException();
     }
 
+    /**
+     * Get the data type with the given name.
+     * 
+     * @param name
+     *      Data type name
+     *      
+     * @return Data type class
+     */
+    public DefaultDataTypes getDataType(String name) {
+        if (name == null) {
+            return DefaultDataTypes.NULL;
+        }
+
+        DefaultDataTypes dataType = null;
+        if (isArrayType(name)) {
+            String compName = getComponentType(name);
+            dataType = findDefaultDataType(compName);
+        } else {
+            dataType = findDefaultDataType(name);
+        }
+
+        if (dataType == null)
+            dataType = DefaultDataTypes.OBJECT;
+
+        return dataType;
+    }
+
     @Override
     public Class<?> getDataTypeClass(String name) {
         if (name == null) {
             return DefaultDataTypes.NULL.getTypeClass();
         }
 
-        Class<?> dataTypeClass = null;
+        DefaultDataTypes dataType = getDataType(name);
         if (isArrayType(name)) {
-            String compName = getComponentType(name);
-            DefaultDataTypes dataType = findDefaultDataType(compName);
-            dataTypeClass = dataType.getTypeArrayClass();
-        } else {
-            DefaultDataTypes dataType = findDefaultDataType(name);
-            dataTypeClass = dataType.getTypeClass();
+            return dataType.getTypeArrayClass();
         }
 
-        if (dataTypeClass == null)
-            dataTypeClass = DefaultDataTypes.OBJECT.getTypeClass();
-
-        return dataTypeClass;
+        return dataType.getClass();
     }
 
     @Override
@@ -255,6 +274,16 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         throw new RuntimeException();
     }
 
+    public DefaultDataTypes getDataType(Class<?> typeClass) {
+        ArgCheck.isNotNull(typeClass);
+
+        DefaultDataTypes dataType = findDefaultDataType(typeClass);
+        if (dataType != null)
+            return dataType;
+
+        return DefaultDataTypes.OBJECT;
+    }
+   
     @Override
     public String getDataTypeName(Class<?> typeClass) {
         ArgCheck.isNotNull(typeClass);

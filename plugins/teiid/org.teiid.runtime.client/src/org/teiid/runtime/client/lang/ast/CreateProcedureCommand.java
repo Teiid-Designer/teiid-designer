@@ -2,8 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+@Since("8.0.0")
 public class CreateProcedureCommand extends Command {
 
     // top level block for the procedure

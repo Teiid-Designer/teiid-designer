@@ -2,12 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class FromClause extends SimpleNode {
 
     public static final String MAKEIND = "MAKEIND"; //$NON-NLS-1$
 
+    @Since("8.0.0")
     public static final String PRESERVE = "PRESERVE"; //$NON-NLS-1$
 
     private boolean optional;

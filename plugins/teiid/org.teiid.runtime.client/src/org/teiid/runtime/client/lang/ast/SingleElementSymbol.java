@@ -5,18 +5,14 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.runtime.client.lang;
+package org.teiid.runtime.client.lang.ast;
+
+import org.teiid.designer.annotation.Removed;
 
 /**
- *
+ * Interface only applicable to the Teiid 7 parser
  */
-public interface SortSpecification {
+@Removed("8.0.0")
+public interface SingleElementSymbol extends Expression {
 
-    /**
-     * How to sort on a specific expression, eg. {code:sql}col1 NULLS FIRST{code}
-     */
-    enum NullOrdering {
-        FIRST,
-        LAST;
-    }
 }

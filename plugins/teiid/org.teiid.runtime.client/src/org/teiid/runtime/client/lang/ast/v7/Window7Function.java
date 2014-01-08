@@ -4,8 +4,10 @@ package org.teiid.runtime.client.lang.ast.v7;
 
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Symbol;
+import org.teiid.runtime.client.lang.ast.Teiid7ParserVisitor;
 import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
+import org.teiid.runtime.client.lang.parser.v7.Teiid7Parser;
 
 public class Window7Function extends Symbol implements WindowFunction {
 
@@ -59,9 +61,8 @@ public class Window7Function extends Symbol implements WindowFunction {
     }
 
     /** Accept the visitor. **/
-    @Override
     public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+        visitor.visit((WindowFunction) this, data);
     }
 }
 /* JavaCC - OriginalChecksum=da43cffa8d1927cfd8b4f378cdcfeae0 (do not edit this line) */

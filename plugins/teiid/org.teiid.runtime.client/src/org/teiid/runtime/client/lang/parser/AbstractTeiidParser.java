@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.runtime.client.Messages;
@@ -87,6 +89,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		return literal;
 	}
 
+	@Since("8.0.0")
 	protected void convertToParameters(List<Expression> values, StoredProcedure storedProcedure, int paramIndex) {
 		for (Expression value : values) {
 			SPParameter parameter = new SPParameter(this, paramIndex++, value);
@@ -281,5 +284,15 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     protected boolean isTrue(final String text) {
         return Boolean.valueOf(text);
+    }
+
+    @Removed("8.0.0")
+    protected String matchesAny(String arg, String ... expected) {
+        for (String string : expected) {
+            if (string.equalsIgnoreCase(arg)) {
+                return arg;
+            }
+        }
+        return null;
     }
 }

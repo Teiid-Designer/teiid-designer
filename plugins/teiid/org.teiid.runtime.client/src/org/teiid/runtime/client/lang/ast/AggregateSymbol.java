@@ -7,12 +7,14 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 
 /**
  *
  */
-public interface AggregateSymbol extends Node, Expression {
+@SuppressWarnings( "unused" )
+public interface AggregateSymbol extends Node, SingleElementSymbol, Expression {
 
     public enum Type {        
         COUNT,
@@ -69,11 +71,13 @@ public interface AggregateSymbol extends Node, Expression {
      *
      * @return Get function arguments
      */
+    @Since("8.0.0")
     Expression[] getArgs();
 
     /**
      * @param arguments
      */
+    @Since("8.0.0")
     void setArgs(Expression[] arguments);
 
     /**
@@ -105,4 +109,16 @@ public interface AggregateSymbol extends Node, Expression {
      * @param isWindowed
      */
     void setWindowed(boolean isWindowed);
+
+    /**
+     * @return canonicalName
+     */
+    @Removed("8.0.0")
+    String getCanonicalName();
+
+    /**
+     * @param canonicalName
+     */
+    void setCanonicalName(String canonicalName);
+
 }

@@ -4,7 +4,8 @@ package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class ExpressionSymbol extends Symbol implements Expression {
+@SuppressWarnings( "unused" )
+public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Expression {
 
     private Expression expression;
 

@@ -7,10 +7,13 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.annotation.Removed;
+
 /**
  *
  */
-public interface WindowFunction extends Node, Expression {
+@SuppressWarnings( "unused" )
+public interface WindowFunction extends Node, SingleElementSymbol, Expression {
 
     /**
      * @return the function
@@ -31,6 +34,18 @@ public interface WindowFunction extends Node, Expression {
      * @param windowSpecification the windowSpecification to set
      */
     void setWindowSpecification(WindowSpecification windowSpecification);
+
+    /**
+     * @return name
+     */
+    @Removed("8.0.0")
+    String getName();
+
+    /**
+     * @param name
+     */
+    @Removed("8.0.0")
+    void setName(String name);
 
     Class<?> getType();
 

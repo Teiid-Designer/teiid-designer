@@ -73,6 +73,10 @@ public class StoredProcedure extends Command {
         return mapOfParameters.get(index);
     }
 
+    public int getParameterCount() {
+        return mapOfParameters.size();
+    }
+
     /**
     * Set a stored procedure's parameter
     *

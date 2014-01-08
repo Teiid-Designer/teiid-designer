@@ -4,8 +4,6 @@ package org.teiid.runtime.client.lang.ast.v8;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.teiid.core.types.DataTypeManager;
-import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.Function;
@@ -13,6 +11,7 @@ import org.teiid.runtime.client.lang.ast.OrderBy;
 import org.teiid.runtime.client.lang.ast.Teiid8ParserVisitor;
 import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
+import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
 
 /**
  * From Teiid Version 8 onwards the AggregateSymbol extends Function
@@ -29,20 +28,19 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
 
     private boolean isWindowed;
 
-    private static final Class<?> COUNT_TYPE = DataTypeManagerService.getInstance().getDefaultDataClass(DataTypeName.INTEGER);
+    private static final Class<?> COUNT_TYPE = DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass();
     private static final Map<Class<?>, Class<?>> SUM_TYPES;
     private static final Map<Class<?>, Class<?>> AVG_TYPES;
 
     static {
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
-        Class<?> byteClass = dataTypeManager.getDefaultDataClass(DataTypeName.BYTE);
-        Class<?> longClass = dataTypeManager.getDefaultDataClass(DataTypeName.LONG);
-        Class<?> shortClass = dataTypeManager.getDefaultDataClass(DataTypeName.SHORT);
-        Class<?> integerClass = dataTypeManager.getDefaultDataClass(DataTypeName.INTEGER);
-        Class<?> doubleClass = dataTypeManager.getDefaultDataClass(DataTypeName.DOUBLE);
-        Class<?> bigDecimalClass = dataTypeManager.getDefaultDataClass(DataTypeName.BIG_DECIMAL);
-        Class<?> bigIntegerClass = dataTypeManager.getDefaultDataClass(DataTypeName.BIG_INTEGER);
-        Class<?> floatClass = dataTypeManager.getDefaultDataClass(DataTypeName.FLOAT);
+        Class<?> byteClass = DataTypeManagerService.DefaultDataTypes.BYTE.getTypeClass();
+        Class<?> longClass = DataTypeManagerService.DefaultDataTypes.LONG.getTypeClass();
+        Class<?> shortClass = DataTypeManagerService.DefaultDataTypes.SHORT.getTypeClass();
+        Class<?> integerClass = DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass();
+        Class<?> doubleClass = DataTypeManagerService.DefaultDataTypes.DOUBLE.getTypeClass();
+        Class<?> bigDecimalClass = DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getTypeClass();
+        Class<?> bigIntegerClass = DataTypeManagerService.DefaultDataTypes.BIG_INTEGER.getTypeClass();
+        Class<?> floatClass = DataTypeManagerService.DefaultDataTypes.FLOAT.getTypeClass();
 
         SUM_TYPES = new HashMap<Class<?>, Class<?>>();        
         SUM_TYPES.put(byteClass, longClass);
@@ -55,6 +53,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         SUM_TYPES.put(bigDecimalClass, bigDecimalClass);
         
         AVG_TYPES = new HashMap<Class<?>, Class<?>>();
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
         if(dataTypeManager.isDecimalAsDouble()) {
             AVG_TYPES.put(byteClass, doubleClass);
             AVG_TYPES.put(shortClass, doubleClass);
@@ -70,7 +69,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         AVG_TYPES.put(bigIntegerClass, bigDecimalClass);
         AVG_TYPES.put(floatClass, doubleClass);
         AVG_TYPES.put(doubleClass, doubleClass);
-        AVG_TYPES.put(bigDecimalClass, bigDecimalClass);        
+        AVG_TYPES.put(bigDecimalClass, bigDecimalClass);
     }
 
     public Aggregate8Symbol(int id) {
@@ -124,9 +123,12 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
                 if (this.getArg(0) == null) {
                     return null;
                 }
-                return DataTypeManager.getArrayType(this.getArg(0).getType());
+                
+                DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+                DefaultDataTypes dataType = dataTypeManager.getDataType(this.getArg(0).getType());
+                return dataType.getTypeArrayClass();
             case TEXTAGG:
-                return DataTypeManager.DefaultDataClasses.BLOB;
+                return DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass();
             case USER_DEFINED:
                 // TODO
                 // Dont want to bring in function descriptors if one can help it
@@ -137,7 +139,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
 //                }
 //                return this.getFunctionDescriptor().getReturnType();
             case JSONARRAY_AGG:
-                return DataTypeManager.DefaultDataClasses.CLOB;
+                return DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass();
             case STRING_AGG:
                 return super.getType();
             default:
@@ -145,15 +147,15 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         }
 
         if (isBoolean()) {
-            return DataTypeManager.DefaultDataClasses.BOOLEAN;
+            return DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass();
         }
 
         if (isEnhancedNumeric()) {
-            return DataTypeManager.DefaultDataClasses.DOUBLE;
+            return DataTypeManagerService.DefaultDataTypes.DOUBLE.getTypeClass();
         }
 
         if (isAnalytical()) {
-            return DataTypeManager.DefaultDataClasses.INTEGER;
+            return DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass();
         }
 
         if (this.getArgs().length == 0) {
@@ -221,6 +223,18 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
 
     public void setWindowed(boolean isWindowed) {
         this.isWindowed = isWindowed;
+    }
+
+    @Override
+    public String getCanonicalName() {
+        // Only applicable to 7.7.0
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setCanonicalName(String canonicalName) {
+        // Only applicable to 7.7.0
+        throw new UnsupportedOperationException();
     }
 
     /** Accept the visitor. **/
