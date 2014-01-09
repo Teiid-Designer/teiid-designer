@@ -53,7 +53,7 @@ import org.teiid.runtime.client.util.StringUtil;
 @SuppressWarnings({"nls", "unused"})
 public class Teiid8Parser extends AbstractTeiidParser {
 
-    public Teiid8Parser() {      super(new TeiidServerVersion("8.x.x"));
+    private Teiid8Parser() {      super(new TeiidServerVersion("8.x.x"));
     }
 
     private String getComment(Token t) {

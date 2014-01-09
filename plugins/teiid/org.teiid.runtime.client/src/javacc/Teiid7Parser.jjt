@@ -53,7 +53,7 @@ import org.teiid.runtime.client.util.StringUtil;
 @SuppressWarnings("nls")
 public class Teiid7Parser extends AbstractTeiidParser {
 
-    public Teiid7Parser() {
+    private Teiid7Parser() {
       super(new TeiidServerVersion("7.7.x"));
     }
 
