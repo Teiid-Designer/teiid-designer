@@ -4,7 +4,6 @@ package org.teiid.runtime.client.lang.ast.v7;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.teiid.core.types.DataTypeManager;
 import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
@@ -112,18 +111,18 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
             expressionType = this.getExpression().getType();
             return AVG_TYPES.get(expressionType);
         case ARRAY_AGG:
-            return DataTypeManager.DefaultDataClasses.OBJECT;
+            return DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
         case TEXTAGG:
-            return DataTypeManager.DefaultDataClasses.BLOB;
+            return DataTypeManagerService.DefaultDataTypes.BLOB.getClass();
         }
         if (isBoolean()) {
-            return DataTypeManager.DefaultDataClasses.BOOLEAN;
+            return DataTypeManagerService.DefaultDataTypes.BOOLEAN.getClass();
         }
         if (isEnhancedNumeric()) {
-            return DataTypeManager.DefaultDataClasses.DOUBLE;
+            return DataTypeManagerService.DefaultDataTypes.DOUBLE.getClass();
         }
         if (isAnalytical()) {
-            return DataTypeManager.DefaultDataClasses.INTEGER;
+            return DataTypeManagerService.DefaultDataTypes.INTEGER.getClass();
         }
         return this.getExpression().getType();
     }

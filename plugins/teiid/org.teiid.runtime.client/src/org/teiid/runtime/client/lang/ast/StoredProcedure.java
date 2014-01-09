@@ -4,7 +4,6 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Map;
 import java.util.TreeMap;
-import org.teiid.client.metadata.ParameterInfo;
 import org.teiid.runtime.client.lang.SPParameter;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
@@ -91,7 +90,7 @@ public class StoredProcedure extends Command {
         }
 
         Integer key = parameter.getIndex();
-        if(parameter.getParameterType() == ParameterInfo.RESULT_SET){
+        if(parameter.getParameterType() == SPParameter.ParameterInfo.RESULT_SET.index()){
             resultSetParameterKey = key;
         }
 

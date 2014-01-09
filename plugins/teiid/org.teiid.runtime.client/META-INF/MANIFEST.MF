@@ -7,3 +7,6 @@ Bundle-Vendor: %pluginProvider
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.teiid.designer.spi;bundle-version="8.3.0"
+Bundle-ClassPath: .,
+ lib/teiid-common-core-8.4.1.jar
+

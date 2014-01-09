@@ -10,7 +10,6 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.teiid.core.util.Assertion;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -133,8 +132,7 @@ public interface CriteriaOperator {
                 return operator;
             }
    
-            Assertion.failed("Symbol '" + symbol + "' has no operator in version " + version); //$NON-NLS-1$ //$NON-NLS-2$
-            return null;
+            throw new UnsupportedOperationException("Symbol '" + symbol + "' has no operator in version " + version); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 }

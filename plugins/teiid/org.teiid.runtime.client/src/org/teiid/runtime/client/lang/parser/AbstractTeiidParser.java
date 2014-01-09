@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -39,6 +38,7 @@ import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.StoredProcedure;
 import org.teiid.runtime.client.types.DataTypeManagerService;
+import org.teiid.runtime.client.util.StringUtil;
 
 public abstract class AbstractTeiidParser implements TeiidParser {
 

@@ -33,4 +33,31 @@ public class StringUtil {
         }
         return text.regionMatches(true, text.length() - suffix.length(), suffix, 0, suffix.length());
     }
+
+    /*
+     * Replace all occurrences of the search string with the replace string
+     * in the source string. If any of the strings is null or the search string
+     * is zero length, the source string is returned.
+     * @param source the source string whose contents will be altered
+     * @param search the string to search for in source
+     * @param replace the string to substitute for search if present
+     * @return source string with *all* occurrences of the search string
+     * replaced with the replace string
+     */
+    public static String replaceAll(String source, String search, String replace) {
+        if (source == null || search == null || search.length() == 0 || replace == null) {
+            return source;
+        }
+        int start = source.indexOf(search);
+        if (start > -1) {
+            StringBuffer newString = new StringBuffer(source);
+            while (start > -1) {
+                int end = start + search.length();
+                newString.replace(start, end, replace);
+                start = newString.indexOf(search, start + replace.length());
+            }
+            return newString.toString();
+        }
+        return source;    
+    }
 }

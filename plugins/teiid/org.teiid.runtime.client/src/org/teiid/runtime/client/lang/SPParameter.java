@@ -42,7 +42,7 @@ public class SPParameter {
     /**
      * Enumerator for types of parameters 
      */
-    enum ParameterInfo {
+    public enum ParameterInfo {
         /** Constant identifying an IN parameter */
         IN,
 
