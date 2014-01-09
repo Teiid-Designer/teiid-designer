@@ -7,7 +7,11 @@
 */
 package org.teiid.runtime.client.lang.parser;
 
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.ParseInfo;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.ast.Command;
+import org.teiid.runtime.client.lang.ast.Criteria;
+import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 /**
@@ -25,6 +29,41 @@ public interface TeiidParser {
      * 
      * @return instance of commonly used node
      */
-    <T> T createCommonNode(CommonNodes nodeType);
-    
+    <T> T createASTNode(ASTNodes nodeType);
+
+    /**
+     * Parse an expression
+     *
+     * @param info
+     * @return the expression
+     * @throws Exception
+     */
+    Expression expression(ParseInfo info) throws Exception;
+
+    /**
+     * Parse a command
+     *
+     * @param parseInfo
+     * @return the command
+     * @throws Exception
+     */
+    Command command(ParseInfo parseInfo) throws Exception;
+
+    /**
+     * Parse a designer command
+     *
+     * @param parseInfo
+     * @return the command
+     * @throws Exception
+     */
+    Command designerCommand(ParseInfo parseInfo) throws Exception;
+
+    /**
+     * Parse a criteria
+     *
+     * @param parseInfo
+     * @return the criteria
+     * @throws Exception
+     */
+    Criteria criteria(ParseInfo parseInfo) throws Exception;
 }

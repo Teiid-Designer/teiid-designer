@@ -4,7 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
@@ -46,7 +46,7 @@ public class XMLTable extends FromClause {
      * @since 4.3
      */
     public void setName(String name) {
-        this.symbol = this.parser.createCommonNode(CommonNodes.GROUP_SYMBOL);
+        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
     }
 
@@ -84,7 +84,7 @@ public class XMLTable extends FromClause {
     public void setColumns(List<XMLColumn> columns) {
         if (columns.isEmpty()) {
             usingDefaultColumn = true;
-            XMLColumn xmlColumn = parser.createCommonNode(CommonNodes.XML_COLUMN);
+            XMLColumn xmlColumn = parser.createASTNode(ASTNodes.XML_COLUMN);
             xmlColumn.setName("OBJECT_VALUE"); //$NON-NLS-1$
             xmlColumn.setType(DataTypeManagerService.DefaultDataTypes.XML.getId());
             xmlColumn.setPath("."); //$NON-NLS-1$

@@ -34,7 +34,7 @@ import org.teiid.runtime.client.lang.SourceHint;
 import org.teiid.runtime.client.lang.SubqueryHint;
 import org.teiid.runtime.client.lang.SPParameter;
 import org.teiid.runtime.client.lang.TeiidNodeFactory;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.*;
 import org.teiid.runtime.client.lang.ast.CriteriaOperator.Operator;
 import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria.PredicateQuantifier;
@@ -771,7 +771,7 @@ Command createTrigger(ParseInfo info) #void :
 	(event = <INSERT> | event = <UPDATE> | event = <DELETE>) 
 	<AS> triggerAction = forEachRowTriggerAction(info)
 	{
-		Alter alter = createCommonNode(CommonNodes.ALTER);
+		Alter alter = createASTNode(ASTNodes.ALTER);
 		alter.setAlterType(Alter.AlterType.TRIGGER);
 		alter.setTarget(groupSymbol(target));
 		alter.setDefinition(triggerAction);
@@ -813,7 +813,7 @@ Command alter(ParseInfo info) #Alter :
 	 	}
 		| (<PROCEDURE> target = id(null) <AS> { comment = getToken(1).specialToken; } stmt = statement(info)) 
 		{
-			CreateProcedureCommand cup = createCommonNode(CommonNodes.CREATE_PROCEDURE_COMMAND);
+			CreateProcedureCommand cup = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
 			cup.setBlock(asBlock(stmt));
 			/*
 			 * if (comment != null) {
@@ -849,7 +849,7 @@ example={code:sql}FOR EACH ROW BEGIN ATOMIC ... END{code}
 */
 TriggerAction forEachRowTriggerAction(ParseInfo info) #TriggerAction :
 {
-	Block b = createCommonNode(CommonNodes.BLOCK);
+	Block b = createASTNode(ASTNodes.BLOCK);
 	b.setAtomic(true);
 	Statement stmt = null;
 }
@@ -1316,7 +1316,7 @@ Statement assignStatement(ParseInfo info) #void :
 	    parameter.setExpression(elementID);
 		storedProcedure.setParameter(parameter);  
 		storedProcedure.setCalledWithReturn(true);
-		CommandStatement cs = createCommonNode(CommonNodes.COMMAND_STATEMENT);
+		CommandStatement cs = createASTNode(ASTNodes.COMMAND_STATEMENT);
 		cs.setCommand(storedProcedure);
 		cs.setReturnable(returnable);
 		return cs;      	    
@@ -1958,18 +1958,18 @@ QueryCommand queryPrimary(ParseInfo info) #void :
     (
         query=query(info) | 
         (<TABLE> name=id(null) {
-           MultipleElementSymbol multipleElementSymbol = createCommonNode(CommonNodes.MULTIPLE_ELEMENT_SYMBOL);
+           MultipleElementSymbol multipleElementSymbol = createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
 
-           Select select = createCommonNode(CommonNodes.SELECT);
+           Select select = createASTNode(ASTNodes.SELECT);
            select.setSymbols(Arrays.asList(multipleElementSymbol));
 
-           UnaryFromClause unaryFromClause = createCommonNode(CommonNodes.UNARY_FROM_CLAUSE);
+           UnaryFromClause unaryFromClause = createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
            unaryFromClause.setGroupSymbol(groupSymbol(name));
 
-           From from = createCommonNode(CommonNodes.FROM);
+           From from = createASTNode(ASTNodes.FROM);
            from.setClauses(Arrays.asList(unaryFromClause));
            
-           Query q = createCommonNode(CommonNodes.QUERY);
+           Query q = createASTNode(ASTNodes.QUERY);
            q.setSelect(select);
            q.setFrom(from);
            query = q;
@@ -2050,7 +2050,7 @@ Select select(ParseInfo info) #Select :
 	[<ALL> | (<DISTINCT> {isDistinct=true;})]
 	(<STAR>
 		{
-		    MultipleElementSymbol multipleElementSymbol = createCommonNode(CommonNodes.MULTIPLE_ELEMENT_SYMBOL);
+		    MultipleElementSymbol multipleElementSymbol = createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
 			jjtThis.addSymbol(multipleElementSymbol);
 		}
 	|
@@ -3068,7 +3068,7 @@ Criteria compoundCritOr(ParseInfo info) #void :
 		if(logicList == null) {
 			return logicPart;
 		} else {
-         	CompoundCriteria cc = createCommonNode(CommonNodes.COMPOUND_CRITERIA);
+         	CompoundCriteria cc = createASTNode(ASTNodes.COMPOUND_CRITERIA);
          	cc.setOperator(CompoundCriteria.OR);
          	cc.setCriteria(logicList);
          	return cc;
@@ -3236,19 +3236,19 @@ QueryCommand subquery(ParseInfo info) #void :
 		proc = storedProcedure(info, 1) //deprecated	  
 	 )
 	 {
-	    MultipleElementSymbol multipleElementSymbol = createCommonNode(CommonNodes.MULTIPLE_ELEMENT_SYMBOL);
+	    MultipleElementSymbol multipleElementSymbol = createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
 
-        Select select = createCommonNode(CommonNodes.SELECT);
+        Select select = createASTNode(ASTNodes.SELECT);
         select.setSymbols(Arrays.asList(multipleElementSymbol));
 
-        SubqueryFromClause subqueryFromClause = createCommonNode(CommonNodes.SUBQUERY_FROM_CLAUSE);
+        SubqueryFromClause subqueryFromClause = createASTNode(ASTNodes.SUBQUERY_FROM_CLAUSE);
         subqueryFromClause.setName("x");
         subqueryFromClause.setCommand(proc);
 
-        From from = createCommonNode(CommonNodes.FROM);
+        From from = createASTNode(ASTNodes.FROM);
         from.setClauses(Arrays.asList(subqueryFromClause));
 
-        Query query = createCommonNode(CommonNodes.QUERY);
+        Query query = createASTNode(ASTNodes.QUERY);
         query.setSelect(select);
         query.setFrom(from);
         subquery = query;
@@ -3352,7 +3352,7 @@ MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) #void :
     <LIKE_REGEX>
 	value=commonValueExpression(info)
 	{
-    	MatchCriteria matchCriteria = createCommonNode(CommonNodes.MATCH_CRITERIA);
+    	MatchCriteria matchCriteria = createASTNode(ASTNodes.MATCH_CRITERIA);
     	matchCriteria.setLeftExpression(expression);
     	matchCriteria.setRightExpression(value);
 		matchCriteria.setNegated(negated);
@@ -3790,7 +3790,7 @@ Expression commonValueExpression(ParseInfo info) #void :
 			<CONCAT_OP>
 			rightExpression=plusExpression(info)
 			{
-			    Function function = createCommonNode(CommonNodes.FUNCTION);
+			    Function function = createASTNode(ASTNodes.FUNCTION);
 			    function.setName("||"); //$NON-NLS-1$
 			    function.setArgs(new Expression[] {leftExpression, rightExpression});
 			    leftExpression = function;
@@ -3820,7 +3820,7 @@ Expression plusExpression(ParseInfo info) #void :
 			operator=plusMinus()
 			rightExpression=timesExpression(info)
 			{
-			    Function function = createCommonNode(CommonNodes.FUNCTION);
+			    Function function = createASTNode(ASTNodes.FUNCTION);
 			    function.setName(operator);
 			    function.setArgs(new Expression[] { leftExpression, rightExpression });
 			    leftExpression = function;
@@ -3867,7 +3867,7 @@ Expression timesExpression(ParseInfo info) #void :
 			operator=timesOperator()
 			rightExpression=valueExpressionPrimary(info) 
 			{
-			    Function function = createCommonNode(CommonNodes.FUNCTION);
+			    Function function = createASTNode(ASTNodes.FUNCTION);
 			    function.setName(operator);
 			    function.setArgs(new Expression[] {leftExpression, rightExpression});
 			    leftExpression = function;
@@ -3919,7 +3919,7 @@ Expression valueExpressionPrimary(ParseInfo info) #void :
 	   |
 	   ex = unsignedValueExpressionPrimary(info) {
 	     if (strVal != null && strVal.charAt(0) == '-') {
-	        Function function = createCommonNode(CommonNodes.FUNCTION);
+	        Function function = createASTNode(ASTNodes.FUNCTION);
 	        function.setName("*"); //$NON-NLS-1$
 	        function.setArgs(new Expression[] { constant(-1), ex });
 	        ex = function;
@@ -4006,7 +4006,7 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) #void :
           	}
 		}
 		if (indexExpr != null) {
-		    Function function = createCommonNode(CommonNodes.FUNCTION);
+		    Function function = createASTNode(ASTNodes.FUNCTION);
             function.setName("array_get"); //$NON-NLS-1$
             function.setArgs(new Expression[] {expression, indexExpr});
             expression = function;

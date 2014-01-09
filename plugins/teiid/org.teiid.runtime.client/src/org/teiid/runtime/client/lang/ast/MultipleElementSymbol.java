@@ -4,7 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class MultipleElementSymbol extends SimpleNode implements Expression {
@@ -32,7 +32,7 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
      * @param name New name
      */
     public void setName(String name) {
-        this.group = this.parser.createCommonNode(CommonNodes.GROUP_SYMBOL);
+        this.group = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.group.setName(name);
     }
 

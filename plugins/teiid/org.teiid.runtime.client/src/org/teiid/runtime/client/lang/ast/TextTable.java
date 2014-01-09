@@ -4,7 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class TextTable extends FromClause {
@@ -55,7 +55,7 @@ public class TextTable extends FromClause {
      * @since 4.3
      */
     public void setName(String name) {
-        this.symbol = this.parser.createCommonNode(CommonNodes.GROUP_SYMBOL);
+        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
     }
 

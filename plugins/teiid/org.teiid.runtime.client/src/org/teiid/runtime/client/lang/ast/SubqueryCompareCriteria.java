@@ -2,7 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class SubqueryCompareCriteria extends AbstractCompareCriteria {
@@ -81,7 +81,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
 
     @Override
     public Expression getRightExpression() {
-        ScalarSubquery scalarSubquery = parser.createCommonNode(CommonNodes.SCALAR_SUBQUERY);
+        ScalarSubquery scalarSubquery = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
         scalarSubquery.setCommand(getCommand());
         return scalarSubquery;
     }

@@ -25,7 +25,7 @@ package org.teiid.runtime.client.lang;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.ElementSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
@@ -108,7 +108,7 @@ public class SPParameter {
         this.teiidParser = teiidParser;
         setIndex(index);
         setExpression(expression);
-        this.parameterSymbol = teiidParser.createCommonNode(CommonNodes.ELEMENT_SYMBOL);
+        this.parameterSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
     }
 
     /**
@@ -129,7 +129,7 @@ public class SPParameter {
     }
 
     private ElementSymbol createElementSymbol(String name) {
-        ElementSymbol symbol = teiidParser.createCommonNode(CommonNodes.ELEMENT_SYMBOL);
+        ElementSymbol symbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
         symbol.setName(name);
         return symbol;
     }

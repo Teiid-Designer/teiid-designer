@@ -4,7 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Select extends SimpleNode {
@@ -36,7 +36,7 @@ public class Select extends SimpleNode {
      */
     public void addSymbol( Expression symbol ) {
         if (!(symbol instanceof Symbol) && !(symbol instanceof MultipleElementSymbol)) {
-            ExpressionSymbol exSymbol = parser.createCommonNode(CommonNodes.EXPRESSION_SYMBOL);
+            ExpressionSymbol exSymbol = parser.createASTNode(ASTNodes.EXPRESSION_SYMBOL);
             exSymbol.setName("expr" + (this.symbols.size() + 1)); //$NON-NLS-1$
             exSymbol.setExpression(symbol);
             symbol = exSymbol;

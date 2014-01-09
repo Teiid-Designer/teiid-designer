@@ -123,9 +123,9 @@ public class TeiidNodeFactory {
 
     /**
      * Names of nodes frequently created outside of the parsers
-     * For use with {@link TeiidNodeFactory#create(TeiidParser, CommonNodes)}
+     * For use with {@link TeiidNodeFactory#create(TeiidParser, ASTNodes)}
      */
-    public enum CommonNodes {
+    public enum ASTNodes {
 
         /**
          * Element Symbol
@@ -237,7 +237,7 @@ public class TeiidNodeFactory {
 
         private String name;
 
-        CommonNodes(String name) {
+        ASTNodes(String name) {
             this.name = name;
         }
 
@@ -272,14 +272,14 @@ public class TeiidNodeFactory {
 
     /**
      * Create a parser node for the node with the given common node name
-     * @see TeiidParser#createCommonNode(CommonNodes)
+     * @see TeiidParser#createASTNode(ASTNodes)
      *
      * @param teiidParser
      * @param nodeType
      *
      * @return node applicable to the given parser
      */
-    public <T extends LanguageObject> T create(TeiidParser teiidParser, CommonNodes nodeType) {
+    public <T extends LanguageObject> T create(TeiidParser teiidParser, ASTNodes nodeType) {
         
         if (isTeiid8Parser(teiidParser)) {
             for (int i = 0; i < Teiid8ParserTreeConstants.jjtNodeName.length; ++i) {
@@ -318,6 +318,8 @@ public class TeiidNodeFactory {
 
         throw new IllegalArgumentException();
     }
+
+    /* ################## Framework for generating the remanined of this class #################### */
 
     private static final String DOT = "."; //$NON-NLS-1$
     private static final String PREFIX = "JJT"; //$NON-NLS-1$

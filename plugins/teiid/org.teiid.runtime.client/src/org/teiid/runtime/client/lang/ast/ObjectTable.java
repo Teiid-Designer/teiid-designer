@@ -5,7 +5,7 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Since;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.CommonNodes;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @Since("8.0.0")
@@ -72,7 +72,7 @@ public class ObjectTable extends FromClause {
      * @param name New name
      */
     public void setName(String name) {
-        this.symbol = this.parser.createCommonNode(CommonNodes.GROUP_SYMBOL);
+        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
     }
 
