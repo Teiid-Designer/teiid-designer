@@ -42,6 +42,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_JDBC));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 		
         AdvisorActionInfo[] infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
@@ -53,6 +54,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_FLAT_FILE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
@@ -64,6 +66,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
@@ -75,6 +78,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.IMPORT_XML_FILE_URL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);
@@ -86,6 +90,7 @@ public class AdvisorGuides implements AdvisorUiConstants {
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.GENERATE_WS_MODELS_FROM_WSDL));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.PREVIEW_DATA));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.DEFINE_VDB));
+		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EDIT_VDB));
 		infoList.add(AdvisorActionFactory.getActionInfo(COMMAND_IDS.EXECUTE_VDB));
 
         infoArray = infoList.toArray(new AdvisorActionInfo[infoList.size()]);

@@ -176,6 +176,7 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 			});
 	        guidesViewer.setLabelProvider(this.actionProvider);
 	        guidesViewer.setContentProvider(this.actionProvider);
+	        syncActionProvider(AdvisorGuides.MODEL_JDBC_SOURCE);
 	        guidesViewer.setInput(guides.getChildren(AdvisorGuides.MODEL_JDBC_SOURCE));
 	        guidesViewer.getTree().addMouseTrackListener(new MouseTrackAdapter() {
 	        	/**
@@ -217,12 +218,17 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
         selectComboItem(getInitialComboSelectionIndex());
         
 	}
+	
+	private void syncActionProvider(String id ) {
+		Properties properties = propertiesManager.getProperties(id);
+		this.actionProvider.setProperties(properties);
+	}
 
     private void selectComboItem(int selectionIndex) {
     	if( selectionIndex >=0 ) {
     		actionGroupCombo.select(selectionIndex);
     		String categoryId = actionGroupCombo.getItem(selectionIndex);
-
+    		syncActionProvider(categoryId);
     		this.guidesViewer.setInput(guides.getChildren(categoryId));
 
     	}
@@ -249,7 +255,13 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
     		cleanProperties(properties);
     	}
     	
+    	syncActionProvider(guideId);
+    	
     	AdvisorActionFactory.executeAction(actionId, properties, true);
+    	
+    	syncActionProvider(guideId);
+    	
+    	this.guidesViewer.refresh();
     }
     
     private void cleanProperties(Properties properties) {
