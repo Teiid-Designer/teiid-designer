@@ -5,6 +5,7 @@ options {
     UNICODE_INPUT = false;
     IGNORE_CASE = true;
     MULTI = true;
+    BUILD_NODE_FILES = false;
     NODE_PREFIX = "";
     NODE_SCOPE_HOOK = true;
     NODE_USES_PARSER = true;
