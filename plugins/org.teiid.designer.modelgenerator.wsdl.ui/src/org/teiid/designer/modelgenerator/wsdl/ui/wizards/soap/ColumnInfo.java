@@ -36,7 +36,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
     /** Constant value indicating no segments */
     private static final String[] NO_SEGMENTS = new String[0];
 	
-	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false);
 	
 	private final SchemaPath EMPTY_PATH = new SchemaPath(StringUtilities.EMPTY_STRING);
 	

@@ -87,7 +87,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		return Util.getString(I18N_PREFIX + id, param);
 	}
 
-	RelationalStringNameValidator validator = new RelationalStringNameValidator(true, true);
+	RelationalStringNameValidator validator = new RelationalStringNameValidator(true);
 	
 	// View Model Variables
 	private Text viewModelContainerText;

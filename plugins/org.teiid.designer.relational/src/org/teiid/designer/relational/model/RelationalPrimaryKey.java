@@ -38,7 +38,7 @@ public class RelationalPrimaryKey extends RelationalReference {
         super();
         setType(TYPES.PK);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -49,7 +49,7 @@ public class RelationalPrimaryKey extends RelationalReference {
         super(name);
         setType(TYPES.PK);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**

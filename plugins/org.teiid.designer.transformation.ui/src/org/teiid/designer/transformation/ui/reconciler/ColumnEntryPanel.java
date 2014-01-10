@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -57,7 +57,7 @@ public class ColumnEntryPanel extends Composite implements ModifyListener {
     private int length = 0;
     private ColumnEntryDialog dlg;
     private Button datatypeButton;
-    private StringNameValidator nameValidator;
+    private RelationalStringNameValidator nameValidator;
 
     /**
      * Constructor.
@@ -201,7 +201,7 @@ public class ColumnEntryPanel extends Composite implements ModifyListener {
      * @return
      */
     private boolean isValidColumn( String text ) {
-        if (nameValidator == null) nameValidator = new StringNameValidator();
+        if (nameValidator == null) nameValidator = new RelationalStringNameValidator();
 
         return nameValidator.isValidName(text);
     }

@@ -104,7 +104,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn() {
         super();
         setType(TYPES.COLUMN);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -114,7 +114,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn( String name ) {
         super(name);
         setType(TYPES.COLUMN);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
 
     /**

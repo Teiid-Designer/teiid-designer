@@ -1888,7 +1888,7 @@ public abstract class ModelUtilities implements UiConstants {
         String uniqueName = targetName;
 
         if( mr != null && !overwrite ) {
-            RelationalStringNameValidator nameValidator = new RelationalStringNameValidator(isTable, true);
+            RelationalStringNameValidator nameValidator = new RelationalStringNameValidator(isTable);
             try {
                 // Load the name validator with EObject names
                 for( Object eObj : mr.getEObjects() ) {

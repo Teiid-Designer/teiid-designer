@@ -183,7 +183,7 @@
             category="Relational">
       </preference>
       <preference
-            toolTip="Restrict names to valid unquoted sql identifiers ?"
+            toolTip="Restrict names to valid unquoted sql identifiers. First character must be a letter and '.' must be quoted and ' ' are not allowed. ?"
             name="nameCharacterRestriction"
             label="%nameCharacterRestriction"
             default="ignore"

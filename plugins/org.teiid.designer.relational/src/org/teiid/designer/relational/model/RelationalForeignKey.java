@@ -54,7 +54,7 @@ public class RelationalForeignKey extends RelationalReference {
         super();
         setType(TYPES.FK);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -65,7 +65,7 @@ public class RelationalForeignKey extends RelationalReference {
         super(name);
         setType(TYPES.FK);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     @Override

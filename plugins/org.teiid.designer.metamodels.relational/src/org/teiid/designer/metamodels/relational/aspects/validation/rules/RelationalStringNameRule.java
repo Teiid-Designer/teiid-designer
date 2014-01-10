@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.relational.aspects.validation.rules;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -21,7 +22,6 @@ import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
 import org.teiid.designer.core.validation.rules.StringNameRule;
 import org.teiid.designer.metamodels.relational.AccessPattern;
-import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.ForeignKey;
@@ -32,7 +32,6 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueKey;
-import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 

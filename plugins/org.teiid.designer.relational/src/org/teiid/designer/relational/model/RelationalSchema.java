@@ -37,7 +37,7 @@ public class RelationalSchema extends RelationalReference {
         this.indexes = new ArrayList<RelationalIndex>();
         this.procedures = new ArrayList<RelationalProcedure>();
         this.tables = new ArrayList<RelationalTable>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -50,7 +50,7 @@ public class RelationalSchema extends RelationalReference {
         this.indexes = new ArrayList<RelationalIndex>();
         this.procedures = new ArrayList<RelationalProcedure>();
         this.tables = new ArrayList<RelationalTable>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**

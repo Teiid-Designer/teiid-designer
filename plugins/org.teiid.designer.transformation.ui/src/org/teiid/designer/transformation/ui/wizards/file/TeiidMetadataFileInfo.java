@@ -41,7 +41,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants, ITeiidMetadataFileInfo {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
-	private static final StringNameValidator validator = new RelationalStringNameValidator(false, true);
+	private static final StringNameValidator validator = new RelationalStringNameValidator(false);
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
