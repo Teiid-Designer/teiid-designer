@@ -47,6 +47,28 @@ public class IsNullCriteria extends Criteria {
         this.negated = negated;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        result = prime * result + (this.negated ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        IsNullCriteria other = (IsNullCriteria)obj;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        if (this.negated != other.negated) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

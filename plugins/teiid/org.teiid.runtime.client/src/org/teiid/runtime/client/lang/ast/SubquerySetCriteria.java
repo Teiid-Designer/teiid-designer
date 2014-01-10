@@ -8,6 +8,7 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
 public class SubquerySetCriteria extends AbstractSetCriteria {
 
     private QueryCommand command;
+
     private SubqueryHint subqueryHint;
 
     public SubquerySetCriteria(int id) {
@@ -40,6 +41,30 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
      */
     public QueryCommand getCommand() {
         return this.command;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.command == null) ? 0 : this.command.hashCode());
+        result = prime * result + ((this.subqueryHint == null) ? 0 : this.subqueryHint.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SubquerySetCriteria other = (SubquerySetCriteria)obj;
+        if (this.command == null) {
+            if (other.command != null) return false;
+        } else if (!this.command.equals(other.command)) return false;
+        if (this.subqueryHint == null) {
+            if (other.subqueryHint != null) return false;
+        } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;
+        return true;
     }
 
     /** Accept the visitor. **/

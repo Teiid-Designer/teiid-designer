@@ -127,6 +127,36 @@ public class MatchCriteria extends Criteria {
         this.mode = mode;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + this.escapeChar;
+        result = prime * result + ((this.leftExpression == null) ? 0 : this.leftExpression.hashCode());
+        result = prime * result + ((this.mode == null) ? 0 : this.mode.hashCode());
+        result = prime * result + (this.negated ? 1231 : 1237);
+        result = prime * result + ((this.rightExpression == null) ? 0 : this.rightExpression.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        MatchCriteria other = (MatchCriteria)obj;
+        if (this.escapeChar != other.escapeChar) return false;
+        if (this.leftExpression == null) {
+            if (other.leftExpression != null) return false;
+        } else if (!this.leftExpression.equals(other.leftExpression)) return false;
+        if (this.mode != other.mode) return false;
+        if (this.negated != other.negated) return false;
+        if (this.rightExpression == null) {
+            if (other.rightExpression != null) return false;
+        } else if (!this.rightExpression.equals(other.rightExpression)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

@@ -105,6 +105,24 @@ public class SimpleNode implements Node, LanguageObject {
             }
         }
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + this.id;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SimpleNode other = (SimpleNode)obj;
+        if (this.id != other.id) return false;
+        return true;
+    }
 }
 
 /* JavaCC - OriginalChecksum=3993b98b61510cfa6ed488fcdfd2afcf (do not edit this line) */

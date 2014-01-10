@@ -119,6 +119,50 @@ public class XMLSerialize extends SimpleNode implements Expression {
         return typeString;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.declaration == null) ? 0 : this.declaration.hashCode());
+        result = prime * result + ((this.document == null) ? 0 : this.document.hashCode());
+        result = prime * result + ((this.encoding == null) ? 0 : this.encoding.hashCode());
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        result = prime * result + ((this.typeString == null) ? 0 : this.typeString.hashCode());
+        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLSerialize other = (XMLSerialize)obj;
+        if (this.declaration == null) {
+            if (other.declaration != null) return false;
+        } else if (!this.declaration.equals(other.declaration)) return false;
+        if (this.document == null) {
+            if (other.document != null) return false;
+        } else if (!this.document.equals(other.document)) return false;
+        if (this.encoding == null) {
+            if (other.encoding != null) return false;
+        } else if (!this.encoding.equals(other.encoding)) return false;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        if (this.type == null) {
+            if (other.type != null) return false;
+        } else if (!this.type.equals(other.type)) return false;
+        if (this.typeString == null) {
+            if (other.typeString != null) return false;
+        } else if (!this.typeString.equals(other.typeString)) return false;
+        if (this.version == null) {
+            if (other.version != null) return false;
+        } else if (!this.version.equals(other.version)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

@@ -87,4 +87,33 @@ public class Symbol extends SimpleNode {
     public void setCanonicalShortName(String canonicalShortName) {
         this.canonicalShortName = canonicalShortName;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.canonicalShortName == null) ? 0 : this.canonicalShortName.hashCode());
+        result = prime * result + ((this.shortName == null) ? 0 : this.shortName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Symbol other = (Symbol)obj;
+        if (this.canonicalShortName == null) {
+            if (other.canonicalShortName != null) return false;
+        } else if (!this.canonicalShortName.equals(other.canonicalShortName)) return false;
+        if (this.shortName == null) {
+            if (other.shortName != null) return false;
+        } else if (!this.shortName.equals(other.shortName)) return false;
+        return true;
+    }
+
+    /** Accept the visitor. **/
+    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+        visitor.visit(this, data);
+    }
 }

@@ -114,6 +114,42 @@ public class DynamicCommand extends Command {
         this.updatingModelCount = count;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.asClauseSet ? 1231 : 1237);
+        result = prime * result + ((this.asColumns == null) ? 0 : this.asColumns.hashCode());
+        result = prime * result + ((this.intoGroup == null) ? 0 : this.intoGroup.hashCode());
+        result = prime * result + ((this.sql == null) ? 0 : this.sql.hashCode());
+        result = prime * result + this.updatingModelCount;
+        result = prime * result + ((this.using == null) ? 0 : this.using.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        DynamicCommand other = (DynamicCommand)obj;
+        if (this.asClauseSet != other.asClauseSet) return false;
+        if (this.asColumns == null) {
+            if (other.asColumns != null) return false;
+        } else if (!this.asColumns.equals(other.asColumns)) return false;
+        if (this.intoGroup == null) {
+            if (other.intoGroup != null) return false;
+        } else if (!this.intoGroup.equals(other.intoGroup)) return false;
+        if (this.sql == null) {
+            if (other.sql != null) return false;
+        } else if (!this.sql.equals(other.sql)) return false;
+        if (this.updatingModelCount != other.updatingModelCount) return false;
+        if (this.using == null) {
+            if (other.using != null) return false;
+        } else if (!this.using.equals(other.using)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

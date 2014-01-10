@@ -59,6 +59,34 @@ public class WhileStatement extends Statement implements Labeled {
         whileBlock = block;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.condition == null) ? 0 : this.condition.hashCode());
+        result = prime * result + ((this.label == null) ? 0 : this.label.hashCode());
+        result = prime * result + ((this.whileBlock == null) ? 0 : this.whileBlock.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        WhileStatement other = (WhileStatement)obj;
+        if (this.condition == null) {
+            if (other.condition != null) return false;
+        } else if (!this.condition.equals(other.condition)) return false;
+        if (this.label == null) {
+            if (other.label != null) return false;
+        } else if (!this.label.equals(other.label)) return false;
+        if (this.whileBlock == null) {
+            if (other.whileBlock != null) return false;
+        } else if (!this.whileBlock.equals(other.whileBlock)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

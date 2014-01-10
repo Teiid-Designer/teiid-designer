@@ -31,6 +31,26 @@ public class Drop extends Command {
         this.table = table;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.table == null) ? 0 : this.table.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Drop other = (Drop)obj;
+        if (this.table == null) {
+            if (other.table != null) return false;
+        } else if (!this.table.equals(other.table)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

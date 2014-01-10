@@ -237,6 +237,36 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.aggregate == null) ? 0 : this.aggregate.hashCode());
+        result = prime * result + ((this.condition == null) ? 0 : this.condition.hashCode());
+        result = prime * result + (this.distinct ? 1231 : 1237);
+        result = prime * result + (this.isWindowed ? 1231 : 1237);
+        result = prime * result + ((this.orderBy == null) ? 0 : this.orderBy.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Aggregate8Symbol other = (Aggregate8Symbol)obj;
+        if (this.aggregate != other.aggregate) return false;
+        if (this.condition == null) {
+            if (other.condition != null) return false;
+        } else if (!this.condition.equals(other.condition)) return false;
+        if (this.distinct != other.distinct) return false;
+        if (this.isWindowed != other.isWindowed) return false;
+        if (this.orderBy == null) {
+            if (other.orderBy != null) return false;
+        } else if (!this.orderBy.equals(other.orderBy)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit((AggregateSymbol)this, data);

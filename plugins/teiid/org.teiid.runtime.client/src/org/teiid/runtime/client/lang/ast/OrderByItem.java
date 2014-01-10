@@ -45,6 +45,30 @@ public class OrderByItem extends SimpleNode implements SortSpecification {
         this.nullOrdering = nullOrdering;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.ascending ? 1231 : 1237);
+        result = prime * result + ((this.nullOrdering == null) ? 0 : this.nullOrdering.hashCode());
+        result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        OrderByItem other = (OrderByItem)obj;
+        if (this.ascending != other.ascending) return false;
+        if (this.nullOrdering != other.nullOrdering) return false;
+        if (this.symbol == null) {
+            if (other.symbol != null) return false;
+        } else if (!this.symbol.equals(other.symbol)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

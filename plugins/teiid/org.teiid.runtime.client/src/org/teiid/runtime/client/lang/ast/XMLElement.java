@@ -85,6 +85,38 @@ public class XMLElement extends SimpleNode implements Expression {
         return DataTypeManagerService.DefaultDataTypes.XML.getTypeClass();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.attributes == null) ? 0 : this.attributes.hashCode());
+        result = prime * result + ((this.content == null) ? 0 : this.content.hashCode());
+        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+        result = prime * result + ((this.namespaces == null) ? 0 : this.namespaces.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLElement other = (XMLElement)obj;
+        if (this.attributes == null) {
+            if (other.attributes != null) return false;
+        } else if (!this.attributes.equals(other.attributes)) return false;
+        if (this.content == null) {
+            if (other.content != null) return false;
+        } else if (!this.content.equals(other.content)) return false;
+        if (this.name == null) {
+            if (other.name != null) return false;
+        } else if (!this.name.equals(other.name)) return false;
+        if (this.namespaces == null) {
+            if (other.namespaces != null) return false;
+        } else if (!this.namespaces.equals(other.namespaces)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

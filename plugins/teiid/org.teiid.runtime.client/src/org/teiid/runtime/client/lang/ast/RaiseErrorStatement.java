@@ -26,6 +26,26 @@ public class RaiseErrorStatement extends Statement {
         this.expression = expression;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        RaiseErrorStatement other = (RaiseErrorStatement)obj;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

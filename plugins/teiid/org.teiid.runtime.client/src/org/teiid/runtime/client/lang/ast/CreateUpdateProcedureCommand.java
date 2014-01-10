@@ -52,6 +52,28 @@ public class CreateUpdateProcedureCommand extends Command {
         this.isUpdateProcedure = isUpdateProcedure;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.block == null) ? 0 : this.block.hashCode());
+        result = prime * result + (this.isUpdateProcedure ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        CreateUpdateProcedureCommand other = (CreateUpdateProcedureCommand)obj;
+        if (this.block == null) {
+            if (other.block != null) return false;
+        } else if (!this.block.equals(other.block)) return false;
+        if (this.isUpdateProcedure != other.isUpdateProcedure) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

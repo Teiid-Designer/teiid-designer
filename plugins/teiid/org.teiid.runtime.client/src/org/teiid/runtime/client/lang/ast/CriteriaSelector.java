@@ -76,6 +76,28 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
         return (elements != null && !elements.isEmpty());
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.elements == null) ? 0 : this.elements.hashCode());
+        result = prime * result + ((this.selectorType == null) ? 0 : this.selectorType.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        CriteriaSelector other = (CriteriaSelector)obj;
+        if (this.elements == null) {
+            if (other.elements != null) return false;
+        } else if (!this.elements.equals(other.elements)) return false;
+        if (this.selectorType != other.selectorType) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

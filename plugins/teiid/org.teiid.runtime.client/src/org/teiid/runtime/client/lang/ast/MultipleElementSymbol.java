@@ -79,6 +79,30 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
         return null;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.elementSymbols == null) ? 0 : this.elementSymbols.hashCode());
+        result = prime * result + ((this.group == null) ? 0 : this.group.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        MultipleElementSymbol other = (MultipleElementSymbol)obj;
+        if (this.elementSymbols == null) {
+            if (other.elementSymbols != null) return false;
+        } else if (!this.elementSymbols.equals(other.elementSymbols)) return false;
+        if (this.group == null) {
+            if (other.group != null) return false;
+        } else if (!this.group.equals(other.group)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

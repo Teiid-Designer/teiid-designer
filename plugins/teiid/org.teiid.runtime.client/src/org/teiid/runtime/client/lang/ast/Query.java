@@ -151,6 +151,52 @@ public class Query extends QueryCommand {
         this.selectList = selectList;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.criteria == null) ? 0 : this.criteria.hashCode());
+        result = prime * result + ((this.from == null) ? 0 : this.from.hashCode());
+        result = prime * result + ((this.groupBy == null) ? 0 : this.groupBy.hashCode());
+        result = prime * result + ((this.having == null) ? 0 : this.having.hashCode());
+        result = prime * result + ((this.into == null) ? 0 : this.into.hashCode());
+        result = prime * result + (this.isXML ? 1231 : 1237);
+        result = prime * result + ((this.select == null) ? 0 : this.select.hashCode());
+        result = prime * result + ((this.selectList == null) ? 0 : this.selectList.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Query other = (Query)obj;
+        if (this.criteria == null) {
+            if (other.criteria != null) return false;
+        } else if (!this.criteria.equals(other.criteria)) return false;
+        if (this.from == null) {
+            if (other.from != null) return false;
+        } else if (!this.from.equals(other.from)) return false;
+        if (this.groupBy == null) {
+            if (other.groupBy != null) return false;
+        } else if (!this.groupBy.equals(other.groupBy)) return false;
+        if (this.having == null) {
+            if (other.having != null) return false;
+        } else if (!this.having.equals(other.having)) return false;
+        if (this.into == null) {
+            if (other.into != null) return false;
+        } else if (!this.into.equals(other.into)) return false;
+        if (this.isXML != other.isXML) return false;
+        if (this.select == null) {
+            if (other.select != null) return false;
+        } else if (!this.select.equals(other.select)) return false;
+        if (this.selectList == null) {
+            if (other.selectList != null) return false;
+        } else if (!this.selectList.equals(other.selectList)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

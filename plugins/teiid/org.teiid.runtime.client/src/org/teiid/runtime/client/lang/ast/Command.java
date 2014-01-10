@@ -50,6 +50,30 @@ public class Command extends SimpleNode {
         this.sourceHint = sourceHint;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.option == null) ? 0 : this.option.hashCode());
+        result = prime * result + ((this.sourceHint == null) ? 0 : this.sourceHint.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Command other = (Command)obj;
+        if (this.option == null) {
+            if (other.option != null) return false;
+        } else if (!this.option.equals(other.option)) return false;
+        if (this.sourceHint == null) {
+            if (other.sourceHint != null) return false;
+        } else if (!this.sourceHint.equals(other.sourceHint)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

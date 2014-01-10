@@ -65,6 +65,38 @@ public class XMLQuery extends SimpleNode implements Expression {
         return DataTypeManagerService.DefaultDataTypes.XML.getTypeClass();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.emptyOnEmpty == null) ? 0 : this.emptyOnEmpty.hashCode());
+        result = prime * result + ((this.namespaces == null) ? 0 : this.namespaces.hashCode());
+        result = prime * result + ((this.passing == null) ? 0 : this.passing.hashCode());
+        result = prime * result + ((this.xquery == null) ? 0 : this.xquery.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLQuery other = (XMLQuery)obj;
+        if (this.emptyOnEmpty == null) {
+            if (other.emptyOnEmpty != null) return false;
+        } else if (!this.emptyOnEmpty.equals(other.emptyOnEmpty)) return false;
+        if (this.namespaces == null) {
+            if (other.namespaces != null) return false;
+        } else if (!this.namespaces.equals(other.namespaces)) return false;
+        if (this.passing == null) {
+            if (other.passing != null) return false;
+        } else if (!this.passing.equals(other.passing)) return false;
+        if (this.xquery == null) {
+            if (other.xquery != null) return false;
+        } else if (!this.xquery.equals(other.xquery)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

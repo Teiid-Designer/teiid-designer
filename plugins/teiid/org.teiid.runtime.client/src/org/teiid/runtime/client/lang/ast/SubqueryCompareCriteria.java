@@ -86,6 +86,28 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
         return scalarSubquery;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.command == null) ? 0 : this.command.hashCode());
+        result = prime * result + ((this.predicateQuantifier == null) ? 0 : this.predicateQuantifier.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SubqueryCompareCriteria other = (SubqueryCompareCriteria)obj;
+        if (this.command == null) {
+            if (other.command != null) return false;
+        } else if (!this.command.equals(other.command)) return false;
+        if (this.predicateQuantifier != other.predicateQuantifier) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

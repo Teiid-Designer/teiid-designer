@@ -50,6 +50,30 @@ public class XMLParse extends SimpleNode implements Expression {
         this.wellFormed = wellFormed;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.document ? 1231 : 1237);
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        result = prime * result + (this.wellFormed ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLParse other = (XMLParse)obj;
+        if (this.document != other.document) return false;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        if (this.wellFormed != other.wellFormed) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

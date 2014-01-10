@@ -79,6 +79,38 @@ public class LoopStatement extends AssignmentStatement implements Labeled {
         this.query = query;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.cursorName == null) ? 0 : this.cursorName.hashCode());
+        result = prime * result + ((this.label == null) ? 0 : this.label.hashCode());
+        result = prime * result + ((this.loopBlock == null) ? 0 : this.loopBlock.hashCode());
+        result = prime * result + ((this.query == null) ? 0 : this.query.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        LoopStatement other = (LoopStatement)obj;
+        if (this.cursorName == null) {
+            if (other.cursorName != null) return false;
+        } else if (!this.cursorName.equals(other.cursorName)) return false;
+        if (this.label == null) {
+            if (other.label != null) return false;
+        } else if (!this.label.equals(other.label)) return false;
+        if (this.loopBlock == null) {
+            if (other.loopBlock != null) return false;
+        } else if (!this.loopBlock.equals(other.loopBlock)) return false;
+        if (this.query == null) {
+            if (other.query != null) return false;
+        } else if (!this.query.equals(other.query)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

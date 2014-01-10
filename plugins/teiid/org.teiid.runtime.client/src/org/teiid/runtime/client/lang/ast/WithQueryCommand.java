@@ -54,6 +54,34 @@ public class WithQueryCommand extends SimpleNode {
         this.queryExpression = queryExpression;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.columns == null) ? 0 : this.columns.hashCode());
+        result = prime * result + ((this.groupSymbol == null) ? 0 : this.groupSymbol.hashCode());
+        result = prime * result + ((this.queryExpression == null) ? 0 : this.queryExpression.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        WithQueryCommand other = (WithQueryCommand)obj;
+        if (this.columns == null) {
+            if (other.columns != null) return false;
+        } else if (!this.columns.equals(other.columns)) return false;
+        if (this.groupSymbol == null) {
+            if (other.groupSymbol != null) return false;
+        } else if (!this.groupSymbol.equals(other.groupSymbol)) return false;
+        if (this.queryExpression == null) {
+            if (other.queryExpression != null) return false;
+        } else if (!this.queryExpression.equals(other.queryExpression)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

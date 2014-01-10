@@ -101,6 +101,36 @@ public class Option extends SimpleNode {
         this.noCache = noCache;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.makeDependentGroups == null) ? 0 : this.makeDependentGroups.hashCode());
+        result = prime * result + ((this.makeNotDependentGroups == null) ? 0 : this.makeNotDependentGroups.hashCode());
+        result = prime * result + (this.noCache ? 1231 : 1237);
+        result = prime * result + ((this.noCacheGroups == null) ? 0 : this.noCacheGroups.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Option other = (Option)obj;
+        if (this.makeDependentGroups == null) {
+            if (other.makeDependentGroups != null) return false;
+        } else if (!this.makeDependentGroups.equals(other.makeDependentGroups)) return false;
+        if (this.makeNotDependentGroups == null) {
+            if (other.makeNotDependentGroups != null) return false;
+        } else if (!this.makeNotDependentGroups.equals(other.makeNotDependentGroups)) return false;
+        if (this.noCache != other.noCache) return false;
+        if (this.noCacheGroups == null) {
+            if (other.noCacheGroups != null) return false;
+        } else if (!this.noCacheGroups.equals(other.noCacheGroups)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

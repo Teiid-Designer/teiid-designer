@@ -101,6 +101,44 @@ public class XMLTable extends FromClause {
         this.namespaces = namespaces;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.columns == null) ? 0 : this.columns.hashCode());
+        result = prime * result + ((this.namespaces == null) ? 0 : this.namespaces.hashCode());
+        result = prime * result + ((this.passing == null) ? 0 : this.passing.hashCode());
+        result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
+        result = prime * result + (this.usingDefaultColumn ? 1231 : 1237);
+        result = prime * result + ((this.xquery == null) ? 0 : this.xquery.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLTable other = (XMLTable)obj;
+        if (this.columns == null) {
+            if (other.columns != null) return false;
+        } else if (!this.columns.equals(other.columns)) return false;
+        if (this.namespaces == null) {
+            if (other.namespaces != null) return false;
+        } else if (!this.namespaces.equals(other.namespaces)) return false;
+        if (this.passing == null) {
+            if (other.passing != null) return false;
+        } else if (!this.passing.equals(other.passing)) return false;
+        if (this.symbol == null) {
+            if (other.symbol != null) return false;
+        } else if (!this.symbol.equals(other.symbol)) return false;
+        if (this.usingDefaultColumn != other.usingDefaultColumn) return false;
+        if (this.xquery == null) {
+            if (other.xquery != null) return false;
+        } else if (!this.xquery.equals(other.xquery)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

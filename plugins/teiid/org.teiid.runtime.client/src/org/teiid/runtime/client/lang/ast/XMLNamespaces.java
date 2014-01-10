@@ -31,6 +31,26 @@ public class XMLNamespaces extends SimpleNode {
         this.namespaceItems = namespaceItems;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.namespaceItems == null) ? 0 : this.namespaceItems.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLNamespaces other = (XMLNamespaces)obj;
+        if (this.namespaceItems == null) {
+            if (other.namespaceItems != null) return false;
+        } else if (!this.namespaceItems.equals(other.namespaceItems)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

@@ -55,6 +55,34 @@ public class ArrayTable extends FromClause {
         this.symbol.setName(name);
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.arrayValue == null) ? 0 : this.arrayValue.hashCode());
+        result = prime * result + ((this.columns == null) ? 0 : this.columns.hashCode());
+        result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        ArrayTable other = (ArrayTable)obj;
+        if (this.arrayValue == null) {
+            if (other.arrayValue != null) return false;
+        } else if (!this.arrayValue.equals(other.arrayValue)) return false;
+        if (this.columns == null) {
+            if (other.columns != null) return false;
+        } else if (!this.columns.equals(other.columns)) return false;
+        if (this.symbol == null) {
+            if (other.symbol != null) return false;
+        } else if (!this.symbol.equals(other.symbol)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

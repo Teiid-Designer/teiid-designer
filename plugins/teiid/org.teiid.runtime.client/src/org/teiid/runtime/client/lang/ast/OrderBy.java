@@ -22,6 +22,26 @@ public class OrderBy extends SimpleNode {
         return this.orderByItems;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.orderByItems == null) ? 0 : this.orderByItems.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        OrderBy other = (OrderBy)obj;
+        if (this.orderByItems == null) {
+            if (other.orderByItems != null) return false;
+        } else if (!this.orderByItems.equals(other.orderByItems)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

@@ -55,6 +55,34 @@ public class QueryCommand extends Command {
         this.with = with;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.limit == null) ? 0 : this.limit.hashCode());
+        result = prime * result + ((this.orderBy == null) ? 0 : this.orderBy.hashCode());
+        result = prime * result + ((this.with == null) ? 0 : this.with.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        QueryCommand other = (QueryCommand)obj;
+        if (this.limit == null) {
+            if (other.limit != null) return false;
+        } else if (!this.limit.equals(other.limit)) return false;
+        if (this.orderBy == null) {
+            if (other.orderBy != null) return false;
+        } else if (!this.orderBy.equals(other.orderBy)) return false;
+        if (this.with == null) {
+            if (other.with != null) return false;
+        } else if (!this.with.equals(other.with)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

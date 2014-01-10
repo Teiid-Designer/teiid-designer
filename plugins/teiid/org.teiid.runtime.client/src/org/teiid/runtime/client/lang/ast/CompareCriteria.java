@@ -56,6 +56,30 @@ public class CompareCriteria extends AbstractCompareCriteria {
         return isOptional == null || isOptional;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.isOptional == null) ? 0 : this.isOptional.hashCode());
+        result = prime * result + ((this.rightExpression == null) ? 0 : this.rightExpression.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        CompareCriteria other = (CompareCriteria)obj;
+        if (this.isOptional == null) {
+            if (other.isOptional != null) return false;
+        } else if (!this.isOptional.equals(other.isOptional)) return false;
+        if (this.rightExpression == null) {
+            if (other.rightExpression != null) return false;
+        } else if (!this.rightExpression.equals(other.rightExpression)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

@@ -163,6 +163,42 @@ public class CaseExpression extends SimpleNode implements Expression {
         this.type = type;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.elseExpression == null) ? 0 : this.elseExpression.hashCode());
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        result = prime * result + ((this.then == null) ? 0 : this.then.hashCode());
+        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        result = prime * result + ((this.when == null) ? 0 : this.when.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        CaseExpression other = (CaseExpression)obj;
+        if (this.elseExpression == null) {
+            if (other.elseExpression != null) return false;
+        } else if (!this.elseExpression.equals(other.elseExpression)) return false;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        if (this.then == null) {
+            if (other.then != null) return false;
+        } else if (!this.then.equals(other.then)) return false;
+        if (this.type == null) {
+            if (other.type != null) return false;
+        } else if (!this.type.equals(other.type)) return false;
+        if (this.when == null) {
+            if (other.when != null) return false;
+        } else if (!this.when.equals(other.when)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

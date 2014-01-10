@@ -41,6 +41,26 @@ public class Constant extends SimpleNode implements Expression {
         return this.value;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Constant other = (Constant)obj;
+        if (this.type == null) {
+            if (other.type != null) return false;
+        } else if (!this.type.equals(other.type)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

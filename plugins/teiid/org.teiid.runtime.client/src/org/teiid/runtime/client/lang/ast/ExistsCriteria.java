@@ -55,6 +55,34 @@ public class ExistsCriteria extends Criteria {
         this.subqueryHint = subqueryHint;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.command == null) ? 0 : this.command.hashCode());
+        result = prime * result + (this.negated ? 1231 : 1237);
+        result = prime * result + (this.shouldEvaluate ? 1231 : 1237);
+        result = prime * result + ((this.subqueryHint == null) ? 0 : this.subqueryHint.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        ExistsCriteria other = (ExistsCriteria)obj;
+        if (this.command == null) {
+            if (other.command != null) return false;
+        } else if (!this.command.equals(other.command)) return false;
+        if (this.negated != other.negated) return false;
+        if (this.shouldEvaluate != other.shouldEvaluate) return false;
+        if (this.subqueryHint == null) {
+            if (other.subqueryHint != null) return false;
+        } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

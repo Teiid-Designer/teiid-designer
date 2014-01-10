@@ -46,6 +46,30 @@ public class UnaryFromClause extends FromClause {
         this.expandedCommand = expandedCommand;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.expandedCommand == null) ? 0 : this.expandedCommand.hashCode());
+        result = prime * result + ((this.groupSymbol == null) ? 0 : this.groupSymbol.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        UnaryFromClause other = (UnaryFromClause)obj;
+        if (this.expandedCommand == null) {
+            if (other.expandedCommand != null) return false;
+        } else if (!this.expandedCommand.equals(other.expandedCommand)) return false;
+        if (this.groupSymbol == null) {
+            if (other.groupSymbol != null) return false;
+        } else if (!this.groupSymbol.equals(other.groupSymbol)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

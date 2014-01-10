@@ -133,6 +133,42 @@ public class StoredProcedure extends Command {
         this.isProcedureRelational = isProcedureRelational;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.calledWithReturn ? 1231 : 1237);
+        result = prime * result + (this.displayNamedParameters ? 1231 : 1237);
+        result = prime * result + (this.isCallableStatement ? 1231 : 1237);
+        result = prime * result + (this.isProcedureRelational ? 1231 : 1237);
+        result = prime * result + ((this.mapOfParameters == null) ? 0 : this.mapOfParameters.hashCode());
+        result = prime * result + ((this.procedureName == null) ? 0 : this.procedureName.hashCode());
+        result = prime * result + ((this.resultSetParameterKey == null) ? 0 : this.resultSetParameterKey.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        StoredProcedure other = (StoredProcedure)obj;
+        if (this.calledWithReturn != other.calledWithReturn) return false;
+        if (this.displayNamedParameters != other.displayNamedParameters) return false;
+        if (this.isCallableStatement != other.isCallableStatement) return false;
+        if (this.isProcedureRelational != other.isProcedureRelational) return false;
+        if (this.mapOfParameters == null) {
+            if (other.mapOfParameters != null) return false;
+        } else if (!this.mapOfParameters.equals(other.mapOfParameters)) return false;
+        if (this.procedureName == null) {
+            if (other.procedureName != null) return false;
+        } else if (!this.procedureName.equals(other.procedureName)) return false;
+        if (this.resultSetParameterKey == null) {
+            if (other.resultSetParameterKey != null) return false;
+        } else if (!this.resultSetParameterKey.equals(other.resultSetParameterKey)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

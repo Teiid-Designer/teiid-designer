@@ -56,6 +56,34 @@ public class Limit extends SimpleNode {
         this.rowLimit = rowLimit;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.implicit ? 1231 : 1237);
+        result = prime * result + ((this.offset == null) ? 0 : this.offset.hashCode());
+        result = prime * result + ((this.rowLimit == null) ? 0 : this.rowLimit.hashCode());
+        result = prime * result + (this.strict ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Limit other = (Limit)obj;
+        if (this.implicit != other.implicit) return false;
+        if (this.offset == null) {
+            if (other.offset != null) return false;
+        } else if (!this.offset.equals(other.offset)) return false;
+        if (this.rowLimit == null) {
+            if (other.rowLimit != null) return false;
+        } else if (!this.rowLimit.equals(other.rowLimit)) return false;
+        if (this.strict != other.strict) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

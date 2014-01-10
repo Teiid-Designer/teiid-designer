@@ -51,6 +51,30 @@ public class ScalarSubquery extends SimpleNode implements Expression {
         this.type = type;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.command == null) ? 0 : this.command.hashCode());
+        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        ScalarSubquery other = (ScalarSubquery)obj;
+        if (this.command == null) {
+            if (other.command != null) return false;
+        } else if (!this.command.equals(other.command)) return false;
+        if (this.type == null) {
+            if (other.type != null) return false;
+        } else if (!this.type.equals(other.type)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

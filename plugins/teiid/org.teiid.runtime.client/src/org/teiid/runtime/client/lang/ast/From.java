@@ -33,6 +33,26 @@ public class From extends SimpleNode {
         this.clauses = clauses;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.clauses == null) ? 0 : this.clauses.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        From other = (From)obj;
+        if (this.clauses == null) {
+            if (other.clauses != null) return false;
+        } else if (!this.clauses.equals(other.clauses)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

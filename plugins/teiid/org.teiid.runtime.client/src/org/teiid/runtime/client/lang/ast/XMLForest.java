@@ -41,6 +41,30 @@ public class XMLForest extends SimpleNode implements Expression {
         this.args = args;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.args == null) ? 0 : this.args.hashCode());
+        result = prime * result + ((this.namespaces == null) ? 0 : this.namespaces.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        XMLForest other = (XMLForest)obj;
+        if (this.args == null) {
+            if (other.args != null) return false;
+        } else if (!this.args.equals(other.args)) return false;
+        if (this.namespaces == null) {
+            if (other.namespaces != null) return false;
+        } else if (!this.namespaces.equals(other.namespaces)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

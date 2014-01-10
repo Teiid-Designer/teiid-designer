@@ -79,6 +79,34 @@ public class IfStatement extends Statement {
         this.condition = criteria;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.condition == null) ? 0 : this.condition.hashCode());
+        result = prime * result + ((this.elseBlock == null) ? 0 : this.elseBlock.hashCode());
+        result = prime * result + ((this.ifBlock == null) ? 0 : this.ifBlock.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        IfStatement other = (IfStatement)obj;
+        if (this.condition == null) {
+            if (other.condition != null) return false;
+        } else if (!this.condition.equals(other.condition)) return false;
+        if (this.elseBlock == null) {
+            if (other.elseBlock != null) return false;
+        } else if (!this.elseBlock.equals(other.elseBlock)) return false;
+        if (this.ifBlock == null) {
+            if (other.ifBlock != null) return false;
+        } else if (!this.ifBlock.equals(other.ifBlock)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

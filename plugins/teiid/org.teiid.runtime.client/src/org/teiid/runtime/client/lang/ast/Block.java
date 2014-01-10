@@ -99,6 +99,40 @@ public class Block extends Statement implements Labeled {
         this.exceptionGroup = exceptionGroup;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.atomic ? 1231 : 1237);
+        result = prime * result + ((this.exceptionGroup == null) ? 0 : this.exceptionGroup.hashCode());
+        result = prime * result + ((this.exceptionStatements == null) ? 0 : this.exceptionStatements.hashCode());
+        result = prime * result + ((this.label == null) ? 0 : this.label.hashCode());
+        result = prime * result + ((this.statements == null) ? 0 : this.statements.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Block other = (Block)obj;
+        if (this.atomic != other.atomic) return false;
+        if (this.exceptionGroup == null) {
+            if (other.exceptionGroup != null) return false;
+        } else if (!this.exceptionGroup.equals(other.exceptionGroup)) return false;
+        if (this.exceptionStatements == null) {
+            if (other.exceptionStatements != null) return false;
+        } else if (!this.exceptionStatements.equals(other.exceptionStatements)) return false;
+        if (this.label == null) {
+            if (other.label != null) return false;
+        } else if (!this.label.equals(other.label)) return false;
+        if (this.statements == null) {
+            if (other.statements != null) return false;
+        } else if (!this.statements.equals(other.statements)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

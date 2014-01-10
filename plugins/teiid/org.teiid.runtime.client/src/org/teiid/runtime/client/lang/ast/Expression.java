@@ -36,4 +36,16 @@ public interface Expression extends LanguageObject {
      */
     Class<?> getType();
 
+    /**
+     * @param obj
+     * @return whether this is equal to obj
+     */
+    @Override
+    boolean equals(Object obj);
+
+    /**
+     * @return hashcode of this object
+     */
+    @Override
+    int hashCode();
 }

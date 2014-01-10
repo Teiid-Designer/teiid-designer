@@ -49,6 +49,28 @@ public class BranchingStatement extends Statement {
         return mode;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.label == null) ? 0 : this.label.hashCode());
+        result = prime * result + ((this.mode == null) ? 0 : this.mode.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        BranchingStatement other = (BranchingStatement)obj;
+        if (this.label == null) {
+            if (other.label != null) return false;
+        } else if (!this.label.equals(other.label)) return false;
+        if (this.mode != other.mode) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

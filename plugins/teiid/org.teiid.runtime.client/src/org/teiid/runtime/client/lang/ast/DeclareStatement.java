@@ -33,6 +33,26 @@ public class DeclareStatement extends AssignmentStatement {
         this.varType = varType;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.varType == null) ? 0 : this.varType.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        DeclareStatement other = (DeclareStatement)obj;
+        if (this.varType == null) {
+            if (other.varType != null) return false;
+        } else if (!this.varType.equals(other.varType)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

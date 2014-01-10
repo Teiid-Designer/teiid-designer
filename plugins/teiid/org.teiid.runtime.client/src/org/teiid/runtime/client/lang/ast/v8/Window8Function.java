@@ -70,6 +70,30 @@ public class Window8Function extends SimpleNode implements WindowFunction {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.function == null) ? 0 : this.function.hashCode());
+        result = prime * result + ((this.windowSpecification == null) ? 0 : this.windowSpecification.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Window8Function other = (Window8Function)obj;
+        if (this.function == null) {
+            if (other.function != null) return false;
+        } else if (!this.function.equals(other.function)) return false;
+        if (this.windowSpecification == null) {
+            if (other.windowSpecification != null) return false;
+        } else if (!this.windowSpecification.equals(other.windowSpecification)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     @Override
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {

@@ -79,6 +79,36 @@ public class BetweenCriteria extends Criteria {
         this.negated = negated;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
+        result = prime * result + ((this.lowerExpression == null) ? 0 : this.lowerExpression.hashCode());
+        result = prime * result + (this.negated ? 1231 : 1237);
+        result = prime * result + ((this.upperExpression == null) ? 0 : this.upperExpression.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        BetweenCriteria other = (BetweenCriteria)obj;
+        if (this.expression == null) {
+            if (other.expression != null) return false;
+        } else if (!this.expression.equals(other.expression)) return false;
+        if (this.lowerExpression == null) {
+            if (other.lowerExpression != null) return false;
+        } else if (!this.lowerExpression.equals(other.lowerExpression)) return false;
+        if (this.negated != other.negated) return false;
+        if (this.upperExpression == null) {
+            if (other.upperExpression != null) return false;
+        } else if (!this.upperExpression.equals(other.upperExpression)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

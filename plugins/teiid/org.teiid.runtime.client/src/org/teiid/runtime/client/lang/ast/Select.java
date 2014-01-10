@@ -87,6 +87,28 @@ public class Select extends SimpleNode {
         return this.distinct;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.distinct ? 1231 : 1237);
+        result = prime * result + ((this.symbols == null) ? 0 : this.symbols.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Select other = (Select)obj;
+        if (this.distinct != other.distinct) return false;
+        if (this.symbols == null) {
+            if (other.symbols != null) return false;
+        } else if (!this.symbols.equals(other.symbols)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

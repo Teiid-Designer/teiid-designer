@@ -3,6 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.ast.JoinType.Kind;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class JoinPredicate extends FromClause {
@@ -21,6 +23,8 @@ public class JoinPredicate extends FromClause {
 
     public JoinPredicate(TeiidParser p, int id) {
         super(p, id);
+        joinType = p.createASTNode(ASTNodes.JOIN_TYPE);
+        joinType.setKind(Kind.JOIN_INNER);
     }
 
     /**
@@ -85,6 +89,38 @@ public class JoinPredicate extends FromClause {
      */
     public List getJoinCriteria() {
         return this.joinCriteria;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.joinCriteria == null) ? 0 : this.joinCriteria.hashCode());
+        result = prime * result + ((this.joinType == null) ? 0 : this.joinType.hashCode());
+        result = prime * result + ((this.leftClause == null) ? 0 : this.leftClause.hashCode());
+        result = prime * result + ((this.rightClause == null) ? 0 : this.rightClause.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        JoinPredicate other = (JoinPredicate)obj;
+        if (this.joinCriteria == null) {
+            if (other.joinCriteria != null) return false;
+        } else if (!this.joinCriteria.equals(other.joinCriteria)) return false;
+        if (this.joinType == null) {
+            if (other.joinType != null) return false;
+        } else if (!this.joinType.equals(other.joinType)) return false;
+        if (this.leftClause == null) {
+            if (other.leftClause != null) return false;
+        } else if (!this.leftClause.equals(other.leftClause)) return false;
+        if (this.rightClause == null) {
+            if (other.rightClause != null) return false;
+        } else if (!this.rightClause.equals(other.rightClause)) return false;
+        return true;
     }
 
     /** Accept the visitor. **/

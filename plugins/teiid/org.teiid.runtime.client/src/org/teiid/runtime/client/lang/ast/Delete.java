@@ -52,6 +52,30 @@ public class Delete extends Command {
         this.criteria = criteria;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.criteria == null) ? 0 : this.criteria.hashCode());
+        result = prime * result + ((this.group == null) ? 0 : this.group.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Delete other = (Delete)obj;
+        if (this.criteria == null) {
+            if (other.criteria != null) return false;
+        } else if (!this.criteria.equals(other.criteria)) return false;
+        if (this.group == null) {
+            if (other.group != null) return false;
+        } else if (!this.group.equals(other.group)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

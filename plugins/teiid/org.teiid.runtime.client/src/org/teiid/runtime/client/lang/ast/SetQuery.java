@@ -74,6 +74,34 @@ public class SetQuery extends QueryCommand {
         this.rightQuery = rightQuery;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.all ? 1231 : 1237);
+        result = prime * result + ((this.leftQuery == null) ? 0 : this.leftQuery.hashCode());
+        result = prime * result + ((this.operation == null) ? 0 : this.operation.hashCode());
+        result = prime * result + ((this.rightQuery == null) ? 0 : this.rightQuery.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        SetQuery other = (SetQuery)obj;
+        if (this.all != other.all) return false;
+        if (this.leftQuery == null) {
+            if (other.leftQuery != null) return false;
+        } else if (!this.leftQuery.equals(other.leftQuery)) return false;
+        if (this.operation != other.operation) return false;
+        if (this.rightQuery == null) {
+            if (other.rightQuery != null) return false;
+        } else if (!this.rightQuery.equals(other.rightQuery)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

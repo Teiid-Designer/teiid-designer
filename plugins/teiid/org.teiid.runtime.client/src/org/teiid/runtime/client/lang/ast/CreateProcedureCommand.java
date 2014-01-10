@@ -33,6 +33,26 @@ public class CreateProcedureCommand extends Command {
         this.block = block;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.block == null) ? 0 : this.block.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        CreateProcedureCommand other = (CreateProcedureCommand)obj;
+        if (this.block == null) {
+            if (other.block != null) return false;
+        } else if (!this.block.equals(other.block)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

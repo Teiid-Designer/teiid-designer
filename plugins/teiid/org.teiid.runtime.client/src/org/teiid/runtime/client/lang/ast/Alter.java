@@ -122,6 +122,40 @@ public class Alter extends Command {
         this.enabled = enabled;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.alterType == null) ? 0 : this.alterType.hashCode());
+        result = prime * result + (this.create ? 1231 : 1237);
+        result = prime * result + ((this.definition == null) ? 0 : this.definition.hashCode());
+        result = prime * result + ((this.enabled == null) ? 0 : this.enabled.hashCode());
+        result = prime * result + ((this.event == null) ? 0 : this.event.hashCode());
+        result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Alter other = (Alter)obj;
+        if (this.alterType != other.alterType) return false;
+        if (this.create != other.create) return false;
+        if (this.definition == null) {
+            if (other.definition != null) return false;
+        } else if (!this.definition.equals(other.definition)) return false;
+        if (this.enabled == null) {
+            if (other.enabled != null) return false;
+        } else if (!this.enabled.equals(other.enabled)) return false;
+        if (this.event != other.event) return false;
+        if (this.target == null) {
+            if (other.target != null) return false;
+        } else if (!this.target.equals(other.target)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

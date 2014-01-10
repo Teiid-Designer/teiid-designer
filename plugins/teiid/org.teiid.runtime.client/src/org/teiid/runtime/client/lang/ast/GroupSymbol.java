@@ -33,6 +33,26 @@ public class GroupSymbol extends Symbol {
         this.definition = definition;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.definition == null) ? 0 : this.definition.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        GroupSymbol other = (GroupSymbol)obj;
+        if (this.definition == null) {
+            if (other.definition != null) return false;
+        } else if (!this.definition.equals(other.definition)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

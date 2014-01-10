@@ -46,6 +46,30 @@ public class ObjectColumn extends ProjectedColumn {
         this.defaultExpression = defaultExpression;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.defaultExpression == null) ? 0 : this.defaultExpression.hashCode());
+        result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        ObjectColumn other = (ObjectColumn)obj;
+        if (this.defaultExpression == null) {
+            if (other.defaultExpression != null) return false;
+        } else if (!this.defaultExpression.equals(other.defaultExpression)) return false;
+        if (this.path == null) {
+            if (other.path != null) return false;
+        } else if (!this.path.equals(other.path)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

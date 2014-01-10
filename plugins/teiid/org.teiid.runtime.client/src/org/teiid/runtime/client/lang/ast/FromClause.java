@@ -80,6 +80,34 @@ public class FromClause extends SimpleNode {
         this.preserve = preserve;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.makeDep ? 1231 : 1237);
+        result = prime * result + (this.makeInd ? 1231 : 1237);
+        result = prime * result + (this.makeNotDep ? 1231 : 1237);
+        result = prime * result + (this.noUnnest ? 1231 : 1237);
+        result = prime * result + (this.optional ? 1231 : 1237);
+        result = prime * result + (this.preserve ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        FromClause other = (FromClause)obj;
+        if (this.makeDep != other.makeDep) return false;
+        if (this.makeInd != other.makeInd) return false;
+        if (this.makeNotDep != other.makeNotDep) return false;
+        if (this.noUnnest != other.noUnnest) return false;
+        if (this.optional != other.optional) return false;
+        if (this.preserve != other.preserve) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

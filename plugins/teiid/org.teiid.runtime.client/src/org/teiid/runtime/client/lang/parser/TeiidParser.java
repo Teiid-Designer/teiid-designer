@@ -7,6 +7,7 @@
 */
 package org.teiid.runtime.client.lang.parser;
 
+import java.io.Reader;
 import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.Command;
@@ -23,6 +24,13 @@ public interface TeiidParser {
      * @return dataTypeManagerService
      */
     DataTypeManagerService getDataTypeService();
+
+    /**
+     * Reinitialise the parser against the new sql reader
+     *
+     * @param sql
+     */
+    void ReInit(Reader sql);
 
     /**
      * @param nodeType

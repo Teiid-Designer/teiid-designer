@@ -130,6 +130,44 @@ public class Insert extends Command {
         this.merge = merge;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.constraint == null) ? 0 : this.constraint.hashCode());
+        result = prime * result + ((this.group == null) ? 0 : this.group.hashCode());
+        result = prime * result + (this.merge ? 1231 : 1237);
+        result = prime * result + ((this.queryExpression == null) ? 0 : this.queryExpression.hashCode());
+        result = prime * result + ((this.values == null) ? 0 : this.values.hashCode());
+        result = prime * result + ((this.variables == null) ? 0 : this.variables.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Insert other = (Insert)obj;
+        if (this.constraint == null) {
+            if (other.constraint != null) return false;
+        } else if (!this.constraint.equals(other.constraint)) return false;
+        if (this.group == null) {
+            if (other.group != null) return false;
+        } else if (!this.group.equals(other.group)) return false;
+        if (this.merge != other.merge) return false;
+        if (this.queryExpression == null) {
+            if (other.queryExpression != null) return false;
+        } else if (!this.queryExpression.equals(other.queryExpression)) return false;
+        if (this.values == null) {
+            if (other.values != null) return false;
+        } else if (!this.values.equals(other.values)) return false;
+        if (this.variables == null) {
+            if (other.variables != null) return false;
+        } else if (!this.variables.equals(other.variables)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

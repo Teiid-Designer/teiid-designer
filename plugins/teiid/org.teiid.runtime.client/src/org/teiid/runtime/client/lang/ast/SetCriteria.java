@@ -32,6 +32,26 @@ public class SetCriteria extends AbstractSetCriteria {
         this.values = values;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.values == null) ? 0 : this.values.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        SetCriteria other = (SetCriteria)obj;
+        if (this.values == null) {
+            if (other.values != null) return false;
+        } else if (!this.values.equals(other.values)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

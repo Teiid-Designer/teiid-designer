@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Arrays;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Function extends SimpleNode implements Expression {
@@ -74,6 +75,32 @@ public class Function extends SimpleNode implements Expression {
      */
     public void setType(Class<?> type) {
         this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + Arrays.hashCode(this.args);
+        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        Function other = (Function)obj;
+        if (!Arrays.equals(this.args, other.args)) return false;
+        if (this.name == null) {
+            if (other.name != null) return false;
+        } else if (!this.name.equals(other.name)) return false;
+        if (this.type == null) {
+            if (other.type != null) return false;
+        } else if (!this.type.equals(other.type)) return false;
+        return true;
     }
 
     /** Accept the visitor. **/

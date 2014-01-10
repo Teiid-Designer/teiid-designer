@@ -78,4 +78,26 @@ public abstract class AbstractCompareCriteria extends Criteria implements Criter
     }
 
     public abstract Expression getRightExpression();
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.leftExpression == null) ? 0 : this.leftExpression.hashCode());
+        result = prime * result + ((this.operator == null) ? 0 : this.operator.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        AbstractCompareCriteria other = (AbstractCompareCriteria)obj;
+        if (this.leftExpression == null) {
+            if (other.leftExpression != null) return false;
+        } else if (!this.leftExpression.equals(other.leftExpression)) return false;
+        if (this.operator != other.operator) return false;
+        return true;
+    }
 }

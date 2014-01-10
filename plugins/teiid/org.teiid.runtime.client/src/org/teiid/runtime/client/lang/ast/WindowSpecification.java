@@ -47,6 +47,30 @@ public class WindowSpecification extends SimpleNode {
         this.orderBy = orderBy;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.orderBy == null) ? 0 : this.orderBy.hashCode());
+        result = prime * result + ((this.partition == null) ? 0 : this.partition.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        WindowSpecification other = (WindowSpecification)obj;
+        if (this.orderBy == null) {
+            if (other.orderBy != null) return false;
+        } else if (!this.orderBy.equals(other.orderBy)) return false;
+        if (this.partition == null) {
+            if (other.partition != null) return false;
+        } else if (!this.partition.equals(other.partition)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

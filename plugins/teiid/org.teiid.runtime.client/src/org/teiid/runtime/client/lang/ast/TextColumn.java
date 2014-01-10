@@ -78,6 +78,36 @@ public class TextColumn extends ProjectedColumn {
         this.position = position;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (this.noTrim ? 1231 : 1237);
+        result = prime * result + ((this.position == null) ? 0 : this.position.hashCode());
+        result = prime * result + ((this.selector == null) ? 0 : this.selector.hashCode());
+        result = prime * result + ((this.width == null) ? 0 : this.width.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        TextColumn other = (TextColumn)obj;
+        if (this.noTrim != other.noTrim) return false;
+        if (this.position == null) {
+            if (other.position != null) return false;
+        } else if (!this.position.equals(other.position)) return false;
+        if (this.selector == null) {
+            if (other.selector != null) return false;
+        } else if (!this.selector.equals(other.selector)) return false;
+        if (this.width == null) {
+            if (other.width != null) return false;
+        } else if (!this.width.equals(other.width)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);

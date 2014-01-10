@@ -70,6 +70,40 @@ public class TextLine extends SimpleNode implements Expression {
         return String[].class;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.delimiter == null) ? 0 : this.delimiter.hashCode());
+        result = prime * result + ((this.encoding == null) ? 0 : this.encoding.hashCode());
+        result = prime * result + ((this.expressions == null) ? 0 : this.expressions.hashCode());
+        result = prime * result + (this.includeHeader ? 1231 : 1237);
+        result = prime * result + ((this.quote == null) ? 0 : this.quote.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!super.equals(obj)) return false;
+        if (getClass() != obj.getClass()) return false;
+        TextLine other = (TextLine)obj;
+        if (this.delimiter == null) {
+            if (other.delimiter != null) return false;
+        } else if (!this.delimiter.equals(other.delimiter)) return false;
+        if (this.encoding == null) {
+            if (other.encoding != null) return false;
+        } else if (!this.encoding.equals(other.encoding)) return false;
+        if (this.expressions == null) {
+            if (other.expressions != null) return false;
+        } else if (!this.expressions.equals(other.expressions)) return false;
+        if (this.includeHeader != other.includeHeader) return false;
+        if (this.quote == null) {
+            if (other.quote != null) return false;
+        } else if (!this.quote.equals(other.quote)) return false;
+        return true;
+    }
+
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit(this, data);
