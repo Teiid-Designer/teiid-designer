@@ -556,8 +556,6 @@ public class TransformationMappingHelper implements ISQLConstants {
                         TransformationPlugin.Util.log(IStatus.WARNING, e, message);
                     }
                 }
-            } else if (fd.getMetadataID() instanceof EObject) {
-            	allAliases.add(new EObjectAlias((EObject) fd.getMetadataID(), fd.getName()));
             }
 		}
         
