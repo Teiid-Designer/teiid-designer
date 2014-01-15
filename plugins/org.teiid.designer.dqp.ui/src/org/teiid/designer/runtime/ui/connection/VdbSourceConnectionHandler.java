@@ -33,6 +33,8 @@ import org.teiid.designer.runtime.connection.ModelConnectionMapper;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
@@ -282,41 +284,44 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                 if (translator != null) {
                     Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
                     
-                    // NOTE: Currently translator.getPropertyDefinitions() will only return property definitions for
-                    // the resource-adapter properties and NOT the translator, so need to comment this out for the time
-                    // being
-//                    for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
-//                        TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
-//                        prop.advanced = propDefn.isAdvanced();
-//                        prop.description = propDefn.getDescription();
-//                        prop.displayName = propDefn.getDisplayName();
-//                        prop.id = propDefn.getName();
-//                        prop.masked = propDefn.isMasked();
-//                        prop.modifiable = propDefn.isModifiable();
-//                        prop.required = propDefn.isRequired();
-//
-//                        prop.defaultValue = (propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
-//                                                                                : propDefn.getDefaultValue().toString();
-//
-//                        if (propDefn.isConstrainedToAllowedValues()) {
-//                            Collection values = propDefn.getAllowedValues();
-//                            prop.allowedValues = new String[values.size()];
-//                            int i = 0;
-//
-//                            for (Object value : values) {
-//                                prop.allowedValues[i++] = value.toString();
-//                            }
-//                        } else {
-//                            // if boolean type turn into allowed values
-//                            String type = propDefn.getPropertyTypeClassName();
-//
-//                            if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
-//                                prop.allowedValues = new String[] { Boolean.TRUE.toString(), Boolean.FALSE.toString() };
-//                            }
-//                        }
-//
-//                        props.add(prop);
-//                    }
+                    // NOTE: For server versions prior to 8.6, translator.getPropertyDefinitions() will only return property definitions for
+                    // the resource-adapter properties and NOT the translator.
+                    // So added the check and ignore getting translator properties if version < 8.6
+                    
+                    if( !defaultServer.getServerVersion().isLessThan(TeiidServerVersion.TEIID_8_6_SERVER)) {
+	                    for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
+	                        TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
+	                        prop.advanced = propDefn.isAdvanced();
+	                        prop.description = propDefn.getDescription();
+	                        prop.displayName = propDefn.getDisplayName();
+	                        prop.id = propDefn.getName();
+	                        prop.masked = propDefn.isMasked();
+	                        prop.modifiable = propDefn.isModifiable();
+	                        prop.required = propDefn.isRequired();
+	
+	                        prop.defaultValue = (propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+	                                                                                : propDefn.getDefaultValue().toString();
+	
+	                        if (propDefn.isConstrainedToAllowedValues()) {
+	                            Collection values = propDefn.getAllowedValues();
+	                            prop.allowedValues = new String[values.size()];
+	                            int i = 0;
+	
+	                            for (Object value : values) {
+	                                prop.allowedValues[i++] = value.toString();
+	                            }
+	                        } else {
+	                            // if boolean type turn into allowed values
+	                            String type = propDefn.getPropertyTypeClassName();
+	
+	                            if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
+	                                prop.allowedValues = new String[] { Boolean.TRUE.toString(), Boolean.FALSE.toString() };
+	                            }
+	                        }
+	
+	                        props.add(prop);
+	                    }
+                    }
 
                     return props.toArray(new PropertyDefinition[props.size()]);
                 }
