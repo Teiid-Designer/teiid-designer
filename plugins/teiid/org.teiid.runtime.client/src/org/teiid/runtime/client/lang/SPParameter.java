@@ -25,6 +25,7 @@ package org.teiid.runtime.client.lang;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.ElementSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
@@ -171,7 +172,7 @@ public class SPParameter {
     public void setParameterType(int parameterType){
         // validate against above types
         if(parameterType < ParameterInfo.IN.index() || parameterType > ParameterInfo.RESULT_SET.index()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0006, parameterType));
         }
         this.parameterType = parameterType;
     }
@@ -285,7 +286,7 @@ public class SPParameter {
      */
     public ElementSymbol getResultSetColumn(int position){
         if(resultSetColumns == null){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0009));
         }
 
         //position is 1 based
@@ -293,7 +294,7 @@ public class SPParameter {
         if(position >= 0 && position < resultSetColumns.size()) {
             return resultSetColumns.get(position);
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0010, new Integer(position + 1)));
     }
 
     /**

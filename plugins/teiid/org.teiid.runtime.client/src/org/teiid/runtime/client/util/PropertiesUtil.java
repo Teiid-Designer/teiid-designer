@@ -8,6 +8,8 @@
 package org.teiid.runtime.client.util;
 
 import java.util.Properties;
+import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 /**
  *
@@ -26,7 +28,8 @@ public class PropertiesUtil {
         try {
             return Boolean.valueOf(stringVal);
         } catch(NumberFormatException e) {
-              throw new IllegalStateException();
+            String msg = Messages.getString(Messages.InvalidPropertyException.message, propName, stringVal, Float.class.getSimpleName());
+            throw new RuntimeException(new TeiidClientException(e, msg));
         }
     }
 }

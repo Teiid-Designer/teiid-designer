@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.AliasSymbol;
 import org.teiid.runtime.client.lang.ast.Alter;
@@ -174,7 +175,7 @@ public class TeiidNodeFactory {
             }
         }
 
-        throw new IllegalStateException();
+        throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType.getName(), teiidParser.getVersion()));
     }
 
     /**
@@ -191,7 +192,7 @@ public class TeiidNodeFactory {
         else if (isTeiid7Parser(teiidParser))
             return create((Teiid7Parser) teiidParser, nodeType);
 
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
     }
 
     /* ################## Framework for generating the remainder of this class #################### */
@@ -403,7 +404,11 @@ public class TeiidNodeFactory {
 
             // Complete switch statement
             createMethodBuffer.append(TAB + TAB + "default:" + NEWLINE); //$NON-NLS-1$
-            createMethodBuffer.append(TAB + TAB + TAB + "throw new IllegalStateException()" + SEMI_COLON + NEWLINE); //$NON-NLS-1$
+            createMethodBuffer.append(TAB + TAB + TAB);
+            createMethodBuffer.append("throw new IllegalArgumentException(" //$NON-NLS-1$
+                                                                + "Messages.getString(Messages.TeiidParser.invalidNodeType, " //$NON-NLS-1$
+                                                                + "nodeType, teiidParser.getVersion()));"); //$NON-NLS-1$
+            createMethodBuffer.append(SEMI_COLON + NEWLINE);
             createMethodBuffer.append(TAB + "}" + NEWLINE); //$NON-NLS-1$
             createMethodBuffer.append("}" + NEWLINE + NEWLINE); //$NON-NLS-1$
         }
@@ -462,7 +467,7 @@ public class TeiidNodeFactory {
       else if (isTeiid7Parser(teiidParser))
           return new Window7Function((Teiid7Parser) teiidParser, nodeType);
 
-        throw new IllegalStateException();
+        throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
     }
 
     /**
@@ -476,7 +481,7 @@ public class TeiidNodeFactory {
         else if (isTeiid7Parser(teiidParser))
             return new Aggregate7Symbol((Teiid7Parser) teiidParser, nodeType);
         
-        throw new IllegalStateException();
+        throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
     }
 
     /*
@@ -2309,7 +2314,7 @@ public class TeiidNodeFactory {
             case Teiid7ParserTreeConstants.JJTTEXTLINE:
                 return (T) createTextLine(teiidParser, nodeType);
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
         }
     }
 
@@ -2497,7 +2502,7 @@ public class TeiidNodeFactory {
             case Teiid8ParserTreeConstants.JJTTEXTLINE:
                 return (T) createTextLine(teiidParser, nodeType);
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
         }
     }
 }

@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
@@ -39,7 +40,7 @@ public class OrderBy extends SimpleNode {
      */
     public void addVariable( Expression element, boolean type ) {
         if(element == null)
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0021));
 
         OrderByItem orderByItem = parser.createASTNode(ASTNodes.ORDER_BY_ITEM);
         orderByItem.setSymbol(element);

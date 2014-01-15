@@ -138,9 +138,9 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         
         String finalSQLString = null;
         if(metadataFileInfo.isUrl()) {
-        	finalSQLString = Messages.getString("procedureServiceTextInvokeHttpTableSqlTemplate", tokens.toArray(new Object[0])); //$NON-NLS-1$
+        	finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceTextInvokeHttpTableSqlTemplate, tokens.toArray(new Object[0])); 
         } else {
-        	finalSQLString = Messages.getString("procedureServiceTextTableSqlTemplate", tokens.toArray(new Object[0])); //$NON-NLS-1$
+        	finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceTextTableSqlTemplate, tokens.toArray(new Object[0])); 
         }
         return finalSQLString;
     }
@@ -256,9 +256,9 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         
         if( xmlFileInfo.isUrl() ) {
             // SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-            finalSQLString = Messages.getString("procedureServiceXmlInvokeHttpTableSqlTemplate", tokens.toArray(new Object[0])); //$NON-NLS-1$
+            finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpTableSqlTemplate, tokens.toArray(new Object[0])); 
         } else {
-            finalSQLString = Messages.getString("procedureServiceXmlGetTextFilesTableSqlTemplate", tokens.toArray(new Object[0])); //$NON-NLS-1$
+            finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlGetTextFilesTableSqlTemplate, tokens.toArray(new Object[0])); 
         }
         return finalSQLString;
     }

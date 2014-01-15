@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class CompoundCriteria extends Criteria {
@@ -53,7 +54,7 @@ public class CompoundCriteria extends Criteria {
      */
     public void setOperator(int operator) {
         if (!isValidOperator(operator)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0002, operator));
         }
         this.operator = operator;
     }

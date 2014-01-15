@@ -42,6 +42,8 @@ import org.teiid.core.types.basic.NumberToShortTransform;
 import org.teiid.core.types.basic.ObjectToAnyTransform;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.runtime.client.util.ArgCheck;
 import org.teiid.runtime.client.util.PropertiesUtil;
 
@@ -532,7 +534,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     private Transform getTransform(String sourceTypeName, String targetTypeName) {
         if (sourceTypeName == null || targetTypeName == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, sourceTypeName, targetTypeName));
         }
         
         DefaultDataTypes sourceType = findDefaultDataType(sourceTypeName);
@@ -543,6 +545,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     @Override
     public boolean isTransformable(String sourceTypeName, String targetTypeName) {
+        if (sourceTypeName == null || targetTypeName == null)
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, sourceTypeName, targetTypeName));
+
         return getTransform(sourceTypeName, targetTypeName) != null;
     }
 
@@ -617,7 +622,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         Transform transform = getTransformFromMaps(sourceDataType, targetDataType);
         if (transform == null) {
             Object[] params = new Object[] { sourceType, targetDataType, value};
-            throw new IllegalStateException();
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10076, params));
         }
 
         T result = (T) transform.transform(value);

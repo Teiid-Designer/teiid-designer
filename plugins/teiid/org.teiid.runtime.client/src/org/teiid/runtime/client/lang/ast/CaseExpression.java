@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Collections;
 import java.util.List;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class CaseExpression extends SimpleNode implements Expression {
@@ -53,7 +54,7 @@ public class CaseExpression extends SimpleNode implements Expression {
      */
     public void setExpression(Expression expr) {
         if (expr == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0035));
         }
         this.expression = expr;
     }
@@ -91,18 +92,18 @@ public class CaseExpression extends SimpleNode implements Expression {
      */
     public void setWhen(List when, List then) {
         if (when == null || then == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
         }
         if (when.size() != then.size() ||
             when.size() < 1) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
         }
         for (int i = 0 ; i < when.size(); i++) {
             if (!(when.get(i) instanceof Expression)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0037));
             }
             if (!(then.get(i) instanceof Expression)) {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0038));
             }
         }
         if (this.when != when) {

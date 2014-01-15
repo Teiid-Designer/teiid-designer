@@ -8,6 +8,7 @@
 package org.teiid.runtime.client.lang.parser;
 
 import java.io.Reader;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.Command;
@@ -20,6 +21,11 @@ import org.teiid.runtime.client.types.DataTypeManagerService;
  *
  */
 public interface TeiidParser {
+
+    /**
+     * @return teiid version of this parser
+     */
+    ITeiidServerVersion getVersion();
 
     /**
      * @return dataTypeManagerService

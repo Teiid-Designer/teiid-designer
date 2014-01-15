@@ -2949,7 +2949,7 @@ int intVal() #void :
 		try { 
 			return Integer.valueOf(t.image); 				
 		} catch(NumberFormatException e1) { 
-			throw new ParseException(Messages.getString("TeiidParser.Integer_parse", t.image)); //$NON-NLS-1$
+			throw new ParseException(Messages.getString(Messages.TeiidParser.Integer_parse, t.image));
 		}
 	}
 }
@@ -3377,7 +3377,7 @@ Character charVal(ParseInfo info, String type) #void :
 	escStr=stringVal()
 	{
 		if (escStr.length() != 1) {
-			throw new ParseException(Messages.getString("TeiidParser.char_val")); //$NON-NLS-1$
+			throw new ParseException(Messages.getString(Messages.TeiidParser.char_val));
 		}
 		return Character.valueOf(escStr.charAt(0));
 	}
@@ -3624,7 +3624,7 @@ Expression sortKey(ParseInfo info) #void :
                 valid = val.intValue() > 0;
             }      
             if (!valid) {
-            	throw new ParseException(Messages.getString("TeiidParser.non_position_constant", ex)); //$NON-NLS-1$
+            	throw new ParseException(Messages.getString(Messages.TeiidParser.non_position_constant, ex));
             }
         } 
         return ex;
@@ -4038,7 +4038,7 @@ Expression windowSpecification(Expression agg, ParseInfo info) #void :
 {
 	<OVER> { 
 	if (!(agg instanceof AggregateSymbol)) {
-	   		throw new ParseException(Messages.getString("TeiidParser.invalid_window", agg)); //$NON-NLS-1$
+	   		throw new ParseException(Messages.getString(Messages.TeiidParser.invalid_window, agg));
     	}
     }
     <LPAREN> 
@@ -4236,7 +4236,7 @@ Expression function(ParseInfo info) #Function :
 	          if (expression instanceof Constant) {
 	              Object value = ((Constant)expression).getValue();
 	              if (value instanceof String && ((String)value).length() != 1) {
-				      throw new ParseException(Messages.getString("TeiidParser.char_val")); //$NON-NLS-1$
+				      throw new ParseException(Messages.getString(Messages.TeiidParser.char_val));
 	              }
 	          }
 	          args.add(expression);
@@ -4737,7 +4737,7 @@ Constant nonNumericLiteral() #void :
 	        	try {
 	        		constant = constant(getDataTypeService().transformValue(strVal, escapeType), escapeType);
 	        	} catch (Exception e) {
-	        		throw new ParseException(e.getMessage()); //$NON-NLS-1$
+	        		throw new ParseException(e.getMessage());
 	        	}
 	        } <RBRACE> )
 
@@ -4772,7 +4772,7 @@ Constant unsignedNumericLiteral(String strVal) #void :
 						return constant(new BigInteger(strVal), DataTypeManagerService.DefaultDataTypes.BIG_INTEGER);
 					} catch(NumberFormatException e3) {
 						Object[] params = new Object[] { strVal };
-						throw new ParseException(Messages.getString("TeiidParser.Integer_parse", params)); //$NON-NLS-1$
+						throw new ParseException(Messages.getString(Messages.TeiidParser.Integer_parse, params));
 					}
 				}
 			}			
@@ -4782,7 +4782,7 @@ Constant unsignedNumericLiteral(String strVal) #void :
 				return constant(Double.valueOf(strVal), DataTypeManagerService.DefaultDataTypes.DOUBLE); 
 			} catch(NumberFormatException e) {
 				Object[] params = new Object[] { strVal };
-				throw new ParseException(Messages.getString("TeiidParser.Float_parse", params)); //$NON-NLS-1$
+				throw new ParseException(Messages.getString(Messages.TeiidParser.Float_parse, params));
 			}
 		}  | t=<DECIMALVAL>	{ 
      		strVal = prependSign(strVal, t.image);
@@ -4794,7 +4794,7 @@ Constant unsignedNumericLiteral(String strVal) #void :
 				}
 			} catch(NumberFormatException e) {
 				Object[] params = new Object[] { t.image };
-				throw new ParseException(Messages.getString("TeiidParser.decimal_parse", params)); //$NON-NLS-1$
+				throw new ParseException(Messages.getString(Messages.TeiidParser.decimal_parse, params));
 			}
 		} )
 }

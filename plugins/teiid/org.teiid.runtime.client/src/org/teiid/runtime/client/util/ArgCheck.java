@@ -4,18 +4,18 @@
  * regarding copyright ownership.  Some portions may be licensed
  * to Red Hat, Inc. under one or more contributor license agreements.
  * 
- * This library is free software; you can redistribute it and/or
+ * This library is free software;you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
+ * License as published by the Free Software Foundation;either
  * version 2.1 of the License, or (at your option) any later version.
  * 
  * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY;without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  * 
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
+ * License along with this library;if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
@@ -31,7 +31,7 @@ import org.teiid.runtime.client.Messages;
  * This class contains a set of static utility methods for checking method arguments.
  * It contains many of the common checks that are done, such as checking that an 
  * Object is non-null, checking the range of a value, etc.  All of these methods
- * throw {@link #java.lang.IllegalArgumentException}.
+ * throw {@link IllegalArgumentException}
  */
 public class ArgCheck {
 
@@ -42,7 +42,7 @@ public class ArgCheck {
 	}
 	
 	/**
-	 * Check that the boolean condition is true; throw an
+	 * Check that the boolean condition is true;throw an
 	 * IllegalArgumentException if not.
 	 * @param condition The boolean condition to check
 	 * @param message Exception message if check fails
@@ -50,7 +50,7 @@ public class ArgCheck {
 	 */
 	public static final void isTrue(boolean condition, String message){
 		if(!condition) {
-			throw new IllegalArgumentException(message);    
+			throw new IllegalArgumentException(message);   
 		}
 	}
 
@@ -75,8 +75,8 @@ public class ArgCheck {
 		if(value < 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNonNegativeInt"); //$NON-NLS-1$
-			throw new IllegalArgumentException(msg);    
+                               Messages.getString(Messages.ArgCheck.isNonNegativeInt);
+			throw new IllegalArgumentException(msg);   
 		}
 	}
 
@@ -99,7 +99,7 @@ public class ArgCheck {
 	    if(value > 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNonPositiveInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNonPositiveInt);
 	        throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -123,7 +123,7 @@ public class ArgCheck {
 	    if(value >= 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNegativeInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNegativeInt);
 	        throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -147,7 +147,7 @@ public class ArgCheck {
 	    if(value <= 0) { 
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isPositiveInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isPositiveInt);
 	        throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -173,8 +173,8 @@ public class ArgCheck {
 		if(value < 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNonNegativeInt"); //$NON-NLS-1$
-			throw new IllegalArgumentException(msg);    
+                               Messages.getString(Messages.ArgCheck.isNonNegativeInt);
+			throw new IllegalArgumentException(msg);   
 		}
 	}
 
@@ -197,7 +197,7 @@ public class ArgCheck {
 	    if(value > 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNonPositiveInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNonPositiveInt);
 	        throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -221,7 +221,7 @@ public class ArgCheck {
 	    if(value >= 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNegativeInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNegativeInt);
             throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -245,7 +245,7 @@ public class ArgCheck {
 	    if(value <= 0) { 
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isPositiveInt"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isPositiveInt);
             throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -272,7 +272,7 @@ public class ArgCheck {
 		if(value.length() <= 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isStringNonZeroLength"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isStringNonZeroLength);
             throw new IllegalArgumentException(msg);
 		}
 	}
@@ -298,7 +298,7 @@ public class ArgCheck {
 	    if(value == null) { 
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNonNull"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNonNull);
             throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -322,7 +322,7 @@ public class ArgCheck {
         if(value != null) { 
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isNull"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isNull);
             throw new IllegalArgumentException(msg);
         }
     }
@@ -349,7 +349,7 @@ public class ArgCheck {
 	    if( ! theClass.isInstance(value) ) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isInstanceOf", theClass.getName(),value.getClass().getName());
+                               Messages.getString(Messages.ArgCheck.isInstanceOf, theClass.getName(),value.getClass().getName());
 	        throw new IllegalArgumentException(msg);
 	    }
 	}
@@ -376,7 +376,7 @@ public class ArgCheck {
         if(collection.isEmpty()) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isCollectionNotEmpty"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isCollectionNotEmpty);
             throw new IllegalArgumentException(msg);
         }
     }
@@ -401,7 +401,7 @@ public class ArgCheck {
         if(map.isEmpty()) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isMapNotEmpty"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isMapNotEmpty);
             throw new IllegalArgumentException(msg);
         }
     }
@@ -428,7 +428,7 @@ public class ArgCheck {
         if(array.length == 0) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.isArrayNotEmpty"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.isArrayNotEmpty);
             throw new IllegalArgumentException(msg);
         }
     }
@@ -458,11 +458,11 @@ public class ArgCheck {
      * Asserts that the specified first object is not the same as (==) the specified second object.
      * @param firstObject  The first object to assert as not the same as the second object.
      * @param firstName    The name that will be used within the exception message for the first object, should an exception be
-     *                      thrown; if null and <code>firstObject</code> is not null, <code>firstObject.toString()</code> will be
+     *                      thrown;if null and <code>firstObject</code> is not null, <code>firstObject.toString()</code> will be
      *                      used.
      * @param secondObject The second object to assert as not the same as the first object.
      * @param secondName   The name that will be used within the exception message for the second object, should an exception be
-     *                      thrown; if null and <code>secondObject</code> is not null, <code>secondObject.toString()</code> will
+     *                      thrown;if null and <code>secondObject</code> is not null, <code>secondObject.toString()</code> will
      *                      be used.
      * @throws IllegalArgumentException If the specified objects are the same.
      * @since 3.1
@@ -475,7 +475,7 @@ public class ArgCheck {
             if (secondName == null && secondObject != null) {
                 secondName = secondObject.toString();
             }
-            throw new IllegalArgumentException(Messages.getString("ArgCheck.isNotSame", firstName, secondName )); //$NON-NLS-1$
+            throw new IllegalArgumentException(Messages.getString(Messages.ArgCheck.isNotSame, firstName, secondName ));
         }
     }
 
@@ -501,7 +501,7 @@ public class ArgCheck {
 		if(! collection.contains(value)) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.contains"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.contains);
             throw new IllegalArgumentException(msg);
 		}
 	}
@@ -528,7 +528,7 @@ public class ArgCheck {
 		if(! map.containsKey(key)) {
             final String msg = message != null ? 
                                message :
-                               Messages.getString("ArgCheck.containsKey"); //$NON-NLS-1$
+                               Messages.getString(Messages.ArgCheck.containsKey);
             throw new IllegalArgumentException(msg);
 		}
 	}

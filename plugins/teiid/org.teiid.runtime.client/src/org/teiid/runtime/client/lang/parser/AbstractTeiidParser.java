@@ -274,9 +274,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     protected String validateName(String id, boolean element) throws Exception {
         if(id.indexOf('.') != -1) { 
-            String key = "TeiidParser.Invalid_alias"; //$NON-NLS-1$
+            Messages.TeiidParser key = Messages.TeiidParser.Invalid_alias;
             if (element) {
-                key = "TeiidParser.Invalid_short_name"; //$NON-NLS-1$
+                key = Messages.TeiidParser.Invalid_short_name;
             }
             throw new Exception(Messages.getString(key, id)); 
         }

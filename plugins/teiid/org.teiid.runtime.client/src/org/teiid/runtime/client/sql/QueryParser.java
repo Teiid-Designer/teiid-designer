@@ -25,6 +25,8 @@ package org.teiid.runtime.client.sql;
 import java.io.Reader;
 import java.io.StringReader;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.ast.Command;
 import org.teiid.runtime.client.lang.ast.Criteria;
@@ -71,7 +73,7 @@ public class QueryParser {
 
 	private TeiidParser createTeiidParser(Reader sql) {
 	    if (sql == null)
-	        throw new IllegalArgumentException();
+	        throw new IllegalArgumentException(Messages.gs(Messages.TEIID.TEIID30377));
 
 	    int major = Integer.parseInt(teiidVersion.getMajor());
 
@@ -84,7 +86,7 @@ public class QueryParser {
 	            teiidParser = new Teiid8Parser(sql);
 	            break;
 	        default:
-	            throw new UnsupportedOperationException();
+	            throw new IllegalStateException(Messages.getString(Messages.TeiidParser.noParserForVersion, major));
 	    }
 
 	    return teiidParser;
@@ -142,7 +144,7 @@ public class QueryParser {
 
 	private Command parseCommand(String sql, ParseInfo parseInfo, boolean designerCommands) throws Exception {
         if(sql == null || sql.length() == 0) {
-             throw new IllegalArgumentException();
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
         }
         
     	Command result = null;
@@ -153,11 +155,20 @@ public class QueryParser {
                 result = getSqlParser(sql).command(parseInfo);
             }
         } catch(Exception e) {
-            throw e;
+           throw convertParserException(e);
         }
 
 		return result;
 	}
+
+    /**
+     * @param e
+     * @return
+     */
+	private TeiidClientException convertParserException(Exception e) {
+        TeiidClientException qpe = new TeiidClientException(e, Messages.getString(Messages.TeiidParser.lexicalError));
+        return qpe;
+    }
 
     /**
      * Takes a SQL string representing an SQL criteria (i.e. just the WHERE
@@ -169,7 +180,7 @@ public class QueryParser {
      */
     public Criteria parseCriteria(String sql) throws Exception {
         if(sql == null) {
-            throw new IllegalArgumentException();
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
         }
 
         ParseInfo dummyInfo = new ParseInfo();
@@ -179,7 +190,7 @@ public class QueryParser {
             result = getSqlParser(sql).criteria(dummyInfo);
 
         } catch(Exception e) {
-            throw e;
+            throw convertParserException(e);
         }
 
         return result;
@@ -195,7 +206,7 @@ public class QueryParser {
      */
     public Expression parseExpression(String sql) throws Exception {
         if(sql == null) {
-            throw new IllegalArgumentException();
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
         }
 
         ParseInfo dummyInfo = new ParseInfo();
@@ -204,7 +215,7 @@ public class QueryParser {
         try{
             result = getSqlParser(sql).expression(dummyInfo);
         } catch (Exception e) {
-            throw e;
+            throw convertParserException(e);
         }
 
         return result;

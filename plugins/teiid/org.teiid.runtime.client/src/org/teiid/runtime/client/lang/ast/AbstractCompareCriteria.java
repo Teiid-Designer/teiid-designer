@@ -7,6 +7,7 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 /**
@@ -56,7 +57,7 @@ public abstract class AbstractCompareCriteria extends Criteria implements Criter
      */
     public void setOperator( Operator operator ) {
         if (operator.isLessThan(Operator.EQ) || operator.isGreaterThan(Operator.GE)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0001, operator));
         }
         this.operator = operator;
     }

@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Collections;
 import java.util.List;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class SearchedCaseExpression extends SimpleNode implements Expression {
@@ -64,12 +65,12 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     */
    public void setWhen(List<? extends Criteria> when, List<? extends Expression> then) {
        if (when == null || then == null) {
-           throw new IllegalArgumentException();
+           throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
        }
 
        if (when.size() != then.size() ||
            when.size() < 1) {
-           throw new IllegalArgumentException();
+           throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
        }
 
        if (this.when != when) {

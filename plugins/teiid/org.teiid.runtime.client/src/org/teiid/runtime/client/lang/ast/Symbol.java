@@ -8,6 +8,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 
@@ -89,7 +90,7 @@ public class Symbol extends SimpleNode {
      */
     public void setShortName(String name) {
         if(name == null) {
-            throw new IllegalArgumentException(); //$NON-NLS-1$
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0017));
         }
         this.shortName = name;
         this.outputName = null;

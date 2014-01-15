@@ -5,6 +5,7 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.SPParameter;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
@@ -94,7 +95,7 @@ public class StoredProcedure extends Command {
     */
     public void setParameter(SPParameter parameter){
         if(parameter == null){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0011));
         }
 
         Integer key = parameter.getIndex();
