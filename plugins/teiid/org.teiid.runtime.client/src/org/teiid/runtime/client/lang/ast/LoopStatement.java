@@ -4,7 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class LoopStatement extends AssignmentStatement implements Labeled {
+public class LoopStatement extends Statement implements Labeled {
 
     private String cursorName;
 

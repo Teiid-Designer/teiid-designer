@@ -32,6 +32,10 @@ public class FromClause extends SimpleNode {
         super(p, id);
     }
 
+    public boolean hasHint() {
+        return optional || makeDep || makeNotDep || makeInd || noUnnest || preserve;
+    }
+
     public boolean isOptional() {
         return optional;
     }

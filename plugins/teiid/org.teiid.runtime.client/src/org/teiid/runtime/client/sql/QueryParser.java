@@ -113,6 +113,20 @@ public class QueryParser {
 	    return parseCommand(sql, new ParseInfo(), false);
 	}
 
+	/**
+     * Takes a SQL string representing a Command and returns the object
+     * representation.
+     *
+     * @param sql SQL string instead of string litral
+	 * @param parseInfo
+     * @return SQL object representation
+     * @throws Exception if parsing fails
+     * @throws IllegalArgumentException if sql is null
+     */ 
+    public Command parseCommand(String sql, ParseInfo parseInfo) throws Exception {
+        return parseCommand(sql, parseInfo, false);
+    }
+
     /**
      * Takes a SQL string representing a Command and returns the object
      * representation.

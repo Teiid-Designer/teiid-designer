@@ -22,6 +22,12 @@ public class ProjectedColumn extends SimpleNode {
     }
 
     public ElementSymbol getSymbol() {
+        if (symbol == null) {
+            this.symbol = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+        }        
+        this.symbol.setName(name);
+        this.symbol.setType(parser.getDataTypeService().getDataTypeClass(type));
+
         return symbol;
     }
 
@@ -37,8 +43,7 @@ public class ProjectedColumn extends SimpleNode {
      */
     public void setName(String name) {
         this.name = name;
-        this.symbol = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
-        this.symbol.setName(name);
+        getSymbol();
     }
 
     /**
@@ -53,6 +58,7 @@ public class ProjectedColumn extends SimpleNode {
      */
     public void setType(String type) {
         this.type = type;
+        getSymbol();
     }
 
     @Override

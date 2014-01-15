@@ -4,6 +4,8 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Block extends Statement implements Labeled {
@@ -27,29 +29,41 @@ public class Block extends Statement implements Labeled {
     }
 
     /**
+     * @return the statements
+     */
+    public List<Statement> getStatements() {
+        return this.statements;
+    }
+
+    /**
      * Add a <code>Statement</code> to this block.
      * @param statement The <code>Statement</code> to be added to the block
      */
     public void addStatement(Statement statement) {
         addStatement(statement, false);
     }
-    
+
     public void addStatement(Statement statement, boolean exception) {
-//        if (statement instanceof AssignmentStatement) {
-//            AssignmentStatement stmt = (AssignmentStatement)statement;
-//            Command cmd = stmt.getCommand();
-//            if (cmd != null) {
-//                internalAddStatement(new CommandStatement(cmd), exception);
-//                stmt.setCommand(null);
-//                stmt.setExpression(null);
-//                if (stmt.getVariable().getShortName().equalsIgnoreCase(ProcedureReservedWords.ROWCOUNT) 
-//                        && stmt.getVariable().getGroupSymbol() != null && stmt.getVariable().getGroupSymbol().getName().equalsIgnoreCase(ProcedureReservedWords.VARIABLES)) {
-//                    return;
-//                }
-//                String fullName = ProcedureReservedWords.VARIABLES+Symbol.SEPARATOR+ProcedureReservedWords.ROWCOUNT;
-//                stmt.setExpression(new ElementSymbol(fullName));
-//            }
-//        }
+        if (statement instanceof AssignmentStatement) {
+            AssignmentStatement stmt = (AssignmentStatement)statement;
+            Command cmd = stmt.getCommand();
+            if (cmd != null) {
+                CommandStatement cs = parser.createASTNode(ASTNodes.COMMAND_STATEMENT);
+                cs.setCommand(cmd);
+                internalAddStatement(cs, exception);
+                stmt.setCommand(null);
+                stmt.setExpression(null);
+                ElementSymbol variable = stmt.getVariable();
+                if (variable != null && variable.getShortName().equalsIgnoreCase(ISQLConstants.ROWCOUNT) 
+                        && variable.getGroupSymbol() != null && variable.getGroupSymbol().getName().equalsIgnoreCase(ISQLConstants.VARIABLES)) {
+                    return;
+                }
+                String fullName = ISQLConstants.VARIABLES + Symbol.SEPARATOR + ISQLConstants.ROWCOUNT;
+                ElementSymbol es = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+                es.setName(fullName);
+                stmt.setExpression(es);
+            }
+        }
         internalAddStatement(statement, exception);
     }
 
@@ -63,6 +77,14 @@ public class Block extends Statement implements Labeled {
             statements.add(statement);
         }
     }
+
+    /**
+     * @param statements the statements to set
+     */
+    public void setStatements(List<Statement> statements) {
+        this.statements = statements;
+    }
+
     /**
      * @return the atomic
      */
@@ -97,6 +119,14 @@ public class Block extends Statement implements Labeled {
      */
     public void setExceptionGroup(String exceptionGroup) {
         this.exceptionGroup = exceptionGroup;
+    }
+
+    public List<Statement> getExceptionStatements() {
+        return exceptionStatements;
+    }
+
+    public void setExceptionStatements(List<Statement> exceptionStatements) {
+        this.exceptionStatements = exceptionStatements;
     }
 
     @Override

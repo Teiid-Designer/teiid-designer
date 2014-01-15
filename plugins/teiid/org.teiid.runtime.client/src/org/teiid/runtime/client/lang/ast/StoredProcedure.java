@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import org.teiid.runtime.client.lang.SPParameter;
@@ -67,6 +68,13 @@ public class StoredProcedure extends Command {
         }
         return null;
     }
+
+    /**
+     * @return a List of SPParameter objects for this stored procedure
+     */
+     public Collection<SPParameter> getParameters(){
+         return mapOfParameters.values();
+     }
 
     public SPParameter getParameter(int index){
         return mapOfParameters.get(index);

@@ -16,13 +16,41 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
  */
 public class Symbol extends SimpleNode {
 
+    /**
+     * Character used to delimit name components in a symbol
+     */
+    public static final String SEPARATOR = "."; //$NON-NLS-1$
+
     private String shortName;
+
+    /**
+     * Prior to resolving null, after resolving it is the exact string
+     * entered in the query.
+     *
+     * The AliasGenerator can also set this value as necessary for the data tier.
+     */
+    protected String outputName;
 
     /** 
      * upper case of name
      */
     @Removed("8.0.0")
     private String canonicalShortName;
+
+    public static String getShortName(Expression ex) {
+        if (ex instanceof Symbol) {
+            return ((Symbol)ex).getShortName();
+        }
+        return "expr"; //$NON-NLS-1$
+    }
+
+    public static String getShortName(String name) {
+        int index = name.lastIndexOf(Symbol.SEPARATOR);
+        if(index >= 0) {
+            return name.substring(index+1);
+        }
+        return name;
+    }
 
     /**
      * @param id
@@ -45,6 +73,7 @@ public class Symbol extends SimpleNode {
 
     /**
      * Get the short name of the element
+     *
      * @return Short name of the symbol (un-dotted)
      */
     public final String getShortName() { 
@@ -55,6 +84,7 @@ public class Symbol extends SimpleNode {
      * Change the symbol's name.  This will change the symbol's hash code
      * and canonical name!!!!!!!!!!!!!!!!!  If this symbol is in a hashed
      * collection, it will be lost!
+     *
      * @param name New name
      */
     public void setShortName(String name) {
@@ -62,6 +92,7 @@ public class Symbol extends SimpleNode {
             throw new IllegalArgumentException(); //$NON-NLS-1$
         }
         this.shortName = name;
+        this.outputName = null;
     }
 
     /**
@@ -77,6 +108,9 @@ public class Symbol extends SimpleNode {
      */
     @Removed("8.0.0")
     public String getCanonicalShortName() {
+        if (canonicalShortName == null) {
+            canonicalShortName = shortName.toUpperCase();
+        }
         return this.canonicalShortName;
     }
 
@@ -88,12 +122,20 @@ public class Symbol extends SimpleNode {
         this.canonicalShortName = canonicalShortName;
     }
 
+    public String getOutputName() {
+        return this.outputName == null ? getName() : this.outputName;
+    }
+
+    public void setOutputName(String outputName) {
+        this.outputName = outputName;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((this.canonicalShortName == null) ? 0 : this.canonicalShortName.hashCode());
-        result = prime * result + ((this.shortName == null) ? 0 : this.shortName.hashCode());
+        result = prime * result + ((this.getName() == null) ? 0 : this.getName().hashCode());
         return result;
     }
 
@@ -106,9 +148,9 @@ public class Symbol extends SimpleNode {
         if (this.canonicalShortName == null) {
             if (other.canonicalShortName != null) return false;
         } else if (!this.canonicalShortName.equals(other.canonicalShortName)) return false;
-        if (this.shortName == null) {
-            if (other.shortName != null) return false;
-        } else if (!this.shortName.equals(other.shortName)) return false;
+        if (this.getName() == null) {
+            if (other.getName() != null) return false;
+        } else if (!this.getName().equalsIgnoreCase(other.getName())) return false;
         return true;
     }
 

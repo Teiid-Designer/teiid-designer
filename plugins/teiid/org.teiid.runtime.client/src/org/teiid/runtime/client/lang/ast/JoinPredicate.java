@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.JoinType.Kind;
@@ -80,7 +81,12 @@ public class JoinPredicate extends FromClause {
      * @param criteria List of {@link Criteria} set on this predicate
      */
     public void setJoinCriteria(List<Criteria> criteria) {
-        this.joinCriteria = criteria;
+        List<Criteria> newCriteria = new ArrayList<Criteria>();
+        for (Criteria criterium : criteria) {
+            newCriteria.addAll(Criteria.separateCriteriaByAnd(criterium));
+        }
+
+        this.joinCriteria = newCriteria;
     }
     
     /**

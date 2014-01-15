@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
@@ -62,6 +63,9 @@ public class CompoundCriteria extends Criteria {
      * @return List of {@link Criteria}
      */
     public List<Criteria> getCriteria() {
+        if (criteria == null)
+            criteria = new ArrayList<Criteria>();
+
         return this.criteria;
     }
 

@@ -9,7 +9,7 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
 
     private QueryCommand command;
 
-    private SubqueryHint subqueryHint;
+    private SubqueryHint subqueryHint = new SubqueryHint();
 
     public SubquerySetCriteria(int id) {
         super(id);

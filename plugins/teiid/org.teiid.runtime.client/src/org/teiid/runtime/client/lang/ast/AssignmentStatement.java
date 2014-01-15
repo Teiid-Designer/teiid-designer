@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class AssignmentStatement extends Statement {
@@ -34,7 +35,12 @@ public class AssignmentStatement extends Statement {
     }
 
     public void setCommand(Command command) {
-        this.command = command;
+        if (command instanceof QueryCommand) {
+            ScalarSubquery ssq = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
+            ssq.setCommand((QueryCommand) command);
+            this.value = ssq;
+        } else
+            this.command = command;
     }
 
     /**

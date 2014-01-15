@@ -17,7 +17,15 @@ public class SetClauseList extends SimpleNode {
     public SetClauseList(TeiidParser p, int id) {
         super(p, id);
     }
-    
+
+    public List<SetClause> getClauses() {
+        return this.setClauses;
+    }
+
+    public boolean isEmpty() {
+        return this.setClauses.isEmpty();
+    }
+
     public void addClause(SetClause clause) {
         this.setClauses.add(clause);
     }

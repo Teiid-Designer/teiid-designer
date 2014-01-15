@@ -6,10 +6,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @Removed("8.0.0")
-public class CreateUpdateProcedureCommand extends Command {
-
-    // top level block for the procedure
-    private Block block;
+public class CreateUpdateProcedureCommand extends CreateProcedureCommand {
 
     //whether it is update procedure or virtual stored procedure, default to update procedure
     private boolean isUpdateProcedure = true;
@@ -20,22 +17,6 @@ public class CreateUpdateProcedureCommand extends Command {
 
     public CreateUpdateProcedureCommand(TeiidParser p, int id) {
         super(p, id);
-    }
-
-    /**
-     * Get the block on this command.
-     * @return The <code>Block</code> on this command
-     */
-    public Block getBlock() {
-        return block;
-    }
-
-    /**
-     * Set the block on this command.
-     * @param block The <code>Block</code> on this command
-     */
-    public void setBlock(Block block) {
-        this.block = block;
     }
 
     /**
@@ -56,7 +37,6 @@ public class CreateUpdateProcedureCommand extends Command {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((this.block == null) ? 0 : this.block.hashCode());
         result = prime * result + (this.isUpdateProcedure ? 1231 : 1237);
         return result;
     }
@@ -67,9 +47,6 @@ public class CreateUpdateProcedureCommand extends Command {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         CreateUpdateProcedureCommand other = (CreateUpdateProcedureCommand)obj;
-        if (this.block == null) {
-            if (other.block != null) return false;
-        } else if (!this.block.equals(other.block)) return false;
         if (this.isUpdateProcedure != other.isUpdateProcedure) return false;
         return true;
     }

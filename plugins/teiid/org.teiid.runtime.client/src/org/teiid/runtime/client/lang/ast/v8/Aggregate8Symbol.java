@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast.v8;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.Function;
@@ -27,6 +28,17 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
     private Type aggregate;
 
     private boolean isWindowed;
+
+    private static final Map<String, Type> nameMap = new TreeMap<String, Type>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        for (Type t : Type.values()) {
+            if (t == Type.USER_DEFINED) {
+                continue;
+            }
+            nameMap.put(t.name(), t);
+        }
+    }
 
     private static final Class<?> COUNT_TYPE = DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass();
     private static final Map<Class<?>, Class<?>> SUM_TYPES;
@@ -104,6 +116,17 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         }
     }
 
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        if (aggregate == null) {
+            this.aggregate = nameMap.get(name);
+            if (this.aggregate == null) {
+                this.aggregate = Type.USER_DEFINED;
+            }
+        }
+    }
+
     /**
     * Get the type of the symbol, which depends on the aggregate function and the
     * type of the contained expression
@@ -165,25 +188,17 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         return this.getArg(0).getType();
     }
 
-    /**
-     * Set the aggregate function.  If the aggregate function is an invalid value, an
-     * IllegalArgumentException is thrown.
-     * @param aggregateFunction Aggregate function type
-     * @see org.teiid.language.SQLConstants.NonReserved#COUNT
-     * @see org.teiid.language.SQLConstants.NonReserved#SUM
-     * @see org.teiid.language.SQLConstants.NonReserved#AVG
-     * @see org.teiid.language.SQLConstants.NonReserved#MIN
-     * @see org.teiid.language.SQLConstants.NonReserved#MAX
-     */
+    @Override
+    public void setAggregateFunction(String aggregateFunction) {
+        setAggregateFunction(Type.valueOf(aggregateFunction));
+    }
+
+    @Override
     public void setAggregateFunction(Type aggregateFunction) {
         this.aggregate = aggregateFunction;
     }
 
-    /**
-     * Get the aggregate function type - this will map to one of the reserved words
-     * for the aggregate functions.
-     * @return Aggregate function type
-     */
+    @Override
     public Type getAggregateFunction() {
         return this.aggregate;
     }
@@ -270,6 +285,18 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
     /** Accept the visitor. **/
     public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
         visitor.visit((AggregateSymbol)this, data);
+    }
+
+    @Override
+    public Expression getExpression() {
+        // No longer supported in 8.0.0+
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setExpression(Expression expression) {
+        // No longer supported in 8.0.0+
+        throw new UnsupportedOperationException();
     }
 }
 /* JavaCC - OriginalChecksum=7efdc98eb15b01c236003d9dc5fca445 (do not edit this line) */

@@ -127,16 +127,12 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
         return this.getExpression().getType();
     }
 
-    /**
-     * Set the aggregate function.  If the aggregate function is an invalid value, an
-     * IllegalArgumentException is thrown.
-     * @param aggregateFunction Aggregate function type
-     * @see org.teiid.language.SQLConstants.NonReserved#COUNT
-     * @see org.teiid.language.SQLConstants.NonReserved#SUM
-     * @see org.teiid.language.SQLConstants.NonReserved#AVG
-     * @see org.teiid.language.SQLConstants.NonReserved#MIN
-     * @see org.teiid.language.SQLConstants.NonReserved#MAX
-     */
+    @Override
+    public void setAggregateFunction(String aggregateFunction) {
+        setAggregateFunction(Type.valueOf(aggregateFunction));
+    }
+
+    @Override
     public void setAggregateFunction(Type aggregateFunction) {
         this.aggregate = aggregateFunction;
     }
@@ -225,14 +221,13 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
     @Override
     @Since("8.0.0")
     public Expression[] getArgs() {
-        // Does nothing. Purely to satisfy the interface
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     @Since("8.0.0")
     public void setArgs(Expression[] arguments) {
-        // Does nothing. Purely to satisfy the interface
+        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -7,10 +7,26 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class ExceptionExpression implements Expression {
+public class ExceptionExpression extends SimpleNode implements Expression {
     
+    /**
+     * @param i
+     */
+    public ExceptionExpression(int i) {
+        super(i);
+    }
+
+    /**
+     * @param teiidParser 
+     * @param i
+     */
+    public ExceptionExpression(TeiidParser teiidParser, int i) {
+        super(teiidParser, i);
+    }
+
     private Expression message;
     private Expression sqlState;
     private Expression errorCode;

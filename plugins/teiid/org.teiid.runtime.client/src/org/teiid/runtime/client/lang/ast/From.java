@@ -2,12 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class From extends SimpleNode {
 
-    private List<? extends FromClause> clauses;
+    private List<FromClause> clauses;
 
     public From(int id) {
         super(id);
@@ -30,8 +32,38 @@ public class From extends SimpleNode {
      * @param clauses List of {@link FromClause}
      */
     public void setClauses(List<? extends FromClause> clauses) {
-        this.clauses = clauses;
+        if (clauses == null) {
+            this.clauses = null;
+            return;
+        }
+
+        this.clauses = new ArrayList<FromClause>( clauses );
     }
+
+
+    /**
+     * Add a from clause to this {@link From}
+     * @param clause
+     */
+    public void addClause(FromClause clause) {
+        if (this.clauses == null)
+            this.clauses = new ArrayList<FromClause>();
+
+        this.clauses.add(clause);
+    }
+
+    /**
+     * Adds a new group to the list (it will be wrapped in a UnaryFromClause)
+     * @param group Group to add
+     */
+    public void addGroup( GroupSymbol group ) {
+        if( group == null )
+            return;
+
+        UnaryFromClause unaryFromClause = parser.createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
+        unaryFromClause.setGroupSymbol(group);
+        addClause(unaryFromClause);
+    }  
 
     @Override
     public int hashCode() {

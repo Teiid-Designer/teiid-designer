@@ -50,9 +50,9 @@ public interface CriteriaOperator {
         @Removed("8.0.0")
         IN("in"), //$NON-NLS-1$
 
-        /** Constant indicating the operand is the other */
+        /** Constant indicating the operand is null */
         @Removed("8.0.0")
-        IS("is"), //$NON-NLS-1$
+        IS_NULL("is null", "is"), //$NON-NLS-1$ //$NON-NLS-2$
 
         /** Constant indicating the operand is between the others */
         @Removed("8.0.0")
@@ -66,6 +66,15 @@ public interface CriteriaOperator {
 
         private Operator(String... symbols) {
             this.symbols.addAll(Arrays.asList(symbols));
+        }
+
+        @Override
+        public String toString() {
+            String symbol = this.symbols.iterator().next();
+            if (symbol == null || symbol.length() == 0)
+                return "??"; //$NON-NLS-1$
+
+            return symbol;
         }
 
         /**

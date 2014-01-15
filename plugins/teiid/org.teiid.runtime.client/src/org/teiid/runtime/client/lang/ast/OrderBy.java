@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class OrderBy extends SimpleNode {
@@ -20,6 +21,30 @@ public class OrderBy extends SimpleNode {
 
     public List<OrderByItem> getOrderByItems() {
         return this.orderByItems;
+    }
+
+    /**
+     * Adds a new variable to the list of order by elements.
+     * @param element Element to add
+     */
+    public void addVariable( Expression element ) {
+        addVariable(element, true);
+    }
+
+    /**
+     * Adds a new variable to the list of order by elements with the
+     * specified sort order
+     * @param element Element to add
+     * @param type True for ascending, false for descending
+     */
+    public void addVariable( Expression element, boolean type ) {
+        if(element == null)
+            throw new IllegalArgumentException();
+
+        OrderByItem orderByItem = parser.createASTNode(ASTNodes.ORDER_BY_ITEM);
+        orderByItem.setSymbol(element);
+        orderByItem.setAscending(type);
+        orderByItems.add(orderByItem);
     }
 
     @Override

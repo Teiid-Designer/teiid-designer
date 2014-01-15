@@ -2,13 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class GroupBy extends SimpleNode {
 
     /** The set of expressions for the data elements to be group. */
-    private List<Expression> symbols;
+    private List<Expression> symbols = new ArrayList<Expression>();
 
     public GroupBy(int id) {
         super(id);

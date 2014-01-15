@@ -13,10 +13,10 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     /**
      * Ordered List of Criteria in the WHEN parts of this expression.
      */
-    private List when = null;
+    private List<Criteria> when = null;
 
     /** Ordered List containing Expression objects. */
-    private List then = null;
+    private List<Expression> then = null;
 
     /** The (optional) expression in the ELSE part of the expression */
     private Expression elseExpression = null;
@@ -35,28 +35,25 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     }
 
     /**
-    *
-    * @see org.teiid.query.sql.symbol.AbstractCaseExpression#getWhenCount()
+    * @return number of when criteria
     */
    public int getWhenCount() {
        return (when == null) ? 0 : when.size();
    }
 
    /**
-    * Gets the List of Criteria in the WHEN parts of this expression. Never null.
-    * @return
+    * @return the List of Criteria in the WHEN parts of this expression. Never null.
     */
-   public List getWhen() {
+   public List<Criteria> getWhen() {
        return when;
    }
 
    /**
-    * Gets the WHEN criteria at the given 0-based index.
     * @param index
-    * @return
+    * @return the WHEN criteria at the given 0-based index.
     */
    public Criteria getWhenCriteria(int index) {
-       return (Criteria)when.get(index);
+       return when.get(index);
    }
 
    /**
@@ -65,22 +62,16 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     * @param when a non-null List of at least one Criteria
     * @param then a non-null List of at least one Expression
     */
-   public void setWhen(List when, List then) {
+   public void setWhen(List<? extends Criteria> when, List<? extends Expression> then) {
        if (when == null || then == null) {
            throw new IllegalArgumentException();
        }
+
        if (when.size() != then.size() ||
            when.size() < 1) {
            throw new IllegalArgumentException();
        }
-       for (int i = 0 ; i < when.size(); i++) {
-           if (!(when.get(i) instanceof Criteria)) {
-               throw new IllegalArgumentException();
-           }
-           if (!(then.get(i) instanceof Expression)) {
-               throw new IllegalArgumentException();
-           }
-       }
+
        if (this.when != when) {
            this.when = Collections.unmodifiableList(when);
        }
@@ -106,15 +97,24 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
    /**
     * @return Gets the List of THEN expressions in this CASE expression. Never null.
     */
-   public List getThen() {
+   public List<Expression> getThen() {
        return then;
    }
-   
+
+   /**
+    * @param index
+    *
+    * @return the expression of the THEN part at the given index.
+    */
+   public Expression getThenExpression(int index) {
+       return then.get(index);
+   }
+
    /**
     * Sets the List of THEN expressions in this CASE expression
     * @param then
     */
-   public void setThen(List then) {
+   public void setThen(List<? extends Expression> then) {
        if (this .then != then) {
            this.then = Collections.unmodifiableList(then);
        }

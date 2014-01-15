@@ -31,6 +31,14 @@ public class XMLTable extends FromClause {
     }
 
     /**
+     * Get name of this clause.
+     * @return Name of clause
+     */
+    public String getName() {
+        return this.symbol.getName();
+    }
+
+    /**
      * Get GroupSymbol representing the named subquery 
      * @return GroupSymbol representing the subquery
      */

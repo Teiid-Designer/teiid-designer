@@ -36,6 +36,7 @@ import org.teiid.runtime.client.lang.SPParameter;
 import org.teiid.runtime.client.lang.TeiidNodeFactory;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.Expression;
+import org.teiid.runtime.client.lang.ast.LanguageObject;
 import org.teiid.runtime.client.lang.ast.StoredProcedure;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.util.StringUtil;
@@ -78,7 +79,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     }
 
     @Override
-    public <T> T createASTNode(ASTNodes nodeType) {
+    public <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
         return TeiidNodeFactory.getInstance().create(this, nodeType);
     };
 

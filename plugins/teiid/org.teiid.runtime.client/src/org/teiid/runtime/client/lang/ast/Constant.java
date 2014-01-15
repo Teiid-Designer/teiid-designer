@@ -2,11 +2,17 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.math.BigDecimal;
+import java.util.List;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.types.DataTypeManagerService;
+import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
 
 public class Constant extends SimpleNode implements Expression {
 
-    private Class<?> type;
+    private Class<?> type = DataTypeManagerService.DefaultDataTypes.NULL.getTypeClass();
+
+    private boolean multiValued;
 
     public Constant(int id) {
         super(id);
@@ -41,11 +47,47 @@ public class Constant extends SimpleNode implements Expression {
         return this.value;
     }
 
+    /**
+     * @param value
+     */
+    public void setValue(Object value) {
+        jjtSetValue(value);
+        DataTypeManagerService service = DataTypeManagerService.getInstance();
+        if (this.value == null) {
+            this.type = DataTypeManagerService.DefaultDataTypes.NULL.getClass();
+        } else { 
+            this.type = this.value.getClass();
+
+            Class<?> originalType = type;
+            while (type.isArray() && !type.getComponentType().isPrimitive()) {
+                type = type.getComponentType();
+            }
+
+            DefaultDataTypes dataType = service.getDataType(type);
+            if (dataType != null) {
+                //array of a runtime-type
+                this.type = originalType;
+            } else if (originalType.isArray() && !originalType.getComponentType().isPrimitive()) {
+                this.type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeArrayClass();
+            } else {
+                this.type = DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
+            }
+        }
+    }
+
+    public boolean isMultiValued() {
+        return multiValued;
+    }
+
+    public void setMultiValued(List<?> value) {
+        this.multiValued = true;
+        this.value = value;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
         return result;
     }
 
@@ -55,10 +97,27 @@ public class Constant extends SimpleNode implements Expression {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Constant other = (Constant)obj;
+
+        if (this.value == null && other.value == null) {
+            // Only consider type information if values are not null
+            return true;
+        }
+
+        if (this.value instanceof BigDecimal) {
+            if (this.value == other.value) {
+                return true;
+            }
+            if (!(other.value instanceof BigDecimal)) {
+                return false;
+            }
+            return ((BigDecimal)this.value).compareTo((BigDecimal)other.value) == 0;
+        }
+
         if (this.type == null) {
             if (other.type != null) return false;
         } else if (!this.type.equals(other.type)) return false;
-        return true;
+
+        return multiValued == other.multiValued && other.getValue().equals(this.getValue());
     }
 
     /** Accept the visitor. **/

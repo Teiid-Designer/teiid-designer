@@ -20,7 +20,7 @@ public class XMLNamespaces extends SimpleNode {
     /**
      * @return the namespaceItems
      */
-    public List<NamespaceItem> getNamespaces() {
+    public List<NamespaceItem> getNamespaceItems() {
         return this.namespaceItems;
     }
 

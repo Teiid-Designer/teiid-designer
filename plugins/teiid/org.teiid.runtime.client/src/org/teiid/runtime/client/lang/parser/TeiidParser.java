@@ -13,6 +13,7 @@ import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.Command;
 import org.teiid.runtime.client.lang.ast.Criteria;
 import org.teiid.runtime.client.lang.ast.Expression;
+import org.teiid.runtime.client.lang.ast.LanguageObject;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 /**
@@ -37,7 +38,7 @@ public interface TeiidParser {
      * 
      * @return instance of commonly used node
      */
-    <T> T createASTNode(ASTNodes nodeType);
+    <T extends LanguageObject> T createASTNode(ASTNodes nodeType);
 
     /**
      * Parse an expression

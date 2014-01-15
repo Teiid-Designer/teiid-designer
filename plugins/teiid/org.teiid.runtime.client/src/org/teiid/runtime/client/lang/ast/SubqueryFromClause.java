@@ -50,6 +50,13 @@ public class SubqueryFromClause extends FromClause {
     }
 
     /**
+     * @return groupSymbol
+     */
+    public GroupSymbol getGroupSymbol() {
+        return symbol;
+    }
+
+    /**
      * Set the command held by the clause
      * @param command Command to hold
      */
@@ -84,9 +91,9 @@ public class SubqueryFromClause extends FromClause {
         if (this.command == null) {
             if (other.command != null) return false;
         } else if (!this.command.equals(other.command)) return false;
-        if (this.symbol == null) {
-            if (other.symbol != null) return false;
-        } else if (!this.symbol.equals(other.symbol)) return false;
+        if (this.getName() == null) {
+            if (other.getName() != null) return false;
+        } else if (!this.getName().equalsIgnoreCase(getName())) return false;
         if (this.table != other.table) return false;
         return true;
     }

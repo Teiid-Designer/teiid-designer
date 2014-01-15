@@ -13,6 +13,8 @@ public class Function extends SimpleNode implements Expression {
 
     private Expression[] args;
 
+    private boolean implicit;
+
 //    private FunctionDescriptor descriptor;
 
     public Function(int id) {
@@ -58,6 +60,9 @@ public class Function extends SimpleNode implements Expression {
      * @param args Function arguments
      */
     public void setArgs(Expression[] args) {
+        if (args == null)
+            args = new Expression[0];
+
         this.args = args;
     }
 
@@ -77,12 +82,28 @@ public class Function extends SimpleNode implements Expression {
         this.type = type;
     }
 
+    /**
+     * Make this function implicit / hidden.
+     */
+    public void makeImplicit() {
+        this.implicit = true;
+    }
+
+    /**
+     * Return true if this function is implicit and should not be shown in SQL representations
+     * @return True if implicit
+     */
+    public boolean isImplicit() {
+        return this.implicit;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + Arrays.hashCode(this.args);
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
+        result = prime * result + (this.implicit ? 1231 : 1237);
+        result = prime * result + ((this.name == null) ? 0 : this.name.toUpperCase().hashCode());
         result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
         return result;
     }
@@ -94,9 +115,10 @@ public class Function extends SimpleNode implements Expression {
         if (getClass() != obj.getClass()) return false;
         Function other = (Function)obj;
         if (!Arrays.equals(this.args, other.args)) return false;
+        if (this.implicit != other.implicit) return false;
         if (this.name == null) {
             if (other.name != null) return false;
-        } else if (!this.name.equals(other.name)) return false;
+        } else if (!this.name.equalsIgnoreCase(other.name)) return false;
         if (this.type == null) {
             if (other.type != null) return false;
         } else if (!this.type.equals(other.type)) return false;

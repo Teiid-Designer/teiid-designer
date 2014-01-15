@@ -9,6 +9,8 @@ public class GroupSymbol extends Symbol {
     /** Definition of the symbol, may be null */
     private String definition;
 
+    private String outputDefinition;
+
     public GroupSymbol(int id) {
         super(id);
     }
@@ -31,6 +33,15 @@ public class GroupSymbol extends Symbol {
      */
     public void setDefinition(String definition) {
         this.definition = definition;
+        this.outputDefinition = definition;
+    }
+
+    public String getOutputDefinition() {
+        return this.outputDefinition;
+    }
+
+    public void setOutputDefinition(String outputDefinition) {
+        this.outputDefinition = outputDefinition;
     }
 
     @Override
@@ -38,6 +49,7 @@ public class GroupSymbol extends Symbol {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((this.definition == null) ? 0 : this.definition.hashCode());
+        result = prime * result + ((this.outputDefinition == null) ? 0 : this.outputDefinition.hashCode());
         return result;
     }
 
@@ -50,6 +62,9 @@ public class GroupSymbol extends Symbol {
         if (this.definition == null) {
             if (other.definition != null) return false;
         } else if (!this.definition.equals(other.definition)) return false;
+        if (this.outputDefinition == null) {
+            if (other.outputDefinition != null) return false;
+        } else if (!this.outputDefinition.equals(other.outputDefinition)) return false;
         return true;
     }
 

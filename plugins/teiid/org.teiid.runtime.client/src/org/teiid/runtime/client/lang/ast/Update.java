@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Update extends Command {
@@ -27,6 +28,22 @@ public class Update extends Command {
      */
     public SetClauseList getChangeList() {
         return changeList;
+    }
+
+    /**
+     * Add change to change list - a change is represented by a CompareCriteria
+     * internally but can be added here as an element and an expression
+     * @param id Element to be changed
+     * @param value Expression, often a value, being set
+     */
+    public void addChange(ElementSymbol id, Expression value) {
+        if (changeList == null)
+            changeList = parser.createASTNode(ASTNodes.SET_CLAUSE_LIST);
+
+        SetClause setClause = parser.createASTNode(ASTNodes.SET_CLAUSE);
+        setClause.setSymbol(id);
+        setClause.setValue(value);
+        changeList.addClause(setClause);
     }
 
     /**

@@ -50,7 +50,7 @@ import org.teiid.runtime.client.util.StringUtil;
  * file.  <B>WARNING:</B> DO NOT MODIFY the SQLParser.java file as it will be 
  * regenerated from the .jj file and your changes will be lost!</p>
  */
-@SuppressWarnings({"nls", "unused"})
+@SuppressWarnings({"nls", "unused", "javadoc"})
 public class Teiid8Parser extends AbstractTeiidParser {
 
     private Teiid8Parser() {      super(new TeiidServerVersion("8.x.x"));
@@ -147,6 +147,14 @@ public class Teiid8Parser extends AbstractTeiidParser {
                 fromClause.setPreserve(true);
             }
         }
+    }
+
+    @Override
+    public ITeiidServerVersion getVersion() {
+        if (version == null)
+            version = new TeiidServerVersion("8.x.x");
+
+        return version;
     }
 
 } // end class
@@ -838,7 +846,7 @@ example={code:sql}FOR EACH ROW BEGIN ATOMIC ... END{code}
 */
 TriggerAction forEachRowTriggerAction(ParseInfo info) #TriggerAction :
 {
-	Block b = createASTNode(ASTNodes.BLOCK);
+	Block b = block();
 	b.setAtomic(true);
 	Statement stmt = null;
 }
@@ -941,7 +949,7 @@ RaiseStatement errorStatement(ParseInfo info) #void :
     errMsg = expression(info)
 
     {
-        ExceptionExpression ee = new ExceptionExpression();
+        ExceptionExpression ee = exceptionExpression();
         ee.setMessage(errMsg);
         return raiseStatementFromExpression(ee);
     }
@@ -1016,13 +1024,19 @@ Expression exception(ParseInfo info) #void :
     ]
     [<CHAIN> parent = exceptionReference(info)]
 	{
-		ExceptionExpression ee = new ExceptionExpression();
+		ExceptionExpression ee = exceptionExpression();
 		ee.setMessage(err);
 		ee.setSqlState(sqlState);
 		ee.setErrorCode(errCode);
 		ee.setParent(parent);
 		return ee;
 	}	
+}
+
+ExceptionExpression exceptionExpression() #ExceptionExpression :
+{}
+{    {        return jjtThis;
+    }
 }
 
 /*
@@ -1089,7 +1103,7 @@ example={code:sql}BEGIN NOT ATOMIC ... END{code}
 */
 Block compoundStatement(ParseInfo info) #void :
 {
-    Block block = null;
+    Block block = block();
     Statement stmt = null;
     Boolean atomic = null;
     String eId = null;
@@ -1099,14 +1113,13 @@ Block compoundStatement(ParseInfo info) #void :
     (LOOKAHEAD(2)
       stmt = statement(info)
       {
-        block = asBlock(stmt);            	                	    
+        block.addStatement(stmt, false);            	                	    
 	  }
  	)*
  	[<EXCEPTION> eId = id(Boolean.FALSE) {block.setExceptionGroup(eId);}
  	 (
        stmt = statement(info)
        {
-         block = block();
          block.addStatement(stmt, true);            	                	    
 	   }
  	 )*
@@ -2901,7 +2914,8 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 	((
 	  <FOR> <ORDINALITY> 
 	  {
-	    return jjtThis; 
+	    jjtThis.setOrdinal(true);
+	    return jjtThis;
 	  }	
 	) | (
       datatype = parseDataType()
@@ -3940,7 +3954,7 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) #void :
 		// Reference
 		<QMARK> {return reference(info.incrementReferenceCount());}
 		|
-		(<DOLLAR> index = intVal() {return new Reference(index -1); })
+		(<DOLLAR> index = intVal() {return reference(index -1); })
 		|
 		// Escaped function
 		(	<ESCAPEDFUNCTION>
@@ -4085,8 +4099,8 @@ SearchedCaseExpression searchedCaseExpression(ParseInfo info) #SearchedCaseExpre
 {
 	Expression thenExpression = null, elseExpression = null;
 	Criteria whenCriteria = null;
-	ArrayList whenCriteriaList = new ArrayList(2);
-	ArrayList thenExpressions = new ArrayList(2);
+	List<Criteria> whenCriteriaList = new ArrayList<Criteria>(2);
+    List<Expression> thenExpressions = new ArrayList<Expression>(2);
 }
 {
 	<CASE>
@@ -4825,9 +4839,9 @@ AssignmentStatement assignmentStatement(ElementSymbol elementSymbol, LanguageObj
 {    {
         jjtThis.setVariable(elementSymbol);
         if (value instanceof Expression)
-            jjtThis.jjtSetValue(value);
+            jjtThis.setExpression((Expression) value);
         else if (value instanceof QueryCommand)
-            jjtThis.jjtSetValue(scalarSubquery((QueryCommand) value));
+            jjtThis.setExpression(scalarSubquery((QueryCommand) value));
         else
             jjtThis.setCommand((Command) value);
 
@@ -4864,6 +4878,9 @@ Constant constant(Object... args) #Constant :
 }
 { 
     {
+        if (args == null)
+            return jjtThis;
+
         /*
          * Expectation is that constant args should be
          * value of type Object and type of type Class.
@@ -4875,7 +4892,7 @@ Constant constant(Object... args) #Constant :
                 DataTypeManagerService.DefaultDataTypes dataType = (DataTypeManagerService.DefaultDataTypes) arg;
                 jjtThis.setType(dataType.getTypeClass());
             } else {
-                jjtThis.jjtSetValue(arg);
+                jjtThis.setValue(arg);
             }
         }
         return jjtThis;

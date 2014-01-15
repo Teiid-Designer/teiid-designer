@@ -41,6 +41,7 @@ import org.teiid.runtime.client.lang.ast.DerivedColumn;
 import org.teiid.runtime.client.lang.ast.Drop;
 import org.teiid.runtime.client.lang.ast.DynamicCommand;
 import org.teiid.runtime.client.lang.ast.ElementSymbol;
+import org.teiid.runtime.client.lang.ast.ExceptionExpression;
 import org.teiid.runtime.client.lang.ast.ExistsCriteria;
 import org.teiid.runtime.client.lang.ast.ExpressionCriteria;
 import org.teiid.runtime.client.lang.ast.ExpressionSymbol;
@@ -229,7 +230,6 @@ public class TeiidNodeFactory {
         AST_NODE_ANNOTATIONS.put("Array", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
         AST_NODE_ANNOTATIONS.put("ExceptionExpression", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
         AST_NODE_ANNOTATIONS.put("JSONObject", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("ExceptionExpression", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
     }
 
     private Map<String, String> indexNodeNames(Class<?> constantClass) throws NoSuchFieldException, IllegalAccessException {
@@ -254,8 +254,7 @@ public class TeiidNodeFactory {
         StringBuffer buffer = new StringBuffer();
 
         buffer.append("/**" + NEWLINE); //$NON-NLS-1$
-        buffer.append(" * Names of nodes frequently created outside of the parsers" + NEWLINE); //$NON-NLS-1$
-        buffer.append(" * For use with {@link TeiidNodeFactory#create(TeiidParser, ASTNodes)}" + NEWLINE); //$NON-NLS-1$
+        buffer.append(" * Names of AST nodes to allow creation outside of the parsers" + NEWLINE); //$NON-NLS-1$
         buffer.append(" *" + NEWLINE); //$NON-NLS-1$
         buffer.append(" * @generated" +  NEWLINE); //$NON-NLS-1$
         buffer.append(" */" + NEWLINE); //$NON-NLS-1$
@@ -485,8 +484,7 @@ public class TeiidNodeFactory {
      */
 
     /**
-     * Names of nodes frequently created outside of the parsers
-     * For use with {@link TeiidNodeFactory#create(TeiidParser, ASTNodes)}
+     * Names of AST nodes to allow creation outside of the parsers
      *
      * @generated
      */
@@ -1007,6 +1005,13 @@ public class TeiidNodeFactory {
          */
         @Since("8.0.0")
         RAISE_STATEMENT("RaiseStatement"), //$NON-NLS-1$
+
+        /**
+         * ExceptionExpression
+         * @generated
+         */
+        @Since("8.0.0")
+        EXCEPTION_EXPRESSION("ExceptionExpression"), //$NON-NLS-1$
 
         /**
          * ReturnStatement
@@ -2060,6 +2065,18 @@ public class TeiidNodeFactory {
      * @param nodeType
      * @return
      */
+    private ExceptionExpression createExceptionExpression(TeiidParser teiidParser, int nodeType) {
+        return new ExceptionExpression(teiidParser, nodeType);
+    }
+
+    /**
+     *
+     * @generated
+     *
+     * @param teiidParser
+     * @param nodeType
+     * @return
+     */
     private ReturnStatement createReturnStatement(TeiidParser teiidParser, int nodeType) {
         return new ReturnStatement(teiidParser, nodeType);
     }
@@ -2317,6 +2334,8 @@ public class TeiidNodeFactory {
                 return (T) createDrop(teiidParser, nodeType);
             case Teiid8ParserTreeConstants.JJTRAISESTATEMENT:
                 return (T) createRaiseStatement(teiidParser, nodeType);
+            case Teiid8ParserTreeConstants.JJTEXCEPTIONEXPRESSION:
+                return (T) createExceptionExpression(teiidParser, nodeType);
             case Teiid8ParserTreeConstants.JJTSTATEMENT:
                 return (T) createStatement(teiidParser, nodeType);
             case Teiid8ParserTreeConstants.JJTBRANCHINGSTATEMENT:

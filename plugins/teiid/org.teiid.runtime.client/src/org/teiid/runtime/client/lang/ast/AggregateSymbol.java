@@ -121,4 +121,41 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression {
      */
     void setCanonicalName(String canonicalName);
 
+    /**
+     * Get the aggregate function type - this will map to one of the reserved words
+     * for the aggregate functions.
+     * @return Aggregate function type
+     */
+    Type getAggregateFunction();
+
+    /**
+     * @param aggregateFunction
+     */
+    void setAggregateFunction(String aggregateFunction);
+
+    /**
+     * Set the aggregate function.  If the aggregate function is an invalid value, an
+     * IllegalArgumentException is thrown.
+     * @param aggregateFunction Aggregate function type
+     * @see org.teiid.runtime.client.lang.SQLConstants.NonReserved#COUNT
+     * @see org.teiid.runtime.client.lang.SQLConstants.NonReserved#SUM
+     * @see org.teiid.runtime.client.lang.SQLConstants.NonReserved#AVG
+     * @see org.teiid.runtime.client.lang.SQLConstants.NonReserved#MIN
+     * @see org.teiid.runtime.client.lang.SQLConstants.NonReserved#MAX
+     */
+    void setAggregateFunction(Type aggregateFunction);
+
+    /**
+     * Get the expression for this symbol
+     * @return Expression for this symbol
+     */
+    @Removed("8.0.0")
+    Expression getExpression();
+
+    /**
+     * Set the expression represented by this symbol.
+     * @param expression Expression for this expression symbol
+     */
+    @Removed("8.0.0")
+    void setExpression(Expression expression);
 }

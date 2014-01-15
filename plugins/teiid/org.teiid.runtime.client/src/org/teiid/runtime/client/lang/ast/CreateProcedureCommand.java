@@ -9,7 +9,7 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
 public class CreateProcedureCommand extends Command {
 
     // top level block for the procedure
-    private Block block;
+    protected Block block;
 
     public CreateProcedureCommand(int id) {
         super(id);

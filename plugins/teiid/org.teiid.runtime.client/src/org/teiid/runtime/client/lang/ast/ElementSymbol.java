@@ -2,14 +2,31 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @SuppressWarnings( "unused" )
 public class ElementSymbol extends Symbol implements SingleElementSymbol, Expression {
 
+    public enum DisplayMode {
+
+        // symbol name
+        FULLY_QUALIFIED,
+
+        // default
+        OUTPUT_NAME,
+
+        // short name
+        SHORT_OUTPUT_NAME
+    }
+
     private Class type;
     
     private Object metadataID;
+
+    private GroupSymbol groupSymbol;
+
+    private DisplayMode displayMode = DisplayMode.OUTPUT_NAME;
 
     public ElementSymbol(int id) {
         super(id);
@@ -49,6 +66,58 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      */
     public void setMetadataID(Object metadataID) {
         this.metadataID = metadataID;
+    }
+
+    /**
+     * Get the group symbol referred to by this element symbol, may be null before resolution
+     * @return Group symbol referred to by this element, may be null
+     */
+    public GroupSymbol getGroupSymbol() {
+        return this.groupSymbol;
+    }
+
+    /**
+     * Set the group symbol referred to by this element symbol
+     * @param symbol the group symbol to set
+     */
+    public void setGroupSymbol(GroupSymbol symbol) {
+        this.groupSymbol = symbol;
+    }
+
+    @Override
+    public String getName() {
+        if (this.groupSymbol != null) {
+            return this.groupSymbol.getName() + Symbol.SEPARATOR + this.getShortName();
+        }
+        return super.getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        int index = name.lastIndexOf('.');
+        if (index > 0) {
+            if (this.groupSymbol != null) {
+                throw new AssertionError("Attempt to set an invalid name"); //$NON-NLS-1$
+            }
+            GroupSymbol gs = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+            gs.setName(new String(name.substring(0, index)));
+            this.setGroupSymbol(gs);
+            name = new String(name.substring(index + 1));
+        } else {
+            this.groupSymbol = null;
+        }
+        super.setShortName(name);
+    }
+
+    public void setDisplayMode(DisplayMode displayMode) {
+        if (displayMode == null) {
+            this.displayMode = DisplayMode.OUTPUT_NAME;
+        }
+        this.displayMode = displayMode;
+    }
+
+    public DisplayMode getDisplayMode() {
+        return displayMode;
     }
 
     @Override

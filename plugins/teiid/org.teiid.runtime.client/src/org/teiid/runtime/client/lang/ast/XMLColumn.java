@@ -10,6 +10,8 @@ public class XMLColumn extends ProjectedColumn {
 
     private Expression defaultExpression;
 
+    private boolean ordinal;
+
     public XMLColumn(int id) {
         super(id);
     }
@@ -46,11 +48,20 @@ public class XMLColumn extends ProjectedColumn {
         this.defaultExpression = defaultExpression;
     }
 
+    public boolean isOrdinal() {
+        return ordinal;
+    }
+
+    public void setOrdinal(boolean ordinal) {
+        this.ordinal = ordinal;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((this.defaultExpression == null) ? 0 : this.defaultExpression.hashCode());
+        result = prime * result + (this.ordinal ? 1231 : 1237);
         result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
         return result;
     }
@@ -64,6 +75,7 @@ public class XMLColumn extends ProjectedColumn {
         if (this.defaultExpression == null) {
             if (other.defaultExpression != null) return false;
         } else if (!this.defaultExpression.equals(other.defaultExpression)) return false;
+        if (this.ordinal != other.ordinal) return false;
         if (this.path == null) {
             if (other.path != null) return false;
         } else if (!this.path.equals(other.path)) return false;
