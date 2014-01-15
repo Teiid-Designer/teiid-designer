@@ -59,7 +59,7 @@
                     <buildNodeFiles>false</buildNodeFiles>
                     <nodePrefix></nodePrefix>
                     <nodeFactory>TeiidNodeFactory</nodeFactory>
-                    <nodeScopeHook>true</nodeScopeHook>
+                    <nodeScopeHook>false</nodeScopeHook>
                     <nodeUsesParser>true</nodeUsesParser>
                     <nodePackage>org.teiid.runtime.client.lang.ast</nodePackage>
                     <visitor>true</visitor>
