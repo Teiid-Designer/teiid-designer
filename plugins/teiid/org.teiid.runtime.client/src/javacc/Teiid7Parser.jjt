@@ -24,7 +24,6 @@ package org.teiid.runtime.client.lang.parser.v7;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
-import org.teiid.core.types.BinaryType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.runtime.client.Messages;

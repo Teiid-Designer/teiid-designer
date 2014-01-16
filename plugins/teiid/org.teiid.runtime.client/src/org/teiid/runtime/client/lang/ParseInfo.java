@@ -24,8 +24,8 @@ package org.teiid.runtime.client.lang;
 
 import java.io.Serializable;
 import java.util.Map;
-import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.runtime.client.util.PropertiesUtils;
 
 /**
  * Info object to pass into the Teiid SQL Parser

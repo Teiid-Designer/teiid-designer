@@ -24,8 +24,6 @@ package org.teiid.runtime.client.lang;
 
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.designer.query.sql.lang.ISourceHint;
 
 public class SourceHint implements ISourceHint {
@@ -94,16 +92,29 @@ public class SourceHint implements ISourceHint {
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (!(obj instanceof SourceHint)) {
-			return false;
-		}
-		SourceHint other = (SourceHint)obj;
-		return EquivalenceUtil.areEqual(generalHint, other.generalHint) 
-		&& EquivalenceUtil.areEqual(this.sourceHints, other.sourceHints);
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.generalHint == null) ? 0 : this.generalHint.hashCode());
+        result = prime * result + ((this.sourceHints == null) ? 0 : this.sourceHints.hashCode());
+        result = prime * result + (this.useAliases ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        SourceHint other = (SourceHint)obj;
+        if (this.generalHint == null) {
+            if (other.generalHint != null) return false;
+        } else if (!this.generalHint.equals(other.generalHint)) return false;
+        if (this.sourceHints == null) {
+            if (other.sourceHints != null) return false;
+        } else if (!this.sourceHints.equals(other.sourceHints)) return false;
+        if (this.useAliases != other.useAliases) return false;
+        return true;
+    }
 	
 }

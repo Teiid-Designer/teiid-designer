@@ -24,7 +24,6 @@ package org.teiid.runtime.client.lang.parser.v8;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
-import org.teiid.core.types.BinaryType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.runtime.client.Messages;
@@ -41,6 +40,7 @@ import org.teiid.runtime.client.lang.ast.CriteriaOperator.Operator;
 import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria.PredicateQuantifier;
 import org.teiid.runtime.client.lang.ast.MatchCriteria.MatchMode;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParser;
+import org.teiid.runtime.client.types.BinaryType;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.util.StringUtil;
 

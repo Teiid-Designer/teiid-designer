@@ -59,6 +59,20 @@ public class Messages {
     }
 
     @SuppressWarnings( "javadoc" )
+    public enum MMClob {
+        MMBlob_0,
+        MMBlob_1,
+        MMBlob_2,
+        MMBlob_3;
+
+        @Override
+        public String toString() {
+            // Cannot use dots in enums
+            return getEnumName(this) + DOT + name().replaceAll("_", DOT); //$NON-NLS-1$
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
     public enum TeiidParser {
         Unknown_join_type,
         Aggregate_only_top_level,
@@ -207,7 +221,26 @@ public class Messages {
 
     @SuppressWarnings( "javadoc" )
     public enum TEIID {
+        TEIID10030,
+        TEIID10032,
+        TEIID10052,
+        TEIID10058,
+        TEIID10059,
+        TEIID10060,
+        TEIID10061,
+        TEIID10063,
+        TEIID10068,
+        TEIID10070,
+        TEIID10071,
+        TEIID10072,
+        TEIID10073,
+        TEIID10074,
         TEIID10076,
+        TEIID10077,
+        TEIID10078,
+        TEIID10080,
+        TEIID10081,
+        TEIID10083,
         TEIID30001,
         TEIID30002,
         TEIID30003,

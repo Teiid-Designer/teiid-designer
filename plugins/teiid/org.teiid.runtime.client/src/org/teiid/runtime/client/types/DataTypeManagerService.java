@@ -10,7 +10,10 @@ package org.teiid.runtime.client.types;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Date;
+import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -18,40 +21,38 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import org.teiid.core.types.BinaryType;
-import org.teiid.core.types.BlobType;
-import org.teiid.core.types.ClobType;
-import org.teiid.core.types.NullType;
-import org.teiid.core.types.Transform;
-import org.teiid.core.types.XMLType;
-import org.teiid.core.types.basic.AnyToObjectTransform;
-import org.teiid.core.types.basic.AnyToStringTransform;
-import org.teiid.core.types.basic.BooleanToNumberTransform;
-import org.teiid.core.types.basic.FixedNumberToBigDecimalTransform;
-import org.teiid.core.types.basic.FixedNumberToBigIntegerTransform;
-import org.teiid.core.types.basic.FloatingNumberToBigDecimalTransform;
-import org.teiid.core.types.basic.FloatingNumberToBigIntegerTransform;
-import org.teiid.core.types.basic.NullToAnyTransform;
-import org.teiid.core.types.basic.NumberToBooleanTransform;
-import org.teiid.core.types.basic.NumberToByteTransform;
-import org.teiid.core.types.basic.NumberToDoubleTransform;
-import org.teiid.core.types.basic.NumberToFloatTransform;
-import org.teiid.core.types.basic.NumberToIntegerTransform;
-import org.teiid.core.types.basic.NumberToLongTransform;
-import org.teiid.core.types.basic.NumberToShortTransform;
-import org.teiid.core.types.basic.ObjectToAnyTransform;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.runtime.client.types.basic.AnyToObjectTransform;
+import org.teiid.runtime.client.types.basic.AnyToStringTransform;
+import org.teiid.runtime.client.types.basic.BooleanToNumberTransform;
+import org.teiid.runtime.client.types.basic.FixedNumberToBigDecimalTransform;
+import org.teiid.runtime.client.types.basic.FixedNumberToBigIntegerTransform;
+import org.teiid.runtime.client.types.basic.FloatingNumberToBigDecimalTransform;
+import org.teiid.runtime.client.types.basic.FloatingNumberToBigIntegerTransform;
+import org.teiid.runtime.client.types.basic.NullToAnyTransform;
+import org.teiid.runtime.client.types.basic.NumberToBooleanTransform;
+import org.teiid.runtime.client.types.basic.NumberToByteTransform;
+import org.teiid.runtime.client.types.basic.NumberToDoubleTransform;
+import org.teiid.runtime.client.types.basic.NumberToFloatTransform;
+import org.teiid.runtime.client.types.basic.NumberToIntegerTransform;
+import org.teiid.runtime.client.types.basic.NumberToLongTransform;
+import org.teiid.runtime.client.types.basic.NumberToShortTransform;
+import org.teiid.runtime.client.types.basic.ObjectToAnyTransform;
 import org.teiid.runtime.client.util.ArgCheck;
-import org.teiid.runtime.client.util.PropertiesUtil;
+import org.teiid.runtime.client.util.PropertiesUtils;
 
 /**
  *
  */
 public class DataTypeManagerService implements IDataTypeManagerService {
 
+    public static final int MAX_STRING_LENGTH = PropertiesUtils.getIntProperty(System.getProperties(), "org.teiid.maxStringLength", 4000); //$NON-NLS-1$
+    
+    public static final int MAX_LOB_MEMORY_BYTES = Math.max(nextPowOf2(2*MAX_STRING_LENGTH), 1<<13);
+    
     private static final String ARRAY_SUFFIX = "[]"; //$NON-NLS-1$
 
     public enum DefaultDataTypes {
@@ -184,6 +185,14 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return instance;
     }
 
+    public static int nextPowOf2(int val) {
+        int result = 1;
+        while (result < val) {
+            result <<= 1;
+        }
+        return result;
+    }
+
     /**
      * Load all basic {@link Transform}s into the  This standard
      * set is always installed but may be overridden.
@@ -257,7 +266,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         addTransform(new NumberToLongTransform(bigIntegerClass, true, false));
         addTransform(new NumberToFloatTransform(bigIntegerClass, true, false));
         addTransform(new NumberToDoubleTransform(bigIntegerClass, true, false));
-        addTransform(new org.teiid.core.types.basic.BigIntegerToBigDecimalTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.BigIntegerToBigDecimalTransform());
         addTransform(new AnyToStringTransform(bigIntegerClass));
 
         addTransform(new NumberToBooleanTransform(BigDecimal.valueOf(0)));
@@ -265,7 +274,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         addTransform(new NumberToShortTransform(bigDecimalClass, true));
         addTransform(new NumberToIntegerTransform(bigDecimalClass, true));
         addTransform(new NumberToLongTransform(bigDecimalClass, true, false));
-        addTransform(new org.teiid.core.types.basic.BigDecimalToBigIntegerTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.BigDecimalToBigIntegerTransform());
         addTransform(new NumberToFloatTransform(bigDecimalClass, true, false));
         addTransform(new NumberToDoubleTransform(bigDecimalClass, true, false));
         addTransform(new AnyToStringTransform(bigDecimalClass));
@@ -290,39 +299,39 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         addTransform(new FloatingNumberToBigDecimalTransform(doubleClass));
         addTransform(new AnyToStringTransform(doubleClass));
 
-        addTransform(new org.teiid.core.types.basic.DateToTimestampTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.DateToTimestampTransform());
         addTransform(new AnyToStringTransform(DefaultDataTypes.DATE.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.TimeToTimestampTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.TimeToTimestampTransform());
         addTransform(new AnyToStringTransform(DefaultDataTypes.TIME.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.TimestampToTimeTransform());
-        addTransform(new org.teiid.core.types.basic.TimestampToDateTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.TimestampToTimeTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.TimestampToDateTransform());
         addTransform(new AnyToStringTransform(DefaultDataTypes.TIMESTAMP.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.StringToBooleanTransform());
-        addTransform(new org.teiid.core.types.basic.StringToByteTransform());
-        addTransform(new org.teiid.core.types.basic.StringToShortTransform());
-        addTransform(new org.teiid.core.types.basic.StringToIntegerTransform());
-        addTransform(new org.teiid.core.types.basic.StringToLongTransform());
-        addTransform(new org.teiid.core.types.basic.StringToBigIntegerTransform());
-        addTransform(new org.teiid.core.types.basic.StringToFloatTransform());
-        addTransform(new org.teiid.core.types.basic.StringToDoubleTransform());
-        addTransform(new org.teiid.core.types.basic.StringToBigDecimalTransform());
-        addTransform(new org.teiid.core.types.basic.StringToTimeTransform());
-        addTransform(new org.teiid.core.types.basic.StringToDateTransform());
-        addTransform(new org.teiid.core.types.basic.StringToTimestampTransform());
-        addTransform(new org.teiid.core.types.basic.StringToCharacterTransform());
-        addTransform(new org.teiid.core.types.basic.StringToClobTransform());
-        addTransform(new org.teiid.core.types.basic.StringToSQLXMLTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToBooleanTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToByteTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToShortTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToIntegerTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToLongTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToBigIntegerTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToFloatTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToDoubleTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToBigDecimalTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToTimeTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToDateTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToTimestampTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToCharacterTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToClobTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.StringToSQLXMLTransform());
 
-        addTransform(new org.teiid.core.types.basic.BinaryToBlobTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.BinaryToBlobTransform());
 
-        addTransform(new org.teiid.core.types.basic.ClobToStringTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.ClobToStringTransform());
 
-        addTransform(new org.teiid.core.types.basic.BlobToBinaryTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.BlobToBinaryTransform());
 
-        addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform());
+        addTransform(new org.teiid.runtime.client.types.basic.SQLXMLToStringTransform());
 
         for (Class<?> type : getAllDataTypeClasses()) {
             if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
@@ -532,7 +541,12 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return dataSourceType.id();
     }
 
-    private Transform getTransform(String sourceTypeName, String targetTypeName) {
+    /**
+     * @param sourceTypeName
+     * @param targetTypeName
+     * @return applicable transform for converting source to target
+     */
+    public Transform getTransform(String sourceTypeName, String targetTypeName) {
         if (sourceTypeName == null || targetTypeName == null) {
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, sourceTypeName, targetTypeName));
         }
@@ -541,6 +555,15 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         DefaultDataTypes targetType = findDefaultDataType(targetTypeName);
 
         return getTransformFromMaps(sourceType, targetType);
+    }
+
+    /**
+     * @param sourceDataType
+     * @param targetDataType
+     * @return applicable transform for converting source to target
+     */
+    public Transform getTransform(DefaultDataTypes sourceDataType, DefaultDataTypes targetDataType) {
+        return getTransformFromMaps(sourceDataType, targetDataType);
     }
 
     @Override
@@ -630,6 +653,42 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
 
     public boolean isDecimalAsDouble() {
-        return PropertiesUtil.getBooleanProperty(System.getProperties(), "org.teiid.decimalAsDouble", false); //$NON-NLS-1$
+        return PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.decimalAsDouble", false); //$NON-NLS-1$
+    }
+
+    /**
+     * Convert the value to the probable runtime type.
+     * @param allConversions if false only lob conversions will be used
+     */
+    public Object convertToRuntimeType(Object value, boolean allConversions) {
+        if (value == null) {
+            return null;
+        }
+        Class<?> c = value.getClass();
+        if (findDefaultDataType(c) != null) {
+            return value;
+        }
+
+        if (allConversions) {
+            if (c == char[].class) {
+                return new ClobType(ClobImpl.createClob((char[])value));
+            }
+            if (c == byte[].class) {
+                return new BinaryType((byte[])value);
+            }
+            if (java.util.Date.class.isAssignableFrom(c)) {
+                return new Timestamp(((java.util.Date)value).getTime());                
+            }
+        }
+        if (Clob.class.isAssignableFrom(c)) {
+            return new ClobType((Clob)value);
+        } 
+        if (Blob.class.isAssignableFrom(c)) {
+            return new BlobType((Blob)value);
+        } 
+        if (SQLXML.class.isAssignableFrom(c)) {
+            return new XMLType((SQLXML)value);
+        } 
+        return value; // "object type"
     }
 }

@@ -3,14 +3,14 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.util.PropertiesUtil;
+import org.teiid.runtime.client.util.PropertiesUtils;
 
 public class MatchCriteria extends Criteria {
 
     /** The internal null escape character */
     private static final char NULL_ESCAPE_CHAR = 0;
 
-    private static final char DEFAULT_ESCAPE_CHAR = PropertiesUtil.getBooleanProperty(System.getProperties(), "org.teiid.backslashDefaultMatchEscape", false)?'\\':NULL_ESCAPE_CHAR; //$NON-NLS-1$
+    private static final char DEFAULT_ESCAPE_CHAR = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.backslashDefaultMatchEscape", false)?'\\':NULL_ESCAPE_CHAR; //$NON-NLS-1$
 
     public enum MatchMode {
         /**
