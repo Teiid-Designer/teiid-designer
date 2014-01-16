@@ -121,7 +121,15 @@ public interface CriteriaOperator {
         public static Operator getOperator(ITeiidServerVersion version, String symbol) {
             for (Operator operator : Operator.values()) {
 
-                if (! operator.getSymbols().contains(symbol))
+                boolean foundSymbol = false;
+                for (String opSymbol : operator.getSymbols()) {
+                    if (opSymbol.equalsIgnoreCase(symbol)) {
+                        foundSymbol = true;
+                        break;
+                    }
+                }
+
+                if (! foundSymbol)
                     continue;
 
                 // Check if the operator has a removed annotation. If it does then check it
@@ -140,7 +148,7 @@ public interface CriteriaOperator {
 
                 return operator;
             }
-   
+
             throw new UnsupportedOperationException("Symbol '" + symbol + "' has no operator in version " + version); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }

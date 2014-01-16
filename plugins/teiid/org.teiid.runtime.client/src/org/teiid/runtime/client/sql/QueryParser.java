@@ -166,7 +166,7 @@ public class QueryParser {
      * @return
      */
 	private TeiidClientException convertParserException(Exception e) {
-        TeiidClientException qpe = new TeiidClientException(e, Messages.getString(Messages.TeiidParser.lexicalError));
+        TeiidClientException qpe = new TeiidClientException(e, Messages.getString(Messages.TeiidParser.lexicalError, e.getMessage()));
         return qpe;
     }
 

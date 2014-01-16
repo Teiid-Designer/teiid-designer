@@ -43,7 +43,7 @@ public class TestCriteriaOperator extends TestCase {
         ExpectedResults[] expectedResults = new ExpectedResults[] {
             new ExpectedResults(version("7.0.0"), Operator.values().length), //$NON-NLS-1$
             new ExpectedResults(version("7.x.0"), Operator.values().length), //$NON-NLS-1$
-            new ExpectedResults(version("8.0.0"), Operator.values().length - 5, "like", "in", "is", "is null", "between", ""), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3 //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+            new ExpectedResults(version("8.0.0"), Operator.values().length - 5, "like", "in", "is", "is null", "between", ""), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
             new ExpectedResults(version("8.x.0"), Operator.values().length - 5, "like", "in", "is", "is null", "between", "") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
         };
 

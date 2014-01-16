@@ -53,9 +53,6 @@ import org.teiid.runtime.client.util.StringUtil;
 @SuppressWarnings({"nls", "unused", "javadoc"})
 public class Teiid8Parser extends AbstractTeiidParser {
 
-    private Teiid8Parser() {      super(new TeiidServerVersion("8.x.x"));
-    }
-
     private String getComment(Token t) {
         Token optToken = t.specialToken;
         if (optToken == null) { 

@@ -52,10 +52,6 @@ import org.teiid.runtime.client.util.StringUtil;
 @SuppressWarnings({"nls", "unused", "javadoc"})
 public class Teiid7Parser extends AbstractTeiidParser {
 
-    private Teiid7Parser() {
-      super(new TeiidServerVersion("7.7.x"));
-    }
-
     private String getComment(Token t) {
         Token optToken = t.specialToken;
         if (optToken == null) { 
@@ -3389,7 +3385,7 @@ OrderByItem sortSpecification(ParseInfo info) #OrderByItem :
 	    jjtThis.setSymbol(ex);
         jjtThis.setAscending(ascending);
     	if (nullOrdering != null) {
-    		jjtThis.setNullOrdering(NullOrdering.valueOf(nullOrdering));
+    		jjtThis.setNullOrdering(NullOrdering.valueOf(nullOrdering.toUpperCase()));
     	}
     	return jjtThis;
 	}

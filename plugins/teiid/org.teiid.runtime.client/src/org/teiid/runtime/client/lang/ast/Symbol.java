@@ -146,9 +146,9 @@ public class Symbol extends SimpleNode {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Symbol other = (Symbol)obj;
-        if (this.canonicalShortName == null) {
-            if (other.canonicalShortName != null) return false;
-        } else if (!this.canonicalShortName.equals(other.canonicalShortName)) return false;
+        if (this.getCanonicalShortName() == null) {
+            if (other.getCanonicalShortName() != null) return false;
+        } else if (!this.getCanonicalShortName().equalsIgnoreCase(other.getCanonicalShortName())) return false;
         if (this.getName() == null) {
             if (other.getName() != null) return false;
         } else if (!this.getName().equalsIgnoreCase(other.getName())) return false;

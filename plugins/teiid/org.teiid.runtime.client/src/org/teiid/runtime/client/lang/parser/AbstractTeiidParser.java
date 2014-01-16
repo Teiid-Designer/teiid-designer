@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.SPParameter;
@@ -49,29 +48,12 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     
     protected Pattern SOURCE_HINT_ARG = Pattern.compile("\\s*([^: ]+)(\\s+KEEP ALIASES)?\\s*:((?:'[^']*')+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
 
-	private ITeiidServerVersion version;
-
-	public AbstractTeiidParser() {
-	    this(TeiidServerVersion.DEFAULT_TEIID_8_SERVER);
-    }
-
-    public AbstractTeiidParser(ITeiidServerVersion version) {
-      this.version = version;
-    }
+    protected ITeiidServerVersion version;
 
     /**
      * @return teiid instance version
      */
-    public ITeiidServerVersion getVersion() {
-      return this.version;
-    }
-
-    /**
-     * @param version
-     */
-    public void setVersion(ITeiidServerVersion version) {
-        this.version = version;
-    }
+    public abstract ITeiidServerVersion getVersion();
 
     @Override
     public DataTypeManagerService getDataTypeService() {
