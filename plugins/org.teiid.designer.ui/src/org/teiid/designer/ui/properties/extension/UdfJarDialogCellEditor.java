@@ -35,7 +35,13 @@ public class UdfJarDialogCellEditor extends DialogCellEditor {
         // Determine if there is a lib folder under the project
         IProject proj = getProject(this.eObject);
         
+        Object value = getValue();
+        
         String selectedFile = VdbFileDialogUtil.selectUdfOrFile(cellEditorWindow.getShell(), proj, true);
+        
+        if( value != null && (selectedFile == null ||  selectedFile.length() == 0) ) {
+        	selectedFile = (String)value;
+        }
         
         return selectedFile;
     }
