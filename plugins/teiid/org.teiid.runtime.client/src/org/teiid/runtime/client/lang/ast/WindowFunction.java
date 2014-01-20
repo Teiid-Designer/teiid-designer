@@ -8,6 +8,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 /**
  *
@@ -50,6 +51,6 @@ public interface WindowFunction extends Node, SingleElementSymbol, Expression {
     Class<?> getType();
 
     /** Accept the visitor. **/
-    void jjtAccept(Teiid8ParserVisitor visitor, Object data);
+    void accept(AbstractTeiidParserVisitor visitor, Object data);
 
 }

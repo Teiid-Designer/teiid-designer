@@ -3,6 +3,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 @SuppressWarnings( "unused" )
 public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Expression {
@@ -62,7 +63,7 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

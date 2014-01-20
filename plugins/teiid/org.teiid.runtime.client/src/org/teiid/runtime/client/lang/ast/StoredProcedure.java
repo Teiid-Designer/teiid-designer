@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.SPParameter;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class StoredProcedure extends Command {
@@ -179,7 +180,7 @@ public class StoredProcedure extends Command {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

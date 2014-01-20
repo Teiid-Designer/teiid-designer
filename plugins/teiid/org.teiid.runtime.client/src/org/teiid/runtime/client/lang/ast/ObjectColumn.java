@@ -3,6 +3,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 public class ObjectColumn extends ProjectedColumn {
 
@@ -71,7 +72,7 @@ public class ObjectColumn extends ProjectedColumn {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

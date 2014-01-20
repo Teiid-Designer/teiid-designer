@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class XMLColumn extends ProjectedColumn {
@@ -83,7 +84,7 @@ public class XMLColumn extends ProjectedColumn {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

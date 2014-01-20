@@ -13,7 +13,7 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
 /**
  *
  */
-public abstract class AbstractCompareCriteria extends Criteria implements CriteriaOperator {
+public abstract class AbstractCompareCriteria extends Criteria implements PredicateCriteria, CriteriaOperator {
 
     /** The left-hand expression. */
     private Expression leftExpression;

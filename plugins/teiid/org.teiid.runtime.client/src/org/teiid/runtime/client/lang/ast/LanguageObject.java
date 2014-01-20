@@ -22,12 +22,20 @@
 
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+
 
 /**
  * Root interface for all language object interfaces.
  */
 public interface LanguageObject {
-    
-    //void acceptVisitor(LanguageObjectVisitor visitor);
+
+    /**
+     * Visit this {@link LanguageObject} with the given visitor
+     *
+     * @param visitor
+     * @param data
+     */
+    void accept(AbstractTeiidParserVisitor visitor, Object data);
 
 }

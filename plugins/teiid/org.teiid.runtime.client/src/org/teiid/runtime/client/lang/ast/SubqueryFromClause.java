@@ -3,6 +3,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class SubqueryFromClause extends FromClause {
@@ -99,7 +100,7 @@ public class SubqueryFromClause extends FromClause {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

@@ -163,6 +163,26 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         public String getValidChars() {
             return validChars;
         }
+
+        /**
+         * Is the supplied class type a LOB based data type?
+         *
+         * @param type
+         * @return true if yes; false otherwise
+         */
+        public static boolean isLOB(Class<?> type) {
+            return BLOB.equals(type) || CLOB.equals(type) || XML.equals(type);
+        }
+
+        /**
+         * Is the supplied class name a LOB based data type?
+         *
+         * @param type
+         * @return true if yes; false otherwise
+         */
+        public static boolean isLOB(String type) {
+            return BLOB.equals(type) ||CLOB.equals(type) || XML.equals(type);
+        }
     }
 
     /**

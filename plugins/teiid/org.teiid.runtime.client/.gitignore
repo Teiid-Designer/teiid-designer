@@ -1,6 +1,5 @@
 *.jj
 Teiid*ParserTreeConstants.java
-Teiid*ParserVisitor.java
 JJTTeiid*ParserState.java
 src/org/teiid/runtime/client/lang/parser/v*/JavaCharStream.java
 src/org/teiid/runtime/client/lang/parser/v*/ParseException.java

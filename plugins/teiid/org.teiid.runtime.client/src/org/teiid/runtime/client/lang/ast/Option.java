@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.SQLConstants.Reserved;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 public class Option extends SimpleNode {
 
@@ -132,7 +133,7 @@ public class Option extends SimpleNode {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

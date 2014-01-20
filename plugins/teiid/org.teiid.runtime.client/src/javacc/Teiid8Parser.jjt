@@ -10,7 +10,7 @@ options {
     NODE_SCOPE_HOOK = false;
     NODE_USES_PARSER = true;
     NODE_PACKAGE = "org.teiid.runtime.client.lang.ast";
-    VISITOR = true;
+    VISITOR = false;
     VISITOR_RETURN_TYPE = "void";
     GRAMMAR_ENCODING="UTF-8";
     KEEP_LINE_COLUMN = true;

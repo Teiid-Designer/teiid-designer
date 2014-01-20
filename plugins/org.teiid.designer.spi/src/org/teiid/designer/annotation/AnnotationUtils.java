@@ -8,6 +8,7 @@
 package org.teiid.designer.annotation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import org.eclipse.core.runtime.Assert;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -21,6 +22,16 @@ public class AnnotationUtils {
     private AnnotationUtils() {}
 
     /**
+     * @param accessibleObject
+     * @param annotationClass
+     *
+     * @return given accessibleObject has the given annotation
+     */
+    public static boolean hasAnnotation(AccessibleObject accessibleObject, Class<? extends Annotation> annotationClass) {
+        return accessibleObject.isAnnotationPresent(annotationClass);
+    }
+
+    /**
      * @param enumValue
      * @param annotationClass
      *
@@ -30,7 +41,17 @@ public class AnnotationUtils {
      */
     public static boolean hasAnnotation(Enum<?> enumValue, Class<? extends Annotation> annotationClass) throws Exception {
         Field enumField = enumValue.getClass().getField(enumValue.name());
-        return enumField.isAnnotationPresent(annotationClass);
+        return hasAnnotation(enumField, annotationClass);
+    }
+
+    /**
+     * @param accessibleObject
+     * @param annotationClass
+     *
+     * @return the annotation of the given class from the given accessibleObject
+     */
+    public static <T extends Annotation> T getAnnotation(AccessibleObject accessibleObject, Class<T> annotationClass) {
+        return accessibleObject.getAnnotation(annotationClass);
     }
 
     /**
@@ -43,7 +64,7 @@ public class AnnotationUtils {
      */
     public static <T extends Annotation> T getAnnotation(Enum<?> enumValue, Class<T> annotationClass) throws Exception {
         Field enumField = enumValue.getClass().getField(enumValue.name());
-        return enumField.getAnnotation(annotationClass);
+        return getAnnotation(enumField, annotationClass);
     }
 
     /**

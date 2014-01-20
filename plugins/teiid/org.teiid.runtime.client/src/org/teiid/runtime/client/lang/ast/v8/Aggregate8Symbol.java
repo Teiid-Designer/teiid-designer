@@ -9,7 +9,7 @@ import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.Function;
 import org.teiid.runtime.client.lang.ast.OrderBy;
-import org.teiid.runtime.client.lang.ast.Teiid8ParserVisitor;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
@@ -283,7 +283,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((AggregateSymbol)this, data);
     }
 

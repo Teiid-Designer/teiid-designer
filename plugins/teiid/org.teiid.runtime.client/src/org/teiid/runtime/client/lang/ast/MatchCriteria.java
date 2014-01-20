@@ -2,13 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.util.PropertiesUtils;
 
-public class MatchCriteria extends Criteria {
+public class MatchCriteria extends Criteria implements PredicateCriteria {
 
     /** The internal null escape character */
-    private static final char NULL_ESCAPE_CHAR = 0;
+    public static final char NULL_ESCAPE_CHAR = 0;
 
     private static final char DEFAULT_ESCAPE_CHAR = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.backslashDefaultMatchEscape", false)?'\\':NULL_ESCAPE_CHAR; //$NON-NLS-1$
 
@@ -158,7 +159,7 @@ public class MatchCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

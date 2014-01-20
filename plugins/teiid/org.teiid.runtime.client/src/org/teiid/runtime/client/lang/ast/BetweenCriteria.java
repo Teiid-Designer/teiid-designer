@@ -2,9 +2,10 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class BetweenCriteria extends Criteria {
+public class BetweenCriteria extends Criteria implements PredicateCriteria {
 
     private Expression expression;
 
@@ -110,7 +111,7 @@ public class BetweenCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

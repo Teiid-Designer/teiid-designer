@@ -62,7 +62,7 @@
                     <nodeScopeHook>false</nodeScopeHook>
                     <nodeUsesParser>true</nodeUsesParser>
                     <nodePackage>org.teiid.runtime.client.lang.ast</nodePackage>
-                    <visitor>true</visitor>
+                    <visitor>false</visitor>
                     <visitorReturnType>void</visitorReturnType>
                     <grammarEncoding>UTF-8</grammarEncoding>
                     <keepLineColumn>true</keepLineColumn>

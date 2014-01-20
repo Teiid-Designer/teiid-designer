@@ -9,6 +9,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 
@@ -156,7 +157,7 @@ public class Symbol extends SimpleNode {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

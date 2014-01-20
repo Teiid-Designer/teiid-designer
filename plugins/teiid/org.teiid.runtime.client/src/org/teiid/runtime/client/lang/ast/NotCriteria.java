@@ -3,6 +3,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 public class NotCriteria extends Criteria {
 
@@ -54,7 +55,7 @@ public class NotCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

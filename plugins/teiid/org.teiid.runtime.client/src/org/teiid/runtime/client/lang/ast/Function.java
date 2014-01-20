@@ -3,6 +3,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.Arrays;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Function extends SimpleNode implements Expression {
@@ -126,7 +127,7 @@ public class Function extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

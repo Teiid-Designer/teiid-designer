@@ -7,6 +7,7 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
@@ -109,5 +110,10 @@ public class ExceptionExpression extends SimpleNode implements Expression {
         result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
         result = prime * result + ((this.sqlState == null) ? 0 : this.sqlState.hashCode());
         return result;
+    }
+
+    /** Accept the visitor. **/
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
+        visitor.visit(this, data);
     }
 }

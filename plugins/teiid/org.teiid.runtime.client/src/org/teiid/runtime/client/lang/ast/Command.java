@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.SourceHint;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 public class Command extends SimpleNode {
 
@@ -75,7 +76,7 @@ public class Command extends SimpleNode {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

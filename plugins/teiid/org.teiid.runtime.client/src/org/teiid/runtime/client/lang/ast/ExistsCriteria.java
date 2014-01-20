@@ -3,9 +3,10 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.SubqueryHint;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class ExistsCriteria extends Criteria {
+public class ExistsCriteria extends Criteria implements PredicateCriteria {
 
     private QueryCommand command;
 
@@ -84,7 +85,7 @@ public class ExistsCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

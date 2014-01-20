@@ -2,7 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.visitor.SQLStringVisitor;
 
 public class SimpleNode implements Node, LanguageObject {
 
@@ -63,28 +65,26 @@ public class SimpleNode implements Node, LanguageObject {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 
     /** Accept the visitor. **/
-    public Object childrenAccept(Teiid8ParserVisitor visitor, Object data) {
+    public Object childrenAccept(AbstractTeiidParserVisitor visitor, Object data) {
         if (children != null) {
             for (int i = 0; i < children.length; ++i) {
-                children[i].jjtAccept(visitor, data);
+                children[i].accept(visitor, data);
             }
         }
         return data;
     }
 
-    /* You can override these two methods in subclasses of SimpleNode to
-       customize the way the node appears when the tree is dumped.  If
-       your output uses more than one line you should override
-       toString(String), otherwise overriding toString() is probably all
-       you need to do. */
-
+    /**
+     * Return a String representation of this object using SQLStringVisitor.
+     * @return String representation using SQLStringVisitor
+     */
     public String toString() {
-        return Teiid8ParserTreeConstants.jjtNodeName[id];
+        return SQLStringVisitor.getSQLString(parser.getVersion(), this);
     }
 
     public String toString(String prefix) {

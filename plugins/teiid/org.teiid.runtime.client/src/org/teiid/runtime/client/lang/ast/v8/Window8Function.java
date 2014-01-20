@@ -4,10 +4,10 @@ package org.teiid.runtime.client.lang.ast.v8;
 
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.SimpleNode;
-import org.teiid.runtime.client.lang.ast.Teiid8ParserVisitor;
 import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
 import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 public class Window8Function extends SimpleNode implements WindowFunction {
 
@@ -96,7 +96,7 @@ public class Window8Function extends SimpleNode implements WindowFunction {
 
     /** Accept the visitor. **/
     @Override
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((WindowFunction) this, data);
     }
 }

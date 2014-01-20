@@ -2,7 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.v8.*;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 /* All AST nodes must implement this interface.  It provides basic
    machinery for constructing the parent and child relationships
@@ -36,6 +36,6 @@ interface Node {
   public int jjtGetNumChildren();
 
   /** Accept the visitor. **/
-  public void jjtAccept(Teiid8ParserVisitor visitor, Object data);
+  public void accept(AbstractTeiidParserVisitor visitor, Object data);
 }
 /* JavaCC - OriginalChecksum=6764f8f167c7f7dd0e5bed5ffc2e199c (do not edit this line) */

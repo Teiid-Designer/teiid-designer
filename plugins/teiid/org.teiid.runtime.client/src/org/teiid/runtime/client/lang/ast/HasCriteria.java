@@ -3,10 +3,11 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @Removed("8.0.0")
-public class HasCriteria extends Criteria {
+public class HasCriteria extends Criteria implements PredicateCriteria {
 
     // the selector object used to determine if a type of criteria is specified 
     // on the user's query
@@ -57,7 +58,7 @@ public class HasCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

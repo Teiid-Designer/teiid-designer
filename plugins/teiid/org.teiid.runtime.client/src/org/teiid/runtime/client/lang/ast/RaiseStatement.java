@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 @Since("8.0.0")
 public class RaiseStatement extends Statement {
@@ -71,7 +72,7 @@ public class RaiseStatement extends Statement {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

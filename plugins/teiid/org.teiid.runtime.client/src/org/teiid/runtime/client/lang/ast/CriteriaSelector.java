@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
 @Removed("8.0.0")
 public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
@@ -99,7 +100,7 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid7ParserVisitor visitor, Object data) {
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }

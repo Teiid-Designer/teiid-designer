@@ -4,6 +4,7 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
@@ -121,7 +122,8 @@ public class Constant extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
-    public void jjtAccept(Teiid8ParserVisitor visitor, Object data) {
+    @Override
+    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 }
