@@ -57,20 +57,6 @@ public class QueryParser {
 	    this.teiidParser = createTeiidParser(new StringReader("")); //$NON-NLS-1$
 	}
 
-	/**
-     * @return the teiidParser
-     */
-    public TeiidParser getTeiidParser() {
-        return this.teiidParser;
-    }
-
-	/**
-	 * Helper method to get a TeiidParser instance for given sql string.
-	 */
-	private TeiidParser getSqlParser(String sql) {
-		return getSqlParser(new StringReader(sql));
-	}
-
 	private TeiidParser createTeiidParser(Reader sql) {
 	    if (sql == null)
 	        throw new IllegalArgumentException(Messages.gs(Messages.TEIID.TEIID30377));
@@ -91,6 +77,21 @@ public class QueryParser {
 
 	    return teiidParser;
 	}
+
+    /**
+     * @return the teiidParser
+     */
+    public TeiidParser getTeiidParser() {
+        return this.teiidParser;
+    }
+
+    /**
+     * @param sql
+     * @return the {@link TeiidParser} initialised with the given sql
+     */
+    public TeiidParser getTeiidParser(String sql) {
+        return getSqlParser(new StringReader(sql));
+    }
 
 	private TeiidParser getSqlParser(Reader sql) {
 		if(teiidParser == null) {
@@ -150,9 +151,9 @@ public class QueryParser {
     	Command result = null;
         try{
             if (designerCommands) {
-                result = getSqlParser(sql).designerCommand(parseInfo);
+                result = getTeiidParser(sql).designerCommand(parseInfo);
             } else {
-                result = getSqlParser(sql).command(parseInfo);
+                result = getTeiidParser(sql).command(parseInfo);
             }
         } catch(Exception e) {
            throw convertParserException(e);
@@ -187,7 +188,7 @@ public class QueryParser {
 
         Criteria result = null;
         try{
-            result = getSqlParser(sql).criteria(dummyInfo);
+            result = getTeiidParser(sql).criteria(dummyInfo);
 
         } catch(Exception e) {
             throw convertParserException(e);
@@ -213,7 +214,7 @@ public class QueryParser {
 
         Expression result = null;
         try{
-            result = getSqlParser(sql).expression(dummyInfo);
+            result = getTeiidParser(sql).expression(dummyInfo);
         } catch (Exception e) {
             throw convertParserException(e);
         }

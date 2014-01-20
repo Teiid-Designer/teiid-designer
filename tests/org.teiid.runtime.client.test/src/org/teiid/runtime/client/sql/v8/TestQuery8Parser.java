@@ -7,11 +7,9 @@
  */
 package org.teiid.runtime.client.sql.v8;
 
-import java.io.StringReader;
 import java.util.Arrays;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.AssignmentStatement;
 import org.teiid.runtime.client.lang.ast.Block;
@@ -35,7 +33,6 @@ import org.teiid.runtime.client.lang.ast.RaiseStatement;
 import org.teiid.runtime.client.lang.ast.Select;
 import org.teiid.runtime.client.lang.ast.Statement;
 import org.teiid.runtime.client.lang.ast.XMLSerialize;
-import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 import org.teiid.runtime.client.sql.AbstractTestFactory;
 import org.teiid.runtime.client.sql.AbstractTestQueryParser;
 
@@ -60,13 +57,6 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
             factory = new Test8Factory(parser);
 
         return factory;
-    }
-
-    @Override
-    protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
-        Teiid8Parser teiid8Parser = new Teiid8Parser(new StringReader(stmt));
-        Statement actualStmt = teiid8Parser.statement(new ParseInfo());
-        assertEquals("Language objects do not match: ", expectedStmt, actualStmt); //$NON-NLS-1$
     }
 
     @Test

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.runtime.client.lang.ParseInfo;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.AssignmentStatement;
 import org.teiid.runtime.client.lang.ast.Block;
@@ -68,13 +67,6 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         Teiid7Parser teiid7Parser = new Teiid7Parser(new StringReader(selector));
         CriteriaSelector actualSelector = teiid7Parser.criteriaSelector();
         assertEquals("CriteriaSelector does not match: ", expectedSelector, actualSelector); //$NON-NLS-1$
-    }
-
-    @Override
-    protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
-        Teiid7Parser teiid7Parser = new Teiid7Parser(new StringReader(stmt));
-        Statement actualStmt = teiid7Parser.statement(new ParseInfo());
-        assertEquals("Language objects do not match: ", expectedStmt, actualStmt); //$NON-NLS-1$
     }
 
     /** SELECT 1.3e8 FROM a.g1 */

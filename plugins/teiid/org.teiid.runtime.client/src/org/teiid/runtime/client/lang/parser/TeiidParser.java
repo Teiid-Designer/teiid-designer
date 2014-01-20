@@ -15,6 +15,7 @@ import org.teiid.runtime.client.lang.ast.Command;
 import org.teiid.runtime.client.lang.ast.Criteria;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.LanguageObject;
+import org.teiid.runtime.client.lang.ast.Statement;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 /**
@@ -81,4 +82,14 @@ public interface TeiidParser {
      * @throws Exception
      */
     Criteria criteria(ParseInfo parseInfo) throws Exception;
+
+    /**
+     * Parse a statement
+     *
+     * @param info
+     * @return the statement
+     * @throws Exception
+     */
+    Statement statement(ParseInfo info) throws Exception;
+
 }
