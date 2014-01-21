@@ -332,13 +332,28 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 		if( thePath != null && thePath.length() > 0 ) {
 			// Need to remove the OLD root path from FULL path
 		    SchemaPath oldRelativePath = new SchemaPath(getRelativePath());
+		    
+		    SchemaPath newRelativePath = this.rootXmlPath;
+		    StringBuffer buf = new StringBuffer();
+		    for (String seg : newRelativePath.segments){
+		    	if (!thePath.contains(seg)){
+		    		buf.append("/").append(seg); //$NON-NLS-1$
+		    	}
+		    }
+		    StringBuffer newRelativeBuf = new StringBuffer();
+		    for (String seg : oldRelativePath.segments){
+		    	if (!thePath.contains(seg)){
+		    		newRelativeBuf.append("/").append(seg); //$NON-NLS-1$
+		    	}
+		    }
+
 			
 			String tmpRoot = thePath;
 			if( thePath.endsWith("/")) { //$NON-NLS-1$
 				tmpRoot = tmpRoot.substring(0, thePath.length()-1);
 			}
 			
-			String newFullPath = tmpRoot + oldRelativePath;
+			String newFullPath = tmpRoot + buf + newRelativeBuf;
 			
 			setFullXmlPath(newFullPath); //tmpRoot + oldRelativePath.toString());
 			
