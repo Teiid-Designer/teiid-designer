@@ -48,9 +48,11 @@ public interface WindowFunction extends Node, SingleElementSymbol, Expression {
     @Removed("8.0.0")
     void setName(String name);
 
+    @Override
     Class<?> getType();
 
     /** Accept the visitor. **/
+    @Override
     void accept(AbstractTeiidParserVisitor visitor, Object data);
 
 }

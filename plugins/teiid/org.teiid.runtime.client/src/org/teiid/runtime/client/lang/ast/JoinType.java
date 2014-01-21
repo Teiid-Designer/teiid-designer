@@ -93,8 +93,20 @@ public class JoinType extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public JoinType clone() {
+        JoinType clone = new JoinType(this.parser, this.id);
+
+        if(getKind() != null)
+            clone.setKind(getKind());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=682a038ace51527d7a11065b4087303a (do not edit this line) */

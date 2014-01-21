@@ -180,8 +180,35 @@ public class StoredProcedure extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public StoredProcedure clone() {
+        StoredProcedure clone = new StoredProcedure(this.parser, this.id);
+
+        if(getProcedureName() != null)
+            clone.setProcedureName(getProcedureName());
+        clone.setCallableStatement(isCallableStatement());
+        
+        if(getParameters() != null) {
+            for (SPParameter parameter : getParameters()) {
+                clone.setParameter(parameter.clone());
+            }
+        }
+        
+        clone.setCalledWithReturn(isCalledWithReturn());
+        clone.setDisplayNamedParameters(isDisplayNamedParameters());
+        clone.setProcedureRelational(isProcedureRelational());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=c312e9c5d62fcc77b0a38cf092591213 (do not edit this line) */

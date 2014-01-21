@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @Since("8.0.0")
 public class ObjectTable extends FromClause {
@@ -114,8 +114,34 @@ public class ObjectTable extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ObjectTable clone() {
+        ObjectTable clone = new ObjectTable(this.parser, this.id);
+
+        if(getColumns() != null)
+            clone.setColumns(cloneList(getColumns()));
+        if(getScriptingLanguage() != null)
+            clone.setScriptingLanguage(getScriptingLanguage());
+        if(getPassing() != null)
+            clone.setPassing(cloneList(getPassing()));
+        if(getRowScript() != null)
+            clone.setRowScript(getRowScript());
+        if(getName() != null)
+            clone.setName(getName());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=2c94f0f8a18498b57fc9853980a571ea (do not edit this line) */

@@ -24,6 +24,7 @@ package org.teiid.runtime.client.lang;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
@@ -387,4 +388,26 @@ public class SPParameter {
 		return varArg;
 	}
 
+	@Override
+    public SPParameter clone() {
+        SPParameter clone = new SPParameter(this.teiidParser, getIndex(), getExpression());
+        clone.setParameterType(getParameterType());
+        if (this.parameterSymbol != null)
+            clone.parameterSymbol = this.parameterSymbol.clone();
+
+        if(getExpression() != null) {
+            clone.setExpression(getExpression().clone());
+        }
+        if(this.resultSetColumns != null) {
+            Iterator<ElementSymbol> iter = this.resultSetColumns.iterator();
+            Iterator<Object> idIter = this.resultSetIDs.iterator();
+            while(iter.hasNext()) {
+                ElementSymbol column = iter.next();
+                clone.addResultSetColumn(column.getName(), column.getType(), idIter.next());
+            }
+        }
+        clone.setUsingDefault(isUsingDefault());
+        clone.setVarArg(isVarArg());
+        return clone;
+    }
 }

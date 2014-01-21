@@ -32,6 +32,7 @@ public class CompareCriteria extends AbstractCompareCriteria {
      * Get right expression.
      * @return right expression
      */
+    @Override
     public Expression getRightExpression() {
         return this.rightExpression;
     }
@@ -82,8 +83,25 @@ public class CompareCriteria extends AbstractCompareCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CompareCriteria clone() {
+        CompareCriteria clone = new CompareCriteria(this.parser, this.id);
+
+        if(getRightExpression() != null)
+            clone.setRightExpression(getRightExpression().clone());
+        clone.setOptional(isOptional());
+        if(getOperator() != null)
+            clone.setOperator(getOperator());
+        if(getLeftExpression() != null)
+            clone.setLeftExpression(getLeftExpression().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b3e2979ada751b1aae0903db53c85d1c (do not edit this line) */

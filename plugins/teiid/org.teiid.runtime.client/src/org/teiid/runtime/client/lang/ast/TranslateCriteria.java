@@ -107,8 +107,22 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public TranslateCriteria clone() {
+        TranslateCriteria clone = new TranslateCriteria(this.parser, this.id);
+
+        if(getSelector() != null)
+            clone.setSelector(getSelector().clone());
+        if(getTranslations() != null)
+            clone.setTranslations(cloneList(getTranslations()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=f23323b45743f602279ed13dcd37babe (do not edit this line) */

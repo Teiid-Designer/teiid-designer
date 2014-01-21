@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.LinkedList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class MultipleElementSymbol extends SimpleNode implements Expression {
 
@@ -105,8 +105,22 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public MultipleElementSymbol clone() {
+        MultipleElementSymbol clone = new MultipleElementSymbol(this.parser, this.id);
+
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
+        if(getElementSymbols() != null)
+            clone.setElementSymbols(cloneList(getElementSymbols()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=ac341c6477c55c5715d1a766627e0a4c (do not edit this line) */

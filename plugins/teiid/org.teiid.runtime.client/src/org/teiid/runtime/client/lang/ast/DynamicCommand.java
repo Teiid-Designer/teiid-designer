@@ -4,8 +4,8 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Collections;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class DynamicCommand extends Command {
 
@@ -152,8 +152,32 @@ public class DynamicCommand extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public DynamicCommand clone() {
+        DynamicCommand clone = new DynamicCommand(this.parser, this.id);
+
+        if(getAsColumns() != null && ! getAsColumns().isEmpty())
+            clone.setAsColumns(cloneList(getAsColumns()));
+        if(getIntoGroup() != null)
+            clone.setIntoGroup(getIntoGroup().clone());
+        if(getSql() != null)
+            clone.setSql(getSql().clone());
+        if(getUsing() != null)
+            clone.setUsing(getUsing().clone());
+        clone.setAsClauseSet(isAsClauseSet());
+        clone.setUpdatingModelCount(getUpdatingModelCount());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=077000c775a7694361ac6d951f20ebb4 (do not edit this line) */

@@ -65,8 +65,18 @@ public class Criteria extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Criteria clone() {
+        Criteria clone = new Criteria(this.parser, this.id);
+
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=d76fcc28dd6818ea751c44825b2d1060 (do not edit this line) */

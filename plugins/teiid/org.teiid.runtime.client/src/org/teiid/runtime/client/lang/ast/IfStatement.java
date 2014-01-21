@@ -109,8 +109,24 @@ public class IfStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public IfStatement clone() {
+        IfStatement clone = new IfStatement(this.parser, this.id);
+
+        if(getCondition() != null)
+            clone.setCondition(getCondition().clone());
+        if(getIfBlock() != null)
+            clone.setIfBlock(getIfBlock().clone());
+        if(getElseBlock() != null)
+            clone.setElseBlock(getElseBlock().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=bb19833978a016bb6733f82348868799 (do not edit this line) */

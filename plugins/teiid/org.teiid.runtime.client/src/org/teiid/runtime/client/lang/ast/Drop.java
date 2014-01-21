@@ -53,8 +53,24 @@ public class Drop extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Drop clone() {
+        Drop clone = new Drop(this.parser, this.id);
+
+        if(getTable() != null)
+            clone.setTable(getTable().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=cf112d019f8dc39785f359562092f510 (do not edit this line) */

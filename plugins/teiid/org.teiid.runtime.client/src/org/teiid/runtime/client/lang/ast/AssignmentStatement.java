@@ -113,8 +113,26 @@ public class AssignmentStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public AssignmentStatement clone() {
+        AssignmentStatement clone = new AssignmentStatement(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        if(getVariable() != null)
+            clone.setVariable(getVariable().clone());
+        if(getValue() != null)
+            clone.setValue(getValue().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=9d8e32dbc35c1c90feaec305fa14473f (do not edit this line) */

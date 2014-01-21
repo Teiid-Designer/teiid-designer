@@ -76,8 +76,22 @@ public class XMLParse extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLParse clone() {
+        XMLParse clone = new XMLParse(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setDocument(isDocument());
+        clone.setWellFormed(isWellFormed());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=3149fac262ffb7a7b54539656eb4178a (do not edit this line) */

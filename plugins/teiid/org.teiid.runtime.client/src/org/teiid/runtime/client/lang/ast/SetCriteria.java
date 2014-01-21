@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class SetCriteria extends AbstractSetCriteria {
 
@@ -54,8 +54,23 @@ public class SetCriteria extends AbstractSetCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SetCriteria clone() {
+        SetCriteria clone = new SetCriteria(this.parser, this.id);
+
+        if(getValues() != null)
+            clone.setValues(cloneList(getValues()));
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setNegated(isNegated());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=9f7eb5b2819c59fc94d4b273872b85f1 (do not edit this line) */

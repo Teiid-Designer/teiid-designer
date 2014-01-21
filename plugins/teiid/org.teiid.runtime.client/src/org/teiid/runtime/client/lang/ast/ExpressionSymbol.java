@@ -22,6 +22,7 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
      * Get the type of the symbol
      * @return Type of the symbol, may be null before resolution
      */
+    @Override
     public Class getType() {
         return this.expression.getType();
     }
@@ -63,8 +64,28 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ExpressionSymbol clone() {
+        ExpressionSymbol clone = new ExpressionSymbol(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b3e2979ada751b1aae0903db53c85d1c (do not edit this line) */

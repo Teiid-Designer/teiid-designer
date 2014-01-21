@@ -111,8 +111,25 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public BetweenCriteria clone() {
+        BetweenCriteria clone = new BetweenCriteria(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getLowerExpression() != null)
+            clone.setLowerExpression(getLowerExpression().clone());
+        if(getUpperExpression() != null)
+            clone.setUpperExpression(getUpperExpression().clone());
+        clone.setNegated(isNegated());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=c3fc97791e1610f2c6a0633d0ef3c39c (do not edit this line) */

@@ -52,8 +52,17 @@ public class SetClauseList extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SetClauseList clone() {
+        SetClauseList clone = new SetClauseList(this.parser, this.id);
+        clone.getClauses().addAll(cloneList(getClauses()));
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=03e0d8ce7120831af6c8c5e5b956b453 (do not edit this line) */

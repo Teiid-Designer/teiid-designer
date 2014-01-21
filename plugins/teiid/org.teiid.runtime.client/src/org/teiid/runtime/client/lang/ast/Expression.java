@@ -48,4 +48,10 @@ public interface Expression extends LanguageObject {
      */
     @Override
     int hashCode();
+
+    /**
+     * @return copy of this expression
+     */
+    @Override
+    Expression clone();
 }

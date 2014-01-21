@@ -71,8 +71,23 @@ public class OrderByItem extends SimpleNode implements SortSpecification {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public OrderByItem clone() {
+        OrderByItem clone = new OrderByItem(this.parser, this.id);
+
+        if(getSymbol() != null)
+            clone.setSymbol(getSymbol().clone());
+        if(getNullOrdering() != null)
+            clone.setNullOrdering(getNullOrdering());
+        clone.setAscending(isAscending());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=8206369bce4a105220b34cfd64063716 (do not edit this line) */

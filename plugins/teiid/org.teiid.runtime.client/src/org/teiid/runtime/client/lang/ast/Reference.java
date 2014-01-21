@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Reference extends SimpleNode implements Expression {
 
@@ -23,6 +23,7 @@ public class Reference extends SimpleNode implements Expression {
         super(p, id);
     }
 
+    @Override
     public Class<?> getType() {
         if (this.isPositional() && this.expression == null) {
             return type;
@@ -93,8 +94,24 @@ public class Reference extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Reference clone() {
+        Reference clone = new Reference(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(this.type != null)
+            clone.setType(this.type);
+        clone.setPositional(isPositional());
+        clone.setIndex(getIndex());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=929474660e4f338ac928ae34c54e9019 (do not edit this line) */

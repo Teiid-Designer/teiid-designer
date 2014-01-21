@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class QueryCommand extends Command {
 
@@ -85,8 +85,28 @@ public class QueryCommand extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public QueryCommand clone() {
+        QueryCommand clone = new QueryCommand(this.parser, this.id);
+
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getLimit() != null)
+            clone.setLimit(getLimit().clone());
+        if(getWith() != null)
+            clone.setWith(cloneList(getWith()));
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e5518987c086d24b10346b06ef207602 (do not edit this line) */

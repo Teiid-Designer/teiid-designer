@@ -55,8 +55,24 @@ public class CreateProcedureCommand extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CreateProcedureCommand clone() {
+        CreateProcedureCommand clone = new CreateProcedureCommand(this.parser, this.id);
+
+        if(getBlock() != null)
+            clone.setBlock(getBlock().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=14790ffe7d56203cb640dd53367c0c33 (do not edit this line) */

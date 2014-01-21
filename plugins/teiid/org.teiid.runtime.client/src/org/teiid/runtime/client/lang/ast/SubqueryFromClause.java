@@ -100,8 +100,29 @@ public class SubqueryFromClause extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SubqueryFromClause clone() {
+        SubqueryFromClause clone = new SubqueryFromClause(this.parser, this.id);
+
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        clone.setTable(isTable());
+        if(getName() != null)
+            clone.setName(getName());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=629ba0123099def7e03078d92c74b52d (do not edit this line) */

@@ -126,5 +126,19 @@ public class Constant extends SimpleNode implements Expression {
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Constant clone() {
+        Constant clone = new Constant(this.parser, this.id);
+
+        if(getType() != null)
+            clone.setType(getType());
+        clone.multiValued = multiValued;
+        if(getValue() != null)
+            clone.setValue(getValue());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=6271d54b51de261eb4775571a208cc1b (do not edit this line) */

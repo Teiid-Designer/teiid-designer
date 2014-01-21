@@ -72,8 +72,21 @@ public class RaiseStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public RaiseStatement clone() {
+        RaiseStatement clone = new RaiseStatement(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setWarning(isWarning());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=8a2fd49e702012817f644e1725684e48 (do not edit this line) */

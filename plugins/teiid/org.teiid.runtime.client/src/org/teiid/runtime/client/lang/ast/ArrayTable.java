@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class ArrayTable extends FromClause {
 
@@ -85,8 +85,30 @@ public class ArrayTable extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ArrayTable clone() {
+        ArrayTable clone = new ArrayTable(this.parser, this.id);
+
+        if(getColumns() != null)
+            clone.setColumns(cloneList(getColumns()));
+        if(getArrayValue() != null)
+            clone.setArrayValue(getArrayValue().clone());
+        if(getName() != null)
+            clone.setName(getName());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=f81b782039749259c07b9501cb43adbf (do not edit this line) */

@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class XMLAttributes extends SimpleNode {
 
@@ -53,8 +53,20 @@ public class XMLAttributes extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLAttributes clone() {
+        XMLAttributes clone = new XMLAttributes(this.parser, this.id);
+
+        if(getArgs() != null)
+            clone.setArgs(cloneList(getArgs()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b3038eb7357f2bdba91bc701ecebddd9 (do not edit this line) */

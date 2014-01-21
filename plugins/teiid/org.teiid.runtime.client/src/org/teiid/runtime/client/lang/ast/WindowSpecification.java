@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class WindowSpecification extends SimpleNode {
 
@@ -73,8 +73,22 @@ public class WindowSpecification extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public WindowSpecification clone() {
+        WindowSpecification clone = new WindowSpecification(this.parser, this.id);
+
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getPartition() != null)
+            clone.setPartition(cloneList(getPartition()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=955691556e321ccc1bc9cfb1cbe30f7c (do not edit this line) */

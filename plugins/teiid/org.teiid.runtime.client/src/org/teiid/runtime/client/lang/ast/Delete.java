@@ -78,8 +78,26 @@ public class Delete extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Delete clone() {
+        Delete clone = new Delete(this.parser, this.id);
+
+        if(getCriteria() != null)
+            clone.setCriteria(getCriteria().clone());
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=2f55ba189d89e0ff22bf3715234a54a4 (do not edit this line) */

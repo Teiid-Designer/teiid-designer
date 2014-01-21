@@ -4,8 +4,8 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class GroupBy extends SimpleNode {
 
@@ -66,8 +66,20 @@ public class GroupBy extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public GroupBy clone() {
+        GroupBy clone = new GroupBy(this.parser, this.id);
+
+        if(getSymbols() != null)
+            clone.setSymbols(cloneList(getSymbols()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=6a7cff5a6c710d93183af9e3561ec65a (do not edit this line) */

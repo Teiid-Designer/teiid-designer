@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class CaseExpression extends SimpleNode implements Expression {
 
@@ -20,10 +20,10 @@ public class CaseExpression extends SimpleNode implements Expression {
     /**
      * Ordered List of Expressions in the WHEN parts of this expression.
      */
-    private List when = null;
+    private List<Expression> when = null;
 
     /** Ordered List containing Expression objects. */
-    private List then = null;
+    private List<Expression> then = null;
 
     /** The (optional) expression in the ELSE part of the expression */
     private Expression elseExpression = null;
@@ -72,7 +72,7 @@ public class CaseExpression extends SimpleNode implements Expression {
      * Gets the List of Expressions in the WHEN parts of this expression. Never null.
      * @return
      */
-    public List getWhen() {
+    public List<Expression> getWhen() {
         return when;
     }
 
@@ -82,7 +82,7 @@ public class CaseExpression extends SimpleNode implements Expression {
      * @return
      */
     public Expression getWhenExpression(int index) {
-        return (Expression)when.get(index);
+        return when.get(index);
     }
 
     /**
@@ -91,7 +91,7 @@ public class CaseExpression extends SimpleNode implements Expression {
      * @param when a non-null List of at least one Expression
      * @param then a non-null List of at least one Expression
      */
-    public void setWhen(List when, List then) {
+    public void setWhen(List<Expression> when, List<Expression> then) {
         if (when == null || then == null) {
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
         }
@@ -99,14 +99,7 @@ public class CaseExpression extends SimpleNode implements Expression {
             when.size() < 1) {
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0036));
         }
-        for (int i = 0 ; i < when.size(); i++) {
-            if (!(when.get(i) instanceof Expression)) {
-                throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0037));
-            }
-            if (!(then.get(i) instanceof Expression)) {
-                throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0038));
-            }
-        }
+
         if (this.when != when) {
             this.when = Collections.unmodifiableList(when);
         }
@@ -119,14 +112,14 @@ public class CaseExpression extends SimpleNode implements Expression {
      * @return
      */
     public Expression getThenExpression(int index) {
-        return (Expression)then.get(index);
+        return then.get(index);
     }
     
     /**
      * Gets the List of THEN expressions in this CASE expression. Never null.
      * @return
      */
-    public List getThen() {
+    public List<Expression> getThen() {
         return then;
     }
     
@@ -134,7 +127,7 @@ public class CaseExpression extends SimpleNode implements Expression {
      * Sets the List of THEN expressions in this CASE expression
      * @param then
      */
-    protected void setThen(List then) {
+    protected void setThen(List<Expression> then) {
         if (this .then != then) {
             this.then = Collections.unmodifiableList(then);
         }
@@ -202,8 +195,26 @@ public class CaseExpression extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CaseExpression clone() {
+        CaseExpression clone = new CaseExpression(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getWhen() != null)
+            clone.setWhen(cloneList(getWhen()), cloneList(getThen()));
+        if(getElseExpression() != null)
+            clone.setElseExpression(getElseExpression().clone());
+        if(getType() != null)
+            clone.setType(getType());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=cd01de33a53d47d00a2b5e980a68efc3 (do not edit this line) */

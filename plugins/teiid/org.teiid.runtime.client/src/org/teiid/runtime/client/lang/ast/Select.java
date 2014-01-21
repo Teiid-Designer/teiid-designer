@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Select extends SimpleNode {
 
@@ -111,8 +111,21 @@ public class Select extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Select clone() {
+        Select clone = new Select(this.parser, this.id);
+
+        clone.setDistinct(isDistinct());
+        if(getSymbols() != null)
+            clone.setSymbols(cloneList(getSymbols()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=4c7be18eb854a0b784d1768f36c4d687 (do not edit this line) */

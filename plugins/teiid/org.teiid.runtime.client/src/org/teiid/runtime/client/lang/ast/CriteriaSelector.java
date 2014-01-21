@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 @Removed("8.0.0")
 public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
@@ -45,7 +45,7 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
      * Get elements on which criteria is pecified on the user's query
      * @return A collection of elements used in criteria
      */
-    public List getElements() {
+    public List<ElementSymbol> getElements() {
         return this.elements;
     }
 
@@ -53,7 +53,7 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
      * Set elements on which criteria is pecified on the user's query
      * @param elements A collection of elements used in criteria
      */ 
-    public void setElements(List elements) {
+    public void setElements(List<ElementSymbol> elements) {
         this.elements = elements;
     }
     
@@ -100,8 +100,22 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CriteriaSelector clone() {
+        CriteriaSelector clone = new CriteriaSelector(this.parser, this.id);
+
+        if(getElements() != null)
+            clone.setElements(cloneList(getElements()));
+        if(getSelectorType() != null)
+            clone.setSelectorType(getSelectorType());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e374010f0e0c1ed5a20b2307bf23e267 (do not edit this line) */

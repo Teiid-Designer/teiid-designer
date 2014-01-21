@@ -22,10 +22,12 @@ public class WhileStatement extends Statement implements Labeled {
         super(p, id);
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }
@@ -89,8 +91,24 @@ public class WhileStatement extends Statement implements Labeled {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public WhileStatement clone() {
+        WhileStatement clone = new WhileStatement(this.parser, this.id);
+
+        if(getCondition() != null)
+            clone.setCondition(getCondition().clone());
+        if(getLabel() != null)
+            clone.setLabel(getLabel());
+        if(getBlock() != null)
+            clone.setBlock(getBlock().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=0d39f04cb283c52ac70af21f40941176 (do not edit this line) */

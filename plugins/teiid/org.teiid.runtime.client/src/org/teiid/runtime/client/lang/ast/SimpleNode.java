@@ -2,6 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.visitor.SQLStringVisitor;
@@ -23,20 +25,25 @@ public class SimpleNode implements Node, LanguageObject {
         parser = p;
     }
 
+    @Override
     public void jjtOpen() {
     }
 
+    @Override
     public void jjtClose() {
     }
 
+    @Override
     public void jjtSetParent(Node n) {
         parent = n;
     }
 
+    @Override
     public Node jjtGetParent() {
         return parent;
     }
 
+    @Override
     public void jjtAddChild(Node n, int i) {
         if (children == null) {
             children = new Node[i + 1];
@@ -48,10 +55,12 @@ public class SimpleNode implements Node, LanguageObject {
         children[i] = n;
     }
 
+    @Override
     public Node jjtGetChild(int i) {
         return children[i];
     }
 
+    @Override
     public int jjtGetNumChildren() {
         return (children == null) ? 0 : children.length;
     }
@@ -65,6 +74,7 @@ public class SimpleNode implements Node, LanguageObject {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
@@ -83,6 +93,7 @@ public class SimpleNode implements Node, LanguageObject {
      * Return a String representation of this object using SQLStringVisitor.
      * @return String representation using SQLStringVisitor
      */
+    @Override
     public String toString() {
         return SQLStringVisitor.getSQLString(parser.getVersion(), this);
     }
@@ -123,6 +134,36 @@ public class SimpleNode implements Node, LanguageObject {
         if (this.id != other.id) return false;
         return true;
     }
+
+    @Override
+    public SimpleNode clone() {
+        SimpleNode clone = new SimpleNode(this.parser, this.id);
+        return clone;
+    }
+
+    protected <T extends LanguageObject> List<T> cloneList(List<T> list) {
+        if (list == null)
+            return null;
+
+        List<T> cloned = new ArrayList<T>();
+        for (T item : list) {
+            cloned.add((T) item.clone());
+        }
+
+        return cloned;
+    }
+
+//    protected <T extends LanguageObject> T[] cloneArray(T[] array) {
+//        if (array == null)
+//            return null;
+//
+//        T[] cloned = (T[]) Array.newInstance(array.getClass(), array.length);
+//        for (int i = 0; i < array.length; ++i) {
+//            cloned[i] = (T) array[i].clone();
+//        }
+//        
+//        return cloned;
+//    }
 }
 
 /* JavaCC - OriginalChecksum=3993b98b61510cfa6ed488fcdfd2afcf (do not edit this line) */

@@ -73,6 +73,7 @@ public abstract class AbstractSetCriteria extends Criteria implements PredicateC
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }

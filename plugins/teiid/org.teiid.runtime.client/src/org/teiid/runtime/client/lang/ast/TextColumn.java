@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class TextColumn extends ProjectedColumn {
 
@@ -110,8 +110,29 @@ public class TextColumn extends ProjectedColumn {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public TextColumn clone() {
+        TextColumn clone = new TextColumn(this.parser, this.id);
+
+        if(getSelector() != null)
+            clone.setSelector(getSelector());
+        if(getWidth() != null)
+            clone.setWidth(getWidth());
+        clone.setNoTrim(isNoTrim());
+        if(getPosition() != null)
+            clone.setPosition(getPosition());
+        if(getName() != null)
+            clone.setName(getName());
+        if(getType() != null)
+            clone.setType(getType());
+        
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b1ade91310a19786192f5e8514ff33a8 (do not edit this line) */

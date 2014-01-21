@@ -96,13 +96,13 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
     @Override
     protected void helpTestExpression(String sql, String expectedString, Expression expected) throws Exception {
         Expression actual = parser.parseExpression(sql);
-        assertEquals("Command objects do not match: ", expected, actual); //$NON-NLS-1$
+        assertEquals("Command objects do not match: ", expected, actual);
     }
 
     @Override
     protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
         Statement actualStmt = parser.getTeiidParser(stmt).statement(new ParseInfo());
-        assertEquals("Language objects do not match: ", expectedStmt, actualStmt); //$NON-NLS-1$
+        assertEquals("Language objects do not match: ", expectedStmt, actualStmt);
     }
 
     /** SELECT * FROM g1 inner join g2 */

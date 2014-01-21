@@ -71,6 +71,7 @@ public class Function extends SimpleNode implements Expression {
      * Get type of function, if known
      * @return Java class name of type, or null if not yet resolved
      */
+    @Override
     public Class<?> getType() {
         return this.type;
     }
@@ -127,8 +128,29 @@ public class Function extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Function clone() {
+        Function clone = new Function(this.parser, this.id);
+
+        if(getArgs() != null) {
+            Expression[] cloned = new Expression[getArgs().length];
+            for (int i = 0; i < getArgs().length; ++i) {
+                cloned[i] = getArgs()[i].clone();
+            }
+            clone.setArgs(cloned);
+        }
+        if(getType() != null)
+            clone.setType(getType());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=117ee9a033f03357a27a00cd03284aa4 (do not edit this line) */

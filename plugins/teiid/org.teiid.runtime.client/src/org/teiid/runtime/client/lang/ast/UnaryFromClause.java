@@ -72,8 +72,28 @@ public class UnaryFromClause extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public UnaryFromClause clone() {
+        UnaryFromClause clone = new UnaryFromClause(this.parser, this.id);
+
+        if(getGroupSymbol() != null)
+            clone.setGroupSymbol(getGroupSymbol().clone());
+        if(getExpandedCommand() != null)
+            clone.setExpandedCommand(getExpandedCommand().clone());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=363ebf15eecd5ebdaa922627c2a7905d (do not edit this line) */

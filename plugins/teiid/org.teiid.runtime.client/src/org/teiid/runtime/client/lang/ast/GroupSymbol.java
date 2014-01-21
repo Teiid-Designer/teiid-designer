@@ -70,8 +70,30 @@ public class GroupSymbol extends Symbol {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public GroupSymbol clone() {
+        GroupSymbol clone = new GroupSymbol(this.parser, this.id);
+
+        if(getDefinition() != null)
+            clone.setDefinition(getDefinition());
+        if(getOutputDefinition() != null)
+            clone.setOutputDefinition(getOutputDefinition());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=f7012acf7f9a059597f0384f4fcb74fa (do not edit this line) */

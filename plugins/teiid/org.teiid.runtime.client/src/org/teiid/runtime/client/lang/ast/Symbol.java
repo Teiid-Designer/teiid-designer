@@ -110,7 +110,7 @@ public class Symbol extends SimpleNode {
      */
     @Removed("8.0.0")
     public String getCanonicalShortName() {
-        if (canonicalShortName == null) {
+        if (canonicalShortName == null && shortName != null) {
             canonicalShortName = shortName.toUpperCase();
         }
         return this.canonicalShortName;
@@ -157,7 +157,25 @@ public class Symbol extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Symbol clone() {
+        Symbol clone = new Symbol(this.parser, this.id);
+
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }

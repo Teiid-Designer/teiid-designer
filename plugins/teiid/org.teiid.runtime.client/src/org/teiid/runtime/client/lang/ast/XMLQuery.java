@@ -4,8 +4,8 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 public class XMLQuery extends SimpleNode implements Expression {
@@ -99,8 +99,25 @@ public class XMLQuery extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLQuery clone() {
+        XMLQuery clone = new XMLQuery(this.parser, this.id);
+
+        if(getPassing() != null)
+            clone.setPassing(cloneList(getPassing()));
+        if(getNamespaces() != null)
+            clone.setNamespaces(getNamespaces().clone());
+        clone.setEmptyOnEmpty(getEmptyOnEmpty());
+        if(getXquery() != null)
+            clone.setXquery(getXquery());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b931394cf8251b585a24b9099cf30d2c (do not edit this line) */

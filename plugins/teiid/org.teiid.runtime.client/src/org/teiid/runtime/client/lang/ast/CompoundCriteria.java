@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class CompoundCriteria extends Criteria {
 
@@ -102,8 +102,21 @@ public class CompoundCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CompoundCriteria clone() {
+        CompoundCriteria clone = new CompoundCriteria(this.parser, this.id);
+
+        clone.setOperator(getOperator());
+        if(getCriteria() != null)
+            clone.setCriteria(cloneList(getCriteria()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e9c63d228bd02df17a0d541cee1f0c51 (do not edit this line) */

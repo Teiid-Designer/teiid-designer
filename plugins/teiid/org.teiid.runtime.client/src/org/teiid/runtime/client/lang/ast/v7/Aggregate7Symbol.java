@@ -100,6 +100,7 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
      * type of the contained expression
      * @return Type of the symbol
      */
+    @Override
     public Class<?> getType() {
         switch (this.aggregate) {
         case COUNT:
@@ -142,6 +143,7 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
      * for the aggregate functions.
      * @return Aggregate function type
      */
+    @Override
     public Type getAggregateFunction() {
         return this.aggregate;
     }
@@ -151,34 +153,42 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
      * computation.
      * @return True if duplicates should be removed during computation
      */
+    @Override
     public boolean isDistinct() {
         return this.distinct;
     }
 
+    @Override
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
+    @Override
     public OrderBy getOrderBy() {
         return orderBy;
     }
 
+    @Override
     public void setOrderBy(OrderBy orderBy) {
         this.orderBy = orderBy;
     }
 
+    @Override
     public Expression getCondition() {
         return condition;
     }
     
+    @Override
     public void setCondition(Expression condition) {
         this.condition = condition;
     }
 
+    @Override
     public boolean isWindowed() {
         return isWindowed;
     }
 
+    @Override
     public void setWindowed(boolean isWindowed) {
         this.isWindowed = isWindowed;
     }
@@ -213,9 +223,50 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
         return true;
     }
 
+    @Override
+    public String getCanonicalName() {
+        return getCanonicalShortName();
+    }
+
+    @Override
+    public void setCanonicalName(String canonicalName) {
+        setCanonicalShortName(canonicalName);
+    }
+
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((AggregateSymbol) this, data);
+    }
+
+    @Override
+    public Aggregate7Symbol clone() {
+        Aggregate7Symbol clone = new Aggregate7Symbol((Teiid7Parser) this.parser, this.id);
+
+        if(getAggregateFunction() != null)
+            clone.setAggregateFunction(getAggregateFunction());
+        if(getAggregateFunction() != null)
+            clone.setAggregateFunction(getAggregateFunction());
+        clone.setDistinct(isDistinct());
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getCondition() != null)
+            clone.setCondition(getCondition().clone());
+        clone.setWindowed(isWindowed());
+        if(getCanonicalName() != null)
+            clone.setCanonicalName(getCanonicalName());
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
     }
 
     @Override
@@ -228,16 +279,6 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
     @Since("8.0.0")
     public void setArgs(Expression[] arguments) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getCanonicalName() {
-        return getCanonicalShortName();
-    }
-
-    @Override
-    public void setCanonicalName(String canonicalName) {
-        setCanonicalShortName(canonicalName);
     }
 }
 /* JavaCC - OriginalChecksum=7efdc98eb15b01c236003d9dc5fca445 (do not edit this line) */

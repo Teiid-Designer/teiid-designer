@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class TextLine extends SimpleNode implements Expression {
 
@@ -106,8 +106,27 @@ public class TextLine extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public TextLine clone() {
+        TextLine clone = new TextLine(this.parser, this.id);
+
+        if(getDelimiter() != null)
+            clone.setDelimiter(getDelimiter());
+        if(getEncoding() != null)
+            clone.setEncoding(getEncoding());
+        if(getQuote() != null)
+            clone.setQuote(getQuote());
+        clone.setIncludeHeader(isIncludeHeader());
+        if(getExpressions() != null)
+            clone.setExpressions(cloneList(getExpressions()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e0b8f44a78e8c88a57ec4d4e5bf9c25f (do not edit this line) */

@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class ProjectedColumn extends SimpleNode {
     
@@ -91,8 +91,22 @@ public class ProjectedColumn extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ProjectedColumn clone() {
+        ProjectedColumn clone = new ProjectedColumn(this.parser, this.id);
+
+        if(getName() != null)
+            clone.setName(getName());
+        if(getType() != null)
+            clone.setType(getType());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=991e5fb319eb5a871b3cd33dacf6a7ed (do not edit this line) */

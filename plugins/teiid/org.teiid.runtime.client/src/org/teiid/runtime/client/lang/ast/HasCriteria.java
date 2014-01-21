@@ -58,8 +58,20 @@ public class HasCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public HasCriteria clone() {
+        HasCriteria clone = new HasCriteria(this.parser, this.id);
+
+        if(getSelector() != null)
+            clone.setSelector(getSelector().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=54952667e8126ec83dae1a24d072a46b (do not edit this line) */

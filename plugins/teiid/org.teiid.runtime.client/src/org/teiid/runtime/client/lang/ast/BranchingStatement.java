@@ -73,8 +73,22 @@ public class BranchingStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public BranchingStatement clone() {
+        BranchingStatement clone = new BranchingStatement(this.parser, this.id);
+
+        if(getLabel() != null)
+            clone.setLabel(getLabel());
+        if(getMode() != null)
+            clone.setMode(getMode());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=bdaeabb3c22da3651d61cf55bef53168 (do not edit this line) */

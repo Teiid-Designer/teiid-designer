@@ -62,8 +62,28 @@ public class AliasSymbol extends Symbol implements SingleElementSymbol, Expressi
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public AliasSymbol clone() {
+        AliasSymbol clone = new AliasSymbol(this.parser, this.id);
+
+        if(getSymbol() != null)
+            clone.setSymbol(getSymbol().clone());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=462ff7272cb5be687c156dcb9525f2f7 (do not edit this line) */

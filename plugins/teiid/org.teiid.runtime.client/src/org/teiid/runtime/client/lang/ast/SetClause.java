@@ -60,8 +60,22 @@ public class SetClause extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SetClause clone() {
+        SetClause clone = new SetClause(this.parser, this.id);
+
+        if(getSymbol() != null)
+            clone.setSymbol(getSymbol().clone());
+        if(getValue() != null)
+            clone.setValue(getValue().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=79e2fad18b6bbeddc71b298c5fd54e9a (do not edit this line) */

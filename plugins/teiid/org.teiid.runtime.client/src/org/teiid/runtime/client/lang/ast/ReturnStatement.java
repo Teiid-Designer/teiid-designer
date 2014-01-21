@@ -18,8 +18,26 @@ public class ReturnStatement extends AssignmentStatement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ReturnStatement clone() {
+        ReturnStatement clone = new ReturnStatement(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        if(getVariable() != null)
+            clone.setVariable(getVariable().clone());
+        if(getValue() != null)
+            clone.setValue(getValue().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=783a3e8bb13999eaeee6f7dc50bef2b1 (do not edit this line) */

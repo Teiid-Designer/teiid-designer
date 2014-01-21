@@ -47,7 +47,7 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
      *
      */
     public TestSQLString8Visitor() {
-        super(new TeiidServerVersion("8.0.0")); //$NON-NLS-1$
+        super(new TeiidServerVersion("8.0.0"));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
 
     @Test
     public void testSignedExpression() {
-        GroupSymbol g = getFactory().newGroupSymbol("g"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("g");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
@@ -72,52 +72,46 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
 
         Query query = getFactory().newQuery(select, from);
         helpTest(
-                 "SELECT (-1 * x), x, 5 FROM g", //$NON-NLS-1$
+                 "SELECT (-1 * x), x, 5 FROM g",
                  query);
     }
 
     @Test
     public void testFloatWithE() {
-        GroupSymbol g = getFactory().newGroupSymbol("a.g1"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("a.g1");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
         Select select = getFactory().newSelect();
-        select.addSymbol(getFactory().newConstant(new Double(1.3e8))); //$NON-NLS-1$
-        select.addSymbol(getFactory().newConstant(new Double(-1.3e+8))); //$NON-NLS-1$
-        select.addSymbol(getFactory().newConstant(new Double(+1.3e-8))); //$NON-NLS-1$
+        select.addSymbol(getFactory().newConstant(new Double(1.3e8)));
+        select.addSymbol(getFactory().newConstant(new Double(-1.3e+8)));
+        select.addSymbol(getFactory().newConstant(new Double(+1.3e-8)));
 
         Query query = getFactory().newQuery(select, from);
 
         helpTest(
-                 "SELECT 1.3E8, -1.3E8, 1.3E-8 FROM a.g1", //$NON-NLS-1$
+                 "SELECT 1.3E8, -1.3E8, 1.3E-8 FROM a.g1",
                  query);
     }
 
     @Test
     public void testPgLike() {
-        GroupSymbol g = getFactory().newGroupSymbol("db.g"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("db.g");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
         Select select = getFactory().newSelect();
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         select.addSymbol(a);
 
-        Expression string1 = getFactory().newConstant("\\_aString"); //$NON-NLS-1$
+        Expression string1 = getFactory().newConstant("\\_aString");
         MatchCriteria crit = getFactory().newMatchCriteria(getFactory().newElementSymbol("b"), string1, '\\');
 
         Query query = getFactory().newQuery(select, from);
         query.setCriteria(crit);
-        helpTest("SELECT a FROM db.g WHERE b LIKE '\\_aString' ESCAPE '\\'", //$NON-NLS-1$
+        helpTest("SELECT a FROM db.g WHERE b LIKE '\\_aString' ESCAPE '\\'",
                  query);
     }
-
-//    @Test
-//    public void testLikeWithEscapeException() {
-////        helpException("SELECT a from db.g where b like '#String' escape '#1'", "TEIID31100 Parsing error: Encountered \"like '#String' escape [*]'#1'[*]\" at line 1, column 50.\nTEIID30398 LIKE/SIMILAR TO ESCAPE value must be a single character: [#1]."); //$NON-NLS-1$ //$NON-NLS-2$
-//        helpException("SELECT a from db.g where b like '#String' escape '#1'", null);
-//    }
 
     @Test
     public void testErrorStatement() throws Exception {
@@ -126,7 +120,7 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
         RaiseStatement errStmt = getFactory().newNode(ASTNodes.RAISE_STATEMENT);
         errStmt.setExpression(ee);
 
-        helpTest("RAISE SQLEXCEPTION 'Test only';", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("RAISE SQLEXCEPTION 'Test only';",
                      errStmt);
     }
 
@@ -140,7 +134,7 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
         errStmt.setExpression(ee);
         errStmt.setWarning(true);
 
-        helpTest("RAISE SQLWARNING SQLEXCEPTION 'Test only' SQLSTATE '100' CHAIN e;", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("RAISE SQLWARNING SQLEXCEPTION 'Test only' SQLSTATE '100' CHAIN e;",
                      errStmt);
     }
 
@@ -156,27 +150,6 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
                            f);
     }
 
-//    @Test
-//    public void testWindowedExpression() {
-//        String sql = "SELECT foo(x, y) over ()";
-//        helpException(sql);
-//    }
-//
-//    @Test
-//    public void testInvalidLimit() {
-//        helpException("SELECT * FROM pm1.g1 LIMIT -5");
-//    }
-//
-//    @Test
-//    public void testInvalidLimit_Offset() {
-//        helpException("SELECT * FROM pm1.g1 LIMIT -1, 100");
-//    }
-//
-//    @Test
-//    public void testTextTableNegativeWidth() {
-//        helpException("SELECT * from texttable(null columns x string width -1) as x");
-//    }
-
     @Test
     public void testBlockExceptionHandling() throws Exception {
         Select select = getFactory().newSelectWithMultileElementSymbol();
@@ -188,13 +161,13 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
         RaiseStatement errStmt = getFactory().newNode(ASTNodes.RAISE_STATEMENT);
         ExceptionExpression ee = getFactory().newExceptionExpression();
         ee.setMessage(getFactory().newConstant("My Error"));
-        errStmt.setExpression(ee); //$NON-NLS-1$
+        errStmt.setExpression(ee);
         Block b = getFactory().newBlock();
         b.setExceptionGroup("e");
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt, true);
-        helpTest("BEGIN\nSELECT * FROM x;\na = 1;\nEXCEPTION e\nRAISE SQLEXCEPTION 'My Error';\nEND", b); //$NON-NLS-1$
+        helpTest("BEGIN\nSELECT * FROM x;\na = 1;\nEXCEPTION e\nRAISE SQLEXCEPTION 'My Error';\nEND", b);
     }
 
     @Test
@@ -244,10 +217,10 @@ public class TestSQLString8Visitor extends AbstractTestSQLStringVisitor {
         CreateProcedureCommand virtualProcedureCommand = getFactory().newCreateProcedureCommand();
         virtualProcedureCommand.setBlock(block);
         
-        helpTest("CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n" //$NON-NLS-1$
-        + "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor\nBEGIN\n" //$NON-NLS-1$
-        + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n" //$NON-NLS-1$
-        + "SELECT c1, c2 FROM m.g;\nEND", virtualProcedureCommand); //$NON-NLS-1$
+        helpTest("CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n"
+        + "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor\nBEGIN\n"
+        + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n"
+        + "SELECT c1, c2 FROM m.g;\nEND", virtualProcedureCommand);
 
     }
 }

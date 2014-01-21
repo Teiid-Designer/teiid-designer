@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.JoinType.Kind;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class JoinPredicate extends FromClause {
 
@@ -131,8 +131,32 @@ public class JoinPredicate extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public JoinPredicate clone() {
+        JoinPredicate clone = new JoinPredicate(this.parser, this.id);
+
+        if(getLeftClause() != null)
+            clone.setLeftClause(getLeftClause().clone());
+        if(getRightClause() != null)
+            clone.setRightClause(getRightClause().clone());
+        if(getJoinType() != null)
+            clone.setJoinType(getJoinType().clone());
+        if(getJoinCriteria() != null)
+            clone.setJoinCriteria(cloneList(getJoinCriteria()));
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=997199fc490b061080c014d8a592db24 (do not edit this line) */

@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class Query extends QueryCommand {
 
@@ -199,8 +199,43 @@ public class Query extends QueryCommand {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Query clone() {
+        Query clone = new Query(this.parser, this.id);
+
+        if(getCriteria() != null)
+            clone.setCriteria(getCriteria().clone());
+        if(getSelect() != null)
+            clone.setSelect(getSelect().clone());
+        if(getFrom() != null)
+            clone.setFrom(getFrom().clone());
+        if(getGroupBy() != null)
+            clone.setGroupBy(getGroupBy().clone());
+        if(getHaving() != null)
+            clone.setHaving(getHaving().clone());
+        clone.setXML(isXML());
+        if(getInto() != null)
+            clone.setInto(getInto().clone());
+        if(getSelectList() != null)
+            clone.setSelectList(cloneList(getSelectList()));
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getLimit() != null)
+            clone.setLimit(getLimit().clone());
+        if(getWith() != null)
+            clone.setWith(cloneList(getWith()));
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=5836b6b4cdb7e7d9afd6ee599f469169 (do not edit this line) */

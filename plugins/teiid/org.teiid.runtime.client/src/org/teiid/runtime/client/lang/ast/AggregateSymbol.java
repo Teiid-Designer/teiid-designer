@@ -158,4 +158,10 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression {
      */
     @Removed("8.0.0")
     void setExpression(Expression expression);
+
+    /**
+     * Clone this aggregate symbol
+     */
+    @Override
+    AggregateSymbol clone();
 }

@@ -41,6 +41,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Get the type of the symbol
      * @return Type of the symbol, may be null before resolution
      */
+    @Override
     public Class getType() {
         return this.type;
     }   
@@ -146,8 +147,32 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ElementSymbol clone() {
+        ElementSymbol clone = new ElementSymbol(this.parser, this.id);
+
+        if (getGroupSymbol() != null)
+            clone.setGroupSymbol(getGroupSymbol().clone());
+        if(getType() != null)
+            clone.setType(getType());
+        if(getMetadataID() != null)
+            clone.setMetadataID(getMetadataID());
+        if(getDisplayMode() != null)
+            clone.setDisplayMode(getDisplayMode());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=77f5180826dcbc69682360fac6b1d467 (do not edit this line) */

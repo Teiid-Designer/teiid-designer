@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class LoopStatement extends Statement implements Labeled {
 
@@ -23,10 +23,12 @@ public class LoopStatement extends Statement implements Labeled {
         super(p, id);
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
 
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }
@@ -113,8 +115,26 @@ public class LoopStatement extends Statement implements Labeled {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public LoopStatement clone() {
+        LoopStatement clone = new LoopStatement(this.parser, this.id);
+
+        if(getLabel() != null)
+            clone.setLabel(getLabel());
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        if(getBlock() != null)
+            clone.setBlock(getBlock().clone());
+        if(getCursorName() != null)
+            clone.setCursorName(getCursorName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=fe4519dc09735b802146c0bcd4db1308 (do not edit this line) */

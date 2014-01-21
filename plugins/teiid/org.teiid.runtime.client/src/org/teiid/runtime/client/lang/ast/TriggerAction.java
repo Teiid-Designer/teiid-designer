@@ -52,8 +52,24 @@ public class TriggerAction extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public TriggerAction clone() {
+        TriggerAction clone = new TriggerAction(this.parser, this.id);
+
+        if(getBlock() != null)
+            clone.setBlock(getBlock().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=a7f2d6ba04e5449efe5634e804bbd15b (do not edit this line) */

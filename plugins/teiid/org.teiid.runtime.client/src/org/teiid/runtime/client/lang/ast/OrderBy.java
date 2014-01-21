@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class OrderBy extends SimpleNode {
 
@@ -70,8 +70,17 @@ public class OrderBy extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public OrderBy clone() {
+        OrderBy clone = new OrderBy(this.parser, this.id);
+        clone.getOrderByItems().addAll(cloneList(orderByItems));
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=6b23125e8c3c5abfe22f4f4ae93fb66d (do not edit this line) */

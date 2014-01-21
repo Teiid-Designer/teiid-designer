@@ -63,8 +63,21 @@ public class CommandStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public CommandStatement clone() {
+        CommandStatement clone = new CommandStatement(this.parser, this.id);
+
+        clone.setReturnable(isReturnable());
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=62f9df6ce048861851414036eed990e3 (do not edit this line) */

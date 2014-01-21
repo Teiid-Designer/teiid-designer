@@ -38,4 +38,8 @@ public interface LanguageObject {
      */
     void accept(AbstractTeiidParserVisitor visitor, Object data);
 
+    /**
+     * @return copy of this language object
+     */
+    LanguageObject clone();
 }

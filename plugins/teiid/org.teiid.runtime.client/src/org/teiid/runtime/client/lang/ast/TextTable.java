@@ -5,8 +5,8 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class TextTable extends FromClause {
 
@@ -263,8 +263,43 @@ public class TextTable extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public TextTable clone() {
+        TextTable clone = new TextTable(this.parser, this.id);
+
+        if(getColumns() != null)
+            clone.setColumns(cloneList(getColumns()));
+        if(getSelector() != null)
+            clone.setSelector(getSelector());
+        if(getDelimiter() != null)
+            clone.setDelimiter(getDelimiter());
+        if(getQuote() != null)
+            clone.setQuote(getQuote());
+        if(getFile() != null)
+            clone.setFile(getFile().clone());
+        clone.setEscape(isEscape());
+        if(getHeader() != null)
+            clone.setHeader(getHeader());
+        if(getSkip() != null)
+            clone.setSkip(getSkip());
+        clone.setUsingRowDelimiter(isUsingRowDelimiter());
+        clone.setFixedWidth(isFixedWidth());
+        if(getName() != null)
+            clone.setName(getName());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=ebe49b0b200a80db8dbb7c673231856d (do not edit this line) */

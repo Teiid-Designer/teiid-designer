@@ -7,7 +7,6 @@
  */
 package org.teiid.runtime.client.sql.v7;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -35,21 +34,20 @@ import org.teiid.runtime.client.lang.ast.RaiseErrorStatement;
 import org.teiid.runtime.client.lang.ast.Select;
 import org.teiid.runtime.client.lang.ast.Statement;
 import org.teiid.runtime.client.lang.ast.TranslateCriteria;
-import org.teiid.runtime.client.lang.parser.v7.Teiid7Parser;
-import org.teiid.runtime.client.sql.AbstractTestQueryParser;
+import org.teiid.runtime.client.sql.AbstractTestCloning;
 
 /**
- * Unit testing for the Query Parser for teiid version 7
+ * Unit testing for the SQLStringVisitor for teiid version 7
  */
 @SuppressWarnings( {"nls", "javadoc"} )
-public class TestQuery7Parser extends AbstractTestQueryParser {
+public class Test7Cloning extends AbstractTestCloning {
 
     private Test7Factory factory;
 
     /**
      *
      */
-    public TestQuery7Parser() {
+    public Test7Cloning() {
         super(new TeiidServerVersion("7.7.0"));
     }
 
@@ -59,14 +57,6 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
             factory = new Test7Factory(parser);
 
         return factory;
-    }
-
-    private void helpCriteriaSelectorTest(String selector, String expectedString, CriteriaSelector expectedSelector)
-        throws Exception {
-        // Don't use query parser as criteriaSelector is not part of the interface
-        Teiid7Parser teiid7Parser = new Teiid7Parser(new StringReader(selector));
-        CriteriaSelector actualSelector = teiid7Parser.criteriaSelector();
-        assertEquals("CriteriaSelector does not match: ", expectedSelector, actualSelector);
     }
 
     /** SELECT 1.3e8 FROM a.g1 */
@@ -81,7 +71,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         Query query = getFactory().newQuery(select, from);
 
-        helpTest("SELECT 1.3e8 FROM a.g1",
+        helpTest(
                  "SELECT 1.3E8 FROM a.g1",
                  query);
     }
@@ -98,7 +88,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         Query query = getFactory().newQuery(select, from);
 
-        helpTest("SELECT -1.3e-6 FROM a.g1",
+        helpTest(
                  "SELECT -1.3E-6 FROM a.g1",
                  query);
     }
@@ -115,24 +105,9 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         Query query = getFactory().newQuery(select, from);
 
-        helpTest("SELECT -1.3e+8 FROM a.g1",
+        helpTest(
                  "SELECT -1.3E8 FROM a.g1",
                  query);
-    }
-
-    @Test
-    public void testLikeWithEscapeException() {
-        helpException("SELECT a from db.g where b like '#String' escape '#1'", null);
-    }
-
-    @Test
-    public void testFailsWildcardInSelect1() {
-        helpException("SELECT % from xx.yy", null);
-    }
-
-    @Test
-    public void testInvalidToken() {
-        helpException("%", null);
     }
 
     @Test
@@ -140,7 +115,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         RaiseErrorStatement errStmt = getFactory().newNode(ASTNodes.RAISE_ERROR_STATEMENT);
         errStmt.setExpression(getFactory().newConstant("Test only"));
 
-        helpStmtTest("ERROR 'Test only';", "ERROR 'Test only';",
+        helpTest("ERROR 'Test only';",
                      errStmt);
     }
 
@@ -152,7 +127,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.IS_NULL);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("IS NULL CRITERIA ON (a)", "IS NULL CRITERIA ON (a)", critSelector);
+        helpTest("IS NULL CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -163,7 +138,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.EQ);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("= CRITERIA ON (a)", "= CRITERIA ON (a)", critSelector);
+        helpTest("= CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -174,7 +149,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.NE);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("<> CRITERIA ON (a)", "<> CRITERIA ON (a)", critSelector);
+        helpTest("<> CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -185,7 +160,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.LT);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("< CRITERIA ON (a)", "< CRITERIA ON (a)", critSelector);
+        helpTest("< CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -196,7 +171,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.GT);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("> CRITERIA ON (a)", "> CRITERIA ON (a)", critSelector);
+        helpTest("> CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -207,7 +182,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.GE);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest(">= CRITERIA ON (a)", ">= CRITERIA ON (a)", critSelector);
+        helpTest(">= CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -218,7 +193,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.LE);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("<= CRITERIA ON (a)", "<= CRITERIA ON (a)", critSelector);
+        helpTest("<= CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -229,7 +204,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.LIKE);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("LIKE CRITERIA ON (a)", "LIKE CRITERIA ON (a)", critSelector);
+        helpTest("LIKE CRITERIA ON (a)", critSelector);
     }
 
     @Test
@@ -240,18 +215,13 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.IN);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("IN CRITERIA ON (a)", "IN CRITERIA ON (a)", critSelector);
+        helpTest("IN CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector9() throws Exception {
-        //ElementSymbol a = getFactory().newElementSymbol("a");
-
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
-        //critSelector.setSelectorType(Operator.IS_NULL);
-        //critSelector.addElement(a);        
-
-        helpCriteriaSelectorTest("CRITERIA", "CRITERIA", critSelector);
+        helpTest("CRITERIA", critSelector);
     }
 
     @Test
@@ -262,7 +232,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         critSelector.setSelectorType(Operator.BETWEEN);
         critSelector.addElement(a);
 
-        helpCriteriaSelectorTest("BETWEEN CRITERIA ON (a)", "BETWEEN CRITERIA ON (a)", critSelector);
+        helpTest("BETWEEN CRITERIA ON (a)", critSelector);
     }
 
     /**HAS IS NULL CRITERIA ON (a)*/
@@ -278,7 +248,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS IS NULL CRITERIA ON (a)", "HAS IS NULL CRITERIA ON (a)",
+        helpTest("HAS IS NULL CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -295,7 +265,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS LIKE CRITERIA ON (a)", "HAS LIKE CRITERIA ON (a)",
+        helpTest("HAS LIKE CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -311,7 +281,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS = CRITERIA ON (a)", "HAS = CRITERIA ON (a)",
+        helpTest("HAS = CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -327,7 +297,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS <> CRITERIA ON (a)", "HAS <> CRITERIA ON (a)",
+        helpTest("HAS <> CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -344,7 +314,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS IN CRITERIA ON (a)", "HAS IN CRITERIA ON (a)",
+        helpTest("HAS IN CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -361,7 +331,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS < CRITERIA ON (a)", "HAS < CRITERIA ON (a)",
+        helpTest("HAS < CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -378,7 +348,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS <= CRITERIA ON (a)", "HAS <= CRITERIA ON (a)",
+        helpTest("HAS <= CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -395,7 +365,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS > CRITERIA ON (a)", "HAS > CRITERIA ON (a)",
+        helpTest("HAS > CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -412,7 +382,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS >= CRITERIA ON (a)", "HAS >= CRITERIA ON (a)",
+        helpTest("HAS >= CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -429,7 +399,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpCriteriaTest("HAS BETWEEN CRITERIA ON (a)", "HAS BETWEEN CRITERIA ON (a)",
+        helpTest("HAS BETWEEN CRITERIA ON (a)",
                          hasSelector);
     }
 
@@ -449,14 +419,9 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
 
         TranslateCriteria transCriteria = getFactory().newTranslateCriteria(critSelector, critList);
 
-        helpCriteriaTest("TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5)",
+        helpTest(
                          "TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5)",
                          transCriteria);
-
-        //helpCriteriaTest("TRANSLATE IS NULL CRITERIA ON (a) USING transFuncEQ (a)",
-        //"TRANSLATE IS NULL CRITERIA ON (a) USING transFuncEQ (a)",
-        //transCriteria);
-
     }
 
     /** original test */
@@ -559,7 +524,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest(procedureString, "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + 
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + 
                                   "IF(HAS IS NULL CRITERIA ON (a))"
                                   + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                                   "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
@@ -670,7 +635,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest(procedureString, expectedString, cmd);
+        helpTest(expectedString, cmd);
     }
 
     /**IF statement with has criteria */
@@ -739,10 +704,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
@@ -813,10 +775,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS CRITERIA) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
@@ -889,10 +848,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS LIKE CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS LIKE CRITERIA ON (a))"
                          + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
@@ -966,10 +922,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS IN CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS IN CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
@@ -1042,10 +995,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
@@ -1125,10 +1075,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE HAS CRITERIA ON (a); END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE HAS CRITERIA ON (a));" + "\n" + "END" + "\n" + "END", cmd);
@@ -1211,11 +1158,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA ON (a) WITH (a = 5)); END" +
-                 " END",
-                 "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                  "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                  "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                  "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA ON (a) WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd);
@@ -1298,12 +1241,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END"
-                 +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5); END"
-                 +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5));"
@@ -1387,10 +1325,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5); END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd);
@@ -1476,11 +1411,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5, m = 6); END" +
-                 " END",
-                 "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                  "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                  "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                  "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5, m = 6));" + "\n" + "END" + "\n" + "END", cmd);
@@ -1563,10 +1494,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS <> CRITERIA ON (a)) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE TRANSLATE CRITERIA; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA);" + "\n" + "END" + "\n" + "END", cmd);
@@ -1632,10 +1560,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE BEGIN DECLARE short var1;" +
-                 " IF(HAS CRITERIA) BEGIN var1 = SELECT a1 FROM g WHERE a2 = 5; END" +
-                 " ELSE BEGIN DECLARE short var2; var2 = SELECT b1 FROM g WHERE a2 = 5; END" +
-                 " END", "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
                          "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
@@ -1684,7 +1609,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         virtualProcedureCommand.setBlock(block);
         virtualProcedureCommand.setUpdateProcedure(false);
 
-        helpTest("CREATE VIRTUAL PROCEDURE BEGIN DECLARE integer x; LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor BEGIN x=mycursor.c1; IF(x > 5) BEGIN CONTINUE; END END SELECT c1, c2 FROM m.g; END",
+        helpTest(
                  "CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n"
                  + "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor\nBEGIN\n"
                  + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n" + "SELECT c1, c2 FROM m.g;\nEND",
@@ -1696,11 +1621,6 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
     public void testDropTable() {
         Drop drop = getFactory().newNode(ASTNodes.DROP);
         drop.setTable(getFactory().newGroupSymbol("tempTable"));
-        helpTest("DROP table tempTable", "DROP TABLE tempTable", drop);
-    }
-
-    @Test
-    public void testBadCreate() {
-        helpException("create insert");
+        helpTest("DROP TABLE tempTable", drop);
     }
 }

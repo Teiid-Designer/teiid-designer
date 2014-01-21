@@ -69,8 +69,25 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SubquerySetCriteria clone() {
+        SubquerySetCriteria clone = new SubquerySetCriteria(this.parser, this.id);
+
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        if(getSubqueryHint() != null)
+            clone.setSubqueryHint(getSubqueryHint().clone());
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setNegated(isNegated());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=089107c07c615436629d5cb75f0cd12d (do not edit this line) */

@@ -132,6 +132,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
     * type of the contained expression
     * @return Type of the symbol
     */
+    @Override
     public Class<?> getType() {
         switch (this.aggregate) {
             case COUNT:
@@ -208,34 +209,42 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
      * computation.
      * @return True if duplicates should be removed during computation
      */
+    @Override
     public boolean isDistinct() {
         return this.distinct;
     }
 
+    @Override
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
+    @Override
     public OrderBy getOrderBy() {
         return orderBy;
     }
 
+    @Override
     public void setOrderBy(OrderBy orderBy) {
         this.orderBy = orderBy;
     }
 
+    @Override
     public Expression getCondition() {
         return condition;
     }
     
+    @Override
     public void setCondition(Expression condition) {
         this.condition = condition;
     }
 
+    @Override
     public boolean isWindowed() {
         return isWindowed;
     }
 
+    @Override
     public void setWindowed(boolean isWindowed) {
         this.isWindowed = isWindowed;
     }
@@ -283,8 +292,38 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((AggregateSymbol)this, data);
+    }
+
+    @Override
+    public Aggregate8Symbol clone() {
+        Aggregate8Symbol clone = new Aggregate8Symbol((Teiid8Parser) this.parser, this.id);
+
+        if(getAggregateFunction() != null)
+            clone.setAggregateFunction(getAggregateFunction());
+        if(getAggregateFunction() != null)
+            clone.setAggregateFunction(getAggregateFunction());
+        clone.setDistinct(isDistinct());
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getCondition() != null)
+            clone.setCondition(getCondition().clone());
+        clone.setWindowed(isWindowed());
+        if(getName() != null)
+            clone.setName(getName());
+        if(getArgs() != null) {
+            Expression[] cloned = new Expression[getArgs().length];
+            for (int i = 0; i < getArgs().length; ++i) {
+                cloned[i] = getArgs()[i].clone();
+            }
+            clone.setArgs(cloned);
+        }
+        if(super.getType() != null)
+            clone.setType(super.getType());
+
+        return clone;
     }
 
     @Override

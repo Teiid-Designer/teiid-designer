@@ -133,8 +133,19 @@ public class Option extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Option clone() {
+        Option clone = new Option(this.parser, this.id);
+
+        clone.setNoCache(isNoCache());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=a564d0b56868fc308d004c702396106a (do not edit this line) */

@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 public class SetQuery extends QueryCommand {
 
@@ -104,8 +104,35 @@ public class SetQuery extends QueryCommand {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SetQuery clone() {
+        SetQuery clone = new SetQuery(this.parser, this.id);
+
+        if(getOperation() != null)
+            clone.setOperation(getOperation());
+        clone.setAll(isAll());
+        if(getLeftQuery() != null)
+            clone.setLeftQuery(getLeftQuery().clone());
+        if(getRightQuery() != null)
+            clone.setRightQuery(getRightQuery().clone());
+        if(getOrderBy() != null)
+            clone.setOrderBy(getOrderBy().clone());
+        if(getLimit() != null)
+            clone.setLimit(getLimit().clone());
+        if(getWith() != null)
+            clone.setWith(cloneList(getWith()));
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=15a0b6183a79ec40affab72ee83028a6 (do not edit this line) */

@@ -55,8 +55,20 @@ public class NotCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public NotCriteria clone() {
+        NotCriteria clone = new NotCriteria(this.parser, this.id);
+
+        if(getCriteria() != null)
+            clone.setCriteria(getCriteria().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b6a937b5a3dc9ccacee90ecad74cfcf6 (do not edit this line) */

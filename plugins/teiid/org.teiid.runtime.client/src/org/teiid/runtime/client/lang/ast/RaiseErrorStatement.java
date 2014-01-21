@@ -48,8 +48,20 @@ public class RaiseErrorStatement extends Statement {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public RaiseErrorStatement clone() {
+        RaiseErrorStatement clone = new RaiseErrorStatement(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e7907291ea67c15960482eabdc9a9c51 (do not edit this line) */

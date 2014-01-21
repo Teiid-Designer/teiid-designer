@@ -111,8 +111,26 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SubqueryCompareCriteria clone() {
+        SubqueryCompareCriteria clone = new SubqueryCompareCriteria(this.parser, this.id);
+
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        if(getPredicateQuantifier() != null)
+            clone.setPredicateQuantifier(getPredicateQuantifier());
+        if(getOperator() != null)
+            clone.setOperator(getOperator());
+        if(getLeftExpression() != null)
+            clone.setLeftExpression(getLeftExpression().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=e9b141cd60d09da32342d127668258f8 (do not edit this line) */

@@ -86,8 +86,24 @@ public class Limit extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Limit clone() {
+        Limit clone = new Limit(this.parser, this.id);
+
+        clone.setStrict(isStrict());
+        clone.setImplicit(isImplicit());
+        if(getRowLimit() != null)
+            clone.setRowLimit(getRowLimit().clone());
+        if(getOffset() != null)
+            clone.setOffset(getOffset().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=ac356bcb126e51b23a771bf5e2b89dfc (do not edit this line) */

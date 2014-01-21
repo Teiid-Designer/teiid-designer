@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 public class XMLForest extends SimpleNode implements Expression {
@@ -67,8 +67,22 @@ public class XMLForest extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLForest clone() {
+        XMLForest clone = new XMLForest(this.parser, this.id);
+
+        if(getNamespaces() != null)
+            clone.setNamespaces(getNamespaces().clone());
+        if(getArgs() != null)
+            clone.setArguments(cloneList(getArgs()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=f7a58421cd938bda6fd8786ca42a7b99 (do not edit this line) */

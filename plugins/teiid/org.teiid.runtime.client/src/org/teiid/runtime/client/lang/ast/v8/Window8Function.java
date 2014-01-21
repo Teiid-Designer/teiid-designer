@@ -6,8 +6,8 @@ import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.SimpleNode;
 import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
-import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 
 public class Window8Function extends SimpleNode implements WindowFunction {
 
@@ -99,5 +99,18 @@ public class Window8Function extends SimpleNode implements WindowFunction {
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((WindowFunction) this, data);
     }
+
+    @Override
+    public Window8Function clone() {
+        Window8Function clone = new Window8Function((Teiid8Parser) this.parser, this.id);
+
+        if(getFunction() != null)
+            clone.setFunction(getFunction().clone());
+        if(getWindowSpecification() != null)
+            clone.setWindowSpecification(getWindowSpecification().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=da43cffa8d1927cfd8b4f378cdcfeae0 (do not edit this line) */

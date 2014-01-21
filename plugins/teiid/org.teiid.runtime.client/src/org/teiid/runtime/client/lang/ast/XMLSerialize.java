@@ -2,8 +2,8 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
 public class XMLSerialize extends SimpleNode implements Expression {
@@ -165,8 +165,28 @@ public class XMLSerialize extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLSerialize clone() {
+        XMLSerialize clone = new XMLSerialize(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        if(getEncoding() != null)
+            clone.setEncoding(getEncoding());
+        clone.setDocument(getDocument());
+        clone.setDeclaration(getDeclaration());
+        if(getVersion() != null)
+            clone.setVersion(getVersion());
+        if(getTypeString() != null)
+            clone.setTypeString(getTypeString());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=2db0f3a9bb9c785d22f2f82535419c33 (do not edit this line) */

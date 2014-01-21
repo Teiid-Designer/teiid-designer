@@ -85,7 +85,7 @@ public class Insert extends Command {
      * to be inserted.
      * @return List of {@link Expression}s
      */
-    public List getValues() {
+    public List<Expression> getValues() {
         return this.values;
     }
 
@@ -93,7 +93,7 @@ public class Insert extends Command {
      * Sets the values to be inserted.
      * @param values List of {@link Expression}s
      */
-    public void setValues(List values) {
+    public void setValues(List<Expression> values) {
         this.values.clear();
         this.values.addAll(values);
     }
@@ -170,8 +170,33 @@ public class Insert extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Insert clone() {
+        Insert clone = new Insert(this.parser, this.id);
+
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
+        if(getVariables() != null)
+            clone.setVariables(cloneList(getVariables()));
+        if(getValues() != null)
+            clone.setValues(cloneList(getValues()));
+        if(getQueryExpression() != null)
+            clone.setQueryExpression(getQueryExpression().clone());
+        if(getConstraint() != null)
+            clone.setConstraint(getConstraint().clone());
+        clone.setMerge(isMerge());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=3a8a1c21abb5c92a3cb53631c04d20bb (do not edit this line) */

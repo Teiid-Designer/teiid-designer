@@ -85,8 +85,24 @@ public class ExistsCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ExistsCriteria clone() {
+        ExistsCriteria clone = new ExistsCriteria(this.parser, this.id);
+
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+        clone.setNegated(isNegated());
+        clone.setShouldEvaluate(shouldEvaluate());
+        if(getSubqueryHint() != null)
+            clone.setSubqueryHint(getSubqueryHint().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=5cc7f321c1d5e22ab073aa2d0115c232 (do not edit this line) */

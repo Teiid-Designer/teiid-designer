@@ -159,8 +159,26 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public MatchCriteria clone() {
+        MatchCriteria clone = new MatchCriteria(this.parser, this.id);
+
+        if(getRightExpression() != null)
+            clone.setRightExpression(getRightExpression().clone());
+        if(getLeftExpression() != null)
+            clone.setLeftExpression(getLeftExpression().clone());
+        if(getMode() != null)
+            clone.setMode(getMode());
+        clone.setNegated(isNegated());
+        clone.setEscapeChar(getEscapeChar());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=0f89c892141b9a7e6acaf4cfc0d222f5 (do not edit this line) */

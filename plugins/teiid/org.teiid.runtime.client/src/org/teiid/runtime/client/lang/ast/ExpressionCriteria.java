@@ -52,8 +52,20 @@ public class ExpressionCriteria extends Criteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ExpressionCriteria clone() {
+        ExpressionCriteria clone = new ExpressionCriteria(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=ac75024b68d2274a23c0fca3d91ba8f4 (do not edit this line) */

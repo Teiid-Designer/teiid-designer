@@ -54,8 +54,20 @@ public class Into extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Into clone() {
+        Into clone = new Into(this.parser, this.id);
+
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=c043560b07b761462fb1c893f608a51c (do not edit this line) */

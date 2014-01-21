@@ -48,7 +48,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
      *
      */
     public TestSQLString7Visitor() {
-        super(new TeiidServerVersion("7.7.0")); //$NON-NLS-1$
+        super(new TeiidServerVersion("7.7.0"));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     /** SELECT 1.3e8 FROM a.g1 */
     @Test
     public void testFloatWithE() {
-        GroupSymbol g = getFactory().newGroupSymbol("a.g1"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("a.g1");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
@@ -72,14 +72,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         Query query = getFactory().newQuery(select, from);
 
         helpTest(
-                 "SELECT 1.3E8 FROM a.g1", //$NON-NLS-1$
+                 "SELECT 1.3E8 FROM a.g1",
                  query);
     }
 
     /** SELECT -1.3e-6 FROM a.g1 */
     @Test
     public void testFloatWithMinusE() {
-        GroupSymbol g = getFactory().newGroupSymbol("a.g1"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("a.g1");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
@@ -89,176 +89,156 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         Query query = getFactory().newQuery(select, from);
 
         helpTest(
-                 "SELECT -1.3E-6 FROM a.g1", //$NON-NLS-1$
+                 "SELECT -1.3E-6 FROM a.g1",
                  query);
     }
 
     /** SELECT -1.3e+8 FROM a.g1 */
     @Test
     public void testFloatWithPlusE() {
-        GroupSymbol g = getFactory().newGroupSymbol("a.g1"); //$NON-NLS-1$
+        GroupSymbol g = getFactory().newGroupSymbol("a.g1");
         From from = getFactory().newFrom();
         from.addGroup(g);
 
         Select select = getFactory().newSelect();
-        select.addSymbol(getFactory().wrapExpression(getFactory().newConstant(new Double(-1.3e+8)))); //$NON-NLS-1$
+        select.addSymbol(getFactory().wrapExpression(getFactory().newConstant(new Double(-1.3e+8))));
 
         Query query = getFactory().newQuery(select, from);
 
         helpTest(
-                 "SELECT -1.3E8 FROM a.g1", //$NON-NLS-1$
+                 "SELECT -1.3E8 FROM a.g1",
                  query);
     }
-
-//    @Test
-//    public void testLikeWithEscapeException() {
-//        helpException("SELECT a from db.g where b like '#String' escape '#1'", null); //$NON-NLS-1$ //$NON-NLS-2$
-//    }
-//
-//    @Test
-//    public void testFailsWildcardInSelect1() {
-//        helpException("SELECT % from xx.yy", null); //$NON-NLS-1$
-//    }
-//
-//    @Test
-//    public void testInvalidToken() {
-//        helpException("%", null);
-//    }
 
     @Test
     public void testErrorStatement() throws Exception {
         RaiseErrorStatement errStmt = getFactory().newNode(ASTNodes.RAISE_ERROR_STATEMENT);
-        errStmt.setExpression(getFactory().newConstant("Test only")); //$NON-NLS-1$
+        errStmt.setExpression(getFactory().newConstant("Test only"));
 
-        helpTest("ERROR 'Test only';", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("ERROR 'Test only';",
                      errStmt);
     }
 
     @Test
     public void testCriteriaSelector0() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.IS_NULL);
         critSelector.addElement(a);
 
-        helpTest("IS NULL CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("IS NULL CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector1() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.EQ);
         critSelector.addElement(a);
 
-        helpTest("= CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("= CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector2() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.NE);
         critSelector.addElement(a);
 
-        helpTest("<> CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("<> CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector3() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.LT);
         critSelector.addElement(a);
 
-        helpTest("< CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("< CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector4() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.GT);
         critSelector.addElement(a);
 
-        helpTest("> CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("> CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector5() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.GE);
         critSelector.addElement(a);
 
-        helpTest(">= CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest(">= CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector6() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.LE);
         critSelector.addElement(a);
 
-        helpTest("<= CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("<= CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector7() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.LIKE);
         critSelector.addElement(a);
 
-        helpTest("LIKE CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("LIKE CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector8() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.IN);
         critSelector.addElement(a);
 
-        helpTest("IN CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("IN CRITERIA ON (a)", critSelector);
     }
 
     @Test
     public void testCriteriaSelector9() throws Exception {
-        //ElementSymbol a = getFactory().newElementSymbol("a");
-
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
-        //critSelector.setSelectorType(Operator.IS_NULL);
-        //critSelector.addElement(a);        
-
-        helpTest("CRITERIA", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("CRITERIA", critSelector);
     }
 
     @Test
     public void testCriteriaSelector10() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
 
         CriteriaSelector critSelector = getFactory().newCriteriaSelector();
         critSelector.setSelectorType(Operator.BETWEEN);
         critSelector.addElement(a);
 
-        helpTest("BETWEEN CRITERIA ON (a)", critSelector); //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("BETWEEN CRITERIA ON (a)", critSelector);
     }
 
     /**HAS IS NULL CRITERIA ON (a)*/
     @Test
     public void testHasIsNullCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -268,14 +248,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS IS NULL CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS IS NULL CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS LIKE CRITERIA ON (a)*/
     @Test
     public void testHasLikeCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -285,13 +265,13 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS LIKE CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS LIKE CRITERIA ON (a)",
                          hasSelector);
     }
 
     @Test
     public void testHasEQCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List<ElementSymbol> elements = new ArrayList<ElementSymbol>();
         elements.add(a);
 
@@ -301,13 +281,13 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS = CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS = CRITERIA ON (a)",
                          hasSelector);
     }
 
     @Test
     public void testHasNECriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -317,14 +297,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS <> CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS <> CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS IN CRITERIA ON (a)*/
     @Test
     public void testHasInCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List<ElementSymbol> elements = new ArrayList<ElementSymbol>();
         elements.add(a);
 
@@ -334,14 +314,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS IN CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS IN CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS COMPARE_LT CRITERIA ON (a)*/
     @Test
     public void testHasLTCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List<ElementSymbol> elements = new ArrayList<ElementSymbol>();
         elements.add(a);
 
@@ -351,14 +331,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS < CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS < CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS COMPARE_LE CRITERIA ON (a)*/
     @Test
     public void testHasLECriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List<ElementSymbol> elements = new ArrayList<ElementSymbol>();
         elements.add(a);
 
@@ -368,14 +348,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS <= CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS <= CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS COMPARE_GT CRITERIA ON (a)*/
     @Test
     public void testHasGTCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -385,14 +365,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS > CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS > CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS COMPARE_GE CRITERIA ON (a)*/
     @Test
     public void testHasGECriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -402,14 +382,14 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS >= CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS >= CRITERIA ON (a)",
                          hasSelector);
     }
 
     /**HAS BETWEEN CRITERIA ON (a)*/
     @Test
     public void testHasBetweenCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -419,13 +399,13 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
 
         HasCriteria hasSelector = getFactory().newHasCriteria(critSelector);
 
-        helpTest("HAS BETWEEN CRITERIA ON (a)", //$NON-NLS-1$ //$NON-NLS-2$
+        helpTest("HAS BETWEEN CRITERIA ON (a)",
                          hasSelector);
     }
 
     @Test
     public void testTranslateCriteria() throws Exception {
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -440,64 +420,59 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         TranslateCriteria transCriteria = getFactory().newTranslateCriteria(critSelector, critList);
 
         helpTest(
-                         "TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5)", //$NON-NLS-1$
+                         "TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5)",
                          transCriteria);
-
-        //helpTest("TRANSLATE IS NULL CRITERIA ON (a) USING transFuncEQ (a)",
-        //"TRANSLATE IS NULL CRITERIA ON (a) USING transFuncEQ (a)",
-        //transCriteria);
-
     }
 
     /** original test */
     @Test
     public void testCreateUpdateProcedureCommand() {
-        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
+        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
                                                      "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = (SELECT a1 FROM g WHERE a2 = 5);\nEND\n"
-                                                     + //$NON-NLS-1$
+                                                     +
                                                      "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n"
-                                                     + //$NON-NLS-1$
-                                                     " END"); //$NON-NLS-1$
+                                                     +
+                                                     " END");
 
     }
 
     @Test
     public void testCreateUpdateProcedureCommandCase3025_1() {
 
-        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
+        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
                                                      "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = (SELECT a1 FROM g WHERE a2 = 5);\nEND\n"
-                                                     + //$NON-NLS-1$
+                                                     +
                                                      "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n"
-                                                     + //$NON-NLS-1$
-                                                     " END"); //$NON-NLS-1$ 
+                                                     +
+                                                     " END"); 
 
     }
 
     @Test
     public void testCreateUpdateProcedureCommandCase3025_2() {
-        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
+        helpTestCreateUpdateProcedureCommandCase3025("CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
                                                      "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = ((SELECT a1 FROM g WHERE a2 = 5) );\nEND\n"
-                                                     + //$NON-NLS-1$
+                                                     +
                                                      "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n"
-                                                     + //$NON-NLS-1$
-                                                     " END"); //$NON-NLS-1$ 
+                                                     +
+                                                     " END"); 
     }
 
     private void helpTestCreateUpdateProcedureCommandCase3025(String procedureString) {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List<ElementSymbol> symbols = new ArrayList<ElementSymbol>();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -509,11 +484,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List<ElementSymbol> elseSymbols = new ArrayList<ElementSymbol>();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -529,7 +504,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -549,11 +524,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + 
                                   "IF(HAS IS NULL CRITERIA ON (a))"
-                                  + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                                  "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                                  "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                                  + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                                  "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                                  "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
 
     }
 
@@ -561,10 +536,10 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testCreateUpdateProcedureCommandCase3025_3() {
 
-        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
-                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = (concat('x', 'y') );\nEND\n" + //$NON-NLS-1$
-                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" + //$NON-NLS-1$
-                                 " END"; //$NON-NLS-1$
+        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
+                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = (concat('x', 'y') );\nEND\n" +
+                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" +
+                                 " END";
 
         helpTestCreateUpdateProcedureCommandCase3025_Expression(procedureString);
     }
@@ -573,10 +548,10 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testCreateUpdateProcedureCommandCase3025_4() {
 
-        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
-                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = ((concat('x', 'y') ));\nEND\n" + //$NON-NLS-1$
-                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" + //$NON-NLS-1$
-                                 " END"; //$NON-NLS-1$
+        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
+                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = ((concat('x', 'y') ));\nEND\n" +
+                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" +
+                                 " END";
 
         helpTestCreateUpdateProcedureCommandCase3025_Expression(procedureString);
     }
@@ -585,46 +560,46 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testCreateUpdateProcedureCommandCase3025_5() {
 
-        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" + //$NON-NLS-1$
-                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = concat('x', 'y') ;\nEND\n" + //$NON-NLS-1$
-                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" + //$NON-NLS-1$
-                                 " END"; //$NON-NLS-1$
+        String procedureString = "CREATE PROCEDURE\nBEGIN\nDECLARE short var1;" +
+                                 "IF(HAS IS NULL CRITERIA ON (a))\nBEGIN\nvar1 = concat('x', 'y') ;\nEND\n" +
+                                 "ELSE\nBEGIN\nDECLARE short var2;\nvar2 = (SELECT b1 FROM g WHERE a2 = 5);\nEND\n" +
+                                 " END";
 
         helpTestCreateUpdateProcedureCommandCase3025_Expression(procedureString);
     }
 
     /** test an expression in parentheses in an assignment statement */
     private void helpTestCreateUpdateProcedureCommandCase3025_Expression(String procedureString) {
-        String expectedString = "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
-                                "IF(HAS IS NULL CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = concat('x', 'y');" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                                "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                                "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        String expectedString = "CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + 
+                                "IF(HAS IS NULL CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = concat('x', 'y');" + "\n" +
+                                "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                                "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END";
 
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
-        Expression[] args = new Expression[] {getFactory().newConstant("x"), getFactory().newConstant("y")}; //$NON-NLS-1$ //$NON-NLS-2$
-        Function function = getFactory().newFunction("concat", args); //$NON-NLS-1$
+        Expression[] args = new Expression[] {getFactory().newConstant("x"), getFactory().newConstant("y")};
+        Function function = getFactory().newFunction("concat", args);
         AssignmentStatement queryStmt = getFactory().newAssignmentStatement(var1, function);
 
         Block ifBlock = getFactory().newBlock();
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List<ElementSymbol> elseSymbols = new ArrayList<ElementSymbol>();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -640,7 +615,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -667,19 +642,19 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testCreateUpdateProcedureCommand1() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -691,11 +666,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -711,7 +686,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -729,28 +704,28 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     @Test
     public void testCreateUpdateProcedureCommand0() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -762,11 +737,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -782,7 +757,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -800,29 +775,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /**IF statement with has LIKE criteria */
     @Test
     public void testCreateUpdateProcedureCommand2() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -834,11 +809,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -854,7 +829,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -873,30 +848,30 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
                          "IF(HAS LIKE CRITERIA ON (a))"
-                         + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                         + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /**IF statement with has IN criteria */
     @Test
     public void testCreateUpdateProcedureCommand3() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -908,11 +883,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -928,7 +903,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -947,29 +922,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS IN CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS IN CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /**IF statement with has <> criteria */
     @Test
     public void testCreateUpdateProcedureCommand4() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -981,11 +956,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1001,7 +976,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         elseBlock.setStatements(elseStmts);
 
         //has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
@@ -1020,29 +995,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /**Has criteria in WHERE clause*/
     @Test
     public void testCreateUpdateProcedureCommand5() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1054,16 +1029,16 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1100,29 +1075,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE HAS CRITERIA ON (a));" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE HAS CRITERIA ON (a));" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /** Translate criteria (empty criteriaSelector in WHERE clause*/
     @Test
     public void testCreateUpdateProcedureCommand7() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1134,16 +1109,16 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1183,29 +1158,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                 "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                 "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                 "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA ON (a) WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                 "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                 "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                 "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA ON (a) WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /** Translate criteria (is null criteriaSelector in WHERE clause*/
     @Test
     public void testCreateUpdateProcedureCommand9() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1217,16 +1192,16 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1266,30 +1241,30 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
                          "var2 = (SELECT b1 FROM g WHERE TRANSLATE IS NULL CRITERIA ON (a) WITH (a = 5));"
-                         + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+                         + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /** Translate criteria ( only with WHERE clause) */
     @Test
     public void testCreateUpdateProcedureCommand10() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1301,16 +1276,16 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1350,29 +1325,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5));" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /** Translate criteria ( only with WHERE clause) */
     @Test
     public void testCreateUpdateProcedureCommand12() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1384,22 +1359,22 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
 
         Criteria crit1 = getFactory().newCompareCriteria(a, Operator.EQ, getFactory().newConstant(new Integer(5)));
-        ElementSymbol m = getFactory().newElementSymbol("m"); //$NON-NLS-1$
+        ElementSymbol m = getFactory().newElementSymbol("m");
         Criteria crit2 = getFactory().newCompareCriteria(m, Operator.EQ, getFactory().newConstant(new Integer(6)));
         List critList = new ArrayList();
         critList.add(crit1);
@@ -1436,10 +1411,10 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                 "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                 "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                 "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5, m = 6));" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                 "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                 "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                 "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA WITH (a = 5, m = 6));" + "\n" + "END" + "\n" + "END", cmd);
 
     }
 
@@ -1447,19 +1422,19 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testCreateUpdateProcedureCommand11() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1471,16 +1446,16 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         //element for has criteria
-        ElementSymbol a = getFactory().newElementSymbol("a"); //$NON-NLS-1$
+        ElementSymbol a = getFactory().newElementSymbol("a");
         List elements = new ArrayList();
         elements.add(a);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1519,29 +1494,29 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS <> CRITERIA ON (a))" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE TRANSLATE CRITERIA);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     /**IF statement with has criteria no on */
     @Test
     public void testCreateUpdateProcedureCommand8() {
         //declare var1
-        ElementSymbol var1 = getFactory().newElementSymbol("var1"); //$NON-NLS-1$
-        String shortType = new String("short"); //$NON-NLS-1$
+        ElementSymbol var1 = getFactory().newElementSymbol("var1");
+        String shortType = new String("short");
         Statement declStmt = getFactory().newDeclareStatement(var1, shortType);
 
         //ifblock
         List symbols = new ArrayList();
-        symbols.add(getFactory().newElementSymbol("a1")); //$NON-NLS-1$
+        symbols.add(getFactory().newElementSymbol("a1"));
         Select select = getFactory().newSelect(symbols);
 
         From from = getFactory().newFrom();
-        from.addGroup(getFactory().newGroupSymbol("g")); //$NON-NLS-1$
+        from.addGroup(getFactory().newGroupSymbol("g"));
 
-        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ, //$NON-NLS-1$
+        Criteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("a2"), Operator.EQ,
                                                getFactory().newConstant(new Integer(5)));
 
         Query query = getFactory().newQuery(select, from);
@@ -1553,11 +1528,11 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         ifBlock.addStatement(queryStmt);
 
         //else block 
-        ElementSymbol var2 = getFactory().newElementSymbol("var2"); //$NON-NLS-1$
+        ElementSymbol var2 = getFactory().newElementSymbol("var2");
         Statement elseDeclStmt = getFactory().newDeclareStatement(var2, shortType);
 
         List elseSymbols = new ArrayList();
-        elseSymbols.add(getFactory().newElementSymbol("b1")); //$NON-NLS-1$
+        elseSymbols.add(getFactory().newElementSymbol("b1"));
         Select elseSelect = getFactory().newSelect(elseSymbols);
 
         Query elseQuery = getFactory().newQuery(elseSelect, from);
@@ -1585,10 +1560,10 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
         CreateUpdateProcedureCommand cmd = getFactory().newCreateUpdateProcedureCommand();
         cmd.setBlock(block);
 
-        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
-                         "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
-                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        helpTest("CREATE PROCEDURE" + "\n" + "BEGIN" + "\n" + "DECLARE short var1;" + "\n" +
+                         "IF(HAS CRITERIA)" + "\n" + "BEGIN" + "\n" + "var1 = (SELECT a1 FROM g WHERE a2 = 5);" + "\n" +
+                         "END" + "\n" + "ELSE" + "\n" + "BEGIN" + "\n" + "DECLARE short var2;" + "\n" +
+                         "var2 = (SELECT b1 FROM g WHERE a2 = 5);" + "\n" + "END" + "\n" + "END", cmd);
     }
 
     @Test
@@ -1645,12 +1620,7 @@ public class TestSQLString7Visitor extends AbstractTestSQLStringVisitor {
     @Test
     public void testDropTable() {
         Drop drop = getFactory().newNode(ASTNodes.DROP);
-        drop.setTable(getFactory().newGroupSymbol("tempTable")); //$NON-NLS-1$
-        helpTest("DROP TABLE tempTable", drop); //$NON-NLS-1$ //$NON-NLS-2$
+        drop.setTable(getFactory().newGroupSymbol("tempTable"));
+        helpTest("DROP TABLE tempTable", drop);
     }
-
-//    @Test
-//    public void testBadCreate() {
-//        helpException("create insert"); //$NON-NLS-1$
-//    }
 }

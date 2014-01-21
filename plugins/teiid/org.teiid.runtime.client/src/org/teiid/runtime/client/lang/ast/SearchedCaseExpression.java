@@ -163,8 +163,24 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public SearchedCaseExpression clone() {
+        SearchedCaseExpression clone = new SearchedCaseExpression(this.parser, this.id);
+
+        if(getWhen() != null)
+            clone.setWhen(cloneList(getWhen()), cloneList(getThen()));
+        if(getElseExpression() != null)
+            clone.setElseExpression(getElseExpression().clone());
+        if(getType() != null)
+            clone.setType(getType());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=04edede68784e204c845cc05bef87d10 (do not edit this line) */

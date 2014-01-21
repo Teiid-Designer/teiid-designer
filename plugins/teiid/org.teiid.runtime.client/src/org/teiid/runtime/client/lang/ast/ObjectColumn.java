@@ -72,8 +72,26 @@ public class ObjectColumn extends ProjectedColumn {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ObjectColumn clone() {
+        ObjectColumn clone = new ObjectColumn(this.parser, this.id);
+
+        if(getPath() != null)
+            clone.setPath(getPath());
+        if(getDefaultExpression() != null)
+            clone.setDefaultExpression(getDefaultExpression().clone());
+        if(getType() != null)
+            clone.setType(getType());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=93bed62047b8d070d6aa7cdb43356933 (do not edit this line) */

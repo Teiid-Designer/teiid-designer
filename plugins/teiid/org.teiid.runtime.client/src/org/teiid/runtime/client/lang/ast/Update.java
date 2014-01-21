@@ -115,8 +115,28 @@ public class Update extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Update clone() {
+        Update clone = new Update(this.parser, this.id);
+
+        if(getCriteria() != null)
+            clone.setCriteria(getCriteria().clone());
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
+        if(getChangeList() != null)
+            clone.setChangeList(getChangeList().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=ce325d62b951bcd63dec74a5c48397e7 (do not edit this line) */

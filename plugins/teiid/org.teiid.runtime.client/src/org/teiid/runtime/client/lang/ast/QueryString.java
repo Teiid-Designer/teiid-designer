@@ -3,8 +3,8 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
 
 public class QueryString extends SimpleNode implements Expression {
@@ -79,8 +79,22 @@ public class QueryString extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public QueryString clone() {
+        QueryString clone = new QueryString(this.parser, this.id);
+
+        if(getArgs() != null)
+            clone.setArgs(cloneList(getArgs()));
+        if(getPath() != null)
+            clone.setPath(getPath().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=442d58224d7e811bdda7829b570b4b56 (do not edit this line) */

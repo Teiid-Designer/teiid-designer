@@ -6,8 +6,8 @@ import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Symbol;
 import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
-import org.teiid.runtime.client.lang.parser.v7.Teiid7Parser;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.v7.Teiid7Parser;
 
 public class Window7Function extends Symbol implements WindowFunction {
 
@@ -85,8 +85,30 @@ public class Window7Function extends Symbol implements WindowFunction {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit((WindowFunction) this, data);
     }
+
+    @Override
+    public Window7Function clone() {
+        Window7Function clone = new Window7Function((Teiid7Parser) this.parser, this.id);
+
+        if(getFunction() != null)
+            clone.setFunction(getFunction().clone());
+        if(getWindowSpecification() != null)
+            clone.setWindowSpecification(getWindowSpecification().clone());
+        if(getCanonicalShortName() != null)
+            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
+        if(getShortName() != null)
+            clone.setShortName(getShortName());
+        if(getName() != null)
+            clone.setName(getName());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=da43cffa8d1927cfd8b4f378cdcfeae0 (do not edit this line) */

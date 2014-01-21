@@ -77,10 +77,24 @@ public class ScalarSubquery extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
 
     
+
+    @Override
+    public ScalarSubquery clone() {
+        ScalarSubquery clone = new ScalarSubquery(this.parser, this.id);
+
+        if(getType() != null)
+            clone.setType(getType());
+        if(getCommand() != null)
+            clone.setCommand(getCommand().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=bfe243691ae4c256b98aff43709faeed (do not edit this line) */

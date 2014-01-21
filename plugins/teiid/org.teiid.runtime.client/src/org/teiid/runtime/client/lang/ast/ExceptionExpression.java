@@ -113,7 +113,25 @@ public class ExceptionExpression extends SimpleNode implements Expression {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public ExceptionExpression clone() {
+        ExceptionExpression clone = new ExceptionExpression(this.parser, this.id);
+
+        if(getErrorCode() != null)
+            clone.setErrorCode(getErrorCode().clone());
+        if(getSqlState() != null)
+            clone.setSqlState(getSqlState().clone());
+        if(getMessage() != null)
+            clone.setMessage(getMessage().clone());
+        if(getParent() != null)
+            clone.setParent(getParent().clone());
+
+        return clone;
+    }
+
 }

@@ -84,8 +84,27 @@ public class XMLColumn extends ProjectedColumn {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLColumn clone() {
+        XMLColumn clone = new XMLColumn(this.parser, this.id);
+
+        if(getPath() != null)
+            clone.setPath(getPath());
+        if(getDefaultExpression() != null)
+            clone.setDefaultExpression(getDefaultExpression().clone());
+        clone.setOrdinal(isOrdinal());
+        if(getName() != null)
+            clone.setName(getName());
+        if(getType() != null)
+            clone.setType(getType());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=2ac7d3dfcbd0e5f01fce2573443ce51f (do not edit this line) */

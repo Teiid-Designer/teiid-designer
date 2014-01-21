@@ -149,8 +149,35 @@ public class XMLTable extends FromClause {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLTable clone() {
+        XMLTable clone = new XMLTable(this.parser, this.id);
+
+        if(getColumns() != null)
+            clone.setColumns(cloneList(getColumns()));
+        if(getPassing() != null)
+            clone.setPassing(cloneList(getPassing()));
+        if(getNamespaces() != null)
+            clone.setNamespaces(getNamespaces().clone());
+        if(getXquery() != null)
+            clone.setXquery(getXquery());
+        clone.setUsingDefaultColumn(isUsingDefaultColumn());
+        if(getName() != null)
+            clone.setName(getName());
+        clone.setOptional(isOptional());
+        clone.setMakeInd(isMakeInd());
+        clone.setNoUnnest(isNoUnnest());
+        clone.setMakeDep(isMakeDep());
+        clone.setMakeNotDep(isMakeNotDep());
+        clone.setPreserve(isPreserve());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=7e5530ab340020c0908e2b5c8b4448f3 (do not edit this line) */

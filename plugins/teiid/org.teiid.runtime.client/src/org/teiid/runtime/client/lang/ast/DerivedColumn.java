@@ -72,8 +72,23 @@ public class DerivedColumn extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public DerivedColumn clone() {
+        DerivedColumn clone = new DerivedColumn(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setPropagateName(isPropagateName());
+        if(getAlias() != null)
+            clone.setAlias(getAlias());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=b8c0cc1023777a56f0a24e4cb9eb6b4a (do not edit this line) */

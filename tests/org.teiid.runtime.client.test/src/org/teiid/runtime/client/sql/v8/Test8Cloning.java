@@ -33,26 +33,25 @@ import org.teiid.runtime.client.lang.ast.RaiseStatement;
 import org.teiid.runtime.client.lang.ast.Select;
 import org.teiid.runtime.client.lang.ast.Statement;
 import org.teiid.runtime.client.lang.ast.XMLSerialize;
-import org.teiid.runtime.client.sql.AbstractTestFactory;
-import org.teiid.runtime.client.sql.AbstractTestQueryParser;
+import org.teiid.runtime.client.sql.AbstractTestCloning;
 
 /**
- * Unit testing for the Query Parser for teiid version 8
+ * Unit testing for the SQLStringVisitor for teiid version 8
  */
 @SuppressWarnings( {"nls", "javadoc"} )
-public class TestQuery8Parser extends AbstractTestQueryParser {
+public class Test8Cloning extends AbstractTestCloning {
 
     private Test8Factory factory;
 
     /**
      *
      */
-    public TestQuery8Parser() {
+    public Test8Cloning() {
         super(new TeiidServerVersion("8.0.0"));
     }
 
     @Override
-    protected AbstractTestFactory getFactory() {
+    protected Test8Factory getFactory() {
         if (factory == null)
             factory = new Test8Factory(parser);
 
@@ -72,7 +71,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         select.addSymbol(getFactory().newConstant(5));
 
         Query query = getFactory().newQuery(select, from);
-        helpTest("SELECT -x, +x, +5 FROM g",
+        helpTest(
                  "SELECT (-1 * x), x, 5 FROM g",
                  query);
     }
@@ -90,7 +89,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
 
         Query query = getFactory().newQuery(select, from);
 
-        helpTest("SELECT 1.3e8, -1.3e+8, +1.3e-8 FROM a.g1",
+        helpTest(
                  "SELECT 1.3E8, -1.3E8, 1.3E-8 FROM a.g1",
                  query);
     }
@@ -110,15 +109,8 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
 
         Query query = getFactory().newQuery(select, from);
         query.setCriteria(crit);
-        helpTest("SELECT a FROM db.g WHERE b LIKE E'\\\\_aString'",
-                 "SELECT a FROM db.g WHERE b LIKE '\\_aString' ESCAPE '\\'",
+        helpTest("SELECT a FROM db.g WHERE b LIKE '\\_aString' ESCAPE '\\'",
                  query);
-    }
-
-    @Test
-    public void testLikeWithEscapeException() {
-//        helpException("SELECT a from db.g where b like '#String' escape '#1'", "TEIID31100 Parsing error: Encountered \"like '#String' escape [*]'#1'[*]\" at line 1, column 50.\nTEIID30398 LIKE/SIMILAR TO ESCAPE value must be a single character: [#1].");
-        helpException("SELECT a from db.g where b like '#String' escape '#1'", null);
     }
 
     @Test
@@ -128,7 +120,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         RaiseStatement errStmt = getFactory().newNode(ASTNodes.RAISE_STATEMENT);
         errStmt.setExpression(ee);
 
-        helpStmtTest("ERROR 'Test only';", "RAISE SQLEXCEPTION 'Test only';",
+        helpTest("RAISE SQLEXCEPTION 'Test only';",
                      errStmt);
     }
 
@@ -142,7 +134,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         errStmt.setExpression(ee);
         errStmt.setWarning(true);
 
-        helpStmtTest("RAISE SQLWARNING SQLEXCEPTION 'Test only' SQLSTATE '100' chain e;", "RAISE SQLWARNING SQLEXCEPTION 'Test only' SQLSTATE '100' CHAIN e;",
+        helpTest("RAISE SQLWARNING SQLEXCEPTION 'Test only' SQLSTATE '100' CHAIN e;",
                      errStmt);
     }
 
@@ -154,30 +146,8 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         f.setDeclaration(Boolean.TRUE);
         f.setVersion("1.0");
         f.setEncoding("UTF-8");
-        helpTestExpression("xmlserialize(x as BLOB encoding \"UTF-8\" version '1.0' INCLUDING xmldeclaration)",
-                           "XMLSERIALIZE(x AS BLOB ENCODING \"UTF-8\" VERSION '1.0' INCLUDING XMLDECLARATION)",
+        helpTest("XMLSERIALIZE(x AS BLOB ENCODING \"UTF-8\" VERSION '1.0' INCLUDING XMLDECLARATION)",
                            f);
-    }
-
-    @Test
-    public void testWindowedExpression() {
-        String sql = "SELECT foo(x, y) over ()";
-        helpException(sql);
-    }
-
-    @Test
-    public void testInvalidLimit() {
-        helpException("SELECT * FROM pm1.g1 LIMIT -5");
-    }
-
-    @Test
-    public void testInvalidLimit_Offset() {
-        helpException("SELECT * FROM pm1.g1 LIMIT -1, 100");
-    }
-
-    @Test
-    public void testTextTableNegativeWidth() {
-        helpException("SELECT * from texttable(null columns x string width -1) as x");
     }
 
     @Test
@@ -197,13 +167,13 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         b.addStatement(cmdStmt);
         b.addStatement(assigStmt);
         b.addStatement(errStmt, true);
-        helpStmtTest("BEGIN\nselect * from x;\na = 1;\nexception e\nERROR 'My Error';\nEND", "BEGIN\nSELECT * FROM x;\na = 1;\nEXCEPTION e\nRAISE SQLEXCEPTION 'My Error';\nEND", b);
+        helpTest("BEGIN\nSELECT * FROM x;\na = 1;\nEXCEPTION e\nRAISE SQLEXCEPTION 'My Error';\nEND", b);
     }
 
     @Test
     public void testJSONObject() throws Exception {
         JSONObject f = getFactory().newJSONObject(Arrays.asList(getFactory().newDerivedColumn("table", getFactory().newElementSymbol("a"))));
-        helpTestExpression("jsonObject(a as \"table\")", "JSONOBJECT(a AS \"table\")", f);
+        helpTest("JSONOBJECT(a AS \"table\")", f);
     }
 
     @Test public void testVirtualProcedure(){        
@@ -225,7 +195,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         x = getFactory().newElementSymbol("x");
         c1 = getFactory().newElementSymbol("mycursor.c1");
         Statement assignmentStmt = getFactory().newAssignmentStatement(x, c1);
-        Block block = getFactory().newBlock();
+        Block block = getFactory().newBlock(); 
         block.addStatement(assignmentStmt);
         
         Block ifBlock = getFactory().newBlock();
@@ -233,12 +203,12 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         ifBlock.addStatement(continueStmt);
         Criteria crit = getFactory().newCompareCriteria(x, Operator.GT,  getFactory().newConstant(new Integer(5)));
         IfStatement ifStmt = getFactory().newIfStatement(crit, ifBlock);
-        block.addStatement(ifStmt);
+        block.addStatement(ifStmt); 
         
         String cursor = "mycursor";
         LoopStatement loopStmt = getFactory().newLoopStatement(block, query, cursor);
         
-        block = getFactory().newBlock();
+        block = getFactory().newBlock();        
         block.addStatement(dStmt);
         block.addStatement(loopStmt);
         CommandStatement cmdStmt = getFactory().newCommandStatement(query);
@@ -247,8 +217,7 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         CreateProcedureCommand virtualProcedureCommand = getFactory().newCreateProcedureCommand();
         virtualProcedureCommand.setBlock(block);
         
-        helpTest("CREATE VIRTUAL PROCEDURE BEGIN DECLARE integer x; LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor BEGIN x=mycursor.c1; IF(x > 5) BEGIN CONTINUE; END END SELECT c1, c2 FROM m.g; END",
-        "CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n"
+        helpTest("CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n"
         + "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor\nBEGIN\n"
         + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n"
         + "SELECT c1, c2 FROM m.g;\nEND", virtualProcedureCommand);

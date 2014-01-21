@@ -100,10 +100,12 @@ public class Block extends Statement implements Labeled {
         this.atomic = atomic;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
     
+    @Override
     public void setLabel(String label) {
         this.label = label;
     }
@@ -165,8 +167,27 @@ public class Block extends Statement implements Labeled {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Block clone() {
+        Block clone = new Block(this.parser, this.id);
+
+        clone.setAtomic(isAtomic());
+        if(getLabel() != null)
+            clone.setLabel(getLabel());
+        if(getExceptionGroup() != null)
+            clone.setExceptionGroup(getExceptionGroup());
+        if(getExceptionStatements() != null)
+            clone.setExceptionStatements(cloneList(getExceptionStatements()));
+        if(getStatements() != null)
+            clone.setStatements(cloneList(getStatements()));
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=c90f4508d390bd046d7adfa163192b9f (do not edit this line) */

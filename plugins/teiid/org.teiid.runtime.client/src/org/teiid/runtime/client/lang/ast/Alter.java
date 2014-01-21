@@ -158,8 +158,32 @@ public class Alter<T extends Command> extends Command {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Alter clone() {
+        Alter clone = new Alter(this.parser, this.id);
+
+        if(getAlterType() != null)
+            clone.setAlterType(getAlterType());
+        if(getDefinition() != null)
+            clone.setDefinition(getDefinition().clone());
+        if(getEvent() != null)
+            clone.setEvent(getEvent());
+        clone.setCreate(isCreate());
+        clone.setEnabled(getEnabled());
+        if(getTarget() != null)
+            clone.setTarget(getTarget().clone());
+        if(getSourceHint() != null)
+            clone.setSourceHint(getSourceHint());
+        if(getOption() != null)
+            clone.setOption(getOption().clone());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=4c2a7e700d4af2b1569d4947a1d82223 (do not edit this line) */

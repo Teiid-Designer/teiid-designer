@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
@@ -53,8 +54,25 @@ public class XMLNamespaces extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public XMLNamespaces clone() {
+        XMLNamespaces clone = new XMLNamespaces(this.parser, this.id);
+
+        if(getNamespaceItems() != null) {
+            List<NamespaceItem> cloneList = new ArrayList<NamespaceItem>();
+            for (NamespaceItem item : getNamespaceItems()) {
+                cloneList.add(item.clone());
+            }
+            clone.setNamespaces(cloneList);
+        }
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=736a2961c19def96febeb5ccbed0cdcf (do not edit this line) */

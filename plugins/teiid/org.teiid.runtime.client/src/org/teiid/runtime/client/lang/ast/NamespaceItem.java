@@ -55,4 +55,11 @@ public class NamespaceItem {
         } else if (!this.uri.equals(other.uri)) return false;
         return true;
     }
+
+    @Override
+    public NamespaceItem clone() {
+        NamespaceItem clone = new NamespaceItem(this.uri, this.prefix);
+        return clone;
+    }
+
 }

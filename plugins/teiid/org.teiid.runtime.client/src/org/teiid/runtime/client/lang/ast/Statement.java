@@ -16,8 +16,18 @@ public class Statement extends SimpleNode {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public Statement clone() {
+        Statement clone = new Statement(this.parser, this.id);
+
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=f7567f59a5c45e144164cfa33217c65a (do not edit this line) */

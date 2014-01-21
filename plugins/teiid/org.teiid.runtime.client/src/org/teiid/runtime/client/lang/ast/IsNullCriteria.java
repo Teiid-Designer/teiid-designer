@@ -71,8 +71,21 @@ public class IsNullCriteria extends Criteria implements PredicateCriteria {
     }
 
     /** Accept the visitor. **/
+    @Override
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
+
+    @Override
+    public IsNullCriteria clone() {
+        IsNullCriteria clone = new IsNullCriteria(this.parser, this.id);
+
+        if(getExpression() != null)
+            clone.setExpression(getExpression().clone());
+        clone.setNegated(isNegated());
+
+        return clone;
+    }
+
 }
 /* JavaCC - OriginalChecksum=c564df426ba245d1c4e483affd0083cb (do not edit this line) */
