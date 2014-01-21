@@ -7,13 +7,22 @@
 */
 package org.teiid.designer.runtime.adapter;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.List;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
+import org.teiid.designer.runtime.DebugConstants;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -56,7 +65,92 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
         String resultString = JBoss7ManagerUtil.getService(parentServer).execute(new AS7ManagementDetails(parentServer), requestString);
         return ModelNode.fromJSONString(resultString);
     }
-    
+
+    /**
+     * @param jbossServer
+     * @return
+     * @throws Exception
+     */
+    protected static boolean isHostConnected(String host, int port) throws Exception {
+        Socket socket = null;
+        Reader in  = null;
+        InetSocketAddress endPoint = new InetSocketAddress(host, port);
+
+        if (endPoint.isUnresolved()) {
+            DqpPlugin.Util.log(IStatus.WARNING, DqpPlugin.Util.getString("jbossServerConnectionFailureMessage", endPoint)); //$NON-NLS-1$
+            return false;
+        }
+
+        try {
+            socket = new Socket();
+            socket.connect(endPoint, 1024);
+
+            /*
+             * This may not seem necessary since a socket connection
+             * should be enough. However, TEIIDDES-1971 has shown
+             * that without actually using the socket, 'Connection reset
+             * by peer' messages with be reported in the server log.
+             */
+            InputStream socketReader = socket.getInputStream();
+
+            final char[] buffer = new char[100];
+            in = new InputStreamReader(socketReader);
+            int rsz = in.read(buffer, 0, buffer.length);
+            if (rsz == -1) {
+                if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
+                    /*
+                     * Only need to log this with debug tracing turned on.
+                     */
+                    String message = DqpPlugin.Util.getString("jbossServerConnectionStreamEmpty", host, port); //$NON-NLS-1$
+                    IStatus status = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, message);
+                    DqpPlugin.Util.log(status);
+                }
+                return false;
+            }
+
+            StringBuffer output = new StringBuffer();
+            for (int i = 0; i < buffer.length; ++i) {
+                if (Character.isLetterOrDigit(buffer[i])) {
+                    output.append(buffer[i]);
+                }
+            }
+
+            if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
+                /*
+                 * Only need to log this with debug tracing turned on.
+                 */
+                String message = DqpPlugin.Util.getString("jbossServerHeartBeat", host, port, output); //$NON-NLS-1$
+                IStatus status = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, message);
+                DqpPlugin.Util.log(status);
+            }
+
+            return true;
+        } catch (Exception ex) {
+            if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
+                /*
+                 * Only need to log this with debug tracing turned on.
+                 */
+                DqpPlugin.Util.log(ex);
+            }
+            return false;
+        } finally {
+            try {
+                if (in != null)
+                    in.close();
+
+                if (socket != null && socket.isConnected()) {
+                    socket.close();
+                    socket = null;
+                }
+            } catch (Exception ex2) {
+                /*
+                 * Unlikely event that socket did not close correctly.
+                 */
+                DqpPlugin.Util.log(ex2);
+            }
+        }
+    }
+
     /**
      * Determine whether the jboss 7 server is contactable by attempting
      * to talk to its management port

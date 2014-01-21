@@ -7,13 +7,10 @@
 */
 package org.teiid.designer.runtime.adapter;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.teiid.designer.runtime.DebugConstants;
@@ -59,46 +56,6 @@ public class JBossServerUtil {
         try {
             socket = new Socket();
             socket.connect(endPoint, 1024);
-
-            /*
-             * This may not seem necessary since a socket connection
-             * should be enough. However, TEIIDDES-1971 has shown
-             * that without actually using the socket, 'Connection reset
-             * by peer' messages with be reported in the server log.
-             */
-            InputStream socketReader = socket.getInputStream();
-
-            final char[] buffer = new char[100];
-            in = new InputStreamReader(socketReader);
-            int rsz = in.read(buffer, 0, buffer.length);
-            if (rsz == -1) {
-                if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
-                    /*
-                     * Only need to log this with debug tracing turned on.
-                     */
-                    String message = DqpPlugin.Util.getString("jbossServerConnectionStreamEmpty", host, port); //$NON-NLS-1$
-                    IStatus status = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, message);
-                    DqpPlugin.Util.log(status);
-                }
-                return false;
-            }
-
-            StringBuffer output = new StringBuffer();
-            for (int i = 0; i < buffer.length; ++i) {
-                if (Character.isLetterOrDigit(buffer[i])) {
-                    output.append(buffer[i]);
-                }
-            }
-
-            if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
-                /*
-                 * Only need to log this with debug tracing turned on.
-                 */
-                String message = DqpPlugin.Util.getString("jbossServerHeartBeat", host, port, output); //$NON-NLS-1$
-                IStatus status = new Status(IStatus.OK, DqpPlugin.PLUGIN_ID, message);
-                DqpPlugin.Util.log(status);
-            }
-
             return true;
         } catch (Exception ex) {
             if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.JBOSS_CONNECTION)) {
