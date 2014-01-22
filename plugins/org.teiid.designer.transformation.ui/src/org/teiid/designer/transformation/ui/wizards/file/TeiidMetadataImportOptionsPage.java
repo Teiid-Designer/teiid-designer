@@ -7,6 +7,11 @@
 */
 package org.teiid.designer.transformation.ui.wizards.file;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -48,12 +53,15 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.ColorManager;
+import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
@@ -1445,6 +1453,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					((TeiidColumnInfo)element).setName(newValue);
 					delimitedColumnsViewer.refresh(element);
 					fixedColumnsViewer.refresh(element);
+					
+					handleInfoChanged(false);
 				}
 			}
 		}
@@ -1517,11 +1527,55 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				if( newValue != oldValue ) {
 					((TeiidColumnInfo)element).setWidth(newValue);
 					fixedColumnsViewer.refresh(element);
+					
+					handleInfoChanged(false);
 				}
 			}
 		}
 
 	}
+    
+    class DatatypeEditingSupport extends ComboBoxEditingSupport {
+    	
+    	private String[] datatypes;
+        /**
+         * @param viewer
+         */
+        public DatatypeEditingSupport( ColumnViewer viewer ) {
+            super(viewer);
+            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
+    		Collection<String> dTypes = new ArrayList<String>();
+    		
+    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
+    		Arrays.sort(sortedStrings);
+    		for( String dType : sortedStrings ) {
+    			dTypes.add(dType);
+    		}
+    		
+    		datatypes = dTypes.toArray(new String[dTypes.size()]);
+    		
+        }
+
+
+        @Override
+        protected String getElementValue( Object element ) {
+        	return ((ITeiidColumnInfo)element).getDatatype();
+        }
+
+        @Override
+        protected String[] refreshItems( Object element ) {
+            return datatypes;
+        }
+
+        @Override
+        protected void setElementValue( Object element,
+                                        String newValue ) {
+            ((TeiidColumnInfo)element).setDatatype(newValue);
+            
+            handleInfoChanged(false);
+        }
+    }
 
 }
 

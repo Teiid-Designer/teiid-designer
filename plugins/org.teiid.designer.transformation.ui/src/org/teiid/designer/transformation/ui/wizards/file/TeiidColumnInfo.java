@@ -19,7 +19,6 @@ import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
-import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlAttribute;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
 
