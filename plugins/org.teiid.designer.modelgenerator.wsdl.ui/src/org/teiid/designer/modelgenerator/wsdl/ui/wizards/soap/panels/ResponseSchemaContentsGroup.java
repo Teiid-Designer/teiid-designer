@@ -132,6 +132,9 @@ public class ResponseSchemaContentsGroup {
 	    	IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
 	    	Object obj = selection.getFirstElement();
     		String pathValue = ((SchemaNode)obj).getChildren().iterator().next().getFullPath();
+    		if( pathValue.endsWith("/")) { //$NON-NLS-1$
+    			pathValue = pathValue.substring(0, pathValue.length()-1);
+			}
     		this.columnsInfoPanel.getRootPathText().setText(pathValue);
     		getResponseInfo().setRootPath(pathValue);
     		this.columnsInfoPanel.refresh();
