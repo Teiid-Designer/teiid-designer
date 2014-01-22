@@ -16,6 +16,7 @@ import org.teiid.designer.query.proc.wsdl.IWsdlRequestInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlResponseInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlWrapperInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *
@@ -27,9 +28,11 @@ public class WsdlWrapperHelper extends AbstractWsdlHelper implements IWsdlConsta
     private final IWsdlResponseInfo responseInfo;
 
     /**
+     * @param teiidVersion 
      * @param wrapperInfo
      */
-    public WsdlWrapperHelper(IWsdlWrapperInfo wrapperInfo) {
+    public WsdlWrapperHelper(ITeiidServerVersion teiidVersion, IWsdlWrapperInfo wrapperInfo) {
+        super(teiidVersion);
         this.wrapperInfo = wrapperInfo;
         this.requestInfo = wrapperInfo.getRequestInfo();
         this.responseInfo = wrapperInfo.getResponseInfo();

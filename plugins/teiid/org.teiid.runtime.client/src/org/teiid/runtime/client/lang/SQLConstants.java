@@ -11,7 +11,9 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *
@@ -431,12 +433,14 @@ public abstract class SQLConstants {
         public static final String DLVALUE = "DLVALUE"; //$NON-NLS-1$
         public static final String IMPORT = "IMPORT"; //$NON-NLS-1$
     }
-        
+
+    private static ITeiidServerVersion CACHED_TEIID_VERSION = null;
+
     /**
      * Set of CAPITALIZED reserved words for checking whether a string is a reserved word.
      */
-    private static final Set<String> RESERVED_WORDS = extractFieldNames(SQLConstants.Reserved.class);
-    private static final Set<String> NON_RESERVED_WORDS = extractFieldNames(SQLConstants.NonReserved.class);
+    private static Set<String> RESERVED_WORDS = null;
+    private static Set<String> NON_RESERVED_WORDS = null;
 
     /**
      * @throws AssertionError
@@ -445,29 +449,52 @@ public abstract class SQLConstants {
         HashSet<String> result = new HashSet<String>();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            if (field.getType() == String.class) {
-                try {
-                    if (!result.add((String)field.get(null))) {
-                        throw new AssertionError("Duplicate value for " + field.getName()); //$NON-NLS-1$
-                    }
-                } catch (Exception e) {
-                }
+            if (field.getType() != String.class)
+                continue;
+
+            // If teiid version is less than the version listed in the since annotation
+            // then word should not be included in the word sets
+            if (AnnotationUtils.hasAnnotation(field, Since.class)) {
+                Since since = AnnotationUtils.getAnnotation(field, Since.class);
+                if (! AnnotationUtils.isGreaterThanOrEqualTo(since, CACHED_TEIID_VERSION))
+                    continue;
             }
+
+            try {
+                if (!result.add((String)field.get(null))) {
+                    throw new AssertionError("Duplicate value for " + field.getName()); //$NON-NLS-1$
+                }
+            } catch (Exception e) {}
         }
         return Collections.unmodifiableSet(result);
     }
-    
+
+    /**
+     * @param teiidVersion
+     */
+    private static void initialiseConstants(ITeiidServerVersion teiidVersion) {
+        CACHED_TEIID_VERSION = teiidVersion;
+        RESERVED_WORDS = extractFieldNames(SQLConstants.Reserved.class);
+        NON_RESERVED_WORDS = extractFieldNames(SQLConstants.NonReserved.class);
+    }
+
     /**
      * @return nonReservedWords
      */
-    public static Set<String> getNonReservedWords() {
+    public static Set<String> getNonReservedWords(ITeiidServerVersion teiidVersion) {
+        if (CACHED_TEIID_VERSION == null || ! CACHED_TEIID_VERSION.equals(teiidVersion) || NON_RESERVED_WORDS == null)
+            initialiseConstants(teiidVersion);
+
         return NON_RESERVED_WORDS;
     }
-    
+
     /**
      * @return reservedWords
      */
-    public static Set<String> getReservedWords() {
+    public static Set<String> getReservedWords(ITeiidServerVersion teiidVersion) {
+        if (CACHED_TEIID_VERSION == null || ! CACHED_TEIID_VERSION.equals(teiidVersion) || RESERVED_WORDS == null)
+            initialiseConstants(teiidVersion);
+
         return RESERVED_WORDS;
     }
     
@@ -479,10 +506,15 @@ public abstract class SQLConstants {
      * @param str String to check
      * @return True if reserved word, false if not or null
      */
-    public static final boolean isReservedWord(String str) {
+    public static final boolean isReservedWord(ITeiidServerVersion teiidVersion, String str) {
         if(str == null) { 
             return false;    
         }
-        return RESERVED_WORDS.contains(str.toUpperCase());    
+
+        String word = str.toUpperCase();
+        if (CACHED_TEIID_VERSION == null || ! CACHED_TEIID_VERSION.equals(teiidVersion) || RESERVED_WORDS == null)
+            initialiseConstants(teiidVersion);
+
+        return RESERVED_WORDS.contains(word);
     }
 }

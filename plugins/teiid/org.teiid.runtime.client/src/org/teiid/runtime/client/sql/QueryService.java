@@ -7,12 +7,19 @@
 */
 package org.teiid.runtime.client.sql;
 
+import java.util.Set;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.runtime.client.lang.ProcedureReservedWords;
+import org.teiid.runtime.client.lang.SQLConstants;
+import org.teiid.runtime.client.lang.parser.visitor.SQLStringVisitor;
+import org.teiid.runtime.client.sql.proc.ProcedureService;
 
 /**
  *
  */
 public class QueryService {
+
+    private final ITeiidServerVersion teiidVersion;
 
     private QueryParser queryParser;
 
@@ -20,12 +27,14 @@ public class QueryService {
 
     //    private final SyntaxFactory factory = new SyntaxFactory();
 
+    public QueryService(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
+
     /**
-     * @param teiidVersion
-     *
      * @return a query parser applicable to the given teiid instance version
      */
-    public QueryParser getQueryParser(ITeiidServerVersion teiidVersion) {
+    public QueryParser getQueryParser() {
         if (queryParser == null) {
             queryParser = new QueryParser(teiidVersion);
         }
@@ -33,26 +42,21 @@ public class QueryService {
         return queryParser;
     }
 
-    //    
-    //    @Override
-    //    public boolean isReservedWord(String word) {
-    //        return SQLConstants.isReservedWord(word);
-    //    }
-    //
-    //    @Override
-    //    public boolean isProcedureReservedWord(String word) {
-    //        return ProcedureReservedWords.isProcedureReservedWord(word);
-    //    }
-    //
-    //    @Override
-    //    public Set<String> getReservedWords() {
-    //        return SQLConstants.getReservedWords();
-    //    }
-    //
-    //    @Override
-    //    public Set<String> getNonReservedWords() {
-    //        return SQLConstants.getNonReservedWords();
-    //    }
+    public boolean isReservedWord(String word) {
+        return SQLConstants.isReservedWord(teiidVersion, word);
+    }
+
+    public boolean isProcedureReservedWord(String word) {
+        return ProcedureReservedWords.isProcedureReservedWord(teiidVersion, word);
+    }
+
+    public Set<String> getReservedWords() {
+        return SQLConstants.getReservedWords(teiidVersion);
+    }
+
+    public Set<String> getNonReservedWords() {
+        return SQLConstants.getNonReservedWords(teiidVersion);
+    }
     //
     //    @Override
     //    public String getJDBCSQLTypeName(int jdbcType) {
@@ -158,11 +162,11 @@ public class QueryService {
     //        }
     //        return "expr"; //$NON-NLS-1$
     //    }
-    //
-    //    @Override
-    //    public ISQLStringVisitor getSQLStringVisitor() {
-    //        return new SQLStringVisitor();
-    //    }
+
+    public SQLStringVisitor getSQLStringVisitor() {
+        return new SQLStringVisitor(teiidVersion);
+    }
+
     //
     //    @Override
     //    public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
@@ -249,9 +253,8 @@ public class QueryService {
     //    public IQueryResolver getQueryResolver() {
     //        return new WrappedQueryResolver();
     //    }
-    //    
-    //    @Override
-    //    public IProcedureService getProcedureService() {
-    //        return new ProcedureService();
-    //    }
+
+    public ProcedureService getProcedureService() {
+        return new ProcedureService(teiidVersion);
+    }
 }

@@ -17,6 +17,7 @@ import org.teiid.designer.query.proc.wsdl.IWsdlWrapperInfo;
 import org.teiid.designer.query.proc.wsdl.model.IMessage;
 import org.teiid.designer.query.proc.wsdl.model.IPart;
 import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  *
@@ -27,10 +28,12 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
     private final Properties properties;
 
     /**
+     * @param teiidVersion 
      * @param requestInfo
      * @param properties
      */
-    public WsdlRequestProcedureHelper(IWsdlRequestInfo requestInfo, Properties properties) {
+    public WsdlRequestProcedureHelper(ITeiidServerVersion teiidVersion, IWsdlRequestInfo requestInfo, Properties properties) {
+        super(teiidVersion);
         this.requestInfo = requestInfo;
         this.properties = properties;
     }

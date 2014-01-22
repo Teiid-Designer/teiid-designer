@@ -7,6 +7,7 @@
 */
 package org.teiid.runtime.client.sql.proc.wsdl;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.lang.SQLConstants;
 
 /**
@@ -14,11 +15,18 @@ import org.teiid.runtime.client.lang.SQLConstants;
  */
 public abstract class AbstractWsdlHelper {
 
+    private final ITeiidServerVersion teiidVersion;
+
     /**
-     * 
+     * @param teiidVersion
      */
-    public AbstractWsdlHelper() {
+    public AbstractWsdlHelper(ITeiidServerVersion teiidVersion) {
         super();
+        this.teiidVersion = teiidVersion;
+    }
+
+    public ITeiidServerVersion getTeiidVersion() {
+        return teiidVersion;
     }
 
     /**
@@ -29,7 +37,7 @@ public abstract class AbstractWsdlHelper {
      * @return
      */
     protected String convertSqlNameSegment(String name) {       
-        if( SQLConstants.isReservedWord(name) ) {
+        if( SQLConstants.isReservedWord(teiidVersion, name) ) {
             return '\"' + name + '\"';
         }
         

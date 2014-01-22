@@ -107,7 +107,7 @@ public class AnnotationUtils {
      * @return currentVersion >= removed value
      */
     public static boolean isGreaterThanOrEqualTo(Removed removed, ITeiidServerVersion currentVersion) {
-        if (removed == null)
+        if (removed == null || currentVersion == null)
             return false;
 
         return isGreaterOrEqualThan(new TeiidServerVersion(removed.value()), currentVersion);
@@ -135,7 +135,7 @@ public class AnnotationUtils {
      * @return currentVersion >= since value
      */
     public static boolean isGreaterThanOrEqualTo(Since since, ITeiidServerVersion currentVersion) {
-        if (since == null)
+        if (since == null || currentVersion == null)
             return true;
 
         return isGreaterOrEqualThan(new TeiidServerVersion(since.value()), currentVersion);

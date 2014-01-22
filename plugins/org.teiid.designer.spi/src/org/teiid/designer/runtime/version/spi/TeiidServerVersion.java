@@ -25,6 +25,16 @@ import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 public class TeiidServerVersion implements ITeiidServerVersion {
 
     /**
+     * Minimum 7 server version
+     */
+    public static final ITeiidServerVersion TEIID_7_SERVER = new TeiidServerVersion(SEVEN, SEVEN, ZERO);
+
+    /**
+     * Minimum 8 server version
+     */
+    public static final ITeiidServerVersion TEIID_8_SERVER = new TeiidServerVersion(EIGHT, ZERO, ZERO);
+
+    /**
      * The default teiid 8 server version
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_8_SERVER = new TeiidServerVersion(DEFAULT_TEIID_8_SERVER_ID);

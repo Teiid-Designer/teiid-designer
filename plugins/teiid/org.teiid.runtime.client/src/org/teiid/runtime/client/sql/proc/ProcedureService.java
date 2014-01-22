@@ -19,6 +19,7 @@ import org.teiid.designer.query.proc.wsdl.IWsdlRequestInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlResponseInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlWrapperInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.sql.proc.wsdl.WsdlRequestProcedureHelper;
 import org.teiid.runtime.client.sql.proc.wsdl.WsdlResponseProcedureHelper;
@@ -28,6 +29,15 @@ import org.teiid.runtime.client.sql.proc.wsdl.WsdlWrapperHelper;
  *
  */
 public class ProcedureService implements IProcedureService, ISQLConstants {
+
+    private final ITeiidServerVersion teiidVersion;
+
+    /**
+     * @param teiidVersion
+     */
+    public ProcedureService(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
 
     @Override
     public String getSQLStatement(ITeiidMetadataFileInfo metadataFileInfo, String relationalModelName) {
@@ -265,26 +275,25 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
     
     @Override
     public String getSQLStatement(IWsdlWrapperInfo wrapperInfo) {
-        WsdlWrapperHelper helper = new WsdlWrapperHelper(wrapperInfo);
+        WsdlWrapperHelper helper = new WsdlWrapperHelper(teiidVersion, wrapperInfo);
         return helper.getWrapperStatement();
     }
     
     @Override
     public String getSQLStatement(IWsdlWrapperInfo wrapperInfo, Properties properties) {
-        WsdlWrapperHelper helper = new WsdlWrapperHelper(wrapperInfo);
+        WsdlWrapperHelper helper = new WsdlWrapperHelper(teiidVersion, wrapperInfo);
         return helper.getWrapperProcedureStatement(properties);
     }
     
     @Override
     public String getSQLStatement(IWsdlRequestInfo requestInfo, Properties properties) {
-        WsdlRequestProcedureHelper helper = new WsdlRequestProcedureHelper(requestInfo, properties);
+        WsdlRequestProcedureHelper helper = new WsdlRequestProcedureHelper(teiidVersion, requestInfo, properties);
         return helper.getSQLStatement();
     }
     
     @Override
     public String getSQLStatement(IWsdlResponseInfo responseInfo, Properties properties) {
-        WsdlResponseProcedureHelper helper = new WsdlResponseProcedureHelper(responseInfo, properties);
+        WsdlResponseProcedureHelper helper = new WsdlResponseProcedureHelper(teiidVersion, responseInfo, properties);
         return helper.getSQLStatement();
     }
-
 }

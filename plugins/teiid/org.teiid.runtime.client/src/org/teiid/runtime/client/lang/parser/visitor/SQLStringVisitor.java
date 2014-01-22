@@ -2522,7 +2522,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(Tokens.RPAREN);
     }
 
-    private static String escapeSinglePart(String part) {
+    private String escapeSinglePart(String part) {
         if (isReservedWord(part)) {
             return ID_ESCAPE_CHAR + part + ID_ESCAPE_CHAR;
         }
@@ -2547,11 +2547,11 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
      * @param string String to check
      * @return True if reserved word
      */
-    private static boolean isReservedWord(String string) {
+    private boolean isReservedWord(String string) {
         if (string == null) {
             return false;
         }
-        return SQLConstants.isReservedWord(string);
+        return SQLConstants.isReservedWord(teiidVersion, string);
     }
 
 }
