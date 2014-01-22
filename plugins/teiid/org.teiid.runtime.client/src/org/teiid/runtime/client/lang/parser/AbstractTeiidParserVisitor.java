@@ -18,6 +18,9 @@ import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.AliasSymbol;
 import org.teiid.runtime.client.lang.ast.Alter;
+import org.teiid.runtime.client.lang.ast.AlterProcedure;
+import org.teiid.runtime.client.lang.ast.AlterTrigger;
+import org.teiid.runtime.client.lang.ast.AlterView;
 import org.teiid.runtime.client.lang.ast.ArrayTable;
 import org.teiid.runtime.client.lang.ast.AssignmentStatement;
 import org.teiid.runtime.client.lang.ast.BetweenCriteria;
@@ -215,7 +218,17 @@ public abstract class AbstractTeiidParserVisitor {
         throw new UnsupportedOperationException();
     }
 
-    public void visit(Alter<? extends Command> node, Object data) {
+    public void visit(AlterView node) {
+        isApplicable(node);
+        throw new UnsupportedOperationException();
+    }
+
+    public void visit(AlterTrigger node) {
+        isApplicable(node);
+        throw new UnsupportedOperationException();
+    }
+
+    public void visit(AlterProcedure node) {
         isApplicable(node);
         throw new UnsupportedOperationException();
     }

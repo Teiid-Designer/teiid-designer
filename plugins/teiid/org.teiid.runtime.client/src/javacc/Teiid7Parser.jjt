@@ -648,17 +648,16 @@ Command createTrigger(ParseInfo info) #void :
 	(event = <INSERT> | event = <UPDATE> | event = <DELETE>) 
 	<AS> triggerAction = forEachRowTriggerAction(info)
 	{
-	    Alter alter = createASTNode(ASTNodes.ALTER);
-        alter.setAlterType(Alter.AlterType.TRIGGER);
-        alter.setTarget(groupSymbol(target));
-        alter.setDefinition(triggerAction);
-        alter.setEvent(Alter.TriggerEvent.valueOf(event.image.toUpperCase()));
-        alter.setCreate(true);
-		return alter;
+		AlterTrigger trigger = alterTrigger();
+        trigger.setTarget(groupSymbol(target));
+        trigger.setDefinition(triggerAction);
+        trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
+        trigger.setCreate(true);
+        return trigger;
 	}
 }
 
-Command alter(ParseInfo info) #Alter :
+Command alter(ParseInfo info) #void :
 {
   	String target = null;
   	QueryCommand command = null;
@@ -678,10 +677,10 @@ Command alter(ParseInfo info) #Alter :
              *     command.setCacheHint(getQueryCacheOption(comment.image));
              * }
              */
-	 	    jjtThis.setAlterType(Alter.AlterType.VIEW);
-            jjtThis.setTarget(groupSymbol(target));
-            jjtThis.setDefinition(command);
-            return jjtThis;
+	 	    AlterView view = alterView();
+            view.setTarget(groupSymbol(target));
+            view.setDefinition(command);
+            return view;
 	 	}
 		| (<PROCEDURE> target = id() <AS> { comment = getToken(1).specialToken; } stmt = statement(info)) 
 		{
@@ -693,24 +692,24 @@ Command alter(ParseInfo info) #Alter :
              *     cup.setCacheHint(getQueryCacheOption(comment.image));
              * }
              */
-			jjtThis.setAlterType(Alter.AlterType.PROCEDURE);
-            jjtThis.setTarget(groupSymbol(target));
-            jjtThis.setDefinition(cup);
-            return jjtThis;
+			AlterProcedure procedure = alterProcedure();
+            procedure.setTarget(groupSymbol(target));
+            procedure.setDefinition(cup);
+            return procedure;
 		}
 		| (<TRIGGER> <ON> target = id() nonReserved("INSTEAD") <OF> 
 		  (event = <INSERT> | event = <UPDATE> | event = <DELETE>) 
 		  ((<AS> triggerAction = forEachRowTriggerAction(info))
 		  |enabled = nonReserved("ENABLED","DISABLED")))
 		{
-		    jjtThis.setAlterType(Alter.AlterType.TRIGGER);
-            jjtThis.setTarget(groupSymbol(target));
-            jjtThis.setDefinition(triggerAction);
-            jjtThis.setEvent(Alter.TriggerEvent.valueOf(event.image.toUpperCase()));
+		    AlterTrigger trigger = alterTrigger();
+            trigger.setTarget(groupSymbol(target));
+            trigger.setDefinition(triggerAction);
+            trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
             if (enabled != null) {
-                jjtThis.setEnabled(enabled.equalsIgnoreCase("ENABLED"));
+                trigger.setEnabled(enabled.equalsIgnoreCase("ENABLED"));
             }
-            return jjtThis;
+            return trigger;
 		}
 	)
 }
@@ -4623,6 +4622,33 @@ WindowSpecification newWindowSpecification() #WindowSpecification :
 
 
 TextLine textLine() #TextLine :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+AlterTrigger alterTrigger() #AlterTrigger :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+AlterProcedure alterProcedure() #AlterProcedure :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+AlterView alterView() #AlterView :
 {
 }
 {

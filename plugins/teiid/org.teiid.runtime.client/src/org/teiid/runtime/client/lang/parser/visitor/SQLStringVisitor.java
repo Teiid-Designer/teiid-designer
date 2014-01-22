@@ -40,104 +40,8 @@ import org.teiid.runtime.client.lang.SourceHint;
 import org.teiid.runtime.client.lang.SourceHint.SpecificHint;
 import org.teiid.runtime.client.lang.SubqueryHint;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.ast.AggregateSymbol;
+import org.teiid.runtime.client.lang.ast.*;
 import org.teiid.runtime.client.lang.ast.AggregateSymbol.Type;
-import org.teiid.runtime.client.lang.ast.AliasSymbol;
-import org.teiid.runtime.client.lang.ast.Alter;
-import org.teiid.runtime.client.lang.ast.ArrayTable;
-import org.teiid.runtime.client.lang.ast.AssignmentStatement;
-import org.teiid.runtime.client.lang.ast.BetweenCriteria;
-import org.teiid.runtime.client.lang.ast.Block;
-import org.teiid.runtime.client.lang.ast.BranchingStatement;
-import org.teiid.runtime.client.lang.ast.CaseExpression;
-import org.teiid.runtime.client.lang.ast.Command;
-import org.teiid.runtime.client.lang.ast.CommandStatement;
-import org.teiid.runtime.client.lang.ast.CompareCriteria;
-import org.teiid.runtime.client.lang.ast.CompoundCriteria;
-import org.teiid.runtime.client.lang.ast.Constant;
-import org.teiid.runtime.client.lang.ast.CreateProcedureCommand;
-import org.teiid.runtime.client.lang.ast.CreateUpdateProcedureCommand;
-import org.teiid.runtime.client.lang.ast.Criteria;
-import org.teiid.runtime.client.lang.ast.CriteriaSelector;
-import org.teiid.runtime.client.lang.ast.DeclareStatement;
-import org.teiid.runtime.client.lang.ast.Delete;
-import org.teiid.runtime.client.lang.ast.DerivedColumn;
-import org.teiid.runtime.client.lang.ast.Drop;
-import org.teiid.runtime.client.lang.ast.DynamicCommand;
-import org.teiid.runtime.client.lang.ast.ElementSymbol;
-import org.teiid.runtime.client.lang.ast.ExceptionExpression;
-import org.teiid.runtime.client.lang.ast.ExistsCriteria;
-import org.teiid.runtime.client.lang.ast.Expression;
-import org.teiid.runtime.client.lang.ast.ExpressionCriteria;
-import org.teiid.runtime.client.lang.ast.ExpressionSymbol;
-import org.teiid.runtime.client.lang.ast.From;
-import org.teiid.runtime.client.lang.ast.FromClause;
-import org.teiid.runtime.client.lang.ast.Function;
-import org.teiid.runtime.client.lang.ast.GroupBy;
-import org.teiid.runtime.client.lang.ast.GroupSymbol;
-import org.teiid.runtime.client.lang.ast.HasCriteria;
-import org.teiid.runtime.client.lang.ast.IfStatement;
-import org.teiid.runtime.client.lang.ast.Insert;
-import org.teiid.runtime.client.lang.ast.Into;
-import org.teiid.runtime.client.lang.ast.IsNullCriteria;
-import org.teiid.runtime.client.lang.ast.JSONObject;
-import org.teiid.runtime.client.lang.ast.JoinPredicate;
-import org.teiid.runtime.client.lang.ast.JoinType;
-import org.teiid.runtime.client.lang.ast.Labeled;
-import org.teiid.runtime.client.lang.ast.LanguageObject;
-import org.teiid.runtime.client.lang.ast.Limit;
-import org.teiid.runtime.client.lang.ast.LoopStatement;
-import org.teiid.runtime.client.lang.ast.MatchCriteria;
-import org.teiid.runtime.client.lang.ast.MultipleElementSymbol;
-import org.teiid.runtime.client.lang.ast.NamespaceItem;
-import org.teiid.runtime.client.lang.ast.NotCriteria;
-import org.teiid.runtime.client.lang.ast.ObjectColumn;
-import org.teiid.runtime.client.lang.ast.ObjectTable;
-import org.teiid.runtime.client.lang.ast.Option;
-import org.teiid.runtime.client.lang.ast.OrderBy;
-import org.teiid.runtime.client.lang.ast.OrderByItem;
-import org.teiid.runtime.client.lang.ast.PredicateCriteria;
-import org.teiid.runtime.client.lang.ast.ProjectedColumn;
-import org.teiid.runtime.client.lang.ast.Query;
-import org.teiid.runtime.client.lang.ast.QueryCommand;
-import org.teiid.runtime.client.lang.ast.QueryString;
-import org.teiid.runtime.client.lang.ast.RaiseErrorStatement;
-import org.teiid.runtime.client.lang.ast.RaiseStatement;
-import org.teiid.runtime.client.lang.ast.Reference;
-import org.teiid.runtime.client.lang.ast.ReturnStatement;
-import org.teiid.runtime.client.lang.ast.ScalarSubquery;
-import org.teiid.runtime.client.lang.ast.SearchedCaseExpression;
-import org.teiid.runtime.client.lang.ast.Select;
-import org.teiid.runtime.client.lang.ast.SetClause;
-import org.teiid.runtime.client.lang.ast.SetClauseList;
-import org.teiid.runtime.client.lang.ast.SetCriteria;
-import org.teiid.runtime.client.lang.ast.SetQuery;
-import org.teiid.runtime.client.lang.ast.Statement;
-import org.teiid.runtime.client.lang.ast.StoredProcedure;
-import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria;
-import org.teiid.runtime.client.lang.ast.SubqueryFromClause;
-import org.teiid.runtime.client.lang.ast.SubquerySetCriteria;
-import org.teiid.runtime.client.lang.ast.Symbol;
-import org.teiid.runtime.client.lang.ast.TextColumn;
-import org.teiid.runtime.client.lang.ast.TextLine;
-import org.teiid.runtime.client.lang.ast.TextTable;
-import org.teiid.runtime.client.lang.ast.TranslateCriteria;
-import org.teiid.runtime.client.lang.ast.TriggerAction;
-import org.teiid.runtime.client.lang.ast.UnaryFromClause;
-import org.teiid.runtime.client.lang.ast.Update;
-import org.teiid.runtime.client.lang.ast.WhileStatement;
-import org.teiid.runtime.client.lang.ast.WindowFunction;
-import org.teiid.runtime.client.lang.ast.WindowSpecification;
-import org.teiid.runtime.client.lang.ast.WithQueryCommand;
-import org.teiid.runtime.client.lang.ast.XMLAttributes;
-import org.teiid.runtime.client.lang.ast.XMLColumn;
-import org.teiid.runtime.client.lang.ast.XMLElement;
-import org.teiid.runtime.client.lang.ast.XMLForest;
-import org.teiid.runtime.client.lang.ast.XMLNamespaces;
-import org.teiid.runtime.client.lang.ast.XMLParse;
-import org.teiid.runtime.client.lang.ast.XMLQuery;
-import org.teiid.runtime.client.lang.ast.XMLSerialize;
-import org.teiid.runtime.client.lang.ast.XMLTable;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.util.StringUtil;
@@ -2421,19 +2325,21 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         outputDisplayName(obj.getName());
     }
 
-    private void visitAlterProcedure(Alter<? extends CreateProcedureCommand> alterProcedure, Object data) {
+    @Override
+    public void visit(AlterProcedure node) {
         append(ALTER);
         append(SPACE);
         append(PROCEDURE);
         append(SPACE);
-        append(alterProcedure.getTarget());
+        append(node.getTarget());
         beginClause(1);
         append(AS);
-        append(alterProcedure.getDefinition().getBlock());
+        append(node.getDefinition().getBlock());
     }
 
-    private void visitAlterTrigger(Alter<TriggerAction> alterTrigger, Object data) {
-        if (alterTrigger.isCreate()) {
+    @Override
+    public void visit(AlterTrigger node) {
+        if (node.isCreate()) {
             append(CREATE);
         } else {
             append(ALTER);
@@ -2443,53 +2349,37 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(SPACE);
         append(ON);
         append(SPACE);
-        append(alterTrigger.getTarget());
+        append(node.getTarget());
         beginClause(0);
         append(NonReserved.INSTEAD);
         append(SPACE);
         append(OF);
         append(SPACE);
-        append(alterTrigger.getEvent());
-        if (alterTrigger.getDefinition() != null) {
+        append(node.getEvent());
+        if (node.getDefinition() != null) {
             beginClause(0);
             append(AS);
             append("\n"); //$NON-NLS-1$
             addTabs(0);
-            append(alterTrigger.getDefinition());
+            append(node.getDefinition());
         } else {
             append(SPACE);
-            append(alterTrigger.getEnabled() ? NonReserved.ENABLED : NonReserved.DISABLED);
+            append(node.getEnabled() ? NonReserved.ENABLED : NonReserved.DISABLED);
         }
     }
 
-    private void visitAlterView(Alter<QueryCommand> alterView, Object data) {
+    @Override
+    public void visit(AlterView node) {
         append(ALTER);
         append(SPACE);
         append(NonReserved.VIEW);
         append(SPACE);
-        append(alterView.getTarget());
+        append(node.getTarget());
         beginClause(0);
         append(AS);
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        append(alterView.getDefinition());
-    }
-
-    @Override
-    public void visit(Alter<? extends Command> alter, Object data) {
-        switch (alter.getAlterType()) {
-            case VIEW:
-                visitAlterView((Alter<QueryCommand>)alter, data);
-                return;
-            case PROCEDURE:
-                visitAlterProcedure((Alter<? extends CreateProcedureCommand>)alter, data);
-                return;
-            case TRIGGER:
-                visitAlterTrigger((Alter<TriggerAction>)alter, data);
-                return;
-            default:
-                throw new AssertionError();
-        }
+        append(node.getDefinition());
     }
 
     @Override

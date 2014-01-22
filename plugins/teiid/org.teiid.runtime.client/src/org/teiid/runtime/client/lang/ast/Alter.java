@@ -5,31 +5,11 @@ package org.teiid.runtime.client.lang.ast;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Alter<T extends Command> extends Command {
-
-    public static enum AlterType {
-        VIEW,
-        TRIGGER,
-        PROCEDURE
-    }
-
-    public static enum TriggerEvent {
-        INSERT,
-        UPDATE,
-        DELETE
-    }
-
-    private AlterType alterType;
+public abstract class Alter<T extends Command> extends Command {
 
     private GroupSymbol target;
 
     private T definition;
-
-    private TriggerEvent event;
-
-    private boolean create;
-
-    private Boolean enabled;
 
     public Alter(int id) {
         super(id);
@@ -37,20 +17,6 @@ public class Alter<T extends Command> extends Command {
 
     public Alter(TeiidParser p, int id) {
         super(p, id);
-    }
-
-    /**
-     * @return the alterType
-     */
-    public AlterType getAlterType() {
-        return this.alterType;
-    }
-
-    /**
-     * @param alterType the type of Alter object
-     */
-    public void setAlterType(AlterType alterType) {
-        this.alterType = alterType;
     }
 
     /**
@@ -81,57 +47,11 @@ public class Alter<T extends Command> extends Command {
         this.definition = definition;
     }
 
-    /**
-     * @return the event
-     */
-    public TriggerEvent getEvent() {
-        return event;
-    }
-
-    /**
-     * @param event the event to set
-     */
-    public void setEvent(TriggerEvent event) {
-        this.event = event;
-    }
-
-    /**
-     * @return the create
-     */
-    public boolean isCreate() {
-        return create;
-    }
-
-    /**
-     * @param create the create to set
-     */
-    public void setCreate(boolean create) {
-        this.create = create;
-    }
-
-    /**
-     * @return the enabled
-     */
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    /**
-     * @param enabled the enabled to set
-     */
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((this.alterType == null) ? 0 : this.alterType.hashCode());
-        result = prime * result + (this.create ? 1231 : 1237);
         result = prime * result + ((this.definition == null) ? 0 : this.definition.hashCode());
-        result = prime * result + ((this.enabled == null) ? 0 : this.enabled.hashCode());
-        result = prime * result + ((this.event == null) ? 0 : this.event.hashCode());
         result = prime * result + ((this.target == null) ? 0 : this.target.hashCode());
         return result;
     }
@@ -142,15 +62,9 @@ public class Alter<T extends Command> extends Command {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Alter other = (Alter)obj;
-        if (this.alterType != other.alterType) return false;
-        if (this.create != other.create) return false;
         if (this.definition == null) {
             if (other.definition != null) return false;
         } else if (!this.definition.equals(other.definition)) return false;
-        if (this.enabled == null) {
-            if (other.enabled != null) return false;
-        } else if (!this.enabled.equals(other.enabled)) return false;
-        if (this.event != other.event) return false;
         if (this.target == null) {
             if (other.target != null) return false;
         } else if (!this.target.equals(other.target)) return false;
@@ -162,28 +76,5 @@ public class Alter<T extends Command> extends Command {
     public void accept(AbstractTeiidParserVisitor visitor, Object data) {
         visitor.visit(this, data);
     }
-
-    @Override
-    public Alter clone() {
-        Alter clone = new Alter(this.parser, this.id);
-
-        if(getAlterType() != null)
-            clone.setAlterType(getAlterType());
-        if(getDefinition() != null)
-            clone.setDefinition(getDefinition().clone());
-        if(getEvent() != null)
-            clone.setEvent(getEvent());
-        clone.setCreate(isCreate());
-        clone.setEnabled(getEnabled());
-        if(getTarget() != null)
-            clone.setTarget(getTarget().clone());
-        if(getSourceHint() != null)
-            clone.setSourceHint(getSourceHint());
-        if(getOption() != null)
-            clone.setOption(getOption().clone());
-
-        return clone;
-    }
-
 }
 /* JavaCC - OriginalChecksum=4c2a7e700d4af2b1569d4947a1d82223 (do not edit this line) */
