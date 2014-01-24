@@ -2,33 +2,21 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IMatchCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.util.PropertiesUtils;
 
-public class MatchCriteria extends Criteria implements PredicateCriteria {
+/**
+ *
+ */
+public class MatchCriteria extends Criteria
+    implements PredicateCriteria, IMatchCriteria<Expression, LanguageVisitor> {
 
     /** The internal null escape character */
     public static final char NULL_ESCAPE_CHAR = 0;
 
     private static final char DEFAULT_ESCAPE_CHAR = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.backslashDefaultMatchEscape", false)?'\\':NULL_ESCAPE_CHAR; //$NON-NLS-1$
-
-    public enum MatchMode {
-        /**
-         * Like Mode
-         */
-        LIKE,
-
-        /**
-         * Similar Mode
-         */
-        SIMILAR,
-
-        /**
-         * The escape char is typically not used in regex mode.
-         */
-        REGEX
-    }
 
     /** The left-hand expression. */
     private Expression leftExpression;
@@ -43,10 +31,10 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
 
     private MatchMode mode = MatchMode.LIKE;
 
-    public MatchCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public MatchCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -55,6 +43,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Get left expression.
      * @return Left expression
      */
+    @Override
     public Expression getLeftExpression() {
         return this.leftExpression;
     }
@@ -63,6 +52,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Set left expression.
      * @param expression expression
      */
+    @Override
     public void setLeftExpression(Expression expression) { 
         this.leftExpression = expression;
     }
@@ -71,6 +61,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Get right expression.
      * @return right expression
      */
+    @Override
     public Expression getRightExpression() {
         return this.rightExpression;
     }
@@ -79,6 +70,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Set right expression.
      * @param expression expression
      */
+    @Override
     public void setRightExpression(Expression expression) { 
         this.rightExpression = expression;
     }
@@ -87,6 +79,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Returns whether this criteria is negated.
      * @return flag indicating whether this criteria contains a NOT
      */
+    @Override
     public boolean isNegated() {
         return negated;
     }
@@ -95,6 +88,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * Sets the negation flag for this criteria.
      * @param negationFlag true if this criteria contains a NOT; false otherwise
      */
+    @Override
     public void setNegated(boolean negationFlag) {
         negated = negationFlag;
     }
@@ -107,6 +101,7 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * to '$' and use the expression "35$%".     
      * @return Escape character, if not set will return {@link #NULL_ESCAPE_CHAR}
      */
+    @Override
     public char getEscapeChar() {
         return this.escapeChar;
     }
@@ -116,14 +111,19 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
      * character should be used literally.
      * @param escapeChar New escape character
      */
+    @Override
     public void setEscapeChar(char escapeChar) {
         this.escapeChar = escapeChar;
     }
 
+    @Override
     public MatchMode getMode() {
         return mode;
     }
 
+    /**
+     * @param mode
+     */
     public void setMode(MatchMode mode) {
         this.mode = mode;
     }
@@ -160,8 +160,8 @@ public class MatchCriteria extends Criteria implements PredicateCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

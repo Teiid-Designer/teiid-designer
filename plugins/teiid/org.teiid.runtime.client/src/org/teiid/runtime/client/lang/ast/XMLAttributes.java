@@ -3,17 +3,21 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IXMLAttributes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class XMLAttributes extends SimpleNode {
+/**
+ *
+ */
+public class XMLAttributes extends SimpleNode implements IXMLAttributes<LanguageVisitor> {
 
     private List<DerivedColumn> args;
 
-    public XMLAttributes(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLAttributes(TeiidParser p, int id) {
         super(p, id);
     }
@@ -54,8 +58,8 @@ public class XMLAttributes extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

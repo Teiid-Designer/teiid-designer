@@ -2,25 +2,32 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.proc.IAssignmentStatement;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class AssignmentStatement extends Statement {
+/**
+ *
+ */
+public class AssignmentStatement extends Statement implements IAssignmentStatement<Expression, LanguageVisitor> {
 
     // the variable to which a value is assigned
     private ElementSymbol variable;
     private Expression value;
     private Command command;
-    
-    public AssignmentStatement(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public AssignmentStatement(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return command
+     */
     @Deprecated
     public Command getCommand() {
         if (command != null) {
@@ -35,6 +42,9 @@ public class AssignmentStatement extends Statement {
         return null;
     }
 
+    /**
+     * @param command
+     */
     public void setCommand(Command command) {
         if (command instanceof QueryCommand) {
             ScalarSubquery ssq = parser.createASTNode(ASTNodes.SCALAR_SUBQUERY);
@@ -47,6 +57,7 @@ public class AssignmentStatement extends Statement {
     /**
      * @see #getExpression()
      */
+    @Override
     @Deprecated
     public Expression getValue() {
         return value;
@@ -55,15 +66,20 @@ public class AssignmentStatement extends Statement {
     /**
      * @see #setExpression(Expression)
      */
+    @Override
     @Deprecated
     public void setValue(Expression value) {
         this.value = value;
     }
 
+    @Override
     public Expression getExpression() {
         return this.value;
     }
 
+    /**
+     * @param expression
+     */
     public void setExpression(Expression expression) {
         this.value = expression;
     }
@@ -72,13 +88,15 @@ public class AssignmentStatement extends Statement {
      * Get the expression giving the value that is assigned to the variable.
      * @return An <code>Expression</code> with the value
      */
+    @Override
     public ElementSymbol getVariable() {
         return this.variable;
     }
     
     /**
      * Set the variable that is assigned to the value
-     * @param<code>ElementSymbol</code> that is being assigned
+     *
+     * @param variable <code>ElementSymbol</code> that is being assigned
      */
     public void setVariable(ElementSymbol variable) {
         this.variable = variable;
@@ -114,8 +132,8 @@ public class AssignmentStatement extends Statement {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

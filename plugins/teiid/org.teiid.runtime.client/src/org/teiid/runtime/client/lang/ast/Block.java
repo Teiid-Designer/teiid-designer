@@ -5,11 +5,15 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.ISQLConstants;
+import org.teiid.designer.query.sql.proc.IBlock;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Block extends Statement implements Labeled {
+/**
+ *
+ */
+public class Block extends Statement implements Labeled, IBlock<Statement, LanguageVisitor> {
 
     private List<Statement> statements = new ArrayList<Statement>();
 
@@ -21,10 +25,10 @@ public class Block extends Statement implements Labeled {
 
     private List<Statement> exceptionStatements;
 
-    public Block(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Block(TeiidParser p, int id) {
         super(p, id);
     }
@@ -32,6 +36,7 @@ public class Block extends Statement implements Labeled {
     /**
      * @return the statements
      */
+    @Override
     public List<Statement> getStatements() {
         return this.statements;
     }
@@ -40,10 +45,16 @@ public class Block extends Statement implements Labeled {
      * Add a <code>Statement</code> to this block.
      * @param statement The <code>Statement</code> to be added to the block
      */
+    @Override
     public void addStatement(Statement statement) {
         addStatement(statement, false);
     }
 
+    /**
+     * @param statement
+     * @param exception
+     */
+    @SuppressWarnings( "deprecation" )
     public void addStatement(Statement statement, boolean exception) {
         if (statement instanceof AssignmentStatement) {
             AssignmentStatement stmt = (AssignmentStatement)statement;
@@ -124,10 +135,16 @@ public class Block extends Statement implements Labeled {
         this.exceptionGroup = exceptionGroup;
     }
 
+    /**
+     * @return exception statements
+     */
     public List<Statement> getExceptionStatements() {
         return exceptionStatements;
     }
 
+    /**
+     * @param exceptionStatements
+     */
     public void setExceptionStatements(List<Statement> exceptionStatements) {
         this.exceptionStatements = exceptionStatements;
     }
@@ -168,8 +185,8 @@ public class Block extends Statement implements Labeled {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -6,19 +6,22 @@ import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.SimpleNode;
 import org.teiid.runtime.client.lang.ast.WindowFunction;
 import org.teiid.runtime.client.lang.ast.WindowSpecification;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.v8.Teiid8Parser;
 
+/**
+ * From Teiid version 8 onwards the WindowFunction no longer extends Symbol
+ */
 public class Window8Function extends SimpleNode implements WindowFunction {
 
     private AggregateSymbol function;
 
     private WindowSpecification windowSpecification;
 
-    public Window8Function(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Window8Function(Teiid8Parser p, int id) {
         super(p, id);
     }
@@ -96,8 +99,8 @@ public class Window8Function extends SimpleNode implements WindowFunction {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit((WindowFunction) this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

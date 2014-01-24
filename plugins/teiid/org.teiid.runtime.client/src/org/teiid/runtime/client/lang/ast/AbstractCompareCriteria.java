@@ -26,14 +26,7 @@ public abstract class AbstractCompareCriteria extends Criteria implements Predic
      * @see #Operator.LE
      * @see #Operator.GE
      */
-    private Operator operator = Operator.EQ;
-
-    /**
-     * @param id
-     */
-    public AbstractCompareCriteria(int id) {
-        super(id);
-    }
+    protected Operator operator = Operator.EQ;
 
     /**
      * @param p
@@ -47,8 +40,15 @@ public abstract class AbstractCompareCriteria extends Criteria implements Predic
      * Returns the operator.
      * @return The operator
      */
-    public Operator getOperator() {
-        return this.operator;
+    public int getOperator() {
+        return this.operator.getIndex();
+    }
+
+    /**
+     * @return string representation of operator
+     */
+    public String getOperatorAsString() {
+        return this.operator.toString();
     }
 
     /**
@@ -78,6 +78,9 @@ public abstract class AbstractCompareCriteria extends Criteria implements Predic
         this.leftExpression = expression;
     }
 
+    /**
+     * @return right expression
+     */
     public abstract Expression getRightExpression();
 
     @Override

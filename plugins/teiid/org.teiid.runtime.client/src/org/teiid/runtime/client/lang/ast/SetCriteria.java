@@ -2,19 +2,23 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import java.util.Collection;
+import org.teiid.designer.query.sql.lang.ISetCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class SetCriteria extends AbstractSetCriteria {
+/**
+ *
+ */
+public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Expression, LanguageVisitor> {
 
     /** The set of value expressions */
-    private List<Expression> values;
+    private Collection<Expression> values;
 
-    public SetCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SetCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -22,14 +26,16 @@ public class SetCriteria extends AbstractSetCriteria {
     /**
      * @return the values
      */
-    public List<Expression> getValues() {
+    @Override
+    public Collection<Expression> getValues() {
         return this.values;
     }
 
     /**
      * @param values the values to set
      */
-    public void setValues(List<Expression> values) {
+    @Override
+    public void setValues(Collection<Expression> values) {
         this.values = values;
     }
 
@@ -55,8 +61,8 @@ public class SetCriteria extends AbstractSetCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -64,7 +70,7 @@ public class SetCriteria extends AbstractSetCriteria {
         SetCriteria clone = new SetCriteria(this.parser, this.id);
 
         if(getValues() != null)
-            clone.setValues(cloneList(getValues()));
+            clone.setValues(cloneCollection(getValues()));
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());
         clone.setNegated(isNegated());

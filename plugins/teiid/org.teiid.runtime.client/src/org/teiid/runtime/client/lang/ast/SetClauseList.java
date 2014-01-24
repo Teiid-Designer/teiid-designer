@@ -4,29 +4,42 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.ISetClauseList;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class SetClauseList extends SimpleNode {
+/**
+ *
+ */
+public class SetClauseList extends SimpleNode implements ISetClauseList<LanguageVisitor> {
 
     private List<SetClause> setClauses = new ArrayList<SetClause>();
 
-    public SetClauseList(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SetClauseList(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return set clauses
+     */
     public List<SetClause> getClauses() {
         return this.setClauses;
     }
 
+    /**
+     * @return clauses is empty
+     */
     public boolean isEmpty() {
         return this.setClauses.isEmpty();
     }
 
+    /**
+     * @param clause
+     */
     public void addClause(SetClause clause) {
         this.setClauses.add(clause);
     }
@@ -53,8 +66,8 @@ public class SetClauseList extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

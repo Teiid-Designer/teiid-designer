@@ -2,19 +2,23 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IObjectColumn;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class ObjectColumn extends ProjectedColumn {
+/**
+ *
+ */
+public class ObjectColumn extends ProjectedColumn implements IObjectColumn<LanguageVisitor> {
 
     private String path;
 
     private Expression defaultExpression;
 
-    public ObjectColumn(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ObjectColumn(TeiidParser p, int id) {
         super(p, id);
     }
@@ -73,8 +77,8 @@ public class ObjectColumn extends ProjectedColumn {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

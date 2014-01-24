@@ -2,20 +2,24 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.proc.ICommandStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class CommandStatement extends Statement {
+/**
+ *
+ */
+public class CommandStatement extends Statement implements ICommandStatement<LanguageVisitor, Command> {
 
     // the command this statement represents
     private Command command;
 
     private boolean returnable = true;
 
-    public CommandStatement(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public CommandStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,18 +28,29 @@ public class CommandStatement extends Statement {
      * Get the command on this statement.
      * @return The <code>Command</code> on this statement
      */
+    @Override
     public Command getCommand() {
         return command; 
     }
 
+    /**
+     * @param command
+     */
+    @Override
     public void setCommand(Command command){
         this.command = command;
     }
 
+    /**
+     * @return returnable flag
+     */
     public boolean isReturnable() {
         return returnable;
     }
     
+    /**
+     * @param returnable
+     */
     public void setReturnable(boolean returnable) {
         this.returnable = returnable;
     }
@@ -64,8 +79,8 @@ public class CommandStatement extends Statement {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

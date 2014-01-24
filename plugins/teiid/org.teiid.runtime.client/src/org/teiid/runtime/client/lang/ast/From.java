@@ -4,18 +4,23 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class From extends SimpleNode {
+/**
+ *
+ */
+public class From extends SimpleNode
+    implements IFrom<FromClause, GroupSymbol, LanguageVisitor> {
 
     private List<FromClause> clauses;
 
-    public From(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public From(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,7 +29,8 @@ public class From extends SimpleNode {
      * Get all the clauses in FROM
      * @return List of {@link FromClause}
      */
-    public List<? extends FromClause> getClauses() {
+    @Override
+    public List<FromClause> getClauses() {
         return this.clauses;
     }
     
@@ -32,6 +38,7 @@ public class From extends SimpleNode {
      * Set all the clauses
      * @param clauses List of {@link FromClause}
      */
+    @Override
     public void setClauses(List<? extends FromClause> clauses) {
         if (clauses == null) {
             this.clauses = null;
@@ -41,11 +48,11 @@ public class From extends SimpleNode {
         this.clauses = new ArrayList<FromClause>( clauses );
     }
 
-
     /**
      * Add a from clause to this {@link From}
      * @param clause
      */
+    @Override
     public void addClause(FromClause clause) {
         if (this.clauses == null)
             this.clauses = new ArrayList<FromClause>();
@@ -57,14 +64,33 @@ public class From extends SimpleNode {
      * Adds a new group to the list (it will be wrapped in a UnaryFromClause)
      * @param group Group to add
      */
+    @Override
     public void addGroup( GroupSymbol group ) {
         if( group == null )
             return;
 
         UnaryFromClause unaryFromClause = parser.createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
-        unaryFromClause.setGroupSymbol(group);
+        unaryFromClause.setGroup(group);
         addClause(unaryFromClause);
     }  
+
+    @Override
+    public List<? extends GroupSymbol> getGroups() {
+        List<GroupSymbol> groups = new ArrayList<GroupSymbol>();
+        if(clauses != null) {
+            for(int i=0; i<clauses.size(); i++) {
+                FromClause clause = clauses.get(i);
+                clause.collectGroups(groups);
+            }
+        }
+            
+        return groups;
+    }
+
+    @Override
+    public boolean containsGroup(GroupSymbol group) {
+        return getGroups().contains(group);
+    }
 
     @Override
     public int hashCode() {
@@ -88,8 +114,8 @@ public class From extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -101,6 +127,5 @@ public class From extends SimpleNode {
 
         return clone;
     }
-
 }
 /* JavaCC - OriginalChecksum=ae9ea7eb99f07c1bca94932f9265c796 (do not edit this line) */

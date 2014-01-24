@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.symbol.IDerivedColumn;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class DerivedColumn extends SimpleNode {
+/**
+ *
+ */
+public class DerivedColumn extends SimpleNode implements IDerivedColumn<LanguageVisitor> {
 
     private String alias;
 
@@ -13,34 +17,52 @@ public class DerivedColumn extends SimpleNode {
 
     private boolean propagateName = true;
 
-    public DerivedColumn(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public DerivedColumn(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return propogate name flag
+     */
     public boolean isPropagateName() {
         return propagateName;
     }
     
+    /**
+     * @param propagateName
+     */
     public void setPropagateName(boolean propagateName) {
         this.propagateName = propagateName;
     }
     
+    /**
+     * @return alias
+     */
     public String getAlias() {
         return alias;
     }
 
+    /**
+     * @return expression
+     */
     public Expression getExpression() {
         return expression;
     }
 
+    /**
+     * @param name
+     */
     public void setAlias(String name) {
         this.alias = name;
     }
     
+    /**
+     * @param expression
+     */
     public void setExpression(Expression expression) {
         this.expression = expression;
     }
@@ -73,8 +95,8 @@ public class DerivedColumn extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

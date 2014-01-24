@@ -5,11 +5,15 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.ICriteriaSelector;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Removed("8.0.0")
-public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
+public class CriteriaSelector extends SimpleNode implements CriteriaOperator, ICriteriaSelector<LanguageVisitor> {
 
     // type of criteria
     private Operator selectorType = Operator.NO_TYPE;
@@ -17,10 +21,10 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
     // elements on which criteria is present
     private List<ElementSymbol> elements;
 
-    public CriteriaSelector(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public CriteriaSelector(TeiidParser p, int id) {
         super(p, id);
     }
@@ -101,8 +105,8 @@ public class CriteriaSelector extends SimpleNode implements CriteriaOperator {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

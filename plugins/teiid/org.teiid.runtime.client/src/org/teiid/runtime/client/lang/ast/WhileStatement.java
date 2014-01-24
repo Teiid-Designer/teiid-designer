@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.proc.IWhileStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class WhileStatement extends Statement implements Labeled {
+/**
+ *
+ */
+public class WhileStatement extends Statement implements Labeled, IWhileStatement<LanguageVisitor> {
 
     private Block whileBlock;
 
@@ -14,10 +18,10 @@ public class WhileStatement extends Statement implements Labeled {
 
     private String label;
 
-    public WhileStatement(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public WhileStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -49,7 +53,7 @@ public class WhileStatement extends Statement implements Labeled {
     }
     
     /**
-     * @return
+     * @return block
      */
     public Block getBlock() {
         return whileBlock;
@@ -92,8 +96,8 @@ public class WhileStatement extends Statement implements Labeled {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

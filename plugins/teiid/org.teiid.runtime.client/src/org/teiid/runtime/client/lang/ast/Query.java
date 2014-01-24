@@ -2,11 +2,20 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
+import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class Query extends QueryCommand {
+/**
+ *
+ */
+public class Query extends QueryCommand
+    implements IQuery<Select, From, Into, Criteria, GroupBy, OrderBy, Query, Expression, LanguageVisitor> {
 
     /** The select clause. */
     private Select select;
@@ -32,17 +41,27 @@ public class Query extends QueryCommand {
     /** xml projected symbols */
     private List<Expression> selectList;
 
-    public Query(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Query(TeiidParser p, int id) {
         super(p, id);
     }
 
     /**
+     * Return type of command.
+     * @return TYPE_QUERY
+     */
+    @Override
+    public int getType() {
+        return TYPE_QUERY;
+    }
+
+    /**
      * @return the select
      */
+    @Override
     public Select getSelect() {
         return this.select;
     }
@@ -50,6 +69,7 @@ public class Query extends QueryCommand {
     /**
      * @param select the select to set
      */
+    @Override
     public void setSelect(Select select) {
         this.select = select;
     }
@@ -57,6 +77,7 @@ public class Query extends QueryCommand {
     /**
      * @return the from
      */
+    @Override
     public From getFrom() {
         return this.from;
     }
@@ -64,6 +85,7 @@ public class Query extends QueryCommand {
     /**
      * @param from the from to set
      */
+    @Override
     public void setFrom(From from) {
         this.from = from;
     }
@@ -71,6 +93,7 @@ public class Query extends QueryCommand {
     /**
      * @return the criteria
      */
+    @Override
     public Criteria getCriteria() {
         return this.criteria;
     }
@@ -78,6 +101,7 @@ public class Query extends QueryCommand {
     /**
      * @param criteria the criteria to set
      */
+    @Override
     public void setCriteria(Criteria criteria) {
         this.criteria = criteria;
     }
@@ -85,6 +109,7 @@ public class Query extends QueryCommand {
     /**
      * @return the groupBy
      */
+    @Override
     public GroupBy getGroupBy() {
         return this.groupBy;
     }
@@ -92,6 +117,7 @@ public class Query extends QueryCommand {
     /**
      * @param groupBy the groupBy to set
      */
+    @Override
     public void setGroupBy(GroupBy groupBy) {
         this.groupBy = groupBy;
     }
@@ -99,6 +125,7 @@ public class Query extends QueryCommand {
     /**
      * @return the having
      */
+    @Override
     public Criteria getHaving() {
         return this.having;
     }
@@ -106,6 +133,7 @@ public class Query extends QueryCommand {
     /**
      * @param having the having to set
      */
+    @Override
     public void setHaving(Criteria having) {
         this.having = having;
     }
@@ -127,6 +155,7 @@ public class Query extends QueryCommand {
     /**
      * @return the into
      */
+    @Override
     public Into getInto() {
         return this.into;
     }
@@ -134,6 +163,7 @@ public class Query extends QueryCommand {
     /**
      * @param into the into to set
      */
+    @Override
     public void setInto(Into into) {
         this.into = into;
     }
@@ -150,6 +180,61 @@ public class Query extends QueryCommand {
      */
     public void setSelectList(List<Expression> selectList) {
         this.selectList = selectList;
+    }
+
+    @Override
+    public boolean returnsResultSet() {
+        return into == null;
+    }
+
+    /**
+     * Get the xml flag for the query
+     * @return boolean
+     */
+    public boolean getIsXML() {
+        return isXML;
+    }
+    
+    /**
+     * Set the xml flag for the query
+     *
+     * @param isXML
+     */
+    public void setIsXML(boolean isXML) {
+        this.isXML = isXML;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List<Expression> getProjectedSymbols() {
+        if (!getIsXML()) {
+            if(getSelect() != null) { 
+                if(getInto() != null){
+                    //SELECT INTO clause
+                    return getUpdateCommandSymbol();
+                }
+                return getSelect().getProjectedSymbols();
+            }
+            return Collections.emptyList();
+        }
+        if(selectList == null){
+            selectList = new ArrayList<Expression>(1);
+            ElementSymbol xmlElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+            xmlElement.setName("xml"); //$NON-NLS-1$
+            xmlElement.setType(DataTypeManagerService.DefaultDataTypes.XML.getTypeClass());
+            selectList.add(xmlElement);
+        }
+        return selectList;
+    }
+
+    @Override
+    public Query getProjectedQuery() {
+        return this;
     }
 
     @Override
@@ -200,8 +285,8 @@ public class Query extends QueryCommand {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

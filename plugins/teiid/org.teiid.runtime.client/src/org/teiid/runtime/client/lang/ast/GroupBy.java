@@ -4,18 +4,22 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class GroupBy extends SimpleNode {
+/**
+ *
+ */
+public class GroupBy extends SimpleNode implements IGroupBy<Expression, LanguageVisitor> {
 
     /** The set of expressions for the data elements to be group. */
     private List<Expression> symbols = new ArrayList<Expression>();
 
-    public GroupBy(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public GroupBy(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,6 +28,7 @@ public class GroupBy extends SimpleNode {
      * Returns an ordered list of the symbols in the GROUP BY
      * @return List of {@link ElementSymbol}s
      */
+    @Override
     public List<Expression> getSymbols() {
         return symbols;
     }
@@ -32,10 +37,16 @@ public class GroupBy extends SimpleNode {
      * Adds a new symbol to the list of symbols.
      * @param symbol Symbol to add to GROUP BY
      */
+    @Override
     public void addSymbol( Expression symbol ) {
         if(symbol != null) {
             symbols.add(symbol);
         }
+    }
+
+    @Override
+    public int getCount() {
+        return symbols.size();
     }
 
     /**
@@ -67,8 +78,8 @@ public class GroupBy extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

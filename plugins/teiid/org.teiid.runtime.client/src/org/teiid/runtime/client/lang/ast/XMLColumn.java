@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IXMLColumn;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class XMLColumn extends ProjectedColumn {
+/**
+ *
+ */
+public class XMLColumn extends ProjectedColumn implements IXMLColumn<LanguageVisitor> {
 
     private String path;
 
@@ -13,10 +17,10 @@ public class XMLColumn extends ProjectedColumn {
 
     private boolean ordinal;
 
-    public XMLColumn(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLColumn(TeiidParser p, int id) {
         super(p, id);
     }
@@ -49,10 +53,16 @@ public class XMLColumn extends ProjectedColumn {
         this.defaultExpression = defaultExpression;
     }
 
+    /**
+     * @return ordinal
+     */
     public boolean isOrdinal() {
         return ordinal;
     }
 
+    /**
+     * @param ordinal
+     */
     public void setOrdinal(boolean ordinal) {
         this.ordinal = ordinal;
     }
@@ -85,8 +95,8 @@ public class XMLColumn extends ProjectedColumn {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

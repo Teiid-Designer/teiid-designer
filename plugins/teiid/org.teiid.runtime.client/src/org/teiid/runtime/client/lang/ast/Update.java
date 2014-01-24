@@ -2,11 +2,16 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.List;
+import org.teiid.designer.query.sql.lang.IUpdate;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class Update extends Command {
+/**
+ *
+ */
+public class Update extends Command implements IUpdate<Expression, LanguageVisitor> {
 
     private SetClauseList changeList;
 
@@ -16,12 +21,21 @@ public class Update extends Command {
     /** optional criteria defining which row get updated. */
     private Criteria criteria;
 
-    public Update(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Update(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command.
+     * @return TYPE_UPDATE
+     */
+    @Override
+    public int getType() {
+        return TYPE_UPDATE;
     }
 
     /**
@@ -87,6 +101,11 @@ public class Update extends Command {
     }
 
     @Override
+    public List<Expression> getProjectedSymbols(){
+        return getUpdateCommandSymbol();
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -116,8 +135,8 @@ public class Update extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -3,20 +3,25 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.sql.proc.IRaiseStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
+/**
+ *
+ */
 @Since("8.0.0")
-public class RaiseStatement extends Statement {
+public class RaiseStatement extends Statement
+    implements IRaiseStatement<LanguageVisitor, Expression> {
 
     private Expression expression;
 
     private boolean warning;
 
-    public RaiseStatement(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public RaiseStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,6 +29,7 @@ public class RaiseStatement extends Statement {
     /**
      * @return the expression
      */
+    @Override
     public Expression getExpression() {
         return this.expression;
     }
@@ -73,8 +79,8 @@ public class RaiseStatement extends Statement {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

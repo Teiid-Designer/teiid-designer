@@ -3,10 +3,14 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.Arrays;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Function extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class Function extends SimpleNode implements Expression, IFunction<FunctionDescriptor, LanguageVisitor> {
 
     private Class<?> type;
 
@@ -16,12 +20,12 @@ public class Function extends SimpleNode implements Expression {
 
     private boolean implicit;
 
-//    private FunctionDescriptor descriptor;
+    private FunctionDescriptor descriptor;
 
-    public Function(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Function(TeiidParser p, int id) {
         super(p, id);
     }
@@ -30,10 +34,14 @@ public class Function extends SimpleNode implements Expression {
      * Get name of function
      * @return Name of function
      */
+    @Override
     public String getName() {
         return this.name;
     }
     
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -42,6 +50,7 @@ public class Function extends SimpleNode implements Expression {
      * Get function arguments
      * @return Get function arguments
      */
+    @Override
     public Expression[] getArgs() {
         return this.args;
     }
@@ -51,6 +60,7 @@ public class Function extends SimpleNode implements Expression {
      * @param index Index of argument
      * @return argument
      */
+    @Override
     public Expression getArg(int index) {
         return this.args[index];
     }
@@ -80,6 +90,7 @@ public class Function extends SimpleNode implements Expression {
      * Set type of function
      * @param type New type
      */
+    @Override
     public void setType(Class<?> type) {
         this.type = type;
     }
@@ -95,6 +106,7 @@ public class Function extends SimpleNode implements Expression {
      * Return true if this function is implicit and should not be shown in SQL representations
      * @return True if implicit
      */
+    @Override
     public boolean isImplicit() {
         return this.implicit;
     }
@@ -129,8 +141,8 @@ public class Function extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

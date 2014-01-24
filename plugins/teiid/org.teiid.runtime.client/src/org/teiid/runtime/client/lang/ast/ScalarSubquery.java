@@ -2,19 +2,24 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.symbol.IScalarSubquery;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class ScalarSubquery extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class ScalarSubquery extends SimpleNode
+    implements Expression, IScalarSubquery<LanguageVisitor, QueryCommand> {
 
     private QueryCommand command;
 
     private Class<?> type;
 
-    public ScalarSubquery(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ScalarSubquery(TeiidParser p, int id) {
         super(p, id);
     }
@@ -22,6 +27,7 @@ public class ScalarSubquery extends SimpleNode implements Expression {
     /**
      * @return the command
      */
+    @Override
     public QueryCommand getCommand() {
         return command;
     }
@@ -29,17 +35,17 @@ public class ScalarSubquery extends SimpleNode implements Expression {
     /**
      * @param command the command to set
      */
+    @Override
     public void setCommand(QueryCommand command) {
         this.command = command;
     }
 
     @Override
     public Class<?> getType() {
-        // TODO
-//        if (this.type == null){
-//            Expression symbol = this.command.getProjectedSymbols().iterator().next();
-//            this.type = symbol.getType();
-//        }
+        if (this.type == null){
+            Expression symbol = this.command.getProjectedSymbols().iterator().next();
+            this.type = symbol.getType();
+        }
         //may still be null if this.command wasn't resolved
         return this.type;
     }
@@ -78,11 +84,9 @@ public class ScalarSubquery extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
-
-    
 
     @Override
     public ScalarSubquery clone() {

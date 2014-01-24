@@ -2,11 +2,15 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IProjectedColumn;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class ProjectedColumn extends SimpleNode {
+/**
+ *
+ */
+public class ProjectedColumn extends SimpleNode implements IProjectedColumn<LanguageVisitor> {
     
     private String name;
 
@@ -14,14 +18,17 @@ public class ProjectedColumn extends SimpleNode {
 
     private ElementSymbol symbol;
 
-    public ProjectedColumn(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ProjectedColumn(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return symbol
+     */
     public ElementSymbol getSymbol() {
         if (symbol == null) {
             this.symbol = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
@@ -92,8 +99,8 @@ public class ProjectedColumn extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

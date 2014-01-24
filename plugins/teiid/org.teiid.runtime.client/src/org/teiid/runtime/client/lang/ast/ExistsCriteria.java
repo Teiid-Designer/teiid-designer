@@ -2,11 +2,15 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IExistsCriteria;
 import org.teiid.runtime.client.lang.SubqueryHint;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class ExistsCriteria extends Criteria implements PredicateCriteria {
+/**
+ *
+ */
+public class ExistsCriteria extends Criteria implements PredicateCriteria, IExistsCriteria<LanguageVisitor, QueryCommand> {
 
     private QueryCommand command;
 
@@ -16,42 +20,58 @@ public class ExistsCriteria extends Criteria implements PredicateCriteria {
 
     private SubqueryHint subqueryHint = new SubqueryHint();
 
-    public ExistsCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ExistsCriteria(TeiidParser p, int id) {
         super(p, id);
     }
 
+    @Override
     public QueryCommand getCommand() {
         return this.command;
     }
 
+    @Override
     public void setCommand(QueryCommand subqueryCommand){
         this.command = subqueryCommand;
     }
 
+    /**
+     * @return whether to evaluate
+     */
     public boolean shouldEvaluate() {
         return shouldEvaluate;
     }
     
+    /**
+     * @param shouldEvaluate
+     */
     public void setShouldEvaluate(boolean shouldEvaluate) {
         this.shouldEvaluate = shouldEvaluate;
     }
 
+    @Override
     public boolean isNegated() {
         return negated;
     }
     
+    @Override
     public void setNegated(boolean negated) {
         this.negated = negated;
     }
 
+    /**
+     * @return subquery hint
+     */
     public SubqueryHint getSubqueryHint() {
         return subqueryHint;
     }
     
+    /**
+     * @param subqueryHint
+     */
     public void setSubqueryHint(SubqueryHint subqueryHint) {
         this.subqueryHint = subqueryHint;
     }
@@ -86,8 +106,8 @@ public class ExistsCriteria extends Criteria implements PredicateCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

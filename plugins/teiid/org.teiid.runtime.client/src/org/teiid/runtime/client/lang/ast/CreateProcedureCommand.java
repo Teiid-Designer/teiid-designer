@@ -2,27 +2,48 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collections;
+import java.util.List;
 import org.teiid.designer.annotation.Since;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Since("8.0.0")
-public class CreateProcedureCommand extends Command {
+public class CreateProcedureCommand extends Command
+    implements ICreateProcedureCommand<Block, Expression, LanguageVisitor> {
 
     // top level block for the procedure
     protected Block block;
 
-    public CreateProcedureCommand(int id) {
-        super(id);
-    }
+    private List<Expression> projectedSymbols;
 
+    private List<? extends Expression> resultSetColumns;
+
+    /**
+     * @param p
+     * @param id
+     */
     public CreateProcedureCommand(TeiidParser p, int id) {
         super(p, id);
     }
 
     /**
+     * Return type of command to make it easier to build switch statements by command type.
+     * @return The type of this command
+     */
+    @Override
+    public int getType() {
+        return TYPE_UPDATE_PROCEDURE;   
+    }
+
+    /**
      * @return the block
      */
+    @Override
     public Block getBlock() {
         return block;
     }
@@ -30,8 +51,49 @@ public class CreateProcedureCommand extends Command {
     /**
      * @param block the block to set
      */
+    @Override
     public void setBlock(Block block) {
         this.block = block;
+    }
+
+    @Override
+    public boolean returnsResultSet() {
+        return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();
+    }
+
+    @Override
+    public List<? extends Expression> getResultSetColumns() {
+        return resultSetColumns;
+    }
+    
+    /**
+     * @param resultSetColumns
+     */
+    public void setResultSetColumns(List<? extends Expression> resultSetColumns) {
+        this.resultSetColumns = resultSetColumns;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List<Expression> getProjectedSymbols(){
+        if(this.projectedSymbols != null){
+            return this.projectedSymbols;
+        }
+        //user may have not entered any query yet
+        return Collections.EMPTY_LIST;
+    }  
+
+    /**
+     * @param projSymbols
+     */
+    @Override
+    public void setProjectedSymbols(List<Expression> projSymbols) {
+        projectedSymbols = projSymbols;
     }
 
     @Override
@@ -56,8 +118,8 @@ public class CreateProcedureCommand extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -70,7 +132,10 @@ public class CreateProcedureCommand extends Command {
             clone.setSourceHint(getSourceHint());
         if(getOption() != null)
             clone.setOption(getOption().clone());
-
+        if (this.projectedSymbols != null)
+            clone.projectedSymbols = cloneList(getProjectedSymbols());
+        if (this.resultSetColumns != null)
+            clone.resultSetColumns = cloneList(this.resultSetColumns);
         return clone;
     }
 

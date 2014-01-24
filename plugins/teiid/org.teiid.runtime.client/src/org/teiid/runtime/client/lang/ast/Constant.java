@@ -4,21 +4,25 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.math.BigDecimal;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
 
-public class Constant extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class Constant extends SimpleNode implements Expression, IConstant<LanguageVisitor> {
 
     private Class<?> type = DataTypeManagerService.DefaultDataTypes.NULL.getTypeClass();
 
     private boolean multiValued;
 
-    public Constant(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Constant(TeiidParser p, int id) {
         super(p, id);
     }
@@ -44,6 +48,7 @@ public class Constant extends SimpleNode implements Expression {
      * Get value of constant
      * @return Constant value
      */
+    @Override
     public Object getValue() {
         return this.value;
     }
@@ -76,10 +81,14 @@ public class Constant extends SimpleNode implements Expression {
         }
     }
 
+    @Override
     public boolean isMultiValued() {
         return multiValued;
     }
 
+    /**
+     * @param value
+     */
     public void setMultiValued(List<?> value) {
         this.multiValued = true;
         this.value = value;
@@ -89,7 +98,21 @@ public class Constant extends SimpleNode implements Expression {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        return result;
+
+        if(this.value != null && !isMultiValued()) {
+            if (this.value instanceof BigDecimal) {
+                BigDecimal bd = (BigDecimal)this.value;
+                int xsign = bd.signum();
+                if (xsign == 0)
+                    return 0;
+                bd = bd.stripTrailingZeros();
+                result =  prime * result + bd.hashCode();
+            }
+
+            result = prime * result + this.value.hashCode();
+        }
+
+        return this.value.hashCode();
     }
 
     @Override
@@ -123,8 +146,8 @@ public class Constant extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

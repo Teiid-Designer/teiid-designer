@@ -2,11 +2,15 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IXMLSerialize;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class XMLSerialize extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class XMLSerialize extends SimpleNode implements Expression, IXMLSerialize<LanguageVisitor> {
 
     private Boolean document;
 
@@ -22,10 +26,10 @@ public class XMLSerialize extends SimpleNode implements Expression {
 
     private String encoding;
 
-    public XMLSerialize(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLSerialize(TeiidParser p, int id) {
         super(p, id);
     }
@@ -112,10 +116,16 @@ public class XMLSerialize extends SimpleNode implements Expression {
         return type;
     }
 
+    /**
+     * @param typeString
+     */
     public void setTypeString(String typeString) {
         this.typeString = typeString;
     }
     
+    /**
+     * @return type string
+     */
     public String getTypeString() {
         return typeString;
     }
@@ -166,8 +176,8 @@ public class XMLSerialize extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

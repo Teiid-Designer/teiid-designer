@@ -2,18 +2,22 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.INotCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class NotCriteria extends Criteria {
+/**
+ *
+ */
+public class NotCriteria extends Criteria implements INotCriteria<LanguageVisitor> {
 
     /** The single sub criteria */
     private Criteria criteria;
 
-    public NotCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public NotCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -22,6 +26,7 @@ public class NotCriteria extends Criteria {
      * Get sub criteria
      * @return Sub criteria
      */
+    @Override
     public Criteria getCriteria() {
         return criteria;
     }
@@ -56,8 +61,8 @@ public class NotCriteria extends Criteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

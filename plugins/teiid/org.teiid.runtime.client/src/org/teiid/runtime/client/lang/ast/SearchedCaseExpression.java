@@ -4,11 +4,16 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Collections;
 import java.util.List;
+import org.teiid.designer.query.sql.symbol.ISearchedCaseExpression;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class SearchedCaseExpression extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class SearchedCaseExpression extends SimpleNode
+    implements Expression, ISearchedCaseExpression<LanguageVisitor> {
 
     private Class<?> type;
 
@@ -23,10 +28,10 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
     /** The (optional) expression in the ELSE part of the expression */
     private Expression elseExpression = null;
 
-    public SearchedCaseExpression(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SearchedCaseExpression(TeiidParser p, int id) {
         super(p, id);
     }
@@ -164,8 +169,8 @@ public class SearchedCaseExpression extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

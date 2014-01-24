@@ -2,14 +2,29 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collection;
 import org.teiid.designer.annotation.Since;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class FromClause extends SimpleNode {
+/**
+ * A FromClause is an interface for subparts held in a FROM clause.  One 
+ * type of FromClause is {@link UnaryFromClause}, which is the more common 
+ * use and represents a single group.  Another, less common type of FromClause
+ * is the {@link JoinPredicate} which represents a join between two FromClauses
+ * and may contain criteria.
+ */
+public abstract class FromClause extends SimpleNode implements IFromClause<LanguageVisitor> {
 
+    /**
+     * 
+     */
     public static final String MAKEIND = "MAKEIND"; //$NON-NLS-1$
 
+    /**
+     * 
+     */
     @Since("8.0.0")
     public static final String PRESERVE = "PRESERVE"; //$NON-NLS-1$
 
@@ -25,65 +40,97 @@ public class FromClause extends SimpleNode {
 
     private boolean preserve;
 
-    public FromClause(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public FromClause(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return whether has any hints set
+     */
     public boolean hasHint() {
         return optional || makeDep || makeNotDep || makeInd || noUnnest || preserve;
     }
 
+    @Override
     public boolean isOptional() {
         return optional;
     }
     
+    @Override
     public void setOptional(boolean optional) {
         this.optional = optional;
     }
     
+    /**
+     * @return make ind flag
+     */
     public boolean isMakeInd() {
         return makeInd;
     }
     
+    /**
+     * @param makeInd
+     */
     public void setMakeInd(boolean makeInd) {
         this.makeInd = makeInd;
     }
 
+    /**
+     * @param noUnnest
+     */
     public void setNoUnnest(boolean noUnnest) {
         this.noUnnest = noUnnest;
     }
     
+    /**
+     * @return no unnest flag
+     */
     public boolean isNoUnnest() {
         return noUnnest;
     }
 
+    @Override
     public boolean isMakeDep() {
         return this.makeDep;
     }
 
+    @Override
     public void setMakeDep(boolean makeDep) {
         this.makeDep = makeDep;
     }
 
+    @Override
     public boolean isMakeNotDep() {
         return this.makeNotDep;
     }
 
+    @Override
     public void setMakeNotDep(boolean makeNotDep) {
         this.makeNotDep = makeNotDep;
     }
     
+    /**
+     * @return preserve flag
+     */
     public boolean isPreserve() {
         return preserve;
     }
     
+    /**
+     * @param preserve
+     */
     public void setPreserve(boolean preserve) {
         this.preserve = preserve;
     }
+
+    /**
+     * @param groups
+     */
+    public abstract void collectGroups(Collection<GroupSymbol> groups);
 
     @Override
     public int hashCode() {
@@ -115,23 +162,12 @@ public class FromClause extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
-    public FromClause clone() {
-        FromClause clone = new FromClause(this.parser, this.id);
-
-        clone.setOptional(isOptional());
-        clone.setMakeInd(isMakeInd());
-        clone.setNoUnnest(isNoUnnest());
-        clone.setMakeDep(isMakeDep());
-        clone.setMakeNotDep(isMakeNotDep());
-        clone.setPreserve(isPreserve());
-
-        return clone;
-    }
+    public abstract FromClause clone();
 
 }
 /* JavaCC - OriginalChecksum=908130697ce6a37a6c778dfefda987bb (do not edit this line) */

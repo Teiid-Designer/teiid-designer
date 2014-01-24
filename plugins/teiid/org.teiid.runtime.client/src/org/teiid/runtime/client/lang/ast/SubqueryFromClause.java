@@ -2,11 +2,17 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collection;
+import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class SubqueryFromClause extends FromClause {
+/**
+ *
+ */
+public class SubqueryFromClause extends FromClause
+    implements ISubqueryFromClause<LanguageVisitor, Command> {
 
     private GroupSymbol symbol;
 
@@ -14,18 +20,24 @@ public class SubqueryFromClause extends FromClause {
 
     private boolean table;
 
-    public SubqueryFromClause(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SubqueryFromClause(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return table flag
+     */
     public boolean isTable() {
         return table;
     }
     
+    /**
+     * @param table
+     */
     public void setTable(boolean table) {
         this.table = table;
     }
@@ -34,6 +46,7 @@ public class SubqueryFromClause extends FromClause {
      * Get name of this clause.
      * @return Name of clause
      */
+    @Override
     public String getName() {
         return this.symbol.getName();   
     }
@@ -45,6 +58,7 @@ public class SubqueryFromClause extends FromClause {
      * @param name New name
      * @since 4.3
      */
+    @Override
     public void setName(String name) {
         this.symbol = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
@@ -61,6 +75,7 @@ public class SubqueryFromClause extends FromClause {
      * Set the command held by the clause
      * @param command Command to hold
      */
+    @Override
     public void setCommand(Command command) {
         this.command = command;
     } 
@@ -69,9 +84,15 @@ public class SubqueryFromClause extends FromClause {
      * Get command held by clause
      * @return Command held by clause
      */
+    @Override
     public Command getCommand() {
         return this.command;
     }   
+
+    @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(getGroupSymbol());
+    }
 
     @Override
     public int hashCode() {
@@ -101,8 +122,8 @@ public class SubqueryFromClause extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

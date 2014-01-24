@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.ParsedDataType;
 import org.teiid.runtime.client.lang.ParseInfo;
@@ -38,7 +39,6 @@ import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.*;
 import org.teiid.runtime.client.lang.ast.CriteriaOperator.Operator;
 import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria.PredicateQuantifier;
-import org.teiid.runtime.client.lang.ast.MatchCriteria.MatchMode;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParser;
 import org.teiid.runtime.client.types.BinaryType;
 import org.teiid.runtime.client.types.DataTypeManagerService;
@@ -716,17 +716,19 @@ String id(Boolean validate) #void :
 /* TODO: createProcedure should not be here, but is due to all of the legacy tests
 unused=true
 */
-Command command(ParseInfo info) #Command :
-{}
+Command command(ParseInfo info) #void :
 {
-    (LOOKAHEAD(2) jjtThis = createProcedure(info) |
-     jjtThis = userCommand(info) |
-     jjtThis = callableStatement(info)
+    Command command = null;
+}
+{
+    (LOOKAHEAD(2) command = createProcedure(info) |
+     command = userCommand(info) |
+     command = callableStatement(info)
 	)
 	[<SEMICOLON>]
 	<EOF>
 	{
-		return jjtThis;
+		return command;
 	}
 }
 
@@ -1827,6 +1829,7 @@ example={code:sql}SELECT * FROM tbl WHERE col2 = 1{code}
 */
 QueryCommand queryExpression(ParseInfo info) #QueryCommand :
 {
+    QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
 	WithQueryCommand withQueryCommand = null;
 }
@@ -1843,10 +1846,10 @@ QueryCommand queryExpression(ParseInfo info) #QueryCommand :
 	    }
 	  )*
 	]
-	jjtThis = queryExpressionBody(info)
+	queryCommand = queryExpressionBody(info)
 	{
-		jjtThis.setWith(withList);
-		return jjtThis;
+		queryCommand.setWith(withList);
+		return queryCommand;
 	}
 }
 
@@ -1962,7 +1965,7 @@ QueryCommand queryPrimary(ParseInfo info) #void :
            select.setSymbols(Arrays.asList(multipleElementSymbol));
 
            UnaryFromClause unaryFromClause = createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
-           unaryFromClause.setGroupSymbol(groupSymbol(name));
+           unaryFromClause.setGroup(groupSymbol(name));
 
            From from = createASTNode(ASTNodes.FROM);
            from.setClauses(Arrays.asList(unaryFromClause));
@@ -2357,21 +2360,22 @@ name=table reference
 description=An optionally escaped joined table.
 example={code:sql}a{code}\n{code:sql}a inner join b{code}
 */
-FromClause tableReference(ParseInfo info) #FromClause :
+FromClause tableReference(ParseInfo info) #void :
 {
+    FromClause fromClause = null;
 }
 {	
 	(
 		(	
 			<ESCAPEDJOIN>
-			jjtThis=joinedTable(info)
+			fromClause=joinedTable(info)
 			<RBRACE>
 		) 
 		|
-		jjtThis=joinedTable(info)
+		fromClause=joinedTable(info)
 	)
 	{
-		return jjtThis;
+		return fromClause;
 	}
 }	
 
@@ -3002,7 +3006,7 @@ UnaryFromClause unaryFromClause(ParseInfo info) #UnaryFromClause :
         } else {
 			group = groupSymbol(groupID);
         }
-        jjtThis.setGroupSymbol(group);
+        jjtThis.setGroup(group);
         setFromClauseOptions(groupToken, jjtThis);
 		return jjtThis;
     }	

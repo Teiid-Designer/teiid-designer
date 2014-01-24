@@ -2,18 +2,23 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.symbol.IExpressionSymbol;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
+/**
+ *
+ */
 @SuppressWarnings( "unused" )
-public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Expression {
+public class ExpressionSymbol extends Symbol
+    implements SingleElementSymbol, Expression, IExpressionSymbol<Expression, LanguageVisitor> {
 
     private Expression expression;
 
-    public ExpressionSymbol(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ExpressionSymbol(TeiidParser p, int id) {
         super(p, id);
     }
@@ -31,6 +36,7 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
      * Get the expression for this symbol
      * @return Expression for this symbol
      */
+    @Override
     public Expression getExpression() {
         return this.expression;
     }
@@ -39,6 +45,7 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
      * Set the expression represented by this symbol.
      * @param expression Expression for this expression symbol
      */
+    @Override
     public void setExpression(Expression expression) {
         this.expression = expression;
     }
@@ -65,8 +72,8 @@ public class ExpressionSymbol extends Symbol implements SingleElementSymbol, Exp
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

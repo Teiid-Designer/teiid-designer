@@ -3,11 +3,16 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.lang.parser.visitor.SQLStringVisitor;
 
+/**
+ * Base class for AST Nodes
+ */
 public class SimpleNode implements Node, LanguageObject {
 
     protected Node parent;
@@ -16,12 +21,12 @@ public class SimpleNode implements Node, LanguageObject {
     protected Object value;
     protected TeiidParser parser;
 
-    public SimpleNode(int i) {
-        id = i;
-    }
-
+    /**
+     * @param p
+     * @param i
+     */
     public SimpleNode(TeiidParser p, int i) {
-        this(i);
+        id = i;
         parser = p;
     }
 
@@ -65,28 +70,37 @@ public class SimpleNode implements Node, LanguageObject {
         return (children == null) ? 0 : children.length;
     }
 
+    /**
+     * @param value
+     */
     public void jjtSetValue(Object value) {
         this.value = value;
     }
 
+    /**
+     * @return value
+     */
     public Object jjtGetValue() {
         return value;
     }
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
-    /** Accept the visitor. **/
-    public Object childrenAccept(AbstractTeiidParserVisitor visitor, Object data) {
+    /**
+     * Accept the visitor.
+     * 
+     * @param visitor
+     **/
+    public void childrenAccept(LanguageVisitor visitor) {
         if (children != null) {
             for (int i = 0; i < children.length; ++i) {
-                children[i].accept(visitor, data);
+                children[i].acceptVisitor(visitor);
             }
         }
-        return data;
     }
 
     /**
@@ -98,20 +112,19 @@ public class SimpleNode implements Node, LanguageObject {
         return SQLStringVisitor.getSQLString(parser.getVersion(), this);
     }
 
-    public String toString(String prefix) {
-        return prefix + toString();
-    }
-
     /* Override this method if you want to customize how the node dumps
        out its children. */
 
-    public void dump(String prefix) {
-        System.out.println(toString(prefix));
+    /**
+     * Dump the tree of nodes
+     */
+    public void dump() {
+        System.out.println(toString());
         if (children != null) {
             for (int i = 0; i < children.length; ++i) {
                 SimpleNode n = (SimpleNode)children[i];
                 if (n != null) {
-                    n.dump(prefix + " ");
+                    n.dump();
                 }
             }
         }
@@ -139,6 +152,18 @@ public class SimpleNode implements Node, LanguageObject {
     public SimpleNode clone() {
         SimpleNode clone = new SimpleNode(this.parser, this.id);
         return clone;
+    }
+
+    protected <T extends LanguageObject> Collection<T> cloneCollection(Collection<T> collection) {
+        if (collection == null)
+            return null;
+
+        Collection<T> cloned = new HashSet<T>();
+        for (T item : collection) {
+            cloned.add((T) item.clone());
+        }
+
+        return cloned;
     }
 
     protected <T extends LanguageObject> List<T> cloneList(List<T> list) {

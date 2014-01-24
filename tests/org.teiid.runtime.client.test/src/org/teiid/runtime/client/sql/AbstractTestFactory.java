@@ -124,7 +124,7 @@ public abstract class AbstractTestFactory {
 
     public UnaryFromClause newUnaryFromClause(GroupSymbol groupSymbol) {
         UnaryFromClause ufc = newNode(ASTNodes.UNARY_FROM_CLAUSE);
-        ufc.setGroupSymbol(groupSymbol);
+        ufc.setGroup(groupSymbol);
         return ufc;
     }
 

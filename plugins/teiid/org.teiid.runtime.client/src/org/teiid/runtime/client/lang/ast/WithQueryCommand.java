@@ -3,10 +3,14 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IWithQueryCommand;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class WithQueryCommand extends SimpleNode {
+/**
+ *
+ */
+public class WithQueryCommand extends SimpleNode implements IWithQueryCommand<LanguageVisitor, QueryCommand> {
 
     private GroupSymbol groupSymbol;
 
@@ -14,14 +18,17 @@ public class WithQueryCommand extends SimpleNode {
 
     private QueryCommand queryExpression;
 
-    public WithQueryCommand(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public WithQueryCommand(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return group symbol
+     */
     public GroupSymbol getGroupSymbol() {
         return groupSymbol;
     }
@@ -33,10 +40,16 @@ public class WithQueryCommand extends SimpleNode {
         this.groupSymbol = groupSymbol;
     }
 
+    /**
+     * @return columns
+     */
     public List<ElementSymbol> getColumns() {
         return columns;
     }
 
+    /**
+     * @param columns
+     */
     public void setColumns(List<ElementSymbol> columns) {
         this.columns = columns;
     }
@@ -53,6 +66,16 @@ public class WithQueryCommand extends SimpleNode {
      */
     public void setQueryExpression(QueryCommand queryExpression) {
         this.queryExpression = queryExpression;
+    }
+
+    @Override
+    public QueryCommand getCommand() {
+        return getQueryExpression();
+    }
+
+    @Override
+    public void setCommand(QueryCommand command) {
+        setQueryExpression(command);
     }
 
     @Override
@@ -85,8 +108,8 @@ public class WithQueryCommand extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

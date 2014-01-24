@@ -3,14 +3,19 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Since("8.0.0")
-public class ObjectTable extends FromClause {
+public class ObjectTable extends FromClause implements IObjectTable<LanguageVisitor> {
 
     private List<ObjectColumn> columns = new ArrayList<ObjectColumn>();
 
@@ -22,42 +27,66 @@ public class ObjectTable extends FromClause {
 
     private GroupSymbol symbol;
 
-    public ObjectTable(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ObjectTable(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return columns
+     */
     public List<ObjectColumn> getColumns() {
         return columns;
     }
 
+    /**
+     * @param columns
+     */
     public void setColumns(List<ObjectColumn> columns) {
         this.columns = columns;
     }
 
+    /**
+     * @return scripting language
+     */
     public String getScriptingLanguage() {
         return scriptingLanguage;
     }
     
+    /**
+     * @param scriptingLanguage
+     */
     public void setScriptingLanguage(String scriptingLanguage) {
         this.scriptingLanguage = scriptingLanguage;
     }
 
+    /**
+     * @return passing
+     */
     public List<DerivedColumn> getPassing() {
         return passing;
     }
     
+    /**
+     * @param passing
+     */
     public void setPassing(List<DerivedColumn> passing) {
         this.passing = passing;
     }
     
+    /**
+     * @return row script
+     */
     public String getRowScript() {
         return rowScript;
     }
     
+    /**
+     * @param query
+     */
     public void setRowScript(String query) {
         this.rowScript = query;
     }
@@ -75,6 +104,11 @@ public class ObjectTable extends FromClause {
     public void setName(String name) {
         this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
+    }
+
+    @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(symbol);
     }
 
     @Override
@@ -115,8 +149,8 @@ public class ObjectTable extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

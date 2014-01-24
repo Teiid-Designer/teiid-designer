@@ -7,16 +7,20 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class Criteria extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class Criteria extends SimpleNode implements Expression, ICriteria<LanguageVisitor> {
 
-    public Criteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Criteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -66,8 +70,8 @@ public class Criteria extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

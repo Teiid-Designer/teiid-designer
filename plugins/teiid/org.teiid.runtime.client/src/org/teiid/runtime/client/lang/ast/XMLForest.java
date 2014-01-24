@@ -3,20 +3,24 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IXMLForest;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class XMLForest extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class XMLForest extends SimpleNode implements Expression, IXMLForest<LanguageVisitor> {
 
     private List<DerivedColumn> args;
 
     private XMLNamespaces namespaces;
 
-    public XMLForest(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLForest(TeiidParser p, int id) {
         super(p, id);
     }
@@ -26,18 +30,30 @@ public class XMLForest extends SimpleNode implements Expression {
         return DataTypeManagerService.DefaultDataTypes.XML.getTypeClass();
     }
 
+    /**
+     * @return namespaces
+     */
     public XMLNamespaces getNamespaces() {
         return namespaces;
     }
     
+    /**
+     * @param namespaces
+     */
     public void setNamespaces(XMLNamespaces namespaces) {
         this.namespaces = namespaces;
     }
     
+    /**
+     * @return args
+     */
     public List<DerivedColumn> getArgs() {
         return args;
     }
 
+    /**
+     * @param args
+     */
     public void setArguments(List<DerivedColumn> args) {
         this.args = args;
     }
@@ -68,8 +84,8 @@ public class XMLForest extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

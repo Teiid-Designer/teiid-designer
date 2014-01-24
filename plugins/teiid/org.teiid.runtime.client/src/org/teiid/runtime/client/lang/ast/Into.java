@@ -2,17 +2,21 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class Into extends SimpleNode {
+/**
+ *
+ */
+public class Into extends SimpleNode implements IInto<LanguageVisitor> {
 
     private GroupSymbol group;
 
-    public Into(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Into(TeiidParser p, int id) {
         super(p, id);
     }
@@ -21,6 +25,7 @@ public class Into extends SimpleNode {
      * Get group held by clause
      * @return Group held by clause
      */
+    @Override
     public GroupSymbol getGroup() {
         return this.group;
     }
@@ -55,8 +60,8 @@ public class Into extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

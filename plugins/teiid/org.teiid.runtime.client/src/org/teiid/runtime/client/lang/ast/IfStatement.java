@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.proc.IIfStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class IfStatement extends Statement {
+/**
+ *
+ */
+public class IfStatement extends Statement implements IIfStatement<LanguageVisitor> {
 
     // the IF block
     private Block ifBlock;
@@ -15,11 +19,11 @@ public class IfStatement extends Statement {
     
     // criteria on the if block
     private Criteria condition;
-    
-    public IfStatement(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public IfStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -110,8 +114,8 @@ public class IfStatement extends Statement {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -2,19 +2,25 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import java.util.List;
+import org.teiid.designer.query.sql.lang.IAlter;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public abstract class Alter<T extends Command> extends Command {
+/**
+ *
+ * @param <T>
+ */
+public abstract class Alter<T extends Command> extends Command implements IAlter<Expression, LanguageVisitor> {
 
     private GroupSymbol target;
 
     private T definition;
 
-    public Alter(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Alter(TeiidParser p, int id) {
         super(p, id);
     }
@@ -48,6 +54,11 @@ public abstract class Alter<T extends Command> extends Command {
     }
 
     @Override
+    public List<Expression> getProjectedSymbols() {
+        return getUpdateCommandSymbol();
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -73,8 +84,8 @@ public abstract class Alter<T extends Command> extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 }
 /* JavaCC - OriginalChecksum=4c2a7e700d4af2b1569d4947a1d82223 (do not edit this line) */

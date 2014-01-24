@@ -3,26 +3,31 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.sql.proc.IReturnStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
+/**
+ *
+ */
 @Since("8.0.0")
-public class ReturnStatement extends AssignmentStatement {
+public class ReturnStatement extends AssignmentStatement implements IReturnStatement<Expression, LanguageVisitor> {
 
-    public ReturnStatement(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ReturnStatement(TeiidParser p, int id) {
         super(p, id);
     }
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
+    @SuppressWarnings( "deprecation" )
     @Override
     public ReturnStatement clone() {
         ReturnStatement clone = new ReturnStatement(this.parser, this.id);

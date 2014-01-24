@@ -15,7 +15,7 @@
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, wr`ite to the Free Software
+ * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.runtime.client.function.SourceSystemFunctions;
@@ -40,9 +41,105 @@ import org.teiid.runtime.client.lang.SourceHint;
 import org.teiid.runtime.client.lang.SourceHint.SpecificHint;
 import org.teiid.runtime.client.lang.SubqueryHint;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.ast.*;
-import org.teiid.runtime.client.lang.ast.AggregateSymbol.Type;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.ast.AggregateSymbol;
+import org.teiid.runtime.client.lang.ast.AliasSymbol;
+import org.teiid.runtime.client.lang.ast.AlterProcedure;
+import org.teiid.runtime.client.lang.ast.AlterTrigger;
+import org.teiid.runtime.client.lang.ast.AlterView;
+import org.teiid.runtime.client.lang.ast.ArrayTable;
+import org.teiid.runtime.client.lang.ast.AssignmentStatement;
+import org.teiid.runtime.client.lang.ast.BetweenCriteria;
+import org.teiid.runtime.client.lang.ast.Block;
+import org.teiid.runtime.client.lang.ast.BranchingStatement;
+import org.teiid.runtime.client.lang.ast.CaseExpression;
+import org.teiid.runtime.client.lang.ast.CommandStatement;
+import org.teiid.runtime.client.lang.ast.CompareCriteria;
+import org.teiid.runtime.client.lang.ast.CompoundCriteria;
+import org.teiid.runtime.client.lang.ast.Constant;
+import org.teiid.runtime.client.lang.ast.CreateProcedureCommand;
+import org.teiid.runtime.client.lang.ast.CreateUpdateProcedureCommand;
+import org.teiid.runtime.client.lang.ast.Criteria;
+import org.teiid.runtime.client.lang.ast.CriteriaSelector;
+import org.teiid.runtime.client.lang.ast.DeclareStatement;
+import org.teiid.runtime.client.lang.ast.Delete;
+import org.teiid.runtime.client.lang.ast.DerivedColumn;
+import org.teiid.runtime.client.lang.ast.Drop;
+import org.teiid.runtime.client.lang.ast.DynamicCommand;
+import org.teiid.runtime.client.lang.ast.ElementSymbol;
+import org.teiid.runtime.client.lang.ast.ExceptionExpression;
+import org.teiid.runtime.client.lang.ast.ExistsCriteria;
+import org.teiid.runtime.client.lang.ast.Expression;
+import org.teiid.runtime.client.lang.ast.ExpressionCriteria;
+import org.teiid.runtime.client.lang.ast.ExpressionSymbol;
+import org.teiid.runtime.client.lang.ast.From;
+import org.teiid.runtime.client.lang.ast.FromClause;
+import org.teiid.runtime.client.lang.ast.Function;
+import org.teiid.runtime.client.lang.ast.GroupBy;
+import org.teiid.runtime.client.lang.ast.GroupSymbol;
+import org.teiid.runtime.client.lang.ast.HasCriteria;
+import org.teiid.runtime.client.lang.ast.IfStatement;
+import org.teiid.runtime.client.lang.ast.Insert;
+import org.teiid.runtime.client.lang.ast.Into;
+import org.teiid.runtime.client.lang.ast.IsNullCriteria;
+import org.teiid.runtime.client.lang.ast.JSONObject;
+import org.teiid.runtime.client.lang.ast.JoinPredicate;
+import org.teiid.runtime.client.lang.ast.JoinType;
+import org.teiid.runtime.client.lang.ast.Labeled;
+import org.teiid.runtime.client.lang.ast.LanguageObject;
+import org.teiid.runtime.client.lang.ast.Limit;
+import org.teiid.runtime.client.lang.ast.LoopStatement;
+import org.teiid.runtime.client.lang.ast.MatchCriteria;
+import org.teiid.runtime.client.lang.ast.MultipleElementSymbol;
+import org.teiid.runtime.client.lang.ast.NamespaceItem;
+import org.teiid.runtime.client.lang.ast.NotCriteria;
+import org.teiid.runtime.client.lang.ast.ObjectColumn;
+import org.teiid.runtime.client.lang.ast.ObjectTable;
+import org.teiid.runtime.client.lang.ast.Option;
+import org.teiid.runtime.client.lang.ast.OrderBy;
+import org.teiid.runtime.client.lang.ast.OrderByItem;
+import org.teiid.runtime.client.lang.ast.PredicateCriteria;
+import org.teiid.runtime.client.lang.ast.ProjectedColumn;
+import org.teiid.runtime.client.lang.ast.Query;
+import org.teiid.runtime.client.lang.ast.QueryCommand;
+import org.teiid.runtime.client.lang.ast.QueryString;
+import org.teiid.runtime.client.lang.ast.RaiseErrorStatement;
+import org.teiid.runtime.client.lang.ast.RaiseStatement;
+import org.teiid.runtime.client.lang.ast.Reference;
+import org.teiid.runtime.client.lang.ast.ReturnStatement;
+import org.teiid.runtime.client.lang.ast.ScalarSubquery;
+import org.teiid.runtime.client.lang.ast.SearchedCaseExpression;
+import org.teiid.runtime.client.lang.ast.Select;
+import org.teiid.runtime.client.lang.ast.SetClause;
+import org.teiid.runtime.client.lang.ast.SetClauseList;
+import org.teiid.runtime.client.lang.ast.SetCriteria;
+import org.teiid.runtime.client.lang.ast.SetQuery;
+import org.teiid.runtime.client.lang.ast.Statement;
+import org.teiid.runtime.client.lang.ast.StoredProcedure;
+import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria;
+import org.teiid.runtime.client.lang.ast.SubqueryFromClause;
+import org.teiid.runtime.client.lang.ast.SubquerySetCriteria;
+import org.teiid.runtime.client.lang.ast.Symbol;
+import org.teiid.runtime.client.lang.ast.TextColumn;
+import org.teiid.runtime.client.lang.ast.TextLine;
+import org.teiid.runtime.client.lang.ast.TextTable;
+import org.teiid.runtime.client.lang.ast.TranslateCriteria;
+import org.teiid.runtime.client.lang.ast.TriggerAction;
+import org.teiid.runtime.client.lang.ast.UnaryFromClause;
+import org.teiid.runtime.client.lang.ast.Update;
+import org.teiid.runtime.client.lang.ast.WhileStatement;
+import org.teiid.runtime.client.lang.ast.WindowFunction;
+import org.teiid.runtime.client.lang.ast.WindowSpecification;
+import org.teiid.runtime.client.lang.ast.WithQueryCommand;
+import org.teiid.runtime.client.lang.ast.XMLAttributes;
+import org.teiid.runtime.client.lang.ast.XMLColumn;
+import org.teiid.runtime.client.lang.ast.XMLElement;
+import org.teiid.runtime.client.lang.ast.XMLForest;
+import org.teiid.runtime.client.lang.ast.XMLNamespaces;
+import org.teiid.runtime.client.lang.ast.XMLParse;
+import org.teiid.runtime.client.lang.ast.XMLQuery;
+import org.teiid.runtime.client.lang.ast.XMLSerialize;
+import org.teiid.runtime.client.lang.ast.XMLTable;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.util.StringUtil;
 
@@ -51,7 +148,7 @@ import org.teiid.runtime.client.util.StringUtil;
  * The SQLStringVisitor will visit a set of ast nodes and return the corresponding SQL string representation.
  * </p>
  */
-public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLConstants.Reserved, SQLConstants.Tokens {
+public class SQLStringVisitor extends LanguageVisitor implements SQLConstants.Reserved, SQLConstants.Tokens {
 
     /**
      * Undefined
@@ -100,7 +197,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
 
         isApplicable(languageObject);
-        languageObject.accept(this, null);
+        languageObject.acceptVisitor(this);
         return getSQLString();
     }
 
@@ -117,13 +214,13 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         return teiidVersion.equals(TEIID_VERSION_8) || teiidVersion.isGreaterThan(TEIID_VERSION_8);
     }
 
-    protected void visitNode(LanguageObject obj, Object data) {
+    protected void visitNode(LanguageObject obj) {
         if (obj == null) {
             append(UNDEFINED);
             return;
         }
         isApplicable(obj);
-        obj.accept(this, data);
+        obj.acceptVisitor(this);
     }
 
     protected void append(Object value) {
@@ -143,8 +240,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     // ############ Visitor methods for language objects ####################
 
     @Override
-    public void visit(BetweenCriteria obj, Object data) {
-        visitNode(obj.getExpression(), data);
+    public void visit(BetweenCriteria obj) {
+        visitNode(obj.getExpression());
         append(SPACE);
 
         if (obj.isNegated()) {
@@ -153,54 +250,54 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
         append(BETWEEN);
         append(SPACE);
-        visitNode(obj.getLowerExpression(), data);
+        visitNode(obj.getLowerExpression());
 
         append(SPACE);
         append(AND);
         append(SPACE);
-        visitNode(obj.getUpperExpression(), data);
+        visitNode(obj.getUpperExpression());
     }
 
     @Override
-    public void visit(CaseExpression obj, Object data) {
+    public void visit(CaseExpression obj) {
         append(CASE);
         append(SPACE);
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
         append(SPACE);
 
         for (int i = 0; i < obj.getWhenCount(); i++) {
             append(WHEN);
             append(SPACE);
-            visitNode(obj.getWhenExpression(i), data);
+            visitNode(obj.getWhenExpression(i));
             append(SPACE);
             append(THEN);
             append(SPACE);
-            visitNode(obj.getThenExpression(i), data);
+            visitNode(obj.getThenExpression(i));
             append(SPACE);
         }
 
         if (obj.getElseExpression() != null) {
             append(ELSE);
             append(SPACE);
-            visitNode(obj.getElseExpression(), data);
+            visitNode(obj.getElseExpression());
             append(SPACE);
         }
         append(END);
     }
 
     @Override
-    public void visit(CompareCriteria obj, Object data) {
+    public void visit(CompareCriteria obj) {
         Expression leftExpression = obj.getLeftExpression();
-        visitNode(leftExpression, data);
+        visitNode(leftExpression);
         append(SPACE);
-        append(obj.getOperator().toString());
+        append(obj.getOperatorAsString());
         append(SPACE);
         Expression rightExpression = obj.getRightExpression();
-        visitNode(rightExpression, data);
+        visitNode(rightExpression);
     }
 
     @Override
-    public void visit(CompoundCriteria obj, Object data) {
+    public void visit(CompoundCriteria obj) {
         // Get operator string
         int operator = obj.getOperator();
         String operatorStr = ""; //$NON-NLS-1$
@@ -217,7 +314,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         if (subCriteria.size() == 1) {
             // Special case - should really never happen, but we are tolerant
             Criteria firstChild = subCriteria.get(0);
-            visitNode(firstChild, data);
+            visitNode(firstChild);
         } else {
             // Add first criteria
             Iterator<Criteria> iter = subCriteria.iterator();
@@ -226,7 +323,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
                 // Add criteria
                 Criteria crit = iter.next();
                 append(Tokens.LPAREN);
-                visitNode(crit, data);
+                visitNode(crit);
                 append(Tokens.RPAREN);
 
                 if (iter.hasNext()) {
@@ -240,7 +337,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(Delete obj, Object data) {
+    public void visit(Delete obj) {
         // add delete clause
         append(DELETE);
         addSourceHint(obj.getSourceHint());
@@ -248,39 +345,39 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         // add from clause
         append(FROM);
         append(SPACE);
-        visitNode(obj.getGroup(), data);
+        visitNode(obj.getGroup());
 
         // add where clause
         if (obj.getCriteria() != null) {
             beginClause(0);
-            visitCriteria(WHERE, obj.getCriteria(), data);
+            visitCriteria(WHERE, obj.getCriteria());
         }
 
         // Option clause
         if (obj.getOption() != null) {
             beginClause(0);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
     @Override
-    public void visit(From obj, Object data) {
+    public void visit(From obj) {
         append(FROM);
         beginClause(1);
-        registerNodes(obj.getClauses(), 0, data);
+        registerNodes(obj.getClauses(), 0);
     }
 
     @Override
-    public void visit(GroupBy obj, Object data) {
+    public void visit(GroupBy obj) {
         append(GROUP);
         append(SPACE);
         append(BY);
         append(SPACE);
-        registerNodes(obj.getSymbols(), 0, data);
+        registerNodes(obj.getSymbols(), 0);
     }
 
     @Override
-    public void visit(Insert obj, Object data) {
+    public void visit(Insert obj) {
         if (isTeiid8OrGreater() && obj.isMerge()) {
             append(MERGE);
         } else {
@@ -290,7 +387,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(SPACE);
         append(INTO);
         append(SPACE);
-        visitNode(obj.getGroup(), data);
+        visitNode(obj.getGroup());
 
         if (!obj.getVariables().isEmpty()) {
             beginClause(2);
@@ -300,14 +397,14 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             if (vars != null) {
                 append("("); //$NON-NLS-1$
                 this.shortNameOnly = true;
-                registerNodes(vars, 0, data);
+                registerNodes(vars, 0);
                 this.shortNameOnly = false;
                 append(")"); //$NON-NLS-1$
             }
         }
         beginClause(1);
         if (obj.getQueryExpression() != null) {
-            visitNode(obj.getQueryExpression(), data);
+            visitNode(obj.getQueryExpression());
             //         } else if (obj.getTupleSource() != null) {
             //             append(VALUES);
             //             append(" (...)"); //$NON-NLS-1$
@@ -315,33 +412,33 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(VALUES);
             beginClause(2);
             append("("); //$NON-NLS-1$
-            registerNodes(obj.getValues(), 0, data);
+            registerNodes(obj.getValues(), 0);
             append(")"); //$NON-NLS-1$
         }
 
         // Option clause
         if (obj.getOption() != null) {
             beginClause(1);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
     @Override
-    public void visit(Drop obj, Object data) {
+    public void visit(Drop obj) {
         append(DROP);
         append(SPACE);
         append(TABLE);
         append(SPACE);
-        visitNode(obj.getTable(), data);
+        visitNode(obj.getTable());
     }
 
     @Override
-    public void visit(IsNullCriteria obj, Object data) {
+    public void visit(IsNullCriteria obj) {
         Expression expr = obj.getExpression();
         if (isTeiid8OrGreater())
-            appendNested(expr, data);
+            appendNested(expr);
         else
-            visitNode(expr, data);
+            visitNode(expr);
 
         append(SPACE);
         append(IS);
@@ -354,8 +451,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(JoinPredicate obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(JoinPredicate obj) {
+        addHintComment(obj);
 
         if (obj.hasHint()) {
             append("(");//$NON-NLS-1$
@@ -365,25 +462,25 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         FromClause leftClause = obj.getLeftClause();
         if (leftClause instanceof JoinPredicate && !((JoinPredicate)leftClause).hasHint()) {
             append("("); //$NON-NLS-1$
-            visitNode(leftClause, data);
+            visitNode(leftClause);
             append(")"); //$NON-NLS-1$
         } else {
-            visitNode(leftClause, data);
+            visitNode(leftClause);
         }
 
         // join type
         append(SPACE);
-        visitNode(obj.getJoinType(), data);
+        visitNode(obj.getJoinType());
         append(SPACE);
 
         // right clause
         FromClause rightClause = obj.getRightClause();
         if (rightClause instanceof JoinPredicate && !((JoinPredicate)rightClause).hasHint()) {
             append("("); //$NON-NLS-1$
-            visitNode(rightClause, data);
+            visitNode(rightClause);
             append(")"); //$NON-NLS-1$
         } else {
-            visitNode(rightClause, data);
+            visitNode(rightClause);
         }
 
         // join criteria
@@ -396,10 +493,10 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             while (critIter.hasNext()) {
                 Criteria crit = (Criteria)critIter.next();
                 if (crit instanceof PredicateCriteria || crit instanceof NotCriteria) {
-                    visitNode(crit, data);
+                    visitNode(crit);
                 } else {
                     append("("); //$NON-NLS-1$
-                    visitNode(crit, data);
+                    visitNode(crit);
                     append(")"); //$NON-NLS-1$
                 }
 
@@ -416,7 +513,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
     }
 
-    private void addHintComment(FromClause obj, Object data) {
+    private void addHintComment(FromClause obj) {
         if (obj.hasHint()) {
             append(BEGIN_HINT);
             append(SPACE);
@@ -451,7 +548,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(JoinType obj, Object data) {
+    public void visit(JoinType obj) {
         String[] output = null;
         switch (obj.getKind()) {
             case JOIN_ANTI_SEMI:
@@ -488,8 +585,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(MatchCriteria obj, Object data) {
-        visitNode(obj.getLeftExpression(), data);
+    public void visit(MatchCriteria obj) {
+        visitNode(obj.getLeftExpression());
 
         append(SPACE);
         if (obj.isNegated()) {
@@ -511,7 +608,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
         append(SPACE);
 
-        visitNode(obj.getRightExpression(), data);
+        visitNode(obj.getRightExpression());
 
         if (obj.getEscapeChar() != MatchCriteria.NULL_ESCAPE_CHAR) {
             append(SPACE);
@@ -528,15 +625,15 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(NotCriteria obj, Object data) {
+    public void visit(NotCriteria obj) {
         append(NOT);
         append(" ("); //$NON-NLS-1$
-        visitNode(obj.getCriteria(), data);
+        visitNode(obj.getCriteria());
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(Option obj, Object data) {
+    public void visit(Option obj) {
         append(OPTION);
 
         Collection<String> groups = obj.getDependentGroups();
@@ -596,22 +693,22 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(OrderBy obj, Object data) {
+    public void visit(OrderBy obj) {
         append(ORDER);
         append(SPACE);
         append(BY);
         append(SPACE);
-        registerNodes(obj.getOrderByItems(), 0, data);
+        registerNodes(obj.getOrderByItems(), 0);
     }
 
     @Override
-    public void visit(OrderByItem obj, Object data) {
+    public void visit(OrderByItem obj) {
         Expression ses = obj.getSymbol();
         if (ses instanceof AliasSymbol) {
             AliasSymbol as = (AliasSymbol)ses;
             outputDisplayName(as.getOutputName());
         } else {
-            visitNode(ses, data);
+            visitNode(ses);
         }
         if (!obj.isAscending()) {
             append(SPACE);
@@ -626,12 +723,12 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(DynamicCommand obj, Object data) {
+    public void visit(DynamicCommand obj) {
         append(EXECUTE);
         append(SPACE);
         append(IMMEDIATE);
         append(SPACE);
-        visitNode(obj.getSql(), data);
+        visitNode(obj.getSql());
 
         if (obj.isAsClauseSet()) {
             beginClause(1);
@@ -639,7 +736,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(SPACE);
             for (int i = 0; i < obj.getAsColumns().size(); i++) {
                 ElementSymbol symbol = (ElementSymbol)obj.getAsColumns().get(i);
-                outputShortName(symbol, data);
+                outputShortName(symbol);
                 append(SPACE);
                 append(DataTypeManagerService.getInstance().getDataTypeName(symbol.getType()));
                 if (i < obj.getAsColumns().size() - 1) {
@@ -652,14 +749,14 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             beginClause(1);
             append(INTO);
             append(SPACE);
-            visitNode(obj.getIntoGroup(), data);
+            visitNode(obj.getIntoGroup());
         }
 
         if (obj.getUsing() != null && !obj.getUsing().isEmpty()) {
             beginClause(1);
             append(USING);
             append(SPACE);
-            visitNode(obj.getUsing(), data);
+            visitNode(obj.getUsing());
         }
 
         if (obj.getUpdatingModelCount() > 0) {
@@ -675,10 +772,10 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(SetClauseList obj, Object data) {
+    public void visit(SetClauseList obj) {
         for (Iterator<SetClause> iterator = obj.getClauses().iterator(); iterator.hasNext();) {
             SetClause clause = iterator.next();
-            visitNode(clause, data);
+            visitNode(clause);
             if (iterator.hasNext()) {
                 append(", "); //$NON-NLS-1$
             }
@@ -686,21 +783,21 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(SetClause obj, Object data) {
+    public void visit(SetClause obj) {
         ElementSymbol symbol = obj.getSymbol();
-        outputShortName(symbol, data);
+        outputShortName(symbol);
         append(" = "); //$NON-NLS-1$
-        visitNode(obj.getValue(), data);
+        visitNode(obj.getValue());
     }
 
     @Override
-    public void visit(WithQueryCommand obj, Object data) {
-        visitNode(obj.getGroupSymbol(), data);
+    public void visit(WithQueryCommand obj) {
+        visitNode(obj.getGroupSymbol());
         append(SPACE);
         if (obj.getColumns() != null && !obj.getColumns().isEmpty()) {
             append(Tokens.LPAREN);
             shortNameOnly = true;
-            registerNodes(obj.getColumns(), 0, data);
+            registerNodes(obj.getColumns(), 0);
             shortNameOnly = false;
             append(Tokens.RPAREN);
             append(SPACE);
@@ -708,64 +805,64 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(AS);
         append(SPACE);
         append(Tokens.LPAREN);
-        visitNode(obj.getQueryExpression(), data);
+        visitNode(obj.getQueryExpression());
         append(Tokens.RPAREN);
     }
 
     @Override
-    public void visit(Query obj, Object data) {
-        addWithClause(obj, data);
+    public void visit(Query obj) {
+        addWithClause(obj);
         append(SELECT);
 
         SourceHint sh = obj.getSourceHint();
         addSourceHint(sh);
         if (obj.getSelect() != null) {
-            visitNode(obj.getSelect(), data);
+            visitNode(obj.getSelect());
         }
 
         if (obj.getInto() != null) {
             beginClause(1);
-            visitNode(obj.getInto(), data);
+            visitNode(obj.getInto());
         }
 
         if (obj.getFrom() != null) {
             beginClause(1);
-            visitNode(obj.getFrom(), data);
+            visitNode(obj.getFrom());
         }
 
         // Where clause
         if (obj.getCriteria() != null) {
             beginClause(1);
-            visitCriteria(WHERE, obj.getCriteria(), data);
+            visitCriteria(WHERE, obj.getCriteria());
         }
 
         // Group by clause
         if (obj.getGroupBy() != null) {
             beginClause(1);
-            visitNode(obj.getGroupBy(), data);
+            visitNode(obj.getGroupBy());
         }
 
         // Having clause
         if (obj.getHaving() != null) {
             beginClause(1);
-            visitCriteria(HAVING, obj.getHaving(), data);
+            visitCriteria(HAVING, obj.getHaving());
         }
 
         // Order by clause
         if (obj.getOrderBy() != null) {
             beginClause(1);
-            visitNode(obj.getOrderBy(), data);
+            visitNode(obj.getOrderBy());
         }
 
         if (obj.getLimit() != null) {
             beginClause(1);
-            visitNode(obj.getLimit(), data);
+            visitNode(obj.getLimit());
         }
 
         // Option clause
         if (obj.getOption() != null) {
             beginClause(1);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
@@ -798,46 +895,46 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
     }
 
-    private void addWithClause(QueryCommand obj, Object data) {
+    private void addWithClause(QueryCommand obj) {
         if (obj.getWith() != null) {
             append(WITH);
             append(SPACE);
-            registerNodes(obj.getWith(), 0, data);
+            registerNodes(obj.getWith(), 0);
             beginClause(0);
         }
     }
 
-    protected void visitCriteria(String keyWord, Criteria crit, Object data) {
+    protected void visitCriteria(String keyWord, Criteria crit) {
         append(keyWord);
         append(SPACE);
-        visitNode(crit, data);
+        visitNode(crit);
     }
 
     @Override
-    public void visit(SearchedCaseExpression obj, Object data) {
+    public void visit(SearchedCaseExpression obj) {
         append(CASE);
         for (int i = 0; i < obj.getWhenCount(); i++) {
             append(SPACE);
             append(WHEN);
             append(SPACE);
-            visitNode(obj.getWhenCriteria(i), data);
+            visitNode(obj.getWhenCriteria(i));
             append(SPACE);
             append(THEN);
             append(SPACE);
-            visitNode(obj.getThenExpression(i), data);
+            visitNode(obj.getThenExpression(i));
         }
         append(SPACE);
         if (obj.getElseExpression() != null) {
             append(ELSE);
             append(SPACE);
-            visitNode(obj.getElseExpression(), data);
+            visitNode(obj.getElseExpression());
             append(SPACE);
         }
         append(END);
     }
 
     @Override
-    public void visit(Select obj, Object data) {
+    public void visit(Select obj) {
         if (obj.isDistinct()) {
             append(SPACE);
             append(DISTINCT);
@@ -847,7 +944,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         Iterator<Expression> iter = obj.getSymbols().iterator();
         while (iter.hasNext()) {
             Expression symbol = iter.next();
-            visitNode(symbol, data);
+            visitNode(symbol);
             if (iter.hasNext()) {
                 append(", "); //$NON-NLS-1$
             }
@@ -863,13 +960,13 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(SetCriteria obj, Object data) {
+    public void visit(SetCriteria obj) {
         // variable
 
         if (isTeiid8OrGreater())
-            appendNested(obj.getExpression(), data);
+            appendNested(obj.getExpression());
         else
-            visitNode(obj.getExpression(), data);
+            visitNode(obj.getExpression());
 
         // operator and beginning of list
         append(SPACE);
@@ -886,15 +983,15 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         if (size == 1) {
             Iterator iter = vals.iterator();
             Expression expr = (Expression)iter.next();
-            visitNode(expr, data);
+            visitNode(expr);
         } else if (size > 1) {
             Iterator iter = vals.iterator();
             Expression expr = (Expression)iter.next();
-            visitNode(expr, data);
+            visitNode(expr);
             while (iter.hasNext()) {
                 expr = (Expression)iter.next();
                 append(", "); //$NON-NLS-1$
-                visitNode(expr, data);
+                visitNode(expr);
             }
         }
         append(")"); //$NON-NLS-1$
@@ -905,22 +1002,22 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
      * @param ex
      */
     @Since( "8.0.0" )
-    private void appendNested(Expression ex, Object data) {
+    private void appendNested(Expression ex) {
         boolean useParens = ex instanceof Criteria;
         if (useParens) {
             append(Tokens.LPAREN);
         }
-        visitNode(ex, data);
+        visitNode(ex);
         if (useParens) {
             append(Tokens.RPAREN);
         }
     }
 
     @Override
-    public void visit(SetQuery obj, Object data) {
-        addWithClause(obj, data);
+    public void visit(SetQuery obj) {
+        addWithClause(obj);
         QueryCommand query = obj.getLeftQuery();
-        appendSetQuery(obj, query, false, data);
+        appendSetQuery(obj, query, false);
 
         beginClause(0);
         append(obj.getOperation());
@@ -931,45 +1028,45 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
         beginClause(0);
         query = obj.getRightQuery();
-        appendSetQuery(obj, query, true, data);
+        appendSetQuery(obj, query, true);
 
         if (obj.getOrderBy() != null) {
             beginClause(0);
-            visitNode(obj.getOrderBy(), data);
+            visitNode(obj.getOrderBy());
         }
 
         if (obj.getLimit() != null) {
             beginClause(0);
-            visitNode(obj.getLimit(), data);
+            visitNode(obj.getLimit());
         }
 
         if (obj.getOption() != null) {
             beginClause(0);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
-    protected void appendSetQuery(SetQuery parent, QueryCommand obj, boolean right, Object data) {
+    protected void appendSetQuery(SetQuery parent, QueryCommand obj, boolean right) {
         if (obj.getLimit() != null
             || obj.getOrderBy() != null
             || (right && ((obj instanceof SetQuery && ((parent.isAll() && !((SetQuery)obj).isAll()) || parent.getOperation() != ((SetQuery)obj).getOperation()))))) {
             append(Tokens.LPAREN);
-            visitNode(obj, data);
+            visitNode(obj);
             append(Tokens.RPAREN);
         } else {
-            visitNode(obj, data);
+            visitNode(obj);
         }
     }
 
     @Override
-    public void visit(StoredProcedure obj, Object data) {
+    public void visit(StoredProcedure obj) {
         if (obj.isCalledWithReturn()) {
             for (SPParameter param : obj.getParameters()) {
                 if (param.getParameterType() == SPParameter.RETURN_VALUE) {
                     if (param.getExpression() == null) {
                         append("?"); //$NON-NLS-1$
                     } else {
-                        visitNode(param.getExpression(), data);
+                        visitNode(param.getExpression());
                     }
                 }
             }
@@ -1002,7 +1099,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             if (addParens) {
                 append(Tokens.LPAREN);
             }
-            visitNode(param.getExpression(), data);
+            visitNode(param.getExpression());
             if (addParens) {
                 append(Tokens.RPAREN);
             }
@@ -1012,18 +1109,18 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         // Option clause
         if (obj.getOption() != null) {
             beginClause(1);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
     @Override
-    public void visit(SubqueryFromClause obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(SubqueryFromClause obj) {
+        addHintComment(obj);
         if (obj.isTable()) {
             append(TABLE);
         }
         append("(");//$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(")");//$NON-NLS-1$
         append(" AS ");//$NON-NLS-1$
 
@@ -1035,9 +1132,9 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(SubquerySetCriteria obj, Object data) {
+    public void visit(SubquerySetCriteria obj) {
         // variable
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
 
         // operator and beginning of list
         append(SPACE);
@@ -1048,53 +1145,53 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(IN);
         addSubqueryHint(obj.getSubqueryHint());
         append(" ("); //$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(UnaryFromClause obj, Object data) {
-        addHintComment(obj, data);
-        visitNode(obj.getGroupSymbol(), data);
+    public void visit(UnaryFromClause obj) {
+        addHintComment(obj);
+        visitNode(obj.getGroup());
     }
 
     @Override
-    public void visit(Update obj, Object data) {
+    public void visit(Update obj) {
         // Update clause
         append(UPDATE);
         addSourceHint(obj.getSourceHint());
         append(SPACE);
-        visitNode(obj.getGroup(), data);
+        visitNode(obj.getGroup());
         beginClause(1);
         // Set clause
         append(SET);
         beginClause(2);
-        visitNode(obj.getChangeList(), data);
+        visitNode(obj.getChangeList());
 
         // Where clause
         if (obj.getCriteria() != null) {
             beginClause(1);
-            visitCriteria(WHERE, obj.getCriteria(), data);
+            visitCriteria(WHERE, obj.getCriteria());
         }
 
         // Option clause
         if (obj.getOption() != null) {
             beginClause(1);
-            visitNode(obj.getOption(), data);
+            visitNode(obj.getOption());
         }
     }
 
     @Override
-    public void visit(Into obj, Object data) {
+    public void visit(Into obj) {
         append(INTO);
         append(SPACE);
-        visitNode(obj.getGroup(), data);
+        visitNode(obj.getGroup());
     }
 
     // ############ Visitor methods for symbol objects ####################
 
     @Override
-    public void visit(AggregateSymbol obj, Object data) {
+    public void visit(AggregateSymbol obj) {
         if (isTeiid8OrGreater())
             append(obj.getName());
         else
@@ -1115,14 +1212,14 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
                 append(Tokens.ALL_COLS);
             }
         } else if (isTeiid8OrGreater()) {
-            registerNodes(obj.getArgs(), 0, data);
+            registerNodes(obj.getArgs(), 0);
         } else {
-            visitNode(obj.getExpression(), data);
+            visitNode(obj.getExpression());
         }
 
         if (obj.getOrderBy() != null) {
             append(SPACE);
-            visitNode(obj.getOrderBy(), data);
+            visitNode(obj.getOrderBy());
         }
         append(")"); //$NON-NLS-1$
 
@@ -1138,8 +1235,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(AliasSymbol obj, Object data) {
-        visitNode(obj.getSymbol(), data);
+    public void visit(AliasSymbol obj) {
+        visitNode(obj.getSymbol());
         append(SPACE);
         append(AS);
         append(SPACE);
@@ -1147,17 +1244,17 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(MultipleElementSymbol obj, Object data) {
+    public void visit(MultipleElementSymbol obj) {
         if (obj.getGroup() == null) {
             append(Tokens.ALL_COLS);
         } else {
-            visitNode(obj.getGroup(), data);
+            visitNode(obj.getGroup());
             append(Tokens.DOT);
             append(Tokens.ALL_COLS);
         }
     }
 
-    private void visit7(Constant obj, Object data) {
+    private void visit7(Constant obj) {
         Class<?> type = obj.getType();
         String[] constantParts = null;
         if (obj.isMultiValued()) {
@@ -1232,7 +1329,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         }
     }
 
-    private void visit8(Constant obj, Object data) {
+    private void visit8(Constant obj) {
         Class<?> type = obj.getType();
         boolean multiValued = obj.isMultiValued();
         Object value = obj.getValue();
@@ -1240,11 +1337,11 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(Constant obj, Object data) {
+    public void visit(Constant obj) {
         if (isTeiid8OrGreater())
-            visit8(obj, data);
+            visit8(obj);
         else
-            visit7(obj, data);
+            visit7(obj);
     }
 
     /**
@@ -1258,9 +1355,9 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(ElementSymbol obj, Object data) {
+    public void visit(ElementSymbol obj) {
         if (obj.getDisplayMode().equals(ElementSymbol.DisplayMode.SHORT_OUTPUT_NAME) || shortNameOnly) {
-            outputShortName(obj, data);
+            outputShortName(obj);
             return;
         }
         String name = obj.getOutputName();
@@ -1270,7 +1367,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         outputDisplayName(name);
     }
 
-    private void outputShortName(ElementSymbol obj, Object data) {
+    private void outputShortName(ElementSymbol obj) {
         outputDisplayName(Symbol.getShortName(obj.getOutputName()));
     }
 
@@ -1285,24 +1382,24 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(ExpressionSymbol obj, Object data) {
-        visitNode(obj.getExpression(), data);
+    public void visit(ExpressionSymbol obj) {
+        visitNode(obj.getExpression());
     }
 
     @Override
-    public void visit(Function obj, Object data) {
+    public void visit(Function obj) {
         String name = obj.getName();
         Expression[] args = obj.getArgs();
         if (obj.isImplicit()) {
             // Hide this function, which is implicit
-            visitNode(args[0], data);
+            visitNode(args[0]);
 
         } else if (name.equalsIgnoreCase(CONVERT) || name.equalsIgnoreCase(CAST)) {
             append(name);
             append("("); //$NON-NLS-1$
 
             if (args != null && args.length > 0) {
-                visitNode(args[0], data);
+                visitNode(args[0]);
 
                 if (name.equalsIgnoreCase(CONVERT)) {
                     append(", "); //$NON-NLS-1$
@@ -1325,7 +1422,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
             if (args != null) {
                 for (int i = 0; i < args.length; i++) {
-                    visitNode(args[i], data);
+                    visitNode(args[i]);
                     if (i < (args.length - 1)) {
                         append(SPACE);
                         append(name);
@@ -1341,7 +1438,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
             if (args != null && args.length > 0) {
                 append(((Constant)args[0]).getValue());
-                registerNodes(args, 1, data);
+                registerNodes(args, 1);
             }
             append(")"); //$NON-NLS-1$
 
@@ -1349,7 +1446,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(name);
             append("(NAME "); //$NON-NLS-1$
             outputDisplayName((String)((Constant)args[0]).getValue());
-            registerNodes(args, 1, data);
+            registerNodes(args, 1);
             append(")"); //$NON-NLS-1$
         } else if (name.equalsIgnoreCase(SourceSystemFunctions.TRIM)) {
             append(name);
@@ -1368,26 +1465,26 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         } else {
             append(name);
             append("("); //$NON-NLS-1$
-            registerNodes(args, 0, data);
+            registerNodes(args, 0);
             append(")"); //$NON-NLS-1$
         }
     }
 
-    private void registerNodes(LanguageObject[] objects, int begin, Object data) {
-        registerNodes(Arrays.asList(objects), begin, data);
+    private void registerNodes(LanguageObject[] objects, int begin) {
+        registerNodes(Arrays.asList(objects), begin);
     }
 
-    private void registerNodes(List<? extends LanguageObject> objects, int begin, Object data) {
+    private void registerNodes(List<? extends LanguageObject> objects, int begin) {
         for (int i = begin; i < objects.size(); i++) {
             if (i > 0) {
                 append(", "); //$NON-NLS-1$
             }
-            visitNode(objects.get(i), data);
+            visitNode(objects.get(i));
         }
     }
 
     @Override
-    public void visit(GroupSymbol obj, Object data) {
+    public void visit(GroupSymbol obj) {
         String alias = null;
         String fullGroup = obj.getOutputName();
         if (obj.getOutputDefinition() != null) {
@@ -1406,9 +1503,9 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(Reference obj, Object data) {
+    public void visit(Reference obj) {
         if (!obj.isPositional() && obj.getExpression() != null) {
-            visitNode(obj.getExpression(), data);
+            visitNode(obj.getExpression());
         } else {
             append("?"); //$NON-NLS-1$
         }
@@ -1416,7 +1513,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
     // ############ Visitor methods for storedprocedure language objects ####################
 
-    private void visit7(Block obj, Object data) {
+    private void visit7(Block obj) {
         addLabel(obj);
         List<Statement> statements = obj.getStatements();
         // Add first clause
@@ -1430,25 +1527,25 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         while (stmtIter.hasNext()) {
             // Add each statement
             addTabs(1);
-            visitNode(stmtIter.next(), data);
+            visitNode(stmtIter.next());
             append("\n"); //$NON-NLS-1$
         }
         addTabs(0);
         append(END);
     }
 
-    private void addStatements(List<Statement> statements, Object data) {
+    private void addStatements(List<Statement> statements) {
         Iterator<Statement> stmtIter = statements.iterator();
         while (stmtIter.hasNext()) {
             // Add each statement
             addTabs(1);
-            visitNode(stmtIter.next(), data);
+            visitNode(stmtIter.next());
             append("\n"); //$NON-NLS-1$
         }
         addTabs(0);
     }
 
-    private void visit8(Block obj, Object data) {
+    private void visit8(Block obj) {
         addLabel(obj);
         List<Statement> statements = obj.getStatements();
         // Add first clause
@@ -1458,25 +1555,25 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(ATOMIC);
         }
         append("\n"); //$NON-NLS-1$
-        addStatements(statements, data);
+        addStatements(statements);
         if (obj.getExceptionGroup() != null) {
             append(NonReserved.EXCEPTION);
             append(SPACE);
             outputDisplayName(obj.getExceptionGroup());
             append("\n"); //$NON-NLS-1$
             if (obj.getExceptionStatements() != null) {
-                addStatements(obj.getExceptionStatements(), data);
+                addStatements(obj.getExceptionStatements());
             }
         }
         append(END);
     }
 
     @Override
-    public void visit(Block block, Object data) {
+    public void visit(Block block) {
         if (isTeiid8OrGreater())
-            visit8(block, data);
+            visit8(block);
         else
-            visit7(block, data);
+            visit7(block);
     }
 
     private void addLabel(Labeled obj) {
@@ -1495,8 +1592,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(CommandStatement obj, Object data) {
-        visitNode(obj.getCommand(), data);
+    public void visit(CommandStatement obj) {
+        visitNode(obj.getCommand());
         if (isTeiid8OrGreater() && !obj.isReturnable()) {
             append(SPACE);
             append(WITHOUT);
@@ -1508,7 +1605,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
     @Override
     @Removed( "8.0.0" )
-    public void visit(CreateUpdateProcedureCommand obj, Object data) {
+    public void visit(CreateUpdateProcedureCommand obj) {
         append(CREATE);
         append(SPACE);
         if (!obj.isUpdateProcedure()) {
@@ -1518,11 +1615,11 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(PROCEDURE);
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getBlock(), data);
+        visitNode(obj.getBlock());
     }
 
     @Override
-    public void visit(CreateProcedureCommand obj, Object data) {
+    public void visit(CreateProcedureCommand obj) {
         append(CREATE);
         append(SPACE);
         append(VIRTUAL);
@@ -1530,78 +1627,78 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(PROCEDURE);
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getBlock(), data);
+        visitNode(obj.getBlock());
     }
 
     @Override
-    public void visit(DeclareStatement obj, Object data) {
+    public void visit(DeclareStatement obj) {
         append(DECLARE);
         append(SPACE);
         append(obj.getVariableType());
         append(SPACE);
-        createAssignment(obj, data);
+        createAssignment(obj);
     }
 
     /**
      * @param obj
      * @param parts
      */
-    private void createAssignment(AssignmentStatement obj, Object data) {
-        visitNode(obj.getVariable(), data);
+    private void createAssignment(AssignmentStatement obj) {
+        visitNode(obj.getVariable());
         if (obj.getExpression() != null) {
             append(" = "); //$NON-NLS-1$
-            visitNode(obj.getExpression(), data);
+            visitNode(obj.getExpression());
         }
         append(";"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(IfStatement obj, Object data) {
+    public void visit(IfStatement obj) {
         append(IF);
         append("("); //$NON-NLS-1$
-        visitNode(obj.getCondition(), data);
+        visitNode(obj.getCondition());
         append(")\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getIfBlock(), data);
+        visitNode(obj.getIfBlock());
         if (obj.hasElseBlock()) {
             append("\n"); //$NON-NLS-1$
             addTabs(0);
             append(ELSE);
             append("\n"); //$NON-NLS-1$
             addTabs(0);
-            visitNode(obj.getElseBlock(), data);
+            visitNode(obj.getElseBlock());
         }
     }
 
     @Override
-    public void visit(AssignmentStatement obj, Object data) {
-        createAssignment(obj, data);
+    public void visit(AssignmentStatement obj) {
+        createAssignment(obj);
     }
 
     @Override
-    public void visit(RaiseStatement obj, Object data) {
+    public void visit(RaiseStatement obj) {
         append(NonReserved.RAISE);
         append(SPACE);
         if (obj.isWarning()) {
             append(SQLWARNING);
             append(SPACE);
         }
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
         append(";"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(HasCriteria obj, Object data) {
+    public void visit(HasCriteria obj) {
         append(HAS);
         append(SPACE);
-        visitNode(obj.getSelector(), data);
+        visitNode(obj.getSelector());
     }
 
     @Override
-    public void visit(TranslateCriteria obj, Object data) {
+    public void visit(TranslateCriteria obj) {
         append(TRANSLATE);
         append(SPACE);
-        visitNode(obj.getSelector(), data);
+        visitNode(obj.getSelector());
 
         if (obj.hasTranslations()) {
             append(SPACE);
@@ -1611,7 +1708,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             Iterator critIter = obj.getTranslations().iterator();
 
             while (critIter.hasNext()) {
-                visitNode((Criteria)critIter.next(), data);
+                visitNode((Criteria)critIter.next());
                 if (critIter.hasNext()) {
                     append(", "); //$NON-NLS-1$
                 }
@@ -1623,7 +1720,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(CriteriaSelector obj, Object data) {
+    public void visit(CriteriaSelector obj) {
         switch (obj.getSelectorType()) {
             case EQ:
                 append("= "); //$NON-NLS-1$
@@ -1676,7 +1773,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
             Iterator elmtIter = obj.getElements().iterator();
             while (elmtIter.hasNext()) {
-                visitNode((ElementSymbol)elmtIter.next(), data);
+                visitNode((ElementSymbol)elmtIter.next());
                 if (elmtIter.hasNext()) {
                     append(", "); //$NON-NLS-1$
                 }
@@ -1686,18 +1783,18 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(RaiseErrorStatement obj, Object data) {
+    public void visit(RaiseErrorStatement obj) {
         append(ERROR);
         append(SPACE);
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
         append(";"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(ExceptionExpression exceptionExpression, Object data) {
+    public void visit(ExceptionExpression exceptionExpression) {
         append(SQLEXCEPTION);
         append(SPACE);
-        visitNode(exceptionExpression.getMessage(), data);
+        visitNode(exceptionExpression.getMessage());
         if (exceptionExpression.getSqlState() != null) {
             append(SPACE);
             append(SQLSTATE);
@@ -1718,17 +1815,17 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(ReturnStatement obj, Object data) {
+    public void visit(ReturnStatement obj) {
         append(RETURN);
         if (obj.getExpression() != null) {
             append(SPACE);
-            visitNode(obj.getExpression(), data);
+            visitNode(obj.getExpression());
         }
         append(Tokens.SEMICOLON);
     }
 
     @Override
-    public void visit(BranchingStatement obj, Object data) {
+    public void visit(BranchingStatement obj) {
         switch (obj.getMode()) {
             case CONTINUE:
                 append(CONTINUE);
@@ -1748,13 +1845,13 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(LoopStatement obj, Object data) {
+    public void visit(LoopStatement obj) {
         addLabel(obj);
         append(LOOP);
         append(" "); //$NON-NLS-1$
         append(ON);
         append(" ("); //$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(") "); //$NON-NLS-1$
         append(AS);
         append(" "); //$NON-NLS-1$
@@ -1765,22 +1862,22 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
 
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getBlock(), data);
+        visitNode(obj.getBlock());
     }
 
     @Override
-    public void visit(WhileStatement obj, Object data) {
+    public void visit(WhileStatement obj) {
         addLabel(obj);
         append(WHILE);
         append("("); //$NON-NLS-1$
-        visitNode(obj.getCondition(), data);
+        visitNode(obj.getCondition());
         append(")\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getBlock(), data);
+        visitNode(obj.getBlock());
     }
 
     @Override
-    public void visit(ExistsCriteria obj, Object data) {
+    public void visit(ExistsCriteria obj) {
         if (obj.isNegated()) {
             append(NOT);
             append(SPACE);
@@ -1788,7 +1885,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(EXISTS);
         addSubqueryHint(obj.getSubqueryHint());
         append(" ("); //$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
     }
 
@@ -1818,11 +1915,11 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(SubqueryCompareCriteria obj, Object data) {
+    public void visit(SubqueryCompareCriteria obj) {
         Expression leftExpression = obj.getLeftExpression();
-        visitNode(leftExpression, data);
+        visitNode(leftExpression);
 
-        String operator = obj.getOperator().toString();
+        String operator = obj.getOperatorAsString();
         String quantifier = obj.getPredicateQuantifierAsString();
 
         // operator and beginning of list
@@ -1831,83 +1928,83 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(SPACE);
         append(quantifier);
         append("("); //$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(ScalarSubquery obj, Object data) {
+    public void visit(ScalarSubquery obj) {
         // operator and beginning of list
         append("("); //$NON-NLS-1$
-        visitNode(obj.getCommand(), data);
+        visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(XMLAttributes obj, Object data) {
+    public void visit(XMLAttributes obj) {
         append(XMLATTRIBUTES);
         append("("); //$NON-NLS-1$
-        registerNodes(obj.getArgs(), 0, data);
+        registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(XMLElement obj, Object data) {
+    public void visit(XMLElement obj) {
         append(XMLELEMENT);
         append("(NAME "); //$NON-NLS-1$
         outputDisplayName(obj.getName());
         if (obj.getNamespaces() != null) {
             append(", "); //$NON-NLS-1$
-            visitNode(obj.getNamespaces(), data);
+            visitNode(obj.getNamespaces());
         }
         if (obj.getAttributes() != null) {
             append(", "); //$NON-NLS-1$
-            visitNode(obj.getAttributes(), data);
+            visitNode(obj.getAttributes());
         }
         if (!obj.getContent().isEmpty()) {
             append(", "); //$NON-NLS-1$
         }
-        registerNodes(obj.getContent(), 0, data);
+        registerNodes(obj.getContent(), 0);
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(XMLForest obj, Object data) {
+    public void visit(XMLForest obj) {
         append(XMLFOREST);
         append("("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
-            visitNode(obj.getNamespaces(), data);
+            visitNode(obj.getNamespaces());
             append(", "); //$NON-NLS-1$
         }
-        registerNodes(obj.getArgs(), 0, data);
+        registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(JSONObject obj, Object data) {
+    public void visit(JSONObject obj) {
         append(NonReserved.JSONOBJECT);
         append("("); //$NON-NLS-1$
-        registerNodes(obj.getArgs(), 0, data);
+        registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(TextLine obj, Object data) {
+    public void visit(TextLine obj) {
         append(FOR);
         append(SPACE);
-        registerNodes(obj.getExpressions(), 0, data);
+        registerNodes(obj.getExpressions(), 0);
 
         if (obj.getDelimiter() != null) {
             append(SPACE);
             append(NonReserved.DELIMITER);
             append(SPACE);
-            visitNode(newConstant(obj.getDelimiter()), data);
+            visitNode(newConstant(obj.getDelimiter()));
         }
         if (obj.getQuote() != null) {
             append(SPACE);
             append(NonReserved.QUOTE);
             append(SPACE);
-            visitNode(newConstant(obj.getQuote()), data);
+            visitNode(newConstant(obj.getQuote()));
         }
         if (obj.isIncludeHeader()) {
             append(SPACE);
@@ -1922,7 +2019,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(XMLNamespaces obj, Object data) {
+    public void visit(XMLNamespaces obj) {
         append(XMLNAMESPACES);
         append("("); //$NON-NLS-1$
         for (Iterator<NamespaceItem> items = obj.getNamespaceItems().iterator(); items.hasNext();) {
@@ -1932,10 +2029,10 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
                     append("NO DEFAULT"); //$NON-NLS-1$
                 } else {
                     append("DEFAULT "); //$NON-NLS-1$
-                    visitNode(newConstant(item.getUri()), data);
+                    visitNode(newConstant(item.getUri()));
                 }
             } else {
-                visitNode(newConstant(item.getUri()), data);
+                visitNode(newConstant(item.getUri()));
                 append(" AS "); //$NON-NLS-1$
                 outputDisplayName(item.getPrefix());
             }
@@ -1947,7 +2044,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(Limit obj, Object data) {
+    public void visit(Limit obj) {
         if (!obj.isStrict()) {
             append(BEGIN_HINT);
             append(SPACE);
@@ -1959,7 +2056,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         if (obj.getRowLimit() == null) {
             append(OFFSET);
             append(SPACE);
-            visitNode(obj.getOffset(), data);
+            visitNode(obj.getOffset());
             append(SPACE);
             append(ROWS);
             return;
@@ -1967,18 +2064,18 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(LIMIT);
         if (obj.getOffset() != null) {
             append(SPACE);
-            visitNode(obj.getOffset(), data);
+            visitNode(obj.getOffset());
             append(","); //$NON-NLS-1$
         }
         append(SPACE);
-        visitNode(obj.getRowLimit(), data);
+        visitNode(obj.getRowLimit());
     }
 
     @Override
-    public void visit(TextTable obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(TextTable obj) {
+        addHintComment(obj);
         append("TEXTTABLE("); //$NON-NLS-1$
-        visitNode(obj.getFile(), data);
+        visitNode(obj.getFile());
         if (isTeiid8OrGreater() && obj.getSelector() != null) {
             append(SPACE);
             append(NonReserved.SELECTOR);
@@ -2030,7 +2127,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(SPACE);
             append(NonReserved.DELIMITER);
             append(SPACE);
-            visitNode(newConstant(obj.getDelimiter()), data);
+            visitNode(newConstant(obj.getDelimiter()));
         }
         if (obj.getQuote() != null) {
             append(SPACE);
@@ -2040,7 +2137,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
                 append(NonReserved.QUOTE);
             }
             append(SPACE);
-            visitNode(newConstant(obj.getQuote()), data);
+            visitNode(newConstant(obj.getQuote()));
         }
         if (obj.getHeader() != null) {
             append(SPACE);
@@ -2064,20 +2161,20 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(XMLTable obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(XMLTable obj) {
+        addHintComment(obj);
         append("XMLTABLE("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
-            visitNode(obj.getNamespaces(), data);
+            visitNode(obj.getNamespaces());
             append(","); //$NON-NLS-1$
             append(SPACE);
         }
-        visitNode(newConstant(obj.getXquery()), data);
+        visitNode(newConstant(obj.getXquery()));
         if (!obj.getPassing().isEmpty()) {
             append(SPACE);
             append(NonReserved.PASSING);
             append(SPACE);
-            registerNodes(obj.getPassing(), 0, data);
+            registerNodes(obj.getPassing(), 0);
         }
 
         if ((isTeiid8OrGreater() && !obj.getColumns().isEmpty() && !obj.isUsingDefaultColumn())
@@ -2099,13 +2196,13 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
                         append(SPACE);
                         append(DEFAULT);
                         append(SPACE);
-                        visitNode(col.getDefaultExpression(), data);
+                        visitNode(col.getDefaultExpression());
                     }
                     if (col.getPath() != null) {
                         append(SPACE);
                         append(NonReserved.PATH);
                         append(SPACE);
-                        visitNode(newConstant(col.getPath()), data);
+                        visitNode(newConstant(col.getPath()));
                     }
                 }
                 if (cols.hasNext()) {
@@ -2121,21 +2218,21 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(ObjectTable obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(ObjectTable obj) {
+        addHintComment(obj);
         append("OBJECTTABLE("); //$NON-NLS-1$
         if (obj.getScriptingLanguage() != null) {
             append(LANGUAGE);
             append(SPACE);
-            visitNode(newConstant(obj.getScriptingLanguage()), data);
+            visitNode(newConstant(obj.getScriptingLanguage()));
             append(SPACE);
         }
-        visitNode(newConstant(obj.getRowScript()), data);
+        visitNode(newConstant(obj.getRowScript()));
         if (!obj.getPassing().isEmpty()) {
             append(SPACE);
             append(NonReserved.PASSING);
             append(SPACE);
-            registerNodes(obj.getPassing(), 0, data);
+            registerNodes(obj.getPassing(), 0);
         }
         append(SPACE);
         append(NonReserved.COLUMNS);
@@ -2146,12 +2243,12 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(SPACE);
             append(col.getType());
             append(SPACE);
-            visitNode(newConstant(col.getPath()), data);
+            visitNode(newConstant(col.getPath()));
             if (col.getDefaultExpression() != null) {
                 append(SPACE);
                 append(DEFAULT);
                 append(SPACE);
-                visitNode(col.getDefaultExpression(), data);
+                visitNode(col.getDefaultExpression());
             }
             if (cols.hasNext()) {
                 append(","); //$NON-NLS-1$
@@ -2165,19 +2262,19 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(XMLQuery obj, Object data) {
+    public void visit(XMLQuery obj) {
         append("XMLQUERY("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
-            visitNode(obj.getNamespaces(), data);
+            visitNode(obj.getNamespaces());
             append(","); //$NON-NLS-1$
             append(SPACE);
         }
-        visitNode(newConstant(obj.getXquery()), data);
+        visitNode(newConstant(obj.getXquery()));
         if (!obj.getPassing().isEmpty()) {
             append(SPACE);
             append(NonReserved.PASSING);
             append(SPACE);
-            registerNodes(obj.getPassing(), 0, data);
+            registerNodes(obj.getPassing(), 0);
         }
         if (obj.getEmptyOnEmpty() != null) {
             append(SPACE);
@@ -2195,8 +2292,8 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(DerivedColumn obj, Object data) {
-        visitNode(obj.getExpression(), data);
+    public void visit(DerivedColumn obj) {
+        visitNode(obj.getExpression());
         if (obj.getAlias() != null) {
             append(SPACE);
             append(AS);
@@ -2206,7 +2303,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(XMLSerialize obj, Object data) {
+    public void visit(XMLSerialize obj) {
         append(XMLSERIALIZE);
         append(Tokens.LPAREN);
         if (obj.getDocument() != null) {
@@ -2217,7 +2314,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             }
             append(SPACE);
         }
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
         if (obj.getTypeString() != null) {
             append(SPACE);
             append(AS);
@@ -2252,20 +2349,20 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(QueryString obj, Object data) {
+    public void visit(QueryString obj) {
         append(NonReserved.QUERYSTRING);
         append("("); //$NON-NLS-1$
-        visitNode(obj.getPath(), data);
+        visitNode(obj.getPath());
         if (!obj.getArgs().isEmpty()) {
             append(","); //$NON-NLS-1$
             append(SPACE);
-            registerNodes(obj.getArgs(), 0, data);
+            registerNodes(obj.getArgs(), 0);
         }
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(XMLParse obj, Object data) {
+    public void visit(XMLParse obj) {
         append(XMLPARSE);
         append(Tokens.LPAREN);
         if (obj.isDocument()) {
@@ -2274,7 +2371,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(NonReserved.CONTENT);
         }
         append(SPACE);
-        visitNode(obj.getExpression(), data);
+        visitNode(obj.getExpression());
         if (obj.isWellFormed()) {
             append(SPACE);
             append(NonReserved.WELLFORMED);
@@ -2283,12 +2380,12 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(ExpressionCriteria obj, Object data) {
-        visitNode(obj.getExpression(), data);
+    public void visit(ExpressionCriteria obj) {
+        visitNode(obj.getExpression());
     }
 
     @Override
-    public void visit(TriggerAction obj, Object data) {
+    public void visit(TriggerAction obj) {
         append(FOR);
         append(SPACE);
         append(EACH);
@@ -2296,14 +2393,14 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(ROW);
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        visitNode(obj.getBlock(), data);
+        visitNode(obj.getBlock());
     }
 
     @Override
-    public void visit(ArrayTable obj, Object data) {
-        addHintComment(obj, data);
+    public void visit(ArrayTable obj) {
+        addHintComment(obj);
         append("ARRAYTABLE("); //$NON-NLS-1$
-        visitNode(obj.getArrayValue(), data);
+        visitNode(obj.getArrayValue());
         append(SPACE);
         append(NonReserved.COLUMNS);
 
@@ -2325,21 +2422,39 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         outputDisplayName(obj.getName());
     }
 
-    @Override
-    public void visit(AlterProcedure node) {
+    private void visit7(AlterProcedure<CreateUpdateProcedureCommand> obj) {
         append(ALTER);
         append(SPACE);
         append(PROCEDURE);
         append(SPACE);
-        append(node.getTarget());
+        append(obj.getTarget());
         beginClause(1);
         append(AS);
-        append(node.getDefinition().getBlock());
+        append(obj.getDefinition().getBlock());
+    }
+
+    private void visit8(AlterProcedure<CreateProcedureCommand> obj) {
+        append(ALTER);
+        append(SPACE);
+        append(PROCEDURE);
+        append(SPACE);
+        append(obj.getTarget());
+        beginClause(1);
+        append(AS);
+        append(obj.getDefinition().getBlock());
     }
 
     @Override
-    public void visit(AlterTrigger node) {
-        if (node.isCreate()) {
+    public void visit(AlterProcedure obj) {
+        if (isTeiid8OrGreater())
+            visit8(obj);
+        else
+            visit7(obj);
+    }
+
+    @Override
+    public void visit(AlterTrigger obj) {
+        if (obj.isCreate()) {
             append(CREATE);
         } else {
             append(ALTER);
@@ -2349,41 +2464,41 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
         append(SPACE);
         append(ON);
         append(SPACE);
-        append(node.getTarget());
+        append(obj.getTarget());
         beginClause(0);
         append(NonReserved.INSTEAD);
         append(SPACE);
         append(OF);
         append(SPACE);
-        append(node.getEvent());
-        if (node.getDefinition() != null) {
+        append(obj.getEvent());
+        if (obj.getDefinition() != null) {
             beginClause(0);
             append(AS);
             append("\n"); //$NON-NLS-1$
             addTabs(0);
-            append(node.getDefinition());
+            append(obj.getDefinition());
         } else {
             append(SPACE);
-            append(node.getEnabled() ? NonReserved.ENABLED : NonReserved.DISABLED);
+            append(obj.getEnabled() ? NonReserved.ENABLED : NonReserved.DISABLED);
         }
     }
 
     @Override
-    public void visit(AlterView node) {
+    public void visit(AlterView obj) {
         append(ALTER);
         append(SPACE);
         append(NonReserved.VIEW);
         append(SPACE);
-        append(node.getTarget());
+        append(obj.getTarget());
         beginClause(0);
         append(AS);
         append("\n"); //$NON-NLS-1$
         addTabs(0);
-        append(node.getDefinition());
+        append(obj.getDefinition());
     }
 
     @Override
-    public void visit(WindowFunction windowFunction, Object data) {
+    public void visit(WindowFunction windowFunction) {
         append(windowFunction.getFunction());
         append(SPACE);
         append(OVER);
@@ -2392,7 +2507,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
     }
 
     @Override
-    public void visit(WindowSpecification windowSpecification, Object data) {
+    public void visit(WindowSpecification windowSpecification) {
         append(Tokens.LPAREN);
         boolean needsSpace = false;
         if (windowSpecification.getPartition() != null) {
@@ -2400,7 +2515,7 @@ public class SQLStringVisitor extends AbstractTeiidParserVisitor implements SQLC
             append(SPACE);
             append(BY);
             append(SPACE);
-            registerNodes(windowSpecification.getPartition(), 0, data);
+            registerNodes(windowSpecification.getPartition(), 0);
             needsSpace = true;
         }
         if (windowSpecification.getOrderBy() != null) {

@@ -3,10 +3,14 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.ITextLine;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class TextLine extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class TextLine extends SimpleNode implements Expression, ITextLine<LanguageVisitor> {
 
     private Character delimiter;
 
@@ -18,50 +22,80 @@ public class TextLine extends SimpleNode implements Expression {
 
     private String encoding;
 
-    public TextLine(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public TextLine(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return delimiter
+     */
     public Character getDelimiter() {
         return delimiter;
     }
 
+    /**
+     * @param delimiter
+     */
     public void setDelimiter(Character delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * @return encoding
+     */
     public String getEncoding() {
         return encoding;
     }
 
+    /**
+     * @param encoding
+     */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
+    /**
+     * @return quote
+     */
     public Character getQuote() {
         return quote;
     }
 
+    /**
+     * @param quote
+     */
     public void setQuote(Character quote) {
         this.quote = quote;
     }
 
+    /**
+     * @return is include header flag
+     */
     public boolean isIncludeHeader() {
         return includeHeader;
     }
 
+    /**
+     * @param includeHeader
+     */
     public void setIncludeHeader(boolean includeHeader) {
         this.includeHeader = includeHeader;
     }
 
+    /**
+     * @return expressions
+     */
     public List<DerivedColumn> getExpressions() {
         return expressions;
     }
 
+    /**
+     * @param expressions
+     */
     public void setExpressions(List<DerivedColumn> expressions) {
         this.expressions = expressions;
     }
@@ -107,8 +141,8 @@ public class TextLine extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

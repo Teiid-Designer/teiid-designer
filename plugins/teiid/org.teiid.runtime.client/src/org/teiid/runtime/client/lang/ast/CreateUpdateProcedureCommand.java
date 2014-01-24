@@ -2,22 +2,62 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collections;
+import java.util.List;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Removed("8.0.0")
-public class CreateUpdateProcedureCommand extends CreateProcedureCommand {
+public class CreateUpdateProcedureCommand extends Command
+    implements ICreateProcedureCommand<Block, Expression, LanguageVisitor> {
+
+    // top level block for the procedure
+    private Block block;
 
     //whether it is update procedure or virtual stored procedure, default to update procedure
     private boolean isUpdateProcedure = true;
 
-    public CreateUpdateProcedureCommand(int id) {
-        super(id);
-    }
+    private List<? extends Expression> projectedSymbols;
 
+    //command that returns resultset. For virtual procedure only.
+    private Command resultsCommand;
+
+    /**
+     * @param p
+     * @param id
+     */
     public CreateUpdateProcedureCommand(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command to make it easier to build switch statements by command type.
+     * @return The type of this command
+     */
+    @Override
+    public int getType() {
+        return TYPE_UPDATE_PROCEDURE;   
+    }
+
+    /**
+     * @return the block
+     */
+    @Override
+    public Block getBlock() {
+        return block;
+    }
+
+    /**
+     * @param block the block to set
+     */
+    @Override
+    public void setBlock(Block block) {
+        this.block = block;
     }
 
     /**
@@ -32,6 +72,58 @@ public class CreateUpdateProcedureCommand extends CreateProcedureCommand {
      */
     public void setUpdateProcedure(boolean isUpdateProcedure) {
         this.isUpdateProcedure = isUpdateProcedure;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List getProjectedSymbols(){
+        if(this.projectedSymbols != null){
+            return this.projectedSymbols;
+        }
+        if(!isUpdateProcedure){
+            if(this.resultsCommand == null){
+                //user may have not entered any query yet
+                return Collections.EMPTY_LIST;
+            }
+            List<? extends Expression> symbols = this.resultsCommand.getProjectedSymbols();
+            if (this.resultsCommand instanceof StoredProcedure) {
+                StoredProcedure sp = (StoredProcedure)this.resultsCommand;
+                if (sp.isCallableStatement()) {
+                    symbols = sp.getResultSetColumns();
+                }
+            }
+            setProjectedSymbols((List<Expression>) symbols);
+            return this.projectedSymbols;
+        }
+        this.projectedSymbols = getUpdateCommandSymbol();
+        return this.projectedSymbols;        
+    }
+
+    /**
+     * @param projSymbols
+     */
+    @Override
+    public void setProjectedSymbols(List<Expression> projSymbols) {
+        projectedSymbols = projSymbols;
+    }
+
+    /**
+     * @return Command
+     */
+    public Command getResultsCommand() {
+        return resultsCommand;
+    }
+
+    /**
+     * @param command
+     */
+    public void setResultsCommand(Command command) {
+        resultsCommand = command;
     }
 
     @Override
@@ -54,8 +146,8 @@ public class CreateUpdateProcedureCommand extends CreateProcedureCommand {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

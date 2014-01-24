@@ -2,10 +2,15 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.ILoopStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class LoopStatement extends Statement implements Labeled {
+/**
+ *
+ */
+public class LoopStatement extends Statement
+    implements Labeled, ILoopStatement<LanguageVisitor, Command> {
 
     private String cursorName;
 
@@ -15,10 +20,10 @@ public class LoopStatement extends Statement implements Labeled {
 
     private String label;
 
-    public LoopStatement(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public LoopStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -34,21 +39,21 @@ public class LoopStatement extends Statement implements Labeled {
     }
 
     /**
-     * @return
+     * @return cursor name
      */
     public String getCursorName() {
         return cursorName;
     }
 
     /**
-     * @param string
+     * @param cursorName
      */
     public void setCursorName(String cursorName) {
         this.cursorName = cursorName;
     }
 
     /**
-     * @return
+     * @return block
      */
     public Block getBlock() {
         return loopBlock;
@@ -62,8 +67,9 @@ public class LoopStatement extends Statement implements Labeled {
     }
 
     /**
-     * @return
+     * @return command
      */
+    @Override
     public Command getCommand() {
         return query;
     }
@@ -71,6 +77,7 @@ public class LoopStatement extends Statement implements Labeled {
     /**
      * Sets the command. 
      */
+    @Override
     public void setCommand(Command command){
         this.query = command;
     }
@@ -116,8 +123,8 @@ public class LoopStatement extends Statement implements Labeled {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

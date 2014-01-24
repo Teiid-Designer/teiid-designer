@@ -2,24 +2,16 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @SuppressWarnings( "unused" )
-public class ElementSymbol extends Symbol implements SingleElementSymbol, Expression {
-
-    public enum DisplayMode {
-
-        // symbol name
-        FULLY_QUALIFIED,
-
-        // default
-        OUTPUT_NAME,
-
-        // short name
-        SHORT_OUTPUT_NAME
-    }
+public class ElementSymbol extends Symbol implements SingleElementSymbol, Expression, IElementSymbol<GroupSymbol, LanguageVisitor> {
 
     private Class type;
     
@@ -29,10 +21,12 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
 
     private DisplayMode displayMode = DisplayMode.OUTPUT_NAME;
 
-    public ElementSymbol(int id) {
-        super(id);
-    }
+    private boolean isExternalReference;
 
+    /**
+     * @param p
+     * @param id
+     */
     public ElementSymbol(TeiidParser p, int id) {
         super(p, id);
     }
@@ -50,6 +44,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Set the type of the symbol
      * @param type New type
      */
+    @Override
     public void setType(Class type) {
         this.type = type;
     }
@@ -58,6 +53,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Get the metadata ID reference
      * @return Metadata ID reference, may be null before resolution
      */
+    @Override
     public Object getMetadataID() {
         return this.metadataID;
     }
@@ -66,6 +62,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Set the metadata ID reference for this element
      * @param metadataID Metadata ID reference
      */
+    @Override
     public void setMetadataID(Object metadataID) {
         this.metadataID = metadataID;
     }
@@ -74,6 +71,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Get the group symbol referred to by this element symbol, may be null before resolution
      * @return Group symbol referred to by this element, may be null
      */
+    @Override
     public GroupSymbol getGroupSymbol() {
         return this.groupSymbol;
     }
@@ -82,6 +80,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
      * Set the group symbol referred to by this element symbol
      * @param symbol the group symbol to set
      */
+    @Override
     public void setGroupSymbol(GroupSymbol symbol) {
         this.groupSymbol = symbol;
     }
@@ -111,6 +110,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
         super.setShortName(name);
     }
 
+    @Override
     public void setDisplayMode(DisplayMode displayMode) {
         if (displayMode == null) {
             this.displayMode = DisplayMode.OUTPUT_NAME;
@@ -118,8 +118,47 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
         this.displayMode = displayMode;
     }
 
+    @Override
     public DisplayMode getDisplayMode() {
         return displayMode;
+    }
+
+    /**
+     * Set whether this element will be displayed as fully qualified
+     * @param displayFullyQualified True if should display fully qualified
+     */
+    @Override
+    public void setDisplayFullyQualified(boolean displayFullyQualified) { 
+        this.displayMode = displayFullyQualified?DisplayMode.FULLY_QUALIFIED:DisplayMode.SHORT_OUTPUT_NAME; 
+    }
+    
+    /**
+     * Get whether this element will be displayed as fully qualified
+     * @return True if should display fully qualified
+     */
+    public boolean getDisplayFullyQualified() { 
+        return this.displayMode.equals(DisplayMode.FULLY_QUALIFIED);    
+    }
+
+    /**
+     * Set whether this element is an external reference.  An external 
+     * reference is an element that comes from a group outside the current
+     * command context.  Typical uses would be variables and correlated 
+     * references in subqueries.
+     * @param isExternalReference True if element is an external reference
+     */
+    public void setIsExternalReference(boolean isExternalReference) { 
+        this.isExternalReference = isExternalReference; 
+    }
+
+    /**
+     * Get whether this element is an external reference to a group
+     * outside the command context.
+     * @return True if element is an external reference
+     */
+    @Override
+    public boolean isExternalReference() { 
+        return this.isExternalReference;  
     }
 
     @Override
@@ -148,8 +187,8 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

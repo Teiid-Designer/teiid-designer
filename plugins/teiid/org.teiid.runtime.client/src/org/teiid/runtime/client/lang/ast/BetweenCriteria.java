@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IBetweenCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class BetweenCriteria extends Criteria implements PredicateCriteria {
+/**
+ *
+ */
+public class BetweenCriteria extends Criteria implements PredicateCriteria, IBetweenCriteria<LanguageVisitor> {
 
     private Expression expression;
 
@@ -16,10 +20,10 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /** Negation flag. Indicates whether the criteria expression contains a NOT. */
     private boolean negated = false;
 
-    public BetweenCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public BetweenCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -27,6 +31,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /**
      * @return the expression
      */
+    @Override
     public Expression getExpression() {
         return this.expression;
     }
@@ -41,6 +46,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /**
      * @return the lowerExpression
      */
+    @Override
     public Expression getLowerExpression() {
         return this.lowerExpression;
     }
@@ -55,6 +61,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /**
      * @return the upperExpression
      */
+    @Override
     public Expression getUpperExpression() {
         return this.upperExpression;
     }
@@ -69,6 +76,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /**
      * @return the negated
      */
+    @Override
     public boolean isNegated() {
         return this.negated;
     }
@@ -76,6 +84,7 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
     /**
      * @param negated the negated to set
      */
+    @Override
     public void setNegated(boolean negated) {
         this.negated = negated;
     }
@@ -112,8 +121,8 @@ public class BetweenCriteria extends Criteria implements PredicateCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

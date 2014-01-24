@@ -4,20 +4,25 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class MultipleElementSymbol extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class MultipleElementSymbol extends SimpleNode
+    implements Expression, IMultipleElementSymbol<ElementSymbol, LanguageVisitor> {
 
     private List<ElementSymbol> elementSymbols;
 
     private GroupSymbol group;
 
-    public MultipleElementSymbol(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public MultipleElementSymbol(TeiidParser p, int id) {
         super(p, id);
     }
@@ -44,6 +49,9 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
         return group;
     }
     
+    /**
+     * @param group
+     */
     public void setGroup(GroupSymbol group) {
         this.group = group;
     }
@@ -52,6 +60,7 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
      * Get the element symbols referred to by this multiple element symbol
      * @return List of {@link ElementSymbol}s, may be null
      */
+    @Override
     public List<ElementSymbol> getElementSymbols(){
         return this.elementSymbols;
     }
@@ -106,8 +115,8 @@ public class MultipleElementSymbol extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

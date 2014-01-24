@@ -5,11 +5,15 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.ITranslateCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Removed("8.0.0")
-public class TranslateCriteria extends Criteria implements PredicateCriteria {
+public class TranslateCriteria extends Criteria implements PredicateCriteria, ITranslateCriteria<LanguageVisitor> {
 
     // the selector object used to determine if a type of criteria is specified 
     // on the user's query  
@@ -18,10 +22,10 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria {
     // List of comparecriteria(element-value pairs) used to translate the user's criteria
     private List<CompareCriteria> translations;
 
-    public TranslateCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public TranslateCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -108,8 +112,8 @@ public class TranslateCriteria extends Criteria implements PredicateCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

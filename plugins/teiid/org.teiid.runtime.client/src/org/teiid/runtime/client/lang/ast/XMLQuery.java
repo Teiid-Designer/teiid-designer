@@ -4,11 +4,15 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IXMLQuery;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class XMLQuery extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class XMLQuery extends SimpleNode implements Expression, IXMLQuery<LanguageVisitor> {
 
     private XMLNamespaces namespaces;
 
@@ -18,22 +22,31 @@ public class XMLQuery extends SimpleNode implements Expression {
 
     private Boolean emptyOnEmpty;
 
-    public XMLQuery(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLQuery(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return empty on empty
+     */
     public Boolean getEmptyOnEmpty() {
         return emptyOnEmpty;
     }
     
+    /**
+     * @param emptyOnEmpty
+     */
     public void setEmptyOnEmpty(Boolean emptyOnEmpty) {
         this.emptyOnEmpty = emptyOnEmpty;
     }
     
+    /**
+     * @return passing
+     */
     public List<DerivedColumn> getPassing() {
         return passing;
     }
@@ -45,18 +58,30 @@ public class XMLQuery extends SimpleNode implements Expression {
         this.passing = passing;
     }
 
+    /**
+     * @return xquery
+     */
     public String getXquery() {
         return xquery;
     }
     
+    /**
+     * @param xquery
+     */
     public void setXquery(String xquery) {
         this.xquery = xquery;
     }
     
+    /**
+     * @return namespaces
+     */
     public XMLNamespaces getNamespaces() {
         return namespaces;
     }
     
+    /**
+     * @param namespaces
+     */
     public void setNamespaces(XMLNamespaces namespaces) {
         this.namespaces = namespaces;
     }
@@ -100,8 +125,8 @@ public class XMLQuery extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

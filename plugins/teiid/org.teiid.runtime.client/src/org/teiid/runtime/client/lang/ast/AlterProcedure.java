@@ -2,40 +2,26 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IAlterProcedure;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class AlterProcedure extends Alter<CreateProcedureCommand> {
 
-    public AlterProcedure(int id) {
-        super(id);
-    }
+/**
+ *
+ * @param <T>
+ */
+public abstract class AlterProcedure<T extends Command> extends Alter<T> implements IAlterProcedure<Expression, LanguageVisitor> {
 
+    /**
+     * @param p
+     * @param id
+     */
     public AlterProcedure(TeiidParser p, int id) {
         super(p, id);
     }
 
-    /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    @Override
-    public AlterProcedure clone() {
-        AlterProcedure clone = new AlterProcedure(this.parser, this.id);
-
-        if(getDefinition() != null)
-            clone.setDefinition(getDefinition().clone());
-        if(getTarget() != null)
-            clone.setTarget(getTarget().clone());
-        if(getSourceHint() != null)
-            clone.setSourceHint(getSourceHint());
-        if(getOption() != null)
-            clone.setOption(getOption().clone());
-
-        return clone;
-    }
-
+    public abstract AlterProcedure clone();
 }
 /* JavaCC - OriginalChecksum=4c2a7e700d4af2b1569d4947a1d82223 (do not edit this line) */

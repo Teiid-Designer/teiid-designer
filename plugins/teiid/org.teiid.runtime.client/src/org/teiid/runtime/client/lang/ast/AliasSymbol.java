@@ -2,18 +2,23 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
+/**
+ *
+ */
 @SuppressWarnings( "unused" )
-public class AliasSymbol extends Symbol implements SingleElementSymbol, Expression {
+public class AliasSymbol extends Symbol
+    implements SingleElementSymbol, Expression, IAliasSymbol<Expression, LanguageVisitor> {
 
     private Expression symbol;
 
-    public AliasSymbol(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public AliasSymbol(TeiidParser p, int id) {
         super(p, id);
     }
@@ -30,6 +35,7 @@ public class AliasSymbol extends Symbol implements SingleElementSymbol, Expressi
     /**
      * @return the symbol
      */
+    @Override
     public Expression getSymbol() {
         return symbol;
     }
@@ -37,6 +43,7 @@ public class AliasSymbol extends Symbol implements SingleElementSymbol, Expressi
     /**
      * @param symbol the symbol to set
      */
+    @Override
     public void setSymbol(Expression symbol) {
         this.symbol = symbol;
     }
@@ -63,8 +70,8 @@ public class AliasSymbol extends Symbol implements SingleElementSymbol, Expressi
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -2,15 +2,26 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
+import org.teiid.designer.query.sql.lang.IStoredProcedure;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.SPParameter;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class StoredProcedure extends Command {
+/**
+ *
+ */
+public class StoredProcedure extends Command
+    implements IStoredProcedure<SPParameter, Expression, LanguageVisitor> {
 
     /** Used as parameters */
     private Map<Integer, SPParameter> mapOfParameters = new TreeMap<Integer, SPParameter>();
@@ -30,12 +41,28 @@ public class StoredProcedure extends Command {
 
     private String procedureName;
 
-    public StoredProcedure(int id) {
-        super(id);
-    }
+    private String callableName;
 
+    //stored procedure is treated as a group
+    private GroupSymbol groupSymbol;
+
+    private Object procedureID;
+
+    /**
+     * @param p
+     * @param id
+     */
     public StoredProcedure(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command.
+     * @return TYPE_STORED_PROCEDURE
+     */
+    @Override
+    public int getType() {
+        return TYPE_STORED_PROCEDURE;
     }
 
     /**
@@ -52,14 +79,43 @@ public class StoredProcedure extends Command {
     *
     * @param procedureName the stored procedure's name
     */
+    @Override
     public void setProcedureName(String procedureName){
         this.procedureName = procedureName;
     }
 
+    @Override
+    public void setProcedureID(Object procedureID){
+        this.procedureID = procedureID;
+    }
+
+    @Override
+    public Object getProcedureID(){
+        return this.procedureID;
+    }
+
+    @Override
+    public String getProcedureCallableName(){
+        return this.callableName != null?this.callableName:this.procedureName;
+    }
+
+    /**
+     * @param callableName
+     */
+    public void setProcedureCallableName(String callableName){
+        this.callableName = callableName;
+    }
+
+    /**
+     * @return is callable statement
+     */
     public boolean isCallableStatement() {
         return isCallableStatement;
     }
 
+    /**
+     * @param isCallableStatement
+     */
     public void setCallableStatement(boolean isCallableStatement) {
         this.isCallableStatement = isCallableStatement;
     }
@@ -78,10 +134,18 @@ public class StoredProcedure extends Command {
          return mapOfParameters.values();
      }
 
+    /**
+     * @param index
+     *
+     * @return parameter at index
+     */
     public SPParameter getParameter(int index){
         return mapOfParameters.get(index);
     }
 
+    /**
+     * @return number of parameters
+     */
     public int getParameterCount() {
         return mapOfParameters.size();
     }
@@ -89,11 +153,11 @@ public class StoredProcedure extends Command {
     /**
     * Set a stored procedure's parameter
     *
-    * @param index the index of the parameter to set
     * @param parameter <code>StoredProcedureParameter</code> the parameter
-    * @throws IllegalArgumentExcecption if the parameters (index and parameter)
+    * @throws IllegalArgumentException if the parameters (index and parameter)
     *   are invalid.
     */
+    @Override
     public void setParameter(SPParameter parameter){
         if(parameter == null){
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0011));
@@ -107,10 +171,16 @@ public class StoredProcedure extends Command {
         mapOfParameters.put(key, parameter);
     }
 
+    /**
+     * @param calledWithReturn
+     */
     public void setCalledWithReturn(boolean calledWithReturn) {
         this.calledWithReturn = calledWithReturn;
     }
 
+    /**
+     * @return called with return flag
+     */
     public boolean isCalledWithReturn() {
         return calledWithReturn;
     }
@@ -125,6 +195,7 @@ public class StoredProcedure extends Command {
     /**
      * @param displayNamedParameters the displayNamedParameters to set
      */
+    @Override
     public void setDisplayNamedParameters(boolean displayNamedParameters) {
         this.displayNamedParameters = displayNamedParameters;
     }
@@ -141,6 +212,91 @@ public class StoredProcedure extends Command {
      */
     public void setProcedureRelational(boolean isProcedureRelational) {
         this.isProcedureRelational = isProcedureRelational;
+    }
+
+    @Override
+    public boolean returnsResultSet(){
+        SPParameter param = getResultSetParameter();
+        return param != null && !param.getResultSetColumns().isEmpty();
+    }
+
+    /**
+     * @return whether this return any parameters
+     */
+    public boolean returnParameters() {
+        return isCallableStatement || !returnsResultSet();
+    }
+
+    /**
+     * @return group symbol
+     */
+    public GroupSymbol getGroupSymbol() {
+        if(groupSymbol == null) {
+            groupSymbol = parser.createASTNode(ASTNodes.GROUP_SYMBOL);
+            groupSymbol.setName(getProcedureCallableName());
+        }
+        return groupSymbol;
+    }
+
+    @Override
+    public String getGroupName() {
+        return getGroupSymbol().getName();
+    }
+
+    @Override
+    public List<ElementSymbol> getResultSetColumns(){
+        SPParameter resultSetParameter = getResultSetParameter();
+        if(resultSetParameter != null){
+            List<ElementSymbol> result = new ArrayList<ElementSymbol>(resultSetParameter.getResultSetColumns().size());
+            for (Iterator<ElementSymbol> i = resultSetParameter.getResultSetColumns().iterator(); i.hasNext();) {
+                ElementSymbol symbol = i.next().clone();
+                symbol.setGroupSymbol(getGroupSymbol());
+                result.add(symbol);
+            }
+            return result;
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a
+     * single column.
+     * @return Ordered list of ElementSymbol
+     */
+    @Override
+    public List getProjectedSymbols(){
+        if (!returnParameters()) {
+            return getResultSetColumns();
+        }
+        //add result set columns
+        List<ElementSymbol> result = new ArrayList<ElementSymbol>(getResultSetColumns());
+        //add out/inout parameter symbols
+        for (SPParameter parameter : mapOfParameters.values()) {
+            if(parameter.getParameterType() == ParameterInfo.RETURN_VALUE.index()){
+                ElementSymbol symbol = parameter.getParameterSymbol();
+                symbol.setGroupSymbol(this.getGroupSymbol());
+                result.add(0, symbol);
+            } else if(parameter.getParameterType() == ParameterInfo.INOUT.index() || parameter.getParameterType() == ParameterInfo.OUT.index()){
+                ElementSymbol symbol = parameter.getParameterSymbol();
+                symbol.setGroupSymbol(this.getGroupSymbol());
+                result.add(symbol);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<SPParameter> getInputParameters() {
+        List<SPParameter> parameters = new ArrayList<SPParameter>(getParameters());
+        Iterator<SPParameter> params = parameters.iterator();
+        while (params.hasNext()) {
+            SPParameter param = params.next();
+            if(param.getParameterType() != ParameterInfo.IN.index() && param.getParameterType() != ParameterInfo.INOUT.index()) {
+                params.remove();
+            }
+        }
+        return parameters;
     }
 
     @Override
@@ -181,8 +337,8 @@ public class StoredProcedure extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

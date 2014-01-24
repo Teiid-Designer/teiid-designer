@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IReference;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Reference extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class Reference extends SimpleNode implements Expression, IReference<LanguageVisitor> {
 
     private int refIndex;
 
@@ -15,10 +19,10 @@ public class Reference extends SimpleNode implements Expression {
 
     private boolean positional;
 
-    public Reference(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Reference(TeiidParser p, int id) {
         super(p, id);
     }
@@ -31,10 +35,14 @@ public class Reference extends SimpleNode implements Expression {
         return expression.getType();
     }
 
+    /**
+     * @param type
+     */
     public void setType(Class<?> type) {
         this.type = type;
     }
 
+    @Override
     public boolean isPositional() {
         return this.positional;
     }
@@ -46,6 +54,7 @@ public class Reference extends SimpleNode implements Expression {
         this.positional = positional;
     }
 
+    @Override
     public ElementSymbol getExpression() {
         return this.expression;    
     }
@@ -57,10 +66,16 @@ public class Reference extends SimpleNode implements Expression {
         this.expression = expression;
     }
 
+    /**
+     * @return reference index
+     */
     public int getIndex() {
         return this.refIndex;
     }
 
+    /**
+     * @param refIndex
+     */
     public void setIndex(int refIndex) {
         this.refIndex = refIndex;
     }
@@ -95,8 +110,8 @@ public class Reference extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

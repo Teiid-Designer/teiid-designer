@@ -2,22 +2,18 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.teiid.designer.query.sql.lang.ISetQuery;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class SetQuery extends QueryCommand {
-
-    /**
-     * Enumerator of types of operation
-     */
-    public enum Operation {
-        /** Represents UNION of two queries */
-        UNION,
-        /** Represents intersection of two queries */
-        INTERSECT,
-        /** Represents set difference of two queries */
-        EXCEPT
-    }
+/**
+ *
+ */
+public class SetQuery extends QueryCommand
+    implements ISetQuery<QueryCommand, OrderBy, Query, Expression, LanguageVisitor>{
 
     private boolean all = true;
 
@@ -27,12 +23,25 @@ public class SetQuery extends QueryCommand {
 
     private QueryCommand rightQuery;
 
-    public SetQuery(int id) {
-        super(id);
-    }
+//    private List<Class<?>> projectedTypes = null;  //set during resolving
 
+//    private QueryMetadataInterface metadata = null; // set during resolving
+
+    /**
+     * @param p
+     * @param id
+     */
     public SetQuery(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command.
+     * @return TYPE_QUERY
+     */
+    @Override
+    public int getType() {
+        return TYPE_QUERY;
     }
     
     /**
@@ -47,32 +56,93 @@ public class SetQuery extends QueryCommand {
      * Get operation for this set
      * @return Operation as defined in this class
      */
+    @Override
     public Operation getOperation() { 
         return this.operation;
     }
 
+    /**
+     * @return all
+     */
+    @Override
     public boolean isAll() {
         return this.all;
     }
 
+    /**
+     * @param all
+     */
+    @Override
     public void setAll(boolean all) {
         this.all = all;
     }
 
+    /**
+     * @return left query
+     */
+    @Override
     public QueryCommand getLeftQuery() {
         return this.leftQuery;
     }
 
+    /**
+     * @param leftQuery
+     */
+    @Override
     public void setLeftQuery(QueryCommand leftQuery) {
         this.leftQuery = leftQuery;
     }
     
+    /**
+     * @return right query
+     */
+    @Override
     public QueryCommand getRightQuery() {
         return this.rightQuery;
     }
     
+    /**
+     * @param rightQuery
+     */
+    @Override
     public void setRightQuery(QueryCommand rightQuery) {
         this.rightQuery = rightQuery;
+    }
+
+    /**
+     * @return the left and right queries as a list.  This list cannot be modified.
+     */
+    @Override
+    public List<QueryCommand> getQueryCommands() {
+        return Collections.unmodifiableList(Arrays.asList(leftQuery, rightQuery));
+    }
+
+    /**
+     * @return projected query
+     */
+    @Override
+    public Query getProjectedQuery() {
+        if (leftQuery instanceof SetQuery) {
+            return ((SetQuery)leftQuery).getProjectedQuery();
+        }
+        return (Query)leftQuery;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List<Expression> getProjectedSymbols() {
+        Query query = getProjectedQuery();
+        List projectedSymbols = query.getProjectedSymbols();
+        // TODO uncomment when consideration of metadata is complete
+//        if (projectedTypes != null) {
+//            return getTypedProjectedSymbols(projectedSymbols, projectedTypes, metadata);
+//        } 
+        return projectedSymbols;
     }
 
     @Override
@@ -105,8 +175,8 @@ public class SetQuery extends QueryCommand {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

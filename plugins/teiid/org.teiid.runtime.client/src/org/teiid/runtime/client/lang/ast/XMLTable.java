@@ -3,13 +3,18 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IXMLTable;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class XMLTable extends FromClause {
+/**
+ *
+ */
+public class XMLTable extends FromClause implements IXMLTable<LanguageVisitor> {
 
     private GroupSymbol symbol;
 
@@ -23,10 +28,10 @@ public class XMLTable extends FromClause {
 
     private XMLNamespaces namespaces;
 
-    public XMLTable(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public XMLTable(TeiidParser p, int id) {
         super(p, id);
     }
@@ -59,22 +64,37 @@ public class XMLTable extends FromClause {
         this.symbol.setName(name);
     }
 
+    /**
+     * @return passing
+     */
     public List<DerivedColumn> getPassing() {
         return passing;
     }
 
+    /**
+     * @param passing
+     */
     public void setPassing(List<DerivedColumn> passing) {
         this.passing = passing;
     }
 
+    /**
+     * @return xquery
+     */
     public String getXquery() {
         return xquery;
     }
     
+    /**
+     * @param xquery
+     */
     public void setXquery(String xquery) {
         this.xquery = xquery;
     }
 
+    /**
+     * @return using default column
+     */
     public boolean isUsingDefaultColumn() {
         return usingDefaultColumn;
     }
@@ -86,10 +106,16 @@ public class XMLTable extends FromClause {
         this.usingDefaultColumn = usingDefaultColumn;
     }
 
+    /**
+     * @return columns
+     */
     public List<XMLColumn> getColumns() {
         return columns;
     }
     
+    /**
+     * @param columns
+     */
     public void setColumns(List<XMLColumn> columns) {
         if (columns.isEmpty()) {
             usingDefaultColumn = true;
@@ -102,12 +128,23 @@ public class XMLTable extends FromClause {
         this.columns = columns;
     }
 
+    /**
+     * @return namespaces
+     */
     public XMLNamespaces getNamespaces() {
         return namespaces;
     }
     
+    /**
+     * @param namespaces
+     */
     public void setNamespaces(XMLNamespaces namespaces) {
         this.namespaces = namespaces;
+    }
+
+    @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(getGroupSymbol());
     }
 
     @Override
@@ -150,8 +187,8 @@ public class XMLTable extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

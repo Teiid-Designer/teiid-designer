@@ -4,16 +4,29 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IOption;
 import org.teiid.runtime.client.lang.SQLConstants.Reserved;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class Option extends SimpleNode {
+/**
+ *
+ */
+public class Option extends SimpleNode implements IOption<LanguageVisitor> {
 
+    /**
+     * Make Dep token
+     */
     public final static String MAKEDEP = Reserved.MAKEDEP; 
 
+    /**
+     * Make Not Dep token
+     */
     public final static String MAKENOTDEP = Reserved.MAKENOTDEP;
 
+    /**
+     * Optional token
+     */
     public final static String OPTIONAL = "optional"; //$NON-NLS-1$
 
     private List<String> makeDependentGroups;
@@ -24,10 +37,10 @@ public class Option extends SimpleNode {
 
     private boolean noCache;
 
-    public Option(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Option(TeiidParser p, int id) {
         super(p, id);
     }
@@ -47,6 +60,7 @@ public class Option extends SimpleNode {
      * Get all groups to make dependent
      * @return List of String defining groups to be made dependent, may be null if no groups
      */
+    @Override
     public List<String> getDependentGroups() {
         return this.makeDependentGroups;
     }
@@ -66,6 +80,7 @@ public class Option extends SimpleNode {
      * Get all groups to make dependent
      * @return List of String defining groups to be made dependent, may be null if no groups
      */
+    @Override
     public List<String> getNotDependentGroups() {
         return this.makeNotDependentGroups;
     }
@@ -90,14 +105,19 @@ public class Option extends SimpleNode {
      * @return List of String defining groups that overrides the default behavior of 
      * Materialized View, may be null if there are no groups
      */
+    @Override
     public List<String> getNoCacheGroups() {
         return this.noCacheGroups;
     }
     
+    @Override
     public boolean isNoCache() {
         return noCache;
     }
 
+    /**
+     * @param noCache
+     */
     public void setNoCache(boolean noCache) {
         this.noCache = noCache;
     }
@@ -134,8 +154,8 @@ public class Option extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

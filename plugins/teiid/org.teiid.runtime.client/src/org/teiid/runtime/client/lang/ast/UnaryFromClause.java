@@ -2,19 +2,24 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.Collection;
+import org.teiid.designer.query.sql.lang.IUnaryFromClause;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class UnaryFromClause extends FromClause {
+/**
+ *
+ */
+public class UnaryFromClause extends FromClause implements IUnaryFromClause<GroupSymbol, LanguageVisitor> {
 
     private GroupSymbol groupSymbol;
     
     private Command expandedCommand;
-    
-    public UnaryFromClause(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public UnaryFromClause(TeiidParser p, int id) {
         super(p, id);
     }
@@ -22,14 +27,16 @@ public class UnaryFromClause extends FromClause {
     /**
      * @return the groupSymbol
      */
-    public GroupSymbol getGroupSymbol() {
+    @Override
+    public GroupSymbol getGroup() {
         return groupSymbol;
     }
 
     /**
      * @param groupSymbol the groupSymbol to set
      */
-    public void setGroupSymbol(GroupSymbol groupSymbol) {
+    @Override
+    public void setGroup(GroupSymbol groupSymbol) {
         this.groupSymbol = groupSymbol;
     }
 
@@ -45,6 +52,11 @@ public class UnaryFromClause extends FromClause {
      */
     public void setExpandedCommand(Command expandedCommand) {
         this.expandedCommand = expandedCommand;
+    }
+
+    @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(getGroup());
     }
 
     @Override
@@ -73,16 +85,16 @@ public class UnaryFromClause extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
     public UnaryFromClause clone() {
         UnaryFromClause clone = new UnaryFromClause(this.parser, this.id);
 
-        if(getGroupSymbol() != null)
-            clone.setGroupSymbol(getGroupSymbol().clone());
+        if(getGroup() != null)
+            clone.setGroup(getGroup().clone());
         if(getExpandedCommand() != null)
             clone.setExpandedCommand(getExpandedCommand().clone());
         clone.setOptional(isOptional());

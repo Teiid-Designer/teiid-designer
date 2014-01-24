@@ -12,7 +12,13 @@ package org.teiid.runtime.client.lang.ast;
  */
 public interface Labeled {
 
+    /**
+     * @return label
+     */
     String getLabel();
 
+    /**
+     * @param label
+     */
     void setLabel(String label);
 }

@@ -3,12 +3,17 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.ITextTable;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class TextTable extends FromClause {
+/**
+ *
+ */
+public class TextTable extends FromClause implements ITextTable<LanguageVisitor> {
 
     private GroupSymbol symbol;
 
@@ -32,10 +37,10 @@ public class TextTable extends FromClause {
     
     private boolean fixedWidth;
 
-    public TextTable(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public TextTable(TeiidParser p, int id) {
         super(p, id);
     }
@@ -209,6 +214,11 @@ public class TextTable extends FromClause {
     }
 
     @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(getGroupSymbol());
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -264,8 +274,8 @@ public class TextTable extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

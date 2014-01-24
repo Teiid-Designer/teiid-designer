@@ -3,12 +3,17 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class ArrayTable extends FromClause {
+/**
+ *
+ */
+public class ArrayTable extends FromClause implements IArrayTable<LanguageVisitor> {
 
     private Expression arrayValue;
 
@@ -16,26 +21,38 @@ public class ArrayTable extends FromClause {
 
     private GroupSymbol symbol;
 
-    public ArrayTable(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public ArrayTable(TeiidParser p, int id) {
         super(p, id);
     }
 
+    /**
+     * @return columns
+     */
     public List<ProjectedColumn> getColumns() {
         return columns;
     }
     
+    /**
+     * @param columns
+     */
     public void setColumns(List<ProjectedColumn> columns) {
         this.columns = columns;
     }
     
+    /**
+     * @return array value
+     */
     public Expression getArrayValue() {
         return arrayValue;
     }
     
+    /**
+     * @param arrayValue
+     */
     public void setArrayValue(Expression arrayValue) {
         this.arrayValue = arrayValue;
     }
@@ -84,10 +101,15 @@ public class ArrayTable extends FromClause {
         return true;
     }
 
+    @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        groups.add(symbol);
+    }
+
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

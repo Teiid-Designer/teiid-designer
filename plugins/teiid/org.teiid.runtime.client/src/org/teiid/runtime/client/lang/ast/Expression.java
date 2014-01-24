@@ -22,18 +22,22 @@
 
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
+
 /**
  * Represents an expression in the language.  Subinterfaces define specific 
  * types of expressions, such as literal values, element references, and 
  * functions.   
  */
-public interface Expression extends LanguageObject {
+public interface Expression extends LanguageObject, IExpression<LanguageVisitor> {
 
     /**
      * Determine the type returned by this expression.
      * 
      * @return The type, as defined by a Java class
      */
+    @Override
     Class<?> getType();
 
     /**

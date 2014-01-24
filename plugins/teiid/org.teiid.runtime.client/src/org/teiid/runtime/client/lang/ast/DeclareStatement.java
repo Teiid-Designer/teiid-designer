@@ -2,18 +2,22 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.proc.IDeclareStatement;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class DeclareStatement extends AssignmentStatement {
+/**
+ *
+ */
+public class DeclareStatement extends AssignmentStatement implements IDeclareStatement<Expression, LanguageVisitor> {
 
     // type of the variable
     private String varType;
-    
-    public DeclareStatement(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public DeclareStatement(TeiidParser p, int id) {
         super(p, id);
     }
@@ -22,6 +26,7 @@ public class DeclareStatement extends AssignmentStatement {
      * Get the type of this variable declared in this statement.
      * @return A string giving the variable type
      */
+    @Override
     public String getVariableType() {
         return varType;
     }
@@ -56,10 +61,11 @@ public class DeclareStatement extends AssignmentStatement {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
+    @SuppressWarnings( "deprecation" )
     @Override
     public DeclareStatement clone() {
         DeclareStatement clone = new DeclareStatement(this.parser, this.id);

@@ -2,11 +2,16 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IOrderByItem;
 import org.teiid.runtime.client.lang.SortSpecification;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class OrderByItem extends SimpleNode implements SortSpecification {
+/**
+ *
+ */
+public class OrderByItem extends SimpleNode
+    implements SortSpecification, IOrderByItem<Expression, LanguageVisitor> {
 
     private boolean ascending = true;
 
@@ -14,34 +19,46 @@ public class OrderByItem extends SimpleNode implements SortSpecification {
 
     private NullOrdering nullOrdering;
 
-    public OrderByItem(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public OrderByItem(TeiidParser p, int id) {
         super(p, id);
     }
 
+    @Override
     public boolean isAscending() {
         return ascending;
     }
 
+    /**
+     * @param ascending
+     */
     public void setAscending(boolean ascending) {
         this.ascending = ascending;
     }
 
+    @Override
     public Expression getSymbol() {
         return symbol;
     }
 
+    @Override
     public void setSymbol(Expression symbol) {
         this.symbol = symbol;
     }
     
+    /**
+     * @return ordering value
+     */
     public NullOrdering getNullOrdering() {
         return nullOrdering;
     }
     
+    /**
+     * @param nullOrdering
+     */
     public void setNullOrdering(NullOrdering nullOrdering) {
         this.nullOrdering = nullOrdering;
     }
@@ -72,8 +89,8 @@ public class OrderByItem extends SimpleNode implements SortSpecification {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

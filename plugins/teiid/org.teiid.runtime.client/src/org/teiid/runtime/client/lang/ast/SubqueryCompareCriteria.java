@@ -2,13 +2,21 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.ISubqueryCompareCriteria;
 import org.teiid.runtime.client.lang.SQLConstants;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class SubqueryCompareCriteria extends AbstractCompareCriteria {
+/**
+ *
+ */
+public class SubqueryCompareCriteria extends AbstractCompareCriteria
+    implements ISubqueryCompareCriteria< LanguageVisitor, QueryCommand> {
 
+    /**
+     * Predicate quantifiers
+     */
     public enum PredicateQuantifier {
 
         /** "Some" predicate quantifier (equivalent to "Any") */
@@ -20,6 +28,9 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
         /** "All" predicate quantifier */
         ALL;
 
+        /**
+         * @return index of predicate
+         */
         public int getQuantifier() {
             return ordinal() + 2;
         }
@@ -29,17 +40,17 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
 
     private QueryCommand command;
 
-    public SubqueryCompareCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SubqueryCompareCriteria(TeiidParser p, int id) {
         super(p, id);
     }
 
     /**
      * Get the predicate quantifier - returns one of the following:
-     * <ul><li>{@link #NO_QUANTIFIER}</li>
+     * <ul>
      * <li>{@link #ANY}</li>
      * <li>{@link #SOME}</li>
      * <li>{@link #ALL}</li></ul>
@@ -69,6 +80,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
         this.predicateQuantifier = predicateQuantifier;
     }
 
+    @Override
     public QueryCommand getCommand() {
         return this.command;
     }
@@ -77,6 +89,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
      * Set the subquery command (either a SELECT or a procedure execution).
      * @param command Command to execute to get the values for the criteria
      */
+    @Override
     public void setCommand(QueryCommand command) {
         this.command = command;
     }
@@ -112,8 +125,8 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -124,8 +137,8 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria {
             clone.setCommand(getCommand().clone());
         if(getPredicateQuantifier() != null)
             clone.setPredicateQuantifier(getPredicateQuantifier());
-        if(getOperator() != null)
-            clone.setOperator(getOperator());
+        if(operator != null)
+            clone.setOperator(operator);
         if(getLeftExpression() != null)
             clone.setLeftExpression(getLeftExpression().clone());
 

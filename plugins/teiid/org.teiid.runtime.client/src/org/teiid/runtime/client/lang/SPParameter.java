@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.ElementSymbol;
@@ -39,37 +40,7 @@ import org.teiid.runtime.client.lang.parser.TeiidParser;
 * The connector will utilize this class to set the appropriate values at the
 * datasource layer.
 */
-public class SPParameter {
-
-    /**
-     * Enumerator for types of parameters 
-     */
-    public enum ParameterInfo {
-        /** Constant identifying an IN parameter */
-        IN,
-
-        /** Constant identifying an OUT parameter */
-        OUT,
-
-        /** Constant identifying an INOUT parameter */
-        INOUT,
-
-        /** Constant identifying a RETURN parameter */
-        RETURN_VALUE,
-
-        /** Constant identifying a RESULT SET parameter */
-        RESULT_SET;
-
-        /**
-         * Get the index of the enumerator. For compatibility
-         * with existing code, the index starts at 1 rather than 0.
-         * 
-         * @return value of index
-         */
-        public int index() {
-            return ordinal() + 1;
-        }
-    }
+public class SPParameter implements ISPParameter {
 
     /** Constant identifying an IN parameter */
     public static final int IN = ParameterInfo.IN.index();
@@ -140,6 +111,7 @@ public class SPParameter {
      * Get full parameter name,.  If unknown, null is returned.
      * @return Parameter name
      */
+    @Override
     public String getName() {
         return this.parameterSymbol.getName();
     }
@@ -148,6 +120,7 @@ public class SPParameter {
      * Set full parameter name
      * @param name Parameter name
      */
+    @Override
     public void setName(String name) {
         if (parameterSymbol == null) {
             this.parameterSymbol = createElementSymbol(name);
@@ -162,6 +135,7 @@ public class SPParameter {
     /**
      * @param parameterInfo
      */
+    @Override
     public void setParameterType(ParameterInfo parameterInfo) {
         this.parameterType = parameterInfo.index();
     }
@@ -182,15 +156,17 @@ public class SPParameter {
      * Get type of parameter according to class constants.
      * @return Parameter type
      */
+    @Override
     public int getParameterType(){
         return this.parameterType;
     }
 
     /**
      * Set class type - MetaMatrix runtime types.
-     * @param classType See {@link org.teiid.core.types.DataTypeManager.DefaultDataClasses}
+     * @param classType
      * for types
      */
+    @Override
     public void setClassType(Class<?> classType){
         this.parameterSymbol.setType(classType);
     }
@@ -199,6 +175,7 @@ public class SPParameter {
      * Get class type - MetaMatrix runtime types.
      * @return MetaMatrix runtime type description
      */
+    @Override
     public Class<?> getClassType(){
         return this.parameterSymbol.getType();
     }
@@ -242,6 +219,7 @@ public class SPParameter {
      * @param type Type of column
      * @param id Object Id
      */
+    @Override
     public void addResultSetColumn(String colName, Class<?> type, Object id) {
         if(resultSetColumns == null){
             resultSetColumns = new ArrayList<ElementSymbol>();
@@ -302,6 +280,7 @@ public class SPParameter {
      * Get actual metadataID for this parameter
      * @return Actual metadata ID for this parameter
      */
+    @Override
     public Object getMetadataID() {
         return this.parameterSymbol.getMetadataID();
     }
@@ -310,6 +289,7 @@ public class SPParameter {
      * Set actual metadataID for this parameter
      * @param metadataID Actual metadataID
      */
+    @Override
     public void setMetadataID(Object metadataID) {
         this.parameterSymbol.setMetadataID(metadataID);
     }
@@ -319,6 +299,7 @@ public class SPParameter {
      * same name and type as the parameter.
      * @return Element symbol representing the parameter
      */
+    @Override
     public ElementSymbol getParameterSymbol() {
 		return parameterSymbol;
     }

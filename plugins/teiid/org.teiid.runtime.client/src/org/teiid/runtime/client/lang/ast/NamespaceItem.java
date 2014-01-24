@@ -8,26 +8,45 @@
 package org.teiid.runtime.client.lang.ast;
 
 
+/**
+ *
+ */
 public class NamespaceItem {
     private String uri;
     private String prefix;
 
+    /**
+     * @param uri
+     * @param prefix
+     */
     public NamespaceItem(String uri, String prefix) {
         this.uri = uri;
         this.prefix = prefix;
     }
 
+    /**
+     * @param defaultNamepace
+     */
     public NamespaceItem(String defaultNamepace) {
         this.uri = defaultNamepace;
     }
 
+    /**
+     * 
+     */
     public NamespaceItem() {
     }
 
+    /**
+     * @return uri
+     */
     public String getUri() {
         return uri;
     }
 
+    /**
+     * @return prefix
+     */
     public String getPrefix() {
         return prefix;
     }

@@ -4,11 +4,15 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class CompoundCriteria extends Criteria {
+/**
+ *
+ */
+public class CompoundCriteria extends Criteria implements ICompoundCriteria<Criteria, LanguageVisitor> {
 
     /** Constant indicating the logical "or" of two or more criteria. */
     public static int OR = 1;
@@ -22,10 +26,10 @@ public class CompoundCriteria extends Criteria {
     /** The logical operator. */
     private int operator = 0;
 
-    public CompoundCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public CompoundCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -35,6 +39,7 @@ public class CompoundCriteria extends Criteria {
      * can be compared to constants defined in this class.
      * @return The operator
      */
+    @Override
     public int getOperator() {
         return this.operator;
     }
@@ -64,11 +69,31 @@ public class CompoundCriteria extends Criteria {
      * Returns the list of criteria.
      * @return List of {@link Criteria}
      */
+    @Override
     public List<Criteria> getCriteria() {
         if (criteria == null)
             criteria = new ArrayList<Criteria>();
 
         return this.criteria;
+    }
+
+    @Override
+    public Criteria getCriteria(int index) {
+        return this.criteria.get(index);
+    }
+
+    /**
+     * Returns the number of criteria in this clause.
+     * @return Criteria
+     */
+    @Override
+    public int getCriteriaCount() {
+        return this.criteria.size();
+    }
+
+    @Override
+    public void addCriteria(Criteria criteria) {
+        this.criteria.add(criteria);
     }
 
     /**
@@ -103,8 +128,8 @@ public class CompoundCriteria extends Criteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

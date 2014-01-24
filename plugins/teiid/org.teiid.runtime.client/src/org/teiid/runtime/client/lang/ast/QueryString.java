@@ -3,20 +3,24 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IQueryString;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService.DefaultDataTypes;
 
-public class QueryString extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class QueryString extends SimpleNode implements Expression, IQueryString<LanguageVisitor> {
 
     private List<DerivedColumn> args;
 
     private Expression path;
 
-    public QueryString(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public QueryString(TeiidParser p, int id) {
         super(p, id);
     }
@@ -80,8 +84,8 @@ public class QueryString extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

@@ -7,18 +7,15 @@
 */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.IExceptionExpression;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
-public class ExceptionExpression extends SimpleNode implements Expression {
-    
-    /**
-     * @param i
-     */
-    public ExceptionExpression(int i) {
-        super(i);
-    }
+/**
+ *
+ */
+public class ExceptionExpression extends SimpleNode implements Expression, IExceptionExpression<LanguageVisitor> {
 
     /**
      * @param teiidParser 
@@ -38,42 +35,70 @@ public class ExceptionExpression extends SimpleNode implements Expression {
         return DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
     }
 
+    /**
+     * @return error code
+     */
     public Expression getErrorCode() {
         return errorCode;
     }
     
+    /**
+     * @param errCode
+     */
     public void setErrorCode(Expression errCode) {
         this.errorCode = errCode;
     }
     
+    /**
+     * @return sql state
+     */
     public Expression getSqlState() {
         return sqlState;
     }
     
+    /**
+     * @param sqlState
+     */
     public void setSqlState(Expression sqlState) {
         this.sqlState = sqlState;
     }
     
+    /**
+     * @return message
+     */
     public Expression getMessage() {
         return message;
     }
     
+    /**
+     * @param message
+     */
     public void setMessage(Expression message) {
         this.message = message;
     }
     
+    /**
+     * @return parent expression
+     */
     public Expression getParent() {
         return parent;
     }
     
+    /**
+     * @param parent
+     */
     public void setParent(Expression parent) {
         this.parent = parent;
     }
 
+    /**
+     * @return default sql state
+     */
     public String getDefaultSQLState() {
-        return "50001";
+        return "50001"; //$NON-NLS-1$
     }
 
+    @SuppressWarnings( "nls" )
     @Override
     public String toString() {
         return "ExceptionExpression [message=" + this.message + ", sqlState=" + this.sqlState + ", errorCode=" + this.errorCode
@@ -114,8 +139,8 @@ public class ExceptionExpression extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

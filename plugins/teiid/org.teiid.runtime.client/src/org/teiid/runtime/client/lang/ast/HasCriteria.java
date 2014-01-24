@@ -3,20 +3,24 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.proc.IHasCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 @Removed("8.0.0")
-public class HasCriteria extends Criteria implements PredicateCriteria {
+public class HasCriteria extends Criteria implements PredicateCriteria, IHasCriteria<LanguageVisitor> {
 
     // the selector object used to determine if a type of criteria is specified 
     // on the user's query
     private CriteriaSelector criteriaSelector;
 
-    public HasCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public HasCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -59,8 +63,8 @@ public class HasCriteria extends Criteria implements PredicateCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

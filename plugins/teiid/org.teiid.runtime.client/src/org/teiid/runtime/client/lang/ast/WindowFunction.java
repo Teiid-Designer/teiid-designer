@@ -8,7 +8,7 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 
 /**
  *
@@ -53,6 +53,6 @@ public interface WindowFunction extends Node, SingleElementSymbol, Expression {
 
     /** Accept the visitor. **/
     @Override
-    void accept(AbstractTeiidParserVisitor visitor, Object data);
+    void acceptVisitor(LanguageVisitor visitor);
 
 }

@@ -2,19 +2,29 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.List;
+import org.teiid.designer.query.sql.proc.ITriggerAction;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class TriggerAction extends Command {
+/**
+ *
+ */
+public class TriggerAction extends Command implements ITriggerAction<Expression, LanguageVisitor> {
 
     private Block block;
 
-    public TriggerAction(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public TriggerAction(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    @Override
+    public int getType() {
+        return TYPE_TRIGGER_ACTION;
     }
 
     /**
@@ -29,6 +39,11 @@ public class TriggerAction extends Command {
      */
     public void setBlock(Block block) {
         this.block = block;
+    }
+
+    @Override
+    public List<Expression> getProjectedSymbols() {
+        return getUpdateCommandSymbol();
     }
 
     @Override
@@ -53,8 +68,8 @@ public class TriggerAction extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

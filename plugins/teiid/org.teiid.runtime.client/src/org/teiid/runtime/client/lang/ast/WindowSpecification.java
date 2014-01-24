@@ -3,19 +3,23 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IWindowSpecification;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class WindowSpecification extends SimpleNode {
+/**
+ *
+ */
+public class WindowSpecification extends SimpleNode implements IWindowSpecification<LanguageVisitor> {
 
     private List<Expression> partition;
 
     private OrderBy orderBy;
 
-    public WindowSpecification(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public WindowSpecification(TeiidParser p, int id) {
         super(p, id);
     }
@@ -74,8 +78,8 @@ public class WindowSpecification extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

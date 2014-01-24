@@ -5,12 +5,17 @@ package org.teiid.runtime.client.lang.ast;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IInsert;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Insert extends Command {
+/**
+ *
+ */
+public class Insert extends Command
+    implements IInsert<ElementSymbol, Expression, GroupSymbol, QueryCommand, LanguageVisitor> {
 
-    /** Identifies the group to be udpdated. */
+    /** Identifies the group to be updated. */
     private GroupSymbol group;
 
     private List<ElementSymbol> variables = new LinkedList<ElementSymbol>();
@@ -22,19 +27,29 @@ public class Insert extends Command {
     private Criteria constraint;
     
     private boolean merge;
-    
-    public Insert(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public Insert(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command.
+     * @return TYPE_INSERT
+     */
+    @Override
+    public int getType() {
+        return TYPE_INSERT;
     }
 
     /**
      * Returns the group being inserted into
      * @return Group being inserted into
      */
+    @Override
     public GroupSymbol getGroup() {
         return group;
     }
@@ -43,6 +58,7 @@ public class Insert extends Command {
      * Set the group for this insert statement
      * @param group Group to be inserted into
      */
+    @Override
     public void setGroup(GroupSymbol group) {
         this.group = group;
     }
@@ -51,6 +67,7 @@ public class Insert extends Command {
      * Return an ordered List of variables, may be null if no columns were specified
      * @return List of {@link ElementSymbol}
      */
+    @Override
     public List<ElementSymbol> getVariables() {
         return variables;
     }
@@ -59,6 +76,7 @@ public class Insert extends Command {
      * Add a variable to end of list
      * @param var Variable to add to the list
      */
+    @Override
     public void addVariable(ElementSymbol var) {
         variables.add(var);
     }
@@ -67,6 +85,7 @@ public class Insert extends Command {
      * Add a collection of variables to end of list
      * @param vars Variables to add to the list - collection of ElementSymbol
      */
+    @Override
     public void addVariables(Collection<ElementSymbol> vars) {
         variables.addAll(vars);
     }
@@ -75,6 +94,7 @@ public class Insert extends Command {
      * Set a collection of variables that replace the existing variables
      * @param vars Variables to be set on this object (ElementSymbols)
      */
+    @Override
     public void setVariables(Collection<ElementSymbol> vars) {
         this.variables.clear();        
         this.variables.addAll(vars);
@@ -85,6 +105,7 @@ public class Insert extends Command {
      * to be inserted.
      * @return List of {@link Expression}s
      */
+    @Override
     public List<Expression> getValues() {
         return this.values;
     }
@@ -93,6 +114,7 @@ public class Insert extends Command {
      * Sets the values to be inserted.
      * @param values List of {@link Expression}s
      */
+    @Override
     public void setValues(List<Expression> values) {
         this.values.clear();
         this.values.addAll(values);
@@ -107,28 +129,55 @@ public class Insert extends Command {
         values.add(value);
     }
 
+    @Override
     public QueryCommand getQueryExpression() {
         return this.queryExpression;        
     }
 
+    /**
+     * @param query
+     */
     public void setQueryExpression( QueryCommand query ) {
         this.queryExpression = query;        
     }
 
+    /**
+     * @return constraint
+     */
     public Criteria getConstraint() {
         return constraint;
     }
     
+    /**
+     * @param constraint
+     */
     public void setConstraint(Criteria constraint) {
         this.constraint = constraint;
     }
     
+    /**
+     * @return merge flag
+     */
     public boolean isMerge() {
         return merge;
     }
     
+    /**
+     * @param merge
+     */
     public void setMerge(boolean merge) {
         this.merge = merge;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List<Expression> getProjectedSymbols(){
+        return getUpdateCommandSymbol();
     }
 
     @Override
@@ -171,8 +220,8 @@ public class Insert extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

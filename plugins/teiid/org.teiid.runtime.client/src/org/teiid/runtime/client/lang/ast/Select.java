@@ -4,11 +4,15 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class Select extends SimpleNode {
+/**
+ *
+ */
+public class Select extends SimpleNode implements ISelect<Expression, LanguageVisitor> {
 
     /** The set of symbols for the data elements to be selected. */
     private List<Expression> symbols = new ArrayList<Expression>();
@@ -16,18 +20,19 @@ public class Select extends SimpleNode {
     /** Flag for whether duplicate removal should be performed on the results */
     private boolean distinct;
 
-    public Select(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Select(TeiidParser p, int id) {
         super(p, id);
     }
 
     /**
      * Returns an ordered list of the symbols in the select.
-     * @param Get list of SelectSymbol in SELECT
+     * @return list of SelectSymbol in SELECT
      */
+    @Override
     public List<Expression> getSymbols() {
         return symbols;
     }
@@ -35,6 +40,7 @@ public class Select extends SimpleNode {
     /**
      * @param symbol New symbol
      */
+    @Override
     public void addSymbol( Expression symbol ) {
         if (!(symbol instanceof Symbol) && !(symbol instanceof MultipleElementSymbol)) {
             ExpressionSymbol exSymbol = parser.createASTNode(ASTNodes.EXPRESSION_SYMBOL);
@@ -50,6 +56,7 @@ public class Select extends SimpleNode {
      * Sets an ordered list of the symbols in the select.
      * @param symbols list of SelectSymbol in SELECT
      */
+    @Override
     public void setSymbols(List<? extends Expression> symbols) {
         this.symbols = new ArrayList<Expression>(symbols);
     }    
@@ -76,6 +83,7 @@ public class Select extends SimpleNode {
      * Set whether select is distinct.
      * @param isDistinct True if SELECT is distinct
      */
+    @Override
     public void setDistinct(boolean isDistinct) {
         this.distinct = isDistinct;
     }
@@ -84,8 +92,39 @@ public class Select extends SimpleNode {
      * Checks whether the select is distinct
      * @return True if select is distinct
      */
+    @Override
     public boolean isDistinct() {
         return this.distinct;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this select.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    public List<Expression> getProjectedSymbols() { 
+        ArrayList<Expression> projectedSymbols = new ArrayList<Expression>();
+        for (Expression symbol : symbols) {
+            if(symbol instanceof MultipleElementSymbol) { 
+                List<ElementSymbol> multiSymbols = ((MultipleElementSymbol)symbol).getElementSymbols();
+                if(multiSymbols != null) { 
+                    projectedSymbols.addAll(multiSymbols);
+                }
+            } else {
+                projectedSymbols.add(symbol);
+            }
+        }       
+        return projectedSymbols;
+    }
+
+    /**
+     * Checks for a Select * clause
+     * @return True if Select * is used
+     */
+    @Override
+    public boolean isStar() {
+        return (symbols.size() == 1 && symbols.get(0) instanceof MultipleElementSymbol && ((MultipleElementSymbol)symbols.get(0)).getGroup() == null);
     }
 
     @Override
@@ -112,8 +151,8 @@ public class Select extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

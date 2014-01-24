@@ -2,10 +2,16 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.List;
+import org.teiid.designer.query.sql.lang.IDelete;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class Delete extends Command {
+/**
+ *
+ */
+public class Delete extends Command
+    implements IDelete<Criteria, GroupSymbol, Expression, LanguageVisitor>{
 
     /** Identifies the group to delete data from. */
     private GroupSymbol group;
@@ -13,18 +19,28 @@ public class Delete extends Command {
     /** The criteria specifying constraints on what data will be deleted. */
     private Criteria criteria;
 
-    public Delete(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Delete(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return type of command.
+     * @return {@link Command#TYPE_DELETE}
+     */
+    @Override
+    public int getType() {
+        return TYPE_DELETE;
     }
 
     /**
      * Returns the group being deleted from
      * @return Group symbol
      */
+    @Override
     public GroupSymbol getGroup() {
         return group;
     }
@@ -33,6 +49,7 @@ public class Delete extends Command {
      * Set the group for this Delete command
      * @param group Group to be associated with this command
      */
+    @Override
     public void setGroup(GroupSymbol group) {
         this.group = group;
     }
@@ -41,6 +58,7 @@ public class Delete extends Command {
      * Returns the criteria object for this command.
      * @return criteria
      */
+    @Override
     public Criteria getCriteria() {
         return this.criteria;
     }
@@ -49,8 +67,20 @@ public class Delete extends Command {
      * Set the criteria for this Delete command
      * @param criteria Criteria to be associated with this command
      */
+    @Override
     public void setCriteria(Criteria criteria) {
         this.criteria = criteria;
+    }
+
+    /**
+     * Get the ordered list of all elements returned by this query.  These elements
+     * may be ElementSymbols or ExpressionSymbols but in all cases each represents a 
+     * single column.
+     * @return Ordered list of SingleElementSymbol
+     */
+    @Override
+    public List<Expression> getProjectedSymbols(){
+        return getUpdateCommandSymbol();
     }
 
     @Override
@@ -79,8 +109,8 @@ public class Delete extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

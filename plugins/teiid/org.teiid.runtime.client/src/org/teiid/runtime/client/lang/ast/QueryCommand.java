@@ -3,10 +3,15 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IQueryCommand;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class QueryCommand extends Command {
+/**
+ *
+ */
+public abstract class QueryCommand extends Command
+    implements IQueryCommand<OrderBy, Query, Expression, LanguageVisitor> {
 
     /** The order in which to sort the results */
     private OrderBy orderBy;
@@ -16,10 +21,10 @@ public class QueryCommand extends Command {
     
     private List<WithQueryCommand> with;
 
-    public QueryCommand(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public QueryCommand(TeiidParser p, int id) {
         super(p, id);
     }
@@ -28,6 +33,7 @@ public class QueryCommand extends Command {
      * Get the order by clause for the query.
      * @return order by clause
      */
+    @Override
     public OrderBy getOrderBy() {
         return orderBy;
     }
@@ -36,24 +42,42 @@ public class QueryCommand extends Command {
      * Set the order by clause for the query.
      * @param orderBy New order by clause
      */
+    @Override
     public void setOrderBy(OrderBy orderBy) {
         this.orderBy = orderBy;
     }
 
+    /**
+     * @return limit
+     */
     public Limit getLimit() {
         return limit;
     }
 
+    /**
+     * @param limit
+     */
     public void setLimit(Limit limit) {
         this.limit = limit;
     }
     
+    /**
+     * @return with
+     */
     public List<WithQueryCommand> getWith() {
         return with;
     }
     
+    /**
+     * @param with
+     */
     public void setWith(List<WithQueryCommand> with) {
         this.with = with;
+    }
+
+    @Override
+    public boolean returnsResultSet() {
+        return true;
     }
 
     @Override
@@ -86,27 +110,12 @@ public class QueryCommand extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
-    public QueryCommand clone() {
-        QueryCommand clone = new QueryCommand(this.parser, this.id);
-
-        if(getOrderBy() != null)
-            clone.setOrderBy(getOrderBy().clone());
-        if(getLimit() != null)
-            clone.setLimit(getLimit().clone());
-        if(getWith() != null)
-            clone.setWith(cloneList(getWith()));
-        if(getSourceHint() != null)
-            clone.setSourceHint(getSourceHint());
-        if(getOption() != null)
-            clone.setOption(getOption().clone());
-
-        return clone;
-    }
+    public abstract QueryCommand clone();
 
 }
 /* JavaCC - OriginalChecksum=e5518987c086d24b10346b06ef207602 (do not edit this line) */

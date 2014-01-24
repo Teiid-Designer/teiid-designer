@@ -2,10 +2,14 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.IJoinType;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class JoinType extends SimpleNode {
+/**
+ *
+ */
+public class JoinType extends SimpleNode implements IJoinType<LanguageVisitor>{
 
     /**
      * Delineation of the category of join type
@@ -41,10 +45,16 @@ public class JoinType extends SimpleNode {
             this.outer = outer;
         }
 
+        /**
+         * @return index of kind
+         */
         public int getTypeCode() {
             return this.ordinal();
         }
         
+        /**
+         * @return outer
+         */
         public boolean isOuter() {
             return this.outer;
         }
@@ -52,10 +62,10 @@ public class JoinType extends SimpleNode {
 
     private Kind kind = Kind.JOIN_CROSS;
 
-    public JoinType(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public JoinType(TeiidParser p, int id) {
         super(p, id);
     }
@@ -72,6 +82,24 @@ public class JoinType extends SimpleNode {
      */
     public void setKind(Kind kind) {
         this.kind = kind;
+    }
+
+    /**
+     * Used only for comparison during equals, not by users of this class
+     * @return Type code for object
+     */
+    @Override
+    public int getTypeCode() { 
+        return kind.getTypeCode();
+    }
+
+    /**
+     * Check if this join type is an outer join.
+     * @return True if left/right/full outer, false if inner/cross
+     */
+    @Override
+    public boolean isOuter() { 
+        return kind.isOuter();
     }
 
     @Override
@@ -94,8 +122,8 @@ public class JoinType extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

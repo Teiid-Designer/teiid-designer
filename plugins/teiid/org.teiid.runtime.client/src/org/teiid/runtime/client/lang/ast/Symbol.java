@@ -8,15 +8,16 @@
 package org.teiid.runtime.client.lang.ast;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
 
 /**
  *
  */
-public class Symbol extends SimpleNode {
+public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
 
     /**
      * Character used to delimit name components in a symbol
@@ -39,6 +40,10 @@ public class Symbol extends SimpleNode {
     @Removed("8.0.0")
     private String canonicalShortName;
 
+    /**
+     * @param ex
+     * @return short name of given expression if a symbol
+     */
     public static String getShortName(Expression ex) {
         if (ex instanceof Symbol) {
             return ((Symbol)ex).getShortName();
@@ -46,19 +51,16 @@ public class Symbol extends SimpleNode {
         return "expr"; //$NON-NLS-1$
     }
 
+    /**
+     * @param name
+     * @return shortname of string using {@link Symbol#SEPARATOR} as delimiter
+     */
     public static String getShortName(String name) {
         int index = name.lastIndexOf(Symbol.SEPARATOR);
         if(index >= 0) {
             return name.substring(index+1);
         }
         return name;
-    }
-
-    /**
-     * @param id
-     */
-    public Symbol(int id) {
-        super(id);
     }
 
     /**
@@ -69,6 +71,9 @@ public class Symbol extends SimpleNode {
         super(p, i);
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         setShortName(name);
     }
@@ -78,6 +83,7 @@ public class Symbol extends SimpleNode {
      *
      * @return Short name of the symbol (un-dotted)
      */
+    @Override
     public final String getShortName() { 
         return shortName;
     }
@@ -89,6 +95,7 @@ public class Symbol extends SimpleNode {
      *
      * @param name New name
      */
+    @Override
     public void setShortName(String name) {
         if(name == null) {
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0017));
@@ -101,6 +108,7 @@ public class Symbol extends SimpleNode {
      * Get the name of the symbol
      * @return Name of the symbol, never null
      */
+    @Override
     public String getName() {
         return getShortName();
     }
@@ -124,10 +132,12 @@ public class Symbol extends SimpleNode {
         this.canonicalShortName = canonicalShortName;
     }
 
+    @Override
     public String getOutputName() {
         return this.outputName == null ? getName() : this.outputName;
     }
 
+    @Override
     public void setOutputName(String outputName) {
         this.outputName = outputName;
     }
@@ -158,8 +168,8 @@ public class Symbol extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

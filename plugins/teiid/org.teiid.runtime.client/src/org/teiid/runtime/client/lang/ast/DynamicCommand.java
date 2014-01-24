@@ -2,12 +2,17 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.IDynamicCommand;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class DynamicCommand extends Command {
+/**
+ *
+ */
+public class DynamicCommand extends Command implements IDynamicCommand<Expression, LanguageVisitor> {
 
     private Expression sql;
     
@@ -20,13 +25,18 @@ public class DynamicCommand extends Command {
     private SetClauseList using;
     
     private boolean asClauseSet;
-    
-    public DynamicCommand(int id) {
-        super(id);
-    }
 
+    /**
+     * @param p
+     * @param id
+     */
     public DynamicCommand(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    @Override
+    public int getType() {
+        return TYPE_DYNAMIC;
     }
 
     /** 
@@ -102,10 +112,16 @@ public class DynamicCommand extends Command {
         this.asClauseSet = asClauseSet;
     }
 
+    /**
+     * @return updating model count
+     */
     public int getUpdatingModelCount() {
         return this.updatingModelCount;
     }
 
+    /**
+     * @param count
+     */
     public void setUpdatingModelCount(int count) {
         if (count < 0) {
             count = 0;
@@ -113,6 +129,33 @@ public class DynamicCommand extends Command {
             count = 2;
         }
         this.updatingModelCount = count;
+    }
+
+    @Override
+    public boolean returnsResultSet() {
+        return intoGroup == null;
+    }
+
+    /** 
+     * Once past resolving, an EMPTY set of project columns indicates that the
+     * project columns of the actual command do not need to be checked during
+     * processing.
+     */
+    @Override
+    public List<Expression> getProjectedSymbols() {
+        if (intoGroup != null) {
+            return getUpdateCommandSymbol();
+        }
+        
+        if (asColumns != null) {
+            List<Expression> ps = new ArrayList<Expression>();
+            for (ElementSymbol es : asColumns) {
+                ps.add(es);
+            }
+            return ps;
+        }
+        
+        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -153,8 +196,8 @@ public class DynamicCommand extends Command {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

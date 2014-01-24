@@ -9,7 +9,7 @@ import org.teiid.runtime.client.lang.ast.AggregateSymbol;
 import org.teiid.runtime.client.lang.ast.Expression;
 import org.teiid.runtime.client.lang.ast.ExpressionSymbol;
 import org.teiid.runtime.client.lang.ast.OrderBy;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.v7.Teiid7Parser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 
@@ -64,10 +64,10 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
         AVG_TYPES.put(bigDecimalClass, bigDecimalClass);        
     }
 
-    public Aggregate7Symbol(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public Aggregate7Symbol(Teiid7Parser p, int id) {
         super(p, id);
     }
@@ -78,7 +78,10 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
         case ROW_NUMBER:
         case DENSE_RANK:
             return true;
+        default:
+            break;
         }
+
         return false;
     }
 
@@ -115,16 +118,22 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
             return DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
         case TEXTAGG:
             return DataTypeManagerService.DefaultDataTypes.BLOB.getClass();
+        default:
+            break;
         }
+
         if (isBoolean()) {
             return DataTypeManagerService.DefaultDataTypes.BOOLEAN.getClass();
         }
+
         if (isEnhancedNumeric()) {
             return DataTypeManagerService.DefaultDataTypes.DOUBLE.getClass();
         }
+
         if (isAnalytical()) {
             return DataTypeManagerService.DefaultDataTypes.INTEGER.getClass();
         }
+
         return this.getExpression().getType();
     }
 
@@ -235,8 +244,8 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit((AggregateSymbol) this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit((AggregateSymbol) this);
     }
 
     @Override

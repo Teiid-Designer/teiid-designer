@@ -2,9 +2,12 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
+/**
+ *
+ */
 public abstract class AbstractSetCriteria extends Criteria implements PredicateCriteria {
 
     private Expression expression;
@@ -12,10 +15,10 @@ public abstract class AbstractSetCriteria extends Criteria implements PredicateC
     /** Negation flag. Indicates whether the criteria expression contains a NOT. */
     private boolean negated = false;
 
-    public AbstractSetCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public AbstractSetCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -74,8 +77,8 @@ public abstract class AbstractSetCriteria extends Criteria implements PredicateC
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 }
 /* JavaCC - OriginalChecksum=b5f13c38d099fca361ab8d2d92744d6a (do not edit this line) */

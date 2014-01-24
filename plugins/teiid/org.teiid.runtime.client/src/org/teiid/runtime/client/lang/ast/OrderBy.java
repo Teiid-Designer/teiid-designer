@@ -4,23 +4,29 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class OrderBy extends SimpleNode {
+/**
+ *
+ */
+public class OrderBy extends SimpleNode
+    implements IOrderBy<Expression, OrderByItem, LanguageVisitor> {
 
     private List<OrderByItem> orderByItems = new ArrayList<OrderByItem>();
 
-    public OrderBy(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public OrderBy(TeiidParser p, int id) {
         super(p, id);
     }
 
+    @Override
     public List<OrderByItem> getOrderByItems() {
         return this.orderByItems;
     }
@@ -29,6 +35,7 @@ public class OrderBy extends SimpleNode {
      * Adds a new variable to the list of order by elements.
      * @param element Element to add
      */
+    @Override
     public void addVariable( Expression element ) {
         addVariable(element, true);
     }
@@ -39,6 +46,7 @@ public class OrderBy extends SimpleNode {
      * @param element Element to add
      * @param type True for ascending, false for descending
      */
+    @Override
     public void addVariable( Expression element, boolean type ) {
         if(element == null)
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0021));
@@ -47,6 +55,11 @@ public class OrderBy extends SimpleNode {
         orderByItem.setSymbol(element);
         orderByItem.setAscending(type);
         orderByItems.add(orderByItem);
+    }
+
+    @Override
+    public int getVariableCount() {
+        return orderByItems.size();
     }
 
     @Override
@@ -71,8 +84,8 @@ public class OrderBy extends SimpleNode {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

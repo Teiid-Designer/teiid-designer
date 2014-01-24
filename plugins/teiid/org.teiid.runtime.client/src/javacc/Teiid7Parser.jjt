@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.lang.ParsedDataType;
 import org.teiid.runtime.client.lang.ParseInfo;
@@ -38,7 +39,6 @@ import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.*;
 import org.teiid.runtime.client.lang.ast.CriteriaOperator.Operator;
 import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria.PredicateQuantifier;
-import org.teiid.runtime.client.lang.ast.MatchCriteria.MatchMode;
 import org.teiid.runtime.client.lang.parser.AbstractTeiidParser;
 import org.teiid.runtime.client.types.DataTypeManagerService;
 import org.teiid.runtime.client.util.StringUtil;
@@ -592,7 +592,7 @@ String id() #void :
  * @return Parsed command
  * @throws ParseException if parsing failed
  */
-Command command(ParseInfo info) #Command :
+Command command(ParseInfo info) #void :
 {
 	Command command = null;
 }
@@ -1791,8 +1791,9 @@ Delete delete(ParseInfo info) #Delete :
 	}
 }
 
-QueryCommand queryExpression(ParseInfo info) #QueryCommand :
+QueryCommand queryExpression(ParseInfo info) #void :
 {
+    QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
 	WithQueryCommand withQueryCommand = null;
 }
@@ -1809,10 +1810,10 @@ QueryCommand queryExpression(ParseInfo info) #QueryCommand :
 	    }
 	  )*
 	]
-	jjtThis = queryExpressionBody(info)
+	queryCommand = queryExpressionBody(info)
 	{
-		jjtThis.setWith(withList);
-		return jjtThis;
+		queryCommand.setWith(withList);
+		return queryCommand;
 	}
 }
 
@@ -1915,7 +1916,7 @@ QueryCommand queryPrimary(ParseInfo info) #void :
            select.setSymbols(Arrays.asList(multipleElementSymbol));
 
            UnaryFromClause unaryFromClause = createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
-           unaryFromClause.setGroupSymbol(groupSymbol(name));
+           unaryFromClause.setGroup(groupSymbol(name));
 
            From from = createASTNode(ASTNodes.FROM);
            from.setClauses(Arrays.asList(unaryFromClause));
@@ -2293,21 +2294,22 @@ From from(ParseInfo info) #From :
  * @return Join predicate
  * @throws ParseException if parsing failed
  */
-FromClause tableReference(ParseInfo info) #FromClause :
+FromClause tableReference(ParseInfo info) #void :
 {
+    FromClause fromClause = null;
 }
 {	
 	(
 		(	
 			<LBRACE> nonReserved("OJ")
-			jjtThis=joinedTable(info)
+			fromClause=joinedTable(info)
 			<RBRACE>
 		) 
 		|
-		jjtThis=joinedTable(info)
+		fromClause=joinedTable(info)
 	)
 	{
-		return jjtThis;
+		return fromClause;
 	}
 }	
 
@@ -2819,7 +2821,7 @@ UnaryFromClause unaryFromClause(ParseInfo info) #UnaryFromClause :
         } else {
 			group = groupSymbol(normalizeId(groupID.image));
         }
-        jjtThis.setGroupSymbol(group);
+        jjtThis.setGroup(group);
         setFromClauseOptions(groupID, jjtThis);
 		return jjtThis;
     }

@@ -4,11 +4,15 @@ package org.teiid.runtime.client.lang.ast;
 
 import java.util.Collections;
 import java.util.List;
+import org.teiid.designer.query.sql.symbol.ICaseExpression;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class CaseExpression extends SimpleNode implements Expression {
+/**
+ *
+ */
+public class CaseExpression extends SimpleNode implements Expression, ICaseExpression<LanguageVisitor> {
 
     private Class type;
 
@@ -28,10 +32,10 @@ public class CaseExpression extends SimpleNode implements Expression {
     /** The (optional) expression in the ELSE part of the expression */
     private Expression elseExpression = null;
 
-    public CaseExpression(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public CaseExpression(TeiidParser p, int id) {
         super(p, id);
     }
@@ -43,8 +47,9 @@ public class CaseExpression extends SimpleNode implements Expression {
 
     /**
      * Gets the expression whose evaluation is being tested in this case expression.
-     * @return
+     * @return expression
      */
+    @Override
     public Expression getExpression() {
         return expression;
     }
@@ -60,17 +65,15 @@ public class CaseExpression extends SimpleNode implements Expression {
         this.expression = expr;
     }
 
-    /**
-     *
-     * @see org.teiid.query.sql.symbol.AbstractCaseExpression#getWhenCount()
-     */
+    @Override
     public int getWhenCount() {
         return (when == null) ? 0 : when.size();
     }
 
     /**
      * Gets the List of Expressions in the WHEN parts of this expression. Never null.
-     * @return
+     *
+     * @return list of whens
      */
     public List<Expression> getWhen() {
         return when;
@@ -79,8 +82,10 @@ public class CaseExpression extends SimpleNode implements Expression {
     /**
      * Gets the WHEN expression at the given 0-based index.
      * @param index
-     * @return
+     *
+     * @return when expression
      */
+    @Override
     public Expression getWhenExpression(int index) {
         return when.get(index);
     }
@@ -109,15 +114,18 @@ public class CaseExpression extends SimpleNode implements Expression {
     /**
      * Gets the expression of the THEN part at the given index.
      * @param index
-     * @return
+     *
+     * @return then expression
      */
+    @Override
     public Expression getThenExpression(int index) {
         return then.get(index);
     }
     
     /**
      * Gets the List of THEN expressions in this CASE expression. Never null.
-     * @return
+     *
+     * @return then expressions
      */
     public List<Expression> getThen() {
         return then;
@@ -136,8 +144,10 @@ public class CaseExpression extends SimpleNode implements Expression {
     /**
      * Gets the expression in the ELSE part of this expression. May be null as
      * the ELSE is optional.
-     * @return
+     *
+     * @return else expression
      */
+    @Override
     public Expression getElseExpression() {
         return elseExpression;
     }
@@ -196,8 +206,8 @@ public class CaseExpression extends SimpleNode implements Expression {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

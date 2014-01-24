@@ -2,20 +2,24 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.ICompareCriteria;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class CompareCriteria extends AbstractCompareCriteria {
+/**
+ *
+ */
+public class CompareCriteria extends AbstractCompareCriteria implements ICompareCriteria<Expression, LanguageVisitor> {
 
     /** The right-hand expression. */
     private Expression rightExpression;
 
     private Boolean isOptional = Boolean.FALSE;
 
-    public CompareCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public CompareCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,6 +28,7 @@ public class CompareCriteria extends AbstractCompareCriteria {
      * Set right expression.
      * @param expression Right expression
      */
+    @Override
     public void setRightExpression(Expression expression) { 
         this.rightExpression = expression;
     }
@@ -50,9 +55,8 @@ public class CompareCriteria extends AbstractCompareCriteria {
     }
     
     /**
-     * Returns true if the compare criteria is used as join criteria, but not needed
+     * @return true if the compare criteria is used as join criteria, but not needed
      * during processing.
-     * @return
      */
     public boolean isOptional() {
         return isOptional == null || isOptional;
@@ -84,8 +88,8 @@ public class CompareCriteria extends AbstractCompareCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override
@@ -95,13 +99,24 @@ public class CompareCriteria extends AbstractCompareCriteria {
         if(getRightExpression() != null)
             clone.setRightExpression(getRightExpression().clone());
         clone.setOptional(isOptional());
-        if(getOperator() != null)
-            clone.setOperator(getOperator());
+        if(operator != null)
+            clone.setOperator(operator);
         if(getLeftExpression() != null)
             clone.setLeftExpression(getLeftExpression().clone());
 
         return clone;
     }
+
+    /**
+     * TODO Refactor {@link CriteriaOperator} to spi
+     * and replace int with {@link CriteriaOperator.Operator}
+     */
+    @Deprecated
+    @Override
+    public void setOperator(int operator) {
+        this.operator = Operator.values()[operator];
+    }
+
 
 }
 /* JavaCC - OriginalChecksum=b3e2979ada751b1aae0903db53c85d1c (do not edit this line) */

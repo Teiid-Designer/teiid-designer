@@ -3,13 +3,19 @@
 package org.teiid.runtime.client.lang.ast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
 import org.teiid.runtime.client.lang.ast.JoinType.Kind;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class JoinPredicate extends FromClause {
+/**
+ *
+ */
+public class JoinPredicate extends FromClause
+    implements IJoinPredicate<FromClause, LanguageVisitor>{
 
     private FromClause leftClause;
 
@@ -19,10 +25,10 @@ public class JoinPredicate extends FromClause {
 
     private List<Criteria> joinCriteria;
 
-    public JoinPredicate(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public JoinPredicate(TeiidParser p, int id) {
         super(p, id);
         joinType = p.createASTNode(ASTNodes.JOIN_TYPE);
@@ -33,6 +39,7 @@ public class JoinPredicate extends FromClause {
      * Set left clause 
      * @param predicate Left clause to set
      */
+    @Override
     public void setLeftClause(FromClause predicate) {
         this.leftClause = predicate;
     }
@@ -41,6 +48,7 @@ public class JoinPredicate extends FromClause {
      * Get left clause
      * @return Left clause
      */
+    @Override
     public FromClause getLeftClause() {
         return this.leftClause;
     }
@@ -49,6 +57,7 @@ public class JoinPredicate extends FromClause {
      * Set right clause 
      * @param predicate Right clause to set
      */
+    @Override
     public void setRightClause(FromClause predicate) {
         this.rightClause = predicate;
     }
@@ -57,6 +66,7 @@ public class JoinPredicate extends FromClause {
      * Get right clause
      * @return Right clause
      */
+    @Override
     public FromClause getRightClause() {
         return this.rightClause;
     }
@@ -99,6 +109,16 @@ public class JoinPredicate extends FromClause {
     }
 
     @Override
+    public void collectGroups(Collection<GroupSymbol> groups) {
+        if(this.leftClause != null) { 
+            this.leftClause.collectGroups(groups);
+        } 
+        if(this.rightClause != null) {
+            this.rightClause.collectGroups(groups);
+        }
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -132,8 +152,8 @@ public class JoinPredicate extends FromClause {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

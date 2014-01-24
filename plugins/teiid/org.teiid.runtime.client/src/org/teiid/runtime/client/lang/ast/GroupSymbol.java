@@ -2,20 +2,27 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
 
-public class GroupSymbol extends Symbol {
+/**
+ *
+ */
+public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor> {
 
     /** Definition of the symbol, may be null */
     private String definition;
 
     private String outputDefinition;
 
-    public GroupSymbol(int id) {
-        super(id);
-    }
+    /** Actual metadata ID */
+    private Object metadataID;
 
+    /**
+     * @param p
+     * @param id
+     */
     public GroupSymbol(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,6 +31,7 @@ public class GroupSymbol extends Symbol {
      * Get the definition for the group symbol, which may be null
      * @return Group definition, may be null
      */
+    @Override
     public String getDefinition() {
         return definition;
     }
@@ -32,17 +40,45 @@ public class GroupSymbol extends Symbol {
      * Set the definition for the group symbol, which may be null
      * @param definition Definition
      */
+    @Override
     public void setDefinition(String definition) {
         this.definition = definition;
         this.outputDefinition = definition;
     }
 
+    /**
+     * @return output definition
+     */
     public String getOutputDefinition() {
         return this.outputDefinition;
     }
 
+    /**
+     * @param outputDefinition
+     */
     public void setOutputDefinition(String outputDefinition) {
         this.outputDefinition = outputDefinition;
+    }
+
+    @Override
+    public boolean isProcedure() {
+        return false;
+    }
+
+    /**
+     * Get the metadata ID that this group symbol resolves to.  If
+     * the group symbol has not been resolved yet, this will be null.
+     * If the symbol has been resolved, this will never be null.
+     * @return Metadata ID object
+     */
+    @Override
+    public Object getMetadataID() {
+        return metadataID;
+    }
+
+    @Override
+    public void setMetadataID(Object metadataID) {
+        this.metadataID = metadataID;
     }
 
     @Override
@@ -71,8 +107,8 @@ public class GroupSymbol extends Symbol {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

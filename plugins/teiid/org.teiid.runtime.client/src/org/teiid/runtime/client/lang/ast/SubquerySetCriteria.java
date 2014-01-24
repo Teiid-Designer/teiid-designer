@@ -2,20 +2,25 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.runtime.client.lang.ast;
 
+import org.teiid.designer.query.sql.lang.ISubquerySetCriteria;
 import org.teiid.runtime.client.lang.SubqueryHint;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 import org.teiid.runtime.client.lang.parser.TeiidParser;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
 
-public class SubquerySetCriteria extends AbstractSetCriteria {
+/**
+ *
+ */
+public class SubquerySetCriteria extends AbstractSetCriteria
+implements ISubquerySetCriteria<Expression, LanguageVisitor, QueryCommand>{
 
     private QueryCommand command;
 
     private SubqueryHint subqueryHint = new SubqueryHint();
 
-    public SubquerySetCriteria(int id) {
-        super(id);
-    }
-
+    /**
+     * @param p
+     * @param id
+     */
     public SubquerySetCriteria(TeiidParser p, int id) {
         super(p, id);
     }
@@ -24,14 +29,21 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
      * Set the subquery command (either a SELECT or a procedure execution).
      * @param command Command to execute to get the values for the criteria
      */
+    @Override
     public void setCommand(QueryCommand command) {
         this.command = command;
     }
 
+    /**
+     * @return subquery hint
+     */
     public SubqueryHint getSubqueryHint() {
         return subqueryHint;
     }
     
+    /**
+     * @param subqueryHint
+     */
     public void setSubqueryHint(SubqueryHint subqueryHint) {
         this.subqueryHint = subqueryHint;
     }
@@ -40,6 +52,7 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
      * Get the subquery command used to produce the values for this SetCriteria.
      * @return Command Command to execute
      */
+    @Override
     public QueryCommand getCommand() {
         return this.command;
     }
@@ -70,8 +83,8 @@ public class SubquerySetCriteria extends AbstractSetCriteria {
 
     /** Accept the visitor. **/
     @Override
-    public void accept(AbstractTeiidParserVisitor visitor, Object data) {
-        visitor.visit(this, data);
+    public void acceptVisitor(LanguageVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

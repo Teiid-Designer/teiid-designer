@@ -22,24 +22,18 @@
 
 package org.teiid.runtime.client.lang.ast;
 
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParserVisitor;
+import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.runtime.client.lang.parser.LanguageVisitor;
 
 
 /**
  * Root interface for all language object interfaces.
  */
-public interface LanguageObject {
-
-    /**
-     * Visit this {@link LanguageObject} with the given visitor
-     *
-     * @param visitor
-     * @param data
-     */
-    void accept(AbstractTeiidParserVisitor visitor, Object data);
+public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
 
     /**
      * @return copy of this language object
      */
+    @Override
     LanguageObject clone();
 }
