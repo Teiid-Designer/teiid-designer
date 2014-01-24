@@ -36,14 +36,14 @@ public interface ISetCriteria<E extends IExpression, LV extends ILanguageVisitor
      * 
      * @return The collection of Expression values
      */
-    Collection<Object> getValues();
+    Collection<E> getValues();
       
     /**
      * Sets the values in the set.
      * 
      * @param values The set of value Expressions
      */
-    void setValues(Collection<Object> values);
+    void setValues(Collection<E> values);
 
     /**
      * Inverse the set criteria

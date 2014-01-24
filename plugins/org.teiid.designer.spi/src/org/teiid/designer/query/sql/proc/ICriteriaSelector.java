@@ -7,12 +7,14 @@
  */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 
 /**
  *
  */
+@Removed("8.0.0")
 public interface ICriteriaSelector <LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
 }

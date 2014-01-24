@@ -21,7 +21,7 @@ public interface IInsert<ES extends IElementSymbol,
                                            E extends IExpression, 
                                            G extends IGroupSymbol, 
                                            Q extends IQueryCommand,
-                                           LV extends ILanguageVisitor> extends IProcedureContainer<E, LV> {
+                                           LV extends ILanguageVisitor> extends ICommand<E, LV> {
 
     /**
      * Returns the group being inserted into
@@ -64,14 +64,14 @@ public interface IInsert<ES extends IElementSymbol,
      * 
      * @return List of {@link IExpression}s
      */
-    List<IExpression> getValues();
+    List<E> getValues();
     
     /**
      * Sets the values to be inserted.
      * 
      * @param values List of {@link IExpression}s
      */
-    void setValues(List<IExpression> values);
+    void setValues(List<E> values);
     
     /**
      * Set a collection of variables that replace the existing variables
@@ -86,12 +86,5 @@ public interface IInsert<ES extends IElementSymbol,
      * @return query expression
      */
     Q getQueryExpression();
-
-    /**
-     * Does this insert have a tuple source
-     * 
-     * @return true if there is a tuple source
-     */
-    boolean hasTupleSource();
     
 }

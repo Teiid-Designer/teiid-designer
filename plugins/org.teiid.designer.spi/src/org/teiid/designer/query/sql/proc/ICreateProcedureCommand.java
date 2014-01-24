@@ -11,7 +11,6 @@ import java.util.List;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 /**
  *
@@ -38,5 +37,5 @@ public interface ICreateProcedureCommand<B extends IBlock, E extends IExpression
      * 
      * @param projectedSymbols
      */
-    void setProjectedSymbols(List<IElementSymbol> projectedSymbols);
+    void setProjectedSymbols(List<E> projectedSymbols);
 }
