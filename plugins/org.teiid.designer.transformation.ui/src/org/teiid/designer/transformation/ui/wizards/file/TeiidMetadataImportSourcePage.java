@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -407,6 +409,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		this.fileViewer.getControl().setLayoutData(gd);
 		fileContentProvider = new DataFolderContentProvider();
 		fileContentProvider.setFilterString(FILTER_INIT);
+		this.fileViewer.setSorter(new ViewerSorter());
 		this.fileViewer.setContentProvider(fileContentProvider);
 		this.fileViewer.setLabelProvider(new FileSystemLabelProvider());
 
