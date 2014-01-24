@@ -115,7 +115,7 @@ public class CompareCriteria extends AbstractCompareCriteria implements ICompare
     @Deprecated
     @Override
     public void setOperator(int operator) {
-        this.operator = Operator.values()[operator];
+        this.operator = Operator.findOperator(operator);
     }
 
 

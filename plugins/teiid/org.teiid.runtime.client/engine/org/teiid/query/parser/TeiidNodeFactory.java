@@ -209,7 +209,7 @@ public class TeiidNodeFactory {
     private static final String TAB = "\t"; //$NON-NLS-1$
     private static final String SPACE = " "; //$NON-NLS-1$
     private static final String NON_NLS = "//$NON-NLS-1$"; //$NON-NLS-1$
-    private static final String PACKAGE_NAME = "org.teiid.runtime.client.lang.ast"; //$NON-NLS-1$
+    private static final String PACKAGE_NAME = "org.teiid.query.sql.lang"; //$NON-NLS-1$
     private static final String CONSTANT_CLASS_PREFIX = "Teiid"; //$NON-NLS-1$
     private static final String CONSTANT_CLASS_POSTFIX = "ParserTreeConstants"; //$NON-NLS-1$
     private static final String NODENAME_FIELD = "jjtNodeName"; //$NON-NLS-1$

@@ -48,7 +48,7 @@
                 <configuration>
                     <sourceDirectory>${project.basedir}</sourceDirectory>
                     <includes>
-                        <include>src/javacc/*Parser.jjt</include>
+                        <include>engine/javacc/*Parser.jjt</include>
                     </includes>
                     <isStatic>false</isStatic>
                     <errorReporting>true</errorReporting>

@@ -100,8 +100,8 @@ public class CompoundCriteria extends Criteria implements ICompoundCriteria<Crit
      * Sets the criteria.
      * @param criteria The list of {@link Criteria}
      */
-    public void setCriteria(List<Criteria> criteria) {
-        this.criteria = criteria;
+    public void setCriteria(List<? extends Criteria> criteria) {
+        this.criteria = (List<Criteria>) criteria;
     }
 
     @Override

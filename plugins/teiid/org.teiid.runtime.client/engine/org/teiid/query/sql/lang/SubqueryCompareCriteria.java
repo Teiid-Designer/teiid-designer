@@ -36,6 +36,19 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
         public int getQuantifier() {
             return ordinal() + 2;
         }
+
+        /**
+         * @param quantifier
+         * @return {@link PredicateQuantifier} with the given quantifier index
+         */
+        public static PredicateQuantifier findQuantifier(int quantifier) {
+            for (PredicateQuantifier pq : values()) {
+                if (pq.getQuantifier() == quantifier)
+                    return pq;
+            }
+
+            throw new IllegalStateException();
+        }
     }
 
     private PredicateQuantifier predicateQuantifier = PredicateQuantifier.ALL;

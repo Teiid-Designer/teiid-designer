@@ -11,56 +11,7 @@ import org.teiid.query.parser.TeiidParser;
  */
 public class JoinType extends SimpleNode implements IJoinType<LanguageVisitor>{
 
-    /**
-     * Delineation of the category of join type
-     */
-    public enum Kind {
-        /** Represents an inner join:  a INNER JOIN b */
-        JOIN_INNER(false),
-
-        /** Represents a right outer join:  a RIGHT OUTER JOIN b */
-        JOIN_RIGHT_OUTER(true),
-
-        /** Represents a left outer join:  a LEFT OUTER JOIN b */
-        JOIN_LEFT_OUTER(true),
-
-        /** Represents a full outer join:  a FULL OUTER JOIN b */
-        JOIN_FULL_OUTER(true),
-
-        /** Represents a cross join:  a CROSS JOIN b */
-        JOIN_CROSS(false),
-
-        /** Represents a union join:  a UNION JOIN b - not used after rewrite */
-        JOIN_UNION(true),
-
-        /** internal SEMI Join type */
-        JOIN_SEMI(false),
-
-        /** internal ANTI SEMI Join type */
-        JOIN_ANTI_SEMI(true);
-
-        private final boolean outer;
-
-        private Kind(boolean outer) {
-            this.outer = outer;
-        }
-
-        /**
-         * @return index of kind
-         */
-        public int getTypeCode() {
-            return this.ordinal();
-        }
-        
-        /**
-         * @return outer
-         */
-        public boolean isOuter() {
-            return this.outer;
-        }
-    }
-
-    private Kind kind = Kind.JOIN_CROSS;
+    private Types kind = Types.JOIN_CROSS;
 
     /**
      * @param p
@@ -73,14 +24,14 @@ public class JoinType extends SimpleNode implements IJoinType<LanguageVisitor>{
     /**
      * @return the kind
      */
-    public Kind getKind() {
+    public Types getKind() {
         return kind;
     }
 
     /**
      * @param kind the kind to set
      */
-    public void setKind(Kind kind) {
+    public void setKind(Types kind) {
         this.kind = kind;
     }
 

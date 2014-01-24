@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
+import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.JoinType.Kind;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.symbol.GroupSymbol;
 
 /**
@@ -33,7 +33,7 @@ public class JoinPredicate extends FromClause
     public JoinPredicate(TeiidParser p, int id) {
         super(p, id);
         joinType = p.createASTNode(ASTNodes.JOIN_TYPE);
-        joinType.setKind(Kind.JOIN_INNER);
+        joinType.setKind(Types.JOIN_INNER);
     }
 
     /**

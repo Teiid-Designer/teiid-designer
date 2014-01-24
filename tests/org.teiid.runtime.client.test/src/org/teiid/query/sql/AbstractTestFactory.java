@@ -133,9 +133,9 @@ public abstract class AbstractTestFactory {
         return newUnaryFromClause(newGroupSymbol(groupSymbolProps));
     }
 
-    public JoinPredicate newJoinPredicate(FromClause leftClause, FromClause rightClause, JoinType.Kind joinTypeKind) {
+    public JoinPredicate newJoinPredicate(FromClause leftClause, FromClause rightClause, JoinType.Types joinTypeTypes) {
         JoinType joinType = newNode(ASTNodes.JOIN_TYPE);
-        joinType.setKind(joinTypeKind);
+        joinType.setKind(joinTypeTypes);
         JoinPredicate jp = newNode(ASTNodes.JOIN_PREDICATE);
         jp.setLeftClause(leftClause);
         jp.setRightClause(rightClause);
@@ -144,8 +144,8 @@ public abstract class AbstractTestFactory {
         return jp;
     }
 
-    public JoinPredicate newJoinPredicate(FromClause leftClause, FromClause rightClause, JoinType.Kind joinTypeKind, List<? extends Criteria> crits) {
-        JoinPredicate jp = newJoinPredicate(leftClause, rightClause, joinTypeKind);
+    public JoinPredicate newJoinPredicate(FromClause leftClause, FromClause rightClause, JoinType.Types joinTypeTypes, List<? extends Criteria> crits) {
+        JoinPredicate jp = newJoinPredicate(leftClause, rightClause, joinTypeTypes);
         jp.setJoinCriteria((List<Criteria>)crits);
         return jp;
     }

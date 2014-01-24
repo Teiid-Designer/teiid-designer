@@ -113,6 +113,19 @@ public interface CriteriaOperator {
         }
 
         /**
+         * @param index
+         * @return {@link Operator} with the given quantifier index
+         */
+        public static Operator findOperator(int index) {
+            for (Operator op : values()) {
+                if (op.getIndex() == index)
+                    return op;
+            }
+
+            throw new IllegalStateException();
+        }
+
+        /**
          * @param version of the parser
          * @param symbol
          *
