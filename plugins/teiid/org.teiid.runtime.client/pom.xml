@@ -23,7 +23,7 @@
                 <configuration>
                     <filesets>
                         <fileset>
-                            <directory>${project.basedir}/src/org/teiid/runtime/client/lang/parser</directory>
+                            <directory>${project.basedir}/engine/org/teiid/query/parser</directory>
                             <includes>
                                 <include>**/v*/Teiid*Parser.java</include>
                                 <include>**/v*/Teiid*ParserConstants.java</include>
@@ -61,13 +61,13 @@
                     <nodeFactory>TeiidNodeFactory</nodeFactory>
                     <nodeScopeHook>false</nodeScopeHook>
                     <nodeUsesParser>true</nodeUsesParser>
-                    <nodePackage>org.teiid.runtime.client.lang.ast</nodePackage>
+                    <nodePackage>org.teiid.query.sql.lang</nodePackage>
                     <visitor>false</visitor>
                     <visitorReturnType>void</visitorReturnType>
                     <grammarEncoding>UTF-8</grammarEncoding>
                     <keepLineColumn>true</keepLineColumn>
-                    <interimDirectory>${project.basedir}/src</interimDirectory>
-                    <outputDirectory>${project.basedir}/src</outputDirectory>
+                    <interimDirectory>${project.basedir}/engine</interimDirectory>
+                    <outputDirectory>${project.basedir}/engine</outputDirectory>
                 </configuration>
             </plugin>
 <!--             <plugin> -->

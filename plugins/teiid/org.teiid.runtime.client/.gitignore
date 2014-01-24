@@ -1,9 +1,9 @@
 *.jj
 Teiid*ParserTreeConstants.java
 JJTTeiid*ParserState.java
-src/org/teiid/runtime/client/lang/parser/v*/JavaCharStream.java
-src/org/teiid/runtime/client/lang/parser/v*/ParseException.java
-src/org/teiid/runtime/client/lang/parser/v*/Teiid*Parser.java
-src/org/teiid/runtime/client/lang/parser/v*/Teiid*ParserConstants.java
-src/org/teiid/runtime/client/lang/parser/v*/Teiid*ParserTokenManager.java
-src/org/teiid/runtime/client/lang/parser/v*/Token*.java
+engine/org/teiid/query/parser/v*/JavaCharStream.java
+engine/org/teiid/query/parser/v*/ParseException.java
+engine/org/teiid/query/parser/v*/Teiid*Parser.java
+engine/org/teiid/query/parser/v*/Teiid*ParserConstants.java
+engine/org/teiid/query/parser/v*/Teiid*ParserTokenManager.java
+engine/org/teiid/query/parser/v*/Token*.java

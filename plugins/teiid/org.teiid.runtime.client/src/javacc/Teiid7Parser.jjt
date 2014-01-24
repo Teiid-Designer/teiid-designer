@@ -9,7 +9,7 @@ options {
     NODE_PREFIX = "";
     NODE_SCOPE_HOOK = false;
     NODE_USES_PARSER = true;
-    NODE_PACKAGE = "org.teiid.runtime.client.lang.ast";
+    NODE_PACKAGE = "org.teiid.query.sql.lang";
     VISITOR = false;
     VISITOR_RETURN_TYPE = "void";
     GRAMMAR_ENCODING="UTF-8";
@@ -19,7 +19,7 @@ options {
 
 PARSER_BEGIN(Teiid7Parser)
 
-package org.teiid.runtime.client.lang.parser.v7;
+package org.teiid.query.parser.v7;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -28,20 +28,19 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.lang.ParsedDataType;
-import org.teiid.runtime.client.lang.ParseInfo;
-import org.teiid.runtime.client.lang.SortSpecification.NullOrdering;
-import org.teiid.runtime.client.lang.SourceHint;
-import org.teiid.runtime.client.lang.SubqueryHint;
-import org.teiid.runtime.client.lang.SPParameter;
-import org.teiid.runtime.client.lang.TeiidNodeFactory;
-import org.teiid.runtime.client.lang.TeiidNodeFactory.ASTNodes;
-import org.teiid.runtime.client.lang.ast.*;
-import org.teiid.runtime.client.lang.ast.CriteriaOperator.Operator;
-import org.teiid.runtime.client.lang.ast.SubqueryCompareCriteria.PredicateQuantifier;
-import org.teiid.runtime.client.lang.parser.AbstractTeiidParser;
-import org.teiid.runtime.client.types.DataTypeManagerService;
-import org.teiid.runtime.client.util.StringUtil;
+import org.teiid.language.SortSpecification.NullOrdering;
+import org.teiid.query.parser.AbstractTeiidParser;
+import org.teiid.query.parser.ParsedDataType;
+import org.teiid.query.parser.ParseInfo;
+import org.teiid.query.parser.TeiidNodeFactory;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.sql.lang.*;
+import org.teiid.query.sql.lang.proc.*;
+import org.teiid.query.sql.lang.symbol.*;
+import org.teiid.query.sql.lang.CriteriaOperator.Operator;
+import org.teiid.query.sql.lang.SubqueryCompareCriteria.PredicateQuantifier;
+import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.util.StringUtil;
 
 /** 
  * <p>The SQLParser is a JavaCC-generated parser that reads a SQL string and produces a 
