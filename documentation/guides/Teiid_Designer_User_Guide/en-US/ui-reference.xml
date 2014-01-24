@@ -1489,14 +1489,6 @@
 									<listitem>
 										<para><inlinemediaobject>
 												<imageobject>
-													<imagedata fileref="images/icons/tb-page-setup.png"/>
-												</imageobject>
-											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
-										</para>
-									</listitem>
-									<listitem>
-										<para><inlinemediaobject>
-												<imageobject>
 													<imagedata fileref="images/icons/tb-grid-on.png"/>
 												</imageobject>
 											</inlinemediaobject> <inlinemediaobject>
@@ -1599,14 +1591,6 @@
 													<imagedata fileref="images/icons/tb-save-diagram.png"/>
 												</imageobject>
 											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
-										</para>
-									</listitem>
-									<listitem>
-										<para><inlinemediaobject>
-												<imageobject>
-													<imagedata fileref="images/icons/tb-page-setup.png"/>
-												</imageobject>
-											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 										</para>
 									</listitem>
 									<listitem>
@@ -1717,14 +1701,6 @@
 													<imagedata fileref="images/icons/tb-save-diagram.png"/>
 												</imageobject>
 											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
-										</para>
-									</listitem>
-									<listitem>
-										<para><inlinemediaobject>
-												<imageobject>
-													<imagedata fileref="images/icons/tb-page-setup.png"/>
-												</imageobject>
-											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 										</para>
 									</listitem>
 									<listitem>
@@ -1970,14 +1946,6 @@
 													<imagedata fileref="images/icons/tb-save-diagram.png"/>
 												</imageobject>
 											</inlinemediaobject> <emphasis role="bold">Save Diagram as Image</emphasis> - Save the diagram image to file in JPG or BMP format.
-										</para>
-									</listitem>
-									<listitem>
-										<para><inlinemediaobject>
-												<imageobject>
-													<imagedata fileref="images/icons/tb-page-setup.png"/>
-												</imageobject>
-											</inlinemediaobject> <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> - Modify page layout information for printing diagrams. Includes margins, orientation, etc...
 										</para>
 									</listitem>
 								</itemizedlist>
@@ -2580,10 +2548,7 @@
 											<imagedata fileref="images/icons/print-edit.png"/>
 										</imageobject>
 									</inlinemediaobject> <emphasis role="bold">Print (Ctrl+P)</emphasis> - Prints the contents 
-										of the active editor. In Teiid Designer, this action prints the diagram in the selected editor. 
-										Allows control over orientation (portrait or landscape), scaling, 
-										margins and page order. User can also specify a subset of the pages to 
-										print (i.e., 2 through 8).
+										of the active editor.
 								</para>
 							</listitem>
 							<listitem>

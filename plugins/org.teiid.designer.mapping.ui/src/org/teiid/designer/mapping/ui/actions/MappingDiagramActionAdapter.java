@@ -37,7 +37,6 @@ import org.eclipse.ui.IEditorPart;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.transaction.SourcedNotification;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
-import org.teiid.designer.diagram.ui.actions.DiagramPageSetupAction;
 import org.teiid.designer.diagram.ui.actions.RefreshAction;
 import org.teiid.designer.diagram.ui.editor.DiagramActionAdapter;
 import org.teiid.designer.diagram.ui.editor.DiagramEditor;
@@ -124,7 +123,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
     private RefreshAction refreshDiagramAction;
 
     private AbstractAction saveDiagramAction;
-    private AbstractAction diagramPageSetupAction;
     private ShowParentDiagramAction upDiagramAction;
 
     private AddTransformationSourceAction addSourcesAction;
@@ -161,13 +159,11 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.upDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
         } else {
             theMenuMgr.add(new Separator());
             theMenuMgr.add(new GroupMarker(D_MARKER));
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
         }
     }
 
@@ -594,7 +590,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
 
             tbm.add(new Separator());
             tbm.add(this.saveDiagramAction);
-            tbm.add(this.diagramPageSetupAction);
         } else {
             tbm.add(new Separator());
 
@@ -1001,13 +996,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
             registerAction(this.saveDiagramAction);
         }
 
-        // ----- DiagramPageSetupAction -----//
-        this.diagramPageSetupAction = (AbstractAction)getRegisteredAction(DiagramPageSetupAction.class.getName());
-        if (this.diagramPageSetupAction == null) {
-            this.diagramPageSetupAction = new DiagramPageSetupAction((DiagramEditor)this.getEditorPage());
-            registerAction(this.diagramPageSetupAction);
-        }
-
         this.addInputSetParameterAction = new AddInputSetParameterAction();
     }
 
@@ -1080,7 +1068,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         if (theMenuMgr.find(this.refreshDiagramAction.getId()) != null) theMenuMgr.remove(this.refreshDiagramAction.getId());
         if (theMenuMgr.find(this.upDiagramAction.getId()) != null) theMenuMgr.remove(this.upDiagramAction.getId());
         if (theMenuMgr.find(this.saveDiagramAction.getId()) != null) theMenuMgr.remove(this.saveDiagramAction.getId());
-        if (theMenuMgr.find(this.diagramPageSetupAction.getId()) != null) theMenuMgr.remove(this.diagramPageSetupAction.getId());
     }
 
     private void removeMappingActions( final IMenuManager theMenuMgr ) {

@@ -30,10 +30,8 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
-import org.teiid.designer.diagram.ui.actions.DiagramPageSetupAction;
 import org.teiid.designer.diagram.ui.actions.RefreshAction;
 import org.teiid.designer.diagram.ui.actions.SaveDiagramAction;
-import org.teiid.designer.diagram.ui.actions.ShowPageGridAction;
 import org.teiid.designer.diagram.ui.editor.DiagramActionAdapter;
 import org.teiid.designer.diagram.ui.editor.DiagramEditor;
 import org.teiid.designer.diagram.ui.editor.DiagramToolBarManager;
@@ -93,8 +91,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     private ShowParentDiagramAction upPackageDiagramAction;
     private ShowDependencyTargetDiagramAction showDependencyTargetDiagramAction;
     private AbstractAction saveDiagramAction;
-    private AbstractAction diagramPageSetupAction;
-    private AbstractAction showPageGridAction;
 
     // overrides of global actions
     private TransformationAction deleteAction;
@@ -282,19 +278,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
             registerAction(this.saveDiagramAction);
         }
 
-        // ----- DiagramPageSetupAction -----//
-        this.diagramPageSetupAction = (AbstractAction)getRegisteredAction(DiagramPageSetupAction.class.getName());
-        if (this.diagramPageSetupAction == null) {
-            this.diagramPageSetupAction = new DiagramPageSetupAction((DiagramEditor)this.getEditorPage());
-            registerAction(this.diagramPageSetupAction);
-        }
-
-        // ----- DiagramPageSetupAction -----//
-        this.showPageGridAction = (AbstractAction)getRegisteredAction(ShowPageGridAction.class.getName());
-        if (this.showPageGridAction == null) {
-            this.showPageGridAction = new ShowPageGridAction((DiagramEditor)this.getEditorPage());
-            registerAction(this.showPageGridAction);
-        }
     }
 
     /**
@@ -696,8 +679,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         if (theMenuMgr.find(this.upPackageDiagramAction.getId()) != null) theMenuMgr.remove(this.upPackageDiagramAction.getId());
         if (theMenuMgr.find(this.showDependencyTargetDiagramAction.getId()) != null) theMenuMgr.remove(this.showDependencyTargetDiagramAction.getId());
         if (theMenuMgr.find(this.saveDiagramAction.getId()) != null) theMenuMgr.remove(this.saveDiagramAction.getId());
-        if (theMenuMgr.find(this.diagramPageSetupAction.getId()) != null) theMenuMgr.remove(this.diagramPageSetupAction.getId());
-        if (theMenuMgr.find(this.showPageGridAction.getId()) != null) theMenuMgr.remove(this.showPageGridAction.getId());
 
         if (theMenuMgr.find(ContextMenu.TRANS_END) != null) theMenuMgr.remove(ContextMenu.TRANS_END);
     }
@@ -712,16 +693,12 @@ public class TransformationActionAdapter extends DiagramActionAdapter
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.upPackageDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.showPageGridAction);
         } else {
             theMenuMgr.add(new Separator());
             theMenuMgr.add(new GroupMarker(D_MARKER));
             theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.showDependencyTargetDiagramAction);
             theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.showPageGridAction);
         }
     }
 
@@ -778,8 +755,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
         }
         tbm.add(new Separator());
         tbm.add(this.saveDiagramAction);
-        tbm.add(this.diagramPageSetupAction);
-        tbm.add(this.showPageGridAction);
 
         this.refreshDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
         this.upPackageDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());

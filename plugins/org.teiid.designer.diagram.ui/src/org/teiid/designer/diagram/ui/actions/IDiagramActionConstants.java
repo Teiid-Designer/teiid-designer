@@ -25,8 +25,6 @@ public interface IDiagramActionConstants extends IActionConstants {
         /** Key for accessing the global edit action. */
         String ZOOM_OUT = ZoomOutWrapper.class.getName();
                        
-        /** Key for accessing the global print action. This constant should NOT show up in ALL_ACTIONS. */
-        String PRINT = PrintWrapper.class.getName();
         
         /** Key for accessing the global increase font action. */
         String FONT_UP = FontUpWrapper.class.getName();

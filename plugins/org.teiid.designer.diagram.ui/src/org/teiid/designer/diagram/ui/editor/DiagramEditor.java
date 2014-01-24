@@ -100,8 +100,6 @@ import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.actions.AbstractActionService;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.print.IPrintable;
-import org.teiid.designer.ui.common.print.Printable;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
@@ -547,8 +545,6 @@ public class DiagramEditor extends GraphicalEditor
         if (type == AutoLayout.class) return this;
 
         if (type == IDiagramActionAdapter.class) if (getDiagramActionAdapter() != null) return getDiagramActionAdapter();
-
-        if (type == IPrintable.class) if (this.getGraphicalViewer() != null) return new Printable(getGraphicalViewer());
 
         return super.getAdapter(type);
     }

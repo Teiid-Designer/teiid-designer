@@ -23,11 +23,9 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
-import org.teiid.designer.diagram.ui.actions.DiagramPageSetupAction;
 import org.teiid.designer.diagram.ui.actions.RefreshAction;
 import org.teiid.designer.diagram.ui.actions.RouterTypeMenuManager;
 import org.teiid.designer.diagram.ui.actions.SaveDiagramAction;
-import org.teiid.designer.diagram.ui.actions.ShowPageGridAction;
 import org.teiid.designer.diagram.ui.connection.NodeConnectionEditPart;
 import org.teiid.designer.diagram.ui.editor.DiagramActionAdapter;
 import org.teiid.designer.diagram.ui.editor.DiagramEditor;
@@ -68,9 +66,7 @@ public class PackageDiagramActionAdapter
 	private RenameAction renameAction;
 
     private AbstractAction saveDiagramAction;
-    private AbstractAction diagramPageSetupAction;
-    private AbstractAction showPageGridAction;
-
+    
     // actions map is needed since we want to override the default print action
     private GlobalActionsMap actionsMap;
 
@@ -196,20 +192,6 @@ public class PackageDiagramActionAdapter
             this.saveDiagramAction = new SaveDiagramAction((DiagramEditor)this.getEditorPage());
             registerAction(this.saveDiagramAction);
         }
-                
-        //----- DiagramPageSetupAction -----//
-        this.diagramPageSetupAction = (AbstractAction)getRegisteredAction(DiagramPageSetupAction.class.getName());
-        if (this.diagramPageSetupAction == null) {
-            this.diagramPageSetupAction = new DiagramPageSetupAction((DiagramEditor)this.getEditorPage());
-            registerAction(this.diagramPageSetupAction);
-        }        
-        
-        //----- ShowPageGridAction -----//
-        this.showPageGridAction = (AbstractAction)getRegisteredAction(ShowPageGridAction.class.getName());
-        if (this.showPageGridAction == null) {
-            this.showPageGridAction = new ShowPageGridAction((DiagramEditor)this.getEditorPage());
-            registerAction(this.showPageGridAction);
-        }        
 
         //----- RenameAction -----//
         this.renameAction = (RenameAction)getRegisteredAction(RenameAction.class.getName());
@@ -282,9 +264,7 @@ public class PackageDiagramActionAdapter
         theMenuMgr.appendToGroup(D_MARKER, this.refreshDiagramAction);
         theMenuMgr.appendToGroup(D_MARKER, this.upPackageDiagramAction);
         theMenuMgr.appendToGroup(D_MARKER, this.saveDiagramAction);
-        theMenuMgr.appendToGroup(D_MARKER, this.diagramPageSetupAction);
-        theMenuMgr.appendToGroup(D_MARKER, this.showPageGridAction);
-        
+
         theMenuMgr.add(new Separator());
     }
     
@@ -299,10 +279,6 @@ public class PackageDiagramActionAdapter
             theMenuMgr.remove( this.linkTypeManager.getId() );
         if ( theMenuMgr.find( this.saveDiagramAction.getId() ) != null )
             theMenuMgr.remove( this.saveDiagramAction.getId() );
-        if ( theMenuMgr.find( this.diagramPageSetupAction.getId() ) != null )
-            theMenuMgr.remove( this.diagramPageSetupAction.getId() );
-        if ( theMenuMgr.find( this.showPageGridAction.getId() ) != null )
-            theMenuMgr.remove( this.showPageGridAction.getId() );
     }
     
     /* (non-Javadoc)
@@ -349,9 +325,6 @@ public class PackageDiagramActionAdapter
     		
             tbm.add(new Separator());
             tbm.add(this.saveDiagramAction);
-            tbm.add(this.diagramPageSetupAction);
-            tbm.add(this.showPageGridAction);
-            
             
             
             this.refreshDiagramAction.setDiagramEditor((DiagramEditor)getEditorPage());
