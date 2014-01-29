@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 
@@ -149,6 +150,14 @@ public class ModelNameChecker extends ModelNameUtil implements UiConstants {
             	 createErrorStatus(getString("illegalExtensionMessage", finalFileExtension)); //$NON-NLS-1$
             	 return;
             }
+        } else {
+        	// Check name first
+        	
+        	StringNameValidator nameValidator = new StringNameValidator();
+        	String result = nameValidator.checkValidName(finalProposedName);
+        	if( result != null ) {
+        		createErrorStatus(result);
+        	}
         }
         
         originalNameWithoutExtension = finalProposedName;

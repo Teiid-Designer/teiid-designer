@@ -544,7 +544,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
                 ModelNameUtil.IGNORE_CASE );
         if( status.getSeverity() == IStatus.ERROR ) {
-            setThisPageComplete(status.getMessage(), ERROR);
+            setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
             return false;
         }
         

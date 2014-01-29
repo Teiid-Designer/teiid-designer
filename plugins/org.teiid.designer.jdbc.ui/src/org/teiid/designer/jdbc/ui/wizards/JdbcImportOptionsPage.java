@@ -958,7 +958,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
             
             if( !updating && status.getSeverity() == IStatus.ERROR ) {
-                WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
+                WizardUtil.setPageComplete(this, ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
                 folder = null;
             }
 

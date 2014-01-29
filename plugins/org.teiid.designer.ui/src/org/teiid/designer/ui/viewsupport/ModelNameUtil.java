@@ -9,6 +9,8 @@ package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.ui.UiConstants;
 
 /**
  * Utility class providing model name analysis and validation methods
@@ -35,7 +37,14 @@ public abstract class ModelNameUtil {
 	 * target project or folder
 	 */
 	static public final int NO_DUPLICATE_MODEL_NAMES_OTHER_THAN_LOCATION = 8;     	// 00001000
+	
+	public interface MESSAGES {
+		String INVALID_MODEL_NAME = UiConstants.Util.getString("ModelNameUtil.invalidModelName") + StringUtilities.SPACE; //$NON-NLS-1$
+		String INVALID_SOURCE_MODEL_NAME = UiConstants.Util.getString("ModelNameUtil.invalidSourceModelName") + StringUtilities.SPACE; //$NON-NLS-1$
+		String INVALID_VIEW_MODEL_NAME = UiConstants.Util.getString("ModelNameUtil.invalidViewModelName") + StringUtilities.SPACE; //$NON-NLS-1$
+		String INVALID_SCHEMA_FILE_NAME = UiConstants.Util.getString("ModelNameUtil.invalidSchemaFileName") + StringUtilities.SPACE; //$NON-NLS-1$
 
+	}
 
     /**
      * Determine if the proposed model name is valid, and return an error message if it is not.
