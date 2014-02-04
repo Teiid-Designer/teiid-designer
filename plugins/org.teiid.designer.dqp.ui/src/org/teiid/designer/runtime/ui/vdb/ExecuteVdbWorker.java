@@ -85,22 +85,25 @@ public class ExecuteVdbWorker implements VdbConstants {
 
 	void internalRun(final IFile selectedVdb) {
 		ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-
+		boolean deployed = false;
+		
 		try {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK()) {
 					// Deploy the VDB
-                    DeployVdbAction.deployVdb(teiidServer, selectedVdb);
+                    deployed = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
                     
 				    String vdbName = selectedVdb.getFullPath().removeFileExtension().lastSegment();
                     if (teiidServer.isVdbActive(vdbName)) {
-                        executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);
+                    	if( deployed ) {
+                    		executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);
+                    	}
                     } else if (teiidServer.isVdbLoading(vdbName)) {
                         StringBuilder message = new StringBuilder(getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
                         MessageDialog.openWarning(getShell(), getString("vdbLoadingTitle"), //$NON-NLS-1$
                                                   message.toString());
-                    } else {
+                    } else if( deployed ) {
                         StringBuilder message = new StringBuilder(getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
                         if (teiidServer.hasVdb(vdbName)) {
                             for (String error : teiidServer.retrieveVdbValidityErrors(vdbName)) {

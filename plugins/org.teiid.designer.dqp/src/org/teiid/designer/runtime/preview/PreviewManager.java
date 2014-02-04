@@ -91,9 +91,12 @@ import org.teiid.designer.runtime.preview.jobs.UpdatePreviewVdbJob;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.EventType;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent.TargetType;
+import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
+import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -480,7 +483,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     @Override
     public IStatus ensureConnectionInfoIsValid( Vdb previewVdb,
-                                                ITeiidServer previewServer ) throws Exception {
+                                                ITeiidServer previewServer )  throws Exception {
         assert (previewServer != null) : "Preview server is null"; //$NON-NLS-1$
 
         if (previewVdb.getModelEntries().isEmpty()) {
@@ -515,7 +518,42 @@ public final class PreviewManager extends JobChangeAdapter
         		// create data source on server if we need to
         		if (!previewServer.dataSourceExists(jndiName)) {
         			TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-        			factory.createDataSource(previewServer, model, jndiName, true);
+        			ITeiidDataSource theDataSource = null;
+        			try {
+        				theDataSource = factory.createDataSource(previewServer, model, jndiName, true);
+					} catch (TeiidExecutionException ex) {
+						switch( ex.getCode() ) {
+							case ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND: {
+								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
+							} break;
+							case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER: {
+								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);						
+							} break;
+							case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED: {
+								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
+							} break;
+							
+							default: break;
+						}
+					}
+        			if( theDataSource instanceof FailedTeiidDataSource ) {
+        				FailedTeiidDataSource fds = (FailedTeiidDataSource)theDataSource;
+        				
+        				switch( fds.getReasonCode() ) {
+	        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROVIDER: {
+	        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+										"No connection provider associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+							} break;
+	        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROFILE_DEFINED_IN_MODEL: {
+	        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+										"No connection profile associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+							} break;
+	        				case ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE: {
+								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+										"No Teiid connection properties associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+							} break;
+        				}
+        			}
         		}
                 if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
                     modelEntry.setJndiName(0, jndiName);

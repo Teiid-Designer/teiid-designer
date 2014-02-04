@@ -21,6 +21,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.runtime.connection.spi.IPasswordProvider;
+import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 
@@ -105,6 +106,13 @@ public class TeiidDataSourceFactory {
          // need to create a DS
          ModelResource modelResource = ModelUtil.getModelResource(model, true);
          ConnectionInfoProviderFactory manager = new ConnectionInfoProviderFactory();
+         
+         if(! manager.hasProvider(modelResource) ) {
+        	 return new FailedTeiidDataSource(
+        			 model.getFullPath().removeFileExtension().lastSegment(),
+        			 jndiName, ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROVIDER);
+         }
+         
          IConnectionInfoProvider connInfoProvider = manager.getProvider(modelResource);
          if (connInfoProvider == null)
              return null;
@@ -112,11 +120,15 @@ public class TeiidDataSourceFactory {
          IConnectionProfile modelConnectionProfile = connInfoProvider.getConnectionProfile(modelResource);
          
          if (modelConnectionProfile == null)
-             return null;
+             return new FailedTeiidDataSource(
+        			 model.getFullPath().removeFileExtension().lastSegment(),
+        			 jndiName, ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROFILE_DEFINED_IN_MODEL);
          
          Properties props = connInfoProvider.getTeiidRelatedProperties(modelConnectionProfile);
          if (props.isEmpty())
-             return null;
+             return new FailedTeiidDataSource(
+        			 model.getFullPath().removeFileExtension().lastSegment(),
+        			 jndiName, ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE);
          
          String dataSourceType = connInfoProvider.getDataSourceType();
 
@@ -163,6 +175,8 @@ public class TeiidDataSourceFactory {
              return tds;
          }
 
-         return null;
+         return new FailedTeiidDataSource(
+    			 model.getFullPath().removeFileExtension().lastSegment(),
+    			 jndiName, ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE);
      }
 }
