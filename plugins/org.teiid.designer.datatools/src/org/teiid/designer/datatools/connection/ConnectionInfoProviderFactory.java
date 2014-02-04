@@ -127,6 +127,33 @@ public class ConnectionInfoProviderFactory {
         }
         return result;
     }
+    
+    /**
+     * @param modeResource a <code>ModelResource</code> with connection information.
+     * @return if a connection provider can be discovered for a model resource
+     */
+    public boolean hasProvider( ModelResource modelResource ) throws Exception {
+        if (!helper.hasConnectionInfo(modelResource)) {
+            return false;
+        }
+        
+        IConnectionProfile profile = helper.getConnectionProfile(modelResource);
+        if (null == profile) {
+        	return false;
+        }
+        
+        IConnectionInfoProvider result = getProvider(profile);
+
+        if (null == result) {
+            ICategory category = profile.getCategory();
+            if (null == category) {
+                return false;
+            }
+            result = getProvider(category);
+        }
+        
+        return result != null;
+    }
 
     public IConnectionInfoProvider getProvider( Properties props ) {
         IConnectionInfoProvider result = null;
