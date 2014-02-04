@@ -27,6 +27,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
+import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
@@ -151,11 +152,13 @@ public class VdbDeployer {
      * 
      * @param monitor the progress monitor (can be <code>null</code>)
      */
-    public void deploy( IProgressMonitor monitor ) {
+    public String deploy( IProgressMonitor monitor ) {
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
 
+        String failedModelName = null;
+        
         try {
             // since we need to deploy lets first check to make sure all the data sources exist on server
             if (!this.vdb.getModelEntries().isEmpty()) {
@@ -169,7 +172,7 @@ public class VdbDeployer {
                     // see if user canceled monitor
                     if (monitor.isCanceled()) {
                         this.status = DeployStatus.MONITOR_CANCELLED;
-                        return; // don't do anything else
+                        return null; // don't do anything else
                     }
 
                     String modelName = modelEntry.getName().toFile().getName();
@@ -253,13 +256,16 @@ public class VdbDeployer {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
                             TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-                            if (factory.createDataSource(teiidServer,
-                                                                 model,
-                                                                 sourceName,
-                                                                 false) == null) {
-                                this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
-                                break; // don't try again to create a DS
+                            
+                            ITeiidDataSource ds = factory.createDataSource(teiidServer, model, sourceName, false);
+                            
+                            if( ds == null ) {
+                            	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                            } else if( ds instanceof FailedTeiidDataSource ) {
+                            	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                            	failedModelName = model.getFullPath().removeFileExtension().lastSegment();
                             }
+                            break; // don't try again to create a DS
                         } else if (!hasJndiProblems) {
                             // DS doesn't exist and won't be auto-created, or model not in workspace
                             hasJndiProblems = true;
@@ -301,6 +307,12 @@ public class VdbDeployer {
         } finally {
             monitor.done();
         }
+        
+        if( failedModelName != null ) {
+        	return failedModelName;
+        }
+        
+        return null;
     }
     
     /*
