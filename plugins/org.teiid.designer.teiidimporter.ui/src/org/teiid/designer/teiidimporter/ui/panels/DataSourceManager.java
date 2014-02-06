@@ -186,6 +186,7 @@ public class DataSourceManager implements UiConstants {
                 try {
                     // Get properties for the source to copy
                     Properties dsProps = teiidImportServer.getDataSourceProperties(dataSourceToCopyName);
+                    dsProps.remove("jndi-name"); //$NON-NLS-1$
                     // Create source with the new name
                     teiidImportServer.getOrCreateDataSource(newDataSourceName, newDataSourceName, dataSourceToCopyDriver, dsProps);
                 } catch (Throwable e) {
