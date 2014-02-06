@@ -268,6 +268,14 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
 	}
 
     void initializeInTransaction() {
+    	if( this.importer.isReachedObjectsPage()) {
+    		final List lastTypes = this.importSettings.getIncludedTableTypes();
+            if (lastTypes != null && !lastTypes.isEmpty()) {
+            	this.listPanel.getTableViewer().setSelection(new StructuredSelection(lastTypes));
+            } 
+    		return;
+    	}
+    	
         // Connect to database chosen in previous page
         final JdbcDatabase db = ((JdbcImportWizard)getWizard()).getDatabase();
         if (db == null) {

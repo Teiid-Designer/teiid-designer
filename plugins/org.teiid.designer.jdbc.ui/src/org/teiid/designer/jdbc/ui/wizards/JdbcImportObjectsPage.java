@@ -380,6 +380,7 @@ public class JdbcImportObjectsPage extends WizardPage
         if (visible) {
             this.db = ((JdbcImportWizard)getWizard()).getDatabase();
             refresh();
+            this.importer.setReachedObjectsPage(true);
         }
         super.setVisible(visible);
         if( this.importer.isVdbSourceModel() ) {
