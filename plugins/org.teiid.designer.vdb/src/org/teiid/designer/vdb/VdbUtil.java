@@ -51,6 +51,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
+import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -460,6 +461,47 @@ public class VdbUtil {
 					
 				}
 				
+				// Check for duplicate model and/or user file names
+				Map<String, String> fileFileNames = new HashMap<String, String>();
+				Set<String> modelNamesWithMultiple = new HashSet<String>();
+				
+				for (ModelElement model : manifest.getModels()) {
+					String modelName = model.getName();
+					if( fileFileNames.get(modelName.toUpperCase()) != null ) {
+						modelNamesWithMultiple.add(modelName);
+					} else {
+						fileFileNames.put(modelName.toUpperCase(), modelName);
+					}
+				}
+				
+				// Add a problem for duplicate model names
+				for( String modelName : modelNamesWithMultiple ) {
+					statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+							VdbPlugin.UTIL.getString("vdbValidationError_duplicateModelNames", //$NON-NLS-1$
+							modelName, theVdb.getName())));
+					break;
+				}
+				
+				Set<String> fileNamesWithMultiple = new HashSet<String>();
+				
+				for (EntryElement file : manifest.getEntries()) {
+					String filePath = file.getPath();
+					IPath path = new Path(filePath);
+					String fileName = path.removeFileExtension().lastSegment();
+					if( fileFileNames.get(fileName.toUpperCase()) != null ) {
+						
+						fileNamesWithMultiple.add(fileName);
+					} else {
+						fileFileNames.put(fileName.toUpperCase(), fileName);
+					}
+				}
+				// Add a problem for duplicate file names
+				for( String fileName : fileNamesWithMultiple ) {
+					statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+							VdbPlugin.UTIL.getString("vdbValidationError_duplicateFileNames", //$NON-NLS-1$
+									fileName, theVdb.getName())));
+					break;
+				}
 
 			}
 		} else {
