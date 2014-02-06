@@ -74,6 +74,13 @@
       </internalUri>
       <priority> 1 </priority>
    </extension>
+   
+      <extension
+         point="org.teiid.designer.core.resourceValidator">
+      <class
+            name="org.teiid.designer.core.builder.ModelProjectResourceValidator">
+      </class>
+   </extension>
 
 <!-- Metamodel extensions -->
    <extension
