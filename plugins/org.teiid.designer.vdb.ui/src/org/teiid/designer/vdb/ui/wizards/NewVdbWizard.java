@@ -61,6 +61,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -82,6 +83,7 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
@@ -112,6 +114,7 @@ public final class NewVdbWizard extends AbstractWizard
     static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = VdbUiConstants.Util.getString("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
+    static final String SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES = VdbUiConstants.Util.getString("selectedModelsAndDependenciesContainDuplicateNamesMessage"); //$NON-NLS-1$
     
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
@@ -542,8 +545,6 @@ public final class NewVdbWizard extends AbstractWizard
                 true, null, wsFilter, validator, modelLabelProvider);
         
         addModels(models);
-        
-        
 	}
 	
 	void addModels(Object[] models) {
@@ -554,6 +555,8 @@ public final class NewVdbWizard extends AbstractWizard
 		}
 		
 		this.modelsViewer.refresh();
+        
+        validatePage();
 	}
 	
 	void removeModels(Collection<IResource> models) {
@@ -561,6 +564,8 @@ public final class NewVdbWizard extends AbstractWizard
 			modelsForVdb.remove(model);
 		}
 		this.modelsViewer.refresh();
+		
+		validatePage();
 	}
 
     /**
@@ -600,6 +605,26 @@ public final class NewVdbWizard extends AbstractWizard
      * @since 4.0
      */
     private void validatePage() {
+        // Validate any models selected for the new VDB to check for duplicate names
+        boolean okToAdd = true;
+        try {
+			for( IResource model : this.modelsForVdb ) {
+				if( !VdbUtil.canAddModelToVdb((IFile)model, null) ) {
+					okToAdd = false;
+					break;
+				}
+			}
+		} catch (ModelWorkspaceException ex) {
+			okToAdd = false;
+			VdbUiConstants.Util.log(ex);
+            WizardUtil.setPageComplete(this.mainPage, ex.getLocalizedMessage(), IMessageProvider.ERROR);
+		}
+        if( !okToAdd ) {
+        	this.mainPage.setPageComplete(false);
+        	this.mainPage.setErrorMessage(SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES);
+        	return;
+        }
+        
         final IContainer folder;
         try {
             folder = WizardUtil.validateFileAndFolder(this.nameText,
