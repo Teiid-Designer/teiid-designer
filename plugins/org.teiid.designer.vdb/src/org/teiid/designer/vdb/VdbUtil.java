@@ -24,12 +24,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -40,18 +42,22 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
-import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -481,27 +487,6 @@ public class VdbUtil {
 							modelName, theVdb.getName())));
 					break;
 				}
-				
-				Set<String> fileNamesWithMultiple = new HashSet<String>();
-				
-				for (EntryElement file : manifest.getEntries()) {
-					String filePath = file.getPath();
-					IPath path = new Path(filePath);
-					String fileName = path.removeFileExtension().lastSegment();
-					if( fileFileNames.get(fileName.toUpperCase()) != null ) {
-						
-						fileNamesWithMultiple.add(fileName);
-					} else {
-						fileFileNames.put(fileName.toUpperCase(), fileName);
-					}
-				}
-				// Add a problem for duplicate file names
-				for( String fileName : fileNamesWithMultiple ) {
-					statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
-							VdbPlugin.UTIL.getString("vdbValidationError_duplicateFileNames", //$NON-NLS-1$
-									fileName, theVdb.getName())));
-					break;
-				}
 
 			}
 		} else {
@@ -515,6 +500,82 @@ public class VdbUtil {
 		}
 		
 		return finalStatus;
+	}
+	
+	/**
+	 * @param modelName
+	 * @param vdb
+	 * @return if model already exists in VDB or not
+	 */
+	public static boolean modelAlreadyExistsInVdb(String modelName, Vdb vdb) {
+		// Check for duplicate model and/or user file names
+		Map<String, String> existingNames = new HashMap<String, String>();
+		
+		for (VdbModelEntry model : vdb.getModelEntries()) {
+			String existingName = model.getName().removeFileExtension().lastSegment();
+			existingNames.put(existingName.toUpperCase(), existingName);
+		}
+		
+		if(existingNames.get(modelName.toUpperCase()) != null ) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Method to determine whether or not a model file (xmi or xsd) can be added to a VDB.
+	 * The basic check is to look at the existing model names (without extension) and the target file to be added
+	 * and include any dependent models that would be added. ALL of these names (without extension) must be unique
+	 * and ignore case
+	 * 
+	 * @param model file either .xmi or .xsd
+	 * @param theVdb can be null
+	 * @return true if model can be added to an existing VDB
+	 * @throws ModelWorkspaceException 
+	 */
+	public static boolean canAddModelToVdb(final IFile model, final Vdb theVdb) throws ModelWorkspaceException {
+		ModelResource mr = ModelUtil.getModel(model);
+		
+		// Assume existing names will not include duplicates, but the MAP will insure they are unique
+		Map<String, String> existingNames = new HashMap<String, String>();
+		
+		if( theVdb != null ) {
+			for (VdbModelEntry modelEntry : theVdb.getModelEntries()) {
+				String existingName = modelEntry.getName().removeFileExtension().lastSegment();
+				existingNames.put(existingName.toUpperCase(), existingName);
+			}
+		}
+		
+		// Check target model first
+		String targetModelName = model.getFullPath().removeFileExtension().lastSegment();
+		if( existingNames.get(targetModelName.toUpperCase()) != null ) {
+			return false;
+		}
+		
+		existingNames.put(targetModelName.toUpperCase(), targetModelName);
+		
+		// Now get dependent models and check those
+		ResourceFinder finder = null;
+		try {
+			finder = ModelerCore.getModelContainer().getResourceFinder();
+        } catch (final Exception error) {
+            throw CoreModelerPlugin.toRuntimeException(error);
+        }
+		Resource[] refs = finder.findReferencesFrom(mr.getEmfResource(), true, false);
+		
+		for( Resource res : refs ) {
+			ModelResource modelRes = ModelUtil.getModel(res);
+			
+			String refModelName = modelRes.getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
+			if( existingNames.get(refModelName.toUpperCase()) != null ) {
+				return false;
+			}
+			
+			existingNames.put(refModelName.toUpperCase(), refModelName);
+		}
+
+		return true;
 	}
 	
 	/**

@@ -10,10 +10,12 @@ package org.teiid.designer.vdb.ui.build;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.PLUGIN_ID;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -74,7 +76,7 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	MISSING_TRANSLATOR_TYPE,
     	MISSING_JNDI_NAME,
     	MODEL_WITH_ERRORS,
-    	DUPLICATE_FILE_NAMES;
+    	DUPLICATE_MODEL_NAMES;
     }
     
     /**
@@ -192,7 +194,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				} else if( iStatus.getMessage().indexOf("and will not be ACTIVE") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MODEL_WITH_ERRORS);
     				} else if(iStatus.getMessage().indexOf("The VDB cannot contain models") > 0 ) { //$NON-NLS-1$
-    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DUPLICATE_FILE_NAMES);
+    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DUPLICATE_MODEL_NAMES);
     				} else {
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
     				}

@@ -27,6 +27,7 @@ import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
 import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.core.workspace.ModelUtil;
 
 /**
  *
@@ -58,8 +59,10 @@ public class ModelProjectResourceValidator implements ResourceValidator {
 		Collection<IPath> fullFilePathsInner = new ArrayList<IPath>();
 		
 		for( IFile file : allFiles) {
-			fullFilePaths.add(file.getFullPath());
-			fullFilePathsInner.add(file.getFullPath());
+			if( ModelUtil.isModelFile(file) || ModelUtil.isXsdFile(file) ) {
+				fullFilePaths.add(file.getFullPath());
+				fullFilePathsInner.add(file.getFullPath());
+			}
 		}
 		
 		Set<String> fileNamesWithMultiple = new HashSet<String>();
