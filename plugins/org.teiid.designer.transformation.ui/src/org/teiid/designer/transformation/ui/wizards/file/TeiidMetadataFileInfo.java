@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.query.IProcedureService;
@@ -905,7 +906,22 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 			}
 		} else {
 			String delim = "" + getDelimiter(); //$NON-NLS-1$
-			StringTokenizer strTokeniser = new StringTokenizer(rowString, delim);
+			char theDelim = getDelimiter().charAt(0);
+			
+			// For the case where no data value is in between delimiters, we need to add an ' ' space to allow the tokenizer
+			// to work
+			
+			StringBuilder sb = new StringBuilder();
+			int maxChar = rowString.length();
+			char[] chars = rowString.toCharArray();
+			for( int i=0; i<maxChar; i++ ) {
+				sb.append(chars[i]);
+				if( chars[i] == theDelim && chars[i+1] == theDelim) {
+					sb.append(StringUtilities.SPACE);
+				}
+			}
+			
+			StringTokenizer strTokeniser = new StringTokenizer(sb.toString(), delim);
 			while( strTokeniser.hasMoreTokens() ) {
 				String value = strTokeniser.nextToken().trim();
 				// Check for d_quoted column names
