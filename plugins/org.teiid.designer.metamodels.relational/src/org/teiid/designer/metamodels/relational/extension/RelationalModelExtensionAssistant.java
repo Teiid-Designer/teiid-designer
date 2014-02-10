@@ -17,8 +17,10 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.View;
@@ -51,7 +53,10 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         JAVA_METHOD(getPropertyId("java-method")), //$NON-NLS-1$
         FUNCTION_CATEGORY(getPropertyId("function-category")), //$NON-NLS-1$
         UDF_JAR_PATH(getPropertyId("udfJarPath")), //$NON-NLS-1$
-        ALLOW_JOIN(getPropertyId("allow-join")); //$NON-NLS-1$
+        ALLOW_JOIN(getPropertyId("allow-join")), //$NON-NLS-1$
+        NATIVE_TYPE(getPropertyId("native_type")), //$NON-NLS-1$
+        GLOBAL_TEMP_TABLE(getPropertyId("global-temp-table")); //$NON-NLS-1$
+        
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -121,6 +126,27 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
             // must be a table or a procedure in a physical model to have these properties
             if (PropertyName.same(PropertyName.NATIVE_QUERY, propId)) {
                 if (((modelObject instanceof Table) || (modelObject instanceof Procedure)) && isPhysical) {
+                    return propDefn;
+                }
+
+                // EObject should not have the native query property definition
+                return null;
+            }
+            
+            // must be a table and physical
+            if (PropertyName.same(PropertyName.GLOBAL_TEMP_TABLE, propId)) {
+                if (( modelObject instanceof Table )  && !isPhysical) {
+                    return propDefn;
+                }
+
+                // EObject should not have the native query property definition
+                return null;
+            }
+            
+            // must be a table or a procedure in a physical model to have these properties
+            if (PropertyName.same(PropertyName.NATIVE_TYPE, propId)) {
+                if (modelObject instanceof ProcedureParameter && isPhysical && 
+                	((ProcedureParameter)modelObject).getDirection() == DirectionKind.OUT_LITERAL) {
                     return propDefn;
                 }
 

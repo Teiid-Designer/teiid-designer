@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -44,11 +45,13 @@ import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.function.ScalarFunction;
+import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
@@ -116,6 +119,12 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         CoreArgCheck.isInstanceOf(SqlTransformationMappingRoot.class, eObject);
         SqlTransformationMappingRoot transRoot = (SqlTransformationMappingRoot)eObject;
 
+        // Check to see if the target is tagged as a Global Temp Table
+        EObject target = transRoot.getTarget();
+        if( target instanceof BaseTable && RelationalUtil.isGlobalTempTable(target)) {
+        	return; // DO NOTHING SQL can be empty
+        }
+        
         // create a validation result for the virtual group
         ValidationResult validationResult = new ValidationResultImpl(transRoot, transRoot.getTarget());
 

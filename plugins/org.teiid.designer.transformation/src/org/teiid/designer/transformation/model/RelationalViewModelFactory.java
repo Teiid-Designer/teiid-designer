@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.model;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -21,11 +20,10 @@ import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceItem;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
 import org.teiid.designer.relational.RelationalPlugin;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
@@ -164,6 +162,25 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
         }
 
         return newEObject;
+    }
+    
+    @Override
+	protected void applyTableExtensionProperties(RelationalTable tableRef, BaseTable baseTable, boolean isVirtual) {
+    	
+        // Set Extension Properties here
+        final RelationalModelExtensionAssistant assistant = getExtensionAssistant();
+        if( assistant != null ) {
+        	try {
+				if( ((RelationalViewTable)tableRef).isGlobalTempTable() ) {
+					assistant.setPropertyValue(baseTable, 
+							BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE, 
+							Boolean.toString(true) );
+        		}
+			} catch (Exception ex) {
+				RelationalPlugin.Util.log(IStatus.ERROR, ex, 
+	                	NLS.bind(org.teiid.designer.relational.Messages.relationalModelFactory_error_setting_extension_props_on_0, tableRef.getName()));
+			}
+        }
     }
 
 }

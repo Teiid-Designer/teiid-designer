@@ -221,12 +221,14 @@ public final class MetadataConstants {
         public static final short XML_MAPPING_CLASS_TYPE = 3;
         public static final short XML_STAGING_TABLE_TYPE = 4;
         public static final short MATERIALIZED_TYPE      = 5;
+        public static final short GLOBAL_TEMPORARY_TABLE_TYPE      = 6;
         public final static String[] TYPE_NAMES = { "Table", //$NON-NLS-1$
                                                     "View",  //$NON-NLS-1$
                                                     "Document",  //$NON-NLS-1$
                                                     "XmlMappingClass",  //$NON-NLS-1$
                                                     "XmlStagingTable", //$NON-NLS-1$
-                                                    "MaterializedTable" }; //$NON-NLS-1$
+                                                    "MaterializedTable", //$NON-NLS-1$ 
+                                                    "GlobalTemporaryTable"}; //$NON-NLS-1$
     }
     public final static String getTableTypeName(short type) {
         return TABLE_TYPES.TYPE_NAMES[type];

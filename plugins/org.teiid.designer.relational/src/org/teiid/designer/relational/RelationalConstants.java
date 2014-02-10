@@ -131,6 +131,7 @@ public interface RelationalConstants {
     
     class BASE_TABLE_EXT_PROPERTIES {
         public static final String NATIVE_QUERY = "relational:native-query"; //$NON-NLS-1$
+        public static final String VIEW_TABLE_GLOBAL_TEMP_TABLE = "relational:global-temp-table"; //$NON-NLS-1$
     }
     
     class FOREIGN_KEY_EXT_PROPERTIES {

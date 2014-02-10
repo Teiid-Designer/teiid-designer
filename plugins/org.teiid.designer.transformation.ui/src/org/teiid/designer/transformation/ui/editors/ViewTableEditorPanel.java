@@ -112,7 +112,8 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	private TabItem	indexesTab;
 	
 	// table property widgets
-	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB, includeUniqueConstraintCB;
+	private Button materializedCB, supportsUpdateCB, isSystemTableCB, includePrimaryKeyCB, includeUniqueConstraintCB,
+		globalTempTableCB;
 	private Button findTableReferenceButton;
 	private Label materializedTableLabel;
 	private Text cardinalityText, materializedTableText, 
@@ -239,6 +240,11 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	protected void synchronizeExtendedUI() {
 		if( WidgetUtil.widgetValueChanged(this.cardinalityText, this.getRelationalReference().getCardinality()) ) {
 			this.cardinalityText.setText(Integer.toString(this.getRelationalReference().getCardinality()));
+		}
+		
+		boolean isGlobalTempTable = this.getRelationalReference().isGlobalTempTable();
+		if( WidgetUtil.widgetValueChanged(globalTempTableCB, isGlobalTempTable)) {
+			this.materializedCB.setSelection(isGlobalTempTable);
 		}
 		
 		boolean isMaterialized = this.getRelationalReference().isMaterialized();	
@@ -370,6 +376,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
         	this.materializedTableLabel.setVisible(false);
         	this.materializedTableText.setVisible(false);
         	this.findTableReferenceButton.setVisible(false);
+        	this.globalTempTableCB.setVisible(false);
         }
 	}
 	
@@ -443,7 +450,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
             }
         });
 
-        this.materializedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
+        this.materializedCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.materializedCB);
         this.materializedCB.setText(Messages.materializedLabel);
         this.materializedCB.addSelectionListener(new SelectionAdapter() {
@@ -457,6 +464,21 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
                 if (!materializedCB.getSelection()) {
                     getRelationalReference().setMaterializedTable(null);
                 }
+                handleInfoChanged();
+            }
+        });
+        
+        this.globalTempTableCB = new Button(checkButtonPanel, SWT.CHECK | SWT.RIGHT);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.globalTempTableCB);
+        this.globalTempTableCB.setText(Messages.globalTempTableLabel);
+        this.globalTempTableCB.addSelectionListener(new SelectionAdapter() {
+            /**            		
+             * {@inheritDoc}
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                getRelationalReference().setGlobalTempTable(globalTempTableCB.getSelection());
                 handleInfoChanged();
             }
         });

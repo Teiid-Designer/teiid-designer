@@ -81,6 +81,7 @@ public class Messages extends NLS {
     public static String foreignKeysLabel;
     public static String primaryKeyLabel;
     public static String uniqueConstraintLabel;
+    public static String globalTempTableLabel;
 
     public static String nameLabel;
     public static String propertiesLabel;
