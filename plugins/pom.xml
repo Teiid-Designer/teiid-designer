@@ -56,6 +56,7 @@
 		<module>org.teiid.designer.metamodels.xsd</module>
 		<module>org.teiid.designer.metamodels.xsd.ui</module>
 		<module>org.teiid.designer.modelgenerator</module>
+		<module>org.teiid.designer.modelgenerator.ldap.ui</module>
 		<module>org.teiid.designer.modelgenerator.salesforce</module>
 		<module>org.teiid.designer.modelgenerator.salesforce.ui</module>
 		<module>org.teiid.designer.modelgenerator.ui</module>
