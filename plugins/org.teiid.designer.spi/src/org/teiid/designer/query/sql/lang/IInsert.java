@@ -21,7 +21,7 @@ public interface IInsert<ES extends IElementSymbol,
                                            E extends IExpression, 
                                            G extends IGroupSymbol, 
                                            Q extends IQueryCommand,
-                                           LV extends ILanguageVisitor> extends ICommand<E, LV> {
+                                           LV extends ILanguageVisitor> extends IProcedureContainer<E, LV> {
 
     /**
      * Returns the group being inserted into

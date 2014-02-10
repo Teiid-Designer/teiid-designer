@@ -14,7 +14,7 @@ import org.teiid.designer.query.sql.ILanguageVisitor;
  *
  */
 public interface IStoredProcedure<P extends ISPParameter, E extends IExpression, LV extends ILanguageVisitor> 
-    extends ICommand<E, LV> {
+    extends IProcedureContainer<E, LV> {
 
     void setProcedureID(Object procedureID);
     

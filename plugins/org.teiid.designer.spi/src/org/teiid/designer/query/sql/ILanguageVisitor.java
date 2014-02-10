@@ -33,6 +33,7 @@ import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.query.sql.lang.IOption;
 import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.designer.query.sql.lang.IOrderByItem;
+import org.teiid.designer.query.sql.lang.IProcedureContainer;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.ISetClause;
@@ -66,6 +67,7 @@ import org.teiid.designer.query.sql.proc.ITriggerAction;
 import org.teiid.designer.query.sql.proc.IWhileStatement;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IArray;
 import org.teiid.designer.query.sql.symbol.ICaseExpression;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IDerivedColumn;
@@ -131,6 +133,7 @@ public interface ILanguageVisitor {
     // Visitor methods for symbol objects
     void visit(IAggregateSymbol obj);
     void visit(IAliasSymbol obj);
+    void visit(IArray obj);
     void visit(IMultipleElementSymbol obj);
     void visit(IConstant obj);
     void visit(IElementSymbol obj);
@@ -174,6 +177,7 @@ public interface ILanguageVisitor {
     void visit(IWithQueryCommand obj);
     void visit(ITriggerAction obj);
     void visit(IArrayTable obj);
+    public void visit(IProcedureContainer obj);
 
     void visit(IAlterView obj);
     void visit(IAlterProcedure obj);

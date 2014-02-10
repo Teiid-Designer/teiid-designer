@@ -34,6 +34,7 @@ import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.designer.query.sql.lang.IOption;
 import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.designer.query.sql.lang.IOrderByItem;
+import org.teiid.designer.query.sql.lang.IProcedureContainer;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.ISetClause;
@@ -67,6 +68,7 @@ import org.teiid.designer.query.sql.proc.ITriggerAction;
 import org.teiid.designer.query.sql.proc.IWhileStatement;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IArray;
 import org.teiid.designer.query.sql.symbol.ICaseExpression;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IDerivedColumn;
@@ -312,6 +314,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     }
 
     @Override
+    public void visit(IProcedureContainer obj) {
+    }
+
+    @Override
     public void visit(ISetClauseList obj) {
     }
 
@@ -388,6 +394,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     }
 
     @Override
+    public void visit(IObjectTable objectTable) {
+    }
+
+    @Override
     public void visit(IAlterView obj) {
     }
 
@@ -404,7 +414,7 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     }
 
     @Override
-    public void visit(IObjectTable objectTable) {
+    public void visit(IArray array) {
     }
 
     @Override

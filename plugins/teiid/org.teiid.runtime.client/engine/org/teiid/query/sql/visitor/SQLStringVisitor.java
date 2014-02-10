@@ -117,6 +117,7 @@ import org.teiid.query.sql.lang.proc.TriggerAction;
 import org.teiid.query.sql.lang.proc.WhileStatement;
 import org.teiid.query.sql.lang.symbol.AggregateSymbol;
 import org.teiid.query.sql.lang.symbol.AliasSymbol;
+import org.teiid.query.sql.lang.symbol.Array;
 import org.teiid.query.sql.lang.symbol.CaseExpression;
 import org.teiid.query.sql.lang.symbol.Constant;
 import org.teiid.query.sql.lang.symbol.DerivedColumn;
@@ -2528,6 +2529,17 @@ public class SQLStringVisitor extends LanguageVisitor
             append(windowSpecification.getOrderBy());
         }
         append(Tokens.RPAREN);
+    }
+
+    @Override
+    public void visit(Array array) {
+        if (!array.isImplicit()) {
+            append(Tokens.LPAREN);
+        }
+        registerNodes(array.getExpressions(), 0);
+        if (!array.isImplicit()) {
+            append(Tokens.RPAREN);
+        }
     }
 
     private String escapeSinglePart(String part) {

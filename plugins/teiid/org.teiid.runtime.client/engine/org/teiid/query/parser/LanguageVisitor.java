@@ -76,6 +76,7 @@ import org.teiid.designer.query.sql.proc.ITriggerAction;
 import org.teiid.designer.query.sql.proc.IWhileStatement;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
+import org.teiid.designer.query.sql.symbol.IArray;
 import org.teiid.designer.query.sql.symbol.ICaseExpression;
 import org.teiid.designer.query.sql.symbol.IConstant;
 import org.teiid.designer.query.sql.symbol.IDerivedColumn;
@@ -171,6 +172,7 @@ import org.teiid.query.sql.lang.proc.TriggerAction;
 import org.teiid.query.sql.lang.proc.WhileStatement;
 import org.teiid.query.sql.lang.symbol.AggregateSymbol;
 import org.teiid.query.sql.lang.symbol.AliasSymbol;
+import org.teiid.query.sql.lang.symbol.Array;
 import org.teiid.query.sql.lang.symbol.CaseExpression;
 import org.teiid.query.sql.lang.symbol.Constant;
 import org.teiid.query.sql.lang.symbol.DerivedColumn;
@@ -772,6 +774,11 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         throw new UnsupportedOperationException();
     }
 
+    @Since( "8.0.0" )
+    public void visit(Array node) {
+        isApplicable(node);
+        throw new UnsupportedOperationException();
+    }
 
     // Visitor methods for language objects
     @Override
@@ -1193,5 +1200,10 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     @Override
     public void visit(IReturnStatement obj) {
         visit((ReturnStatement) obj);
+    }
+
+    @Override
+    public void visit(IArray obj) {
+        visit((Array) obj);
     }
 }
