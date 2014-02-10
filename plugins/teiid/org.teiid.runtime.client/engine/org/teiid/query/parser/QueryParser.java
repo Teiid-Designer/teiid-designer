@@ -24,6 +24,7 @@ package org.teiid.query.parser;
 
 import java.io.Reader;
 import java.io.StringReader;
+import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.parser.v8.Teiid8Parser;
@@ -39,7 +40,7 @@ import org.teiid.runtime.client.TeiidClientException;
  * input stream.  Putting multiple queries into the same stream will result
  * in unpredictable and most likely incorrect behavior.</p>
  */
-public class QueryParser {
+public class QueryParser implements IQueryParser {
 
 	private TeiidParser teiidParser;
 

@@ -31,6 +31,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -39,8 +40,65 @@ import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.language.SQLConstants.Tokens;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.*;
+import org.teiid.query.sql.lang.AlterProcedure;
+import org.teiid.query.sql.lang.AlterTrigger;
+import org.teiid.query.sql.lang.AlterView;
+import org.teiid.query.sql.lang.ArrayTable;
+import org.teiid.query.sql.lang.BetweenCriteria;
+import org.teiid.query.sql.lang.CompareCriteria;
+import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CriteriaSelector;
+import org.teiid.query.sql.lang.Delete;
+import org.teiid.query.sql.lang.Drop;
+import org.teiid.query.sql.lang.DynamicCommand;
+import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.lang.ExistsCriteria;
+import org.teiid.query.sql.lang.ExpressionCriteria;
+import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.lang.HasCriteria;
+import org.teiid.query.sql.lang.Insert;
+import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsNullCriteria;
+import org.teiid.query.sql.lang.JoinPredicate;
+import org.teiid.query.sql.lang.JoinType;
+import org.teiid.query.sql.lang.Labeled;
+import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.lang.Limit;
+import org.teiid.query.sql.lang.MatchCriteria;
+import org.teiid.query.sql.lang.NamespaceItem;
+import org.teiid.query.sql.lang.NotCriteria;
+import org.teiid.query.sql.lang.ObjectColumn;
+import org.teiid.query.sql.lang.ObjectTable;
+import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.lang.OrderByItem;
+import org.teiid.query.sql.lang.PredicateCriteria;
+import org.teiid.query.sql.lang.ProjectedColumn;
+import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.lang.SPParameter;
+import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.SetClause;
+import org.teiid.query.sql.lang.SetClauseList;
+import org.teiid.query.sql.lang.SetCriteria;
+import org.teiid.query.sql.lang.SetQuery;
+import org.teiid.query.sql.lang.SourceHint;
 import org.teiid.query.sql.lang.SourceHint.SpecificHint;
+import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.lang.SubqueryCompareCriteria;
+import org.teiid.query.sql.lang.SubqueryFromClause;
+import org.teiid.query.sql.lang.SubqueryHint;
+import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.lang.TextColumn;
+import org.teiid.query.sql.lang.TextTable;
+import org.teiid.query.sql.lang.TranslateCriteria;
+import org.teiid.query.sql.lang.UnaryFromClause;
+import org.teiid.query.sql.lang.Update;
+import org.teiid.query.sql.lang.WithQueryCommand;
+import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.lang.proc.AssignmentStatement;
 import org.teiid.query.sql.lang.proc.Block;
 import org.teiid.query.sql.lang.proc.BranchingStatement;
@@ -91,7 +149,8 @@ import org.teiid.translator.SourceSystemFunctions;
  * The SQLStringVisitor will visit a set of ast nodes and return the corresponding SQL string representation.
  * </p>
  */
-public class SQLStringVisitor extends LanguageVisitor implements SQLConstants.Reserved, SQLConstants.Tokens {
+public class SQLStringVisitor extends LanguageVisitor
+    implements SQLConstants.Reserved, SQLConstants.Tokens, ISQLStringVisitor<LanguageObject> {
 
     /**
      * Undefined
@@ -134,6 +193,7 @@ public class SQLStringVisitor extends LanguageVisitor implements SQLConstants.Re
      * @param languageObject
      * @return sql representation of {@link LanguageObject}
      */
+    @Override
     public String returnSQLString(LanguageObject languageObject) {
         if (languageObject == null) {
             return UNDEFINED;

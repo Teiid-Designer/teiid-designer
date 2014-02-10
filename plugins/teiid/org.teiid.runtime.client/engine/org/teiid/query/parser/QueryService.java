@@ -8,6 +8,11 @@
 package org.teiid.query.parser;
 
 import java.util.Set;
+import org.teiid.designer.query.IQueryFactory;
+import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -17,7 +22,7 @@ import org.teiid.query.sql.visitor.SQLStringVisitor;
 /**
  *
  */
-public class QueryService {
+public class QueryService implements IQueryService {
 
     private final ITeiidServerVersion teiidVersion;
 
@@ -25,8 +30,11 @@ public class QueryService {
 
     //    private final SystemFunctionManager systemFunctionManager = new SystemFunctionManager();
 
-    //    private final SyntaxFactory factory = new SyntaxFactory();
+    private SyntaxFactory factory;
 
+    /**
+     * @param teiidVersion
+     */
     public QueryService(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
     }
@@ -34,7 +42,8 @@ public class QueryService {
     /**
      * @return a query parser applicable to the given teiid instance version
      */
-    public QueryParser getQueryParser() {
+    @Override
+    public IQueryParser getQueryParser() {
         if (queryParser == null) {
             queryParser = new QueryParser(teiidVersion);
         }
@@ -42,18 +51,22 @@ public class QueryService {
         return queryParser;
     }
 
+    @Override
     public boolean isReservedWord(String word) {
         return SQLConstants.isReservedWord(teiidVersion, word);
     }
 
+    @Override
     public boolean isProcedureReservedWord(String word) {
         return ProcedureReservedWords.isProcedureReservedWord(teiidVersion, word);
     }
 
+    @Override
     public Set<String> getReservedWords() {
         return SQLConstants.getReservedWords(teiidVersion);
     }
 
+    @Override
     public Set<String> getNonReservedWords() {
         return SQLConstants.getNonReservedWords(teiidVersion);
     }
@@ -127,8 +140,12 @@ public class QueryService {
     //                                                      functionTrees.values().toArray(new FunctionTree[0]));
     //    }
     //
-    public SyntaxFactory createQueryFactory() {
-        return new SyntaxFactory(getQueryParser().getTeiidParser());
+    @Override
+    public IQueryFactory createQueryFactory() {
+        if (factory == null)
+            factory = new SyntaxFactory(((QueryParser) getQueryParser()).getTeiidParser());
+
+        return factory;
     }
 
     //    
@@ -137,32 +154,33 @@ public class QueryService {
     //        return new MappingDocumentFactory();
     //    }
     //
-    //    @Override
-    //    public String getSymbolName(IExpression expression) {
-    //        if (expression instanceof ISymbol) {
-    //            return ((ISymbol) expression).getName();
-    //        }
-    //        
-    //        return "expr"; //$NON-NLS-1$
-    //    }
-    //
-    //    @Override
-    //    public String getSymbolShortName(String name) {
-    //        int index = name.lastIndexOf(ISymbol.SEPARATOR);
-    //        if(index >= 0) { 
-    //            return name.substring(index+1);
-    //        }
-    //        return name;
-    //    }
-    //
-    //    @Override
-    //    public String getSymbolShortName(IExpression expression) {
-    //        if (expression instanceof ISymbol) {
-    //            return ((ISymbol)expression).getShortName();
-    //        }
-    //        return "expr"; //$NON-NLS-1$
-    //    }
+        @Override
+        public String getSymbolName(IExpression expression) {
+            if (expression instanceof ISymbol) {
+                return ((ISymbol) expression).getName();
+            }
+            
+            return "expr"; //$NON-NLS-1$
+        }
+    
+        @Override
+        public String getSymbolShortName(String name) {
+            int index = name.lastIndexOf(ISymbol.SEPARATOR);
+            if(index >= 0) { 
+                return name.substring(index+1);
+            }
+            return name;
+        }
+    
+        @Override
+        public String getSymbolShortName(IExpression expression) {
+            if (expression instanceof ISymbol) {
+                return ((ISymbol)expression).getShortName();
+            }
+            return "expr"; //$NON-NLS-1$
+        }
 
+    @Override
     public SQLStringVisitor getSQLStringVisitor() {
         return new SQLStringVisitor(teiidVersion);
     }
@@ -254,6 +272,7 @@ public class QueryService {
     //        return new WrappedQueryResolver();
     //    }
 
+    @Override
     public ProcedureService getProcedureService() {
         return new ProcedureService(teiidVersion);
     }

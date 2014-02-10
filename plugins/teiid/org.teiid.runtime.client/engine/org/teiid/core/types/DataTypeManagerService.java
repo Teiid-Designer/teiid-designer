@@ -50,7 +50,11 @@ import org.teiid.runtime.client.TeiidClientException;
 public class DataTypeManagerService implements IDataTypeManagerService {
 
     public static final int MAX_STRING_LENGTH = PropertiesUtils.getIntProperty(System.getProperties(), "org.teiid.maxStringLength", 4000); //$NON-NLS-1$
-    
+
+    private static final boolean COMPARABLE_LOBS = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.comparableLobs", false); //$NON-NLS-1$
+
+    private static final boolean COMPARABLE_OBJECT = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.comparableObject", false); //$NON-NLS-1$
+
     public static final int MAX_LOB_MEMORY_BYTES = Math.max(nextPowOf2(2*MAX_STRING_LENGTH), 1<<13);
     
     private static final String ARRAY_SUFFIX = "[]"; //$NON-NLS-1$
@@ -559,6 +563,19 @@ public class DataTypeManagerService implements IDataTypeManagerService {
             return DataSourceTypes.UNKNOWN.id();
 
         return dataSourceType.id();
+    }
+
+    /**
+     * Is the data type represented by the given type class comparable
+     *
+     * @param type
+     * @return true if type is comparable, false otherwise
+     */
+    public boolean isNonComparable(Class<?> type) {
+        return (!COMPARABLE_OBJECT && DefaultDataTypes.OBJECT.getTypeClass().equals(type))
+            || (!COMPARABLE_LOBS && DefaultDataTypes.BLOB.getTypeClass().equals(type))
+            || (!COMPARABLE_LOBS && DefaultDataTypes.CLOB.getTypeClass().equals(type))
+            || DefaultDataTypes.XML.getTypeClass().equals(type);
     }
 
     /**
