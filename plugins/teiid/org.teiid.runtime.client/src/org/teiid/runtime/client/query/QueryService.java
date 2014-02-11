@@ -15,12 +15,14 @@ import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.xml.IMappingDocumentFactory;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.proc.ProcedureService;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
+import org.teiid.runtime.client.xml.MappingDocumentFactory;
 
 /**
  *
@@ -152,12 +154,11 @@ public class QueryService implements IQueryService {
         return factory;
     }
 
-        
-//    @Override
-//    public IMappingDocumentFactory getMappingDocumentFactory() {
-//        getQueryParser();
-//        return new MappingDocumentFactory(queryParser.getTeiidParser());
-//    }
+    @Override
+    public IMappingDocumentFactory getMappingDocumentFactory() {
+        getQueryParser();
+        return new MappingDocumentFactory(queryParser.getTeiidParser());
+    }
 
     @Override
     public String getSymbolName(IExpression expression) {

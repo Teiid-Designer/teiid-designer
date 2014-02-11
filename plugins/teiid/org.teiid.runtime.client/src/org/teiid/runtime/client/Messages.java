@@ -121,6 +121,19 @@ public class Messages {
     }
 
     @SuppressWarnings( "javadoc" )
+    public enum Mapping {
+        unknown_node_type,
+        invalid_criteria_node,
+        noCriteria,
+        invalidName;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT + name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
     public enum ERR {
         ERR_003_029_0002,
         ERR_003_029_0003,
