@@ -82,10 +82,19 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
     @Override
     public String getName() {
         if (value instanceof ITeiidDataSource) {
+        	String nodeName = null;
             if (((ITeiidDataSource) value).getDisplayName() != null) {
-                return ((ITeiidDataSource) value).getDisplayName();
+            	nodeName = ((ITeiidDataSource) value).getDisplayName();
             }
-            return ((ITeiidDataSource) value).getName();
+            nodeName = ((ITeiidDataSource) value).getName();
+            
+            String jndiName = ((ITeiidDataSource)value).getPropertyValue("jndi-name"); //$NON-NLS-1$
+            if(jndiName!=null && !jndiName.isEmpty()) {
+            	nodeName += " [JNDI: " + jndiName + "]";  //$NON-NLS-1$ //$NON-NLS-2$
+            } else {
+            	nodeName += " [JNDI: java:/" + nodeName + "]";  //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            return nodeName;
         }
         
         if (value instanceof ITeiidTranslator) {

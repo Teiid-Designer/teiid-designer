@@ -159,12 +159,17 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
         column.getColumn().setText(Messages.dataSourcePanel_nameColText);
-        column.setLabelProvider(new DataSourceLabelProvider(true));
+        column.setLabelProvider(new DataSourceLabelProvider(0));
+        column.getColumn().pack();
+
+        column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
+        column.getColumn().setText(Messages.dataSourcePanel_jndiNameColText);
+        column.setLabelProvider(new DataSourceLabelProvider(1));
         column.getColumn().pack();
 
         column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
         column.getColumn().setText(Messages.dataSourcePanel_typeColText);
-        column.setLabelProvider(new DataSourceLabelProvider(false));
+        column.setLabelProvider(new DataSourceLabelProvider(2));
         column.getColumn().pack();
 
         this.dataSourcesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -468,6 +473,15 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             // Name
             String name = dataSource.getName();
             dsObj.setName(name);
+
+            String sourceJndiName = dataSource.getPropertyValue("jndi-name");  //$NON-NLS-1$
+            if(sourceJndiName!=null) {
+            	dsObj.setJndiName(sourceJndiName);
+            // The jndi property may not be present if the source was just created.  Use the default name.
+            } else {
+            	dsObj.setJndiName("java:/"+name); //$NON-NLS-1$
+            }
+
             // Driver name
             String dsDriver = dataSourceManager.getDataSourceDriver(name);
             dsObj.setDriver(dsDriver);
@@ -487,6 +501,15 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         return (selectedDS==null) ? null : selectedDS.getName();
     }
     
+    /**
+     * Get the currently selected DataSource JNDI Name
+     * @return the selected dataSource JNDI name
+     */
+    public String getSelectedDataSourceJndiName() {
+        DataSourceItem selectedDS = getSelectedDataSource();
+        return (selectedDS==null) ? null : selectedDS.getJndiName();
+    }
+
     /**
      * Get the currently selected DataSource driver name
      * @return the selected dataSource driver
@@ -564,10 +587,14 @@ public final class DataSourcePanel extends Composite implements UiConstants {
      */
     class DataSourceLabelProvider extends ColumnLabelProvider {
 
-        private final boolean nameColumn;
+    	public int NAME_COL = 0;
+    	public int JNDI_COL = 1;
+    	public int DRIVER_COL = 2;
+   	
+        private int cType;
 
-        public DataSourceLabelProvider( boolean nameColumn ) {
-            this.nameColumn = nameColumn;
+        public DataSourceLabelProvider( int colType ) {
+            this.cType = colType;
         }
 
         /**
@@ -589,8 +616,10 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         public String getText( Object element ) {
             DataSourceItem dataSourceItem = (DataSourceItem)element;
 
-            if (this.nameColumn) {
+            if (this.cType == NAME_COL) {
                 return dataSourceItem.getName();
+            } else if(this.cType == JNDI_COL) {
+            	return dataSourceItem.getJndiName();
             } else {
                 return dataSourceItem.getDriver();
             }
@@ -605,8 +634,10 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         public String getToolTipText( Object element ) {
             DataSourceItem dataSourceItem = (DataSourceItem)element;
 
-            if (this.nameColumn) {
+            if (this.cType == NAME_COL) {
                 return dataSourceItem.getName();
+            } else if(this.cType == JNDI_COL) {
+            	return dataSourceItem.getJndiName();
             } else {
                 return Messages.dataSourcePanel_driverTooltipPrefix+dataSourceItem.getName();
             }

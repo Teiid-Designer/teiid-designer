@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String errorNameInvalid;
     
     public static String createDataSourcePanel_name;
+    public static String createDataSourcePanel_jndiName;
     public static String createDataSourcePanel_driver;
     public static String createDataSourcePanel_driversGroupTxt;
     public static String createDataSourcePanel_dataSourcePropertiesGroupTxt;
@@ -57,6 +58,7 @@ public class Messages extends NLS {
     public static String dataSourcePanel_editButtonTooltip;
     public static String dataSourcePanel_copyButtonTooltip;
     public static String dataSourcePanel_nameColText;
+    public static String dataSourcePanel_jndiNameColText;
     public static String dataSourcePanel_typeColText;
     public static String dataSourcePanel_createErrorTitle;
     public static String dataSourcePanel_deleteErrorTitle;

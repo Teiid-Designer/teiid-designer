@@ -205,6 +205,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     @Override
     public void selectionChanged(String selectedSourceName) {
         importManager.setDataSourceName(this.dataSourcePanel.getSelectedDataSourceName());
+        importManager.setDataSourceJndiName(this.dataSourcePanel.getSelectedDataSourceJndiName());
         importManager.setDataSourceDriverName(this.dataSourcePanel.getSelectedDataSourceDriver());
         importManager.setDataSourceProperties(this.propertiesPanel.getDataSourceProperties());
         
