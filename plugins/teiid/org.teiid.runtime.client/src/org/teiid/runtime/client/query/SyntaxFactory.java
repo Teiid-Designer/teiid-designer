@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.parser;
+package org.teiid.runtime.client.query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +63,8 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
+import org.teiid.query.parser.TeiidNodeFactory;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;

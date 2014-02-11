@@ -5,16 +5,19 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.parser;
+package org.teiid.runtime.client.query;
 
 import java.util.Set;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
+import org.teiid.designer.query.IQueryResolver;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.language.SQLConstants;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.proc.ProcedureService;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
@@ -70,6 +73,7 @@ public class QueryService implements IQueryService {
     public Set<String> getNonReservedWords() {
         return SQLConstants.getNonReservedWords(teiidVersion);
     }
+
     //
     //    @Override
     //    public String getJDBCSQLTypeName(int jdbcType) {
@@ -143,42 +147,43 @@ public class QueryService implements IQueryService {
     @Override
     public IQueryFactory createQueryFactory() {
         if (factory == null)
-            factory = new SyntaxFactory(((QueryParser) getQueryParser()).getTeiidParser());
+            factory = new SyntaxFactory(((QueryParser)getQueryParser()).getTeiidParser());
 
         return factory;
     }
 
-    //    
-    //    @Override
-    //    public IMappingDocumentFactory getMappingDocumentFactory() {
-    //        return new MappingDocumentFactory();
-    //    }
-    //
-        @Override
-        public String getSymbolName(IExpression expression) {
-            if (expression instanceof ISymbol) {
-                return ((ISymbol) expression).getName();
-            }
-            
-            return "expr"; //$NON-NLS-1$
+        
+//    @Override
+//    public IMappingDocumentFactory getMappingDocumentFactory() {
+//        getQueryParser();
+//        return new MappingDocumentFactory(queryParser.getTeiidParser());
+//    }
+
+    @Override
+    public String getSymbolName(IExpression expression) {
+        if (expression instanceof ISymbol) {
+            return ((ISymbol)expression).getName();
         }
-    
-        @Override
-        public String getSymbolShortName(String name) {
-            int index = name.lastIndexOf(ISymbol.SEPARATOR);
-            if(index >= 0) { 
-                return name.substring(index+1);
-            }
-            return name;
+
+        return "expr"; //$NON-NLS-1$
+    }
+
+    @Override
+    public String getSymbolShortName(String name) {
+        int index = name.lastIndexOf(ISymbol.SEPARATOR);
+        if (index >= 0) {
+            return name.substring(index + 1);
         }
-    
-        @Override
-        public String getSymbolShortName(IExpression expression) {
-            if (expression instanceof ISymbol) {
-                return ((ISymbol)expression).getShortName();
-            }
-            return "expr"; //$NON-NLS-1$
+        return name;
+    }
+
+    @Override
+    public String getSymbolShortName(IExpression expression) {
+        if (expression instanceof ISymbol) {
+            return ((ISymbol)expression).getShortName();
         }
+        return "expr"; //$NON-NLS-1$
+    }
 
     @Override
     public SQLStringVisitor getSQLStringVisitor() {
@@ -242,7 +247,7 @@ public class QueryService implements IQueryService {
     //    }
     //
     //    @Override
-    //    public IUpdateValidator getUpdateValidator(IQueryMetadataInterface metadata,
+    //    public IUpdateValidator getUpdateValidator(QueryMetadataInterface metadata,
     //                                               TransformUpdateType tInsertType,
     //                                               TransformUpdateType tUpdateType,
     //                                               TransformUpdateType tDeleteType) {
@@ -257,7 +262,7 @@ public class QueryService implements IQueryService {
     //
     //    @Override
     //    public void resolveGroup(IGroupSymbol groupSymbol,
-    //                             IQueryMetadataInterface metadata) throws Exception {
+    //                             QueryMetadataInterface metadata) throws Exception {
     //        CrossQueryMetadata crossMetadata = new CrossQueryMetadata(metadata);
     //        ResolverUtil.resolveGroup((GroupSymbol) groupSymbol, crossMetadata);
     //    }
@@ -267,10 +272,10 @@ public class QueryService implements IQueryService {
     //        ResolverUtil.fullyQualifyElements((Command) command);
     //    }
     //
-    //    @Override
-    //    public IQueryResolver getQueryResolver() {
-    //        return new WrappedQueryResolver();
-    //    }
+    @Override
+    public IQueryResolver getQueryResolver() {
+        return new QueryResolver();
+    }
 
     @Override
     public ProcedureService getProcedureService() {
