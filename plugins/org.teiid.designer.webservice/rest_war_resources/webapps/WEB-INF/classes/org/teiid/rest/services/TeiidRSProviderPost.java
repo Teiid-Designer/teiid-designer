@@ -63,7 +63,6 @@ public class TeiidRSProviderPost {
 
     	Connection conn = null;
     	PreparedStatement statement = null;
-    	ResultSet set = null;
     	Object result = null;
     	InputStream resultStream = null;
      
@@ -101,7 +100,7 @@ public class TeiidRSProviderPost {
                                                   RestPlugin.Util.getString("TeiidRSProvider.2")); //$NON-NLS-1$
                 }
 
-                set.close();
+                rs.close();
             }
 
             statement.close(); 
