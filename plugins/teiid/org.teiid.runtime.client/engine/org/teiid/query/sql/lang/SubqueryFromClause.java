@@ -5,15 +5,15 @@ package org.teiid.query.sql.lang;
 import java.util.Collection;
 import org.teiid.designer.query.sql.lang.ISubqueryFromClause;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
 public class SubqueryFromClause extends FromClause
-    implements ISubqueryFromClause<LanguageVisitor, Command> {
+    implements SubqueryContainer<Command>, ISubqueryFromClause<LanguageVisitor, Command> {
 
     private GroupSymbol symbol;
 

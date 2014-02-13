@@ -30,7 +30,7 @@ import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 

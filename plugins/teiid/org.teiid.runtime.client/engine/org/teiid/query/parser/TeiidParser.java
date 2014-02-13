@@ -14,8 +14,8 @@ import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.LanguageObject;
-import org.teiid.query.sql.lang.proc.Statement;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *

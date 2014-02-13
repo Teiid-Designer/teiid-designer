@@ -9,8 +9,8 @@ import org.teiid.designer.query.sql.lang.ITextTable;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *

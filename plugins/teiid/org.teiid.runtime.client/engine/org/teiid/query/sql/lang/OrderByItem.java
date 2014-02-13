@@ -6,7 +6,7 @@ import org.teiid.designer.query.sql.lang.IOrderByItem;
 import org.teiid.language.SortSpecification;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *
@@ -19,6 +19,8 @@ public class OrderByItem extends SimpleNode
     private Expression symbol;
 
     private NullOrdering nullOrdering;
+
+    private Integer expressionPosition; //set during resolving to the select clause position
 
     /**
      * @param p
@@ -62,6 +64,20 @@ public class OrderByItem extends SimpleNode
      */
     public void setNullOrdering(NullOrdering nullOrdering) {
         this.nullOrdering = nullOrdering;
+    }
+
+    /**
+     * @return expression position set during resolving
+     */
+    public int getExpressionPosition() {
+        return expressionPosition == null?-1:expressionPosition;
+    }
+
+    /**
+     * @param expressionPosition
+     */
+    public void setExpressionPosition(int expressionPosition) {
+        this.expressionPosition = expressionPosition;
     }
 
     @Override

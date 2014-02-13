@@ -2,13 +2,21 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.resolver.util.ResolverUtil;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.util.SymbolMap;
 
 /**
  *
@@ -24,9 +32,9 @@ public class SetQuery extends QueryCommand
 
     private QueryCommand rightQuery;
 
-//    private List<Class<?>> projectedTypes = null;  //set during resolving
+    private List<Class<?>> projectedTypes = null;  //set during resolving
 
-//    private QueryMetadataInterface metadata = null; // set during resolving
+    private IQueryMetadataInterface metadata = null; // set during resolving
 
     /**
      * @param p
@@ -139,11 +147,53 @@ public class SetQuery extends QueryCommand
     public List<Expression> getProjectedSymbols() {
         Query query = getProjectedQuery();
         List projectedSymbols = query.getProjectedSymbols();
-        // TODO uncomment when consideration of metadata is complete
-//        if (projectedTypes != null) {
-//            return getTypedProjectedSymbols(projectedSymbols, projectedTypes, metadata);
-//        } 
+        if (projectedTypes != null) {
+            return getTypedProjectedSymbols(projectedSymbols, projectedTypes, metadata);
+        } 
         return projectedSymbols;
+    }
+
+    /**
+     * @param projectedTypes The projectedSymbols to set.
+     * @param metadata
+     */
+    public void setProjectedTypes(List<Class<?>> projectedTypes, IQueryMetadataInterface metadata) {
+        this.projectedTypes = projectedTypes;
+        this.metadata = metadata;
+    }
+
+    /** 
+     * @return Returns the projectedTypes.
+     */
+    public List<Class<?>>  getProjectedTypes() {
+        return this.projectedTypes;
+    }
+
+    public static List<Expression> getTypedProjectedSymbols(List<? extends Expression> acutal, List<Class<?>> projectedTypes, IQueryMetadataInterface metadata) {
+        List<Expression> newProject = new ArrayList<Expression>();
+        for (int i = 0; i < acutal.size(); i++) {
+            Expression originalSymbol = acutal.get(i);
+            Expression symbol = originalSymbol;
+            Class<?> type = projectedTypes.get(i);
+            if (symbol.getType() != type) {
+                symbol = SymbolMap.getExpression(originalSymbol);
+                try {
+                    symbol = ResolverUtil.convertExpression(symbol, DataTypeManagerService.getInstance().getDataTypeName(type), metadata);
+                } catch (Exception err) {
+                     throw new RuntimeException(err);
+                }
+
+                if (originalSymbol instanceof Symbol) {
+                    TeiidParser teiidParser = originalSymbol.getTeiidParser();
+                    AliasSymbol aliasSymbol = teiidParser.createASTNode(ASTNodes.ALIAS_SYMBOL);
+                    aliasSymbol.setName(Symbol.getShortName(originalSymbol));
+                    aliasSymbol.setSymbol(symbol);
+                    symbol = aliasSymbol;
+                } 
+            }
+            newProject.add(symbol);
+        }
+        return newProject;
     }
 
     @Override

@@ -20,8 +20,8 @@ import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.ProcedureReservedWords;
-import org.teiid.query.sql.proc.ProcedureService;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
+import org.teiid.runtime.client.proc.ProcedureService;
 import org.teiid.runtime.client.xml.MappingDocumentFactory;
 
 /**

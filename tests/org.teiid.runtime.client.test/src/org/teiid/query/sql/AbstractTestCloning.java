@@ -13,8 +13,8 @@ import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.proc.Statement;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *

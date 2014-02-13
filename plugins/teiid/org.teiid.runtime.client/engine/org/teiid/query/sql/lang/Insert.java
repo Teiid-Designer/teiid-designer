@@ -8,13 +8,13 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
-public class Insert extends Command
+public class Insert extends ProcedureContainer
     implements IInsert<ElementSymbol, Expression, GroupSymbol, QueryCommand, LanguageVisitor> {
 
     /** Identifies the group to be updated. */
@@ -246,6 +246,7 @@ public class Insert extends Command
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
         return clone;
     }
 

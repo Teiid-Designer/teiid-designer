@@ -8,16 +8,21 @@ import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.DerivedColumn;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.DerivedColumn;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
 @Since("8.0.0")
 public class ObjectTable extends FromClause implements IObjectTable<LanguageVisitor> {
+
+    /**
+     * Default language key for script engine
+     */
+    public static final String DEFAULT_LANGUAGE = "teiid_script"; //$NON-NLS-1$
 
     private List<ObjectColumn> columns = new ArrayList<ObjectColumn>();
 
@@ -111,6 +116,14 @@ public class ObjectTable extends FromClause implements IObjectTable<LanguageVisi
     @Override
     public void collectGroups(Collection<GroupSymbol> groups) {
         groups.add(symbol);
+    }
+
+    /**
+     * Get GroupSymbol representing the named subquery 
+     * @return GroupSymbol representing the subquery
+     */
+    public GroupSymbol getGroupSymbol() {
+        return this.symbol;    
     }
 
     @Override

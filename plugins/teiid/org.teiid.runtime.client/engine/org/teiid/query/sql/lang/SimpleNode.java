@@ -31,6 +31,11 @@ public class SimpleNode implements Node, LanguageObject {
     }
 
     @Override
+    public TeiidParser getTeiidParser() {
+        return parser;
+    }
+
+    @Override
     public void jjtOpen() {
     }
 

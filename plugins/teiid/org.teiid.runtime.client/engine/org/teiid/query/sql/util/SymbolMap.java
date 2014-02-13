@@ -31,10 +31,10 @@ import java.util.List;
 import java.util.Map;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.query.sql.lang.ElementSymbol;
-import org.teiid.query.sql.lang.symbol.AliasSymbol;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.ExpressionSymbol;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 
 public class SymbolMap {

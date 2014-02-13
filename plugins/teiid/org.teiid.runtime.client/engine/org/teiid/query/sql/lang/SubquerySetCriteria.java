@@ -5,13 +5,13 @@ package org.teiid.query.sql.lang;
 import org.teiid.designer.query.sql.lang.ISubquerySetCriteria;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *
  */
 public class SubquerySetCriteria extends AbstractSetCriteria
-implements ISubquerySetCriteria<Expression, LanguageVisitor, QueryCommand>{
+implements SubqueryContainer<QueryCommand>, ISubquerySetCriteria<Expression, LanguageVisitor, QueryCommand>{
 
     private QueryCommand command;
 

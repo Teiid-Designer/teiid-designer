@@ -32,8 +32,8 @@ import java.util.Map;
 import org.teiid.core.util.LRUCache;
 import org.teiid.designer.query.metadata.IMetadataID;
 import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.Symbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Symbol;
 
 /**
  * This class represents a temporary metadata ID.  A temporary metadata ID 

@@ -5,15 +5,15 @@ package org.teiid.query.sql.lang;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IUpdate;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
-public class Update extends Command implements IUpdate<Expression, LanguageVisitor> {
+public class Update extends ProcedureContainer implements IUpdate<Expression, LanguageVisitor> {
 
     private SetClauseList changeList;
 
@@ -156,6 +156,7 @@ public class Update extends Command implements IUpdate<Expression, LanguageVisit
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
         return clone;
     }
 

@@ -15,10 +15,10 @@ import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.proc.Statement;
-import org.teiid.query.sql.lang.symbol.AliasSymbol;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *

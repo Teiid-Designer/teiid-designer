@@ -7,7 +7,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IFromClause;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * A FromClause is an interface for subparts held in a FROM clause.  One 

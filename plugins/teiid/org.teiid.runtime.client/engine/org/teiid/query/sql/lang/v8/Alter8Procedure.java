@@ -5,7 +5,7 @@ package org.teiid.query.sql.lang.v8;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.AlterProcedure;
-import org.teiid.query.sql.lang.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
 
 /**
  * From Teiid version 8 onwards the AlterProcedure has a CreateProcedureCommand generic

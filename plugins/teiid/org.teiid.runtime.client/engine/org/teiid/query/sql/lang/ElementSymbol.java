@@ -4,11 +4,11 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
-import org.teiid.query.sql.lang.symbol.Symbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Symbol;
 
 /**
  *
@@ -25,6 +25,8 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
     private DisplayMode displayMode = DisplayMode.OUTPUT_NAME;
 
     private boolean isExternalReference;
+
+    private boolean isAggregate;
 
     /**
      * @param p
@@ -164,10 +166,27 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
         return this.isExternalReference;  
     }
 
+    /**
+     * @return is aggregate flag
+     */
+    public boolean isAggregate() {
+        return isAggregate;
+    }
+    
+    /**
+     * @param isAggregate
+     */
+    public void setAggregate(boolean isAggregate) {
+        this.isAggregate = isAggregate;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
+        result = prime * result + ((this.displayMode == null) ? 0 : this.displayMode.hashCode());
+        result = prime * result + (this.isAggregate ? 1231 : 1237);
+        result = prime * result + (this.isExternalReference ? 1231 : 1237);
         result = prime * result + ((this.metadataID == null) ? 0 : this.metadataID.hashCode());
         result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
         return result;
@@ -175,16 +194,29 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         ElementSymbol other = (ElementSymbol)obj;
+        if (this.displayMode != other.displayMode)
+            return false;
+        if (this.isAggregate != other.isAggregate)
+            return false;
+        if (this.isExternalReference != other.isExternalReference)
+            return false;
         if (this.metadataID == null) {
-            if (other.metadataID != null) return false;
-        } else if (!this.metadataID.equals(other.metadataID)) return false;
+            if (other.metadataID != null)
+                return false;
+        } else if (!this.metadataID.equals(other.metadataID))
+            return false;
         if (this.type == null) {
-            if (other.type != null) return false;
-        } else if (!this.type.equals(other.type)) return false;
+            if (other.type != null)
+                return false;
+        } else if (!this.type.equals(other.type))
+            return false;
         return true;
     }
 
@@ -212,6 +244,9 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             clone.setOutputName(getOutputName());
         if(getShortName() != null)
             clone.setShortName(getShortName());
+
+        clone.isExternalReference = isExternalReference;
+        clone.isAggregate = isAggregate;
 
         return clone;
     }

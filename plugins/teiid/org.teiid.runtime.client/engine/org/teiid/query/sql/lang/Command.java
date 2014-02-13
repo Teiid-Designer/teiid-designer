@@ -3,15 +3,20 @@
 package org.teiid.query.sql.lang;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.util.SymbolMap;
 
 /**
  *
@@ -26,6 +31,17 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     private SourceHint sourceHint;
 
     private boolean isResolved;
+
+    private transient GroupContext externalGroups;
+
+    private SymbolMap correlatedReferences;
+
+    /**
+     * All temporary group IDs discovered while resolving this 
+     * command.  The key is a TempMetadataID and the value is an 
+     * ordered List of TempMetadataID representing the elements.
+     */
+    protected TempMetadataStore tempGroupIDs;
 
     /**
      * @param p
@@ -116,6 +132,93 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
             updateCommandSymbol = Arrays.asList((Expression)symbol);
         }
         return updateCommandSymbol;
+    }
+
+    protected void copyMetadataState(Command copy) {
+        if(this.getExternalGroupContexts() != null) {
+            copy.externalGroups = (GroupContext)this.externalGroups.clone();
+        }
+        if(this.tempGroupIDs != null) {
+            copy.setTemporaryMetadata(this.tempGroupIDs.clone());
+        }
+        
+        copy.setIsResolved(this.isResolved());
+
+        if (this.correlatedReferences != null) {
+            copy.correlatedReferences = this.correlatedReferences.clone();
+        }
+        if(this.getOption() != null) { 
+            copy.setOption(this.getOption().clone());
+        }
+
+        copy.sourceHint = this.sourceHint;
+    }
+
+    /**
+     * @return temporary group ids
+     */
+    public TempMetadataStore getTemporaryMetadata() {
+        return this.tempGroupIDs;
+    }
+
+    /**
+     * @param metadata
+     */
+    public void setTemporaryMetadata(TempMetadataStore metadata) {
+        this.tempGroupIDs = metadata;
+    }
+
+    /**
+     * @param group
+     */
+    public void addExternalGroupToContext(GroupSymbol group) {
+        getExternalGroupContexts().addGroup(group);
+    }
+
+    /**
+     * @param groups
+     */
+    public void addExternalGroupsToContext(Collection<GroupSymbol> groups) {
+        getExternalGroupContexts().getGroups().addAll(groups);
+    }
+
+    /**
+     * @param root
+     */
+    public void setExternalGroupContexts(GroupContext root) {
+        if (root == null) {
+            this.externalGroups = null;
+        } else {
+            this.externalGroups = (GroupContext)root.clone();
+        }
+    }
+    
+    /**
+     * @param groups
+     */
+    public void pushNewResolvingContext(Collection<GroupSymbol> groups) {
+        externalGroups = new GroupContext(externalGroups, new LinkedList<GroupSymbol>(groups));
+    }
+
+    /**
+     * @return external groups
+     */
+    public GroupContext getExternalGroupContexts() {
+        if (externalGroups == null) {
+            this.externalGroups = new GroupContext();
+        }
+        return this.externalGroups;
+    }
+    
+    /**
+     * @return external groups
+     */
+    public List<GroupSymbol> getAllExternalGroups() {
+        if (externalGroups == null) {
+            return Collections.emptyList();
+        }
+        
+        return externalGroups.getAllGroups();
     }
 
     @Override

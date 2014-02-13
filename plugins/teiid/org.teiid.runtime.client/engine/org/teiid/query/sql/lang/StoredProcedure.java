@@ -12,16 +12,16 @@ import java.util.TreeMap;
 import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
 import org.teiid.designer.query.sql.lang.IStoredProcedure;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.runtime.client.Messages;
 
 /**
  *
  */
-public class StoredProcedure extends Command
+public class StoredProcedure extends ProcedureContainer
     implements IStoredProcedure<SPParameter, Expression, LanguageVisitor> {
 
     /** Used as parameters */
@@ -240,6 +240,11 @@ public class StoredProcedure extends Command
     }
 
     @Override
+    public GroupSymbol getGroup() {
+        return getGroupSymbol();
+    }
+
+    @Override
     public String getGroupName() {
         return getGroupSymbol().getName();
     }
@@ -364,6 +369,7 @@ public class StoredProcedure extends Command
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
         return clone;
     }
 

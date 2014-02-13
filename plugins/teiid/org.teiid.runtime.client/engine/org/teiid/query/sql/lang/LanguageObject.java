@@ -24,12 +24,18 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidParser;
 
 
 /**
  * Root interface for all language object interfaces.
  */
 public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
+
+    /**
+     * @return associated parser
+     */
+    TeiidParser getTeiidParser();
 
     /**
      * @return copy of this language object

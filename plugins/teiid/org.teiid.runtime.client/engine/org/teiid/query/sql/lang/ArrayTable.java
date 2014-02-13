@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
@@ -73,6 +73,14 @@ public class ArrayTable extends FromClause implements IArrayTable<LanguageVisito
     public void setName(String name) {
         this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
         this.symbol.setName(name);
+    }
+
+    /**
+     * Get GroupSymbol representing the named subquery 
+     * @return GroupSymbol representing the subquery
+     */
+    public GroupSymbol getGroupSymbol() {
+        return this.symbol;    
     }
 
     @Override

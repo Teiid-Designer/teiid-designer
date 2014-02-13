@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -30,6 +30,15 @@ public class OrderBy extends SimpleNode
     @Override
     public List<OrderByItem> getOrderByItems() {
         return this.orderByItems;
+    }
+
+    /**
+     * Returns the ORDER BY element at the specified index.
+     * @param index Index to get
+     * @return The element at the index
+     */
+    public Expression getVariable( int index ) {
+        return orderByItems.get(index).getSymbol();
     }
 
     /**
@@ -61,6 +70,22 @@ public class OrderBy extends SimpleNode
     @Override
     public int getVariableCount() {
         return orderByItems.size();
+    }
+
+    /**
+     * @param orderIndex
+     * @return expression position set during resolving
+     */
+    public int getExpressionPosition(int orderIndex) {
+        return this.orderByItems.get(orderIndex).getExpressionPosition();
+    }
+
+    /**
+     * @param orderIndex
+     * @param selectIndex
+     */
+    public void setExpressionPosition(int orderIndex, int selectIndex) {
+        this.orderByItems.get(orderIndex).setExpressionPosition(selectIndex);
     }
 
     @Override

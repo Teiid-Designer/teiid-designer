@@ -5,16 +5,16 @@ package org.teiid.query.sql.lang;
 import org.teiid.designer.query.sql.lang.ISubqueryCompareCriteria;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.ScalarSubquery;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ScalarSubquery;
 
 /**
  *
  */
 public class SubqueryCompareCriteria extends AbstractCompareCriteria
-    implements ISubqueryCompareCriteria< LanguageVisitor, QueryCommand> {
+    implements SubqueryContainer<QueryCommand>, ISubqueryCompareCriteria< LanguageVisitor, QueryCommand> {
 
     /**
      * Predicate quantifiers

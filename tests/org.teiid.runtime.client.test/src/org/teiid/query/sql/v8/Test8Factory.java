@@ -10,9 +10,9 @@ package org.teiid.query.sql.v8;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.AbstractTestFactory;
-import org.teiid.query.sql.lang.symbol.AggregateSymbol;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.WindowFunction;
+import org.teiid.query.sql.symbol.AggregateSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.WindowFunction;
 
 /**
  *

@@ -36,10 +36,10 @@ import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.*;
-import org.teiid.query.sql.lang.proc.*;
-import org.teiid.query.sql.lang.symbol.*;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria.PredicateQuantifier;
+import org.teiid.query.sql.proc.*;
+import org.teiid.query.sql.symbol.*;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
@@ -1827,7 +1827,7 @@ name=query expression
 description=A declarative query for data.
 example={code:sql}SELECT * FROM tbl WHERE col2 = 1{code}
 */
-QueryCommand queryExpression(ParseInfo info) #QueryCommand :
+QueryCommand queryExpression(ParseInfo info) #void :
 {
     QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
@@ -5011,6 +5011,15 @@ AlterProcedure alterProcedure() #AlterProcedure :
 }
 
 AlterView alterView() #AlterView :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+Array array() #Array :
 {
 }
 {

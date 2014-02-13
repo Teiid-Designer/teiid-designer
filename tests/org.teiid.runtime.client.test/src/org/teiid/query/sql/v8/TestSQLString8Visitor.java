@@ -19,21 +19,21 @@ import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
-import org.teiid.query.sql.lang.proc.AssignmentStatement;
-import org.teiid.query.sql.lang.proc.Block;
-import org.teiid.query.sql.lang.proc.CommandStatement;
-import org.teiid.query.sql.lang.proc.CreateProcedureCommand;
-import org.teiid.query.sql.lang.proc.ExceptionExpression;
-import org.teiid.query.sql.lang.proc.IfStatement;
-import org.teiid.query.sql.lang.proc.LoopStatement;
-import org.teiid.query.sql.lang.proc.RaiseStatement;
-import org.teiid.query.sql.lang.proc.Statement;
-import org.teiid.query.sql.lang.proc.BranchingStatement.BranchingMode;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.Function;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
-import org.teiid.query.sql.lang.symbol.JSONObject;
-import org.teiid.query.sql.lang.symbol.XMLSerialize;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.ExceptionExpression;
+import org.teiid.query.sql.proc.IfStatement;
+import org.teiid.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.proc.RaiseStatement;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.JSONObject;
+import org.teiid.query.sql.symbol.XMLSerialize;
 
 /**
  * Unit testing for the SQLStringVisitor for teiid version 8

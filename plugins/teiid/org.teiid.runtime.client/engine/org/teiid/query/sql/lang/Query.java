@@ -8,9 +8,9 @@ import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *
@@ -236,6 +236,12 @@ public class Query extends QueryCommand
     @Override
     public Query getProjectedQuery() {
         return this;
+    }
+
+    public boolean hasAggregates() {
+        return getGroupBy() != null 
+        || getHaving() != null 
+        || !AggregateSymbolCollectorVisitor.getAggregates(getSelect(), false).isEmpty();
     }
 
     @Override

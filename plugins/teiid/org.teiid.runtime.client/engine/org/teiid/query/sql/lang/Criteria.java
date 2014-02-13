@@ -11,7 +11,7 @@ import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICriteria;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *

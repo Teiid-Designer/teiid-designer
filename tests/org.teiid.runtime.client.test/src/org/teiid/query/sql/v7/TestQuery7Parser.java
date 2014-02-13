@@ -25,18 +25,18 @@ import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.TranslateCriteria;
-import org.teiid.query.sql.lang.proc.AssignmentStatement;
-import org.teiid.query.sql.lang.proc.Block;
-import org.teiid.query.sql.lang.proc.BranchingStatement.BranchingMode;
-import org.teiid.query.sql.lang.proc.CommandStatement;
-import org.teiid.query.sql.lang.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.lang.proc.IfStatement;
-import org.teiid.query.sql.lang.proc.LoopStatement;
-import org.teiid.query.sql.lang.proc.RaiseErrorStatement;
-import org.teiid.query.sql.lang.proc.Statement;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.Function;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.proc.AssignmentStatement;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CommandStatement;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.IfStatement;
+import org.teiid.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.proc.RaiseErrorStatement;
+import org.teiid.query.sql.proc.Statement;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.Function;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  * Unit testing for the Query Parser for teiid version 7

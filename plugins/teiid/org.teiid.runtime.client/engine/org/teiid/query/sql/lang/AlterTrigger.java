@@ -5,8 +5,8 @@ package org.teiid.query.sql.lang;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.proc.TriggerAction;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.proc.TriggerAction;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *

@@ -35,7 +35,7 @@ import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 
 public abstract class AbstractTeiidParser implements TeiidParser {

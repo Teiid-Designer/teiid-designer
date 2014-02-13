@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.teiid.designer.query.sql.lang.ISetCriteria;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *
@@ -15,6 +15,8 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
 
     /** The set of value expressions */
     private Collection<Expression> values;
+
+    private boolean allConstants;
 
     /**
      * @param p
@@ -40,23 +42,45 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
         this.values = values;
     }
 
+    /**
+     * @return allConstants
+     */
+    public boolean isAllConstants() {
+        return allConstants;
+    }
+    
+    /**
+     * @param allConstants
+     */
+    public void setAllConstants(boolean allConstants) {
+        this.allConstants = allConstants;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
+        result = prime * result + (this.allConstants ? 1231 : 1237);
         result = prime * result + ((this.values == null) ? 0 : this.values.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         SetCriteria other = (SetCriteria)obj;
+        if (this.allConstants != other.allConstants)
+            return false;
         if (this.values == null) {
-            if (other.values != null) return false;
-        } else if (!this.values.equals(other.values)) return false;
+            if (other.values != null)
+                return false;
+        } else if (!this.values.equals(other.values))
+            return false;
         return true;
     }
 
@@ -75,6 +99,8 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());
         clone.setNegated(isNegated());
+
+        clone.allConstants = allConstants;
 
         return clone;
     }

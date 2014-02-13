@@ -6,13 +6,13 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IDelete;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
-public class Delete extends Command
+public class Delete extends ProcedureContainer
     implements IDelete<Criteria, GroupSymbol, Expression, LanguageVisitor>{
 
     /** Identifies the group to delete data from. */
@@ -128,6 +128,7 @@ public class Delete extends Command
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
         return clone;
     }
 

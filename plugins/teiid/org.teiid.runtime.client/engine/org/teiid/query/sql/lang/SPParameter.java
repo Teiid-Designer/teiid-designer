@@ -27,9 +27,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -39,7 +39,7 @@ import org.teiid.runtime.client.Messages;
 * The connector will utilize this class to set the appropriate values at the
 * datasource layer.
 */
-public class SPParameter implements ISPParameter {
+public class SPParameter implements ISPParameter<ElementSymbol> {
 
     /** Constant identifying an IN parameter */
     public static final int IN = ParameterInfo.IN.index();

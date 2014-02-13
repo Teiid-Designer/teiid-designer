@@ -10,7 +10,7 @@ import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *

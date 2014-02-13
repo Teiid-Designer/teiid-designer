@@ -15,13 +15,13 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.TranslateCriteria;
-import org.teiid.query.sql.lang.proc.Block;
-import org.teiid.query.sql.lang.proc.CreateUpdateProcedureCommand;
-import org.teiid.query.sql.lang.proc.IfStatement;
-import org.teiid.query.sql.lang.symbol.AggregateSymbol;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.ExpressionSymbol;
-import org.teiid.query.sql.lang.symbol.WindowFunction;
+import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
+import org.teiid.query.sql.proc.IfStatement;
+import org.teiid.query.sql.symbol.AggregateSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.WindowFunction;
 
 /**
  *

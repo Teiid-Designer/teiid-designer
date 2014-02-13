@@ -8,7 +8,7 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Removed;
-import org.teiid.query.sql.lang.symbol.Expression;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  * Interface only applicable to the Teiid 7 parser

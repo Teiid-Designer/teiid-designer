@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.teiid.designer.query.sql.lang.IUnaryFromClause;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *

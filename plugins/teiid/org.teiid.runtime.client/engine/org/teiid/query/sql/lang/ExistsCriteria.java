@@ -9,7 +9,8 @@ import org.teiid.query.parser.TeiidParser;
 /**
  *
  */
-public class ExistsCriteria extends Criteria implements PredicateCriteria, IExistsCriteria<LanguageVisitor, QueryCommand> {
+public class ExistsCriteria extends Criteria
+    implements PredicateCriteria, SubqueryContainer<QueryCommand>, IExistsCriteria<LanguageVisitor, QueryCommand> {
 
     private QueryCommand command;
 
