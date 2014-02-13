@@ -12,15 +12,22 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 
 
 /**
@@ -264,18 +271,28 @@ public class TeiidMetadataImportInfo implements UiConstants {
 			info.setDoProcess(doProcess);
 			if( doProcess ) {
 				if( getSourceModelName() == null ) {
-					String fileName = info.getDataFile().getName();
-					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
-						fileName = fileName.substring(0, fileName.length()-4);
+					String initialName = "SourceModel"; //$NON-NLS-1$
+					if( getSourceModelLocation() != null ) {
+						initialName = ModelNameUtil.getNewUniqueModelName(initialName, getTargetProject());
 					}
-					setSourceModelName(fileName + "_Source"); //$NON-NLS-1$
+					setSourceModelName(initialName);
+//					String fileName = info.getDataFile().getName();
+//					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
+//						fileName = fileName.substring(0, fileName.length()-4);
+//					}
+//					setSourceModelName(fileName + "_Source"); //$NON-NLS-1$
 				}
 				if( getViewModelName() == null ) {
-					String fileName = info.getDataFile().getName();
-					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
-						fileName = fileName.substring(0, fileName.length()-4);
+					String initialName = "ViewModel"; //$NON-NLS-1$
+					if( getViewModelLocation() != null ) {
+						initialName = ModelNameUtil.getNewUniqueModelName(initialName, getTargetProject());
 					}
-					setViewModelName(fileName + "_View"); //$NON-NLS-1$
+					setViewModelName(initialName);
+//					String fileName = info.getDataFile().getName();
+//					if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
+//						fileName = fileName.substring(0, fileName.length()-4);
+//					}
+//					setViewModelName(fileName + "_View"); //$NON-NLS-1$
 				}
 			}
 		}
@@ -286,6 +303,22 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		
 		validate();
 	}
+	
+    public IProject getTargetProject() {
+        IProject result = null;
+        String containerName = getSourceModelLocation().toString();
+
+        if (!CoreStringUtil.isEmpty(containerName)) {
+            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
+            IResource resource = root.findMember(new Path(containerName));
+
+            if (resource.exists()) {
+                result = resource.getProject();
+            }
+        }
+
+        return result;
+    }
 	
 	public TeiidMetadataFileInfo getCheckedFileInfo() {
 		for( TeiidMetadataFileInfo info : getFileInfos()) {
@@ -333,7 +366,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public Collection<TeiidMetadataFileInfo> getFileInfos() {
 		return fileInfoMap.values();
 	}
-	
+
 	public Collection<TeiidXmlFileInfo> getXmlFileInfos() {
 		return xmlFileInfoMap.values();
 	}
@@ -442,6 +475,16 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public String getFileFilterText() {
 		return this.fileFilterText;
 	}
+	
+//	private IProject getTargetProject() {
+//		if( getSourceModelLocation() != null ) {
+//			IPath sourceModelPath = getSourceModelLocation();
+//			IContainer container = ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(sourceModelPath);
+//			return container.getProject();
+//		}
+//		
+//		return null;
+//	}
 	
     /**
      * {@inheritDoc}
