@@ -16,9 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
@@ -38,7 +36,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
  *
  * @since 8.0
  */
-@SuppressWarnings("javadoc")
+
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants, ITeiidMetadataFileInfo {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
@@ -246,10 +244,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
 		
 		//loadHeader();
-		
-		IPath filePath = new Path(getDataFile().getName());
-		String fileName = filePath.removeFileExtension().lastSegment();
-		setViewTableName(fileName + "View"); //$NON-NLS-1$
+
+		setViewTableName("new_table"); //$NON-NLS-1$
 	}
 
 	/**

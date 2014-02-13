@@ -9,6 +9,9 @@ package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.ui.UiConstants;
 
 /**
  * Utility class providing model name analysis and validation methods
@@ -71,5 +74,40 @@ public abstract class ModelNameUtil {
     	ModelNameChecker checker = new ModelNameChecker(proposedModelName, fileExtension, null, flags);
     	
     	return checker.validate();
+    }
+    
+    /**
+     * Method to generate a unique model name if a model name already exits in the project
+     * 
+     * This is designed for importers that auto-create names during the import
+     * 
+     * @param proposedNameWithoutExtension the proposed file name
+     * @param project the target project
+     * @return a unique model name within that project
+     */
+    public static String getNewUniqueModelName(String proposedNameWithoutExtension, IContainer project) {
+    	ModelNameChecker checker = new ModelNameChecker(
+    			proposedNameWithoutExtension, ModelerCore.MODEL_FILE_EXTENSION,	project, NO_DUPLICATE_MODEL_NAMES);
+    	
+    	IStatus status = checker.validate();
+    	
+    	if( status.getSeverity() == IStatus.ERROR) {
+    		// We have duplicate model names
+    		int count = 1;
+    		String newName = proposedNameWithoutExtension + '_' + Integer.toString(count);
+    		
+    		while( status.getSeverity() == IStatus.ERROR && count < 20 ) {
+    			checker = new ModelNameChecker(newName, ModelerCore.MODEL_FILE_EXTENSION, 
+    	    					project, NO_DUPLICATE_MODEL_NAMES);
+    			count++;
+    			if( checker.validate().getSeverity() != IStatus.ERROR) {
+    				return newName;
+    			}
+    			newName = proposedNameWithoutExtension + '_' + Integer.toString(count);
+    		}
+    		
+    	}
+    	
+    	return proposedNameWithoutExtension;
     }
 }
