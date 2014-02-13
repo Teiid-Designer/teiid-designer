@@ -34,6 +34,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -232,6 +233,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         	// Assume UDF
         	if( this.getRelationalReference().getUdfJarPath() != null ) {
         		this.udfJarPathText.setText(this.getRelationalReference().getUdfJarPath());
+        		this.udfJarPathText.setSelection(this.udfJarPathText.getText().length());
         	}
         }
 	}
