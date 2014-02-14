@@ -1242,6 +1242,8 @@ public class WebServiceBuilderHelper {
             TransformationHelper.setSelectSqlString(mappingRoot, sqlString, false, null);
             // reconcile mappings
             TransformationMappingHelper.reconcileMappingsOnSqlChange(mappingRoot, null);
+            
+            TransformationMappingHelper.reconcileTargetAttributes(mappingRoot, null);
         }
     }
 }
