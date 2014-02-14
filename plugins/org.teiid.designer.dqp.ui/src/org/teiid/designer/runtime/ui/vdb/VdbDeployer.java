@@ -210,10 +210,14 @@ public class VdbDeployer {
                     // DS with matching jndi not found on server
                     if (!StringUtilities.isEmpty(jndiName) && !dataSourceWithJndiExists(jndiName)) {
 
-                        // auto-create if user did not change the default DS name
-                        String defaultName = VdbModelEntry.createDefaultSourceName(modelEntry.getName());
-
-                        if (sourceName.equals(defaultName) && this.autoCreateDsOnServer) {
+                        // auto-create if jndiName not different than sourceName
+                        String jndiNameWithoutContext = jndiName;
+                    	// incoming jndiName may not have context, so try that also since server can match it
+                    	if(jndiName.startsWith(JNDI_CONTEXT)) {
+                    		jndiNameWithoutContext = jndiName.substring(JNDI_CONTEXT.length());
+                    	}
+                        
+                        if (sourceName.equals(jndiNameWithoutContext) && this.autoCreateDsOnServer) {
                             autoCreate = true; // create without asking user
                         }
 
@@ -257,15 +261,16 @@ public class VdbDeployer {
 
                             TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
                             
-                            ITeiidDataSource ds = factory.createDataSource(teiidServer, model, sourceName, false);
+                            ITeiidDataSource ds = factory.createDataSource(teiidServer, model, jndiNameWithoutContext, false);
                             
                             if( ds == null ) {
                             	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                                break; // don't try again to create a DS
                             } else if( ds instanceof FailedTeiidDataSource ) {
                             	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
                             	failedModelName = model.getFullPath().removeFileExtension().lastSegment();
+                                break; // don't try again to create a DS
                             }
-                            break; // don't try again to create a DS
                         } else if (!hasJndiProblems) {
                             // DS doesn't exist and won't be auto-created, or model not in workspace
                             hasJndiProblems = true;
