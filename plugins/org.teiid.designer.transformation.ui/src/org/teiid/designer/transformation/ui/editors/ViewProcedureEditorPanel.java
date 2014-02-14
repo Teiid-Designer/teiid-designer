@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -231,7 +232,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         if( this.isFunction() ) {
         	// Assume UDF
         	if( this.getRelationalReference().getUdfJarPath() != null ) {
+        		int caret = this.udfJarPathText.getCaretPosition();
         		this.udfJarPathText.setText(this.getRelationalReference().getUdfJarPath());
+        		this.udfJarPathText.setSelection(caret);
         	}
         }
 	}
