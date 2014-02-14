@@ -4,8 +4,8 @@ package org.teiid.query.sql.proc;
 
 import org.teiid.designer.query.sql.proc.IAssignmentStatement;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Query;
@@ -16,7 +16,7 @@ import org.teiid.query.sql.symbol.ScalarSubquery;
 /**
  *
  */
-public class AssignmentStatement extends Statement implements IAssignmentStatement<Expression, LanguageVisitor> {
+public class AssignmentStatement extends Statement implements ExpressionStatement, IAssignmentStatement<Expression, LanguageVisitor> {
 
     // the variable to which a value is assigned
     private ElementSymbol variable;
@@ -29,6 +29,16 @@ public class AssignmentStatement extends Statement implements IAssignmentStateme
      */
     public AssignmentStatement(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The type of this statement
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_ASSIGNMENT;
     }
 
     /**
@@ -107,6 +117,14 @@ public class AssignmentStatement extends Statement implements IAssignmentStateme
     public void setVariable(ElementSymbol variable) {
         this.variable = variable;
     }   
+
+    @Override
+    public Class<?> getExpectedType() {
+        if (this.variable == null) {
+            return null;
+        }
+        return this.variable.getType();
+    }
 
     @Override
     public int hashCode() {

@@ -30,6 +30,16 @@ public class IfStatement extends Statement implements IIfStatement<LanguageVisit
     }
 
     /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_IF;
+    }
+
+    /**
      * Get the statement's IF block.
      * @return The IF <code>Block</code> object.
      */

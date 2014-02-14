@@ -22,6 +22,16 @@ public class ReturnStatement extends AssignmentStatement implements IReturnState
         super(p, id);
     }
 
+    /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_RETURN;
+    }
+
     /** Accept the visitor. **/
     @Override
     public void acceptVisitor(LanguageVisitor visitor) {

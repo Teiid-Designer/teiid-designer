@@ -832,31 +832,32 @@ RaiseErrorStatement raiseErrorStatement(Expression expression) #RaiseErrorStatem
  * Parse statement
  * @throws ParseException if parsing failed
  */
-Statement statement(ParseInfo info) #Statement :
+Statement statement(ParseInfo info) #void :
 {
+    Statement statement;
     String label = null;
 }
 {
     (
 	 LOOKAHEAD(2) ([label = id() <COLON>] 
 	  (
-	   jjtThis = loopStatement(info) |
-	   jjtThis = whileStatement(info) |
-	   jjtThis = compoundStatement(info)
+	   statement = loopStatement(info) |
+	   statement = whileStatement(info) |
+	   statement = compoundStatement(info)
 	  )
 	  {
-	  	((Labeled) jjtThis).setLabel(label);
+	  	((Labeled) statement).setLabel(label);
 	  }
 	 )
 	 |
 	 (
-      jjtThis = ifStatement(info) |
-      jjtThis = delimitedStatement(info)
+      statement = ifStatement(info) |
+      statement = delimitedStatement(info)
 	 )
 	)
     
     {
-        return jjtThis;
+        return statement;
     }
 }
 

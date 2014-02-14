@@ -3,21 +3,16 @@
 package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ITextTable;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.symbol.Expression;
-import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
-public class TextTable extends FromClause implements ITextTable<LanguageVisitor> {
-
-    private GroupSymbol symbol;
+public class TextTable extends TableFunctionReference implements ITextTable<LanguageVisitor> {
 
     private Expression file;
 
@@ -45,34 +40,6 @@ public class TextTable extends FromClause implements ITextTable<LanguageVisitor>
      */
     public TextTable(TeiidParser p, int id) {
         super(p, id);
-    }
-
-    /**
-     * Get name of this clause.
-     * @return Name of clause
-     */
-    public String getName() {
-        return this.symbol.getName();   
-    }
-    
-    /** 
-     * Reset the alias for this subquery from clause and it's pseudo-GroupSymbol.  
-     * WARNING: this will modify the hashCode and equals semantics and will cause this object
-     * to be lost if currently in a HashMap or HashSet.
-     * @param name New name
-     * @since 4.3
-     */
-    public void setName(String name) {
-        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
-        this.symbol.setName(name);
-    }
-
-    /**
-     * Get GroupSymbol representing the named subquery 
-     * @return GroupSymbol representing the subquery
-     */
-    public GroupSymbol getGroupSymbol() {
-        return this.symbol;    
     }
 
     /**
@@ -216,11 +183,6 @@ public class TextTable extends FromClause implements ITextTable<LanguageVisitor>
     }
 
     @Override
-    public void collectGroups(Collection<GroupSymbol> groups) {
-        groups.add(getGroupSymbol());
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -233,44 +195,60 @@ public class TextTable extends FromClause implements ITextTable<LanguageVisitor>
         result = prime * result + ((this.quote == null) ? 0 : this.quote.hashCode());
         result = prime * result + ((this.selector == null) ? 0 : this.selector.hashCode());
         result = prime * result + ((this.skip == null) ? 0 : this.skip.hashCode());
-        result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
         result = prime * result + (this.usingRowDelimiter ? 1231 : 1237);
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         TextTable other = (TextTable)obj;
         if (this.columns == null) {
-            if (other.columns != null) return false;
-        } else if (!this.columns.equals(other.columns)) return false;
+            if (other.columns != null)
+                return false;
+        } else if (!this.columns.equals(other.columns))
+            return false;
         if (this.delimiter == null) {
-            if (other.delimiter != null) return false;
-        } else if (!this.delimiter.equals(other.delimiter)) return false;
-        if (this.escape != other.escape) return false;
+            if (other.delimiter != null)
+                return false;
+        } else if (!this.delimiter.equals(other.delimiter))
+            return false;
+        if (this.escape != other.escape)
+            return false;
         if (this.file == null) {
-            if (other.file != null) return false;
-        } else if (!this.file.equals(other.file)) return false;
-        if (this.fixedWidth != other.fixedWidth) return false;
+            if (other.file != null)
+                return false;
+        } else if (!this.file.equals(other.file))
+            return false;
+        if (this.fixedWidth != other.fixedWidth)
+            return false;
         if (this.header == null) {
-            if (other.header != null) return false;
-        } else if (!this.header.equals(other.header)) return false;
+            if (other.header != null)
+                return false;
+        } else if (!this.header.equals(other.header))
+            return false;
         if (this.quote == null) {
-            if (other.quote != null) return false;
-        } else if (!this.quote.equals(other.quote)) return false;
+            if (other.quote != null)
+                return false;
+        } else if (!this.quote.equals(other.quote))
+            return false;
         if (this.selector == null) {
-            if (other.selector != null) return false;
-        } else if (!this.selector.equals(other.selector)) return false;
+            if (other.selector != null)
+                return false;
+        } else if (!this.selector.equals(other.selector))
+            return false;
         if (this.skip == null) {
-            if (other.skip != null) return false;
-        } else if (!this.skip.equals(other.skip)) return false;
-        if (this.symbol == null) {
-            if (other.symbol != null) return false;
-        } else if (!this.symbol.equals(other.symbol)) return false;
-        if (this.usingRowDelimiter != other.usingRowDelimiter) return false;
+            if (other.skip != null)
+                return false;
+        } else if (!this.skip.equals(other.skip))
+            return false;
+        if (this.usingRowDelimiter != other.usingRowDelimiter)
+            return false;
         return true;
     }
 

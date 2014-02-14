@@ -28,6 +28,16 @@ public class CommandStatement extends Statement
     }
 
     /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_COMMAND;
+    }
+
+    /**
      * Get the command on this statement.
      * @return The <code>Command</code> on this statement
      */

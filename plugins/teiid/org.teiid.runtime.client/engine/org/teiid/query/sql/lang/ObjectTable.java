@@ -3,21 +3,18 @@
 package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.DerivedColumn;
-import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
  *
  */
 @Since("8.0.0")
-public class ObjectTable extends FromClause implements IObjectTable<LanguageVisitor> {
+public class ObjectTable extends TableFunctionReference implements IObjectTable<LanguageVisitor> {
 
     /**
      * Default language key for script engine
@@ -31,8 +28,6 @@ public class ObjectTable extends FromClause implements IObjectTable<LanguageVisi
     private List<DerivedColumn> passing = new ArrayList<DerivedColumn>();
 
     private String scriptingLanguage;
-
-    private GroupSymbol symbol;
 
     /**
      * @param p
@@ -98,34 +93,6 @@ public class ObjectTable extends FromClause implements IObjectTable<LanguageVisi
         this.rowScript = query;
     }
 
-    /**
-     * @return name
-     */
-    public String getName() {
-        return this.symbol.getName();   
-    }
-
-    /**
-     * @param name New name
-     */
-    public void setName(String name) {
-        this.symbol = this.parser.createASTNode(ASTNodes.GROUP_SYMBOL);
-        this.symbol.setName(name);
-    }
-
-    @Override
-    public void collectGroups(Collection<GroupSymbol> groups) {
-        groups.add(symbol);
-    }
-
-    /**
-     * Get GroupSymbol representing the named subquery 
-     * @return GroupSymbol representing the subquery
-     */
-    public GroupSymbol getGroupSymbol() {
-        return this.symbol;    
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -134,31 +101,38 @@ public class ObjectTable extends FromClause implements IObjectTable<LanguageVisi
         result = prime * result + ((this.passing == null) ? 0 : this.passing.hashCode());
         result = prime * result + ((this.rowScript == null) ? 0 : this.rowScript.hashCode());
         result = prime * result + ((this.scriptingLanguage == null) ? 0 : this.scriptingLanguage.hashCode());
-        result = prime * result + ((this.symbol == null) ? 0 : this.symbol.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!super.equals(obj)) return false;
-        if (getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         ObjectTable other = (ObjectTable)obj;
         if (this.columns == null) {
-            if (other.columns != null) return false;
-        } else if (!this.columns.equals(other.columns)) return false;
+            if (other.columns != null)
+                return false;
+        } else if (!this.columns.equals(other.columns))
+            return false;
         if (this.passing == null) {
-            if (other.passing != null) return false;
-        } else if (!this.passing.equals(other.passing)) return false;
+            if (other.passing != null)
+                return false;
+        } else if (!this.passing.equals(other.passing))
+            return false;
         if (this.rowScript == null) {
-            if (other.rowScript != null) return false;
-        } else if (!this.rowScript.equals(other.rowScript)) return false;
+            if (other.rowScript != null)
+                return false;
+        } else if (!this.rowScript.equals(other.rowScript))
+            return false;
         if (this.scriptingLanguage == null) {
-            if (other.scriptingLanguage != null) return false;
-        } else if (!this.scriptingLanguage.equals(other.scriptingLanguage)) return false;
-        if (this.symbol == null) {
-            if (other.symbol != null) return false;
-        } else if (!this.symbol.equals(other.symbol)) return false;
+            if (other.scriptingLanguage != null)
+                return false;
+        } else if (!this.scriptingLanguage.equals(other.scriptingLanguage))
+            return false;
         return true;
     }
 

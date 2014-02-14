@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.proc;
 
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
 import org.teiid.query.parser.LanguageVisitor;
@@ -13,7 +14,7 @@ import org.teiid.query.sql.symbol.Expression;
  */
 @Since("8.0.0")
 public class RaiseStatement extends Statement
-    implements IRaiseStatement<LanguageVisitor, Expression> {
+    implements ExpressionStatement, IRaiseStatement<LanguageVisitor, Expression> {
 
     private Expression expression;
 
@@ -28,6 +29,16 @@ public class RaiseStatement extends Statement
     }
 
     /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_ERROR;
+    }
+
+    /**
      * @return the expression
      */
     @Override
@@ -38,6 +49,7 @@ public class RaiseStatement extends Statement
     /**
      * @param expression the expression to set
      */
+    @Override
     public void setExpression(Expression expression) {
         this.expression = expression;
     }
@@ -54,6 +66,11 @@ public class RaiseStatement extends Statement
      */
     public void setWarning(boolean warning) {
         this.warning = warning;
+    }
+
+    @Override
+    public Class<?> getExpectedType() {
+        return DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
     }
 
     @Override

@@ -10,7 +10,83 @@ import org.teiid.query.sql.lang.SimpleNode;
 /**
  *
  */
-public class Statement extends SimpleNode implements IStatement<LanguageVisitor> {
+public abstract class Statement extends SimpleNode implements IStatement<LanguageVisitor> {
+
+    /**
+     * Types of statement
+     */
+    public enum StatementType {
+
+        /** 
+        * Represents an unknown type of statement 
+        */
+        TYPE_UNKNOWN,
+
+        /**
+         * Represents a IF statement
+         */
+        TYPE_IF,
+
+        /**
+         * Represents a SQL COMMAND statement
+         */
+        TYPE_COMMAND,
+
+        /**
+         * Represents a DECLARE statement
+         */
+        TYPE_DECLARE,
+
+        /**
+         * Represents a ERROR statement
+         */
+        TYPE_ERROR,
+
+        /**
+         * Represents a ASSIGNMENT statement
+         */
+        TYPE_ASSIGNMENT,
+
+        /**
+         * Represents a LOOP statement
+         */
+        TYPE_LOOP,
+
+        /**
+         * Represents a WHILE statement
+         */
+        TYPE_WHILE,
+
+        /**
+         * Represents a CONTINUE statement
+         */
+        TYPE_CONTINUE,
+
+        /**
+         * Represents a BREAK statement
+         */
+        TYPE_BREAK,
+
+        /**
+         * Represents a UPDATE statement
+         */
+        TYPE_UPDATE,
+
+        /**
+         * Represents a COMPOUND statement
+         */
+        TYPE_COMPOUND,
+
+        /**
+         * Represents a LEAVE statement
+         */
+        TYPE_LEAVE,
+
+        /**
+         * Represents a RETURN statement
+         */
+        TYPE_RETURN;
+    }
 
     /**
      * @param p
@@ -20,18 +96,23 @@ public class Statement extends SimpleNode implements IStatement<LanguageVisitor>
         super(p, id);
     }
 
+    /**
+     * Return type of statement to make it easier to build switch statements by statement type.
+     * @return Type from TYPE constants
+     */ 
+    public abstract StatementType getType();
+
+    /**
+     * Deep clone statement to produce a new identical statement.
+     * @return Deep clone 
+     */
+    @Override
+    public abstract Statement clone();
+
     /** Accept the visitor. **/
     @Override
     public void acceptVisitor(LanguageVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public Statement clone() {
-        Statement clone = new Statement(this.parser, this.id);
-
-
-        return clone;
     }
 
 }

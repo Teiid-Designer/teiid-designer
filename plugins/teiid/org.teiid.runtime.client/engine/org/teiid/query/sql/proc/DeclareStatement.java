@@ -24,6 +24,16 @@ public class DeclareStatement extends AssignmentStatement implements IDeclareSta
     }
 
     /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_DECLARE;
+    }
+
+    /**
      * Get the type of this variable declared in this statement.
      * @return A string giving the variable type
      */

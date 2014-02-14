@@ -32,6 +32,16 @@ public class LoopStatement extends Statement
         super(p, id);
     }
 
+    /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_LOOP;
+    }
+
     @Override
     public String getLabel() {
         return label;

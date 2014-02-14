@@ -7,8 +7,8 @@ import java.util.List;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.query.sql.proc.IBlock;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Labeled;
@@ -35,6 +35,16 @@ public class Block extends Statement implements Labeled, IBlock<Statement, Langu
      */
     public Block(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     * @return The statement type
+     */
+    @Override
+    public StatementType getType() {
+        return StatementType.TYPE_COMPOUND;
     }
 
     /**

@@ -51,7 +51,6 @@ import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
-import org.teiid.query.sql.symbol.XMLColumn;
 import org.teiid.query.sql.symbol.XMLElement;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;

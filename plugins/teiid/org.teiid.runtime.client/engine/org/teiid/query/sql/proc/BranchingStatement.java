@@ -42,6 +42,23 @@ public class BranchingStatement extends Statement implements IBranchingStatement
     }
 
     /**
+     * Return the type for this statement, this is one of the types
+     * defined on the statement object.
+     */
+    @Override
+    public StatementType getType() {
+        switch (mode) {
+        case BREAK:
+            return StatementType.TYPE_BREAK;
+        case CONTINUE:
+            return StatementType.TYPE_CONTINUE;
+        case LEAVE:
+            return StatementType.TYPE_LEAVE;
+        }
+        throw new AssertionError();
+    }
+
+    /**
      * @return label
      */
     public String getLabel() {

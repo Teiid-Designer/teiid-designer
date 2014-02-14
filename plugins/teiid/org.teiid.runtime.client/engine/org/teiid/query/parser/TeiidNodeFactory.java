@@ -70,6 +70,7 @@ import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
+import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.lang.v7.Alter7Procedure;
 import org.teiid.query.sql.lang.v8.Alter8Procedure;
@@ -86,7 +87,6 @@ import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.proc.RaiseStatement;
 import org.teiid.query.sql.proc.ReturnStatement;
-import org.teiid.query.sql.proc.Statement;
 import org.teiid.query.sql.proc.TriggerAction;
 import org.teiid.query.sql.proc.WhileStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
@@ -108,7 +108,6 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
-import org.teiid.query.sql.symbol.XMLColumn;
 import org.teiid.query.sql.symbol.XMLElement;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
@@ -528,12 +527,6 @@ public class TeiidNodeFactory {
         */
        @Removed("8.0.0")
        RAISE_ERROR_STATEMENT("RaiseErrorStatement"), //$NON-NLS-1$
-
-       /**
-        * Statement
-        * @generated
-        */
-       STATEMENT("Statement"), //$NON-NLS-1$
 
        /**
         * BranchingStatement
@@ -1116,18 +1109,6 @@ public class TeiidNodeFactory {
     */
    private RaiseErrorStatement createRaiseErrorStatement(TeiidParser teiidParser, int nodeType) {
        return new RaiseErrorStatement(teiidParser, nodeType);
-   }
-
-   /**
-    *
-    * @generated
-    *
-    * @param teiidParser
-    * @param nodeType
-    * @return
-    */
-   private Statement createStatement(TeiidParser teiidParser, int nodeType) {
-       return new Statement(teiidParser, nodeType);
    }
 
    /**
@@ -2155,8 +2136,6 @@ public class TeiidNodeFactory {
                return (T) createDrop(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTRAISEERRORSTATEMENT:
                return (T) createRaiseErrorStatement(teiidParser, nodeType);
-           case Teiid7ParserTreeConstants.JJTSTATEMENT:
-               return (T) createStatement(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTBRANCHINGSTATEMENT:
                return (T) createBranchingStatement(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTWHILESTATEMENT:
@@ -2339,8 +2318,6 @@ public class TeiidNodeFactory {
                return (T) createRaiseStatement(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTEXCEPTIONEXPRESSION:
                return (T) createExceptionExpression(teiidParser, nodeType);
-           case Teiid8ParserTreeConstants.JJTSTATEMENT:
-               return (T) createStatement(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTBRANCHINGSTATEMENT:
                return (T) createBranchingStatement(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTRETURNSTATEMENT:
