@@ -71,7 +71,7 @@ public interface IInsert<ES extends IElementSymbol,
      * 
      * @param values List of {@link IExpression}s
      */
-    void setValues(List<E> values);
+    void setValues(List<? extends E> values);
     
     /**
      * Set a collection of variables that replace the existing variables

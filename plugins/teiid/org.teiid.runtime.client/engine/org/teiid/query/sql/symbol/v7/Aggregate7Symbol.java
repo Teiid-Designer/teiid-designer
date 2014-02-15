@@ -286,7 +286,19 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
 
     @Override
     @Since("8.0.0")
+    public Expression getArg(int index) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @Since("8.0.0")
     public void setArgs(Expression[] arguments) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @Since("8.0.0")
+    public void setType(Class<?> type) {
         throw new UnsupportedOperationException();
     }
 }

@@ -40,6 +40,13 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
         super(p, id);
     }
 
+    /**
+     * @return schema
+     */
+    public String getSchema() {
+        return schema;
+    }
+
     @Override
     public String getName() {
         if (this.schema != null) {
@@ -160,6 +167,16 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
     }
 
     /**
+     * @param name
+     * @return true if given name has the temp group prefix
+     */
+    public static boolean isTempGroupName(String name) {
+        if (name == null) 
+            return false;
+        return name.startsWith(TEMP_GROUP_PREFIX);
+    }
+
+    /**
      * Returns true if this is a symbol for a temporary (implicit or explicit) group
      * May return false for explicit temp tables prior to resolving.
      * see {@link #isTempTable()}
@@ -177,6 +194,28 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
             return false;
 
         return getNonCorrelationName().startsWith(TEMP_GROUP_PREFIX);
+    }
+
+    /**
+     * Returns true if this symbol has been completely resolved with respect
+     * to actual runtime metadata.  A resolved symbol has been validated that
+     * it refers to actual metadata and will have references to the real metadata
+     * IDs if necessary.  Different types of symbols determine their resolution
+     * in different ways, so this method is abstract and must be implemented
+     * by subclasses.
+     * @return True if resolved with runtime metadata
+     */
+    public boolean isResolved() {
+        return (metadataID != null);
+    }
+
+    /**
+     * Compare two groups and give an ordering.
+     * @param other Other group
+     * @return -1, 0, or 1 depending on how this compares to group
+     */
+    public int compareTo(GroupSymbol o) {
+        return getName().compareTo(o.getName());
     }
 
     @Override

@@ -22,10 +22,10 @@
 
 package org.teiid.query.validator;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
 import org.teiid.query.report.ReportItem;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.LanguageObject;
 
 public class ValidatorFailure extends ReportItem {
 	

@@ -49,6 +49,8 @@ public class StoredProcedure extends ProcedureContainer
 
     private Object procedureID;
 
+    private Object modelID;
+
     /**
      * @param p
      * @param id
@@ -173,6 +175,13 @@ public class StoredProcedure extends ProcedureContainer
     }
 
     /**
+     * Clear parameters
+     */
+    public void clearParameters(){
+        this.mapOfParameters.clear();
+    }
+
+    /**
      * @param calledWithReturn
      */
     public void setCalledWithReturn(boolean calledWithReturn) {
@@ -239,9 +248,23 @@ public class StoredProcedure extends ProcedureContainer
         return groupSymbol;
     }
 
+    /**
+     * @param group
+     */
+    public void setGroupSymbol(GroupSymbol group){
+        this.groupSymbol = group;
+    }
+
     @Override
     public GroupSymbol getGroup() {
         return getGroupSymbol();
+    }
+
+    /**
+     * @param group
+     */
+    public void setGroup(GroupSymbol group){
+        setGroupSymbol(group);
     }
 
     @Override
@@ -303,6 +326,20 @@ public class StoredProcedure extends ProcedureContainer
             }
         }
         return parameters;
+    }
+
+    /**
+     * @return model id
+     */
+    public Object getModelID(){
+        return modelID;
+    }
+
+    /**
+     * @param modelID
+     */
+    public void setModelID(Object modelID){
+        this.modelID = modelID;
     }
 
     @Override

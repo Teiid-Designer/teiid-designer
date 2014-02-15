@@ -117,7 +117,7 @@ public class Insert extends ProcedureContainer
      * @param values List of {@link Expression}s
      */
     @Override
-    public void setValues(List<Expression> values) {
+    public void setValues(List<? extends Expression> values) {
         this.values.clear();
         this.values.addAll(values);
     }

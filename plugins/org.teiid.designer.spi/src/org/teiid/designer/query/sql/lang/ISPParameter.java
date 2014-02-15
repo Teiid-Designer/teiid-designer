@@ -7,13 +7,14 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import java.util.List;
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
 
 
 /**
  *
  */
-public interface ISPParameter {
+public interface ISPParameter<E extends IElementSymbol> {
 
     /**
      * Enumerator for types of parameters 
@@ -61,7 +62,7 @@ public interface ISPParameter {
      * 
      * @return Element symbol representing the parameter
      */
-    IElementSymbol getParameterSymbol();
+    E getParameterSymbol();
 
     /**
      * Get full parameter name,.  If unknown, null is returned.
@@ -118,5 +119,10 @@ public interface ISPParameter {
      * @param object
      */
     void setMetadataID(Object object);
+
+    /**
+     * @return list of result set columns
+     */
+    List<E> getResultSetColumns();
 
 }

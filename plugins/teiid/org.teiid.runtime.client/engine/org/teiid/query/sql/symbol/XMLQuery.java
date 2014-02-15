@@ -9,6 +9,7 @@ import org.teiid.designer.query.sql.symbol.IXMLQuery;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
+import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
 
 /**
  *
@@ -22,6 +23,8 @@ public class XMLQuery extends SimpleNode implements Expression, IXMLQuery<Langua
     private List<DerivedColumn> passing = new ArrayList<DerivedColumn>();
 
     private Boolean emptyOnEmpty;
+
+    private SaxonXQueryExpression xqueryExpression;
 
     /**
      * @param p
@@ -57,6 +60,15 @@ public class XMLQuery extends SimpleNode implements Expression, IXMLQuery<Langua
      */
     public void setPassing(List<DerivedColumn> passing) {
         this.passing = passing;
+    }
+
+    public void compileXqueryExpression() throws Exception {
+        this.xqueryExpression = new SaxonXQueryExpression(xquery, namespaces, passing, null);
+        this.xqueryExpression.useDocumentProjection(null);
+    }
+    
+    public SaxonXQueryExpression getXQueryExpression() {
+        return xqueryExpression;
     }
 
     /**

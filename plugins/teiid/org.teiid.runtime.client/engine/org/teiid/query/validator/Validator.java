@@ -23,26 +23,23 @@
 package org.teiid.query.validator;
 
 import java.util.Iterator;
-
-import org.teiid.core.TeiidComponentException;
-import org.teiid.query.metadata.QueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataStore;
-import org.teiid.query.sql.LanguageObject;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
-import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
 
 public class Validator {
 
-    public static final ValidatorReport validate(LanguageObject object, QueryMetadataInterface metadata) throws TeiidComponentException {
+    public static final ValidatorReport validate(LanguageObject object, QueryMetadataInterface metadata) throws Exception {
         ValidatorReport report1 = Validator.validate(object, metadata, new ValidationVisitor());
         return report1;
     }
 
-    public static final ValidatorReport validate(LanguageObject object, QueryMetadataInterface metadata, AbstractValidationVisitor visitor)
-        throws TeiidComponentException {
+    public static final ValidatorReport validate(LanguageObject object, IQueryMetadataInterface metadata, AbstractValidationVisitor visitor)
+        throws Exception {
 
         // Execute on this command
         executeValidation(object, metadata, visitor);
@@ -62,7 +59,7 @@ public class Validator {
     }
 
     private static final void executeValidation(LanguageObject object, final QueryMetadataInterface metadata, final AbstractValidationVisitor visitor) 
-        throws TeiidComponentException {
+        throws Exception {
 
         // Reset visitor
         visitor.reset();
@@ -73,7 +70,7 @@ public class Validator {
         PreOrderNavigator nav = new PreOrderNavigator(visitor) {
         	
         	protected void visitNode(LanguageObject obj) {
-        		QueryMetadataInterface previous = visitor.getMetadata();
+        		IQueryMetadataInterface previous = visitor.getMetadata();
         		setTempMetadata(metadata, visitor, obj);
         		super.visitNode(obj);
         		visitor.setMetadata(previous);
@@ -94,7 +91,7 @@ public class Validator {
         object.acceptVisitor(nav);        	
         
         // If an error occurred, throw an exception
-        TeiidComponentException e = visitor.getException();
+        Exception e = visitor.getException();
         if(e != null) { 
             throw e;
         }                

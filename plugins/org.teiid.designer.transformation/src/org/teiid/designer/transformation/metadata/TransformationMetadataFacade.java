@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import javax.script.ScriptEngine;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.LRUCache;
@@ -913,6 +915,81 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
 
     @Override
     public IFunctionLibrary getFunctionLibrary() {
+        return null;
+    }
+
+    @Override
+    public boolean isTemporaryTable(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public Object addToMetadataCache(Object metadataID, String key, Object value) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object getFromMetadataCache(Object metadataID, String key) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isScalarGroup(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSource(Object modelId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSourceElement(Object elementId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public IQueryMetadataInterface getDesignTimeMetadata() {
+        return null;
+    }
+
+    @Override
+    public IQueryMetadataInterface getSessionMetadata() {
+        return null;
+    }
+
+    @Override
+    public Set getImportedModels() {
+        return null;
+    }
+
+    @Override
+    public ScriptEngine getScriptEngine(String langauge) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isVariadic(Object metadataID) {
+        return false;
+    }
+
+    @Override
+    public Map getFunctionBasedExpressions(Object metadataID) {
+        return null;
+    }
+
+    @Override
+    public boolean isPseudo(Object elementId) {
+        return false;
+    }
+
+    @Override
+    public Object getModelID(String modelName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified) {
         return null;
     }
 

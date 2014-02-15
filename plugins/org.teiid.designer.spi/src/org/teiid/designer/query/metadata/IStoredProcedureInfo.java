@@ -43,6 +43,8 @@ public interface IStoredProcedureInfo<P extends ISPParameter, Q extends IQueryNo
 
     void setUpdateCount(int updateCount);
 
+    Q getQueryPlan();
+
     void setQueryPlan(Q queryNode);
     
 }

@@ -210,6 +210,8 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
      */
     private final QueryParser parser;
 
+    private boolean abort = false;
+
     private static final Map<Class<?>, Method> methodCache = new HashMap<Class<?>, Method>();
 
     static {
@@ -243,12 +245,34 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         this.parser = new QueryParser(teiidVersion);
     }
 
+    /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
+    /**
+     * @return the parser
+     */
+    public QueryParser getQueryParser() {
+        return this.parser;
+    }
+
     protected TeiidParser getTeiidParser() {
         return parser.getTeiidParser();
     }
 
     protected <T extends LanguageObject> T createNode(ASTNodes nodeType) {
         return getTeiidParser().createASTNode(nodeType);
+    }
+
+    public void setAbort(boolean abort) {
+        this.abort = abort;
+    }
+    
+    public final boolean shouldAbort() {
+        return abort;
     }
 
     private Method searchMethodCache(Class<?> methodClass) {

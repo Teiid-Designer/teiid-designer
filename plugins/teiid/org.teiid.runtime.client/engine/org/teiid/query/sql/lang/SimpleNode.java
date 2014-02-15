@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
@@ -33,6 +34,11 @@ public class SimpleNode implements Node, LanguageObject {
     @Override
     public TeiidParser getTeiidParser() {
         return parser;
+    }
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return parser.getVersion();
     }
 
     @Override

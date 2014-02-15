@@ -177,7 +177,7 @@ public interface ILanguageVisitor {
     void visit(IWithQueryCommand obj);
     void visit(ITriggerAction obj);
     void visit(IArrayTable obj);
-    public void visit(IProcedureContainer obj);
+    void visit(IProcedureContainer obj);
 
     void visit(IAlterView obj);
     void visit(IAlterProcedure obj);

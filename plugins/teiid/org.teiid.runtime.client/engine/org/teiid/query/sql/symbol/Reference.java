@@ -21,6 +21,8 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
 
     private boolean positional;
 
+    private boolean optional;
+
     /**
      * @param p
      * @param id
@@ -80,6 +82,20 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
      */
     public void setIndex(int refIndex) {
         this.refIndex = refIndex;
+    }
+
+    /**
+     * @return is optional
+     */
+    public boolean isOptional() {
+        return optional;
+    }
+    
+    /**
+     * @param optional
+     */
+    public void setOptional(boolean optional) {
+        this.optional = optional;
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.DerivedColumn;
 import org.teiid.query.sql.symbol.XMLNamespaces;
+import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
 
 /**
  *
@@ -26,6 +27,8 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
     private boolean usingDefaultColumn;
 
     private XMLNamespaces namespaces;
+
+    private SaxonXQueryExpression xqueryExpression;
 
     /**
      * @param p
@@ -113,6 +116,18 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
         this.namespaces = namespaces;
     }
 
+    /**
+     * @throws Exception
+     */
+    public void compileXqueryExpression() throws Exception {
+        this.xqueryExpression = new SaxonXQueryExpression(xquery, namespaces, passing, this.columns);
+    }
+    
+    /**
+     * @return saxon xquery expression
+     */
+    public SaxonXQueryExpression getXQueryExpression() {
+        return xqueryExpression;
     }
 
     @Override

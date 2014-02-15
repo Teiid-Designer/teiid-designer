@@ -50,10 +50,26 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
     Expression[] getArgs();
 
     /**
+     * Get argument at specified index
+     * @param index Index of argument
+     * @return expression
+     */
+    @Since("8.0.0")
+    Expression getArg(int index);
+
+    /**
      * @param arguments
      */
     @Since("8.0.0")
     void setArgs(Expression[] arguments);
+
+    /**
+     * Set type of function
+     *
+     * @param type New type
+     */
+    @Since("8.0.0")
+    void setType(Class<?> type);
 
     /**
      * @return order by

@@ -91,4 +91,12 @@ public interface TeiidParser {
      */
     Statement statement(ParseInfo info) throws Exception;
 
+    /**
+     * Parse a select expression
+     *
+     * @param info
+     * @return the select expression
+     * @throws Exception
+     */
+    Expression selectExpression(ParseInfo info) throws Exception;
 }

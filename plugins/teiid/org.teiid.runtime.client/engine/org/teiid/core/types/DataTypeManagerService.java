@@ -16,10 +16,12 @@ import java.sql.Date;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.teiid.core.types.basic.AnyToObjectTransform;
 import org.teiid.core.types.basic.AnyToStringTransform;
@@ -414,7 +416,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
 
-    private boolean isArrayType(String name) {
+    public boolean isArrayType(String name) {
         return name.endsWith(ARRAY_SUFFIX);
     }
 
@@ -566,6 +568,17 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
 
     /**
+     * Is the data type represented by the given type id comparable
+     *
+     * @param type
+     * @return true if type is comparable, false otherwise
+     */
+    public boolean isNonComparable(String type) {
+        DefaultDataTypes dataType = findDefaultDataType(type);
+        return isNonComparable(dataType.getTypeClass());
+    }
+
+    /**
      * Is the data type represented by the given type class comparable
      *
      * @param type
@@ -587,11 +600,27 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         if (sourceTypeName == null || targetTypeName == null) {
             throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, sourceTypeName, targetTypeName));
         }
-        
+
         DefaultDataTypes sourceType = findDefaultDataType(sourceTypeName);
         DefaultDataTypes targetType = findDefaultDataType(targetTypeName);
 
         return getTransformFromMaps(sourceType, targetType);
+    }
+
+    /**
+     * @param sourceType
+     * @param targetType
+     * @return applicable transform for converting source to target
+     */
+    public Transform getTransform(Class<?> sourceType, Class<?> targetType) {
+        if (sourceType == null || targetType == null) {
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, sourceType, targetType));
+        }
+
+        DefaultDataTypes sourceDataType = findDefaultDataType(sourceType);
+        DefaultDataTypes targetDataType = findDefaultDataType(targetType);
+
+        return getTransformFromMaps(sourceDataType, targetDataType);
     }
 
     /**
@@ -611,6 +640,18 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return getTransform(sourceTypeName, targetTypeName) != null;
     }
 
+    /**
+     * @param srcTypeClass
+     * @param targetTypeClass
+     * @return true if source type is transformable into target type
+     */
+    public boolean isTransformable(Class<?> srcTypeClass, Class<?> targetTypeClass) {
+        if (srcTypeClass == null || targetTypeClass == null)
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_003_029_0002, srcTypeClass, targetTypeClass));
+
+        return getTransform(srcTypeClass, targetTypeClass) != null;
+    }
+
     @Override
     public boolean isExplicitConversion(String sourceTypeName, String targetTypeName) {
         Transform t = getTransform(sourceTypeName, targetTypeName);
@@ -619,7 +660,31 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         }
         return false;
     }
-    
+
+    public void getImplicitConversions(String sourceTypeName, Collection<String> result) {
+        if (sourceTypeName == null || result == null) {
+            throw new IllegalArgumentException();
+        }
+
+        DefaultDataTypes sourceType = findDefaultDataType(sourceTypeName);
+        Map<DefaultDataTypes, Transform> innerMap = transforms.get(sourceType);
+        if (innerMap != null) {
+            for (Entry<DefaultDataTypes, Transform> entry : innerMap.entrySet()) {
+                if (!entry.getValue().isExplicit()) {
+                    result.add(entry.getKey().getId());
+                }
+            }
+            return;
+        }
+
+        String previous = DefaultDataTypes.OBJECT.getId();
+        while (isArrayType(sourceTypeName)) {
+            previous += ARRAY_SUFFIX;
+            result.add(previous);
+            sourceTypeName = getComponentType(sourceTypeName);
+        }
+    }
+   
     @Override
     public boolean isImplicitConversion(String sourceTypeName, String targetTypeName) {
         Transform t = getTransform(sourceTypeName, targetTypeName);
@@ -687,6 +752,14 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         T result = (T) transform.transform(value);
         return result;
+    }
+
+    public <T> T transformValue(Object value, Class<T> targetClass) throws Exception {
+        if (value == null) {
+            return (T)value;
+        }
+        
+        return transformValue(value, value.getClass(), getDataType(targetClass));
     }
 
     public boolean isDecimalAsDouble() {

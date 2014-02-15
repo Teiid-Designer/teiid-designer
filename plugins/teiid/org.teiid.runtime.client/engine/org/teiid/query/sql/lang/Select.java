@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
@@ -39,6 +39,13 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
     @Override
     public List<Expression> getSymbols() {
         return symbols;
+    }
+
+    /**
+     * Remove all current symbols
+     */
+    public void clearSymbols() {
+        symbols.clear();
     }
 
     /**

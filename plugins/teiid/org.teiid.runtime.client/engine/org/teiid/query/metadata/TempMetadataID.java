@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import org.teiid.core.util.LRUCache;
 import org.teiid.designer.query.metadata.IMetadataID;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Symbol;
@@ -54,7 +55,7 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
 	public static class TableData {
 		Collection<TempMetadataID> accessPatterns;
 		List<TempMetadataID> elements;
-		int cardinality = QueryMetadataInterface.UNKNOWN_CARDINALITY;
+		int cardinality = IQueryMetadataInterface.UNKNOWN_CARDINALITY;
 		List<TempMetadataID> primaryKey;
 		QueryNode queryNode;
 		Map<Object, Object> localCache;

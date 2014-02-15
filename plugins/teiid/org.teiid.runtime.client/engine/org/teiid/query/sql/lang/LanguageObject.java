@@ -23,6 +23,7 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.ILanguageObject;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
@@ -36,6 +37,11 @@ public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
      * @return associated parser
      */
     TeiidParser getTeiidParser();
+
+    /**
+     * @return teiid version of associated parser
+     */
+    ITeiidServerVersion getTeiidVersion();
 
     /**
      * @return copy of this language object

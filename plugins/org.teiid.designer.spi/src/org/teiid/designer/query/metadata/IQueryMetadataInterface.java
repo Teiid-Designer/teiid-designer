@@ -7,9 +7,13 @@
 */
 package org.teiid.designer.query.metadata;
 
+import java.beans.Expression;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import javax.script.ScriptEngine;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
@@ -20,17 +24,64 @@ import org.teiid.designer.xml.IMappingNode;
  * user of a query component will need to implement this interface.  Many
  * of these methods take or return things of type "Object".  Typically, these 
  * objects represent a metadata-implementation-specific metadata ID.  
+ * @param <F> the function library class
+ * @param <S> the stored procedure info class
+ * @param <Q> the query node class
+ * @param <M> the mapping node class
  */
 public interface IQueryMetadataInterface<F extends IFunctionLibrary, 
                                                                       S extends IStoredProcedureInfo, 
                                                                       Q extends IQueryNode, 
                                                                       M extends IMappingNode> {
 
-//    /**
-//     * Unknown cardinality.
-//     */
-//    int UNKNOWN_CARDINALITY = -1;
-//
+    /**
+     * Unknown cardinality.
+     */
+    int UNKNOWN_CARDINALITY = -1;
+
+    /**
+     * Default empty set of properties
+     */
+    Properties EMPTY_PROPS = new Properties();
+
+    /**
+     * Support constants for metadata
+     */
+    public class SupportConstants {
+
+        private SupportConstants() {}
+
+        /**
+         * Support contants for groups
+         */
+        public static class Group {
+            private Group() {}
+
+            @SuppressWarnings( "javadoc" )
+            public static final int UPDATE = 0;                 
+        }
+
+        /**
+         * Support constants for elements
+         */
+        @SuppressWarnings( "javadoc" )
+        public static class Element {
+            private Element() {}
+            
+            public static final int SELECT = 0;
+            public static final int SEARCHABLE_LIKE = 1;
+            public static final int SEARCHABLE_COMPARE = 2;
+            public static final int NULL = 4;
+            public static final int UPDATE = 5;
+            public static final int DEFAULT_VALUE = 7;
+            public static final int AUTO_INCREMENT = 8;
+            public static final int CASE_SENSITIVE = 9;
+            public static final int NULL_UNKNOWN = 10;
+            public static final int SIGNED = 11;
+        }
+
+    }
+
     /**
      * Get the metadata-implementation identifier object for the given element name.  
      * 
@@ -38,7 +89,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata identifier for this element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getElementID(String elementName) throws Exception;
 
@@ -49,7 +100,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata identifier for this group
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getGroupID(String groupName) throws Exception;
 
@@ -60,7 +111,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return A collection of groups whose names are matched by the partial name.
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Collection getGroupsForPartialName(String partialGroupName) throws Exception;
 
@@ -72,7 +123,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata identifier for the model
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getModelID(Object groupOrElementID) throws Exception;
 
@@ -84,7 +135,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata identifier for this model
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getFullName(Object metadataID) throws Exception;
 
@@ -96,7 +147,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata identifier for this model
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getName(Object metadataID) throws Exception;
 
@@ -107,7 +158,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of Object, where each object is a metadata elementID for element within group
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     List getElementIDsInGroupID(Object groupID) throws Exception;
 
@@ -118,7 +169,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Group ID containing elementID
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getGroupIDForElementID(Object elementID) throws Exception;
 
@@ -129,7 +180,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return StoredProcedureInfo containing the runtime model id
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     IStoredProcedureInfo getStoredProcedureInfoForProcedure(String fullyQualifiedProcedureName) throws Exception;
 
@@ -141,7 +192,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The element data type
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getElementType(Object elementID) throws Exception;
 
@@ -152,7 +203,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The default value of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getDefaultValue(Object elementID) throws Exception;
 
@@ -163,7 +214,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The minimum value of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getMinimumValue(Object elementID) throws Exception;
 
@@ -174,7 +225,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The maximum value of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getMaximumValue(Object elementID) throws Exception;
 
@@ -184,7 +235,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The position of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getPosition(Object elementID) throws Exception;
 
@@ -195,7 +246,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The precision of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getPrecision(Object elementID) throws Exception;
 
@@ -206,7 +257,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The scale of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getScale(Object elementID) throws Exception;
 
@@ -217,7 +268,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The radix of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getRadix(Object elementID) throws Exception;
 
@@ -228,7 +279,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The format of the element
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getFormat(Object elementID) throws Exception;
 
@@ -240,7 +291,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The number of distinct values of this element in the data source
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getDistinctValues(Object elementID) throws Exception;
 
@@ -252,7 +303,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The number of distinct values of this element in the data source
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getNullValues(Object elementID) throws Exception;
 
@@ -263,7 +314,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if virtual
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean isVirtualGroup(Object groupID) throws Exception;
 
@@ -274,7 +325,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if virtual
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean isVirtualModel(Object modelID) throws Exception;
 
@@ -285,7 +336,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Root of tree of QueryNode objects
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     IQueryNode getVirtualPlan(Object groupID) throws Exception;
 
@@ -296,7 +347,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return A string giving the procedure for inserts.
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     String getInsertPlan(Object groupID) throws Exception;
 
@@ -307,7 +358,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return A string giving the procedure for inserts.
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     String getUpdatePlan(Object groupID) throws Exception;
 
@@ -330,7 +381,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if model supports feature
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean modelSupports(Object modelID, int modelConstant) throws Exception;
 
@@ -342,7 +393,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if group supports feature
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean groupSupports(Object groupID, int groupConstant) throws Exception;
 
@@ -354,7 +405,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if element supports feature
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean elementSupports(Object elementID, int elementConstant) throws Exception;
 
@@ -365,7 +416,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return All extension properties for this object or null for none
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Properties getExtensionProperties(Object metadataID) throws Exception;
 
@@ -375,7 +426,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Maximum set size
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getMaxSetSize(Object modelID) throws Exception;
 
@@ -386,7 +437,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Collection of Object (never null), each object representing an index
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Collection getIndexesInGroup(Object groupID) throws Exception;
 
@@ -397,7 +448,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Collection of Object (never null), each object representing a unique key
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Collection getUniqueKeysInGroup(Object groupID) throws Exception;
 
@@ -408,7 +459,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Collection of Object (never null), each object representing a key
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Collection getForeignKeysInGroup(Object groupID) throws Exception;
 
@@ -420,7 +471,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Metadata ID of the corresponding primary key
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getPrimaryKeyIDForForeignKeyID(Object foreignKeyID) throws Exception;
 
@@ -431,7 +482,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Collection of Object (never null), each object representing an access pattern
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Collection getAccessPatternsInGroup(Object groupID) throws Exception;
 
@@ -442,7 +493,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of Object, where each object is a metadata element identifier
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     List getElementIDsInIndex(Object index) throws Exception;
 
@@ -453,7 +504,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of Object, where each object is a metadata element identifier
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     List getElementIDsInKey(Object key) throws Exception;
 
@@ -464,7 +515,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of Object, where each object is a metadata element identifier
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     List getElementIDsInAccessPattern(Object accessPattern) throws Exception;
 
@@ -475,7 +526,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      *  
      * @return True if group is an XML virtual document
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     boolean isXMLGroup(Object groupID) throws Exception;
     
@@ -484,7 +535,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @param groupID
      * @return mapping node
-     * @throws Exception 
+     * @throws Exception
      */
     IMappingNode getMappingNode(Object groupID) throws Exception;
 
@@ -494,7 +545,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Name of current virtual database
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getVirtualDatabaseName() throws Exception;
 
@@ -505,7 +556,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of all the temp groups used in this document.
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     <T> Collection<T> getXMLTempGroups(Object groupID) throws Exception;
 
@@ -516,7 +567,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return cardinality for the given group. If unknown, return UNKNOWN_CARDINALITY. 
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     int getCardinality(Object groupID) throws Exception;
 
@@ -527,7 +578,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return List of String where each string is an XML schema for the document
      * 
-     * @throws Exception 
+     * @throws Exception
      */
     List getXMLSchemas(Object groupID) throws Exception;
 
@@ -539,7 +590,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Name in source as a string.
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getNameInSource(Object metadataID) throws Exception;
 
@@ -551,7 +602,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The element length
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     int getElementLength(Object elementID) throws Exception;
 
@@ -563,7 +614,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if given virtual group has been marked as having a Materialization.
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean hasMaterialization(Object groupID) throws Exception;
 
@@ -575,7 +626,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return The groupID of the physical group that is a Materialization of the given virtual group.
      *
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getMaterialization(Object groupID) throws Exception;
 
@@ -589,7 +640,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * @return The groupID of the physical group that is the staging table for loading
      * the Materialization of the given virtual group.
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     Object getMaterializationStage(Object groupID) throws Exception;
 
@@ -601,7 +652,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return Native type name
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getNativeType(Object elementID) throws Exception;
 
@@ -612,7 +663,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return True if it is an procedure; false otherwise
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     boolean isProcedure(Object groupID) throws Exception;
     
@@ -622,6 +673,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * @param procedureName
      * 
      * @return true if it does
+     * @throws Exception
      */
     boolean hasProcedure(String procedureName) throws Exception;
 
@@ -630,7 +682,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return an array of resource paths of the resources in the VDB
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String[] getVDBResourcePaths() throws Exception;
     
@@ -671,7 +723,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return the contents of the resource as a String.
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     String getCharacterVDBResource(String resourcePath) throws Exception;
 
@@ -682,7 +734,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @return the binary contents of the resource in a byte[]
      * 
-     * @throws Exception Metadata implementation detected a problem during the request
+     * @throws Exception implementation detected a problem during the request
      */
     byte[] getBinaryVDBResource(String resourcePath) throws Exception;
     
@@ -701,4 +753,105 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * @return the function library
      */
     IFunctionLibrary getFunctionLibrary();
+
+    /**
+     * @param groupID
+     *
+     * @return true if object is temporary table, false otherwise
+     * @throws Exception
+     */
+    boolean isTemporaryTable(Object groupID) throws Exception;
+
+    /**
+     * @param metadataID
+     * @param key
+     * @param value
+     * @return previous value associated with key or null if no mapping had been added
+     * @throws Exception
+     */
+    Object addToMetadataCache(Object metadataID, String key, Object value) throws Exception;
+
+    /**
+     * @param metadataID
+     * @param key
+     * @return metadata associated with the given key parameters
+     * @throws Exception
+     */
+    Object getFromMetadataCache(Object metadataID, String key) throws Exception;
+
+    /**
+     * @param groupID
+     * @return true if group is scalar, false otherwise
+     * @throws Exception
+     */
+    boolean isScalarGroup(Object groupID) throws Exception;
+
+    /**
+     * @param modelId
+     * @return true if model is multi source, false otherwise
+     * @throws Exception
+     */
+    boolean isMultiSource(Object modelId) throws Exception;
+
+    /**
+     * @param elementId
+     * @return true if a multi source element, false otherwise
+     * @throws Exception
+     */
+    boolean isMultiSourceElement(Object elementId) throws Exception;
+
+    /**
+     * @return design time metadata, if applicable
+     */
+    IQueryMetadataInterface getDesignTimeMetadata();
+
+    /**
+     * @return session metadata, if applicable
+     */
+    IQueryMetadataInterface getSessionMetadata();
+
+    /**
+     * @return imported models
+     */
+    Set<String> getImportedModels();
+
+    /**
+     * @param language
+     * @return script engine for language
+     * @throws Exception
+     */
+    ScriptEngine getScriptEngine(String language) throws Exception;
+
+    /**
+     * @param metadataID
+     * @return true if metadata id is variadic, false otherwise
+     */
+    boolean isVariadic(Object metadataID);
+
+    /**
+     * @param metadataID
+     * @return map of function-based expression for metadata id
+     */
+    Map<Expression, Integer> getFunctionBasedExpressions(Object metadataID);
+
+    /**
+     * @param elementId
+     * @return true if pseudo element, false otherwise
+     */
+    boolean isPseudo(Object elementId);
+
+    /**
+     * @param modelName
+     * @return model id for model with given name
+     * @throws Exception
+     */
+    Object getModelID(String modelName) throws Exception;
+
+    /**
+     * @param metadataID
+     * @param key
+     * @param checkUnqualified
+     * @return extension property for given parameters
+     */
+    String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified);
 }

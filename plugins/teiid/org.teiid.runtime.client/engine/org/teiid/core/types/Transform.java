@@ -24,6 +24,7 @@ package org.teiid.core.types;
 
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 
 /**
@@ -114,7 +115,7 @@ public abstract class Transform {
 	    
 		if (((Comparable)value).compareTo(service.transformValue(min, sourceDataType)) < 0 
 		    || ((Comparable)value).compareTo(service.transformValue(max, sourceDataType)) > 0) {
-			  throw new Exception(Messages.gs(Messages.TEIID.TEIID10058, value, getSourceType().getSimpleName(), getTargetType().getSimpleName()));
+			  throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10058, value, getSourceType().getSimpleName(), getTargetType().getSimpleName()));
 		}
 	}
 

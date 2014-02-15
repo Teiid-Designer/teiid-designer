@@ -7,7 +7,13 @@
 */
 package org.teiid.runtime.client.query;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.query.IQueryResolver;
@@ -15,8 +21,19 @@ import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.udf.FunctionMethodDescriptor;
+import org.teiid.designer.udf.FunctionParameterDescriptor;
+import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingDocumentFactory;
 import org.teiid.language.SQLConstants;
+import org.teiid.metadata.FunctionMethod;
+import org.teiid.metadata.FunctionMethod.Determinism;
+import org.teiid.metadata.FunctionParameter;
+import org.teiid.query.function.FunctionDescriptor;
+import org.teiid.query.function.FunctionLibrary;
+import org.teiid.query.function.FunctionTree;
+import org.teiid.query.function.SystemFunctionManager;
+import org.teiid.query.function.UDFSource;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -33,7 +50,7 @@ public class QueryService implements IQueryService {
 
     private QueryParser queryParser;
 
-    //    private final SystemFunctionManager systemFunctionManager = new SystemFunctionManager();
+    private final SystemFunctionManager systemFunctionManager;
 
     private SyntaxFactory factory;
 
@@ -42,6 +59,7 @@ public class QueryService implements IQueryService {
      */
     public QueryService(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
+        systemFunctionManager = new SystemFunctionManager(teiidVersion);
     }
 
     /**
@@ -76,76 +94,75 @@ public class QueryService implements IQueryService {
         return SQLConstants.getNonReservedWords(teiidVersion);
     }
 
-    //
-    //    @Override
-    //    public String getJDBCSQLTypeName(int jdbcType) {
-    //        return JDBCSQLTypeInfo.getTypeName(jdbcType);
-    //    }
-    //
-    //    @Override
-    //    public IFunctionLibrary createFunctionLibrary() {
-    //        /*
-    //         * System function manager needs this classloader since it uses reflection to instantiate classes, 
-    //         * such as FunctionMethods. The default classloader is taken from the thread, which in turn takes
-    //         * a random plugin. Since no plugin depends on this plugin, ClassNotFound exceptions result.
-    //         * 
-    //         * So set the class loader to the one belonging to this plugin.
-    //         */
-    //        systemFunctionManager.setClassloader(getClass().getClassLoader());
-    //        return new FunctionLibrary(systemFunctionManager.getSystemFunctions(), new FunctionTree[0]);
-    //    }
-    //
-    //    @Override
-    //    public IFunctionLibrary createFunctionLibrary(List<FunctionMethodDescriptor> functionMethodDescriptors) {
-    //
-    //        // Dynamically return a function library for each call rather than cache it here.
-    //        Map<String, FunctionTree> functionTrees = new HashMap<String, FunctionTree>();
-    //
-    //        for (FunctionMethodDescriptor descriptor : functionMethodDescriptors) {
-    //
-    //            List<FunctionParameter> inputParameters = new ArrayList<FunctionParameter>();
-    //            for (FunctionParameterDescriptor paramDescriptor : descriptor.getInputParameters()) {
-    //                inputParameters.add(new FunctionParameter(paramDescriptor.getName(), paramDescriptor.getType()));
-    //            }
-    //
-    //            FunctionParameter outputParameter = new FunctionParameter(descriptor.getOutputParameter().getName(),
-    //                                                                      descriptor.getOutputParameter().getType());
-    //
-    //            FunctionMethod fMethod = new FunctionMethod(descriptor.getName(), descriptor.getDescription(),
-    //                                                        descriptor.getCategory(), descriptor.getInvocationClass(),
-    //                                                        descriptor.getInvocationMethod(),
-    //                                                        inputParameters.toArray(new FunctionParameter[0]), outputParameter);
-    //
-    //            fMethod.setPushDown(descriptor.getPushDownLiteral());
-    //            fMethod.setVarArgs(descriptor.isVariableArgs());
-    //            if (descriptor.isDeterministic()) {
-    //                fMethod.setDeterminism(Determinism.DETERMINISTIC);
-    //            } else {
-    //                fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
-    //            }
-    //
-    //            FunctionTree tree = functionTrees.get(descriptor.getSchema());
-    //            if (tree == null) {
-    //                tree = new FunctionTree(descriptor.getSchema(), new UDFSource(Collections.EMPTY_LIST), false);
-    //                functionTrees.put(descriptor.getSchema(), tree);
-    //            }
-    //
-    //            FunctionDescriptor fd = tree.addFunction(descriptor.getSchema(), null, fMethod, false);
-    //            fd.setMetadataID(descriptor.getMetadataID());
-    //        }
-    //
-    //        /*
-    //         * System function manager needs this classloader since it uses reflection to instantiate classes, 
-    //         * such as FunctionMethods. The default classloader is taken from the thread, which in turn takes
-    //         * a random plugin. Since no plugin depends on this plugin, ClassNotFound exceptions result.
-    //         * 
-    //         * So set the class loader to the one belonging to this plugin.
-    //         */
-    //        systemFunctionManager.setClassloader(getClass().getClassLoader());
-    //        return new FunctionLibrary(systemFunctionManager.getSystemFunctions(), 
-    //                                                      functionTrees.values().toArray(new FunctionTree[0]));
-    //    }
-    //
+    @Override
+    public String getJDBCSQLTypeName(int jdbcType) {
+        return JDBCSQLTypeInfo.getTypeName(jdbcType);
+    }
+    
+    @Override
+    public IFunctionLibrary createFunctionLibrary() {
+        /*
+         * System function manager needs this classloader since it uses reflection to instantiate classes, 
+         * such as FunctionMethods. The default classloader is taken from the thread, which in turn takes
+         * a random plugin. Since no plugin depends on this plugin, ClassNotFound exceptions result.
+         * 
+         * So set the class loader to the one belonging to this plugin.
+         */
+        systemFunctionManager.setClassloader(getClass().getClassLoader());
+        return new FunctionLibrary(teiidVersion, systemFunctionManager.getSystemFunctions(), new FunctionTree[0]);
+    }
+
+    @Override
+    public IFunctionLibrary createFunctionLibrary(List<FunctionMethodDescriptor> functionMethodDescriptors) {
+
+        // Dynamically return a function library for each call rather than cache it here.
+        Map<String, FunctionTree> functionTrees = new HashMap<String, FunctionTree>();
+
+        for (FunctionMethodDescriptor descriptor : functionMethodDescriptors) {
+
+            List<FunctionParameter> inputParameters = new ArrayList<FunctionParameter>();
+            for (FunctionParameterDescriptor paramDescriptor : descriptor.getInputParameters()) {
+                inputParameters.add(new FunctionParameter(paramDescriptor.getName(), paramDescriptor.getType()));
+            }
+
+            FunctionParameter outputParameter = new FunctionParameter(descriptor.getOutputParameter().getName(),
+                                                                      descriptor.getOutputParameter().getType());
+
+            FunctionMethod fMethod = new FunctionMethod(descriptor.getName(), descriptor.getDescription(),
+                                                        descriptor.getCategory(), descriptor.getInvocationClass(),
+                                                        descriptor.getInvocationMethod(),
+                                                        inputParameters.toArray(new FunctionParameter[0]), outputParameter);
+
+            fMethod.setPushDown(descriptor.getPushDownLiteral());
+            fMethod.setVarArgs(descriptor.isVariableArgs());
+            if (descriptor.isDeterministic()) {
+                fMethod.setDeterminism(Determinism.DETERMINISTIC);
+            } else {
+                fMethod.setDeterminism(Determinism.NONDETERMINISTIC);
+            }
+
+            FunctionTree tree = functionTrees.get(descriptor.getSchema());
+            if (tree == null) {
+                tree = new FunctionTree(descriptor.getSchema(), new UDFSource(Collections.EMPTY_LIST), false);
+                functionTrees.put(descriptor.getSchema(), tree);
+            }
+
+            FunctionDescriptor fd = tree.addFunction(descriptor.getSchema(), null, fMethod, false);
+            fd.setMetadataID(descriptor.getMetadataID());
+        }
+
+        /*
+         * System function manager needs this classloader since it uses reflection to instantiate classes, 
+         * such as FunctionMethods. The default classloader is taken from the thread, which in turn takes
+         * a random plugin. Since no plugin depends on this plugin, ClassNotFound exceptions result.
+         * 
+         * So set the class loader to the one belonging to this plugin.
+         */
+        systemFunctionManager.setClassloader(getClass().getClassLoader());
+        return new FunctionLibrary(teiidVersion, systemFunctionManager.getSystemFunctions(),
+                                   functionTrees.values().toArray(new FunctionTree[0]));
+    }
+    
     @Override
     public IQueryFactory createQueryFactory() {
         if (factory == null)
@@ -275,7 +292,8 @@ public class QueryService implements IQueryService {
     //
     @Override
     public IQueryResolver getQueryResolver() {
-        return new QueryResolver();
+        getQueryParser();
+        return new QueryResolver((QueryParser) getQueryParser());
     }
 
     @Override

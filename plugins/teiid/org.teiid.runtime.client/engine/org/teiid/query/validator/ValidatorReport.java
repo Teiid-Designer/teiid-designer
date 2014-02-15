@@ -24,11 +24,10 @@ package org.teiid.query.validator;
 
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.teiid.query.QueryPlugin;
 import org.teiid.query.report.ActivityReport;
-import org.teiid.query.sql.LanguageObject;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.validator.ValidatorFailure.Status;
+import org.teiid.runtime.client.Messages;
 
 
 public class ValidatorReport extends ActivityReport<ValidatorFailure> {
@@ -54,12 +53,12 @@ public class ValidatorReport extends ActivityReport<ValidatorFailure> {
     public String getFailureMessage() {
     	Collection<ValidatorFailure> failures = getItems();
         if(failures.size() == 0) {
-            return QueryPlugin.Util.getString("ERR.015.012.0064"); //$NON-NLS-1$
+            return Messages.getString(Messages.ERR.ERR_015_012_0064);
         } else if(failures.size() == 1) {
             return failures.iterator().next().toString();
         } else {
             StringBuffer err = new StringBuffer();
-            err.append(QueryPlugin.Util.getString("ERR.015.012.0063")); //$NON-NLS-1$
+            err.append(Messages.getString(Messages.ERR.ERR_015_012_0063));
 
             Iterator<ValidatorFailure> iter = failures.iterator();
             while(iter.hasNext()) {

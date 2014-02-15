@@ -27,41 +27,39 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
-import org.teiid.api.exception.query.QueryMetadataException;
-import org.teiid.core.TeiidComponentException;
-import org.teiid.core.TeiidException;
-import org.teiid.query.metadata.QueryMetadataInterface;
-import org.teiid.query.sql.LanguageObject;
-import org.teiid.query.sql.LanguageVisitor;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Query;
-import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 public class AbstractValidationVisitor extends LanguageVisitor {
     
     // Exception handling
-    private TeiidComponentException exception;
+    private Exception exception;
     private LanguageObject exceptionObject;
         
     // Validation error handling
     protected ValidatorReport report;
     
-    private QueryMetadataInterface metadata;
+    private IQueryMetadataInterface metadata;
     
     protected Command currentCommand;
     protected Stack<LanguageObject> stack = new Stack<LanguageObject>();
     
-    public AbstractValidationVisitor() {
+    public AbstractValidationVisitor(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
         this.report = new ValidatorReport();
     }
-        
-    public void setMetadata(QueryMetadataInterface metadata) {
+
+    public void setMetadata(IQueryMetadataInterface metadata) {
         this.metadata = metadata;
     }
     
-    protected QueryMetadataInterface getMetadata() {
+    protected IQueryMetadataInterface getMetadata() {
         return this.metadata;
     } 
     
@@ -88,18 +86,14 @@ public class AbstractValidationVisitor extends LanguageVisitor {
         this.report.addItem(new ValidatorFailure(message, invalidObjs));
     }
 
-    protected void handleException(TeiidException e) { 
+    protected void handleException(Exception e) { 
         handleException(e, null);
     }
 
-    protected void handleException(TeiidException e, LanguageObject obj) { 
+    protected void handleException(Exception e, LanguageObject obj) { 
         // Store exception information
         this.exceptionObject = obj;
-        if(e instanceof TeiidComponentException) {
-            this.exception = (TeiidComponentException) e;
-        } else {
-            this.exception = new TeiidComponentException(e);
-        }    
+        this.exception = e;
         
         // Abort the validation process
         setAbort(true);
@@ -107,7 +101,7 @@ public class AbstractValidationVisitor extends LanguageVisitor {
 
     // ######################### Report results info #########################
 
-    public TeiidComponentException getException() { 
+    public Exception getException() { 
         return this.exception;
     }
     
@@ -147,11 +141,9 @@ public class AbstractValidationVisitor extends LanguageVisitor {
                     dontSupport.add(symbol);    
                 }            
 		    }
-        } catch(QueryMetadataException e) {
+        } catch(Exception e) {
             handleException(e, symbol);
-        } catch(TeiidComponentException e) { 
-            handleException(e, symbol);
-        }    
+        } 
 
         return dontSupport;
     }

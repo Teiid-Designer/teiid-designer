@@ -111,7 +111,8 @@ public class QueryParser implements IQueryParser {
 	 * @throws Exception if parsing fails
 	 * @throws IllegalArgumentException if sql is null
 	 */	
-	public Command parseCommand(String sql) throws Exception {
+	@Override
+    public Command parseCommand(String sql) throws Exception {
 	    return parseCommand(sql, new ParseInfo(), false);
 	}
 
@@ -138,6 +139,7 @@ public class QueryParser implements IQueryParser {
      * @throws Exception if parsing fails
      * @throws IllegalArgumentException if sql is null
      */
+    @Override
     public Command parseDesignerCommand(String sql) throws Exception {
         return parseCommand(sql, new ParseInfo(), true);
     }
@@ -176,8 +178,9 @@ public class QueryParser implements IQueryParser {
      * @param sql SQL criteria (WHERE clause) string
      * @return Criteria SQL object representation
      * @throws Exception if parsing fails
-     * @throws IllegalArgumentException if sql is null
+     * @throws TeiidClientException if sql is null
      */
+    @Override
     public Criteria parseCriteria(String sql) throws Exception {
         if(sql == null) {
             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
@@ -204,6 +207,7 @@ public class QueryParser implements IQueryParser {
      * @throws Exception if parsing fails
      * @throws IllegalArgumentException if sql is null
      */
+    @Override
     public Expression parseExpression(String sql) throws Exception {
         if(sql == null) {
             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
@@ -220,4 +224,55 @@ public class QueryParser implements IQueryParser {
 
         return result;
     }
+
+    /**
+     * @param sql
+     * @return Expression representing sql
+     * @throws Exception
+     */
+    public Expression parseSelectExpression(String sql) throws Exception {
+        if (sql == null) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30377));
+        }
+
+        ParseInfo dummyInfo = new ParseInfo();
+
+        Expression result = null;
+        try {
+            result = getTeiidParser(sql).selectExpression(dummyInfo);
+
+        } catch (Exception e) {
+            throw convertParserException(e);
+        }
+
+        return result;
+    }
+
+//    TODO consider whether we need to explicitly parse update procedure / procedure
+//    public Command parseProcedure(String sql, boolean update) throws Exception {
+//        try{
+//            if (update) {
+//                return getTeiidParser(sql).forEachRowTriggerAction(new ParseInfo());
+//            }
+//            Command result = getSqlParser(sql).procedureBodyCommand(new ParseInfo());
+//            result.setCacheHint(SQLParserUtil.getQueryCacheOption(sql));
+//            return result;
+//        } catch(ParseException pe) {
+//            throw convertParserException(pe);
+//        } finally {
+//            tm.reinit();
+//        }
+//    }
+//
+//    public Command parseUpdateProcedure(String sql) throws Exception {
+//        try{
+//            Command result = getTeiidParser(sql).updateProcedure(new ParseInfo());
+//            result.setCacheHint(SQLParserUtil.getQueryCacheOption(sql));
+//            return result;
+//        } catch(ParseException pe) {
+//            throw convertParserException(pe);
+//        } catch(TokenMgrError tme) {
+//            throw handleTokenMgrError(tme);
+//        }
+//    }
 }

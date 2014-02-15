@@ -7,6 +7,9 @@
 */
 package org.teiid.designer.query.metadata;
 
+import java.util.List;
+import org.teiid.designer.query.sql.lang.ICommand;
+
 
 /**
  *
@@ -17,5 +20,20 @@ public interface IQueryNode {
      * @param binding
      */
     void addBinding(String binding);
+
+    /**
+     * @return list of bindings
+     */
+    List<String> getBindings();
+
+    /**
+     * @return command
+     */
+    ICommand getCommand();
+
+    /**
+     * @return sql of the query
+     */
+    String getQuery();
 
 }

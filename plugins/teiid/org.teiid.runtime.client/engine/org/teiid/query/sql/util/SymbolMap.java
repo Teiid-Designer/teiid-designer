@@ -30,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -103,7 +105,7 @@ public class SymbolMap {
     }
 
     public static final SymbolMap createSymbolMap(GroupSymbol virtualGroup,
-                                                  List<? extends Expression> projectCols, QueryMetadataInterface metadata) throws Exception {
+                                                  List<? extends Expression> projectCols, IQueryMetadataInterface metadata) throws Exception {
         return createSymbolMap(ResolverUtil.resolveElementsInGroup(virtualGroup, metadata), projectCols);
     }
 

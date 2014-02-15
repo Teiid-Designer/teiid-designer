@@ -3,16 +3,18 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.Arrays;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IFunction;
-import org.teiid.designer.udf.IFunctionDescriptor;
+import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
  *
  */
-public class Function extends SimpleNode implements Expression, IFunction<IFunctionDescriptor, LanguageVisitor> {
+public class Function extends SimpleNode implements Expression, IFunction<FunctionDescriptor, LanguageVisitor> {
 
     private Class<?> type;
 
@@ -22,7 +24,7 @@ public class Function extends SimpleNode implements Expression, IFunction<IFunct
 
     private boolean implicit;
 
-//    private FunctionDescriptor descriptor;
+    private FunctionDescriptor descriptor;
 
     /**
      * @param p
@@ -113,6 +115,52 @@ public class Function extends SimpleNode implements Expression, IFunction<IFunct
         return this.implicit;
     }
 
+    /**
+     * Get the function descriptor that this function resolves to.
+     * @return Descriptor or null if resolution has not yet occurred
+     */
+    @Override
+    public FunctionDescriptor getFunctionDescriptor() {
+        return this.descriptor;
+    }
+
+    /**
+     * Set the descriptor for this function.
+     * @param fd Function descriptor
+     */
+    @Override
+    public void setFunctionDescriptor(FunctionDescriptor fd) {
+        this.descriptor = fd;
+    }
+
+    /** 
+     * Insert a conversion function at specified index.  This is a convenience 
+     * method to insert a conversion into the function tree.
+     * @param index Argument index to insert conversion function at
+     * @param functionDescriptor Conversion function descriptor
+     */
+    public void insertConversion(int index, FunctionDescriptor functionDescriptor) { 
+        // Get target type for conversion
+        Class<?> t = functionDescriptor.getReturnType();
+        String typeName = DataTypeManagerService.getInstance().getDataTypeName(t);
+        
+        // Pull old expression at index
+        Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+        constant.setValue(typeName);
+        Expression newArg[] = new Expression[] { args[index],  constant};
+        
+        // Replace old expression with new expression, using old as arg
+        Function func = getTeiidParser().createASTNode(ASTNodes.FUNCTION);
+        func.setName(functionDescriptor.getName());
+        func.setArgs(newArg);
+        args[index] = func;
+        
+        // Set function descriptor and type of new function
+        func.setFunctionDescriptor(functionDescriptor);
+        func.setType(t);
+        func.makeImplicit();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -138,6 +186,9 @@ public class Function extends SimpleNode implements Expression, IFunction<IFunct
         if (this.type == null) {
             if (other.type != null) return false;
         } else if (!this.type.equals(other.type)) return false;
+        if (this.descriptor == null) {
+            if (other.descriptor != null) return false;
+        } else if (!this.descriptor.equals(other.descriptor)) return false;
         return true;
     }
 
@@ -164,18 +215,6 @@ public class Function extends SimpleNode implements Expression, IFunction<IFunct
             clone.setName(getName());
 
         return clone;
-    }
-
-    @Override
-    public IFunctionDescriptor getFunctionDescriptor() {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setFunctionDescriptor(IFunctionDescriptor fd) {
-        // TODO
-        throw new UnsupportedOperationException();
     }
 
 }

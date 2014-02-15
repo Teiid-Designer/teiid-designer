@@ -3,10 +3,12 @@
 package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ISetClauseList;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.Expression;
 
 /**
  *
@@ -21,6 +23,17 @@ public class SetClauseList extends SimpleNode implements ISetClauseList<Language
      */
     public SetClauseList(TeiidParser p, int id) {
         super(p, id);
+    }
+
+    /**
+     * @return a non-updateable map representation
+     */
+    public LinkedHashMap<ElementSymbol, Expression> getClauseMap() {
+        LinkedHashMap<ElementSymbol, Expression> result = new LinkedHashMap<ElementSymbol, Expression>();
+        for (SetClause clause : this.setClauses) {
+            result.put(clause.getSymbol(), clause.getValue());
+        }
+        return result;
     }
 
     /**

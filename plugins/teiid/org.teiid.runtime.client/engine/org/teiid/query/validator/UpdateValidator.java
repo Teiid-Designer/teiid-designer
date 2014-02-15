@@ -30,7 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.query.optimizer.relational.PartitionAnalyzer;
+import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Insert;
@@ -40,6 +43,7 @@ import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.symbol.Constant;
 import org.teiid.query.sql.lang.symbol.Expression;
 import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.util.SymbolMap;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -55,7 +59,7 @@ public class UpdateValidator {
 		/**
 		 * The default handling should be used
 		 */
-		INHERENT, 
+		INHERENT,
 		/**
 		 * An instead of trigger (TriggerAction) has been defined
 		 */
@@ -257,7 +261,7 @@ public class UpdateValidator {
 		
 	}
 	
-	private QueryMetadataInterface metadata;
+	private IQueryMetadataInterface metadata;
 	private UpdateInfo updateInfo = new UpdateInfo();
 	
 	private ValidatorReport report = new ValidatorReport();
@@ -265,7 +269,7 @@ public class UpdateValidator {
 	private ValidatorReport updateReport = new ValidatorReport();
 	private ValidatorReport deleteReport = new ValidatorReport();
 	
-	public UpdateValidator(QueryMetadataInterface qmi, UpdateType insertType, UpdateType updateType, UpdateType deleteType) {
+	public UpdateValidator(IQueryMetadataInterface qmi, UpdateType insertType, UpdateType updateType, UpdateType deleteType) {
 		this.metadata = qmi;
 		this.updateInfo.deleteType = deleteType;
 		this.updateInfo.insertType = insertType;
@@ -456,7 +460,7 @@ public class UpdateValidator {
     		deleteReport.handleValidationWarning(warning);
     		updateInfo.isSimple = false;
     	}
-    	List<GroupSymbol> allGroups = query.getFrom().getGroups();
+    	List<? extends GroupSymbol> allGroups = query.getFrom().getGroups();
     	HashSet<GroupSymbol> keyPreservingGroups = new HashSet<GroupSymbol>();
     	
 		ResolverUtil.findKeyPreserved(query, keyPreservingGroups, metadata);
@@ -535,8 +539,8 @@ public class UpdateValidator {
 	 * <p> This method validates an elements present in the group specified in the
 	 * FROM clause of the query but not specified in its SELECT clause</p>
 	 * @param element The <code>ElementSymbol</code> being validated
-	 * @throws TeiidComponentException 
-	 * @throws QueryMetadataException 
+	 * @throws Exception 
+	 * @throws Exception 
 	 */
 	private boolean validateInsertElement(ElementSymbol element) throws Exception {
 		// checking if the elements not specified in the query are required.

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -76,7 +76,7 @@ public class From extends SimpleNode
     }  
 
     @Override
-    public List<? extends GroupSymbol> getGroups() {
+    public List<GroupSymbol> getGroups() {
         List<GroupSymbol> groups = new ArrayList<GroupSymbol>();
         if(clauses != null) {
             for(int i=0; i<clauses.size(); i++) {

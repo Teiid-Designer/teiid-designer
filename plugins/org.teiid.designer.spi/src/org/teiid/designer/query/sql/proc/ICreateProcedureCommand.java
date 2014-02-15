@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.query.sql.proc;
 
-import java.util.List;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
@@ -31,11 +30,4 @@ public interface ICreateProcedureCommand<B extends IBlock, E extends IExpression
      * @param block The <code>Block</code> on this command
      */
     void setBlock(B block);
-    
-    /**
-     * Set the projected symbols
-     * 
-     * @param projectedSymbols
-     */
-    void setProjectedSymbols(List<E> projectedSymbols);
 }

@@ -37,6 +37,7 @@ import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 public abstract class AbstractTeiidParser implements TeiidParser {
 
@@ -258,7 +259,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
             if (element) {
                 key = Messages.TeiidParser.Invalid_short_name;
             }
-            throw new Exception(Messages.getString(key, id)); 
+            throw new TeiidClientException(Messages.getString(key, id)); 
         }
         return id;
     }
