@@ -61,7 +61,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         securityLabel = new Label(this, SWT.NONE);
         securityLabel.setText(Util.getString(PREFIX + "Common.Security.Type.Label")); //$NON-NLS-1$
         securityLabel.setToolTipText(Util.getString(PREFIX + "Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(securityLabel);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(securityLabel);
 
         securityCombo = new Combo(this, SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
         securityCombo.setToolTipText(Util.getString(PREFIX + "Common.Context.Factory.ToolTip")); //$NON-NLS-1$
@@ -74,7 +74,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         usernameLabel = new Label(this, SWT.NONE);
         usernameLabel.setText(Util.getString(PREFIX + "Common.Username.Label")); //$NON-NLS-1$
         usernameLabel.setToolTipText(Util.getString(PREFIX + "Common.Username.ToolTip")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(usernameLabel);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(usernameLabel);
 
         usernameText = new Text(this, SWT.SINGLE | SWT.BORDER);
         usernameText.setToolTipText(Util.getString(PREFIX + "Common.Username.ToolTip")); //$NON-NLS-1$
@@ -85,7 +85,7 @@ public class CredentialsComposite extends Composite implements UiConstants, List
         passwordLabel = new Label(this, SWT.NONE);
         passwordLabel.setText(Util.getString(PREFIX + "Common.Password.Label")); //$NON-NLS-1$
         passwordLabel.setToolTipText(Util.getString(PREFIX + "Common.Password.ToolTip")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(passwordLabel);
+        GridDataFactory.fillDefaults().grab(false, false).align(SWT.CENTER, SWT.CENTER).applyTo(passwordLabel);
 
         passwordText = new Text(this, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
         passwordText.setToolTipText(Util.getString(PREFIX + "Common.Password.ToolTip")); //$NON-NLS-1$

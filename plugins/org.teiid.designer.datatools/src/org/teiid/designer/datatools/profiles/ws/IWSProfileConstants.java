@@ -75,4 +75,13 @@ public interface IWSProfileConstants extends ICredentialsCommon {
       * Also used incorrectly in 7.7.1 for the endpoint property key. 
       */
      String WSDL_URI_PROP_ID = "wsdlURI"; //$NON-NLS-1$
+     
+     /**
+      * Properties used for REST WS Request header info
+      */
+     String AUTHORIZATION_KEY = "Authorization"; //$NON-NLS-1$
+     String ACCEPT_PROPERTY_KEY = "Accept"; //$NON-NLS-1$
+     String ACCEPT_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
+     String CONTENT_TYPE_PROPERTY_KEY = "Content-Type"; //$NON-NLS-1$
+     String CONTENT_TYPE_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
 }

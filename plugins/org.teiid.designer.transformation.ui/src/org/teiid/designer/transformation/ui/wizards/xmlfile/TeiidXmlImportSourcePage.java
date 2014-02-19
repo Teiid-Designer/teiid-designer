@@ -608,16 +608,42 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 //			}
 			
 			if (username != null && !username.isEmpty()) {
-				httpConn.setRequestProperty("Authorization", "Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$ //$NON-NLS-2$
+				httpConn.setRequestProperty(IWSProfileConstants.AUTHORIZATION_KEY, 
+						"Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$
 			}
 			
 			httpConn.setDoOutput(true);
-            httpConn.setRequestProperty("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
-            httpConn.setRequestProperty("Content-Type", "application/xml"); //$NON-NLS-1$  //$NON-NLS-2$
+			if( props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null ) {
+				httpConn.setRequestProperty(IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String)props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
+			} else {
+				httpConn.setRequestProperty(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+			}
+			
+			if( props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null ) {
+				httpConn.setRequestProperty(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, (String)props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
+			} else {
+				httpConn.setRequestProperty(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, IWSProfileConstants.CONTENT_TYPE_DEFAULT_VALUE);
+			}
+			
+			for( Object key : props.keySet() ) {
+				String keyStr = (String)key;
+				if( IWSProfileConstants.AUTHORIZATION_KEY.equalsIgnoreCase(keyStr) ||
+					ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
+            		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr) ) {
+            		// do nothing;
+            	} else {
+            		httpConn.setRequestProperty(keyStr, props.getProperty(keyStr));
+            	}
+			}
+
 			InputStream is = httpConn.getInputStream();
 			xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
-			FileOutputStream os = new FileOutputStream(xmlFile);
-			write(os, is);
+			fos = new FileOutputStream(xmlFile);
+			write(fos, is);
 			
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);
