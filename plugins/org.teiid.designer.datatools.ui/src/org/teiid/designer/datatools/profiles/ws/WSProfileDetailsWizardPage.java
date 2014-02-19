@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -22,7 +23,6 @@ import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
@@ -55,6 +55,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     private Label urlLabel;
     private Text urlText;
     private CredentialsComposite credentialsComposite;
+    private Properties profileProperties;
 
     /**
      * @param wizardPageName
@@ -68,8 +69,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	public void createCustomControl(Composite parent) {
         GridData gd;
 
-        Group group = WidgetFactory.createSimpleGroup(parent,
-                                                                    UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
+        Group group = WidgetFactory.createSimpleGroup(parent, UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
         scrolled = new Composite(group, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
@@ -112,14 +112,16 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         gd.widthHint = 500;
         urlText.setLayoutData(gd);
         
-        Label spacerLabel = new Label(scrolled, SWT.NONE);
-        spacerLabel.setVisible(false);
-        GridDataFactory.swtDefaults().grab(false, false).applyTo(spacerLabel);
-        
         credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.horizontalSpan = 2;
         credentialsComposite.setLayoutData(gd);
 
+        
+        profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        
+        new HeaderPropertiesPanel(scrolled, profileProperties, 6);
+        
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
         setAutoConnectOnFinishDefault(false);
@@ -186,8 +188,8 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     }
 
     private void setProperty(String propertyId, String value) {
-        Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
-        properties.setProperty(propertyId, value);
+        //Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        profileProperties.setProperty(propertyId, value);
         updateState();
     }
     
@@ -209,31 +211,34 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
         descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
 
-        Properties properties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
-        if (null == properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID)
-                || properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString().isEmpty()) {
+        if( this.profileProperties ==  null ) {
+        	this.profileProperties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
+        }
+        
+        if (null == profileProperties.get(IWSProfileConstants.END_POINT_URI_PROP_ID)
+                || profileProperties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString().isEmpty()) {
                 setErrorMessage(UTIL.getString("Common.URL.Error.Message")); //$NON-NLS-1$
                 return;
         }
         setErrorMessage(null);
         try {
         	@SuppressWarnings("unused")
-			URL url = new URL(properties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString());
+			URL url = new URL(profileProperties.get(IWSProfileConstants.END_POINT_URI_PROP_ID).toString());
         } catch(MalformedURLException e) {
         	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + e.getMessage()); //$NON-NLS-1$
         	return;
         }
         
-        if (null != properties.get(ICredentialsCommon.SECURITY_TYPE_ID) &&
-        		!SecurityType.None.name().equals(properties.get(ICredentialsCommon.SECURITY_TYPE_ID))) {
-        	if (null == properties.get(ICredentialsCommon.USERNAME_PROP_ID)
-                    || properties.get(ICredentialsCommon.USERNAME_PROP_ID).toString().isEmpty()) {
+        if (null != profileProperties.get(ICredentialsCommon.SECURITY_TYPE_ID) &&
+        		!SecurityType.None.name().equals(profileProperties.get(ICredentialsCommon.SECURITY_TYPE_ID))) {
+        	if (null == profileProperties.get(ICredentialsCommon.USERNAME_PROP_ID)
+                    || profileProperties.get(ICredentialsCommon.USERNAME_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Username.Error.Message")); //$NON-NLS-1$
                     return;
                 }
                 setErrorMessage(null);
-                if (null == properties.get(ICredentialsCommon.PASSWORD_PROP_ID)
-                    || properties.get(ICredentialsCommon.PASSWORD_PROP_ID).toString().isEmpty()) {
+                if (null == profileProperties.get(ICredentialsCommon.PASSWORD_PROP_ID)
+                    || profileProperties.get(ICredentialsCommon.PASSWORD_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Password.Error.Message")); //$NON-NLS-1$
                     return;
                 }
