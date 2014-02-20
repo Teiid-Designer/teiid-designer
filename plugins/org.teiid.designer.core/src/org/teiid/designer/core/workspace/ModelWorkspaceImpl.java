@@ -457,7 +457,7 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
         for (int i = 0; i < projects.length; ++i) {
             ModelProject mProject = projects[i];
             ModelResourceCollectorVisitor visitor = new ModelResourceCollectorVisitor();
-            if (mProject != null && mProject.isOpen()) {
+            if (mProject != null && mProject.isOpen() && mProject.getProject().isOpen()) {
                 mProject.getProject().accept(visitor);
                 temp.addAll(visitor.getModelResources());
             }
