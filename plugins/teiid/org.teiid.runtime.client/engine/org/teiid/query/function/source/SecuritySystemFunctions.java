@@ -22,9 +22,25 @@
 
 package org.teiid.query.function.source;
 
+import org.teiid.query.util.CommandContext;
+
 
 public class SecuritySystemFunctions {
 	
 	public static final String DATA_ROLE = "data"; //$NON-NLS-1$
+
+	public static boolean hasRole(CommandContext context, String roleName) {
+        return hasRole(context, DATA_ROLE, roleName);
+    }
     
+    public static boolean hasRole(CommandContext context, String roleType, String roleName) {
+        if (!DATA_ROLE.equalsIgnoreCase(roleType)) {
+            return false;
+        }
+        if (context == null) {
+            return true;
+        }
+
+        return true;
+    }
 }

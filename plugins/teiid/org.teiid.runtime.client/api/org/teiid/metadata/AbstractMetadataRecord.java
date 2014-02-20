@@ -128,6 +128,7 @@ public abstract class AbstractMetadataRecord implements Serializable {
 		return name.toUpperCase();
 	}
 	
+    @Override
     public String toString() {
     	StringBuffer sb = new StringBuffer(100);
         sb.append(getClass().getSimpleName());
@@ -207,6 +208,7 @@ public abstract class AbstractMetadataRecord implements Serializable {
     /**
      * Compare two records for equality.
      */
+    @Override
     public boolean equals(Object obj) {
         if(obj == this) {
             return true;
@@ -233,6 +235,7 @@ public abstract class AbstractMetadataRecord implements Serializable {
     	}
     }
 
+    @Override
     public int hashCode() {
         return getUUID().hashCode();
     }

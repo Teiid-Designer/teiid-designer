@@ -7,3 +7,6 @@ engine/org/teiid/query/parser/v*/Teiid*Parser.java
 engine/org/teiid/query/parser/v*/Teiid*ParserConstants.java
 engine/org/teiid/query/parser/v*/Teiid*ParserTokenManager.java
 engine/org/teiid/query/parser/v*/Token*.java
+
+lib/*
+libsrc/*

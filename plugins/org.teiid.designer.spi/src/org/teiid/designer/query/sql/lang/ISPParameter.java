@@ -44,6 +44,15 @@ public interface ISPParameter<E extends IElementSymbol> {
         public int index() {
             return ordinal() + 1;
         }
+
+        public static ParameterInfo valueOf(int type) {
+            for (ParameterInfo info : ParameterInfo.values()) {
+                if (info.index() == type)
+                    return info;
+            }
+
+            throw new IllegalArgumentException();
+        }
     }
 
     /**

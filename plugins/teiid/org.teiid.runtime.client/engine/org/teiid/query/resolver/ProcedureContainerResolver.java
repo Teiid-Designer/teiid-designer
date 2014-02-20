@@ -35,7 +35,6 @@ import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.language.SQLConstants;
-import org.teiid.query.metadata.ParameterInfo;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataID.Type;
@@ -255,10 +254,10 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
                 boolean[] updatable = new boolean[info.getParameters().size()];
                 int i = 0;
                 for (ISPParameter param : info.getParameters()) {
-                    if(param.getParameterType() != ParameterInfo.RESULT_SET) {
+                    if(param.getParameterType() != ISPParameter.ParameterInfo.RESULT_SET.index()) {
                         ElementSymbol symbol = (ElementSymbol) param.getParameterSymbol();
                         tempElements.add(symbol);
-                        updatable[i++] = param.getParameterType() != ParameterInfo.IN;  
+                        updatable[i++] = param.getParameterType() != ISPParameter.ParameterInfo.IN.index();
                     }
                 }
 
@@ -282,11 +281,11 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		        int i = 0;
 		        List<ElementSymbol> rsColumns = Collections.emptyList();
 		        for (ISPParameter param : info.getParameters()) {
-		            if(param.getParameterType() != ParameterInfo.RESULT_SET) {
+		            if(param.getParameterType() != ISPParameter.ParameterInfo.RESULT_SET.index()) {
 		                ElementSymbol symbol = (ElementSymbol) param.getParameterSymbol();
 		                tempElements.add(symbol);
-		                updatable[i++] = param.getParameterType() != ParameterInfo.IN;  
-		                if (param.getParameterType() == ParameterInfo.RETURN_VALUE) {
+		                updatable[i++] = param.getParameterType() != ISPParameter.ParameterInfo.IN.index();  
+		                if (param.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
 		                	cupc.setReturnVariable(symbol);
 		                }
 		            } else {
@@ -298,7 +297,8 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		        }
 		        GroupSymbol gs = addScalarGroup(parser, procName, childMetadata, externalGroups, tempElements, updatable);
 		        if (cupc.getReturnVariable() != null) {
-		        	ResolverVisitor.resolveLanguageObject(cupc.getReturnVariable(), Arrays.asList(gs), metadata);
+		        	ResolverVisitor visitor = new ResolverVisitor(parser.getVersion());
+		        	visitor.resolveLanguageObject(cupc.getReturnVariable(), Arrays.asList(gs), metadata);
 		        }
 		        cupc.setResultSetColumns(rsColumns);
 		        //the relational planner will override this with the appropriate value

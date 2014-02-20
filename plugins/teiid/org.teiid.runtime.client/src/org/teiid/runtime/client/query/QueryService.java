@@ -18,12 +18,29 @@ import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.query.IQueryResolver;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.ICommandCollectorVisitor;
+import org.teiid.designer.query.sql.IElementCollectorVisitor;
+import org.teiid.designer.query.sql.IFunctionCollectorVisitor;
+import org.teiid.designer.query.sql.IGroupCollectorVisitor;
+import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
+import org.teiid.designer.query.sql.IPredicateCollectorVisitor;
+import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
+import org.teiid.designer.query.sql.IResolverVisitor;
+import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.ISQLStringVisitorCallback;
+import org.teiid.designer.query.sql.IValueIteratorProviderCollectorVisitor;
+import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.FunctionMethodDescriptor;
 import org.teiid.designer.udf.FunctionParameterDescriptor;
 import org.teiid.designer.udf.IFunctionLibrary;
+import org.teiid.designer.validator.IUpdateValidator;
+import org.teiid.designer.validator.IUpdateValidator.TransformUpdateType;
+import org.teiid.designer.validator.IValidator;
 import org.teiid.designer.xml.IMappingDocumentFactory;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.FunctionMethod;
@@ -36,7 +53,11 @@ import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.function.UDFSource;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.QueryResolver;
+import org.teiid.query.resolver.util.ResolverUtil;
+import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
+import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.runtime.client.proc.ProcedureService;
 import org.teiid.runtime.client.xml.MappingDocumentFactory;
@@ -98,7 +119,7 @@ public class QueryService implements IQueryService {
     public String getJDBCSQLTypeName(int jdbcType) {
         return JDBCSQLTypeInfo.getTypeName(jdbcType);
     }
-    
+
     @Override
     public IFunctionLibrary createFunctionLibrary() {
         /*
@@ -162,7 +183,7 @@ public class QueryService implements IQueryService {
         return new FunctionLibrary(teiidVersion, systemFunctionManager.getSystemFunctions(),
                                    functionTrees.values().toArray(new FunctionTree[0]));
     }
-    
+
     @Override
     public IQueryFactory createQueryFactory() {
         if (factory == null)
@@ -254,10 +275,11 @@ public class QueryService implements IQueryService {
     //        return new ValueIteratorProviderCollectorVisitor();
     //    }
     //
-    //    @Override
-    //    public IResolverVisitor getResolverVisitor() {
-    //        return new WrappedResolverVisitor();
-    //    }
+    @Override
+    public IResolverVisitor getResolverVisitor() {
+        return new ResolverVisitor(teiidVersion);
+    }
+
     //
     //    @Override
     //    public IValidator getValidator() {
@@ -278,26 +300,79 @@ public class QueryService implements IQueryService {
     //        return new WrappedUpdateValidator(crossMetadata, insertType, updateType, deleteType);
     //    }
     //
-    //    @Override
-    //    public void resolveGroup(IGroupSymbol groupSymbol,
-    //                             QueryMetadataInterface metadata) throws Exception {
-    //        CrossQueryMetadata crossMetadata = new CrossQueryMetadata(metadata);
-    //        ResolverUtil.resolveGroup((GroupSymbol) groupSymbol, crossMetadata);
-    //    }
-    //
-    //    @Override
-    //    public void fullyQualifyElements(ICommand command) {
-    //        ResolverUtil.fullyQualifyElements((Command) command);
-    //    }
-    //
+    @Override
+    public void resolveGroup(IGroupSymbol groupSymbol, IQueryMetadataInterface metadata) throws Exception {
+        ResolverUtil.resolveGroup((GroupSymbol)groupSymbol, metadata);
+    }
+
+    @Override
+    public void fullyQualifyElements(ICommand command) {
+        ResolverUtil.fullyQualifyElements((Command)command);
+    }
+
     @Override
     public IQueryResolver getQueryResolver() {
         getQueryParser();
-        return new QueryResolver((QueryParser) getQueryParser());
+        return new QueryResolver((QueryParser)getQueryParser());
     }
 
     @Override
     public ProcedureService getProcedureService() {
         return new ProcedureService(teiidVersion);
+    }
+
+    @Override
+    public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
+        return null;
+    }
+
+    @Override
+    public IGroupCollectorVisitor getGroupCollectorVisitor(boolean removeDuplicates) {
+        return null;
+    }
+
+    @Override
+    public IGroupsUsedByElementsVisitor getGroupsUsedByElementsVisitor() {
+        return null;
+    }
+
+    @Override
+    public IElementCollectorVisitor getElementCollectorVisitor(boolean removeDuplicates) {
+        return null;
+    }
+
+    @Override
+    public ICommandCollectorVisitor getCommandCollectorVisitor() {
+        return null;
+    }
+
+    @Override
+    public IFunctionCollectorVisitor getFunctionCollectorVisitor(boolean removeDuplicates) {
+        return null;
+    }
+
+    @Override
+    public IPredicateCollectorVisitor getPredicateCollectorVisitor() {
+        return null;
+    }
+
+    @Override
+    public IReferenceCollectorVisitor getReferenceCollectorVisitor() {
+        return null;
+    }
+
+    @Override
+    public IValueIteratorProviderCollectorVisitor getValueIteratorProviderCollectorVisitor() {
+        return null;
+    }
+
+    @Override
+    public IValidator getValidator() {
+        return null;
+    }
+
+    @Override
+    public IUpdateValidator getUpdateValidator(IQueryMetadataInterface metadata, TransformUpdateType insertType, TransformUpdateType updateType, TransformUpdateType deleteType) {
+        return null;
     }
 }

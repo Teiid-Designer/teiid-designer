@@ -327,4 +327,14 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
         return false;
     }
+
+    @Override
+    public boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion) {
+        return this.compareTo(otherVersion) || this.isGreaterThan(otherVersion);
+    }
+
+    @Override
+    public boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion) {
+        return this.compareTo(otherVersion) || this.isLessThan(otherVersion);
+    }
 }

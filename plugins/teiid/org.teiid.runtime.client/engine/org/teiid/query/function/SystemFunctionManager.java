@@ -55,7 +55,7 @@ public class SystemFunctionManager {
 	public FunctionTree getSystemFunctions() {
     	if(systemFunctionTree == null) { 
 	    	// Create the system source and add it to the source list
-	    	SystemSource systemSource = new SystemSource(this.allowEnvFunction);
+	    	SystemSource systemSource = new SystemSource(getTeiidVersion(), this.allowEnvFunction);
 	    	systemSource.setClassLoader(classLoader);
 			// Validate the system source - should never fail
 	    	ValidatorReport report = new ValidatorReport("Function Validation"); //$NON-NLS-1$

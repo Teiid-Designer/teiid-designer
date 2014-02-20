@@ -33,9 +33,9 @@ import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.mapping.relational.QueryNode;
-import org.teiid.query.metadata.ParameterInfo;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
@@ -156,8 +156,8 @@ public class ExecResolver extends ProcedureContainerResolver {
         boolean varargs = false;
         for (int i = 0; i < metadataParams.size(); i++) {
         	SPParameter metadataParameter = metadataParams.get(i);
-            if( (metadataParameter.getParameterType()==ParameterInfo.IN) ||
-                (metadataParameter.getParameterType()==ParameterInfo.INOUT)){
+            if( (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.IN.index()) ||
+                (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index())){
             	if (ResolverUtil.hasDefault(metadataParameter.getMetadataID(), metadata) || metadataParameter.isVarArg()) {
                 	optional = true;
                 	optionalParams++;
@@ -172,7 +172,7 @@ public class ExecResolver extends ProcedureContainerResolver {
             	if (metadataParameter.isVarArg()) {
             		varargs = true;
             	}
-            } else if (metadataParameter.getParameterType() == ParameterInfo.OUT) {
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.OUT.index()) {
             	outParams++;
             	/*
             	 * TODO: it would consistent to do the following, but it is a breaking change for procedures that have intermixed out params with in.
@@ -180,7 +180,7 @@ public class ExecResolver extends ProcedureContainerResolver {
             	 */
         		//optional = true;
         		//optionalParams++;
-            } else if (metadataParameter.getParameterType() == ParameterInfo.RETURN_VALUE) {
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
             	hasReturnValue = true;
             }
             SPParameter clonedParam = metadataParameter.clone();
@@ -218,7 +218,7 @@ public class ExecResolver extends ProcedureContainerResolver {
                 Expression expr = namedExpressions.remove(nameKey);
                 // With named parameters, have to check on optional params and default values
                 if (expr == null) {
-                	if (param.getParameterType() != ParameterInfo.OUT) {
+                	if (param.getParameterType() != ISPParameter.ParameterInfo.OUT.index()) {
                 		param.setUsingDefault(true);
 	                	expected.add(nameKey);
 	                	if (getTeiidParser().getVersion().isGreaterThan(TeiidServerVersion.TEIID_7_SERVER)) {
@@ -329,7 +329,8 @@ public class ExecResolver extends ProcedureContainerResolver {
                 getQueryResolver().resolveCommand(container.getCommand(), metadata.getMetadata());
             }
             try {
-            	ResolverVisitor.resolveLanguageObject(expr, null, externalGroups, metadata);
+            	ResolverVisitor visitor = new ResolverVisitor(expr.getTeiidVersion());
+            	visitor.resolveLanguageObject(expr, null, externalGroups, metadata);
             } catch (Exception e) {
             	if (!checkForArray(param, expr)) {
             		throw e;

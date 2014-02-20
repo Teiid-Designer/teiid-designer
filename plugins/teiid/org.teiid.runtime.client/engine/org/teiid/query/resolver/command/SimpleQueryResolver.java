@@ -40,7 +40,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
-import org.teiid.query.metadata.ParameterInfo;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -177,9 +177,10 @@ public class SimpleQueryResolver extends CommandResolver {
             obj.getGroupSymbol().setMetadataID(metadata.getMetadataStore().getTempGroupID(obj.getGroupSymbol().getName()));
             obj.getGroupSymbol().setIsTempTable(true);
             List<GroupSymbol> groups = Collections.singletonList(obj.getGroupSymbol());
+            ResolverVisitor visitor = new ResolverVisitor(obj.getTeiidVersion());
             if (obj.getColumns() != null && !obj.getColumns().isEmpty()) {
 	            for (Expression singleElementSymbol : projectedSymbols) {
-	                ResolverVisitor.resolveLanguageObject(singleElementSymbol, groups, metadata);
+	                visitor.resolveLanguageObject(singleElementSymbol, groups, metadata);
 				}
             }
             if (obj.getColumns() != null && !obj.getColumns().isEmpty()) {
@@ -443,9 +444,10 @@ public class SimpleQueryResolver extends CommandResolver {
             //now resolve the projected symbols
             Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
             groups.add(obj.getGroupSymbol());
+            ResolverVisitor visitor = new ResolverVisitor(obj.getTeiidVersion());
             for (ElementSymbol symbol : obj.getProjectedSymbols()) {
                 try {
-					ResolverVisitor.resolveLanguageObject(symbol, groups, null, metadata);
+					visitor.resolveLanguageObject(symbol, groups, null, metadata);
 				} catch (Exception e) {
 					 throw new RuntimeException(e);
 				}				
@@ -525,7 +527,7 @@ public class SimpleQueryResolver extends CommandResolver {
 			
 			for (SPParameter metadataParameter : metadataParams) {
 			    SPParameter clonedParam = metadataParameter.clone();
-			    if (clonedParam.getParameterType()==ParameterInfo.IN || metadataParameter.getParameterType()==ParameterInfo.INOUT) {
+			    if (clonedParam.getParameterType()==ISPParameter.ParameterInfo.IN.index() || metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index()) {
 			        ElementSymbol paramSymbol = clonedParam.getParameterSymbol();
 			        Reference ref = getTeiidParser().createASTNode(ASTNodes.REFERENCE);
 			        ref.setExpression(paramSymbol);
@@ -535,7 +537,7 @@ public class SimpleQueryResolver extends CommandResolver {
 			        
 			        String aliasName = paramSymbol.getShortName();
 			        
-			        if (metadataParameter.getParameterType()==ParameterInfo.INOUT) {
+			        if (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index()) {
 			            aliasName += "_IN"; //$NON-NLS-1$
 			        }
 

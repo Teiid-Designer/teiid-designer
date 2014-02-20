@@ -203,7 +203,7 @@ import org.teiid.query.sql.symbol.XMLSerialize;
 @SuppressWarnings( "javadoc" )
 public abstract class LanguageVisitor extends AbstractLanguageVisitor {
 
-    protected final ITeiidServerVersion teiidVersion;
+    private final ITeiidServerVersion teiidVersion;
 
     /*
      * Required if nodes are to be created by the visitor

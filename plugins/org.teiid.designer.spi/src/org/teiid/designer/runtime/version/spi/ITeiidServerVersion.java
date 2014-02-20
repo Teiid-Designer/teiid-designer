@@ -122,4 +122,24 @@ public interface ITeiidServerVersion {
      * @return true if this version is less. False otherwise.
      */
     boolean isLessThan(ITeiidServerVersion otherVersion);
+
+    /**
+     * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
+     * and {@link #isGreaterThan(ITeiidServerVersion)}.
+     *
+     * @param otherVersion
+     *
+     * @return this is greater than or equal to otherVersion
+     */
+    boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion);
+
+    /**
+     * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
+     * and {@link #isLessThan(ITeiidServerVersion)}.
+     *
+     * @param otherVersion
+     *
+     * @return this is less than or equal to otherVersion
+     */
+    boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion);
 }

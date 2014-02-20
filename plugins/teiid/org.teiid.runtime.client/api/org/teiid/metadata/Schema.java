@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.TreeMap;
 import org.teiid.runtime.client.Messages;
 
@@ -35,11 +36,29 @@ public class Schema extends AbstractMetadataRecord {
 
 	private boolean physical = true;
     private String primaryMetamodelUri = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
-
+    
+    private NavigableMap<String, Table> tables = new TreeMap<String, Table>(String.CASE_INSENSITIVE_ORDER);
+	private NavigableMap<String, Procedure> procedures = new TreeMap<String, Procedure>(String.CASE_INSENSITIVE_ORDER);
 	private Map<String, FunctionMethod> functions = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
 	
 	private List<AbstractMetadataRecord> resolvingOrder = new ArrayList<AbstractMetadataRecord>();
-
+	
+	public void addTable(Table table) {
+		table.setParent(this);
+		if (this.tables.put(table.getName(), table) != null) {
+			throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60013, table.getName())); 
+		}
+		resolvingOrder.add(table);
+	}
+	
+	public void addProcedure(Procedure procedure) {
+		procedure.setParent(this);
+		if (this.procedures.put(procedure.getName(), procedure) != null) {
+			throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60014, procedure.getName())); 
+		}
+		resolvingOrder.add(procedure);
+	}
+	
 	public void addFunction(FunctionMethod function) {
 		function.setParent(this);
 		//TODO: ensure that all uuids are unique
@@ -48,6 +67,30 @@ public class Schema extends AbstractMetadataRecord {
 		}
 		resolvingOrder.add(function);
 	}	
+
+	/**
+	 * Get the tables defined in this schema
+	 * @return
+	 */
+	public NavigableMap<String, Table> getTables() {
+		return tables;
+	}
+	
+	public Table getTable(String tableName) {
+		return tables.get(tableName);
+	}
+	
+	/**
+	 * Get the procedures defined in this schema
+	 * @return
+	 */
+	public NavigableMap<String, Procedure> getProcedures() {
+		return procedures;
+	}
+	
+	public Procedure getProcedure(String procName) {
+		return procedures.get(procName);
+	}
 	
 	/**
 	 * Get the functions defined in this schema in a map of uuid to {@link FunctionMethod}
@@ -96,6 +139,8 @@ public class Schema extends AbstractMetadataRecord {
     	}
     	if (this.resolvingOrder == null) {
     		this.resolvingOrder = new ArrayList<AbstractMetadataRecord>();
+    		this.resolvingOrder.addAll(this.tables.values());
+    		this.resolvingOrder.addAll(this.procedures.values());
     		this.resolvingOrder.addAll(this.functions.values());
     	}
     }

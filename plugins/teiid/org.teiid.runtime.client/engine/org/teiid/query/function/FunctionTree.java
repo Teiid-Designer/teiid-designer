@@ -43,6 +43,7 @@ import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -317,8 +318,7 @@ public class FunctionTree {
                         try {
                             invocationMethod = helper.findBestMethodWithSignature(method.getInvocationMethod(), inputTypes);
                         } catch (NoSuchMethodException e) {
-                            // TODO Don't want to include this due to it coming with a load of cruft!
-                            //	                    inputTypes.add(0, CommandContext.class);
+                            inputTypes.add(0, CommandContext.class);
                             invocationMethod = helper.findBestMethodWithSignature(method.getInvocationMethod(), inputTypes);
                             requiresContext = true;
                         }

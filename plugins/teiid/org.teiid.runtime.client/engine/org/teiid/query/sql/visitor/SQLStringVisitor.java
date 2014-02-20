@@ -86,7 +86,6 @@ import org.teiid.query.sql.lang.SetClauseList;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SourceHint;
-import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.SourceHint.SpecificHint;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
@@ -99,6 +98,7 @@ import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
+import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
@@ -215,7 +215,7 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     protected boolean isTeiid8OrGreater() {
-        return teiidVersion.equals(TEIID_VERSION_8) || teiidVersion.isGreaterThan(TEIID_VERSION_8);
+        return getTeiidVersion().equals(TEIID_VERSION_8) || getTeiidVersion().isGreaterThan(TEIID_VERSION_8);
     }
 
     protected void visitNode(LanguageObject obj) {
@@ -2571,7 +2571,7 @@ public class SQLStringVisitor extends LanguageVisitor
         if (string == null) {
             return false;
         }
-        return SQLConstants.isReservedWord(teiidVersion, string);
+        return SQLConstants.isReservedWord(getTeiidVersion(), string);
     }
 
 }

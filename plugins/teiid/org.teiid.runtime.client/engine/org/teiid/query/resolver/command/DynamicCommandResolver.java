@@ -84,7 +84,8 @@ public class DynamicCommandResolver extends CommandResolver {
             }
         }
         
-        ResolverVisitor.resolveLanguageObject(dynamicCmd, groups, dynamicCmd.getExternalGroupContexts(), metadata);
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidParser().getVersion());
+        visitor.resolveLanguageObject(dynamicCmd, groups, dynamicCmd.getExternalGroupContexts(), metadata);
         DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
         String sqlType = dataTypeManager.getDataTypeName(dynamicCmd.getSql().getType());
         String targetType = DataTypeManagerService.DefaultDataTypes.STRING.getId();

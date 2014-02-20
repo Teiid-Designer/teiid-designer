@@ -31,9 +31,9 @@ import org.teiid.api.exception.query.UnresolvedSymbolDescription;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
-import org.teiid.query.metadata.ParameterInfo;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
@@ -191,6 +191,8 @@ public class UpdateProcedureResolver extends CommandResolver {
 //	       TODO
 //        LogManager.logTrace(org.teiid.logging.LogConstants.CTX_QUERY_RESOLVER, new Object[]{"Resolving statement", statement}); //$NON-NLS-1$
 
+	    ResolverVisitor visitor = new ResolverVisitor(command.getTeiidVersion());
+
         switch(statement.getType()) {
             case TYPE_IF:
                 IfStatement ifStmt = (IfStatement) statement;
@@ -198,7 +200,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                 for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(ifCrit)) {
                 	resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
                 }
-                ResolverVisitor.resolveLanguageObject(ifCrit, null, externalGroups, metadata);
+                visitor.resolveLanguageObject(ifCrit, null, externalGroups, metadata);
             	resolveBlock(command, ifStmt.getIfBlock(), externalGroups, metadata);
                 if(ifStmt.hasElseBlock()) {
                     resolveBlock(command, ifStmt.getElseBlock(), externalGroups, metadata);
@@ -213,15 +215,16 @@ public class UpdateProcedureResolver extends CommandResolver {
                 if (subCommand instanceof StoredProcedure) {
                 	StoredProcedure sp = (StoredProcedure)subCommand;
                 	for (SPParameter param : sp.getParameters()) {
-            			switch (param.getParameterType()) {
-        	            case ParameterInfo.OUT:
-        	            case ParameterInfo.RETURN_VALUE:
+                	    ISPParameter.ParameterInfo paramInfo = ISPParameter.ParameterInfo.valueOf(param.getParameterType());
+            			switch (paramInfo) {
+        	            case OUT:
+        	            case RETURN_VALUE:
         	            	if (param.getExpression() != null && !isAssignable(metadata, param)) {
         	                     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30121, param.getExpression()));
         	            	}
         	            	sp.setCallableStatement(true);
         	            	break;
-        	            case ParameterInfo.INOUT:
+        	            case INOUT:
         	            	if (!isAssignable(metadata, param)) {
         	            		continue;
         	            	}
@@ -267,7 +270,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                     for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(expr)) {
                     	resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
                     }
-                    ResolverVisitor.resolveLanguageObject(expr, null, externalGroups, metadata);
+                    visitor.resolveLanguageObject(expr, null, externalGroups, metadata);
             	}
                 
                 //second resolve the variable
@@ -277,7 +280,7 @@ public class UpdateProcedureResolver extends CommandResolver {
             		break;
             	case TYPE_ASSIGNMENT:
             		AssignmentStatement assStmt = (AssignmentStatement)statement;
-                    ResolverVisitor.resolveLanguageObject(assStmt.getVariable(), null, externalGroups, metadata);
+                    visitor.resolveLanguageObject(assStmt.getVariable(), null, externalGroups, metadata);
                     if (!metadata.elementSupports(assStmt.getVariable().getMetadataID(), SupportConstants.Element.UPDATE)) {
                          throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30121, assStmt.getVariable()));
                     }
@@ -316,7 +319,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                 for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(whileCrit)) {
                 	resolveEmbeddedCommand(metadata, externalGroups, container.getCommand());
                 }
-                ResolverVisitor.resolveLanguageObject(whileCrit, null, externalGroups, metadata);
+                visitor.resolveLanguageObject(whileCrit, null, externalGroups, metadata);
                 resolveBlock(command, whileStmt.getBlock(), externalGroups, metadata);
                 break;
             case TYPE_LOOP:
@@ -389,7 +392,8 @@ public class UpdateProcedureResolver extends CommandResolver {
         }
         boolean exists = false;
         try {
-        	ResolverVisitor.resolveLanguageObject(variable, null, externalGroups, metadata);
+            ResolverVisitor visitor = new ResolverVisitor(variable.getTeiidVersion());
+        	visitor.resolveLanguageObject(variable, null, externalGroups, metadata);
         	exists = true;
         } catch (Exception e) {
         	//ignore, not already defined

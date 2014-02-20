@@ -39,9 +39,12 @@ import java.sql.SQLException;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 import javax.xml.stream.EventFilter;
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.Location;
@@ -54,8 +57,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.EventReaderDelegate;
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stax.StAXSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathExpressionException;
 import net.sf.saxon.expr.JPConverter;
@@ -83,7 +89,9 @@ import org.teiid.core.types.ClobType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.InputStreamFactory;
 import org.teiid.core.types.SQLXMLImpl;
+import org.teiid.core.types.StandardXMLTranslator;
 import org.teiid.core.types.Streamable;
+import org.teiid.core.types.XMLTranslator;
 import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.util.ObjectConverterUtil;
@@ -93,6 +101,7 @@ import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
 import org.teiid.query.function.CharsetUtils;
 import org.teiid.query.sql.symbol.XMLSerialize;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.util.StAXSQLXML;
@@ -433,6 +442,162 @@ public class XMLSystemFunctions {
 		return threadLocalOutputFactory.get();
 	}
 	
+	public static ClobType xslTransform(CommandContext context, Object xml, Object styleSheet) throws Exception {
+    	Source styleSource = null; 
+		Source xmlSource = null;
+		try {
+			styleSource = convertToSource(styleSheet);
+			xmlSource = convertToSource(xml);
+			final Source xmlParam = xmlSource;
+			TransformerFactory factory = StandardXMLTranslator.getThreadLocalTransformerFactory();
+            final Transformer transformer = factory.newTransformer(styleSource);
+            
+			//this creates a non-validated sqlxml - it may not be valid xml/root-less xml
+			SQLXMLImpl result = saveToBufferManager(new XMLTranslator() {
+				
+				@Override
+				public void translate(Writer writer) throws TransformerException {
+	                //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); //$NON-NLS-1$
+	                // Feed the resultant I/O stream into the XSLT processor
+					transformer.transform(xmlParam, new StreamResult(writer));
+				}
+			});
+			return new ClobType(new ClobImpl(result.getStreamFactory(), -1));
+		} finally {
+			closeSource(styleSource);
+			closeSource(xmlSource);
+		}
+    }
+
+	public static XMLType xmlForest(final CommandContext context, final NameValuePair[] namespaces, final NameValuePair[] values) throws Exception {
+		boolean valueExists = false;
+		for (NameValuePair nameValuePair : values) {
+			if (nameValuePair.value != null) {
+				valueExists = true;
+				break;
+			}
+		}
+		if (!valueExists) {
+			return null;
+		}
+
+		XMLType result = new XMLType(XMLSystemFunctions.saveToBufferManager(new XMLTranslator() {
+			
+			@Override
+			public void translate(Writer writer) throws TransformerException,
+					IOException {
+				try {
+					XMLOutputFactory factory = getOutputFactory();
+					XMLEventWriter eventWriter = factory.createXMLEventWriter(writer);
+					XMLEventFactory eventFactory = threadLocalEventtFactory.get();
+					for (NameValuePair nameValuePair : values) {
+						if (nameValuePair.value == null) {
+							continue;
+						}
+						addElement(nameValuePair.name, writer, eventWriter, eventFactory, namespaces, null, Collections.singletonList(nameValuePair.value));
+					}
+					eventWriter.close();
+				} catch (XMLStreamException e) {
+					throw new TransformerException(e);
+				} 
+			}
+		}));
+		result.setType(Type.CONTENT);
+		return result;
+	}
+	
+	/**
+	 * Basic support for xmlelement.  namespaces are not yet supported.
+	 * @param context
+	 * @param name
+	 * @param contents
+	 * @return
+	 * @throws TeiidComponentException
+	 * @throws TeiidProcessingException 
+	 */
+	public static XMLType xmlElement(CommandContext context, final String name, 
+			final NameValuePair<String>[] namespaces, final NameValuePair<?>[] attributes, final List<?> contents) throws Exception {
+		    XMLType result = new XMLType(saveToBufferManager(new XMLTranslator() {
+			
+			@Override
+			public void translate(Writer writer) throws TransformerException,
+					IOException {
+				try {
+					XMLOutputFactory factory = getOutputFactory();
+					XMLEventWriter eventWriter = factory.createXMLEventWriter(writer);
+					XMLEventFactory eventFactory = threadLocalEventtFactory.get();
+					addElement(name, writer, eventWriter, eventFactory, namespaces, attributes, contents);
+					eventWriter.close();
+				} catch (XMLStreamException e) {
+					throw new TransformerException(e);
+				} 
+			}
+
+		}));
+		result.setType(Type.ELEMENT);
+		return result;
+	}
+	
+	private static void addElement(final String name, Writer writer, XMLEventWriter eventWriter, XMLEventFactory eventFactory,
+			NameValuePair<String> namespaces[], NameValuePair<?> attributes[], List<?> contents) throws XMLStreamException, IOException, TransformerException {
+		eventWriter.add(eventFactory.createStartElement("", null, name)); //$NON-NLS-1$
+		if (namespaces != null) {
+			for (NameValuePair<String> nameValuePair : namespaces) {
+				if (nameValuePair.name == null) {
+					if (nameValuePair.value == null) {
+						eventWriter.add(eventFactory.createNamespace(XMLConstants.NULL_NS_URI));
+					} else {
+						eventWriter.add(eventFactory.createNamespace(nameValuePair.value));
+					} 
+				} else {
+					eventWriter.add(eventFactory.createNamespace(nameValuePair.name, nameValuePair.value));
+				}
+			}
+		}
+		if (attributes != null) {
+			for (NameValuePair<?> nameValuePair : attributes) {
+				if (nameValuePair.value != null) {
+					eventWriter.add(eventFactory.createAttribute(new QName(nameValuePair.name), convertToAtomicValue(nameValuePair.value).getStringValue()));
+				}
+			}
+		}
+		//add empty chars to close the start tag
+		eventWriter.add(eventFactory.createCharacters("")); //$NON-NLS-1$ 
+		for (Object object : contents) {
+			convertValue(writer, eventWriter, eventFactory, object);
+		}
+		eventWriter.add(eventFactory.createEndElement("", null, name)); //$NON-NLS-1$
+	}
+	
+	public static XMLType xmlConcat(CommandContext context, final XMLType xml, final Object... other) throws Exception {
+		//determine if there is just a single xml value and return it
+		XMLType singleValue = xml;
+		XMLType.Type type = null;
+		for (Object object : other) {
+			if (object != null) {
+				if (singleValue != null) {
+					type = Type.CONTENT;
+					break;
+				}
+				if (object instanceof XMLType) {
+					singleValue = (XMLType)object;
+				} else {
+					type = Type.CONTENT;
+					break;
+				}
+			}
+		}
+		if (type == null) {
+			return singleValue;
+		}
+		
+		XmlConcat concat = new XmlConcat();
+		concat.addValue(xml);
+		for (Object object : other) {
+			concat.addValue(object);
+		}
+		return concat.close();
+	}
 	public static class XmlConcat {
 		private XMLOutputFactory factory;
 		private XMLEventWriter eventWriter;
@@ -767,6 +932,14 @@ public class XMLSystemFunctions {
 		return cb.append("_").flip().toString();  //$NON-NLS-1$
 	}
 
+    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Blob json) throws Exception {
+    	return jsonToXml(context, rootName, json, false);
+    }
+    
+    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Blob json, boolean stream) throws Exception {
+		Reader r = getJsonReader(json);
+		return jsonToXml(context, rootName, r, stream);
+    }
 	public static InputStreamReader getJsonReader(final Blob json) throws SQLException,
 			IOException {
 		InputStream is = json.getBinaryStream();
@@ -813,6 +986,82 @@ public class XMLSystemFunctions {
             return new InputStreamFactory.BlobInputStreamFactory((Blob)s.getReference());
         }
         return new InputStreamFactory.SQLXMLInputStreamFactory((SQLXML)s.getReference());
+    }
+
+	public static SQLXML jsonToXml(CommandContext context, final String rootName, final Clob json) throws Exception {
+        return jsonToXml(context, rootName, json, false);
+    }
+    
+    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Clob json, boolean stream) throws Exception {
+        return jsonToXml(context, rootName, json.getCharacterStream(), stream);
+    }
+    
+    private static SQLXML jsonToXml(CommandContext context,
+            final String rootName, final Reader r, boolean stream) throws Exception {
+        JSONParser parser = new JSONParser();
+        final JsonToXmlContentHandler reader = new JsonToXmlContentHandler(rootName, r, parser, threadLocalEventtFactory.get());
+
+        SQLXMLImpl sqlXml = null;
+        if (stream) {
+            try {
+                //jre 1.7 event logic does not set a dummy location and throws an NPE in StAXSource, so we explicitly set a location
+                //the streaming result will be directly consumed, so there's no danger that we're stepping on another location
+                reader.eventFactory.setLocation(dummyLocation);
+                sqlXml = new StAXSQLXML(new StAXSource(reader));
+            } catch (XMLStreamException e) {
+                throw new TeiidClientException(e);
+            }
+        } else {
+            sqlXml = saveToBufferManager(new XMLTranslator() {
+                
+                @Override
+                public void translate(Writer writer) throws TransformerException,
+                        IOException {
+                    try {
+                        XMLOutputFactory factory = getOutputFactory();
+                        final XMLEventWriter streamWriter = factory.createXMLEventWriter(writer);
+    
+                        streamWriter.add(reader);
+                        streamWriter.flush(); //woodstox needs a flush rather than a close
+                    } catch (XMLStreamException e) {
+                        throw new TransformerException(e);
+                    } finally {
+                        try {
+                            r.close();
+                        } catch (IOException e) {
+                            
+                        }
+                    }
+                }
+            });
+        }
+        XMLType result = new XMLType(sqlXml);
+        result.setType(Type.DOCUMENT);
+        return result;
+    }
+
+    /**
+     * This method saves the given XML object to the buffer manager's disk process
+     * Documents less than the maxMemorySize will be held directly in memory
+     */
+    public static SQLXMLImpl saveToBufferManager(XMLTranslator translator) throws Exception {        
+        boolean success = false;
+        MemoryStorageManager manager = new MemoryStorageManager();
+        final FileStore lobBuffer = manager.createFileStore("xml"); //$NON-NLS-1$
+        FileStoreInputStreamFactory fsisf = new FileStoreInputStreamFactory(lobBuffer, Streamable.ENCODING);
+        try{  
+            Writer writer = fsisf.getWriter();
+            translator.translate(writer);
+            writer.close();
+            success = true;
+            return new SQLXMLImpl(fsisf);
+        } catch(Exception e) {
+             throw new TeiidClientException(e);
+        } finally {
+            if (!success && lobBuffer != null) {
+                lobBuffer.remove();
+            }
+        }
     }
 
 	public static Object serialize(XMLSerialize xs, XMLType value) throws Exception {

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.teiid.core.util.StringUtil;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement;
@@ -100,7 +101,7 @@ public class CloneGenerator {
 
     private static final String IS = "is";
 
-    private static final String DOT = ".";
+    private static final String DOT = StringUtil.Constants.DOT;
 
     private static final String OPEN_BRACKET = "(";
 

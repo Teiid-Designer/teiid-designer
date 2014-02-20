@@ -35,8 +35,10 @@ import org.teiid.api.exception.query.UnresolvedSymbolDescription;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol.DisplayMode;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -79,14 +81,16 @@ import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
 
-public class ResolverVisitor extends LanguageVisitor {
+public class ResolverVisitor extends LanguageVisitor
+    implements IResolverVisitor<LanguageObject, GroupSymbol> {
     
     public static final String TEIID_PASS_THROUGH_TYPE = "teiid:pass-through-type"; //$NON-NLS-1$
 
 	private static final String SYS_PREFIX = CoreConstants.SYSTEM_MODEL + '.';
 
     private static ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
-    	protected Boolean initialValue() {
+    	@Override
+        protected Boolean initialValue() {
     		return false;
     	}
     };
@@ -106,26 +110,39 @@ public class ResolverVisitor extends LanguageVisitor {
     private List<GroupSymbol> groupMatches = new ArrayList<GroupSymbol>(2);
     
     /**
-     * Constructor for ResolveElementsVisitor.
+     * Constructor for ResolverVisitor.
      * 
      * External groups are ordered from inner to outer most
-     * @param teiidVersion 
-     * @param metadata 
-     * @param internalGroups 
-     * @param externalContext 
+     * @param teiidVersion
      */
-    public ResolverVisitor(ITeiidServerVersion teiidVersion, IQueryMetadataInterface metadata, Collection<GroupSymbol> internalGroups, GroupContext externalContext) {
+    public ResolverVisitor(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
-        this.groups = internalGroups;
-        this.externalContext = externalContext;
-        this.metadata = metadata;
         this.findShortName = determinePartialName.get();
     }
 
+    /**
+     * Constructor for ResolverVisitor.
+     *
+     * @param teiidVersion
+     * @param metadata
+     * @param groups
+     * @param externalContext
+     */
+    public ResolverVisitor(ITeiidServerVersion teiidVersion, IQueryMetadataInterface metadata, Collection<GroupSymbol> groups, GroupContext externalContext) {
+        this(teiidVersion);
+        this.metadata = metadata;
+        setGroups(groups);
+        this.externalContext = externalContext;
+    }
+
+	/**
+	 * @param groups
+	 */
 	public void setGroups(Collection<GroupSymbol> groups) {
 		this.groups = groups;
 	}
 
+    @Override
     public void visit(ElementSymbol obj) {
         try {
             resolveElementSymbol(obj);
@@ -263,6 +280,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
         
+    @Override
     public void visit(BetweenCriteria obj) {
         try {
             resolveBetweenCriteria(obj);
@@ -271,6 +289,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(CompareCriteria obj) {
         try {
             resolveCompareCriteria(obj);
@@ -279,6 +298,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(MatchCriteria obj) {
         try {
             resolveMatchCriteria(obj);
@@ -287,6 +307,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(SetCriteria obj) {
         try {
             resolveSetCriteria(obj);
@@ -295,6 +316,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(SubqueryCompareCriteria obj) {
         try {
             obj.setLeftExpression(ResolverUtil.resolveSubqueryPredicateCriteria(obj.getLeftExpression(), obj, metadata));
@@ -303,6 +325,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(SubquerySetCriteria obj) {
         try {
             obj.setExpression(ResolverUtil.resolveSubqueryPredicateCriteria(obj.getExpression(), obj, metadata));
@@ -311,6 +334,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
 
+    @Override
     public void visit(IsNullCriteria obj) {
         try {
         	setDesiredType(obj.getExpression(), DefaultDataTypes.OBJECT.getTypeClass(), obj);
@@ -360,6 +384,7 @@ public class ResolverVisitor extends LanguageVisitor {
     	}
     }
 
+    @Override
     public void visit(CaseExpression obj) {
         try {
             resolveCaseExpression(obj);
@@ -368,6 +393,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
     
+    @Override
     public void visit(SearchedCaseExpression obj) {
         try {
             resolveSearchedCaseExpression(obj);
@@ -376,6 +402,7 @@ public class ResolverVisitor extends LanguageVisitor {
         }
     }
     
+    @Override
     public void visit(SetClause obj) {
     	String type = DataTypeManagerService.getInstance().getDataTypeName(obj.getSymbol().getType());
     	try {
@@ -1095,27 +1122,46 @@ public class ResolverVisitor extends LanguageVisitor {
 	    obj.setType(DataTypeManagerService.getInstance().getDataTypeClass(thenTypeName));
 	}
 	
-    public static void resolveLanguageObject(LanguageObject obj, IQueryMetadataInterface metadata)
+    @Override
+    public void resolveLanguageObject(LanguageObject obj, IQueryMetadataInterface metadata)
     throws Exception {
-	    ResolverVisitor.resolveLanguageObject(obj, null, metadata);
+	    resolveLanguageObject(obj, null, metadata);
 	}
 	
-	public static void resolveLanguageObject(LanguageObject obj, Collection<GroupSymbol> groups, IQueryMetadataInterface metadata)
+	@Override
+    public void resolveLanguageObject(LanguageObject obj, Collection<GroupSymbol> groups, IQueryMetadataInterface metadata)
 	    throws Exception {
-	    ResolverVisitor.resolveLanguageObject(obj, groups, null, metadata);
+	    resolveLanguageObject(obj, groups, null, metadata);
 	}
 	
-	public static void resolveLanguageObject(LanguageObject obj, Collection<GroupSymbol> groups, GroupContext externalContext, IQueryMetadataInterface metadata)
+	/**
+	 * @param obj
+	 * @param groups
+	 * @param externalContext
+	 * @param metadata
+	 * @throws Exception
+	 */
+	public void resolveLanguageObject(LanguageObject obj, Collection<GroupSymbol> groups, GroupContext externalContext, IQueryMetadataInterface metadata)
 	    throws Exception {
 	
 	    if(obj == null) {
 	        return;
 	    }
-	
+
+	    ArgCheck.isTrue(obj.getTeiidVersion().compareTo(getTeiidVersion()), "version of visitor should match version of object"); //$NON-NLS-1$
+
+	    setGroups(groups);
+        this.externalContext = externalContext;
+        this.metadata = metadata;
+
 	    // Resolve elements, deal with errors
-	    ResolverVisitor elementsVisitor = new ResolverVisitor(obj.getTeiidVersion(), metadata, groups, externalContext);
-	    PostOrderNavigator.doVisit(obj, elementsVisitor);
-	    elementsVisitor.throwException(true);
+	    PostOrderNavigator.doVisit(obj, this);
+	    this.throwException(true);
 	}
-    
+
+	@Override
+    public void setProperty(String propertyName, Object value) {
+        if (SHORT_NAME.equals(propertyName) && value instanceof Boolean)
+            ResolverVisitor.setFindShortName((Boolean) value);
+    }
 }

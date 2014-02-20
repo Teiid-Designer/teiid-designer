@@ -25,12 +25,14 @@ package org.teiid.query.function;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.teiid.CommandContext;
+import org.teiid.designer.annotation.Since;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
+@Since("8.0.0")
 public class SystemFunctionMethods {
 	
 	private static final int MAX_VARIABLES = 512;

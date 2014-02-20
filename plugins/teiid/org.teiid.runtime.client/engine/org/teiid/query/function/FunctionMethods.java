@@ -35,7 +35,10 @@ import java.nio.charset.CodingErrorAction;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +46,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
-import org.teiid.CommandContext;
 import org.teiid.core.types.BlobImpl;
 import org.teiid.core.types.BlobType;
 import org.teiid.core.types.ClobImpl;
@@ -55,15 +57,18 @@ import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.StringUtil;
 import org.teiid.core.util.TimestampWithTimezone;
+import org.teiid.designer.annotation.Since;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
 /**
  * Static method hooks for most of the function library.
  */
+@Since("8.0.0")
 public final class FunctionMethods {
 	
 	private static final boolean CALENDAR_TIMESTAMPDIFF = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.calendarTimestampDiff", true); //$NON-NLS-1$
@@ -1137,6 +1142,85 @@ public final class FunctionMethods {
 		}
         return null;
     }
+
+	// ================== Format date/time/timestamp TO String ==================
+	public static String format(CommandContext context, Date date, String format)
+		throws Exception {
+		try {
+            SimpleDateFormat sdf = CommandContext.getDateFormat(context, format);
+            return sdf.format(date);
+		} catch (IllegalArgumentException iae) {
+			 throw new TeiidClientException(iae, Messages.gs(Messages.TEIID.TEIID30409,iae.getMessage()));
+		}
+	}
+
+	//	================== Parse String TO date/time/timestamp  ==================
+	private static Date parseDateHelper(CommandContext context, String date, String format)
+			throws Exception {
+		DateFormat df = CommandContext.getDateFormat(context, format);
+		try {
+			return df.parse(date);
+		} catch (Exception e) {
+			 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30410, date, format));
+		}
+	}
+	
+	public static Timestamp parseTimestamp(CommandContext context, String timestamp, String format)
+		throws Exception {
+        return new Timestamp(parseDateHelper(context, timestamp, format).getTime());
+	}
+
+	//	================== Format number TO String ==================
+	public static String format(CommandContext context, Number number, String format)
+	throws Exception {
+		try {
+	        DecimalFormat df = CommandContext.getDecimalFormat(context, format);
+	        return df.format(number);
+		} catch (IllegalArgumentException iae) {
+			 throw new TeiidClientException(iae, Messages.gs(Messages.TEIID.TEIID30411, iae.getMessage()));
+		}
+	}
+
+	//	================== Parse String TO numbers ==================
+	public static Object parseInteger(CommandContext context, String number, String format)
+		throws Exception {
+		Number intNum = parseBigDecimal(context, number, format);
+		return new Integer(intNum.intValue());
+	}
+
+	public static Object parseLong(CommandContext context, String number, String format)
+		throws Exception {
+		Number longNum = parseBigDecimal(context, number, format);
+		return new Long(longNum.longValue());
+	}
+
+	public static Object parseDouble(CommandContext context, String number, String format)
+		throws Exception {
+		Number doubleNum = parseBigDecimal(context, number, format);
+		return new Double(doubleNum.doubleValue());
+	}
+
+	public static Object parseFloat(CommandContext context, String number, String format)
+		throws Exception {
+		Number longNum = parseBigDecimal(context, number, format);
+		return new Float(longNum.floatValue());
+	}
+
+	public static Object parseBigInteger(CommandContext context, String number, String format)
+		throws Exception {
+		Number bigIntegerNum = parseBigDecimal(context, number, format);
+		return new BigInteger(bigIntegerNum.toString());
+	}
+
+	public static BigDecimal parseBigDecimal(CommandContext context, String number, String format)
+		throws Exception {
+		DecimalFormat df= CommandContext.getDecimalFormat(context, format);
+		try {
+			return (BigDecimal) df.parse(number);
+		} catch (Exception e) {
+			 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30412,number,format));
+		}
+	}
 
 	// ================== Function - ACOS =====================
 	public static Object acos(Number number) {

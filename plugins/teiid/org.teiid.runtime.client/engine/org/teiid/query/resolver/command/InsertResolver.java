@@ -55,7 +55,6 @@ import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.util.SymbolMap;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.TeiidClientException;
 
 
 /**
@@ -161,11 +160,12 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
         }
     }
 
-    private void resolveList(Collection elements, TempMetadataAdapter metadata,
+    private void resolveList(Collection<? extends Expression> elements, TempMetadataAdapter metadata,
                                   GroupContext externalGroups, Set<GroupSymbol> groups) throws QueryResolverException, Exception {
-        for (Iterator i = elements.iterator(); i.hasNext();) {
-            Expression expr = (Expression)i.next();
-            ResolverVisitor.resolveLanguageObject(expr, groups, externalGroups, metadata);
+        ResolverVisitor visitor = new ResolverVisitor(elements.iterator().next().getTeiidVersion());
+        for (Iterator<? extends Expression> i = elements.iterator(); i.hasNext();) {
+            Expression expr = i.next();
+            visitor.resolveLanguageObject(expr, groups, externalGroups, metadata);
         }
     }
     

@@ -14,6 +14,7 @@
 	  <version>8.4.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
+        <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
     </properties>
     <build>
         <plugins>
@@ -32,6 +33,30 @@
                         </fileset>
                     </filesets>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jboss</groupId>
+                                    <artifactId>jboss-vfs</artifactId>
+                                    <version>${version.org.jboss.jboss-vfs}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <skip>false</skip>
+                            <stripVersion>true</stripVersion>
+                            <outputDirectory>${project.basedir}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -224,4 +249,19 @@
             <url>http://repository.jboss.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-vfs</artifactId>
+        </dependency>
+    </dependencies>
+    <dependencyManagement> 
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-vfs</artifactId>
+                <version>${version.org.jboss.jboss-vfs}</version>
+            </dependency>                         
+        </dependencies>
+    </dependencyManagement>
 </project>

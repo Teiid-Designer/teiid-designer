@@ -27,7 +27,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import org.teiid.CommandContext;
+import org.teiid.query.util.CommandContext;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BinaryType;

@@ -17,6 +17,7 @@ import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.util.SymbolMap;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
 /**
  *
@@ -219,6 +220,38 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
         }
         
         return externalGroups.getAllGroups();
+    }
+
+    /**
+     * Helper method to print command tree at given tab level
+     * @param str String buffer to add command sub tree to
+     * @param tabLevel Number of tabs to print this command at
+     */
+    protected void printCommandTree(StringBuffer str, int tabLevel) {
+        // Add tabs
+        for(int i=0; i<tabLevel; i++) {
+            str.append("\t"); //$NON-NLS-1$
+        }
+        
+        // Add this command
+        str.append(toString());
+        str.append("\n"); //$NON-NLS-1$
+        
+        // Add children recursively
+        tabLevel++;
+        for (Command subCommand : CommandCollectorVisitor.getCommands(this)) {
+            subCommand.printCommandTree(str, tabLevel);
+        }
+    }
+
+    /**
+     * Print the full tree of commands with indentation - useful for debugging
+     * @return String String representation of command tree
+     */
+    public String printCommandTree() {
+        StringBuffer str = new StringBuffer();
+        printCommandTree(str, 0);
+        return str.toString();
     }
 
     @Override

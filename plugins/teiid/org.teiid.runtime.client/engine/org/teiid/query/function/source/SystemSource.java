@@ -29,6 +29,11 @@ import java.util.Collection;
 import org.teiid.CommandContext;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.annotation.AnnotationUtils;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -53,19 +58,26 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     /** The name of the invocation class for all of the system functions. */
     private static final String FUNCTION_CLASS = FunctionMethods.class.getName(); 
     private static final String XML_FUNCTION_CLASS = XMLSystemFunctions.class.getName(); 
-    private static final String SECURITY_FUNCTION_CLASS = SecuritySystemFunctions.class.getName(); 
+    private static final String SECURITY_FUNCTION_CLASS = SecuritySystemFunctions.class.getName();
+
+    private final ITeiidServerVersion teiidVersion; 
     
     /**
      * Construct a source of system metadata.
+     *
+     * @param teiidVersion
+     * @param allowEnvFunction
      */
-    public SystemSource(boolean allowEnvFunction) {
+    public SystemSource(ITeiidServerVersion teiidVersion, boolean allowEnvFunction) {
     	super(new ArrayList<FunctionMethod>());
+        this.teiidVersion = teiidVersion;
+
 		// +, -, *, /
-        addArithmeticFunction(SourceSystemFunctions.ADD_OP, Messages.getString(Messages.SystemSource.Add_desc), "plus", Messages.getString(Messages.SystemSource.Add_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addArithmeticFunction(SourceSystemFunctions.SUBTRACT_OP, Messages.getString(Messages.SystemSource.Subtract_desc), "minus", Messages.getString(Messages.SystemSource.Subtract_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addArithmeticFunction(SourceSystemFunctions.MULTIPLY_OP, Messages.getString(Messages.SystemSource.Multiply_desc), "multiply", Messages.getString(Messages.SystemSource.Multiply_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addArithmeticFunction(SourceSystemFunctions.DIVIDE_OP, Messages.getString(Messages.SystemSource.Divide_desc), "divide", Messages.getString(Messages.SystemSource.Divide_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addArithmeticFunction(SourceSystemFunctions.MOD, Messages.getString(Messages.SystemSource.Mod_desc), "mod", Messages.getString(Messages.SystemSource.Mod_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addArithmeticFunction(SourceSystemFunctions.ADD_OP, Messages.getString(Messages.SystemSource.Add_description), "plus", Messages.getString(Messages.SystemSource.Add_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addArithmeticFunction(SourceSystemFunctions.SUBTRACT_OP, Messages.getString(Messages.SystemSource.Subtract_description), "minus", Messages.getString(Messages.SystemSource.Subtract_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addArithmeticFunction(SourceSystemFunctions.MULTIPLY_OP, Messages.getString(Messages.SystemSource.Multiply_description), "multiply", Messages.getString(Messages.SystemSource.Multiply_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addArithmeticFunction(SourceSystemFunctions.DIVIDE_OP, Messages.getString(Messages.SystemSource.Divide_description), "divide", Messages.getString(Messages.SystemSource.Divide_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addArithmeticFunction(SourceSystemFunctions.MOD, Messages.getString(Messages.SystemSource.Mod_description), "mod", Messages.getString(Messages.SystemSource.Mod_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
         
         // numeric
         addAbsFunction();
@@ -74,45 +86,45 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addRoundFunction();
         addSignFunction();
         addSqrtFunction();        
-		addDoubleFunction(SourceSystemFunctions.ACOS, Messages.getString(Messages.SystemSource.Acos_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.ASIN, Messages.getString(Messages.SystemSource.Asin_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.ATAN, Messages.getString(Messages.SystemSource.Atan_desc)); //$NON-NLS-1$ 
-		addAtan2Function(SourceSystemFunctions.ATAN2, Messages.getString(Messages.SystemSource.Atan2_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.COS, Messages.getString(Messages.SystemSource.Cos_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.COT, Messages.getString(Messages.SystemSource.Cot_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.DEGREES, Messages.getString(Messages.SystemSource.Degrees_desc)); //$NON-NLS-1$ 
-		addPiFunction(SourceSystemFunctions.PI, Messages.getString(Messages.SystemSource.Pi_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.RADIANS, Messages.getString(Messages.SystemSource.Radians_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.SIN, Messages.getString(Messages.SystemSource.Sin_desc)); //$NON-NLS-1$ 
-		addDoubleFunction(SourceSystemFunctions.TAN, Messages.getString(Messages.SystemSource.Tan_desc)); //$NON-NLS-1$ 
-        addDoubleFunction(SourceSystemFunctions.LOG, Messages.getString(Messages.SystemSource.Log_desc)); //$NON-NLS-1$ 
-        addDoubleFunction(SourceSystemFunctions.LOG10, Messages.getString(Messages.SystemSource.Log10_desc)); //$NON-NLS-1$ 
-        addDoubleFunction(SourceSystemFunctions.CEILING, Messages.getString(Messages.SystemSource.Ceiling_desc)); //$NON-NLS-1$ 
-        addDoubleFunction(SourceSystemFunctions.EXP, Messages.getString(Messages.SystemSource.Exp_desc)); //$NON-NLS-1$ 
-        addDoubleFunction(SourceSystemFunctions.FLOOR, Messages.getString(Messages.SystemSource.Floor_desc)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.ACOS, Messages.getString(Messages.SystemSource.Acos_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.ASIN, Messages.getString(Messages.SystemSource.Asin_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.ATAN, Messages.getString(Messages.SystemSource.Atan_description)); //$NON-NLS-1$ 
+		addAtan2Function(SourceSystemFunctions.ATAN2, Messages.getString(Messages.SystemSource.Atan2_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.COS, Messages.getString(Messages.SystemSource.Cos_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.COT, Messages.getString(Messages.SystemSource.Cot_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.DEGREES, Messages.getString(Messages.SystemSource.Degrees_description)); //$NON-NLS-1$ 
+		addPiFunction(SourceSystemFunctions.PI, Messages.getString(Messages.SystemSource.Pi_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.RADIANS, Messages.getString(Messages.SystemSource.Radians_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.SIN, Messages.getString(Messages.SystemSource.Sin_description)); //$NON-NLS-1$ 
+		addDoubleFunction(SourceSystemFunctions.TAN, Messages.getString(Messages.SystemSource.Tan_description)); //$NON-NLS-1$ 
+        addDoubleFunction(SourceSystemFunctions.LOG, Messages.getString(Messages.SystemSource.Log_description)); //$NON-NLS-1$ 
+        addDoubleFunction(SourceSystemFunctions.LOG10, Messages.getString(Messages.SystemSource.Log10_description)); //$NON-NLS-1$ 
+        addDoubleFunction(SourceSystemFunctions.CEILING, Messages.getString(Messages.SystemSource.Ceiling_description)); //$NON-NLS-1$ 
+        addDoubleFunction(SourceSystemFunctions.EXP, Messages.getString(Messages.SystemSource.Exp_description)); //$NON-NLS-1$ 
+        addDoubleFunction(SourceSystemFunctions.FLOOR, Messages.getString(Messages.SystemSource.Floor_description)); //$NON-NLS-1$ 
         
         // bit
-        addBitFunction(SourceSystemFunctions.BITAND, Messages.getString(Messages.SystemSource.Bitand_desc), "bitand", 2, Messages.getString(Messages.SystemSource.Bitand_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addBitFunction(SourceSystemFunctions.BITOR, Messages.getString(Messages.SystemSource.Bitor_desc), "bitor", 2, Messages.getString(Messages.SystemSource.Bitor_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addBitFunction(SourceSystemFunctions.BITXOR, Messages.getString(Messages.SystemSource.Bitxor_desc), "bitxor", 2, Messages.getString(Messages.SystemSource.Bitxor_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addBitFunction(SourceSystemFunctions.BITNOT, Messages.getString(Messages.SystemSource.Bitnot_desc), "bitnot", 1, Messages.getString(Messages.SystemSource.Bitnot_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addBitFunction(SourceSystemFunctions.BITAND, Messages.getString(Messages.SystemSource.Bitand_description), "bitand", 2, Messages.getString(Messages.SystemSource.Bitand_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addBitFunction(SourceSystemFunctions.BITOR, Messages.getString(Messages.SystemSource.Bitor_description), "bitor", 2, Messages.getString(Messages.SystemSource.Bitor_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addBitFunction(SourceSystemFunctions.BITXOR, Messages.getString(Messages.SystemSource.Bitxor_description), "bitxor", 2, Messages.getString(Messages.SystemSource.Bitxor_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addBitFunction(SourceSystemFunctions.BITNOT, Messages.getString(Messages.SystemSource.Bitnot_description), "bitnot", 1, Messages.getString(Messages.SystemSource.Bitnot_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 
         // date
-        addConstantDateFunction(SourceSystemFunctions.CURDATE, Messages.getString(Messages.SystemSource.Curdate_desc), "currentDate", DataTypeManagerService.DefaultDataTypes.DATE); //$NON-NLS-1$ //$NON-NLS-2$ 
-        addConstantDateFunction(SourceSystemFunctions.CURTIME, Messages.getString(Messages.SystemSource.Curtime_desc), "currentTime", DataTypeManagerService.DefaultDataTypes.TIME); //$NON-NLS-1$ //$NON-NLS-2$ 
-        addConstantDateFunction(SourceSystemFunctions.NOW, Messages.getString(Messages.SystemSource.Now_desc), "currentTimestamp", DataTypeManagerService.DefaultDataTypes.TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$ 
-        addDateFunction(SourceSystemFunctions.DAYNAME, "dayName", Messages.getString(Messages.SystemSource.Dayname_result_d_desc), Messages.getString(Messages.SystemSource.Dayname_result_ts_desc), DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.DAYOFMONTH, "dayOfMonth", Messages.getString(Messages.SystemSource.Dayofmonth_result_d_desc), Messages.getString(Messages.SystemSource.Dayofmonth_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.DAYOFWEEK, "dayOfWeek", Messages.getString(Messages.SystemSource.Dayofweek_result_d_desc), Messages.getString(Messages.SystemSource.Dayofweek_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.DAYOFYEAR, "dayOfYear", Messages.getString(Messages.SystemSource.Dayofyear_result_d_desc), Messages.getString(Messages.SystemSource.Dayofyear_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.MONTH, "month", Messages.getString(Messages.SystemSource.Month_result_d_desc), Messages.getString(Messages.SystemSource.Month_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.MONTHNAME, "monthName", Messages.getString(Messages.SystemSource.Monthname_result_d_desc), Messages.getString(Messages.SystemSource.Monthname_result_ts_desc), DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.WEEK, "week", Messages.getString(Messages.SystemSource.Week_result_d_desc), Messages.getString(Messages.SystemSource.Week_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addDateFunction(SourceSystemFunctions.YEAR, "year", Messages.getString(Messages.SystemSource.Year_result_d_desc), Messages.getString(Messages.SystemSource.Year_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addTimeFunction(SourceSystemFunctions.HOUR, "hour", Messages.getString(Messages.SystemSource.Hour_result_t_desc), Messages.getString(Messages.SystemSource.Hour_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addTimeFunction(SourceSystemFunctions.MINUTE, "minute", Messages.getString(Messages.SystemSource.Minute_result_t_desc), Messages.getString(Messages.SystemSource.Minute_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        addTimeFunction(SourceSystemFunctions.SECOND, "second", Messages.getString(Messages.SystemSource.Second_result_t_desc), Messages.getString(Messages.SystemSource.Second_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-		addQuarterFunction(SourceSystemFunctions.QUARTER, "quarter", Messages.getString(Messages.SystemSource.Quarter_result_d_desc), Messages.getString(Messages.SystemSource.Quarter_result_ts_desc), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addConstantDateFunction(SourceSystemFunctions.CURDATE, Messages.getString(Messages.SystemSource.Curdate_description), "currentDate", DataTypeManagerService.DefaultDataTypes.DATE); //$NON-NLS-1$ //$NON-NLS-2$ 
+        addConstantDateFunction(SourceSystemFunctions.CURTIME, Messages.getString(Messages.SystemSource.Curtime_description), "currentTime", DataTypeManagerService.DefaultDataTypes.TIME); //$NON-NLS-1$ //$NON-NLS-2$ 
+        addConstantDateFunction(SourceSystemFunctions.NOW, Messages.getString(Messages.SystemSource.Now_description), "currentTimestamp", DataTypeManagerService.DefaultDataTypes.TIMESTAMP); //$NON-NLS-1$ //$NON-NLS-2$ 
+        addDateFunction(SourceSystemFunctions.DAYNAME, "dayName", Messages.getString(Messages.SystemSource.Dayname_result_d_description), Messages.getString(Messages.SystemSource.Dayname_result_ts_description), DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.DAYOFMONTH, "dayOfMonth", Messages.getString(Messages.SystemSource.Dayofmonth_result_d_description), Messages.getString(Messages.SystemSource.Dayofmonth_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.DAYOFWEEK, "dayOfWeek", Messages.getString(Messages.SystemSource.Dayofweek_result_d_description), Messages.getString(Messages.SystemSource.Dayofweek_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.DAYOFYEAR, "dayOfYear", Messages.getString(Messages.SystemSource.Dayofyear_result_d_description), Messages.getString(Messages.SystemSource.Dayofyear_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.MONTH, "month", Messages.getString(Messages.SystemSource.Month_result_d_description), Messages.getString(Messages.SystemSource.Month_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.MONTHNAME, "monthName", Messages.getString(Messages.SystemSource.Monthname_result_d_description), Messages.getString(Messages.SystemSource.Monthname_result_ts_description), DataTypeManagerService.DefaultDataTypes.STRING); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.WEEK, "week", Messages.getString(Messages.SystemSource.Week_result_d_description), Messages.getString(Messages.SystemSource.Week_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addDateFunction(SourceSystemFunctions.YEAR, "year", Messages.getString(Messages.SystemSource.Year_result_d_description), Messages.getString(Messages.SystemSource.Year_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addTimeFunction(SourceSystemFunctions.HOUR, "hour", Messages.getString(Messages.SystemSource.Hour_result_t_description), Messages.getString(Messages.SystemSource.Hour_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addTimeFunction(SourceSystemFunctions.MINUTE, "minute", Messages.getString(Messages.SystemSource.Minute_result_t_description), Messages.getString(Messages.SystemSource.Minute_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        addTimeFunction(SourceSystemFunctions.SECOND, "second", Messages.getString(Messages.SystemSource.Second_result_t_description), Messages.getString(Messages.SystemSource.Second_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+		addQuarterFunction(SourceSystemFunctions.QUARTER, "quarter", Messages.getString(Messages.SystemSource.Quarter_result_d_description), Messages.getString(Messages.SystemSource.Quarter_result_ts_description), DataTypeManagerService.DefaultDataTypes.INTEGER); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 		addTimestampAddFunction();
         addTimestampDiffFunction();
         addTimeZoneFunctions();
@@ -141,6 +153,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addRepeatFunction();
 		addSpaceFunction();
 		addInsertFunction();
+
+		// Since 8.0.0
 		addEndsWithFunction();
 		
         // clob
@@ -149,6 +163,10 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addClobFunction("lower", Messages.getString(Messages.SystemSource.LowerClob_result), "lowerCase", DataTypeManagerService.DefaultDataTypes.CLOB); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         addClobFunction("upper", Messages.getString(Messages.SystemSource.UpperClob_result), "upperCase", DataTypeManagerService.DefaultDataTypes.CLOB); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         
+		// Removed 8.0.0
+		addToCharsFunction();
+        addToBytesFunction();
+
         // conversion
         addConversionFunctions();   
         
@@ -198,6 +216,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addArrayGet();
         addArrayLength();
         addTrimFunction();
+
+		// Since 8.0.0
         addFunctions(JSONFunctionMethods.class);
         addFunctions(SystemFunctionMethods.class);
         addFunctions(FunctionMethods.class);
@@ -266,7 +286,28 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         return func;
     }
 
+    private boolean isApplicable(Class<?> clazz) {
+        if (AnnotationUtils.hasAnnotation(clazz, Removed.class)) {
+            Removed removed = AnnotationUtils.getAnnotation(clazz, Removed.class);
+            if (AnnotationUtils.isGreaterThanOrEqualTo(removed, teiidVersion)) {
+                return false;
+            }
+        }
+
+        if (AnnotationUtils.hasAnnotation(clazz, Since.class)) {
+            Since since = AnnotationUtils.getAnnotation(clazz, Since.class);
+            if (!AnnotationUtils.isGreaterThanOrEqualTo(since, teiidVersion)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void addFunctions(Class<?> clazz) {
+        if(! isApplicable(clazz))
+            return;
+        
 		Method[] methods = clazz.getMethods();
 		for (Method method : methods) {
 			TeiidFunction f = method.getAnnotation(TeiidFunction.class);
@@ -299,7 +340,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     
     private void addTrimFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.TRIM, Messages.getString(Messages.SystemSource.trim_desc), STRING, FUNCTION_CLASS, SourceSystemFunctions.TRIM,//$NON-NLS-1$ 
+            new FunctionMethod(SourceSystemFunctions.TRIM, Messages.getString(Messages.SystemSource.trim_description), STRING, FUNCTION_CLASS, SourceSystemFunctions.TRIM,//$NON-NLS-1$ 
                 new FunctionParameter[] {
             		new FunctionParameter("spec", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.trim_arg1)),//$NON-NLS-1$ //$NON-NLS-2$
             		new FunctionParameter("trimChar", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.trim_arg2)),//$NON-NLS-1$ //$NON-NLS-2$
@@ -308,14 +349,14 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
 
     private void addArrayLength() {
-    	functions.add(new FunctionMethod(SourceSystemFunctions.ARRAY_LENGTH, Messages.getString(Messages.SystemSource.array_length_desc), MISCELLANEOUS, PushDown.CAN_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.ARRAY_LENGTH, //$NON-NLS-1$ 
+    	functions.add(new FunctionMethod(SourceSystemFunctions.ARRAY_LENGTH, Messages.getString(Messages.SystemSource.array_length_description), MISCELLANEOUS, PushDown.CAN_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.ARRAY_LENGTH, //$NON-NLS-1$ 
                 Arrays.asList( 
                     new FunctionParameter("array", DataTypeManagerService.DefaultDataTypes.OBJECT, Messages.getString(Messages.SystemSource.array_param1))), //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.array_length_result)), true, Determinism.DETERMINISTIC ) );       //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addArrayGet() {
-    	functions.add(new FunctionMethod(SourceSystemFunctions.ARRAY_GET, Messages.getString(Messages.SystemSource.array_get_desc), MISCELLANEOUS, PushDown.CAN_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.ARRAY_GET, //$NON-NLS-1$ 
+    	functions.add(new FunctionMethod(SourceSystemFunctions.ARRAY_GET, Messages.getString(Messages.SystemSource.array_get_description), MISCELLANEOUS, PushDown.CAN_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.ARRAY_GET, //$NON-NLS-1$ 
                 Arrays.asList( 
                     new FunctionParameter("array", DataTypeManagerService.DefaultDataTypes.OBJECT, Messages.getString(Messages.SystemSource.array_param1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("index", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.array_get_param2))), //$NON-NLS-1$ //$NON-NLS-2$
@@ -323,7 +364,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 	}
 
 	private void addUnescape() {
-    	functions.add(new FunctionMethod(SourceSystemFunctions.UNESCAPE, Messages.getString(Messages.SystemSource.unescape_desc), STRING, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.UNESCAPE, //$NON-NLS-1$ 
+    	functions.add(new FunctionMethod(SourceSystemFunctions.UNESCAPE, Messages.getString(Messages.SystemSource.unescape_description), STRING, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, SourceSystemFunctions.UNESCAPE, //$NON-NLS-1$ 
                 Arrays.asList( 
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.unescape_param1))), //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.unescape_result)), true, Determinism.DETERMINISTIC ) );       //$NON-NLS-1$ //$NON-NLS-2$
@@ -343,21 +384,21 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
 
     private void addFormatNumberFunctions() {
-		addFormatNumberFunction(SourceSystemFunctions.FORMATINTEGER, Messages.getString(Messages.SystemSource.Formatinteger_desc), "format", "integer", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Formatinteger_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addFormatNumberFunction(SourceSystemFunctions.FORMATLONG, Messages.getString(Messages.SystemSource.Formatlong_desc), "format", "long", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Formatlong_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addFormatNumberFunction(SourceSystemFunctions.FORMATDOUBLE, Messages.getString(Messages.SystemSource.Formatdouble_desc), "format", "double", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Formatdouble_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addFormatNumberFunction(SourceSystemFunctions.FORMATFLOAT, Messages.getString(Messages.SystemSource.Formatfloat_desc), "format", "float", DataTypeManagerService.DefaultDataTypes.FLOAT, Messages.getString(Messages.SystemSource.Formatfloat_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addFormatNumberFunction(SourceSystemFunctions.FORMATBIGINTEGER, Messages.getString(Messages.SystemSource.Formatbiginteger_desc), "format", "biginteger", DataTypeManagerService.DefaultDataTypes.BIG_INTEGER, Messages.getString(Messages.SystemSource.Formatbiginteger_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addFormatNumberFunction(SourceSystemFunctions.FORMATBIGDECIMAL, Messages.getString(Messages.SystemSource.Formatbigdecimal_desc), "format", "bigdecimal", DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL, Messages.getString(Messages.SystemSource.Formatbigdecimal_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATINTEGER, Messages.getString(Messages.SystemSource.Formatinteger_description), "format", "integer", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Formatinteger_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATLONG, Messages.getString(Messages.SystemSource.Formatlong_description), "format", "long", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Formatlong_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATDOUBLE, Messages.getString(Messages.SystemSource.Formatdouble_description), "format", "double", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Formatdouble_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATFLOAT, Messages.getString(Messages.SystemSource.Formatfloat_description), "format", "float", DataTypeManagerService.DefaultDataTypes.FLOAT, Messages.getString(Messages.SystemSource.Formatfloat_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATBIGINTEGER, Messages.getString(Messages.SystemSource.Formatbiginteger_description), "format", "biginteger", DataTypeManagerService.DefaultDataTypes.BIG_INTEGER, Messages.getString(Messages.SystemSource.Formatbiginteger_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addFormatNumberFunction(SourceSystemFunctions.FORMATBIGDECIMAL, Messages.getString(Messages.SystemSource.Formatbigdecimal_description), "format", "bigdecimal", DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL, Messages.getString(Messages.SystemSource.Formatbigdecimal_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
 	}
 	
 	private void addParseNumberFunctions() {
-		addParseNumberFunction(SourceSystemFunctions.PARSEINTEGER, Messages.getString(Messages.SystemSource.Parseinteger_desc), "parseInteger", "integer", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Parseinteger_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addParseNumberFunction(SourceSystemFunctions.PARSELONG, Messages.getString(Messages.SystemSource.Parselong_desc), "parseLong", "long", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Parselong_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addParseNumberFunction(SourceSystemFunctions.PARSEDOUBLE, Messages.getString(Messages.SystemSource.Parsedouble_desc), "parseDouble", "double", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Parsedouble_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addParseNumberFunction(SourceSystemFunctions.PARSEFLOAT, Messages.getString(Messages.SystemSource.Parsefloat_desc), "parseFloat", "float", DataTypeManagerService.DefaultDataTypes.FLOAT, Messages.getString(Messages.SystemSource.Parsefloat_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addParseNumberFunction(SourceSystemFunctions.PARSEBIGINTEGER, Messages.getString(Messages.SystemSource.Parsebiginteger_desc), "parseBigInteger", "biginteger", DataTypeManagerService.DefaultDataTypes.BIG_INTEGER, Messages.getString(Messages.SystemSource.Parsebiginteger_result_desc)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-		addParseNumberFunction(SourceSystemFunctions.PARSEBIGDECIMAL, Messages.getString(Messages.SystemSource.Parsebigdecimal_desc), "parseBigDecimal", "bigdecimal", DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL, Messages.getString(Messages.SystemSource.Parsebigdecimal_result_desc));	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSEINTEGER, Messages.getString(Messages.SystemSource.Parseinteger_description), "parseInteger", "integer", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Parseinteger_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSELONG, Messages.getString(Messages.SystemSource.Parselong_description), "parseLong", "long", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Parselong_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSEDOUBLE, Messages.getString(Messages.SystemSource.Parsedouble_description), "parseDouble", "double", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Parsedouble_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSEFLOAT, Messages.getString(Messages.SystemSource.Parsefloat_description), "parseFloat", "float", DataTypeManagerService.DefaultDataTypes.FLOAT, Messages.getString(Messages.SystemSource.Parsefloat_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSEBIGINTEGER, Messages.getString(Messages.SystemSource.Parsebiginteger_description), "parseBigInteger", "biginteger", DataTypeManagerService.DefaultDataTypes.BIG_INTEGER, Messages.getString(Messages.SystemSource.Parsebiginteger_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+		addParseNumberFunction(SourceSystemFunctions.PARSEBIGDECIMAL, Messages.getString(Messages.SystemSource.Parsebigdecimal_description), "parseBigDecimal", "bigdecimal", DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL, Messages.getString(Messages.SystemSource.Parsebigdecimal_result_description));	 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
 	}
 	
     private void addArithmeticFunction(String functionName, String description, String methodName, String resultsDescription) {
@@ -397,32 +438,32 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTypedAbsFunction(String type) {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.ABS, Messages.getString(Messages.SystemSource.Abs_desc), NUMERIC, FUNCTION_CLASS, "abs", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.ABS, Messages.getString(Messages.SystemSource.Abs_description), NUMERIC, FUNCTION_CLASS, "abs", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] { 
                     new FunctionParameter("number", type, Messages.getString(Messages.SystemSource.Abs_arg)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", type, Messages.getString(Messages.SystemSource.Abs_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", type, Messages.getString(Messages.SystemSource.Abs_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     private void addRandFunction() {
         // With Seed
-        FunctionMethod rand = new FunctionMethod(SourceSystemFunctions.RAND, Messages.getString(Messages.SystemSource.Rand_desc), NUMERIC, FUNCTION_CLASS, "rand", //$NON-NLS-1$ //$NON-NLS-2$ 
+        FunctionMethod rand = new FunctionMethod(SourceSystemFunctions.RAND, Messages.getString(Messages.SystemSource.Rand_description), NUMERIC, FUNCTION_CLASS, "rand", //$NON-NLS-1$ //$NON-NLS-2$ 
                                           new FunctionParameter[] {new FunctionParameter("seed", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Rand_arg)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Rand_result_desc)) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Rand_result_description)) );                 //$NON-NLS-1$ //$NON-NLS-2$
         rand.setNullOnNull(false);
         rand.setDeterminism(Determinism.NONDETERMINISTIC);
         functions.add(rand);
         // Without Seed
-        rand = new FunctionMethod(SourceSystemFunctions.RAND, Messages.getString(Messages.SystemSource.Rand_desc), NUMERIC, FUNCTION_CLASS, "rand", //$NON-NLS-1$ //$NON-NLS-2$ 
+        rand = new FunctionMethod(SourceSystemFunctions.RAND, Messages.getString(Messages.SystemSource.Rand_description), NUMERIC, FUNCTION_CLASS, "rand", //$NON-NLS-1$ //$NON-NLS-2$ 
                                           new FunctionParameter[] {}, 
-                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Rand_result_desc)) ); //$NON-NLS-1$ //$NON-NLS-2$
+                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Rand_result_description)) ); //$NON-NLS-1$ //$NON-NLS-2$
         rand.setDeterminism(Determinism.NONDETERMINISTIC);
         functions.add(rand);
     }
     
     private void addUuidFunction() {
-        FunctionMethod rand = new FunctionMethod(SourceSystemFunctions.UUID, Messages.getString(Messages.SystemSource.uuid_desc), MISCELLANEOUS, FUNCTION_CLASS, "uuid", //$NON-NLS-1$ //$NON-NLS-2$ 
+        FunctionMethod rand = new FunctionMethod(SourceSystemFunctions.UUID, Messages.getString(Messages.SystemSource.uuid_description), MISCELLANEOUS, FUNCTION_CLASS, "uuid", //$NON-NLS-1$ //$NON-NLS-2$ 
                                           new FunctionParameter[] {},
-                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.uuid_result_desc)) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                                          new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.uuid_result_description)) );                 //$NON-NLS-1$ //$NON-NLS-2$
         rand.setDeterminism(Determinism.NONDETERMINISTIC);
         functions.add(rand);
     }
@@ -474,11 +515,11 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTypedPowerFunction(String baseType, String powerType) { 
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.POWER, Messages.getString(Messages.SystemSource.Power_desc), NUMERIC, FUNCTION_CLASS, "power", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.POWER, Messages.getString(Messages.SystemSource.Power_description), NUMERIC, FUNCTION_CLASS, "power", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] { 
                     new FunctionParameter("base", baseType, Messages.getString(Messages.SystemSource.Power_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("power", powerType, Messages.getString(Messages.SystemSource.Power_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", baseType, Messages.getString(Messages.SystemSource.Power_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", baseType, Messages.getString(Messages.SystemSource.Power_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     } 
 
     private void addRoundFunction() {
@@ -494,11 +535,11 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTypedRoundFunction(String roundType) {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.ROUND, Messages.getString(Messages.SystemSource.Round_desc), NUMERIC, FUNCTION_CLASS, "round", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.ROUND, Messages.getString(Messages.SystemSource.Round_description), NUMERIC, FUNCTION_CLASS, "round", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] { 
                     new FunctionParameter("number", roundType, Messages.getString(Messages.SystemSource.Round_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("places", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Round_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", roundType, Messages.getString(Messages.SystemSource.Round_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", roundType, Messages.getString(Messages.SystemSource.Round_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     } 
 
     private void addSignFunction() {
@@ -516,10 +557,10 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTypedSignFunction(String type) {        
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.SIGN, Messages.getString(Messages.SystemSource.Sign_desc), NUMERIC, FUNCTION_CLASS, "sign", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.SIGN, Messages.getString(Messages.SystemSource.Sign_description), NUMERIC, FUNCTION_CLASS, "sign", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] { 
                     new FunctionParameter("number", type, Messages.getString(Messages.SystemSource.Sign_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Sign_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Sign_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     } 
     
     private void addSqrtFunction() {
@@ -534,10 +575,10 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTypedSqrtFunction(String type) {    
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.SQRT, Messages.getString(Messages.SystemSource.Sqrt_desc), NUMERIC, FUNCTION_CLASS, "sqrt", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.SQRT, Messages.getString(Messages.SystemSource.Sqrt_description), NUMERIC, FUNCTION_CLASS, "sqrt", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] { 
                     new FunctionParameter("number", type, Messages.getString(Messages.SystemSource.Sqrt_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Sqrt_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DOUBLE, Messages.getString(Messages.SystemSource.Sqrt_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     } 
 
     /**
@@ -596,19 +637,19 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	private void addTimestampAddFunction() {
 		functions.add(
-			createSyntheticMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_d_desc), DATETIME, null, null, new FunctionParameter[] { //$NON-NLS-1$
+			createSyntheticMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_d_description), DATETIME, null, null, new FunctionParameter[] { //$NON-NLS-1$
 				new FunctionParameter("interval", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Timestampadd_d_arg1)),  //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("count", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Timestampadd_d_arg2)),  //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("timestamp", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Timestampadd_d_arg3))}, //$NON-NLS-1$ //$NON-NLS-2$ 
-				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Timestampadd_d_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Timestampadd_d_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-			createSyntheticMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_t_desc), DATETIME, null, null, new FunctionParameter[] { //$NON-NLS-1$
+			createSyntheticMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_t_description), DATETIME, null, null, new FunctionParameter[] { //$NON-NLS-1$
 				new FunctionParameter("interval", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Timestampadd_t_arg1)),  //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("count", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Timestampadd_t_arg2)),  //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("timestamp", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Timestampadd_t_arg3))}, //$NON-NLS-1$ //$NON-NLS-2$  
-				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Timestampadd_t_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Timestampadd_t_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_ts_desc), DATETIME, FUNCTION_CLASS, "timestampAdd", //$NON-NLS-1$ //$NON-NLS-2$ 
+			new FunctionMethod(SourceSystemFunctions.TIMESTAMPADD, Messages.getString(Messages.SystemSource.Timestampadd_ts_description), DATETIME, FUNCTION_CLASS, "timestampAdd", //$NON-NLS-1$ //$NON-NLS-2$ 
 				new FunctionParameter[] {
 					new FunctionParameter("interval", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Timestampadd_ts_arg1)),  //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("count", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Timestampadd_ts_arg2)),  //$NON-NLS-1$ //$NON-NLS-2$
@@ -618,21 +659,21 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTimestampDiffFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.TIMESTAMPDIFF, Messages.getString(Messages.SystemSource.Timestampdiff_ts_desc), DATETIME, FUNCTION_CLASS, "timestampDiff", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.TIMESTAMPDIFF, Messages.getString(Messages.SystemSource.Timestampdiff_ts_description), DATETIME, FUNCTION_CLASS, "timestampDiff", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("interval", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Timestampdiff_ts_arg1)),  //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("timestamp1", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.Timestampdiff_ts_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("timestamp2", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.Timestampdiff_ts_arg3))}, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Timestampdiff_ts_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.LONG, Messages.getString(Messages.SystemSource.Timestampdiff_ts_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     private void addTimestampCreateFunction() {
         functions.add(
-              new FunctionMethod(SourceSystemFunctions.TIMESTAMPCREATE, Messages.getString(Messages.SystemSource.TimestampCreate_desc), DATETIME, FUNCTION_CLASS, "timestampCreate", //$NON-NLS-1$ //$NON-NLS-2$ 
+              new FunctionMethod(SourceSystemFunctions.TIMESTAMPCREATE, Messages.getString(Messages.SystemSource.TimestampCreate_description), DATETIME, FUNCTION_CLASS, "timestampCreate", //$NON-NLS-1$ //$NON-NLS-2$ 
                   new FunctionParameter[] {
                       new FunctionParameter("date", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.TimestampCreate_arg1)),  //$NON-NLS-1$ //$NON-NLS-2$
                       new FunctionParameter("time", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.TimestampCreate_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
-                  new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.TimestampCreate_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                  new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.TimestampCreate_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private void addTimeFunction(String name, String methodName, String timeDesc, String timestampDesc, DefaultDataTypes returnType) {
@@ -678,37 +719,37 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addConcatFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.CONCAT, Messages.getString(Messages.SystemSource.Concat_desc), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.CONCAT, Messages.getString(Messages.SystemSource.Concat_description), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod("||", Messages.getString(Messages.SystemSource.Concatop_desc), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("||", Messages.getString(Messages.SystemSource.Concatop_description), STRING, FUNCTION_CLASS, "concat", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter[] {
                     new FunctionParameter("string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concatop_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concatop_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concatop_result_desc)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concatop_result_description)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         
-        FunctionMethod concat2 = new FunctionMethod(SourceSystemFunctions.CONCAT2, Messages.getString(Messages.SystemSource.Concat_desc), STRING, FUNCTION_CLASS, "concat2", //$NON-NLS-1$ //$NON-NLS-2$ 
+        FunctionMethod concat2 = new FunctionMethod(SourceSystemFunctions.CONCAT2, Messages.getString(Messages.SystemSource.Concat_description), STRING, FUNCTION_CLASS, "concat2", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
             		new FunctionParameter("string1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
             		new FunctionParameter("string2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-            	new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_result_desc)) );                 //$NON-NLS-1$ //$NON-NLS-2$
+            	new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Concat_result_description)) );                 //$NON-NLS-1$ //$NON-NLS-2$
         concat2.setNullOnNull(false);
         functions.add(concat2);                         
     }
 
     private void addSubstringFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.SUBSTRING, Messages.getString(Messages.SystemSource.Substring_desc), STRING, FUNCTION_CLASS, "substring", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.SUBSTRING, Messages.getString(Messages.SystemSource.Substring_description), STRING, FUNCTION_CLASS, "substring", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Substring_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("index", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Substring_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Substring_arg3)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Substring_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.SUBSTRING, Messages.getString(Messages.SystemSource.Susbstring2_desc), STRING, FUNCTION_CLASS, "substring", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.SUBSTRING, Messages.getString(Messages.SystemSource.Susbstring2_description), STRING, FUNCTION_CLASS, "substring", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Substring2_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("index", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Substring2_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -717,13 +758,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addLeftRightFunctions() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.LEFT, Messages.getString(Messages.SystemSource.Left_desc), STRING, FUNCTION_CLASS, "left", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.LEFT, Messages.getString(Messages.SystemSource.Left_description), STRING, FUNCTION_CLASS, "left", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Left_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Left_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Left2_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.RIGHT, Messages.getString(Messages.SystemSource.Right_desc), STRING, FUNCTION_CLASS, "right", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.RIGHT, Messages.getString(Messages.SystemSource.Right_description), STRING, FUNCTION_CLASS, "right", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Right_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Right_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -732,7 +773,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
            
     private void addLocateFunction() {
         FunctionMethod func =
-            new FunctionMethod(SourceSystemFunctions.LOCATE, Messages.getString(Messages.SystemSource.Locate_desc), STRING, FUNCTION_CLASS, "locate", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.LOCATE, Messages.getString(Messages.SystemSource.Locate_description), STRING, FUNCTION_CLASS, "locate", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("substring", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Locate_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Locate_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -741,7 +782,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         func.setNullOnNull(false);
         functions.add(func);
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.LOCATE, Messages.getString(Messages.SystemSource.Locate2_desc), STRING, FUNCTION_CLASS, "locate", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.LOCATE, Messages.getString(Messages.SystemSource.Locate2_description), STRING, FUNCTION_CLASS, "locate", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("substring", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Locate2_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Locate2_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -750,17 +791,21 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addReplaceFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.REPLACE, Messages.getString(Messages.SystemSource.Replace_desc), STRING, FUNCTION_CLASS, "replace", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.REPLACE, Messages.getString(Messages.SystemSource.Replace_description), STRING, FUNCTION_CLASS, "replace", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Replace_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("substring", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Replace_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("replacement", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Replace_arg3)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Replace_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
+
+	@Since("8.0.0")
     private void addEndsWithFunction() {
+	    if (teiidVersion.getMinimumVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            return;
+
         FunctionMethod f =
-            new FunctionMethod(SourceSystemFunctions.ENDSWITH, Messages.getString(Messages.SystemSource.endswith_desc), STRING, FUNCTION_CLASS, "endsWith", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.ENDSWITH, Messages.getString(Messages.SystemSource.endswith_description), STRING, FUNCTION_CLASS, "endsWith", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("substring", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
@@ -770,7 +815,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	private void addRepeatFunction() {
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.REPEAT, Messages.getString(Messages.SystemSource.Repeat_desc), STRING, FUNCTION_CLASS, "repeat", //$NON-NLS-1$ //$NON-NLS-2$ 
+			new FunctionMethod(SourceSystemFunctions.REPEAT, Messages.getString(Messages.SystemSource.Repeat_description), STRING, FUNCTION_CLASS, "repeat", //$NON-NLS-1$ //$NON-NLS-2$ 
 				new FunctionParameter[] {
 					new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Repeat_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("count", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Repeat_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
@@ -779,14 +824,14 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	private void addSpaceFunction() {
 		functions.add(
-			createSyntheticMethod(IFunctionLibrary.FunctionName.SPACE.text(), Messages.getString(Messages.SystemSource.Space_desc), STRING, null, null, new FunctionParameter[] { //$NON-NLS-1$
+			createSyntheticMethod(IFunctionLibrary.FunctionName.SPACE.text(), Messages.getString(Messages.SystemSource.Space_description), STRING, null, null, new FunctionParameter[] { //$NON-NLS-1$
 				new FunctionParameter("count", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Space_arg1))}, //$NON-NLS-1$ //$NON-NLS-2$ 
 				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Space_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addInsertFunction() {
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.INSERT, Messages.getString(Messages.SystemSource.Insert_desc), STRING, FUNCTION_CLASS, "insert", //$NON-NLS-1$ //$NON-NLS-2$ 
+			new FunctionMethod(SourceSystemFunctions.INSERT, Messages.getString(Messages.SystemSource.Insert_description), STRING, FUNCTION_CLASS, "insert", //$NON-NLS-1$ //$NON-NLS-2$ 
 				new FunctionParameter[] {
 					new FunctionParameter("str1", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Insert_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("start", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Insert_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -794,15 +839,41 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 					new FunctionParameter("str2", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Insert_arg4)) }, //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Insert_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
+
+	@Removed("8.0.0")
+	private void addToCharsFunction() {
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+	        return;
+
+		functions.add(
+			new FunctionMethod("to_chars", Messages.getString(Messages.SystemSource.encode_description), CONVERSION, FUNCTION_CLASS, "toChars", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
+				new FunctionParameter[] {
+					new FunctionParameter("value", DataTypeManagerService.DefaultDataTypes.BLOB, Messages.getString(Messages.SystemSource.encode_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("encoding", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.encode_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.encode_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	@Removed("8.0.0")
+	private void addToBytesFunction() {
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+            return;
+
+		functions.add(
+			new FunctionMethod("to_bytes", Messages.getString(Messages.SystemSource.decode_description), CONVERSION, FUNCTION_CLASS, "toBytes", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
+				new FunctionParameter[] {
+					new FunctionParameter("value", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.decode_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("encoding", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.decode_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.BLOB, Messages.getString(Messages.SystemSource.decode_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
     private void addAsciiFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.ASCII, Messages.getString(Messages.SystemSource.Ascii_desc), STRING, FUNCTION_CLASS, "ascii", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.ASCII, Messages.getString(Messages.SystemSource.Ascii_description), STRING, FUNCTION_CLASS, "ascii", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Ascii_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Ascii_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.ASCII, Messages.getString(Messages.SystemSource.Ascii2_desc), STRING, FUNCTION_CLASS, "ascii", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.ASCII, Messages.getString(Messages.SystemSource.Ascii2_description), STRING, FUNCTION_CLASS, "ascii", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("char", DataTypeManagerService.DefaultDataTypes.CHAR, Messages.getString(Messages.SystemSource.Ascii2_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Ascii2_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -810,12 +881,12 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	private void addCharFunction() {
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.CHAR, Messages.getString(Messages.SystemSource.Char_desc), STRING, FUNCTION_CLASS, "chr", //$NON-NLS-1$ //$NON-NLS-2$ 
+			new FunctionMethod(SourceSystemFunctions.CHAR, Messages.getString(Messages.SystemSource.Char_description), STRING, FUNCTION_CLASS, "chr", //$NON-NLS-1$ //$NON-NLS-2$ 
 				new FunctionParameter[] {
 					new FunctionParameter("code", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Char_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.CHAR, Messages.getString(Messages.SystemSource.Char_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-                new FunctionMethod("chr", Messages.getString(Messages.SystemSource.Chr_desc), STRING, FUNCTION_CLASS, "chr", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                new FunctionMethod("chr", Messages.getString(Messages.SystemSource.Chr_description), STRING, FUNCTION_CLASS, "chr", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     new FunctionParameter[] {
                         new FunctionParameter("code", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Chr_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.CHAR, Messages.getString(Messages.SystemSource.Chr_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -823,7 +894,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 	
     private void addInitCapFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.INITCAP, Messages.getString(Messages.SystemSource.Initcap_desc), STRING, FUNCTION_CLASS, "initCap", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.INITCAP, Messages.getString(Messages.SystemSource.Initcap_description), STRING, FUNCTION_CLASS, "initCap", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Initcap_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Initcap_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -831,13 +902,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addLpadFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.LPAD, Messages.getString(Messages.SystemSource.Lpad_desc), STRING, FUNCTION_CLASS, "lpad", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.LPAD, Messages.getString(Messages.SystemSource.Lpad_description), STRING, FUNCTION_CLASS, "lpad", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Lpad_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Lpad_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Lpad_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.LPAD, Messages.getString(Messages.SystemSource.Lpad3_desc), STRING, FUNCTION_CLASS, "lpad", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.LPAD, Messages.getString(Messages.SystemSource.Lpad3_description), STRING, FUNCTION_CLASS, "lpad", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Lpad3_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Lpad3_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -847,13 +918,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addRpadFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.RPAD, Messages.getString(Messages.SystemSource.Rpad1_desc), STRING, FUNCTION_CLASS, "rpad", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.RPAD, Messages.getString(Messages.SystemSource.Rpad1_description), STRING, FUNCTION_CLASS, "rpad", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Rpad1_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Rpad1_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Rpad1_result)) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.RPAD, Messages.getString(Messages.SystemSource.Rpad3_desc), STRING, FUNCTION_CLASS, "rpad", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.RPAD, Messages.getString(Messages.SystemSource.Rpad3_description), STRING, FUNCTION_CLASS, "rpad", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Rpad3_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("length", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Rpad3_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -863,7 +934,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addTranslateFunction() {
         functions.add(
-            new FunctionMethod(SourceSystemFunctions.TRANSLATE, Messages.getString(Messages.SystemSource.Translate_desc), STRING, FUNCTION_CLASS, "translate", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(SourceSystemFunctions.TRANSLATE, Messages.getString(Messages.SystemSource.Translate_description), STRING, FUNCTION_CLASS, "translate", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Translate_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("source", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Translate_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -880,7 +951,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     
     private void addTypedConversionFunction(String name, String sourceType) {
         functions.add(
-            new FunctionMethod(name, Messages.getString(Messages.SystemSource.Convert_desc, sourceType), CONVERSION, FUNCTION_CLASS, "convert", //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(name, Messages.getString(Messages.SystemSource.Convert_description, sourceType), CONVERSION, FUNCTION_CLASS, "convert", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter("value", sourceType, Messages.getString(Messages.SystemSource.Convert_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("target", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Convert_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -897,7 +968,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     
     private void addTypedContextFunction(String contextType, String exprType) {
         functions.add(
-            new FunctionMethod("context", Messages.getString(Messages.SystemSource.Context_desc), MISCELLANEOUS, FUNCTION_CLASS, "context", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("context", Messages.getString(Messages.SystemSource.Context_description), MISCELLANEOUS, FUNCTION_CLASS, "context", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter[] {
                     new FunctionParameter("context", contextType, Messages.getString(Messages.SystemSource.Context_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("element", exprType, Messages.getString(Messages.SystemSource.Context_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -907,7 +978,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     private void addRowLimitFunctions() {
     	for (String exprType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
             functions.add(
-                    new FunctionMethod("rowlimit", Messages.getString(Messages.SystemSource.Rowlimit_desc), MISCELLANEOUS, FUNCTION_CLASS, "rowlimit", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    new FunctionMethod("rowlimit", Messages.getString(Messages.SystemSource.Rowlimit_description), MISCELLANEOUS, FUNCTION_CLASS, "rowlimit", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         new FunctionParameter[] {
                             new FunctionParameter("element", exprType, Messages.getString(Messages.SystemSource.Rowlimit_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                         new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Rowlimit_result)) ) );                     //$NON-NLS-1$ //$NON-NLS-2$
@@ -917,7 +988,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     private void addRowLimitExceptionFunctions() {
     	for (String exprType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
             functions.add(
-                    new FunctionMethod("rowlimitexception", Messages.getString(Messages.SystemSource.RowlimitException_desc), MISCELLANEOUS, FUNCTION_CLASS, "rowlimitexception", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    new FunctionMethod("rowlimitexception", Messages.getString(Messages.SystemSource.RowlimitException_description), MISCELLANEOUS, FUNCTION_CLASS, "rowlimitexception", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         new FunctionParameter[] {
                             new FunctionParameter("element", exprType, Messages.getString(Messages.SystemSource.Rowlimit_arg1)) }, //$NON-NLS-1$ //$NON-NLS-2$
                         new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.INTEGER, Messages.getString(Messages.SystemSource.Rowlimit_result)) ) );                     //$NON-NLS-1$ //$NON-NLS-2$
@@ -935,13 +1006,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addDecodeFunction(String functionName, String resultType) {
         functions.add(
-        	createSyntheticMethod(functionName, Messages.getString(Messages.SystemSource.Decode1_desc), MISCELLANEOUS, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+        	createSyntheticMethod(functionName, Messages.getString(Messages.SystemSource.Decode1_description), MISCELLANEOUS, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 			    new FunctionParameter("input", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Decode1_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 			    new FunctionParameter("decodeString", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Decode1_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
                 new FunctionParameter("result", resultType, Messages.getString(Messages.SystemSource.Decode1_result) ) ) );    //$NON-NLS-1$ //$NON-NLS-2$
                      
         functions.add(
-        	createSyntheticMethod(functionName, Messages.getString(Messages.SystemSource.Decode2_desc), MISCELLANEOUS, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+        	createSyntheticMethod(functionName, Messages.getString(Messages.SystemSource.Decode2_description), MISCELLANEOUS, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 			    new FunctionParameter("input", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Decode2_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 			    new FunctionParameter("decodeString", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Decode2_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
 			    new FunctionParameter("delimiter", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Decode2_arg3)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -952,7 +1023,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     private void addLookupFunctions() {
     	for (String keyValueType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
             functions.add(
-                    new FunctionMethod("lookup", Messages.getString(Messages.SystemSource.Lookup_desc), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "lookup", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    new FunctionMethod("lookup", Messages.getString(Messages.SystemSource.Lookup_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "lookup", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         Arrays.asList(
                             new FunctionParameter("codetable", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Lookup_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                             new FunctionParameter("returnelement", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Lookup_arg2)), //$NON-NLS-1$ //$NON-NLS-2$
@@ -965,19 +1036,19 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
     private void addUserFunction() {
         functions.add(
-            new FunctionMethod("user", Messages.getString(Messages.SystemSource.User_desc), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "user", null, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("user", Messages.getString(Messages.SystemSource.User_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "user", null, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.User_result)), true, Determinism.USER_DETERMINISTIC) );                     //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     private void addCurrentDatabaseFunction() {
         functions.add(
-            new FunctionMethod("current_database", Messages.getString(Messages.SystemSource.current_database_desc), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "current_database", null, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("current_database", Messages.getString(Messages.SystemSource.current_database_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "current_database", null, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.current_database_result)), true, Determinism.VDB_DETERMINISTIC) );                     //$NON-NLS-1$ //$NON-NLS-2$
     }    
     
     private void addEnvFunction() {
         functions.add(
-            new FunctionMethod("env", Messages.getString(Messages.SystemSource.Env_desc), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "env", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("env", Messages.getString(Messages.SystemSource.Env_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "env", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 Arrays.asList(
                     new FunctionParameter("variablename", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Env_varname)) //$NON-NLS-1$ //$NON-NLS-2$
                      ),
@@ -986,7 +1057,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     
     private void addSessionIdFunction() {
         functions.add(
-            new FunctionMethod(IFunctionLibrary.FunctionName.SESSION_ID.text(), Messages.getString(Messages.SystemSource.session_id_desc), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "session_id", null, //$NON-NLS-1$ //$NON-NLS-2$ 
+            new FunctionMethod(IFunctionLibrary.FunctionName.SESSION_ID.text(), Messages.getString(Messages.SystemSource.session_id_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "session_id", null, //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.session_id_result)), true, Determinism.SESSION_DETERMINISTIC) );                     //$NON-NLS-1$ //$NON-NLS-2$
     }    
     
@@ -1012,7 +1083,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 	
     private void addNvlFunction(String valueType) {
         FunctionMethod nvl = 
-            new FunctionMethod("nvl", Messages.getString(Messages.SystemSource.Nvl_desc), MISCELLANEOUS, FUNCTION_CLASS, "ifnull", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            new FunctionMethod("nvl", Messages.getString(Messages.SystemSource.Nvl_description), MISCELLANEOUS, FUNCTION_CLASS, "ifnull", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 new FunctionParameter[] {
                     new FunctionParameter("value", valueType, Messages.getString(Messages.SystemSource.Nvl_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter("valueIfNull", valueType, Messages.getString(Messages.SystemSource.Nvl_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -1023,7 +1094,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	private void addIfNullFunction(String valueType) {
 		FunctionMethod nvl = 
-			new FunctionMethod("ifnull", Messages.getString(Messages.SystemSource.Ifnull_desc), MISCELLANEOUS, FUNCTION_CLASS, "ifnull", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			new FunctionMethod("ifnull", Messages.getString(Messages.SystemSource.Ifnull_description), MISCELLANEOUS, FUNCTION_CLASS, "ifnull", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				new FunctionParameter[] {
 					new FunctionParameter("value", valueType, Messages.getString(Messages.SystemSource.Ifnull_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("valueIfNull", valueType, Messages.getString(Messages.SystemSource.Ifnull_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
@@ -1034,40 +1105,40 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 			
 	private void addFormatTimestampFunction() {
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.FORMATTIMESTAMP, Messages.getString(Messages.SystemSource.Formattimestamp_desc),CONVERSION, FUNCTION_CLASS, "format", //$NON-NLS-1$ //$NON-NLS-2$
+			new FunctionMethod(SourceSystemFunctions.FORMATTIMESTAMP, Messages.getString(Messages.SystemSource.Formattimestamp_description),CONVERSION, FUNCTION_CLASS, "format", //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter[] { 
 					new FunctionParameter("timestamp", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.Formattimestamp_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattimestamp_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattimestamp_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattimestamp_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-				createSyntheticMethod(IFunctionLibrary.FunctionName.FORMATDATE.text(), Messages.getString(Messages.SystemSource.Formatdate_desc),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+				createSyntheticMethod(IFunctionLibrary.FunctionName.FORMATDATE.text(), Messages.getString(Messages.SystemSource.Formatdate_description),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 					new FunctionParameter("date", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Formatdate_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formatdate_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formatdate_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formatdate_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-				createSyntheticMethod(IFunctionLibrary.FunctionName.FORMATTIME.text(), Messages.getString(Messages.SystemSource.Formattime_desc),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+				createSyntheticMethod(IFunctionLibrary.FunctionName.FORMATTIME.text(), Messages.getString(Messages.SystemSource.Formattime_description),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 					new FunctionParameter("time", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Formattime_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattime_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattime_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Formattime_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 	}
 					
 	private void addParseTimestampFunction() {
 		functions.add(
-			new FunctionMethod(SourceSystemFunctions.PARSETIMESTAMP, Messages.getString(Messages.SystemSource.Parsetimestamp_desc),CONVERSION, FUNCTION_CLASS, "parseTimestamp", //$NON-NLS-1$ //$NON-NLS-2$
+			new FunctionMethod(SourceSystemFunctions.PARSETIMESTAMP, Messages.getString(Messages.SystemSource.Parsetimestamp_description),CONVERSION, FUNCTION_CLASS, "parseTimestamp", //$NON-NLS-1$ //$NON-NLS-2$
 				new FunctionParameter[] { 
 					new FunctionParameter("timestamp", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsetimestamp_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsetimestamp_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.Parsetimestamp_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIMESTAMP, Messages.getString(Messages.SystemSource.Parsetimestamp_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-				createSyntheticMethod(IFunctionLibrary.FunctionName.PARSETIME.text(), Messages.getString(Messages.SystemSource.Parsetime_desc),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+				createSyntheticMethod(IFunctionLibrary.FunctionName.PARSETIME.text(), Messages.getString(Messages.SystemSource.Parsetime_description),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 					new FunctionParameter("time", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsetime_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsetime_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Parsetime_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.TIME, Messages.getString(Messages.SystemSource.Parsetime_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 		functions.add(
-				createSyntheticMethod(IFunctionLibrary.FunctionName.PARSEDATE.text(), Messages.getString(Messages.SystemSource.Parsedate_desc),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
+				createSyntheticMethod(IFunctionLibrary.FunctionName.PARSEDATE.text(), Messages.getString(Messages.SystemSource.Parsedate_description),CONVERSION, null, null, new FunctionParameter[] {  //$NON-NLS-1$
 					new FunctionParameter("date", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsedate_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
 					new FunctionParameter("format", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Parsedate_arg2)) }, //$NON-NLS-1$ //$NON-NLS-2$
-					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Parsedate_result_desc)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
+					new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.DATE, Messages.getString(Messages.SystemSource.Parsedate_result_description)) ) );       //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	private void addFormatNumberFunction(String functionName, String description, String methodName, String inputParam, DefaultDataTypes dataType, String resultDesc) {

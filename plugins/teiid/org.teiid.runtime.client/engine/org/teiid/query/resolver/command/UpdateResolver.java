@@ -74,11 +74,12 @@ public class UpdateResolver extends ProcedureContainerResolver implements Variab
         // Resolve elements and functions
         Set<GroupSymbol> groups = new HashSet<GroupSymbol>();
         groups.add(update.getGroup());
+        ResolverVisitor visitor = new ResolverVisitor(command.getTeiidVersion());
         for (SetClause clause : update.getChangeList().getClauses()) {
-        	ResolverVisitor.resolveLanguageObject(clause.getSymbol(), groups, null, metadata);
+        	visitor.resolveLanguageObject(clause.getSymbol(), groups, null, metadata);
 		}
         getQueryResolver().resolveSubqueries(command, metadata, groups);
-        ResolverVisitor.resolveLanguageObject(update, groups, update.getExternalGroupContexts(), metadata);
+        visitor.resolveLanguageObject(update, groups, update.getExternalGroupContexts(), metadata);
     }
     
     /** 

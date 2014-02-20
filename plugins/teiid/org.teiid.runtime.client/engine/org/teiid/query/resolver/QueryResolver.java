@@ -96,16 +96,16 @@ import org.teiid.runtime.client.TeiidClientException;
 public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expression> {
 
     private final String BINDING_GROUP = "INPUTS"; //$NON-NLS-1$
-	private final CommandResolver simpleQueryResolver = new SimpleQueryResolver(this);
-    private final CommandResolver setQueryResolver = new SetQueryResolver(this);
-    private final CommandResolver xmlQueryResolver = new XMLQueryResolver(this);
-    private final ProcedureContainerResolver execResolver = new ExecResolver(this);
-    private final ProcedureContainerResolver insertResolver = new InsertResolver(this);
-    private final ProcedureContainerResolver updateResolver = new UpdateResolver(this);
-    private final ProcedureContainerResolver deleteResolver = new DeleteResolver(this);
-    private final CommandResolver updateProcedureResolver = new UpdateProcedureResolver(this);
-    private final CommandResolver dynamicCommandResolver = new DynamicCommandResolver(this);
-    private final CommandResolver alterResolver = new AlterResolver(this);
+	private final CommandResolver simpleQueryResolver;
+    private final CommandResolver setQueryResolver;
+    private final CommandResolver xmlQueryResolver;
+    private final ProcedureContainerResolver execResolver;
+    private final ProcedureContainerResolver insertResolver;
+    private final ProcedureContainerResolver updateResolver;
+    private final ProcedureContainerResolver deleteResolver;
+    private final CommandResolver updateProcedureResolver;
+    private final CommandResolver dynamicCommandResolver;
+    private final CommandResolver alterResolver;
 
     /*
      * The parser that preceded the resolution
@@ -117,6 +117,17 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
      */
     public QueryResolver(QueryParser parser) {
         this.parser = parser;
+
+        simpleQueryResolver = new SimpleQueryResolver(this);
+        setQueryResolver = new SetQueryResolver(this);
+        xmlQueryResolver = new XMLQueryResolver(this);
+        execResolver = new ExecResolver(this);
+        insertResolver = new InsertResolver(this);
+        updateResolver = new UpdateResolver(this);
+        deleteResolver = new DeleteResolver(this);
+        updateProcedureResolver = new UpdateProcedureResolver(this);
+        dynamicCommandResolver = new DynamicCommandResolver(this);
+        alterResolver = new AlterResolver(this);
     }
 
     /**
@@ -242,7 +253,8 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		    		positional = false;
 		    	}
 		    	ElementSymbol elementSymbol = (ElementSymbol)ses;
-		    	ResolverVisitor.resolveLanguageObject(elementSymbol, metadata);
+		    	ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+		    	visitor.resolveLanguageObject(elementSymbol, metadata);
 		    	elementSymbol.setIsExternalReference(true);
 		    	if (!positional) {
 		    	    ElementSymbol keySymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
@@ -441,8 +453,8 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
      */
     public void resolveCriteria(Criteria criteria, IQueryMetadataInterface metadata)
         throws Exception {
-
-        ResolverVisitor.resolveLanguageObject(criteria, metadata);
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+        visitor.resolveLanguageObject(criteria, metadata);
     }
 
     public void setChildMetadata(Command subCommand, Command parent) {

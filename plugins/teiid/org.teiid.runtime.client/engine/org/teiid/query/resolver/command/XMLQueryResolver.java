@@ -267,7 +267,8 @@ public class XMLQueryResolver extends CommandResolver {
 
 			resolveXMLCriteria(crit, externalGroups, root, metadata);
 			// Resolve functions in current query
-			ResolverVisitor.resolveLanguageObject(crit, metadata);
+			ResolverVisitor visitor = new ResolverVisitor(crit.getTeiidVersion());
+			visitor.resolveLanguageObject(crit, metadata);
 		}
 
 		// resolve any orderby specified on the query
@@ -506,7 +507,8 @@ public class XMLQueryResolver extends CommandResolver {
 					}
 				}
 				try {
-	                ResolverVisitor.resolveLanguageObject(elem, Collections.EMPTY_LIST, externalGroups, metadata);
+	                ResolverVisitor visitor = new ResolverVisitor(elem.getTeiidVersion());
+	                visitor.resolveLanguageObject(elem, Collections.EMPTY_LIST, externalGroups, metadata);
 	                return;
 	            } catch (Exception e) {
 	                 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30136, fullName));

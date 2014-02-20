@@ -460,14 +460,15 @@ public class ResolverUtil {
         	if (command instanceof SetQuery) {
     			 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30086, sortKey));
     		}
+        	ResolverVisitor visitor = new ResolverVisitor(command.getTeiidVersion());
         	for (ElementSymbol symbol : ElementCollectorVisitor.getElements(sortKey, false)) {
         		try {
-        	    	ResolverVisitor.resolveLanguageObject(symbol, fromClauseGroups, command.getExternalGroupContexts(), metadata);
+        	    	visitor.resolveLanguageObject(symbol, fromClauseGroups, command.getExternalGroupContexts(), metadata);
         	    } catch(Exception e) {
         	    	 throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30087, symbol.getName()) );
         	    } 
 			}
-            ResolverVisitor.resolveLanguageObject(sortKey, metadata);
+            visitor.resolveLanguageObject(sortKey, metadata);
             
             int index = expressions.indexOf(SymbolMap.getExpression(sortKey));
             if (index == -1 && !isSimpleQuery) {
@@ -855,8 +856,9 @@ public class ResolverUtil {
 		String returnElementName = (String) ((Constant)args[0]).getValue() + "." + (String) ((Constant)args[1]).getValue(); //$NON-NLS-1$
 		ElementSymbol returnElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
 		returnElement.setName(returnElementName);
+		ResolverVisitor visitor = new ResolverVisitor(parser.getVersion());
         try {
-            ResolverVisitor.resolveLanguageObject(returnElement, groups, metadata);
+            visitor.resolveLanguageObject(returnElement, groups, metadata);
         } catch(Exception e) {
              throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30098, returnElementName));
         }
@@ -866,7 +868,7 @@ public class ResolverUtil {
         ElementSymbol keyElement = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
         keyElement.setName(keyElementName);
         try {
-            ResolverVisitor.resolveLanguageObject(keyElement, groups, metadata);
+            visitor.resolveLanguageObject(keyElement, groups, metadata);
         } catch(Exception e) {
              throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30099, keyElementName));
         }

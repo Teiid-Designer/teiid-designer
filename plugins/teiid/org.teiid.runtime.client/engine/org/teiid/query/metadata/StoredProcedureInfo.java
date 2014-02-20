@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.sql.lang.SPParameter;
 
@@ -37,19 +38,19 @@ import org.teiid.query.sql.lang.SPParameter;
 public class StoredProcedureInfo implements Serializable, IStoredProcedureInfo<SPParameter, QueryNode> {
 
     /** Constant identifying an IN parameter */
-    public static final int IN = ParameterInfo.IN;
+    public static final int IN = ISPParameter.ParameterInfo.IN.index();
     
     /** Constant identifying an OUT parameter */
-    public static final int OUT = ParameterInfo.OUT;
+    public static final int OUT = ISPParameter.ParameterInfo.OUT.index();
 
     /** Constant identifying an INOUT parameter */
-    public static final int INOUT = ParameterInfo.INOUT;
+    public static final int INOUT = ISPParameter.ParameterInfo.INOUT.index();
 
     /** Constant identifying a RETURN parameter */
-    public static final int RETURN_VALUE = ParameterInfo.RETURN_VALUE;
+    public static final int RETURN_VALUE = ISPParameter.ParameterInfo.RETURN_VALUE.index();
 
     /** Constant identifying a RESULT SET parameter */
-    public static final int RESULT_SET = ParameterInfo.RESULT_SET;
+    public static final int RESULT_SET = ISPParameter.ParameterInfo.RESULT_SET.index();
 
     private Object modelID;
     private Object procedureID;
@@ -96,7 +97,7 @@ public class StoredProcedureInfo implements Serializable, IStoredProcedureInfo<S
 
 	public boolean returnsResultSet() {
 		for (SPParameter parameter : parameters) {
-			if (parameter.getParameterType() == ParameterInfo.RESULT_SET) {
+			if (parameter.getParameterType() == ISPParameter.ParameterInfo.RESULT_SET.index()) {
 				return true;
 			}
 		}
@@ -105,7 +106,7 @@ public class StoredProcedureInfo implements Serializable, IStoredProcedureInfo<S
 
 	public boolean returnsResultParameter() {
 		for (SPParameter parameter : parameters) {
-			if (parameter.getParameterType() == ParameterInfo.RETURN_VALUE) {
+			if (parameter.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
 				return true;
 			}
 		}

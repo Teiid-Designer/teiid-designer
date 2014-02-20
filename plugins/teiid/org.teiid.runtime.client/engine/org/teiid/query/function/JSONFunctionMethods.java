@@ -28,7 +28,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.Stack;
-import org.teiid.CommandContext;
 import org.teiid.common.buffer.FileStore;
 import org.teiid.common.buffer.FileStoreInputStreamFactory;
 import org.teiid.common.buffer.impl.MemoryStorageManager;
@@ -40,13 +39,16 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.InputStreamFactory;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ObjectConverterUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.function.source.XMLSystemFunctions;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.TeiidClientException;
 
+@Since("8.0.0")
 public class JSONFunctionMethods {
 	
 	/**

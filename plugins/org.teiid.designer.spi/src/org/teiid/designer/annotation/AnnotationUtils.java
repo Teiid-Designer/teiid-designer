@@ -22,6 +22,16 @@ public class AnnotationUtils {
     private AnnotationUtils() {}
 
     /**
+     * @param klazz
+     * @param annotationClass
+     *
+     * @return given class has the given annotation
+     */
+    public static boolean hasAnnotation(Class<?> klazz, Class<? extends Annotation> annotationClass) {
+        return klazz.isAnnotationPresent(annotationClass);
+    }
+
+    /**
      * @param accessibleObject
      * @param annotationClass
      *
@@ -42,6 +52,16 @@ public class AnnotationUtils {
     public static boolean hasAnnotation(Enum<?> enumValue, Class<? extends Annotation> annotationClass) throws Exception {
         Field enumField = enumValue.getClass().getField(enumValue.name());
         return hasAnnotation(enumField, annotationClass);
+    }
+
+    /**
+     * @param klazz
+     * @param annotationClass
+     *
+     * @return the annotation of the given class from the given class
+     */
+    public static <T extends Annotation> T getAnnotation(Class<?> klazz, Class<T> annotationClass) {
+        return klazz.getAnnotation(annotationClass);
     }
 
     /**

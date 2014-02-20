@@ -11,10 +11,41 @@
 */
 package org.teiid.core.util;
 
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * This is a common place to put String utility methods.
  */
 public final class StringUtil {
+
+    public interface Constants {
+        char CARRIAGE_RETURN_CHAR = '\r';
+        char LINE_FEED_CHAR       = '\n';
+        char NEW_LINE_CHAR        = LINE_FEED_CHAR;
+        char SPACE_CHAR           = ' ';
+        char DOT_CHAR           = '.';
+        char TAB_CHAR             = '\t';
+        
+        String CARRIAGE_RETURN = String.valueOf(CARRIAGE_RETURN_CHAR);
+        String EMPTY_STRING    = ""; //$NON-NLS-1$
+        String DBL_SPACE       = "  "; //$NON-NLS-1$
+        String LINE_FEED       = String.valueOf(LINE_FEED_CHAR);
+        String NEW_LINE        = String.valueOf(NEW_LINE_CHAR);
+        String SPACE           = String.valueOf(SPACE_CHAR);
+        String DOT             = String.valueOf(DOT_CHAR);
+        String TAB             = String.valueOf(TAB_CHAR);
+
+        String[] EMPTY_STRING_ARRAY = new String[0];
+    }
 
     /*
      * Replace a single occurrence of the search string with the replace string
@@ -62,6 +93,42 @@ public final class StringUtil {
         }
 	    return source;    
 	}
+
+	/**
+     * Return the last token in the string.
+     *
+     * @param str String to be tokenized
+     * @param delimiter Characters which are delimit tokens
+     * @return the last token contained in the tokenized string
+     */
+    public static String getLastToken(String str, String delimiter) {
+        if (str == null) {
+            return Constants.EMPTY_STRING;
+        }
+        int beginIndex = 0;
+        if (str.lastIndexOf(delimiter) > 0) {
+            beginIndex = str.lastIndexOf(delimiter)+1;
+        }
+        return str.substring(beginIndex,str.length());
+    }
+
+    /**
+     * Return the first token in the string.
+     *
+     * @param str String to be tokenized
+     * @param delimiter Characters which are delimit tokens
+     * @return the first token contained in the tokenized string
+     */
+    public static String getFirstToken(String str, String delimiter) {
+        if (str == null) {
+            return Constants.EMPTY_STRING;
+        }
+        int endIndex = str.indexOf(delimiter);
+        if (endIndex < 0) {
+            endIndex = str.length();
+        }
+        return str.substring(0,endIndex);
+    }
 
 	/**
      * Tests if the string starts with the specified prefix.
@@ -140,6 +207,80 @@ public final class StringUtil {
         }
         sb.append((char)value);
         return i;
+    }
+
+    /**
+     * Convert the given value to specified type. 
+     * @param value
+     * @param type
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T valueOf(String value, Class type){
+        if (value == null) {
+            return null;
+        }
+        if(type == String.class) {
+            return (T) value;
+        }
+        else if(type == Boolean.class || type == Boolean.TYPE) {
+            return (T) Boolean.valueOf(value);
+        }
+        else if (type == Integer.class || type == Integer.TYPE) {
+            return (T) Integer.decode(value);
+        }
+        else if (type == Float.class || type == Float.TYPE) {
+            return (T) Float.valueOf(value);
+        }
+        else if (type == Double.class || type == Double.TYPE) {
+            return (T) Double.valueOf(value);
+        }
+        else if (type == Long.class || type == Long.TYPE) {
+            return (T) Long.decode(value);
+        }
+        else if (type == Short.class || type == Short.TYPE) {
+            return (T) Short.decode(value);
+        }
+        else if (type.isAssignableFrom(List.class)) {
+            return (T)new ArrayList<String>(Arrays.asList(value.split(","))); //$NON-NLS-1$
+        }
+        else if (type.isAssignableFrom(Set.class)) {
+            return (T)new HashSet<String>(Arrays.asList(value.split(","))); //$NON-NLS-1$
+        }
+        else if (type.isArray()) {
+            String[] values = value.split(","); //$NON-NLS-1$
+            Object array = Array.newInstance(type.getComponentType(), values.length);
+            for (int i = 0; i < values.length; i++) {
+                Array.set(array, i, valueOf(values[i], type.getComponentType()));
+            }
+            return (T)array;
+        }
+        else if (type == Void.class) {
+            return null;
+        }
+        else if (type.isEnum()) {
+            return (T)Enum.valueOf(type, value);
+        }
+        else if (type == URL.class) {
+            try {
+                return (T)new URL(value);
+            } catch (MalformedURLException e) {
+                // fall through and end up in error
+            }
+        }
+        else if (type.isAssignableFrom(Map.class)) {
+            List<String> l = Arrays.asList(value.split(",")); //$NON-NLS-1$
+            Map m = new HashMap<String, String>();
+            for(String key: l) {
+                int index = key.indexOf('=');
+                if (index != -1) {
+                    m.put(key.substring(0, index), key.substring(index+1));
+                }
+            }
+            return (T)m;
+        }
+
+        throw new IllegalArgumentException("Conversion from String to "+ type.getName() + " is not supported"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
