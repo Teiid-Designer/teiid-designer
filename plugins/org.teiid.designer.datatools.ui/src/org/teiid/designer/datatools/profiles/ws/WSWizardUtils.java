@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.core.designer.util.Base64;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
@@ -50,22 +51,44 @@ public class WSWizardUtils {
 
         try {
             URL url = URLHelper.buildURL(xmlFile);
-            String securityType = connProperties.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
             boolean resolved = false;
             
             // Supply content type
             Map<String,String> connPropMap = new HashMap<String,String>();
-            connPropMap.put("Accept", "application/xml"); //$NON-NLS-1$ //$NON-NLS-2$
-            connPropMap.put("Content-Type", "application/xml"); //$NON-NLS-1$  //$NON-NLS-2$
             
-            if (securityType == null || SecurityType.None.name().equals(securityType)) {
-                resolved = URLHelper.resolveUrl(url, null, null, connPropMap, true);
-            } else {
-                String userName = connProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-                String password = connProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
-                resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);
-            }
-
+            if( connProperties.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null ) {
+            	connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String)connProperties.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
+			} else {
+				connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+			}
+			
+			if( connProperties.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null ) {
+				connPropMap.put(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, (String)connProperties.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
+			} else {
+				connPropMap.put(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, IWSProfileConstants.CONTENT_TYPE_DEFAULT_VALUE);
+			}
+			
+			for( Object key : connPropMap.keySet() ) {
+				String keyStr = (String)key;
+				if( IWSProfileConstants.AUTHORIZATION_KEY.equalsIgnoreCase(keyStr) ||
+					ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
+            		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
+            		IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr) ) {
+            		// do nothing;
+            	} else {
+            		connPropMap.put(keyStr, connProperties.getProperty(keyStr));
+            	}
+			}
+			
+			String userName = null;
+			String password = null;
+			userName = connProperties.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+            password = connProperties.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+	        resolved = URLHelper.resolveUrl(url, userName, password, connPropMap, true);
+        
             if (!resolved) {
                 throw new Exception(DatatoolsUiConstants.UTIL.getString("WSWizardUtils.connectionFailureMessage")); //$NON-NLS-1$
             }
