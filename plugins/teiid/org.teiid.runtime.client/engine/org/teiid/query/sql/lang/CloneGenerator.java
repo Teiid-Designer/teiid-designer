@@ -111,7 +111,7 @@ public class CloneGenerator {
 
     private static final String NOT_NULL = "!= null";
 
-    private static final String DIRECTORY = "/home/phantomjinx/programming/java/tdesigner/git/plugins/teiid/org.teiid.runtime.client/src/org/teiid/runtime/client/lang/ast";
+    private static final String DIRECTORY = "/home/phantomjinx/programming/java/tdesigner/git/plugins/teiid/org.teiid.runtime.client/engine/";
 
     private static final String JAVA = ".java";
     
@@ -226,21 +226,29 @@ public class CloneGenerator {
         CLASS_LIST.add(XMLQuery.class);
         CLASS_LIST.add(XMLSerialize.class);
         CLASS_LIST.add(XMLTable.class);
+        CLASS_LIST.add(Create.class);
     }
 
     private void cacheASTClasses() {
 
         for (Class<?> klazz : CLASS_LIST) {
-            StringBuffer fileName = new StringBuffer(JAVA);
-            fileName.insert(0, klazz.getSimpleName());
+            String packagePath = klazz.getPackage().getName();
+            packagePath = packagePath.replaceAll("\\" + DOT, File.separator);
 
+            StringBuffer fileName = new StringBuffer();
+            fileName.append(packagePath);
+            fileName.append(File.separator);
+            
             if (klazz.getSimpleName().contains("7")) {
-                fileName.insert(0, File.separator);
-                fileName.insert(0, "v7");
+                fileName.append("v7");
+                fileName.append(File.separator);
             } else if (klazz.getSimpleName().contains("8")) {
-                fileName.insert(0, File.separator);
-                fileName.insert(0, "v8");
+                fileName.append("v8");
+                fileName.append(File.separator);
             }
+
+            fileName.append(klazz.getSimpleName());
+            fileName.append(JAVA);
 
             File jFile = new File(DIRECTORY, fileName.toString());
             if (! jFile.exists())

@@ -30,6 +30,8 @@ import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.runtime.client.Messages;
 import org.teiid.language.SortSpecification.NullOrdering;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.query.parser.AbstractTeiidParser;
 import org.teiid.query.parser.ParsedDataType;
 import org.teiid.query.parser.ParseInfo;
@@ -899,9 +901,9 @@ Command userCommand(ParseInfo info) #void :
 	command = insert(info) |
 	command = update(info) |
 	command = delete(info) |
-	command = dropTable(info) |
-//  TODO Consider whether these should be re-included	
-//	LOOKAHEAD(2) command = createTempTable(info) |//  LOOKAHEAD(2) command = createForeignTempTable(info) |
+	command = dropTable(info) |	
+	LOOKAHEAD(2) command = createTempTable(info) |
+	//  TODO Consider whether these should be re-included//    LOOKAHEAD(2) command = createForeignTempTable(info) |
 	command = alter(info) |
 	command = createTrigger(info)
 	)
@@ -931,6 +933,83 @@ Drop dropTable(ParseInfo info) #Drop :
 		jjtThis.setTable(groupSymbol(table));
 		return jjtThis;
 	}
+}
+
+/*
+name=create temporary table
+description=Creates a temporary table.
+example={code:sql}CREATE LOCAL TEMPORARY TABLE tmp (col integer){code}
+*/
+Command createTempTable(ParseInfo info) #Create :
+{
+    String table = null;
+    String pkId = null;
+    Column col = null;
+    List<ElementSymbol> pk = null;
+}
+{
+    <CREATE> <LOCAL> <TEMPORARY> <TABLE> 
+    table = id(null)
+    <LPAREN>
+    {
+        jjtThis.setTable(groupSymbol(table));
+    }
+    col = tableElement(info)
+    {
+      jjtThis.getColumns().add(col);
+    }
+    (LOOKAHEAD(2) <COMMA>
+      col = tableElement(info)
+      {
+        jjtThis.getColumns().add(col);
+      }
+    )*  
+    [<COMMA> <PRIMARY> <KEY> 
+      pk = columnList(true, true)
+      {
+        jjtThis.getPrimaryKey().addAll(pk);
+      }   
+    ]
+    <RPAREN>
+    {
+        return jjtThis;
+    }
+}
+
+/*
+name=temporary table element
+description=Defines a temporary table column.
+example={code:sql}col string NOT NULL{code}
+*/
+Column tableElement(ParseInfo info) #void :
+{
+    String element = null;
+    ParsedDataType type = null;
+    boolean autoIncrement = false;
+    //TODO: once we support udts, then this will need to inherit the nullability from the type
+    boolean notNull = false;
+}
+{
+     element = id(Boolean.TRUE)
+     (
+      type = parseDataType()
+      |
+      <SERIAL>
+      {
+        type = new ParsedDataType("INTEGER");
+        autoIncrement = true;
+        notNull = true;
+      }
+     )
+     [<NOT> <NULL> { notNull = true; }]
+     {
+        Column c = new Column();
+        c.setName(element);
+        c.setRuntimeType(type.getType());
+        c.setAutoIncremented(autoIncrement);
+        c.setNullType(notNull?NullType.No_Nulls:NullType.Nullable);
+        return c;
+     }
 }
 
 /*

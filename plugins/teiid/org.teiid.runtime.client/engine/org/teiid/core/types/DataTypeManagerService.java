@@ -499,7 +499,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
    
     @Override
     public String getDataTypeName(Class<?> typeClass) {
-        ArgCheck.isNotNull(typeClass);
+        if (typeClass == null) {
+            return DefaultDataTypes.NULL.getId();
+        }
 
         DefaultDataTypes dataType = findDefaultDataType(typeClass);
         if (dataType != null)

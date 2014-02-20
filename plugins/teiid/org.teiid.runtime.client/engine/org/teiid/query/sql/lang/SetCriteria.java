@@ -79,8 +79,10 @@ public class SetCriteria extends AbstractSetCriteria implements ISetCriteria<Exp
         if (this.values == null) {
             if (other.values != null)
                 return false;
-        } else if (!this.values.equals(other.values))
+        } else if (this.values.size() != other.values.size() || 
+            (! this.values.containsAll(other.values)))
             return false;
+
         return true;
     }
 

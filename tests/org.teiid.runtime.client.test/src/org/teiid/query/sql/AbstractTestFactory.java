@@ -18,9 +18,11 @@ import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.Delete;
+import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.ExistsCriteria;
@@ -49,7 +51,6 @@ import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
-import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria.PredicateQuantifier;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
@@ -58,10 +59,12 @@ import org.teiid.query.sql.lang.TextTable;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
+import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.proc.DeclareStatement;
@@ -69,7 +72,6 @@ import org.teiid.query.sql.proc.ExceptionExpression;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.WhileStatement;
-import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
@@ -645,6 +647,14 @@ public abstract class AbstractTestFactory {
         ScalarSubquery scalarSubquery = newNode(ASTNodes.SCALAR_SUBQUERY);
         scalarSubquery.setCommand(query);
         return scalarSubquery;
+    }
+
+    public Create newCreate() {
+        return newNode(ASTNodes.CREATE);
+    }
+
+    public Drop newDrop() {
+        return newNode(ASTNodes.DROP);
     }
 
     public abstract AggregateSymbol newAggregateSymbol(String name, boolean isDistinct, Expression expression);

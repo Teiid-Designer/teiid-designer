@@ -109,6 +109,7 @@ import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
@@ -319,489 +320,398 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
 
     public void visit(LanguageObject node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Command node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AlterView node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AlterTrigger node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AlterProcedure node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(TriggerAction node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Drop node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
+    }
+
+    public void visit(Create node) {
+        isApplicable(node);
     }
 
     @Removed( "8.0.0" )
     public void visit(RaiseErrorStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(RaiseStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(ExceptionExpression node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Statement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(BranchingStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(ReturnStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(WhileStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(LoopStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(IfStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(DeclareStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(CommandStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(CreateProcedureCommand node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Removed( "8.0.0" )
     public void visit(CreateUpdateProcedureCommand node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(DynamicCommand node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SetClauseList node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SetClause node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ProjectedColumn node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(StoredProcedure node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Insert node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Update node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Delete node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(QueryCommand node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(WithQueryCommand node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SetQuery node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Query node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Into node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Select node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ExpressionSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(DerivedColumn node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(MultipleElementSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(From node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(FromClause node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(JoinPredicate node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(JoinType node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLSerialize node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ArrayTable node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(TextTable node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(TextColumn node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLQuery node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(ObjectTable node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ObjectColumn node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLTable node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLColumn node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SubqueryFromClause node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(UnaryFromClause node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Criteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(CompoundCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(NotCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(CompareCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SubqueryCompareCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(MatchCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(BetweenCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(IsNullCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SubquerySetCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SetCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ExistsCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(GroupBy node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(OrderBy node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(OrderByItem node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Limit node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Option node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Reference node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(CaseExpression node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(SearchedCaseExpression node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Function node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLParse node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(QueryString node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLElement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLAttributes node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(JSONObject node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLForest node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(XMLNamespaces node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AssignmentStatement node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ScalarSubquery node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(GroupSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Constant node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ElementSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(Block node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ExpressionCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AliasSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(AggregateSymbol node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(WindowFunction node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(WindowSpecification node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     public void visit(TextLine node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Removed( "8.0.0" )
     public void visit(CriteriaSelector node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Removed( "8.0.0" )
     public void visit(HasCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Removed( "8.0.0" )
     public void visit(TranslateCriteria node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     @Since( "8.0.0" )
     public void visit(Array node) {
         isApplicable(node);
-        throw new UnsupportedOperationException();
     }
 
     // Visitor methods for language objects
@@ -951,11 +861,9 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     }
 
     public void visit(IDependentSetCriteria obj) {
-        throw new UnsupportedOperationException();
     }
 
     public void visit(ICreate obj) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

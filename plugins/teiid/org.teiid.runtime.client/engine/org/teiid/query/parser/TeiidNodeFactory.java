@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.query.parser.v7.Teiid7Parser;
@@ -26,6 +27,7 @@ import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
@@ -197,7 +199,7 @@ public class TeiidNodeFactory {
 
     /* ################## Framework for generating the remainder of this class #################### */
 
-    private static final String DOT = "."; //$NON-NLS-1$
+    private static final String DOT = StringUtil.Constants.DOT;
     private static final String UNDERSCORE = "_"; //$NON-NLS-1$
     private static final String OPEN_BRACKET = "("; //$NON-NLS-1$
     private static final String CLOSE_BRACKET = ")"; //$NON-NLS-1$
@@ -520,6 +522,12 @@ public class TeiidNodeFactory {
         * @generated
         */
        DROP("Drop"), //$NON-NLS-1$
+
+       /**
+        * Create
+        * @generated
+        */
+       CREATE("Create"), //$NON-NLS-1$
 
        /**
         * RaiseErrorStatement
@@ -1097,6 +1105,18 @@ public class TeiidNodeFactory {
     */
    private Drop createDrop(TeiidParser teiidParser, int nodeType) {
        return new Drop(teiidParser, nodeType);
+   }
+
+   /**
+    *
+    * @generated
+    *
+    * @param teiidParser
+    * @param nodeType
+    * @return
+    */
+   private Create createCreate(TeiidParser teiidParser, int nodeType) {
+       return new Create(teiidParser, nodeType);
    }
 
    /**
@@ -2134,6 +2154,8 @@ public class TeiidNodeFactory {
                return (T) createTriggerAction(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTDROP:
                return (T) createDrop(teiidParser, nodeType);
+           case Teiid7ParserTreeConstants.JJTCREATE:
+               return (T) createCreate(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTRAISEERRORSTATEMENT:
                return (T) createRaiseErrorStatement(teiidParser, nodeType);
            case Teiid7ParserTreeConstants.JJTBRANCHINGSTATEMENT:
@@ -2314,6 +2336,8 @@ public class TeiidNodeFactory {
                return (T) createTriggerAction(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTDROP:
                return (T) createDrop(teiidParser, nodeType);
+           case Teiid8ParserTreeConstants.JJTCREATE:
+               return (T) createCreate(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTRAISESTATEMENT:
                return (T) createRaiseStatement(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTEXCEPTIONEXPRESSION:

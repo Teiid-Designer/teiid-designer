@@ -14,6 +14,7 @@ import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICreate;
 import org.teiid.designer.query.sql.lang.IDelete;
 import org.teiid.designer.query.sql.lang.IDrop;
 import org.teiid.designer.query.sql.lang.IDynamicCommand;
@@ -103,6 +104,7 @@ public interface ILanguageVisitor {
     void visit(ICaseExpression obj);
     void visit(ICompareCriteria obj);
     void visit(ICompoundCriteria obj);
+    void visit(ICreate obj);
     void visit(IDelete obj);
     void visit(IExistsCriteria obj);
     void visit(IFrom obj);

@@ -31,6 +31,7 @@ import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.DynamicCommand;
@@ -329,6 +330,15 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         	visitNode(obj.getQueryExpression());
         }
         visitNode(obj.getOption());
+        postVisitVisitor(obj);
+    }
+
+    @Override
+    public void visit(Create obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getTable());
+        visitNodes(obj.getColumnSymbols());
+        visitNodes(obj.getPrimaryKey());
         postVisitVisitor(obj);
     }
 

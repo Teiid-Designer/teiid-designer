@@ -15,6 +15,7 @@ import org.teiid.designer.query.sql.lang.IArrayTable;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
+import org.teiid.designer.query.sql.lang.ICreate;
 import org.teiid.designer.query.sql.lang.IDelete;
 import org.teiid.designer.query.sql.lang.IDrop;
 import org.teiid.designer.query.sql.lang.IDynamicCommand;
@@ -111,6 +112,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
 
     @Override
     public void visit(ICompoundCriteria obj) {
+    }
+
+    @Override
+    public void visit(ICreate obj) {
     }
 
     @Override

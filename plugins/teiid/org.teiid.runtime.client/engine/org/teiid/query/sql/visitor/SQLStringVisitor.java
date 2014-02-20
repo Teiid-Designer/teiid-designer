@@ -24,6 +24,8 @@ package org.teiid.query.sql.visitor;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,14 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.language.SQLConstants.Tokens;
+import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.BaseColumn;
+import org.teiid.metadata.BaseColumn.NullType;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.ForeignKey;
+import org.teiid.metadata.KeyRecord;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Table;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -47,6 +57,7 @@ import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
@@ -151,7 +162,31 @@ import org.teiid.translator.SourceSystemFunctions;
  * </p>
  */
 public class SQLStringVisitor extends LanguageVisitor
-    implements SQLConstants.Reserved, SQLConstants.Tokens, ISQLStringVisitor<LanguageObject> {
+    implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, SQLConstants.DDLConstants, ISQLStringVisitor<LanguageObject> {
+
+    @Since("8.0.0")
+    private final static Map<String, String> BUILTIN_PREFIXES = new HashMap<String, String>();
+    static {
+        for (Map.Entry<String, String> entry : MetadataFactory.BUILTIN_NAMESPACES.entrySet()) {
+            BUILTIN_PREFIXES.put(entry.getValue(), entry.getKey());
+        }
+    }
+
+    @Since("8.0.0")
+    private static final HashSet<String> LENGTH_DATATYPES = new HashSet<String>(
+        Arrays.asList(
+            DataTypeManagerService.DefaultDataTypes.CHAR.getId(),
+            DataTypeManagerService.DefaultDataTypes.CLOB.getId(),
+            DataTypeManagerService.DefaultDataTypes.BLOB.getId(),
+            DataTypeManagerService.DefaultDataTypes.OBJECT.getId(),
+            DataTypeManagerService.DefaultDataTypes.XML.getId(),
+            DataTypeManagerService.DefaultDataTypes.STRING.getId(),
+            DataTypeManagerService.DefaultDataTypes.VARBINARY.getId(),
+            DataTypeManagerService.DefaultDataTypes.BIG_INTEGER.getId()));
+
+    @Since("8.0.0")
+    private static final HashSet<String> PRECISION_DATATYPES = new HashSet<String>(
+        Arrays.asList(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getId()));
 
     /**
      * Undefined
@@ -425,6 +460,497 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+    }
+
+    private void visit7( Create obj ) {
+        append(CREATE);
+        append(SPACE);
+        append(LOCAL);
+        append(SPACE);
+        append(TEMPORARY);
+        append(SPACE);
+        append(TABLE);
+        append(SPACE);
+        visitNode(obj.getTable());
+        append(SPACE);
+
+        // Columns clause
+        List<Column> columns = obj.getColumns();
+        append("("); //$NON-NLS-1$
+        Iterator<Column> iter = columns.iterator();
+        while (iter.hasNext()) {
+            Column element = iter.next();
+            outputDisplayName(element.getName());
+            append(SPACE);
+            if (element.isAutoIncremented()) {
+                append(NonReserved.SERIAL);
+            } else {
+                append(element.getRuntimeType());
+                if (element.getNullType() == NullType.No_Nulls) {
+                    append(NOT);
+                    append(SPACE);
+                    append(NULL);
+                }
+            }
+            if (iter.hasNext()) {
+                append(", "); //$NON-NLS-1$
+            }
+        }
+        if (!obj.getPrimaryKey().isEmpty()) {
+            append(", "); //$NON-NLS-1$
+            append(PRIMARY);
+            append(" "); //$NON-NLS-1$
+            append(NonReserved.KEY);
+            append(Tokens.LPAREN);
+            Iterator<ElementSymbol> pkiter = obj.getPrimaryKey().iterator();
+            while (pkiter.hasNext()) {
+                outputShortName(pkiter.next());
+                if (pkiter.hasNext()) {
+                    append(", "); //$NON-NLS-1$
+                }
+            }
+            append(Tokens.RPAREN);
+        }
+        append(")"); //$NON-NLS-1$
+    }
+
+    private String buildTableOptions(Table table) {
+        StringBuilder options = new StringBuilder();
+        addCommonOptions(options, table);
+        
+        if (table.isMaterialized()) {
+            addOption(options, MATERIALIZED, table.isMaterialized());
+            if (table.getMaterializedTable() != null) {
+                addOption(options, MATERIALIZED_TABLE, table.getMaterializedTable().getName());
+            }
+        }
+        if (table.supportsUpdate()) {
+            addOption(options, UPDATABLE, table.supportsUpdate());
+        }
+        if (table.getCardinality() != -1) {
+            addOption(options, CARDINALITY, table.getCardinality());
+        }
+        if (!table.getProperties().isEmpty()) {
+            for (String key:table.getProperties().keySet()) {
+                addOption(options, key, table.getProperty(key, false));
+            }
+        }
+        return options.toString();
+    }
+
+    private void addCommonOptions(StringBuilder sb, AbstractMetadataRecord record) {
+        if (record.getUUID() != null && !record.getUUID().startsWith("tid:")) { //$NON-NLS-1$
+            addOption(sb, UUID, record.getUUID());
+        }
+        if (record.getAnnotation() != null) {
+            addOption(sb, ANNOTATION, record.getAnnotation());
+        }
+        if (record.getNameInSource() != null && !record.getNameInSource().equals(record.getName())) {
+            addOption(sb, NAMEINSOURCE, record.getNameInSource());
+        }
+    }
+    
+    private void buildContraints(Table table) {
+        addConstraints(table.getAccessPatterns(), "AP", ACCESSPATTERN); //$NON-NLS-1$
+        
+        KeyRecord pk = table.getPrimaryKey();
+        if (pk != null) {
+            addConstraint("PK", PRIMARY_KEY, pk, true); //$NON-NLS-1$
+        }
+
+        addConstraints(table.getUniqueKeys(), UNIQUE, UNIQUE);
+        addConstraints(table.getIndexes(), INDEX, INDEX);
+        addConstraints(table.getFunctionBasedIndexes(), INDEX, INDEX);
+
+        for (int i = 0; i < table.getForeignKeys().size(); i++) {
+            ForeignKey key = table.getForeignKeys().get(i);
+            addConstraint("FK" + i, FOREIGN_KEY, key, false); //$NON-NLS-1$
+            append(SPACE);
+            append(REFERENCES);
+            if (key.getReferenceTableName() != null) {
+                append(SPACE);
+                GroupSymbol gs = getTeiidParser().createASTNode(ASTNodes.GROUP_SYMBOL);
+                gs.setName(key.getReferenceTableName());
+                append(gs.getName());
+            }
+            append(SPACE);
+            addNames(key.getReferenceColumns());
+            appendOptions(key);
+        }
+    }
+
+    private void addConstraints(List<KeyRecord> constraints, String defaultName, String type) {
+        for (int i = 0; i < constraints.size(); i++) {
+            KeyRecord constraint = constraints.get(i);
+            addConstraint(defaultName + i, type, constraint, true);
+        }
+    }
+
+    private void addConstraint(String defaultName, String type,
+            KeyRecord constraint, boolean addOptions) {
+        append(COMMA);
+        append(NEWLINE);
+        append(TAB);
+        boolean nameMatches = defaultName.equals(constraint.getName());
+        if (!nameMatches) {
+            append(CONSTRAINT);
+            append(SPACE);
+            append(escapeSinglePart(constraint.getName()));
+            append(SPACE); 
+        }
+        append(type);
+        addColumns(constraint.getColumns(), false);
+        if (addOptions) {
+            appendOptions(constraint);
+        }
+    }
+
+    private void addColumns(List<Column> columns, boolean includeType) {
+        append(LPAREN);
+        boolean first = true;
+        for (Column c:columns) {
+            if (first) {
+                first = false;
+            }
+            else {
+                append(COMMA);
+                append(SPACE);
+            }
+            if (includeType) {
+                appendColumn(c, true, includeType);
+                appendColumnOptions(c);
+            } else if (c.getParent() instanceof KeyRecord) {
+                //function based column
+                append(c.getNameInSource());
+            } else {
+                append(escapeSinglePart(c.getName()));
+            }
+        }
+        append(RPAREN);
+    }
+
+    private void addNames(List<String> columns) {
+        if (columns != null) {
+            append(LPAREN);
+            boolean first = true;
+            for (String c:columns) {
+                if (first) {
+                    first = false;
+                }
+                else {
+                    append(COMMA);
+                    append(SPACE);
+                }
+                append(escapeSinglePart(c));
+            }
+            append(RPAREN);
+        }
+    }   
+    
+    private void visit(Column column) {
+        append(NEWLINE);
+        append(TAB);
+        appendColumn(column, true, true);
+        
+        if (column.isAutoIncremented()) {
+            append(SPACE);
+            append(AUTO_INCREMENT);
+        }
+        
+        appendDefault(column);
+        
+        // options
+        appendColumnOptions(column);
+    }
+
+    private void appendDefault(BaseColumn column) {
+        if (column.getDefaultValue() != null) {
+            append(SPACE);
+            append(DEFAULT);
+            append(SPACE);
+            append(TICK);
+            append(StringUtil.replaceAll(column.getDefaultValue(), TICK, TICK + TICK));
+            append(TICK);
+        }
+    }
+
+    private void appendColumn(BaseColumn column, boolean includeName, boolean includeType) {
+        if (includeName) {
+            append(escapeSinglePart(column.getName()));
+        }
+        if (includeType) {
+            String runtimeTypeName = column.getDatatype().getRuntimeTypeName();
+            if (includeName) {
+                append(SPACE);
+            }
+            append(runtimeTypeName);
+            if (LENGTH_DATATYPES.contains(runtimeTypeName)) {
+                if (column.getLength() != 0 && column.getLength() != column.getDatatype().getLength()) {
+                    append(LPAREN);
+                    append(column.getLength());
+                    append(RPAREN);
+                }
+            } else if (PRECISION_DATATYPES.contains(runtimeTypeName) 
+                    && (column.getPrecision() != column.getDatatype().getPrecision() || column.getScale() != column.getDatatype().getScale())) {
+                append(LPAREN);
+                append(column.getPrecision());
+                if (column.getScale() != 0) {
+                    append(COMMA);
+                    append(column.getScale());
+                }
+                append(RPAREN);
+            }
+            if (column.getNullType() == NullType.No_Nulls) {
+                append(SPACE);
+                append(NOT_NULL);
+            }
+        }
+    }   
+    
+    private void appendColumnOptions(BaseColumn column) {
+        StringBuilder options = new StringBuilder();
+        addCommonOptions(options, column);
+        
+        if (!column.getDatatype().isBuiltin()) {
+            addOption(options, UDT, column.getDatatype().getName() + "("+column.getLength()+ ", " +column.getPrecision()+", " + column.getScale()+ ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        }
+        
+        if (column.getDatatype().getRadix() != 0 && column.getRadix() != column.getDatatype().getRadix()) {
+            addOption(options, RADIX, column.getRadix());
+        }
+        
+        if (column instanceof Column) {
+            buildColumnOptions((Column)column, options);
+        }
+        if (options.length() != 0) {
+            append(SPACE);
+            append(OPTIONS);
+            append(SPACE);
+            append(LPAREN);
+            append(options);
+            append(RPAREN);
+        }
+    }
+
+    private void buildColumnOptions(Column column, 
+            StringBuilder options) {
+        if (!column.isSelectable()) {
+            addOption(options, SELECTABLE, column.isSelectable());
+        }       
+
+        // if table is already updatable, then columns are implicitly updatable.
+        if (!column.isUpdatable() && column.getParent() instanceof Table && ((Table)column.getParent()).supportsUpdate()) {
+            addOption(options, UPDATABLE, column.isUpdatable());
+        }
+        
+        if (column.isCurrency()) {
+            addOption(options, CURRENCY, column.isCurrency());
+        }
+            
+        // only record if not default
+        if (!column.isCaseSensitive() && column.getDatatype().isCaseSensitive()) {
+            addOption(options, CASE_SENSITIVE, column.isCaseSensitive());
+        }
+        
+        if (!column.isSigned() && column.getDatatype().isSigned()) {
+            addOption(options, SIGNED, column.isSigned());
+        }         
+        if (column.isFixedLength()) {
+            addOption(options, FIXED_LENGTH, column.isFixedLength());
+        }
+        // length and octet length should be same. so this should be never be true.
+        //TODO - this is not quite valid since we are dealing with length representing chars in UTF-16, then there should be twice the bytes
+        if (column.getCharOctetLength() != 0 && column.getLength() != column.getCharOctetLength()) {
+            addOption(options, CHAR_OCTET_LENGTH, column.getCharOctetLength());
+        }   
+        
+        // by default the search type is default data type search, so avoid it.
+        if (column.getSearchType() != null && (!column.getSearchType().equals(column.getDatatype().getSearchType()) || column.isSearchTypeSet())) {
+            addOption(options, SEARCHABLE, column.getSearchType().name());
+        }
+        
+        if (column.getMinimumValue() != null) {
+            addOption(options, MIN_VALUE, column.getMinimumValue());
+        }
+        
+        if (column.getMaximumValue() != null) {
+            addOption(options, MAX_VALUE, column.getMaximumValue());
+        }
+        
+        if (column.getNativeType() != null) {
+            addOption(options, NATIVE_TYPE, column.getNativeType());
+        }
+        
+        if (column.getNullValues() != -1) {
+            addOption(options, NULL_VALUE_COUNT, column.getNullValues());
+        }
+        
+        if (column.getDistinctValues() != -1) {
+            addOption(options, DISTINCT_VALUES, column.getDistinctValues());
+        }       
+        
+        buildOptions(column, options);
+    }
+    
+    private void appendOptions(AbstractMetadataRecord record) {
+        StringBuilder options = new StringBuilder();
+        buildOptions(record, options);
+        if (options.length() != 0) {
+            append(SPACE);
+            append(OPTIONS);
+            append(SPACE);
+            append(LPAREN);
+            append(options);
+            append(RPAREN);
+        }
+    }
+
+    private void buildOptions(AbstractMetadataRecord record, StringBuilder options) {
+        if (!record.getProperties().isEmpty()) {
+            for (Map.Entry<String, String> entry:record.getProperties().entrySet()) {
+                addOption(options, entry.getKey(), entry.getValue());
+            }
+        }
+    }   
+    
+    private void addOption(StringBuilder sb, String key, Object value) {
+        if (sb.length() != 0) {
+            sb.append(COMMA).append(SPACE);
+        }
+
+        Constant c = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+        c.setValue(value);
+        value = c;
+
+        if (key != null && key.length() > 2 && key.charAt(0) == '{') { 
+            String origKey = key;
+            int index = key.indexOf('}');
+            if (index > 1) {
+                String uri = key.substring(1, index);
+                key = key.substring(index + 1, key.length());
+                String prefix = BUILTIN_PREFIXES.get(uri);
+                if (prefix != null) {
+                    key = prefix + ":" + key; //$NON-NLS-1$
+                } else {
+                    key = origKey;
+                }
+            }
+        }
+        sb.append(escapeSinglePart(key));
+        append(SPACE);
+        append(value);
+    }
+
+    private String addTableBody(Table table) {
+        String name = escapeSinglePart(table.getName());
+        append(name);
+        
+        if (table.getColumns() != null) {
+            append(SPACE);
+            append(LPAREN);
+            boolean first = true; 
+            for (Column c:table.getColumns()) {
+                if (first) {
+                    first = false;
+                }
+                else {
+                    append(COMMA);
+                }
+                visit(c);
+            }
+            buildContraints(table);
+            append(NEWLINE);
+            append(RPAREN);         
+        }
+        
+        // options
+        String options = buildTableOptions(table);      
+        if (!options.isEmpty()) {
+            append(SPACE);
+            append(OPTIONS);
+            append(SPACE);
+            append(LPAREN);
+            append(options);
+            append(RPAREN);
+        }
+        return name;
+    }
+
+    private void visit8( Create obj ) {
+        append(CREATE);
+        append(SPACE);
+        if (obj.getTableMetadata() != null) {
+            append(FOREIGN);
+            append(SPACE);
+            append(TEMPORARY);
+            append(SPACE);
+            append(TABLE);
+            append(SPACE);
+            
+            addTableBody(obj.getTableMetadata());
+
+            append(SPACE);
+            append(ON);
+            append(SPACE);
+            outputLiteral(String.class, false, obj.getOn());
+            return;
+        }
+        append(LOCAL);
+        append(SPACE);
+        append(TEMPORARY);
+        append(SPACE);
+        append(TABLE);
+        append(SPACE);
+        visitNode(obj.getTable());
+        append(SPACE);
+
+        // Columns clause
+        List<Column> columns = obj.getColumns();
+        append("("); //$NON-NLS-1$
+        Iterator<Column> iter = columns.iterator();
+        while (iter.hasNext()) {
+            Column element = iter.next();
+            outputDisplayName(element.getName());
+            append(SPACE);
+            if (element.isAutoIncremented()) {
+                append(NonReserved.SERIAL);
+            } else {
+                append(element.getRuntimeType());
+                if (element.getNullType() == NullType.No_Nulls) {
+                    append(SPACE);
+                    append(NOT);
+                    append(SPACE);
+                    append(NULL);
+                }
+            }
+            if (iter.hasNext()) {
+                append(", "); //$NON-NLS-1$
+            }
+        }
+        if (!obj.getPrimaryKey().isEmpty()) {
+            append(", "); //$NON-NLS-1$
+            append(PRIMARY);
+            append(" "); //$NON-NLS-1$
+            append(NonReserved.KEY);
+            append(Tokens.LPAREN);
+            Iterator<ElementSymbol> pkiter = obj.getPrimaryKey().iterator();
+            while (pkiter.hasNext()) {
+                outputShortName(pkiter.next());
+                if (pkiter.hasNext()) {
+                    append(", "); //$NON-NLS-1$
+                }
+            }
+            append(Tokens.RPAREN);
+        }
+        append(")"); //$NON-NLS-1$
+    }
+
+    @Override
+    public void visit(Create obj) {
+        if (isTeiid8OrGreater())
+            visit8(obj);
+        else
+            visit7(obj);
     }
 
     @Override

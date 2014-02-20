@@ -50,6 +50,7 @@ import org.teiid.query.resolver.command.ExecResolver;
 import org.teiid.query.resolver.command.InsertResolver;
 import org.teiid.query.resolver.command.SetQueryResolver;
 import org.teiid.query.resolver.command.SimpleQueryResolver;
+import org.teiid.query.resolver.command.TempTableResolver;
 import org.teiid.query.resolver.command.UpdateProcedureResolver;
 import org.teiid.query.resolver.command.UpdateResolver;
 import org.teiid.query.resolver.command.XMLQueryResolver;
@@ -105,6 +106,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
     private final ProcedureContainerResolver deleteResolver;
     private final CommandResolver updateProcedureResolver;
     private final CommandResolver dynamicCommandResolver;
+    private final CommandResolver tempTableResolver;
     private final CommandResolver alterResolver;
 
     /*
@@ -127,6 +129,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
         deleteResolver = new DeleteResolver(this);
         updateProcedureResolver = new UpdateProcedureResolver(this);
         dynamicCommandResolver = new DynamicCommandResolver(this);
+        tempTableResolver = new TempTableResolver(this);
         alterResolver = new AlterResolver(this);
     }
 
@@ -391,8 +394,8 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
             case ICommand.TYPE_UPDATE_PROCEDURE:     return updateProcedureResolver;
 //            case ICommand.TYPE_BATCHED_UPDATE:       return batchedUpdateResolver;
             case ICommand.TYPE_DYNAMIC:              return dynamicCommandResolver;
-//            case ICommand.TYPE_CREATE:               return tempTableResolver;
-//            case ICommand.TYPE_DROP:                 return tempTableResolver;
+            case ICommand.TYPE_CREATE:               return tempTableResolver;
+            case ICommand.TYPE_DROP:                 return tempTableResolver;
             case ICommand.TYPE_ALTER_PROC:           
             case ICommand.TYPE_ALTER_TRIGGER:        
             case ICommand.TYPE_ALTER_VIEW:           return alterResolver;

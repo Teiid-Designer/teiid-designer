@@ -30,6 +30,8 @@ import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.runtime.client.Messages;
 import org.teiid.language.SortSpecification.NullOrdering;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.query.parser.AbstractTeiidParser;
 import org.teiid.query.parser.ParsedDataType;
 import org.teiid.query.parser.ParseInfo;
@@ -766,8 +768,7 @@ Command userCommand(ParseInfo info) #void :
 	command = update(info) |
 	command = delete(info) |
 	command = dropTable(info) |
-//  TODO Consider whether this should be re-included
-//	LOOKAHEAD(2) command = createTempTable(info) |
+	LOOKAHEAD(2) command = createTempTable(info) |
 	command = alter(info) |
 	command = createTrigger(info)
 	)
@@ -798,6 +799,86 @@ Command dropTable(ParseInfo info) #Drop :
 		jjtThis.setTable(groupSymbol(table));
 		return jjtThis;
 	}
+}
+
+/** 
+ * Parse create temp table command. 
+ * @param info instructions to parse the command
+ * @return Parsed command
+ * @throws ParseException if parsing failed
+ */
+Command createTempTable(ParseInfo info) #Create :
+{
+    String table = null;
+    String pkId = null;
+    Column col = null;
+}
+{
+    <CREATE> <LOCAL> <TEMPORARY> <TABLE> 
+    table = id()
+    <LPAREN>
+    {
+        jjtThis.setTable(groupSymbol(table));
+    }
+    col = tableElement(info)
+    {
+      jjtThis.getColumns().add(col);
+    }
+    (LOOKAHEAD(2) <COMMA>
+      col = tableElement(info)
+      {
+        jjtThis.getColumns().add(col);
+      }
+    )*  
+    [<COMMA> <PRIMARY> nonReserved("KEY") <LPAREN>
+      pkId = id()
+      {
+        jjtThis.getPrimaryKey().add(elementSymbol(validateName(pkId, true)));
+      }
+      (<COMMA> pkId = id()
+       {
+         jjtThis.getPrimaryKey().add(elementSymbol(validateName(pkId, true)));
+       }
+      )*
+     <RPAREN>   
+    ]
+    <RPAREN>
+    {
+        return jjtThis;
+    }
+}
+
+Column tableElement(ParseInfo info) #void :
+{
+    String element = null;
+    String type = null;
+    boolean autoIncrement = false;
+    boolean notNull = false;
+}
+{
+     element = id()
+     (
+      type = dataTypeString()
+      |
+      nonReserved("SERIAL")
+      {
+        type = "INTEGER";
+        autoIncrement = true;
+        notNull = true;
+      }
+     )
+     [<NOT> <NULL> { notNull = true; }]
+     {
+        try {
+          Column c = new Column();
+          c.setName(validateName(element, true));
+          c.setRuntimeType(type);
+          c.setAutoIncremented(autoIncrement);
+          c.setNullType(notNull?NullType.No_Nulls:NullType.Nullable);
+          return c;
+        } catch (Exception ex) {          throw new ParseException(ex.getLocalizedMessage());
+        }
+     }
 }
 
 /**
