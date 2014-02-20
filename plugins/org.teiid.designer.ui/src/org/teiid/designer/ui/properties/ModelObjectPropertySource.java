@@ -30,6 +30,8 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.diagram.PresentationEntity;
+import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.extension.ModelExtensionPropertySource;
@@ -177,23 +179,26 @@ public class ModelObjectPropertySource extends PropertySource {
                         
                         // the user edited a real property
                         final IItemPropertyDescriptor descriptor = this.itemPropertySource.getPropertyDescriptor(this.object, propertyId);
-                        if ( descriptor instanceof ItemPropertyDescriptor ) {
-	                        boolean success = ModelerCore.getModelEditor().setPropertyValue((EObject)object, value, (ItemPropertyDescriptor) descriptor);
-	                        if (success) {
+                        
+                        if( isValidPropertyChange((EObject)object, propertyId, value) ) {
+	                        if ( descriptor instanceof ItemPropertyDescriptor ) {
+		                        boolean success = ModelerCore.getModelEditor().setPropertyValue((EObject)object, value, (ItemPropertyDescriptor) descriptor);
+		                        if (success) {
+		                            succeeded = true;
+		                            return;
+		                        }
+	                        } else if (genericFeature instanceof EStructuralFeature) {
+		                        boolean success = ModelerCore.getModelEditor().setPropertyValue((EObject)object, value, genericFeature);
+		                        if (success) {
+		                            succeeded = true;
+		                            return;
+		                        } 
+		                        descriptor.setPropertyValue(this.object, value);
+		                        succeeded = true;
+	                        } else {
+	                            descriptor.setPropertyValue(this.object, value);
 	                            succeeded = true;
-	                            return;
 	                        }
-                        } else if (genericFeature instanceof EStructuralFeature) {
-	                        boolean success = ModelerCore.getModelEditor().setPropertyValue((EObject)object, value, genericFeature);
-	                        if (success) {
-	                            succeeded = true;
-	                            return;
-	                        } 
-	                        descriptor.setPropertyValue(this.object, value);
-	                        succeeded = true;
-                        } else {
-                            descriptor.setPropertyValue(this.object, value);
-                            succeeded = true;
                         }
                     }
                 } finally {
@@ -217,6 +222,26 @@ public class ModelObjectPropertySource extends PropertySource {
             String message =  UiConstants.Util.getString("ModelObjectPropertySource.setPropertyValueError", (Object[])strings); //$NON-NLS-1$
             UiConstants.Util.log(IStatus.ERROR, e, message);
         }
+    }
+    
+    private boolean isValidPropertyChange(EObject eObject, Object propertyId, Object value) {
+    	if( eObject instanceof Column || eObject instanceof ProcedureParameter) {
+    		if( propertyId instanceof String && ((String)propertyId).equals("length") && value instanceof Integer ) { //$NON-NLS-1$
+	    		Integer intValue = (Integer)value;
+	    		if( intValue != 1 ) {
+	    			if( eObject instanceof Column ) {
+		    			// Throw up a Message dialog that you cannot change a char type length
+		    			UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString("ModelObjectPropertySource.cannotChangeColumnCharLengthWarning")); //$NON-NLS-1$
+	    			} else {
+	    				// Throw up a Message dialog that you cannot change a char type length
+		    			UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString("ModelObjectPropertySource.cannotChangeParameterCharLengthWarning")); //$NON-NLS-1$
+	    			}
+	    			return false;
+	    		}
+    		}
+    	}
+    	
+    	return true;
     }
     
     private IPropertyDescriptor[] getAllDescriptors() {

@@ -8,6 +8,7 @@
 package org.teiid.designer.metamodels.relational.aspects.validation;
 
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
+import org.teiid.designer.core.validation.ValidationRuleSet;
 
 /**
  * ProcedureParameterAspect
@@ -23,4 +24,13 @@ public class ProcedureParameterAspect extends RelationalEntityAspect {
     public ProcedureParameterAspect(MetamodelEntity entity){
         super(entity);
     }
+    
+	/**
+	 * Get all the validation rules for a parameter.
+	 */
+	@Override
+    public ValidationRuleSet getValidationRules() {
+        addRule(CHAR_DATATYPE_LENGTH_RULE);
+		return super.getValidationRules();		
+	}
 }
