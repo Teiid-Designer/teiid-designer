@@ -194,8 +194,19 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 
         addlisteners();
     }
+	
+	
 
-    /**
+    /* (non-Javadoc)
+	 * @see org.eclipse.datatools.connectivity.ui.wizards.ProfilePropertyPage#performOk()
+	 */
+	@Override
+	public boolean performOk() {
+		getConnectionProfile().setProperties(getPropertiesID(), collectProperties());
+		return super.performOk();
+	}
+
+	/**
      * 
      */
     private void addlisteners() {
