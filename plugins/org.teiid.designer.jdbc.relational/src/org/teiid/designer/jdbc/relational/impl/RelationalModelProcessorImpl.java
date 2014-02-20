@@ -1250,8 +1250,8 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             for (int i = 0; i < numRows; ++i) {
                 final Object row = rows[i];
                 final String name = results.getString(row, 3);
-                final int type = results.getInt(row, 4);
-                final String typeName = results.getString(row, 5);
+                int type = results.getInt(row, 4);
+                String typeName = results.getString(row, 5);
                 final int columnSize = results.getInt(row, 6);
                 // buffer length; unused
                 final int numDecDigits = results.getInt(row, 8);
@@ -1264,6 +1264,11 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final int charOctetLen = results.getInt(row, 15);
                 // final int position = results.getInt(row,16);
                 // final String isNullable = results.getString(row,17);
+                
+                if (type == Types.CHAR && columnSize > 1 ) {
+                	type = Types.VARCHAR;
+                	typeName = "varchar"; //$NON-NLS-1$
+                }
 
                 final Column column = this.factory.createColumn();
                 // Add the column to the table
@@ -2196,14 +2201,20 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final Object row = rows[i];
                 String name = results.getString(row, 3); // COLUMN_NAME
                 final short columnType = results.getShort(row, 4); // COLUMN_TYPE
-                final short type = results.getShort(row, 5); // DATA_TYPE
-                final String typeName = results.getString(row, 6); // TYPE_NAME
+                short type = results.getShort(row, 5); // DATA_TYPE
+                String typeName = results.getString(row, 6); // TYPE_NAME
                 final int precision = results.getInt(row, 7); // PRECISION
                 final int length = results.getInt(row, 8); // LENGTH
                 final int scale = results.getInt(row, 9); // SCALE
                 final int radix = results.getInt(row, 10); // RADIX
                 final short nullable = results.getShort(row, 11); // NULLABLE
                 final String remarks = results.getString(row, 12); // REMARKS
+                
+                
+                if (type == Types.CHAR && length > 1 ) {
+                	type = Types.VARCHAR;
+                	typeName = "varchar"; //$NON-NLS-1$
+                }
 
                 final boolean resultSetColumn = isProcedureResultColumn(columnType, type, typeName);
                 if (!resultSetColumn) {
