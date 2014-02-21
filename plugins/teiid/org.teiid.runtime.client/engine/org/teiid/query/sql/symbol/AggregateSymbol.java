@@ -10,6 +10,7 @@ package org.teiid.query.sql.symbol;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Node;
 import org.teiid.query.sql.lang.OrderBy;
@@ -152,6 +153,13 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      */
     @Removed("8.0.0")
     void setExpression(Expression expression);
+
+    /**
+     * Get the function descriptor that this function resolves to.
+     * @return Descriptor or null if resolution has not yet occurred
+     */
+    @Since("8.0.0")
+    FunctionDescriptor getFunctionDescriptor();
 
     /**
      * Clone this aggregate symbol

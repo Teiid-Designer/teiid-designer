@@ -38,8 +38,8 @@ import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.DynamicCommand;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.SetClause;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.runtime.client.Messages;
 

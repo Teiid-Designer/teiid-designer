@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.TimeZone;
 import javax.security.auth.Subject;
 import org.teiid.core.util.LRUCache;
+import org.teiid.metadata.FunctionMethod.Determinism;
 
 /** 
  * Defines the context that a command is processing in.  For example, this defines
@@ -47,7 +48,19 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 	
 	private GlobalState globalState = new GlobalState();
 
+	private Determinism[] determinismLevel = new Determinism[] {Determinism.DETERMINISTIC};
+
     public CommandContext() {
+    }
+
+    public Determinism getDeterminismLevel() {
+        return determinismLevel[0];
+    }
+
+    public void setDeterminismLevel(Determinism level) {
+        if (determinismLevel[0] == null || level.compareTo(determinismLevel[0]) < 0) {
+            determinismLevel[0] = level;
+        }
     }
 
     public double getNextRand() {

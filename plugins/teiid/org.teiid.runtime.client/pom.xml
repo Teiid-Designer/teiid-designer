@@ -91,6 +91,7 @@
                     <visitorReturnType>void</visitorReturnType>
                     <grammarEncoding>UTF-8</grammarEncoding>
                     <keepLineColumn>true</keepLineColumn>
+                    <nodeDefaultVoid>true</nodeDefaultVoid>
                     <interimDirectory>${project.basedir}/engine</interimDirectory>
                     <outputDirectory>${project.basedir}/engine</outputDirectory>
                 </configuration>

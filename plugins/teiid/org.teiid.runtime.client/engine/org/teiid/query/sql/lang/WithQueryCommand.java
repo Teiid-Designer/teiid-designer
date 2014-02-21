@@ -6,6 +6,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.IWithQueryCommand;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**

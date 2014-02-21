@@ -22,13 +22,6 @@
 
 package org.teiid.query.resolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -73,7 +66,6 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -89,6 +81,7 @@ import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -1231,7 +1224,7 @@ public abstract class AbstractTestResolver extends TestCase {
         Collection functions = FunctionCollectorVisitor.getFunctions(outerQuery, true);
         assertTrue(functions.size() == 1);
         Function function = (Function)functions.iterator().next();
-        assertTrue(function.getName().equals(IFunctionLibrary.FunctionName.CONVERT));
+        assertTrue(function.getName().equals(IFunctionLibrary.FunctionName.CONVERT.name()));
         Expression[] args = function.getArgs();
         assertSame(e2, args[0]);
         assertTrue(args[1] instanceof Constant);

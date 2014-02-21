@@ -104,7 +104,10 @@ public class Messages {
         expected_non_reserved,
         lexicalError,
         noParserForVersion,
-        invalidNodeType;
+        invalidNodeType,
+        udt_format_wrong,
+        proc_type_conflict,
+        param_out;
         
         @Override
         public String toString() {
@@ -1064,10 +1067,19 @@ public class Messages {
         TEIID31143,
         TEIID31144,
         TEIID31146,
+        TEIID60001,
+        TEIID60004,
+        TEIID60008,
+        TEIID60009,
+        TEIID60010,
+        TEIID60011,
         TEIID60012,
         TEIID60013,
         TEIID60014,
         TEIID60015,
+        TEIID60016,
+        TEIID60017,
+        TEIID60018,
         TEIID70053;
 
         @Override

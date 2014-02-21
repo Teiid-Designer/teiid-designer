@@ -273,6 +273,9 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
         		}
         	}
             Object result = invocationMethod.invoke(functionTarget, values);
+            if (context != null && getDeterministic().ordinal() <= Determinism.USER_DETERMINISTIC.ordinal()) {
+            	context.setDeterminismLevel(getDeterministic());
+            }
             return importValue(result, getReturnType());
         } catch(ArithmeticException e) {
     		 throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30384, getFullName()));

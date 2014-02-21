@@ -35,7 +35,6 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstant
 import org.teiid.query.optimizer.relational.PartitionAnalyzer;
 import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SetQuery;
@@ -43,6 +42,7 @@ import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.symbol.Constant;
 import org.teiid.query.sql.lang.symbol.Expression;
 import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.util.SymbolMap;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;

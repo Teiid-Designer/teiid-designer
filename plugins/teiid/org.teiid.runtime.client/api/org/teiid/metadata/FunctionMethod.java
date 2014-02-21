@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.function.metadata.FunctionMetadataValidator;
 
 
 /**
@@ -464,7 +466,47 @@ public class FunctionMethod extends AbstractMetadataRecord {
     public void setAggregateAttributes(AggregateAttributes aggregateAttributes) {
 		this.aggregateAttributes = aggregateAttributes;
 	}
-    
+
+    public static void convertExtensionMetadata(Procedure procedureRecord, FunctionMethod function) {
+        String deterministic = procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "deterministic", true); //$NON-NLS-1$
+        boolean nullOnNull = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "null-on-null", true)); //$NON-NLS-1$
+        String varargs = procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "varargs", true); //$NON-NLS-1$
+        String javaClass = procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "java-class", true); //$NON-NLS-1$
+        String javaMethod = procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "java-method", true); //$NON-NLS-1$
+        if (function.getInvocationClass() == null) {
+            function.setInvocationClass(javaClass);
+        }
+        if (function.getInvocationMethod() == null) {
+            function.setInvocationMethod(javaMethod);
+        }
+        boolean aggregate = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "aggregate", true)); //$NON-NLS-1$
+        if (deterministic != null) {
+            function.setDeterminism(Boolean.valueOf(deterministic) ? Determinism.DETERMINISTIC : Determinism.NONDETERMINISTIC);
+        }
+        function.setNullOnNull(nullOnNull);
+        if (varargs != null && !function.getInputParameters().isEmpty()) {
+            function.getInputParameters().get(function.getInputParameterCount() - 1).setVarArg(Boolean.valueOf(varargs));
+        }
+        if (aggregate) {
+            boolean analytic = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI + "analytic", true)); //$NON-NLS-1$
+            boolean allowsOrderBy = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI
+                                                                                + "allows-orderby", true)); //$NON-NLS-1$
+            boolean usesDistinctRows = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI
+                                                                                   + "uses-distinct-rows", true)); //$NON-NLS-1$
+            boolean allowsDistinct = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI
+                                                                                 + "allows-distinct", true)); //$NON-NLS-1$
+            boolean decomposable = Boolean.valueOf(procedureRecord.getProperty(AbstractMetadataRecord.RELATIONAL_URI
+                                                                               + "decomposable", true)); //$NON-NLS-1$
+            AggregateAttributes aa = new AggregateAttributes();
+            aa.setAnalytic(analytic);
+            aa.setAllowsOrderBy(allowsOrderBy);
+            aa.setUsesDistinctRows(usesDistinctRows);
+            aa.setAllowsDistinct(allowsDistinct);
+            aa.setDecomposable(decomposable);
+            function.setAggregateAttributes(aa);
+        }
+    }
+
 	public static FunctionMethod createFunctionMethod(String name, String description, String category,
 			String returnType, String... paramTypes) {
 		FunctionParameter[] params = new FunctionParameter[paramTypes.length];

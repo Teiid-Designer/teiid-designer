@@ -9,7 +9,9 @@ package org.teiid.query.parser;
 
 import java.io.Reader;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
@@ -45,6 +47,14 @@ public interface TeiidParser {
      * @return instance of commonly used node
      */
     <T extends LanguageObject> T createASTNode(ASTNodes nodeType);
+
+    /**
+     * @param parseInfo
+     *
+     * @return command for trigger action
+     * @throws Exception 
+     */
+    Command forEachRowTriggerAction(ParseInfo parseInfo) throws Exception;
 
     /**
      * Parse an expression
@@ -99,4 +109,20 @@ public interface TeiidParser {
      * @throws Exception
      */
     Expression selectExpression(ParseInfo info) throws Exception;
+
+    /**
+     * Parse a procedure command
+     *
+     * @param parseInfo
+     * @return command
+     */
+    @Since("8.0.0")
+    Command procedureBodyCommand(ParseInfo parseInfo);
+
+    /**
+     * @param factory
+     * @throws Exception 
+     */
+    @Since("8.0.0")
+    void parseMetadata(MetadataFactory factory) throws Exception;
 }

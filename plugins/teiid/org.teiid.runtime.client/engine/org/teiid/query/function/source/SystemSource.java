@@ -26,7 +26,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.teiid.CommandContext;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.designer.annotation.AnnotationUtils;
@@ -39,6 +38,7 @@ import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.function.JSONFunctionMethods;
 import org.teiid.query.function.SystemFunctionMethods;
@@ -246,46 +246,6 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         return clazz;
     }
 
-    /**
-     * Taken from MetadataFactory
-     *
-     * @param name
-     * @param method
-     * @return
-     */
-    private FunctionMethod createFunctionFromMethod(String name, Method method) {
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
-        String returnType = dataTypeManager.getDataTypeName(method.getReturnType());
-        Class<?>[] params = method.getParameterTypes();
-        String[] paramTypes = new String[params.length];
-        boolean nullOnNull = false;
-        for (int i = 0; i < params.length; i++) {
-            Class<?> clazz = params[i];
-            if (clazz.isPrimitive()) {
-                nullOnNull = true;
-                clazz = convertPrimitiveToObject(clazz);
-            }
-            if (method.isVarArgs() && i == params.length -1) {
-                paramTypes[i] = dataTypeManager.getDataTypeName(clazz.getComponentType());
-            } else {
-                paramTypes[i] = dataTypeManager.getDataTypeName(clazz);
-            }
-        }
-        if (params.length > 0 && CommandContext.class.isAssignableFrom(params[0])) {
-            paramTypes = Arrays.copyOfRange(paramTypes, 1, paramTypes.length);
-        }
-        FunctionMethod func = FunctionMethod.createFunctionMethod(name, null, null, returnType, paramTypes);
-        func.setInvocationMethod(method.getName());
-        func.setPushdown(PushDown.CANNOT_PUSHDOWN);
-        func.setMethod(method);
-        func.setInvocationClass(method.getDeclaringClass().getName());
-        func.setNullOnNull(nullOnNull);
-        if (method.isVarArgs()) {
-            func.setVarArgs(method.isVarArgs());
-        }
-        return func;
-    }
-
     private boolean isApplicable(Class<?> clazz) {
         if (AnnotationUtils.hasAnnotation(clazz, Removed.class)) {
             Removed removed = AnnotationUtils.getAnnotation(clazz, Removed.class);
@@ -318,7 +278,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 			if (name.isEmpty()) {
 				name = method.getName();
 			}
-			FunctionMethod func = createFunctionFromMethod(name, method);
+
+			FunctionMethod func = MetadataFactory.createFunctionFromMethod(name, method);
 
 			Messages.SystemSource descKey = Messages.SystemSource.valueOf(name + "_description"); //$NON-NLS-1$
 			Messages.SystemSource resultKey = Messages.SystemSource.valueOf(name + "_result"); //$NON-NLS-1$

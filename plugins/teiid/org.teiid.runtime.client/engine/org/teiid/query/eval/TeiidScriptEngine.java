@@ -32,10 +32,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,8 +50,8 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.ObjectConverterUtil;
+import org.teiid.query.function.FunctionMethods;
 import org.teiid.runtime.client.Messages;
-import org.teiid.runtime.client.TeiidClientException;
 
 /**
  * A simplistic script engine that supports root variable access and 0-ary methods on the subsequent objects.
@@ -66,29 +64,6 @@ public final class TeiidScriptEngine extends AbstractScriptEngine implements Com
 	public Bindings createBindings() {
 		return new SimpleBindings();
 	}
-
-	/**
-	 * Taken from FunctionMethods class
-	 *
-	 * @param array
-	 * @param index
-	 * @return
-	 * @throws FunctionExecutionException
-	 * @throws SQLException
-	 */
-	private Object array_get(Object array, int index) throws Exception {
-        try {
-            if (array instanceof java.sql.Array) {
-                return Array.get(((java.sql.Array)array).getArray(index, 1), 0);
-            }
-            if (array.getClass().isArray()) {
-                return Array.get(array, index - 1);
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return null;
-        }
-         throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30416, array.getClass()));
-    }
 
 	@Override
 	public CompiledScript compile(String script) throws ScriptException {
@@ -142,7 +117,7 @@ public final class TeiidScriptEngine extends AbstractScriptEngine implements Com
 								continue;
 							}
 							try {
-								obj = array_get(obj, index);
+								obj = FunctionMethods.array_get(obj, index);
 								continue;
 							} catch (Exception e) {
 								throw new ScriptException(e);

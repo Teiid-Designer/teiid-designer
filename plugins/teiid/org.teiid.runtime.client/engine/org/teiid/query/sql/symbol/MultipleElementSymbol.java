@@ -8,7 +8,6 @@ import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**

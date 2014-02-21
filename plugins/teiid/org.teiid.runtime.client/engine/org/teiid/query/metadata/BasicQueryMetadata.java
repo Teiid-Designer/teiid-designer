@@ -613,7 +613,8 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
 	}
 	
 	@Override
-	public String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified) {
+	public String getExtensionProperty(Object metadataID, String key,
+			boolean checkUnqualified) {
 		return null;
 	}
 	

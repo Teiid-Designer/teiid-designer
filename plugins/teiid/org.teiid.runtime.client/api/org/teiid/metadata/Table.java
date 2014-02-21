@@ -45,11 +45,25 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 		TemporaryTable 
 	}
 	
+    /**
+     * TriggerEvent Types
+     */
     public static enum TriggerEvent {
-		INSERT,
-		UPDATE,
-		DELETE
-	}
+        /**
+         * Insert event 
+         */
+        INSERT,
+
+        /**
+         * Update event
+         */
+        UPDATE,
+
+        /**
+         * Delete event
+         */
+        DELETE
+    }
 
 	private volatile int cardinality = -1;
     private Type tableType;

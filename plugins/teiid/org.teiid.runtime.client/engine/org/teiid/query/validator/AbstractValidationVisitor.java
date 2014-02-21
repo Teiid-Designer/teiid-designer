@@ -31,9 +31,9 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Query;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 public class AbstractValidationVisitor extends LanguageVisitor {

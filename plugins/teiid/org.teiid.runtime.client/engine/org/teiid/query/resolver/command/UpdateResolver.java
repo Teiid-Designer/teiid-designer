@@ -41,10 +41,10 @@ import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.SetClause;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.symbol.Constant;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 

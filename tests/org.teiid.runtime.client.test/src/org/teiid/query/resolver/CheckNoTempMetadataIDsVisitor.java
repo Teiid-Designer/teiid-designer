@@ -27,9 +27,9 @@ import java.util.Collection;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.Symbol;
 

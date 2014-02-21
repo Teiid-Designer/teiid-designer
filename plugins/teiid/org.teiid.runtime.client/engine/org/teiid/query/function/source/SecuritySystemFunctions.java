@@ -41,6 +41,10 @@ public class SecuritySystemFunctions {
             return true;
         }
 
-        return true;
+//        AuthorizationValidator authorizationValidator = context.getAuthorizationValidator();
+//        if (authorizationValidator == null) {
+        	return true;
+//   		}
+//    	return authorizationValidator.hasRole(roleName, context);
     }
 }

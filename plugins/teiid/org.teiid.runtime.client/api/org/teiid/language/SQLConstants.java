@@ -436,44 +436,6 @@ public abstract class SQLConstants {
         String IMPORT = "IMPORT"; //$NON-NLS-1$
     }
 
-    @Since("8.0.0")
-    public interface DDLConstants {
-        String JAVA_METHOD = "JAVA_METHOD";//$NON-NLS-1$
-        String JAVA_CLASS = "JAVA_CLASS";//$NON-NLS-1$
-        String DETERMINISM = "DETERMINISM";//$NON-NLS-1$
-        String CATEGORY = "CATEGORY";//$NON-NLS-1$
-        String UPDATECOUNT = "UPDATECOUNT";//$NON-NLS-1$
-        String DISTINCT_VALUES = "DISTINCT_VALUES";//$NON-NLS-1$
-        String NULL_VALUE_COUNT = "NULL_VALUE_COUNT";//$NON-NLS-1$
-        String RADIX = "RADIX";//$NON-NLS-1$
-        String NATIVE_TYPE = "NATIVE_TYPE";//$NON-NLS-1$
-        String CHAR_OCTET_LENGTH = "CHAR_OCTET_LENGTH";//$NON-NLS-1$
-        String MAX_VALUE = "MAX_VALUE"; //$NON-NLS-1$
-        String MIN_VALUE = "MIN_VALUE";//$NON-NLS-1$
-        String SEARCHABLE = "SEARCHABLE";//$NON-NLS-1$
-        String FIXED_LENGTH = "FIXED_LENGTH";//$NON-NLS-1$
-        String CURRENCY = "CURRENCY";//$NON-NLS-1$
-        String SIGNED = "SIGNED";//$NON-NLS-1$
-        String SELECTABLE = "SELECTABLE";//$NON-NLS-1$
-        String CASE_SENSITIVE = "CASE_SENSITIVE";//$NON-NLS-1$
-        String AUTO_INCREMENT = "AUTO_INCREMENT";//$NON-NLS-1$
-        String NOT_NULL = "NOT NULL";//$NON-NLS-1$
-        String FOREIGN_KEY = "FOREIGN KEY";//$NON-NLS-1$
-        String PRIMARY_KEY = "PRIMARY KEY";//$NON-NLS-1$
-        String ACCESSPATTERN = "ACCESSPATTERN";//$NON-NLS-1$
-        String NAMEINSOURCE = "NAMEINSOURCE";//$NON-NLS-1$
-        String ANNOTATION = "ANNOTATION";//$NON-NLS-1$
-        String UUID = "UUID";//$NON-NLS-1$
-        String CARDINALITY = "CARDINALITY";//$NON-NLS-1$
-        String UPDATABLE = "UPDATABLE";//$NON-NLS-1$
-        String MATERIALIZED_TABLE = "MATERIALIZED_TABLE";//$NON-NLS-1$
-        String MATERIALIZED = "MATERIALIZED";//$NON-NLS-1$
-        String INSTEAD_OF = "INSTEAD OF";//$NON-NLS-1$
-        String CREATE_TRIGGER_ON = "CREATE TRIGGER ON";//$NON-NLS-1$
-        String FOREIGN_TABLE = "FOREIGN TABLE";//$NON-NLS-1$
-        String UDT = "UDT";//$NON-NLS-1$
-    }
-
     private static ITeiidServerVersion CACHED_TEIID_VERSION = null;
 
     /**

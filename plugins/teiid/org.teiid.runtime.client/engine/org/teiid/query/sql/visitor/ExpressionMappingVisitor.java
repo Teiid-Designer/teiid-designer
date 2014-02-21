@@ -37,7 +37,6 @@ import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.DynamicCommand;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.ExpressionCriteria;
 import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.Insert;
@@ -67,6 +66,7 @@ import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Array;
 import org.teiid.query.sql.symbol.CaseExpression;
 import org.teiid.query.sql.symbol.DerivedColumn;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
@@ -199,9 +199,10 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
 		    ((ExpressionSymbol) replacementSymbol).setName(name);
 		    ((ExpressionSymbol) replacementSymbol).setExpression(replacementSymbol);
 		} else if (alias && createAliases() && !Symbol.getShortName(replacementSymbol).equals(name)) {
-		    replacementSymbol = getTeiidParser().createASTNode(ASTNodes.ALIAS_SYMBOL);
-		    ((AliasSymbol) replacementSymbol).setName(name);
-            ((AliasSymbol) replacementSymbol).setSymbol(replacementSymbol);
+		    AliasSymbol aliasSymbol = getTeiidParser().createASTNode(ASTNodes.ALIAS_SYMBOL);
+		    aliasSymbol.setName(name);
+            aliasSymbol.setSymbol(replacementSymbol);
+            replacementSymbol = aliasSymbol;
 		}
 		return replacementSymbol;
 	}

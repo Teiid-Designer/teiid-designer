@@ -17,6 +17,7 @@ import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -63,17 +64,17 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     public enum DefaultDataTypes {
 
-        STRING ("string", DataTypeName.STRING, String.class, 256), //$NON-NLS-1$
+        STRING ("string", DataTypeName.STRING, String.class, 256, DataTypeAliases.VARCHAR), //$NON-NLS-1$
 
         VARCHAR ("varchar", DataTypeName.VARCHAR , String.class, 256), //$NON-NLS-1$
         
         BOOLEAN ("boolean", DataTypeName.BOOLEAN, Boolean.class), //$NON-NLS-1$
 
-        BYTE ("byte", DataTypeName.BYTE, Byte.class, 3, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
+        BYTE ("byte", DataTypeName.BYTE, Byte.class, 3, "0123456789-", DataTypeAliases.TINYINT), //$NON-NLS-1$ //$NON-NLS-2$
 
         TINYINT ("tinyint", DataTypeName.TINYINT, Byte.class, 3, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
         
-        SHORT ("short", DataTypeName.SHORT, Short.class, 5, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
+        SHORT ("short", DataTypeName.SHORT, Short.class, 5, "0123456789-", DataTypeAliases.SMALLINT), //$NON-NLS-1$ //$NON-NLS-2$
 
         SMALLINT ("smallint", DataTypeName.SMALLINT, Short.class, 5, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -84,11 +85,11 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         /* Not to be confused with BIG_INTEGER which comes from a different domain */
         BIGINT ("bigint", DataTypeName.BIGINT, Long.class, 19, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
-        LONG ("long", DataTypeName.LONG, Long.class, 19, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
+        LONG ("long", DataTypeName.LONG, Long.class, 19, "0123456789-", DataTypeAliases.BIGINT), //$NON-NLS-1$ //$NON-NLS-2$
 
         BIG_INTEGER ("biginteger", DataTypeName.BIG_INTEGER, BigInteger.class, 30, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
-        FLOAT ("float", DataTypeName.FLOAT, Float.class, 30, "0123456789-+.eE"), //$NON-NLS-1$ //$NON-NLS-2$
+        FLOAT ("float", DataTypeName.FLOAT, Float.class, 30, "0123456789-+.eE", DataTypeAliases.REAL), //$NON-NLS-1$ //$NON-NLS-2$
 
         REAL ("real", DataTypeName.REAL, Float.class, 30, "0123456789-+.eE"), //$NON-NLS-1$ //$NON-NLS-2$
         
@@ -96,7 +97,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         DECIMAL ("decimal", DataTypeName.DECIMAL, BigDecimal.class, 30, "0123456789-.eE"), //$NON-NLS-1$ //$NON-NLS-2$
 
-        BIG_DECIMAL ("bigdecimal", DataTypeName.BIG_DECIMAL, BigDecimal.class, 30, "0123456789-.eE"), //$NON-NLS-1$ //$NON-NLS-2$
+        BIG_DECIMAL ("bigdecimal", DataTypeName.BIG_DECIMAL, BigDecimal.class, 30, "0123456789-.eE", DataTypeAliases.DECIMAL), //$NON-NLS-1$ //$NON-NLS-2$
 
         DATE ("date", DataTypeName.DATE, Date.class), //$NON-NLS-1$
 
@@ -129,19 +130,27 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         private Class<?> arrayKlazz;
 
-        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz) {
+        private Set<DataTypeAliases> aliases = Collections.emptySet();
+
+        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, DataTypeAliases... aliases) {
             this.id = id;
             this.dataTypeName = dataTypeName;
             this.klazz = klazz;
+            if (aliases != null) {
+                this.aliases = new HashSet<DataTypeAliases>();
+                for (DataTypeAliases alias : aliases) {
+                    this.aliases.add(alias);
+                }
+            }
             this.arrayKlazz = Array.newInstance(klazz, 0).getClass();
         }
 
-        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit) {
+        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit, DataTypeAliases... aliases) {
             this(id, dataTypeName, klazz);
             this.limit = limit;
         }
 
-        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit, String validChars) {
+        DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit, String validChars, DataTypeAliases... aliases) {
             this(id, dataTypeName, klazz, limit);
             this.validChars = validChars;
         }
@@ -168,6 +177,14 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         public String getValidChars() {
             return validChars;
+        }
+
+        /**
+         * @param alias
+         * @return true if this type contains the given alias, false otherwise
+         */
+        public boolean hasAlias(DataTypeAliases alias) {
+            return aliases.contains(alias);
         }
 
         /**
@@ -496,7 +513,24 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         return DefaultDataTypes.OBJECT;
     }
-   
+
+    /**
+     * @param alias
+     * @return the data type that is aliased by the given alias
+     */
+    @Since("8.0.0")
+    public DefaultDataTypes getDataType(DataTypeAliases alias) {
+        ArgCheck.isNotNull(alias);
+
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+            if (defaultDataType.hasAlias(alias)) {
+                return defaultDataType;
+            }
+        }
+
+        throw new IllegalArgumentException("No data type for the alias " + alias.getId()); //$NON-NLS-1$
+    }
+
     @Override
     public String getDataTypeName(Class<?> typeClass) {
         if (typeClass == null) {

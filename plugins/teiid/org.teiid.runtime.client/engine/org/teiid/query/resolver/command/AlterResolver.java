@@ -24,6 +24,7 @@ package org.teiid.query.resolver.command;
 
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.metadata.Table.TriggerEvent;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.resolver.CommandResolver;
 import org.teiid.query.resolver.QueryResolver;
@@ -31,7 +32,6 @@ import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.lang.Alter;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
-import org.teiid.query.sql.lang.AlterTrigger.Event;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.runtime.client.Messages;
 
@@ -55,7 +55,7 @@ public class AlterResolver extends CommandResolver {
 		int type = ICommand.TYPE_QUERY;
 		boolean viewTarget = true;
 		if (alter instanceof AlterTrigger) {
-			Event event = ((AlterTrigger)alter).getEvent();
+			TriggerEvent event = ((AlterTrigger)alter).getEvent();
 			switch (event) {
 			case DELETE:
 				type = ICommand.TYPE_DELETE;

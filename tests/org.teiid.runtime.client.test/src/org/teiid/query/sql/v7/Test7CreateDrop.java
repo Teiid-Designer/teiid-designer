@@ -30,7 +30,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Drop;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test7CreateDrop extends AbstractTestQueryParser {

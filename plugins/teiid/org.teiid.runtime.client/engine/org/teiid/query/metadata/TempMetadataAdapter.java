@@ -34,6 +34,7 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.xml.IMappingNode;
+import org.teiid.metadata.Table;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.TempMetadataID.Type;
 import org.teiid.query.sql.symbol.Expression;
@@ -768,13 +769,13 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
         if(groupID instanceof TempMetadataID) {
             return ((TempMetadataID)groupID).isTempTable();
         }
-//        TODO Consider given this is supposed to be an api table        
-//        if (groupID instanceof Table) {
-//        	Table t = (Table)groupID;
-//        	if (t.getTableType() == Table.Type.TemporaryTable) {
-//        		return true;
-//        	}
-//        }
+      
+        if (groupID instanceof Table) {
+        	Table t = (Table)groupID;
+        	if (t.getTableType() == Table.Type.TemporaryTable) {
+        		return true;
+        	}
+        }
         return false;
     }
     

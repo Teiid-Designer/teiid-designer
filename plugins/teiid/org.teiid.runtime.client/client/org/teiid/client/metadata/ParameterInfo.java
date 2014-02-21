@@ -20,7 +20,7 @@
  * 02110-1301 USA.
  */
 
-package org.teiid.query.metadata;
+package org.teiid.client.metadata;
 
 import java.io.Externalizable;
 import java.io.IOException;

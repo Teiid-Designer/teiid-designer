@@ -22,20 +22,44 @@
 
 package org.teiid.query.parser;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.language.SQLConstants;
+import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.BaseColumn;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.Column.SearchType;
+import org.teiid.metadata.Datatype;
+import org.teiid.metadata.FunctionMethod;
+import org.teiid.metadata.FunctionMethod.PushDown;
+import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.KeyRecord;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Procedure;
+import org.teiid.metadata.ProcedureParameter;
+import org.teiid.metadata.ProcedureParameter.Type;
+import org.teiid.metadata.Table;
+import org.teiid.query.metadata.DDLConstants;
+import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.sql.lang.AlterTrigger;
+import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -49,9 +73,12 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     protected ITeiidServerVersion version;
 
+    private MetadataFactory metadataFactory;
+
     /**
      * @return teiid instance version
      */
+    @Override
     public abstract ITeiidServerVersion getVersion();
 
     @Override
@@ -264,10 +291,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return id;
     }
 
-    protected boolean isTrue(final String text) {
-        return Boolean.valueOf(text);
-    }
-
     @Removed("8.0.0")
     protected String matchesAny(String arg, String ... expected) {
         for (String string : expected) {
@@ -276,5 +299,542 @@ public abstract class AbstractTeiidParser implements TeiidParser {
             }
         }
         return null;
+    }
+
+    @Override
+    public Command procedureBodyCommand(ParseInfo parseInfo) {
+        throw new UnsupportedOperationException("Not supported in Teiid Version " + getVersion()); //$NON-NLS-1$
+    }
+
+    /**
+     * @param factory
+     * @throws Exception 
+     */
+    @Override
+    public void parseMetadata(MetadataFactory factory) throws Exception {
+        throw new UnsupportedOperationException("Not supported in Teiid Version " + getVersion()); //$NON-NLS-1$
+    }
+
+    @Since("8.0.0")
+    protected void setColumnOptions(BaseColumn c) {
+    	Map<String, String> props = c.getProperties();
+		setCommonProperties(c, props);
+		
+    	String v = props.remove(DDLConstants.RADIX); 
+    	if (v != null) {
+    		c.setRadix(Integer.parseInt(v));
+    	}
+    	
+    	if (c instanceof Column) {
+    		setColumnOptions((Column)c, props);
+    	}
+    }
+
+	@Since("8.0.0")
+    protected void removeColumnOption(String key, BaseColumn c) {
+    	if (c.getProperty(key, false) != null) {
+    		c.setProperty(key, null);
+    	}    	
+		removeCommonProperty(key, c);
+		
+    	if (key.equals(DDLConstants.RADIX)) {
+    		c.setRadix(0);
+    	}
+    	
+    	if (c instanceof Column) {
+    		removeColumnOption(key, (Column)c);
+    	}
+    }    
+    
+	@Since("8.0.0")
+    protected void removeColumnOption(String key, Column c) {
+        if (key.equals(DDLConstants.CASE_SENSITIVE)) {
+        	c.setCaseSensitive(false);
+        }
+    	
+    	if (key.equals(DDLConstants.SELECTABLE)) {
+    		c.setSelectable(true);
+    	}
+    	
+    	if (key.equals(DDLConstants.UPDATABLE)) {
+    		c.setUpdatable(false);
+    	}
+    	
+    	if (key.equals(DDLConstants.SIGNED)) {
+    		c.setSigned(false);
+    	}
+    	
+    	if (key.equals(DDLConstants.CURRENCY)) {
+    		c.setSigned(false);
+    	}
+
+    	if (key.equals(DDLConstants.FIXED_LENGTH)) {
+    		c.setFixedLength(false);
+    	}
+    	
+    	if (key.equals(DDLConstants.SEARCHABLE)) {
+    		c.setSearchType(null);
+    	}
+    	
+    	if (key.equals(DDLConstants.MIN_VALUE)) {
+    		c.setMinimumValue(null);
+    	}
+    	
+    	if (key.equals(DDLConstants.MAX_VALUE)) {
+    		c.setMaximumValue(null);
+    	}
+    	
+    	if (key.equals(DDLConstants.CHAR_OCTET_LENGTH)) {
+    		c.setCharOctetLength(0);
+    	}
+        
+    	if (key.equals(DDLConstants.NATIVE_TYPE)) {
+    		c.setNativeType(null);
+    	}
+
+    	if (key.equals(DDLConstants.NULL_VALUE_COUNT)) {
+    		c.setNullValues(-1);
+    	}
+    	
+    	if (key.equals(DDLConstants.DISTINCT_VALUES)) {
+    		c.setDistinctValues(-1);
+    	}
+
+    	if (key.equals(DDLConstants.UDT)) {
+			c.setDatatype(null);
+			c.setLength(0);
+			c.setPrecision(0);
+			c.setScale(0);
+    	}    	
+    }
+
+    @Since("8.0.0")
+    private void setColumnOptions(Column c, Map<String, String> props) {
+        String v = props.remove(DDLConstants.CASE_SENSITIVE); 
+        if (v != null) {
+            c.setCaseSensitive(isTrue(v));
+        }
+        
+        v = props.remove(DDLConstants.SELECTABLE);
+        if (v != null) {
+            c.setSelectable(isTrue(v));
+        }
+        
+        v = props.remove(DDLConstants.UPDATABLE); 
+        if (v != null) {
+            c.setUpdatable(isTrue(v));
+        }
+        
+        v = props.remove(DDLConstants.SIGNED);
+        if (v != null) {
+            c.setSigned(isTrue(v));
+        }
+        
+        v = props.remove(DDLConstants.CURRENCY);
+        if (v != null) {
+            c.setSigned(isTrue(v));
+        }
+
+        v = props.remove(DDLConstants.FIXED_LENGTH);
+        if (v != null) {
+            c.setFixedLength(isTrue(v));
+        }
+        
+        v = props.remove(DDLConstants.SEARCHABLE);
+        if (v != null) {
+            c.setSearchType(StringUtil.caseInsensitiveValueOf(SearchType.class, v));
+        }
+        
+        v = props.remove(DDLConstants.MIN_VALUE);
+        if (v != null) {
+            c.setMinimumValue(v);
+        }
+        
+        v = props.remove(DDLConstants.MAX_VALUE);
+        if (v != null) {
+            c.setMaximumValue(v);
+        }
+        
+        v = props.remove(DDLConstants.CHAR_OCTET_LENGTH);
+        if (v != null) {
+            c.setCharOctetLength(Integer.parseInt(v));
+        }
+        
+        v = props.remove(DDLConstants.NATIVE_TYPE);
+        if (v != null) {
+            c.setNativeType(v);
+        }
+
+        v = props.remove(DDLConstants.NULL_VALUE_COUNT); 
+        if (v != null) {
+            c.setNullValues(Integer.parseInt(v));
+        }
+        
+        v = props.remove(DDLConstants.DISTINCT_VALUES); 
+        if (v != null) {
+            c.setDistinctValues(Integer.parseInt(v));
+        }
+
+        v = props.remove(DDLConstants.UDT); 
+        if (v != null) {
+            Matcher matcher = udtPattern.matcher(v);
+            Map<String, Datatype> datatypes = SystemMetadata.getInstance(getVersion()).getSystemStore().getDatatypes();
+            if (matcher.matches() && datatypes.get(matcher.group(1)) != null) {
+                c.setDatatype(datatypes.get(matcher.group(1)));
+                c.setLength(Integer.parseInt(matcher.group(2)));
+                c.setPrecision(Integer.parseInt(matcher.group(3)));
+                c.setScale(Integer.parseInt(matcher.group(4)));
+            }
+            else {
+                throw new RuntimeException(Messages.getString(Messages.TeiidParser.udt_format_wrong, c.getName()));
+            }
+        }
+    }
+
+    @Since("8.0.0")
+    protected void setCommonProperties(AbstractMetadataRecord c, Map<String, String> props) {
+        String v = props.remove(DDLConstants.UUID); 
+        if (v != null) {
+            c.setUUID(v);
+        }
+        
+        v = props.remove(DDLConstants.ANNOTATION); 
+        if (v != null) {
+            c.setAnnotation(v);
+        }
+        
+        v = props.remove(DDLConstants.NAMEINSOURCE); 
+        if (v != null) {
+            c.setNameInSource(v);
+        }
+    }
+
+    @Since("8.0.0")
+    protected void removeCommonProperty(String key, AbstractMetadataRecord c) {
+		if (key.equals(DDLConstants.UUID)) {
+			c.setUUID(null);
+		}
+		
+    	if (key.equals(DDLConstants.ANNOTATION)) {
+    		c.setAnnotation(null);
+    	}
+		
+		if (key.equals(DDLConstants.NAMEINSOURCE)) {
+			c.setNameInSource(null);
+		}
+	}
+
+    @Since("8.0.0")
+    protected void setTableOptions(Table table) {
+        Map<String, String> props = table.getProperties();
+        setCommonProperties(table, props);
+        
+        String value = props.remove(DDLConstants.MATERIALIZED); 
+        if (value != null) {
+            table.setMaterialized(isTrue(value));
+        }
+        
+        value = props.remove(DDLConstants.MATERIALIZED_TABLE); 
+        if (value != null) {
+            Table mattable = new Table();
+            mattable.setName(value);
+            table.setMaterializedTable(mattable);
+        }
+        
+        value = props.remove(DDLConstants.UPDATABLE); 
+        if (value != null) {
+            table.setSupportsUpdate(isTrue(value));
+        }
+        
+        value = props.remove(DDLConstants.CARDINALITY); 
+        if (value != null) {
+            table.setCardinality(Integer.parseInt(value));
+        }
+    }
+
+	@Since("8.0.0")
+	protected void removeTableOption(String key, Table table) {
+    	if (table.getProperty(key, false) != null) {
+    		table.setProperty(key, null);
+    	}
+    	removeCommonProperty(key, table);
+    	
+    	if (key.equals(DDLConstants.MATERIALIZED)) {
+    		table.setMaterialized(false);
+    	}
+    	
+    	if (key.equals(DDLConstants.MATERIALIZED_TABLE)) {
+    		table.setMaterializedTable(null);
+    	}
+    	
+    	if (key.equals(DDLConstants.UPDATABLE)) {
+    		table.setSupportsUpdate(false);
+    	}
+    	
+    	if (key.equals(DDLConstants.CARDINALITY)) {
+    		table.setCardinality(-1);
+    	}    	
+    }
+
+	@Since("8.0.0")
+	protected void replaceProcedureWithFunction(MetadataFactory factory,
+			Procedure proc) {
+		FunctionMethod method = new FunctionMethod();
+		method.setName(proc.getName());
+		method.setPushdown(proc.isVirtual()?FunctionMethod.PushDown.CAN_PUSHDOWN:FunctionMethod.PushDown.MUST_PUSHDOWN);
+		
+		ArrayList<FunctionParameter> ins = new ArrayList<FunctionParameter>();
+		for (ProcedureParameter pp:proc.getParameters()) {
+			if (pp.getType() == ProcedureParameter.Type.InOut || pp.getType() == ProcedureParameter.Type.Out) {
+				throw  new RuntimeException(Messages.getString(Messages.TeiidParser.function_in, proc.getName()));
+			}
+			
+			FunctionParameter fp = new FunctionParameter(pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+			if (pp.getType() == ProcedureParameter.Type.In) {
+				fp.setVarArg(pp.isVarArg());
+				ins.add(fp);
+			} else {
+				method.setOutputParameter(fp);
+			}
+		}
+		method.setInputParameters(ins);
+		
+		if (proc.getResultSet() != null || method.getOutputParameter() == null) {
+			throw  new RuntimeException(Messages.getString(Messages.TeiidParser.function_return, proc.getName()));
+		}
+		
+		method.setAnnotation(proc.getAnnotation());
+		method.setNameInSource(proc.getNameInSource());
+		method.setUUID(proc.getUUID());
+		
+		Map<String, String> props = proc.getProperties();
+
+		String value = props.remove(DDLConstants.CATEGORY); 
+		method.setCategory(value);
+		
+		value = props.remove(DDLConstants.DETERMINISM); 
+		if (value != null) {
+			method.setDeterminism(FunctionMethod.Determinism.valueOf(value.toUpperCase()));
+		}
+		
+		value = props.remove(DDLConstants.JAVA_CLASS); 
+		method.setInvocationClass(value);
+		
+		value = props.remove(DDLConstants.JAVA_METHOD); 
+		method.setInvocationMethod(value);
+		
+		for (String key:props.keySet()) {
+			value = props.get(key);
+			method.setProperty(key, value);
+		}
+		
+		FunctionMethod.convertExtensionMetadata(proc, method);
+		if (method.getInvocationMethod() != null) {
+    		method.setPushdown(PushDown.CAN_PUSHDOWN);
+    	}
+		factory.getSchema().addFunction(method);
+		factory.getSchema().getProcedures().remove(proc.getName());
+	}
+
+	@Since("8.0.0")
+	protected void setProcedureOptions(Procedure proc) {
+    	Map<String, String> props = proc.getProperties();
+    	setCommonProperties(proc, props);
+    	
+    	String value = props.remove("UPDATECOUNT"); //$NON-NLS-1$
+    	if (value != null) {
+    		proc.setUpdateCount(Integer.parseInt(value));
+    	}
+    }
+
+	@Since("8.0.0")
+	protected void removeOption(String option, AbstractMetadataRecord record) {
+    	if (record instanceof Table) {
+    		removeTableOption(option, (Table)record);
+    	}
+    	if (record instanceof Procedure) {
+    		removeProcedureOption(option, (Procedure)record);
+    	}
+    	if (record instanceof BaseColumn) {
+    		removeColumnOption(option, (BaseColumn)record);
+    	}
+    }
+
+	@Since("8.0.0")
+	protected void setOptions(AbstractMetadataRecord record) {
+    	if (record instanceof Table) {
+    		setTableOptions((Table)record);
+    	}
+    	if (record instanceof Procedure) {
+    		setProcedureOptions((Procedure)record);
+    	}
+    	if (record instanceof BaseColumn) {
+    		setColumnOptions((BaseColumn)record);
+    	}
+    }
+
+	@Since("8.0.0")
+	protected void removeProcedureOption(String key, Procedure proc) {
+    	if (proc.getProperty(key, false) != null) {
+    		proc.setProperty(key, null);
+    	}    	
+    	removeCommonProperty(key, proc);
+    	
+    	if (key.equals("UPDATECOUNT")) { //$NON-NLS-1$
+    		proc.setUpdateCount(1);
+    	}
+    }    
+
+    @Since("8.0.0")
+	protected boolean isTrue(final String text) {
+        return Boolean.valueOf(text);
+    }    
+
+    @Since("8.0.0")
+	protected AbstractMetadataRecord getChild(String name, AbstractMetadataRecord record, boolean parameter) {
+    	if (record instanceof Table) {
+    		if (parameter) {
+    			throw  new RuntimeException(Messages.getString(Messages.TeiidParser.alter_table_param, name, record.getName())); 
+    		}
+    		return getColumn(name, (Table)record);
+    	}
+		return getColumn(name, (Procedure)record, parameter);
+    	//TODO: function is not supported yet because we store by uid, which should instead be a more friendly "unique name"
+    }
+
+    @Since("8.0.0")
+	protected Column getColumn(String columnName, Table table) {
+		Column c = table.getColumnByName(columnName);
+		if (c != null) {
+			return c;
+		}
+		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.no_column, columnName, table.getName())); 
+	}
+
+    @Since("8.0.0")
+	protected AbstractMetadataRecord getColumn(String paramName, Procedure proc, boolean parameter) {
+		if (proc.getResultSet() != null) {
+			Column result = proc.getResultSet().getColumnByName(paramName);
+			if (result != null) {
+				return result;
+			}
+		}
+		if (parameter) {
+			List<ProcedureParameter> params = proc.getParameters();
+			for (ProcedureParameter param:params) {
+				if (param.getName().equalsIgnoreCase(paramName)) {
+					return param;
+				}
+			}
+		}
+		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.alter_procedure_param_doesnot_exist, paramName, proc.getName()));
+	}
+	
+    @Since("8.0.0")
+	protected FunctionParameter getParameter(String paramName, FunctionMethod func) {
+		List<FunctionParameter> params = func.getInputParameters();
+		for (FunctionParameter param:params) {
+			if (param.getName().equalsIgnoreCase(paramName)) {
+				return param;
+			}
+		}
+		throw  new RuntimeException(Messages.getString(Messages.TeiidParser.alter_function_param_doesnot_exist, paramName, func.getName()));
+	}	
+	
+    @Since("8.0.0")
+	protected void createDDLTrigger(MetadataFactory schema, AlterTrigger trigger) {
+		GroupSymbol group = trigger.getTarget();
+		
+		Table table = schema.getSchema().getTable(group.getName());
+		if (trigger.getEvent().equals(Table.TriggerEvent.INSERT)) {
+			table.setInsertPlan(trigger.getDefinition().toString());
+		}
+		else if (trigger.getEvent().equals(Table.TriggerEvent.UPDATE)) {
+			table.setUpdatePlan(trigger.getDefinition().toString());
+		}
+		else if (trigger.getEvent().equals(Table.TriggerEvent.DELETE)) {
+			table.setDeletePlan(trigger.getDefinition().toString());
+		}
+	}
+
+    @Since("8.0.0")
+    protected BaseColumn addProcColumn(MetadataFactory factory, Procedure proc, String name, ParsedDataType type, boolean rs) {
+        BaseColumn column = null;
+        if (rs) {
+            column = factory.addProcedureResultSetColumn(name, type.getType(), proc);
+        } else {
+            boolean added = false;
+            for (ProcedureParameter pp : proc.getParameters()) {
+                if (pp.getType() == Type.ReturnValue) {
+                    added = true;
+                    if (pp.getDatatype() != factory.getDataTypes().get(type.getType())) {
+                        throw new RuntimeException(Messages.getString(Messages.TeiidParser.proc_type_conflict, proc.getName(), pp.getDatatype(), type.getType()));
+                    }
+                }
+            }
+            if (!added) {
+                column = factory.addProcedureParameter(name, type.getType(), ProcedureParameter.Type.ReturnValue, proc);
+            }
+        }
+        setTypeInfo(type, column);
+        return column;
+    }
+
+	@Since("8.0.0")
+    protected void setTypeInfo(ParsedDataType type, BaseColumn column) {
+        if (type.getLength() != null){
+            column.setLength(type.getLength());
+        }
+        if (type.getScale() != null){
+            column.setScale(type.getScale());
+        }   
+        if (type.getPrecision() != null){
+            column.setPrecision(type.getPrecision());
+        }
+    }
+
+	@Since("8.0.0")
+	protected String resolvePropertyKey(MetadataFactory factory, String key) {
+	 	int index = key.indexOf(':');
+	 	if (index > 0 && index < key.length() - 1) {
+	 		String prefix = key.substring(0, index);
+	 		String uri = MetadataFactory.BUILTIN_NAMESPACES.get(prefix);
+	 		if (uri == null) {
+	 			uri = factory.getNamespaces().get(prefix);
+	 		}
+	 		if (uri != null) {
+	 			key = '{' +uri + '}' + key.substring(index + 1, key.length());
+	 		}
+	 		//TODO warnings or errors if not resolvable 
+	 	}
+	 	return key;
+	}
+
+    @Since("8.0.0")
+    protected KeyRecord addFBI(MetadataFactory factory, List<Expression> expressions, Table table, String name) {
+        List<String> columnNames = new ArrayList<String>(expressions.size());
+        List<Boolean> nonColumnExpressions = new ArrayList<Boolean>(expressions.size());
+        boolean fbi = false;
+        for (int i = 0; i < expressions.size(); i++) {
+            Expression ex = expressions.get(i);
+            if (ex instanceof ElementSymbol) {
+                columnNames.add(((ElementSymbol)ex).getName());
+                nonColumnExpressions.add(Boolean.FALSE);
+            } else {
+                columnNames.add(ex.toString());
+                nonColumnExpressions.add(Boolean.TRUE);
+                fbi = true;
+            }
+        }
+        return factory.addFunctionBasedIndex(name != null?name:(SQLConstants.NonReserved.INDEX+(fbi?table.getFunctionBasedIndexes().size():table.getIndexes().size())), columnNames, nonColumnExpressions, table);
+    }
+
+    @Since("8.0.0")
+    protected MetadataFactory getTempMetadataFactory() {
+        if (this.metadataFactory == null) {
+            this.metadataFactory = new MetadataFactory("temp", 1, "temp", //$NON-NLS-1$ //$NON-NLS-2$
+                                                       SystemMetadata.getInstance(getVersion()).getRuntimeTypeMap(), null, null);
+        }
+        return this.metadataFactory;
     }
 }

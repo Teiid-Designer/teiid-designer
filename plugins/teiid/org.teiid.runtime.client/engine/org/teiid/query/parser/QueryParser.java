@@ -24,8 +24,12 @@ package org.teiid.query.parser;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashSet;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.metadata.FunctionMethod;
+import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.Command;
@@ -100,6 +104,28 @@ public class QueryParser implements IQueryParser {
 
 		return teiidParser;
 	}
+
+	/**
+	 * Parses the given procedure sql string, returning the object
+	 * representation
+	 *
+	 * @param sql
+	 * @param update
+	 * @return command of sql
+	 * @throws Exception
+	 */
+	@Since("8.0.0")
+	public Command parseProcedure(String sql, boolean update) throws Exception {
+        try{
+            if (update) {
+                return getTeiidParser(sql).forEachRowTriggerAction(new ParseInfo());
+            }
+            Command result = getTeiidParser(sql).procedureBodyCommand(new ParseInfo());
+            return result;
+        } catch(Exception pe) {
+            throw convertParserException(pe);
+        }
+    }
 
 	/**
 	 * Takes a SQL string representing a Command and returns the object
@@ -275,4 +301,23 @@ public class QueryParser implements IQueryParser {
 //            throw handleTokenMgrError(tme);
 //        }
 //    }
+
+    public void parseDDL(MetadataFactory factory, String ddl) {
+        parseDDL(factory, new StringReader(ddl));
+    }
+    
+    public void parseDDL(MetadataFactory factory, Reader ddl) {
+        try {
+            getSqlParser(ddl).parseMetadata(factory);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        HashSet<FunctionMethod> functions = new HashSet<FunctionMethod>();
+        for (FunctionMethod functionMethod : factory.getSchema().getFunctions().values()) {
+            if (!functions.add(functionMethod)) {
+                throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60015, functionMethod.getName()));
+            }
+        }
+    }
 }

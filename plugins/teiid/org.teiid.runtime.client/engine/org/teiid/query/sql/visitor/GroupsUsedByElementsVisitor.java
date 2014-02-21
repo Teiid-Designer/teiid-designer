@@ -26,8 +26,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.teiid.designer.query.sql.IGroupsUsedByElementsVisitor;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 

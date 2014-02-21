@@ -31,10 +31,10 @@ import java.util.List;
 import org.teiid.designer.query.sql.IElementCollectorVisitor;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.runtime.client.Messages;
 

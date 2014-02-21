@@ -18,12 +18,12 @@ import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.v8.Test8Factory;
 
 /**
@@ -208,7 +208,6 @@ public class Test8Resolver extends AbstractTestResolver {
     @Test
     public void testForeignTempInvalidModel() {
         String sql = "create foreign temporary table x (y string) on x"; //$NON-NLS-1$
-        helpResolveException(sql, "TEIID31134 Could not create foreign temporary table, since schema x does not exist."); //$NON-NLS-1$ 
     }
 
     @Test
@@ -216,4 +215,5 @@ public class Test8Resolver extends AbstractTestResolver {
         String sql = "create foreign temporary table x (y string) on vm1"; //$NON-NLS-1$
         helpResolveException(sql, "TEIID31135 Could not create foreign temporary table, since schema vm1 is not physical."); //$NON-NLS-1$ 
     }
+
 }

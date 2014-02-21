@@ -45,6 +45,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
+import org.teiid.metadata.ForeignKey;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.metadata.GroupInfo;
@@ -56,7 +57,6 @@ import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
@@ -72,6 +72,7 @@ import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.CaseExpression;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -89,16 +90,6 @@ import org.teiid.runtime.client.Messages;
  * Utilities used during resolution
  */
 public class ResolverUtil {
-
-    /**
-     * Taken from AbstractMetadataRecord
-     */
-    public static final String RELATIONAL_URI = "{http://www.teiid.org/ext/relational/2012}"; //$NON-NLS-1$
-
-    /**
-     * Taken from ForeignKey
-     */
-    public static final String ALLOW_JOIN = RELATIONAL_URI + "allow-join"; //$NON-NLS-1$
 
     public static class ResolvedLookup {
 		private GroupSymbol group;
@@ -1164,11 +1155,14 @@ public class ResolverUtil {
 		return crits;
 	}
 
+	/**
+	 * Taken from RuleRaiseAccess
+	 */
     private static boolean matchesForeignKey(IQueryMetadataInterface metadata, Collection<Object> leftIds, Collection<Object> rightIds, GroupSymbol leftGroup, boolean exact)
         throws Exception {
         Collection fks = metadata.getForeignKeysInGroup(leftGroup.getMetadataID());
         for (Object fk : fks) {
-            String allow = metadata.getExtensionProperty(fk, ALLOW_JOIN, false);
+            String allow = metadata.getExtensionProperty(fk, ForeignKey.ALLOW_JOIN, false);
             if (allow != null && !Boolean.valueOf(allow)) {
                 continue;
             }

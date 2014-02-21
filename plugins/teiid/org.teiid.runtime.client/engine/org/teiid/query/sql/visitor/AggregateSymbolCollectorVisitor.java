@@ -28,10 +28,10 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
 import org.teiid.query.sql.symbol.AggregateSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.WindowFunction;
 

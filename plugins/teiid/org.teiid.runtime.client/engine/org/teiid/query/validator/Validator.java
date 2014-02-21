@@ -29,11 +29,12 @@ import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
 
 public class Validator {
 
-    public static final ValidatorReport validate(LanguageObject object, QueryMetadataInterface metadata) throws Exception {
+    public static final ValidatorReport validate(LanguageObject object, IQueryMetadataInterface metadata) throws Exception {
         ValidatorReport report1 = Validator.validate(object, metadata, new ValidationVisitor());
         return report1;
     }

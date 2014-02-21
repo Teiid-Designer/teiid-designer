@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Properties;
 import org.teiid.designer.xml.IMappingElement;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 

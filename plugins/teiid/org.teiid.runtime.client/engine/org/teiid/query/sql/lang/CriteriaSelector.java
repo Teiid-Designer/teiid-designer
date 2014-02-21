@@ -8,6 +8,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ICriteriaSelector;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 /**
  *

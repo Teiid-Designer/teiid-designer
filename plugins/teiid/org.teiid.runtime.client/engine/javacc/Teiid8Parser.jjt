@@ -15,6 +15,7 @@ options {
     GRAMMAR_ENCODING="UTF-8";
     KEEP_LINE_COLUMN = true;
     NODE_FACTORY = "TeiidNodeFactory";
+    NODE_DEFAULT_VOID = true;
 }
 
 PARSER_BEGIN(Teiid8Parser)
@@ -28,10 +29,18 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.designer.query.sql.lang.IJoinType;
+import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.runtime.client.Messages;
 import org.teiid.language.SortSpecification.NullOrdering;
-import org.teiid.metadata.Column;
+import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.BaseColumn;
 import org.teiid.metadata.BaseColumn.NullType;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.KeyRecord;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Procedure;
+import org.teiid.metadata.ProcedureParameter;
+import org.teiid.metadata.Table;
 import org.teiid.query.parser.AbstractTeiidParser;
 import org.teiid.query.parser.ParsedDataType;
 import org.teiid.query.parser.ParseInfo;
@@ -662,7 +671,7 @@ name=string
 description=A string literal value.  Use '' to escape ' in the string.  
 example={code:sql}'a string'{code}\n{code:sql}'it''s a string'{code}
 */
-String stringVal() #void :
+String stringVal() :
 {
 	Token t = null;	
 }
@@ -678,7 +687,7 @@ name=non-reserved identifier
 description=Allows non-reserved keywords to be parsed as identifiers  
 example=SELECT *COUNT* FROM ...
 */
-Token nonReserved() #void :
+Token nonReserved() :
 {
 }
 {
@@ -698,7 +707,7 @@ name=identifier
 description=Partial or full name of a single entity.
 example={code:sql}tbl.col{code}\n{code:sql}"tbl"."col"{code}
 */
-String id(Boolean validate) #void :
+String id(Boolean validate) :
 {
 }
 {
@@ -708,7 +717,8 @@ String id(Boolean validate) #void :
   		if (validate != null) {
   		    try {
   			   return validateName(id, validate);
-  			 } catch (Exception ex) {  			   throw new ParseException(ex.getLocalizedMessage());
+  			 } catch (Exception ex) {
+  			   throw new ParseException(ex.getLocalizedMessage());
   		     }
   		}
   		return id;
@@ -718,7 +728,7 @@ String id(Boolean validate) #void :
 /* TODO: createProcedure should not be here, but is due to all of the legacy tests
 unused=true
 */
-Command command(ParseInfo info) #void :
+Command command(ParseInfo info) :
 {
     Command command = null;
 }
@@ -737,7 +747,7 @@ Command command(ParseInfo info) #void :
 /*
 unused=true
 */
-Command designerCommand(ParseInfo info) #void :
+Command designerCommand(ParseInfo info) :
 {
 	Command command = null;
 }
@@ -758,23 +768,23 @@ name=create trigger
 description=Creates a trigger action on the given target.
 example={code:sql}CREATE TRIGGER ON vw INSTEAD OF INSERT AS FOR EACH ROW BEGIN ATOMIC ... END{code}
 */
-Command createTrigger(ParseInfo info) #void :
+Command createTrigger(ParseInfo info) :
 {
   	String target = null;
-  	Token event = null;
   	TriggerAction triggerAction = null;
+  	Token event = null;
 }
 {
 	<CREATE> <TRIGGER> <ON> target = id(null) <INSTEAD> <OF> 
 	(event = <INSERT> | event = <UPDATE> | event = <DELETE>) 
 	<AS> triggerAction = forEachRowTriggerAction(info)
 	{
-		AlterTrigger trigger = alterTrigger();
-		trigger.setTarget(groupSymbol(target));
-		trigger.setDefinition(triggerAction);
-		trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
-		trigger.setCreate(true);
-		return trigger;
+		AlterTrigger alterTrigger = alterTrigger();
+		alterTrigger.setTarget(groupSymbol(target));
+		alterTrigger.setDefinition(triggerAction);
+		alterTrigger.setEvent(Table.TriggerEvent.valueOf(event.image.toUpperCase()));
+		alterTrigger.setCreate(true);
+		return alterTrigger;
 	}
 }
 
@@ -783,7 +793,7 @@ name=alter
 description=Alter the given target.
 example={code:sql}ALTER VIEW vw AS SELECT col FROM tbl{code}
 */
-Command alter(ParseInfo info) #void :
+Command alter(ParseInfo info) :
 {
   	String target = null;
   	QueryCommand command = null;
@@ -803,10 +813,10 @@ Command alter(ParseInfo info) #void :
 		 	 *     command.setCacheHint(getQueryCacheOption(comment.image));
 	 	     * }
 	 	     */
-            AlterView view = alterView();
-	 		view.setTarget(groupSymbol(target));
-	 		view.setDefinition(command);
-	 		return view;
+            AlterView alterView = alterView();
+	 		alterView.setTarget(groupSymbol(target));
+	 		alterView.setDefinition(command);
+	 		return alterView;
 	 	}
 		| (<PROCEDURE> target = id(null) <AS> { comment = getToken(1).specialToken; } stmt = statement(info)) 
 		{
@@ -817,24 +827,24 @@ Command alter(ParseInfo info) #void :
 		 	 *     cup.setCacheHint(getQueryCacheOption(comment.image));
 	 	     * }
 	 	     */
-            AlterProcedure procedure = alterProcedure();
-			procedure.setTarget(groupSymbol(target));
-			procedure.setDefinition(cup);
-			return procedure;
+            AlterProcedure alterProc = alterProcedure();
+			alterProc.setTarget(groupSymbol(target));
+			alterProc.setDefinition(cup);
+			return alterProc;
 		}
 		| (<TRIGGER> <ON> target = id(null) <INSTEAD> <OF> 
 		  (event = <INSERT> | event = <UPDATE> | event = <DELETE>) 
 		  ((<AS> triggerAction = forEachRowTriggerAction(info))
 		  |<ENABLED> {enabled=true;}| <DISABLED> {enabled=false;}))
 		{
-		    AlterTrigger trigger = alterTrigger();
-			trigger.setTarget(groupSymbol(target));
-			trigger.setDefinition(triggerAction);
-			trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
+		    AlterTrigger alterTrigger = alterTrigger();
+			alterTrigger.setTarget(groupSymbol(target));
+			alterTrigger.setDefinition(triggerAction);
+			alterTrigger.setEvent(Table.TriggerEvent.valueOf(event.image.toUpperCase()));
 			if (enabled != null) {
-				trigger.setEnabled(enabled);
+				alterTrigger.setEnabled(enabled);
 			}
-			return trigger;
+			return alterTrigger;
 		}
 	)
 }
@@ -881,7 +891,7 @@ description=A statement that can be executed at runtime.
 example={code:sql}SELECT * FROM tbl{code}
 index=true
 */
-Command userCommand(ParseInfo info) #void :
+Command userCommand(ParseInfo info) :
 {
 	Command command = null;
 	SourceHint sourceHint = null;
@@ -903,13 +913,15 @@ Command userCommand(ParseInfo info) #void :
 	command = delete(info) |
 	command = dropTable(info) |	
 	LOOKAHEAD(2) command = createTempTable(info) |
-	//  TODO Consider whether these should be re-included//    LOOKAHEAD(2) command = createForeignTempTable(info) |
+    LOOKAHEAD(2) command = createForeignTempTable(info) |
 	command = alter(info) |
 	command = createTrigger(info)
 	)
 	{
 	    if (sourceHint != null) {
-//	        if (command instanceof SetQuery) {//	        	((SetQuery)command).getProjectedQuery().setSourceHint(sourceHint);//	        } else {
+//	        if (command instanceof SetQuery) {
+//	        	((SetQuery)command).getProjectedQuery().setSourceHint(sourceHint);
+//	        } else {
 	    		command.setSourceHint(sourceHint);
 //	    	}
 	    }
@@ -981,7 +993,7 @@ name=temporary table element
 description=Defines a temporary table column.
 example={code:sql}col string NOT NULL{code}
 */
-Column tableElement(ParseInfo info) #void :
+Column tableElement(ParseInfo info) :
 {
     String element = null;
     ParsedDataType type = null;
@@ -1017,7 +1029,7 @@ name=raise error statement
 description=Raises an error with the given message.
 example={code:sql}ERROR 'something went wrong'{code}
 */
-RaiseStatement errorStatement(ParseInfo info) #void :
+RaiseStatement errorStatement(ParseInfo info) :
 {
     Expression errMsg = null;
 }
@@ -1037,7 +1049,7 @@ name=raise statement
 description=Raises an error or warning with the given message.
 example={code:sql}RAISE SQLEXCEPTION 'something went wrong'{code}
 */
-RaiseStatement raiseStatement(ParseInfo info) #void :
+RaiseStatement raiseStatement(ParseInfo info) :
 {
     RaiseStatement stmt = null;
     Expression err = null;
@@ -1055,9 +1067,11 @@ RaiseStatement raiseStatement(ParseInfo info) #void :
 }
 
 RaiseStatement raiseStatementFromExpression(Expression expression) #RaiseStatement :
-{}
 {
-    {      jjtThis.setExpression(expression);
+}
+{
+    {
+      jjtThis.setExpression(expression);
       return jjtThis;
     }
 }
@@ -1067,7 +1081,7 @@ name=exception reference
 description=a reference to an exception
 example={code:sql}SQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2{code}
 */
-Expression exceptionReference(ParseInfo info) #void :
+Expression exceptionReference(ParseInfo info) :
 {
 	String id = null;
 	Expression ex;
@@ -1086,7 +1100,7 @@ name=sql exception
 description=creates a sql exception or warning with the specified message, state, and code
 example={code:sql}SQLEXCEPTION 'something went wrong' SQLSTATE '00X', 2{code}
 */
-Expression exception(ParseInfo info) #void :
+Expression exception(ParseInfo info) :
 {
 	Expression err = null;
 	Expression sqlState = null;
@@ -1111,8 +1125,11 @@ Expression exception(ParseInfo info) #void :
 }
 
 ExceptionExpression exceptionExpression() #ExceptionExpression :
-{}
-{    {        return jjtThis;
+{
+}
+{
+    {
+        return jjtThis;
     }
 }
 
@@ -1121,32 +1138,32 @@ name=statement
 description=A procedure statement.
 example={code:sql}IF (x = 5) BEGIN ... END{code}
 */
-Statement statement(ParseInfo info) #void :
+Statement statement(ParseInfo info) :
 {
-    Statement statement;
+    Statement stmt;
     String label = null;
 }
 {
     (
 	 LOOKAHEAD(2) ([label = id(null) <COLON>] 
 	  (
-	   statement = loopStatement(info) |
-	   statement = whileStatement(info) |
-	   statement = compoundStatement(info)
+	   stmt = loopStatement(info) |
+	   stmt = whileStatement(info) |
+	   stmt = compoundStatement(info)
 	  )
 	  {
-	  	((Labeled) statement).setLabel(label);
+	  	((Labeled)stmt).setLabel(label);
 	  }
 	 )
 	 |
 	 (
-      statement = ifStatement(info) |
-      statement = delimitedStatement(info)
+      stmt = ifStatement(info) |
+      stmt = delimitedStatement(info)
 	 )
 	)
     
     {
-        return statement;
+        return stmt;
     }
 }
 
@@ -1155,7 +1172,7 @@ name=delimited statement
 description=A procedure statement terminated by ;.
 example={code:sql}SELECT * FROM tbl;{code}
 */
-Statement delimitedStatement(ParseInfo info) #void :
+Statement delimitedStatement(ParseInfo info) :
 {
     Statement stmt = null;
 }           
@@ -1179,10 +1196,10 @@ name=compound statement
 description=A procedure statement block contained in BEGIN END.
 example={code:sql}BEGIN NOT ATOMIC ... END{code}
 */
-Block compoundStatement(ParseInfo info) #void :
+Block compoundStatement(ParseInfo info) :
 {
-    Block block = block();
     Statement stmt = null;
+    Block block = block();
     Boolean atomic = null;
     String eId = null;
 }
@@ -1376,7 +1393,7 @@ name=assignment statement
 description=Assigns a variable a value in a procedure.
 example={code:sql}x = 'b'{code}
 */
-Statement assignStatement(ParseInfo info) #void :
+Statement assignStatement(ParseInfo info) :
 {
     LanguageObject value = null;
     String var = null;
@@ -1412,7 +1429,7 @@ Statement assignStatement(ParseInfo info) #void :
 name=assignment statement operand
 description=A value or command that can be used in an assignment.  {note}All assigments except for expression are deprecated.{note}
 */
-LanguageObject assignStatementOperand(ParseInfo info) #void :
+LanguageObject assignStatementOperand(ParseInfo info) :
 {
     LanguageObject value = null;
 }
@@ -1563,8 +1580,10 @@ SetClauseList setClauseList(boolean shortName, ParseInfo info) #SetClauseList :
 }
 
 SetClause setClause(ElementSymbol symbol, Expression value) #SetClause :
-{}
-{    {
+{
+}
+{
+    {
         jjtThis.setSymbol(symbol);
         jjtThis.setValue(value);
         return jjtThis;
@@ -1576,7 +1595,7 @@ name=typed element list
 description=A list of typed elements.
 example={code:sql}col1 string, col2 integer ...{code}
 */
-List<ProjectedColumn> createElementsWithTypes(ParseInfo info) #void :
+List<ProjectedColumn> createElementsWithTypes(ParseInfo info) :
 {
 	String element = null;
 	ParsedDataType type = null;
@@ -1602,9 +1621,12 @@ List<ProjectedColumn> createElementsWithTypes(ParseInfo info) #void :
 	 }
 }
 
-ProjectedColumn projectedColumn(String name, String type) #ProjectedColumn :{}
+ProjectedColumn projectedColumn(String name, String type) #ProjectedColumn :
 {
-    {        jjtThis.setName(name);
+}
+{
+    {
+        jjtThis.setName(name);
         jjtThis.setType(type);
         return jjtThis;
     }
@@ -1616,7 +1638,7 @@ description=A callable statement defined using JDBC escape syntax.
 example={code:sql}{? = CALL proc}{code}
 index=true
 */
-StoredProcedure callableStatement(ParseInfo info) #void :
+StoredProcedure callableStatement(ParseInfo info) :
 {
 	StoredProcedure storedProcedure = newStoredProcedure();
 	storedProcedure.setCallableStatement(true);
@@ -1667,17 +1689,14 @@ name=call statement
 description=Executes the procedure with the given parameters.
 example={code:sql}CALL proc('a', 1){code}
 */
-StoredProcedure storedProcedure(ParseInfo info, int startIndex) #void :
+StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 {
-    StoredProcedure storedProcedure = null;
 	String procName = null;
 	Option option = null;
 	List<Expression> values = null;
+	StoredProcedure storedProcedure = newStoredProcedure();
 }
 {
-    {        storedProcedure = newStoredProcedure();
-    }
-
 	(
 		(<EXEC> | <EXECUTE> | <CALL>)
 		procName = id(null)
@@ -1721,7 +1740,7 @@ name=named parameter list
 description=A list of named parameters.
 example={code:sql}param1 => 'x', param2 => 1{code}
 */
-void executeNamedParams(ParseInfo info, StoredProcedure storedProcedure, int parameterIndex) #void :
+void executeNamedParams(ParseInfo info, StoredProcedure storedProcedure, int parameterIndex) :
 {
 	String name = null;
     Expression value = null;
@@ -1814,7 +1833,7 @@ name=expression list
 description=A list of expressions.
 example={code:sql}col1, 'a', ...{code}
 */
-ArrayList<Expression> expressionList(ParseInfo info) #void :
+ArrayList<Expression> expressionList(ParseInfo info) :
 {
 	ArrayList<Expression> rowVals = new ArrayList<Expression>(4);
 	Expression value = null;
@@ -1907,7 +1926,7 @@ name=query expression
 description=A declarative query for data.
 example={code:sql}SELECT * FROM tbl WHERE col2 = 1{code}
 */
-QueryCommand queryExpression(ParseInfo info) #void :
+QueryCommand queryExpression(ParseInfo info) :
 {
     QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
@@ -1961,7 +1980,7 @@ name=query expression body
 description=The body of a query expression, which can optionally be ordered and limited.
 example={code:sql}SELECT * FROM tbl ORDER BY col1 LIMIT 1{code}
 */
-QueryCommand queryExpressionBody(ParseInfo info) #void :
+QueryCommand queryExpressionBody(ParseInfo info) :
 {
     QueryCommand query = null;
     QueryCommand rightQuery = null;
@@ -1969,11 +1988,11 @@ QueryCommand queryExpressionBody(ParseInfo info) #void :
     Option option = null;
 	OrderBy orderby = null;
 	Limit limit = null;
-	SetQuery.Operation type;
+	ISetQuery.Operation type;
 }
 {
 	query = queryTerm(info) 
-	(	(LOOKAHEAD( <UNION>, { getToken(2).kind != JOIN } ) <UNION> { type = SetQuery.Operation.UNION; } | <EXCEPT> { type = SetQuery.Operation.EXCEPT; }) 
+	(	(LOOKAHEAD( <UNION>, { getToken(2).kind != JOIN } ) <UNION> { type = ISetQuery.Operation.UNION; } | <EXCEPT> { type = ISetQuery.Operation.EXCEPT; }) 
  	 	[<ALL> { all = true; } | <DISTINCT>]
  	 	rightQuery = queryTerm(info)
  	   	{
@@ -1994,7 +2013,7 @@ name=query term
 description=Used to establish INTERSECT precedence.
 example={code:sql}SELECT * FROM tbl{code}\n{code:sql}SELECT * FROM tbl1 INTERSECT SELECT * FROM tbl2{code}
 */
-QueryCommand queryTerm(ParseInfo info) #void :
+QueryCommand queryTerm(ParseInfo info) :
 {
     QueryCommand query = null;
     QueryCommand rightQuery = null;
@@ -2006,7 +2025,7 @@ QueryCommand queryTerm(ParseInfo info) #void :
  		[<ALL> { all = true; } | <DISTINCT>] 
  		rightQuery=queryPrimary(info)
  		{
- 	   		query = setQuery(SetQuery.Operation.INTERSECT, all, query, rightQuery);
+ 	   		query = setQuery(ISetQuery.Operation.INTERSECT, all, query, rightQuery);
     		all = false;
  		}
 	) *
@@ -2015,9 +2034,12 @@ QueryCommand queryTerm(ParseInfo info) #void :
     }
 }    
 
-SetQuery setQuery(SetQuery.Operation operation, boolean all, QueryCommand leftQuery, QueryCommand rightQuery) #SetQuery :
-{}
-{    {        jjtThis.setOperation(operation);
+SetQuery setQuery(ISetQuery.Operation operation, boolean all, QueryCommand leftQuery, QueryCommand rightQuery) #SetQuery :
+{
+}
+{
+    {
+        jjtThis.setOperation(operation);
         jjtThis.setAll(all);
         jjtThis.setLeftQuery(leftQuery);
         jjtThis.setRightQuery(rightQuery);
@@ -2030,7 +2052,7 @@ name=query primary
 description=A declarative source of rows.
 example={code:sql}TABLE tbl{code}\n{code:sql}SELECT * FROM tbl1{code}
 */
-QueryCommand queryPrimary(ParseInfo info) #void :
+QueryCommand queryPrimary(ParseInfo info) :
 {
     QueryCommand query = null;
     String name = null;
@@ -2161,7 +2183,7 @@ name=select sublist
 description=An element in the select clause
 example={code:sql}tbl.*{code}\n{code:sql}tbl.col AS x{code}
 */
-Expression selectSymbol(ParseInfo info) #void :
+Expression selectSymbol(ParseInfo info) :
 {
 	Expression symbol = null;	
 }
@@ -2181,7 +2203,7 @@ name=select derived column
 description=A select clause item that selects a single column. {note}This is slightly different than a derived column in that the AS keyword is optional.{note}
 example={code:sql}tbl.col AS x{code}
 */
-Expression selectExpression(ParseInfo info) #void :
+Expression selectExpression(ParseInfo info) :
 {
 	Expression expression = null;
     String alias = null;
@@ -2247,7 +2269,7 @@ name=ordered aggreate function
 description=An aggregate function that can optionally be ordered.
 example={code:sql}XMLAGG(col1) ORDER BY col2{code}\n{code:sql}ARRAY_AGG(col1){code}
 */
-AggregateSymbol orderedAgg(ParseInfo info) #void :
+AggregateSymbol orderedAgg(ParseInfo info) :
 {
     Token t = null;
 	Expression expression = null;
@@ -2272,7 +2294,7 @@ name=text aggreate function
 description=An aggregate function for creating separated value clobs.
 example={code:sql}TEXTAGG (col1 as t1, col2 as t2 DELIMITER ',' HEADER){code}
 */
-AggregateSymbol textAgg(ParseInfo info) #void :
+AggregateSymbol textAgg(ParseInfo info) :
 {
 	DerivedColumn expression = null;
 	Character delimiter = null;
@@ -2332,11 +2354,11 @@ name=standard aggregate function
 description=A standard aggregate function.
 example={code:sql}COUNT(*){code}
 */
-AggregateSymbol aggregateSymbol(ParseInfo info) #void :
+AggregateSymbol aggregateSymbol(ParseInfo info) :
 {
-    AggregateSymbol aggregateSymbol = null;
 	Token func = null;
 	Token starToken = null;
+    AggregateSymbol agg = null;
 	boolean isDistinct = false;
 	Expression expression = null;
 }
@@ -2361,12 +2383,12 @@ AggregateSymbol aggregateSymbol(ParseInfo info) #void :
 		String name = func.image.toUpperCase();
 		if(starToken == null) { 
 			// Aggregate
-			aggregateSymbol = newAggregateSymbol(name, isDistinct, new Expression[] {expression});
+			agg = newAggregateSymbol(name, isDistinct, new Expression[] {expression});
 		} else {
 			// COUNT(*)
-			aggregateSymbol = newAggregateSymbol(name, false, null);
+			agg = newAggregateSymbol(name, false, null);
 		}
-		return aggregateSymbol;
+		return agg;
 	}
 }
 
@@ -2375,7 +2397,7 @@ name=analytic aggregate function
 description=An analytic aggregate function.
 example={code:sql}ROW_NUMBER(){code}
 */
-AggregateSymbol analyticAggregateSymbol(ParseInfo info) #void :
+AggregateSymbol analyticAggregateSymbol(ParseInfo info) :
 {
 	Token func = null;
 }
@@ -2392,7 +2414,7 @@ name=filter clause
 description=An aggregate filter clause applied prior to accumulating the value.
 example={code:sql}FILTER (WHERE col1='a'){code}
 */
-Expression filterClause(ParseInfo info) #void :
+Expression filterClause(ParseInfo info) :
 {
 	Expression condition = null;
 }
@@ -2410,8 +2432,8 @@ example={code:sql}FROM a, b{code}\n{code:sql}FROM a right outer join b, c, d joi
 */
 From from(ParseInfo info) #From :
 {
+	FromClause clause = null;
 	List clauseList = new LinkedList();
-	FromClause clause;
 }
 {
 	<FROM>
@@ -2440,22 +2462,22 @@ name=table reference
 description=An optionally escaped joined table.
 example={code:sql}a{code}\n{code:sql}a inner join b{code}
 */
-FromClause tableReference(ParseInfo info) #void :
+FromClause tableReference(ParseInfo info) :
 {
-    FromClause fromClause = null;
+	FromClause result = null;
 }
 {	
 	(
 		(	
 			<ESCAPEDJOIN>
-			fromClause=joinedTable(info)
+			result=joinedTable(info)
 			<RBRACE>
 		) 
 		|
-		fromClause=joinedTable(info)
+		result=joinedTable(info)
 	)
 	{
-		return fromClause;
+		return result;
 	}
 }	
 
@@ -2464,7 +2486,7 @@ name=joined table
 description=A table or join.
 example={code:sql}a{code}\n{code:sql}a inner join b{code}
 */
-FromClause joinedTable(ParseInfo info) #void :
+FromClause joinedTable(ParseInfo info) :
 {
 	FromClause result = null;
 	JoinPredicate jp = null;
@@ -2490,14 +2512,12 @@ name=cross join
 description=A cross join.
 example={code:sql}a CROSS JOIN b{code}
 */
-JoinPredicate crossJoin(ParseInfo info) #void :
+JoinPredicate crossJoin(ParseInfo info) :
 {
-    JoinPredicate result;
+    JoinPredicate result = joinPredicate();
 	FromClause clause = null;
 }
 {
-    {        result = joinPredicate();
-    }
 	(	(<CROSS> {result.setJoinType(joinType(IJoinType.Types.JOIN_CROSS));}|<UNION> {result.setJoinType(joinType(IJoinType.Types.JOIN_UNION));})
     	<JOIN> 
 		clause = tablePrimary(info) {result.setRightClause(clause);}
@@ -2512,15 +2532,13 @@ name=qualified table
 description=An INNER or OUTER join.
 example={code:sql}a inner join b{code}
 */
-JoinPredicate qualifiedJoin(ParseInfo info) #void :
+JoinPredicate qualifiedJoin(ParseInfo info) :
 {
-	JoinPredicate result;
+	JoinPredicate result = joinPredicate();
 	FromClause clause = null;
 	Criteria onCriteria = null;
 }
 {
-    {        result = joinPredicate();
-    }
 	(	[	(<RIGHT> {result.setJoinType(joinType(IJoinType.Types.JOIN_RIGHT_OUTER));} [<OUTER>])
     		| (<LEFT> {result.setJoinType(joinType(IJoinType.Types.JOIN_LEFT_OUTER));} [<OUTER>])
     		|  (<FULL> {result.setJoinType(joinType(IJoinType.Types.JOIN_FULL_OUTER));} [<OUTER>])
@@ -2537,14 +2555,20 @@ JoinPredicate qualifiedJoin(ParseInfo info) #void :
 }
 
 JoinPredicate joinPredicate() #JoinPredicate :
-{}
-{    {        return jjtThis;
+{
+}
+{
+    {
+        return jjtThis;
     }
 }
 
 JoinType joinType(IJoinType.Types kind) #JoinType :
-{}
-{    {        jjtThis.setKind(kind);
+{
+}
+{
+    {
+        jjtThis.setKind(kind);
         return jjtThis;
     }
 }
@@ -2554,7 +2578,7 @@ name=table primary
 description=A single source of rows.
 example={code:sql}a{code}
 */
-FromClause tablePrimary(ParseInfo info) #void :
+FromClause tablePrimary(ParseInfo info) :
 {
 	FromClause clause = null;
 	Token lparen = null;
@@ -2988,7 +3012,8 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 }
 {
 	name = id(null)
-	{	   jjtThis.setName(name);
+	{
+	   jjtThis.setName(name);
 	}
 
 	((
@@ -3019,7 +3044,7 @@ name=unsigned integer
 description=An unsigned interger value.
 example={code:sql}12345{code}
 */
-int intVal() #void :
+int intVal() :
 {
 	Token t;
 }
@@ -3097,7 +3122,7 @@ name=where clause
 description=Specifies a search condition
 example={code:sql}WHERE x = 'a'{code}
 */
-Criteria where(ParseInfo info) #void :
+Criteria where(ParseInfo info) :
 {
     Criteria criteria = null;
 }
@@ -3129,7 +3154,7 @@ Criteria criteria(ParseInfo info) #Criteria :
 name=boolean value expression
 description=An optionally ORed boolean expression.
 */
-Criteria compoundCritOr(ParseInfo info) #void :
+Criteria compoundCritOr(ParseInfo info) :
 {
     ArrayList logicList = null;
     Criteria logicPart = null;
@@ -3227,7 +3252,7 @@ name=boolean primary
 description=A boolean predicate or simple expression.
 example={code:sql}col LIKE 'a%'{code}
 */
-Expression booleanPrimary(ParseInfo info) #void :
+Expression booleanPrimary(ParseInfo info) :
 {
     Expression ex = null;
 }
@@ -3257,7 +3282,7 @@ name=comparison operator
 description=A comparison operator.
 example={code:sql}={code}
 */
-Token operator() #void :
+Token operator() :
 {
 	Token operator = null;
 }
@@ -3307,7 +3332,7 @@ name=subquery
 description=A subquery.
 example={code:sql}(SELECT * FROM tbl){code}
 */
-QueryCommand subquery(ParseInfo info) #void :
+QueryCommand subquery(ParseInfo info) :
 {
     QueryCommand subquery = null;
     StoredProcedure proc = null;
@@ -3425,7 +3450,7 @@ name=like regex predicate
 description=A regular expression match.
 example={code:sql}LIKE_REGEX 'a.*b'{code}
 */
-MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) #void :
+MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) :
 {
 	Expression value = null;
 	boolean negated = false;
@@ -3435,12 +3460,12 @@ MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) #void :
     <LIKE_REGEX>
 	value=commonValueExpression(info)
 	{
-    	MatchCriteria matchCriteria = createASTNode(ASTNodes.MATCH_CRITERIA);
-    	matchCriteria.setLeftExpression(expression);
-    	matchCriteria.setRightExpression(value);
-		matchCriteria.setNegated(negated);
-		matchCriteria.setMode(MatchMode.REGEX);
-		return matchCriteria;
+    	MatchCriteria matchcriteria = createASTNode(ASTNodes.MATCH_CRITERIA);
+    	matchcriteria.setLeftExpression(expression);
+    	matchcriteria.setRightExpression(value);
+		matchcriteria.setNegated(negated);
+		matchcriteria.setMode(MatchMode.REGEX);
+		return matchcriteria;
    	}
 }
 
@@ -3449,7 +3474,7 @@ name=character
 description=A single character.
 example={code:sql}'a'{code}
 */
-Character charVal(ParseInfo info, String type) #void :
+Character charVal(ParseInfo info, String type) :
 {
 	String escStr = null;
 }
@@ -3515,14 +3540,14 @@ name=in predicate
 description=A comparison with multiple values.
 example={code:sql}IN (1, 5){code}
 */
-AbstractSetCriteria setCrit(ParseInfo info, Expression expression) #void :
+AbstractSetCriteria setCrit(ParseInfo info, Expression expression) :
 {
-    AbstractSetCriteria criteria = null;
 	Expression value = null;
 	List setList = new ArrayList();
 	QueryCommand command = null;
 	SubqueryHint hint = null;
 	boolean negated = false;
+	AbstractSetCriteria criteria = null;
 }
 {
 	[<NOT> {negated = true;}]
@@ -3558,8 +3583,11 @@ AbstractSetCriteria setCrit(ParseInfo info, Expression expression) #void :
 }
 
 SubquerySetCriteria subquerySetCriteria(Expression expression, QueryCommand command) #SubquerySetCriteria :
-{}
-{    {        jjtThis.setExpression(expression);
+{
+}
+{
+    {
+        jjtThis.setExpression(expression);
         jjtThis.setCommand(command);
         return jjtThis;
     }
@@ -3620,7 +3648,7 @@ name=having clause
 description=Search condition applied after grouping.
 example={code:sql}HAVING max(col1) = 5{code}
 */
-Criteria having(ParseInfo info) #void :
+Criteria having(ParseInfo info) :
 {
     Criteria criteria = null;
 }
@@ -3688,7 +3716,7 @@ name=sort key
 description=A sort expression.
 example={code:sql}col1{code}
 */
-Expression sortKey(ParseInfo info) #void :
+Expression sortKey(ParseInfo info) :
 {
     Expression ex = null;
 }
@@ -3716,7 +3744,7 @@ name=integer parameter
 description=A literal integer or parameter reference to an integer.
 example={code:sql}?{code}
 */
-Expression intParam(ParseInfo info) #void :
+Expression intParam(ParseInfo info) :
 {
    Integer val = null;
 }
@@ -3769,7 +3797,7 @@ name=fetch clause
 description=ANSI limit.
 example={code:sql}FETCH FIRST 1 ROWS ONLY{code}
 */
-Expression fetchLimit(ParseInfo info) #void :
+Expression fetchLimit(ParseInfo info) :
 {
     Expression limit = null;
 }
@@ -3843,7 +3871,7 @@ name=expression
 description=A value.
 example={code:sql}col1{code}
 */
-Expression expression(ParseInfo info) #void :
+Expression expression(ParseInfo info) :
 {
   Expression expression = null;
 }
@@ -3862,7 +3890,7 @@ name=common value expression
 description=Establishes the precedence of concat.
 example={code:sql}'a' || 'b'{code}
 */
-Expression commonValueExpression(ParseInfo info) #void :
+Expression commonValueExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3891,7 +3919,7 @@ Expression commonValueExpression(ParseInfo info) #void :
 name=numeric value expression
 example={code:sql}1 + 2{code}
 */
-Expression plusExpression(ParseInfo info) #void :
+Expression plusExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3923,7 +3951,7 @@ name=plus or minus
 description=The + or - operator.
 example={code:sql}+{code}
 */
-String plusMinus() #void :
+String plusMinus() :
 {
 }
 {
@@ -3938,7 +3966,7 @@ name=term
 description=A numeric term
 example={code:sql}1 * 2{code}
 */
-Expression timesExpression(ParseInfo info) #void :
+Expression timesExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3970,7 +3998,7 @@ name=star or slash
 description=The * or / operator.
 example={code:sql}/{code}
 */
-String timesOperator() #void :
+String timesOperator() :
 {
 	Token operator = null;
 }
@@ -3989,7 +4017,7 @@ name=value expression primary
 description=A simple value expression.
 example={code:sql}+col1{code}
 */
-Expression valueExpressionPrimary(ParseInfo info) #void :
+Expression valueExpressionPrimary(ParseInfo info) :
 {
 	String strVal = null;
 	Expression ex = null;
@@ -4020,7 +4048,7 @@ name=unsigned value expression primary
 description=An unsigned simple value expression.
 example={code:sql}col1{code}
 */
-Expression unsignedValueExpressionPrimary(ParseInfo info) #void :
+Expression unsignedValueExpressionPrimary(ParseInfo info) :
 {
 	Expression expression = null;
 	Token symbol = null;
@@ -4099,8 +4127,12 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) #void :
 }
 
 Reference reference(int referenceIndex) #Reference :
-{}
-{    {        jjtThis.setIndex(referenceIndex);
+{
+}
+{
+    {
+        jjtThis.setIndex(referenceIndex);
+        jjtThis.setPositional(true);
         return jjtThis;
     }
 }
@@ -4110,7 +4142,7 @@ name=window specification
 description=The window specification for an analytical or windowed aggregate function.
 example={code:sql}OVER (PARTION BY col1){code}
 */
-Expression windowSpecification(Expression agg, ParseInfo info) #void :
+Expression windowSpecification(Expression agg, ParseInfo info) :
 {
 	List<Expression> partitionList = null;
 	OrderBy orderBy = null;
@@ -4598,7 +4630,7 @@ name=derived column list
 description=a list of name value pairs
 example={code:sql}col1 AS val1, col2 AS val2{code}
 */
-ArrayList<DerivedColumn> derivedColumnList(ParseInfo info) #void :
+ArrayList<DerivedColumn> derivedColumnList(ParseInfo info) :
 {
 	DerivedColumn expression = null;
 	ArrayList<DerivedColumn> args = new ArrayList<DerivedColumn>(2);
@@ -4676,7 +4708,7 @@ name=xml namespace element
 description=An xml namespace
 example={code:sql}NO DEFAULT{code}
 */
-NamespaceItem namespaceItem() #void :
+NamespaceItem namespaceItem() :
 {
 	String uri = null;
 	String prefix = null;
@@ -4705,7 +4737,7 @@ name=data type
 description=A data type.
 example={code:sql}STRING{code}
 */
-ParsedDataType parseDataType() #void :
+ParsedDataType parseDataType() :
 {
 	Token typeToken = null;
 	Integer length = null;
@@ -4758,7 +4790,7 @@ name=time interval
 description=A time interval keyword.
 example={code:sql}SQL_TSI_HOUR{code}
 */
-Constant intervalType() #void : 
+Constant intervalType() : 
 {
 	Token type = null;
 }
@@ -4784,7 +4816,7 @@ name=non numeric literal
 description=An escaped or simple non numeric literal.
 example={code:sql}'a'{code}
 */
-Constant nonNumericLiteral() #void :
+Constant nonNumericLiteral() :
 {
     Token t = null;
     String strVal = "";
@@ -4832,7 +4864,7 @@ name=unsigned numeric literal
 description=An unsigned numeric literal value.
 example={code:sql}1.234{code}
 */
-Constant unsignedNumericLiteral(String strVal) #void :
+Constant unsignedNumericLiteral(String strVal) :
 {
     Token t = null;
 }
@@ -4880,45 +4912,624 @@ Constant unsignedNumericLiteral(String strVal) #void :
 }
 
 /*
+unused=true
+*/
+ void parseMetadata(MetadataFactory factory) :
+{
+}
+{
+    (ddlStmt(factory))*
+    <EOF>     
+}
+
+/*
+name=ddl statement
+description=A data definition statement.
+example={code:sql}CREATE FOREIGN TABLE X (Y STRING){code}
+index=true
+*/
+void ddlStmt(MetadataFactory factory) :
+{
+	Command command = null; 
+}
+{
+	(LOOKAHEAD(3) 	createTable(factory) | 
+	 LOOKAHEAD(4)	createDDLProcedure(factory, ParseInfo.DEFAULT_INSTANCE) |
+	 LOOKAHEAD(2)	createNameSpace(factory) |
+	 LOOKAHEAD(4)	alterStatement(factory) |
+	 LOOKAHEAD(4) 	command=createTrigger(ParseInfo.DEFAULT_INSTANCE)
+	 {
+	 	createDDLTrigger(factory, (AlterTrigger)command);
+	 }
+	)
+	[<SEMICOLON>]
+}
+
+/*
+name=option namespace
+description=A namespace used to shorten the full name of an option key.
+example={code:sql}SET NAMESPACE 'http://foo' AS foo{code}
+*/
+void createNameSpace(MetadataFactory factory) :
+{
+	String uri = null;
+	String prefix = null;
+}
+{ 
+	<SET> <NAMESPACE> uri = stringVal() <AS> prefix = id(Boolean.FALSE)
+	{
+		factory.addNamespace(prefix, uri);
+	}
+}
+
+/*
+name=create procedure
+description=Defines a procedure or function invocation.
+example={code:sql}CREATE FOREIGN PROCEDURE proc (param STRING) RETURNS STRING{code}
+*/
+CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo info) :
+{
+	boolean virtual = true;
+	boolean function = false;
+	Procedure proc = null;
+	String procName = null;
+    CreateProcedureCommand procCmd = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
+    Statement stmt = null; 	
+    ParsedDataType returnDataType = null;
+    Token comment = null;    
+}
+{
+	<CREATE> [<VIRTUAL> | <FOREIGN> {virtual = false;}] (<PROCEDURE> | <FUNCTION> {function = true;})
+	//the below is optional beacuse to allow the designer based metadata
+	(	procName = id(null)
+		{
+			proc = factory.addProcedure(procName);
+		}
+	
+		<LPAREN>
+		[procedureParameter(factory, proc)
+		(<COMMA> procedureParameter(factory, proc))*]	
+		<RPAREN>
+		
+		[<RETURNS> (([<TABLE>] <LPAREN>
+	        procedureRsColumn(factory, proc)
+	        (<COMMA> procedureRsColumn(factory, proc))*
+	    <RPAREN>)
+	     |
+	     returnDataType = parseDataType())
+	    ]
+	    [ optionsClause(proc, factory)
+		   {
+		      setProcedureOptions(proc);
+		   }
+		]
+		[<AS> { comment = getToken(1).specialToken; } 
+		stmt = statement(info)])
+		{
+			proc.setVirtual(virtual);
+			proc.setFunction(function);
+			if (stmt != null){
+			    if (function || !virtual) {
+			         throw new ParseException(Messages.getString(Messages.TeiidParser.function_def, procName));
+			    }
+				proc.setQueryPlan((comment != null?comment.image+" ":"") + stmt.toString());
+			}
+			
+	        if (returnDataType != null){
+				addProcColumn(factory, proc, "return", returnDataType, false);
+	        }
+	        if (function) {
+	        	replaceProcedureWithFunction(factory, proc);
+	        }
+	        return procCmd; 		
+		}
+}
+
+/*
+name=procedure parameter
+description=A procedure or function parameter
+example={code:sql}OUT x INTEGER{code}
+*/
+void procedureParameter(MetadataFactory factory, Procedure proc) :
+{
+	String name = null;
+	ParsedDataType type = null;
+	ProcedureParameter.Type ppType = ProcedureParameter.Type.In;
+	ProcedureParameter param = null;
+	String defaultValue = null;
+	boolean notNull = false;
+	boolean vararg = false;
+}
+{
+	[LOOKAHEAD(1) ((<IN> {ppType = ProcedureParameter.Type.In ;})
+	 |(<OUT> {ppType = ProcedureParameter.Type.Out;})
+	 |(<INOUT> {ppType = ProcedureParameter.Type.InOut;})
+	 |(<VARIADIC> {ppType = ProcedureParameter.Type.In ; vararg = true;}))]
+	name = id(Boolean.TRUE)
+	type = parseDataType()
+	[<NOT> <NULL> {notNull = true;}]
+	[<RESULT>
+	  {
+	    if (ppType != ProcedureParameter.Type.Out) {
+	    	throw new ParseException(Messages.getString(Messages.TeiidParser.param_out, proc.getName(), name));
+	    }
+	    ppType = ProcedureParameter.Type.ReturnValue;
+	  }
+	]
+	{
+		param = factory.addProcedureParameter(name, type.getType(), ppType, proc);
+		setTypeInfo(type, param);
+		if (notNull) {
+			param.setNullType(Column.NullType.No_Nulls);
+		}
+		if (vararg) {
+			param.setVarArg(vararg);
+		}			
+	}
+	[<DEFAULT_KEYWORD> defaultValue = stringVal() {param.setDefaultValue(defaultValue);}]
+	[optionsClause(param, factory)
+	   {
+	      setColumnOptions(param);
+	   }
+	]	
+}
+
+/*
+name=procedure result column
+description=A procedure result column.
+example={code:sql}x INTEGER{code}
+*/
+void procedureRsColumn(MetadataFactory factory, Procedure proc) :
+{
+	String name = null;
+	ParsedDataType type = null;
+	boolean notNull = false;
+	BaseColumn column = null; 
+}
+{
+      name = id(Boolean.TRUE)
+	  type = parseDataType()
+	  {
+	  	column = addProcColumn(factory, proc, name, type, true);
+	  }
+	  [<NOT> <NULL> {column.setNullType(Column.NullType.No_Nulls);}]	  
+	  [optionsClause(column, factory)
+	   {
+	      setColumnOptions(column);
+	   }
+	  ]
+}
+
+/*
+name=create table
+description=Defines a table or view.
+example={code:sql}CREATE VIEW vw AS SELECT 1{code}
+*/
+void createTable(MetadataFactory factory) :
+{
+	boolean view = false;
+	String tableName = null;
+	Table table = null;
+	Token comment = null;
+	Command query = null;
+}
+{
+	<CREATE> (<FOREIGN> <TABLE> | [<VIRTUAL>] <VIEW> {view = true;}) 
+	tableName = id(null)
+	{
+	    table = factory.addTable(tableName);
+	    table.setVirtual(view);
+	}
+	(createTableBody(table, factory) | [optionsClause(table, factory)
+	   {
+	      setTableOptions(table);
+	   }
+	])
+	[<AS> { comment = getToken(1).specialToken; } query = queryExpression(ParseInfo.DEFAULT_INSTANCE)
+	  {
+		   if (!view) {
+     		   throw new ParseException(Messages.getString(Messages.TeiidParser.view_def, table.getName()));
+		   }
+		   table.setSelectTransformation((comment != null?comment.image+" ":"") + query.toString());	
+	  }
+	]
+}
+
+/*
+name=create foreign temp table
+description=Defines a foreign temp table
+example={code:sql}CREATE FOREIGN TEMPORARY TABLE t (x string) ON z{code}
+*/
+Create createForeignTempTable(ParseInfo info) :
+{
+	Table table = null;
+	String tableName = null;
+	String model = null;
+	MetadataFactory factory = getTempMetadataFactory();
+}
+{
+	<CREATE> <FOREIGN> <TEMPORARY> <TABLE>
+	tableName = id(null)
+	{
+		table = new Table();
+		//need to set a dummy/stable uuid
+		table.setUUID("tid:0");
+		table.setTableType(Table.Type.TemporaryTable);
+		table.setName(tableName);
+	} 
+	createTableBody(table, factory)
+	<ON> model = id(null)
+	{
+		Create create = createASTNode(ASTNodes.CREATE);
+		create.setTableMetadata(table);
+		create.setOn(model);
+		return create;
+	}
+}
+
+/*
+name=create table body
+description=Defines a table.
+example={code:sql}(x string) OPTIONS (CARDINALITY 100){code}
+*/
+void createTableBody(Table table, MetadataFactory factory) :
+{
+	String name = null;
+	AbstractMetadataRecord constraint = null;
+}
+{
+	<LPAREN>
+    createColumn(factory, table)
+    (LOOKAHEAD(3) <COMMA>
+      createColumn(factory, table)
+    )*	
+    (<COMMA>{name=null;} [<CONSTRAINT> name = id(null)] (constraint = primaryKey(factory, table, name) | constraint = constraint(factory, table, name, ParseInfo.DEFAULT_INSTANCE) | constraint = foreignKey(factory, table, name))
+       [optionsClause(constraint, factory)
+	   {
+	      setCommonProperties(constraint, constraint.getProperties());
+	   }
+	]
+    )*
+    <RPAREN>    
+    [optionsClause(table, factory)
+	   {
+	      setTableOptions(table);
+	   }
+	]
+	{
+		if (table.getColumns() != null && !table.supportsUpdate()) {
+			for (Column c : table.getColumns()) {
+				c.setUpdatable(false);
+			}
+		}
+	}
+}
+
+/*
+name=foreign key
+description=Defines the foreign key referential constraint.
+example={code:sql}FOREIGN KEY (a, b) REFERENCES tbl (x, y){code}
+*/
+AbstractMetadataRecord foreignKey(MetadataFactory factory, Table table, String name) :
+{
+	List<String> columnNames = null;
+	String viewName = null;
+	Table reference = null;
+	KeyRecord pk = null;
+	Column column = null;
+	List<String> pkColumnNames = null;
+	KeyRecord key = null;
+}
+{
+	<FOREIGN> <KEY>
+	columnNames = columnList(true, false)
+    <REFERENCES>
+    viewName = id(null)
+    [pkColumnNames = columnList(true, false)]
+    {
+	    return factory.addForiegnKey(name != null?name:("FK"+table.getForeignKeys().size()), columnNames, pkColumnNames, viewName, table);   
+    }
+}
+
+/*
+name=primary key
+description=Defines the primary key.
+example={code:sql}PRIMARY KEY (a, b){code}
+*/
+AbstractMetadataRecord primaryKey(MetadataFactory factory, Table table, String name) :
+{
+	List<String> columnNames = null;
+	Column column = null;
+	KeyRecord key = null;
+}
+{
+	<PRIMARY> <KEY>
+	columnNames = columnList(true, false)
+    {
+	    if (table.getPrimaryKey() != null){
+	    	throw new ParseException(Messages.getString(Messages.TeiidParser.pk_exists, table.getName()));
+	 	}
+ 		return factory.addPrimaryKey(name!=null?name:"PK", columnNames, table);
+    }
+}
+
+/*
+name=other constraints
+description=Defines ACCESSPATTERN and UNIQUE constraints and INDEXes. 
+example={code:sql}UNIQUE (a){code}
+*/
+AbstractMetadataRecord constraint(MetadataFactory factory, Table table, String name, ParseInfo info) :
+{
+	KeyRecord keyrecord = null;
+	Column column = null;
+	List<String> columnNames = null;
+	Token type = null;
+	KeyRecord key = null;
+	List<Expression> expressions = null;
+}
+{
+	(( type = <UNIQUE> | type = <ACCESSPATTERN>)
+	columnNames = columnList(true, false)	    
+	{
+		if (type.image.equalsIgnoreCase("UNIQUE")) { 
+    		return factory.addIndex(name != null?name:("UNIQUE"+table.getUniqueKeys().size()), false, columnNames, table);
+    	} else if (type.image.equalsIgnoreCase("ACCESSPATTERN")) { 
+    		return factory.addAccessPattern(name != null?name:("AP"+table.getAccessPatterns().size()), columnNames, table);
+    	}
+    }) | (
+    type = <INDEX>
+    <LPAREN>
+ 	expressions = expressionList(info)
+ 	<RPAREN>
+ 	 {
+ 		return addFBI(factory, expressions, table, name);
+ 	 }
+ 	)
+}
+
+/*
 name=column list
 description=A list of column names.
 example={code:sql}(a, b){code}
 */
-List columnList(boolean validate, boolean asElementSymbols) #void :
+List columnList(boolean validate, boolean asElementSymbols) :
 {
-    ArrayList list = new ArrayList();
-    String id = null;
+	ArrayList list = new ArrayList();
+	String id = null;
 }
 {
-    <LPAREN>
-      id = id(validate?Boolean.TRUE:null)
-      {
-        if (asElementSymbols) {
-            list.add(elementSymbol(id));
-        } else {
-            list.add(id);
-        }
-      }
-      (<COMMA> id = id(validate?Boolean.TRUE:null)
-       {
-        if (asElementSymbols) {
-            list.add(elementSymbol(id));
-        } else {
-            list.add(id);
-        }
-       }
-      )*
-     <RPAREN> 
-     {
-        return list;
-     }
+	<LPAREN>
+	  id = id(validate?Boolean.TRUE:null)
+	  {
+		if (asElementSymbols) {
+			list.add(elementSymbol(id));
+		} else {
+	  		list.add(id);
+	  	}
+	  }
+	  (<COMMA> id = id(validate?Boolean.TRUE:null)
+	   {
+		if (asElementSymbols) {
+			list.add(elementSymbol(id));
+		} else {
+	  		list.add(id);
+	  	}
+	   }
+	  )*
+	 <RPAREN> 
+	 {
+	 	return list;
+	 }
+}
+
+/*
+name=table element
+description=Defines a table column.
+example={code:sql}x INTEGER NOT NULL{code}
+*/
+void createColumn(MetadataFactory factory, Table table) :
+{
+	String element = null;
+	ParsedDataType type = null;
+	boolean autoIncrement = false;
+	Boolean notNull = false;
+	String defalt = null;
+	Column column = null;
+	List<String> columnName = new ArrayList<String>();
+	boolean index = false;
+	boolean unique = false;
+	boolean pk = false;
+	Token word = null;
+}
+{
+	 element = id(Boolean.TRUE)
+	 (
+	  type = parseDataType()
+	  {
+		column = factory.addColumn(element, type.getType(), table);
+		column.setUpdatable(true);
+	    setTypeInfo(type, column);		    	
+		columnName.add(element);
+	  }
+	 )
+	 [<NOT> <NULL> { column.setNullType(Column.NullType.No_Nulls); }]
+	 [<AUTO_INCREMENT> {  autoIncrement = true; }]
+	 ((<PRIMARY> <KEY> { pk = true; }) | ([<UNIQUE> { unique = true;  }] [<INDEX> { index = true; }]))
+	 [<DEFAULT_KEYWORD> defalt = stringVal() {column.setDefaultValue(defalt);}]
+	 [optionsClause(column, factory)
+	   {
+	      setColumnOptions(column);
+	   }
+	 ]
+	 {
+	    if (index){
+	 		factory.addIndex("INDEX"+table.getIndexes().size(), true, columnName, table);
+	 	} else if (unique){
+	 		factory.addIndex("UNIQUE"+table.getIndexes().size(), false, columnName, table);
+	 	} else if (pk) {
+	    	if (table.getPrimaryKey() != null) {
+	    		throw new ParseException(Messages.getString(Messages.TeiidParser.pk_exists, table.getName()));
+	    	}
+	 		factory.addPrimaryKey("PK", columnName, table);
+	 	}
+	     	 	
+	    column.setAutoIncremented(autoIncrement);
+	 }
+}
+
+/*
+name=options clause
+description=A list of statement options.
+example={code:sql}OPTIONS ('x' 'y', 'a' 'b'){code}
+*/
+void optionsClause(AbstractMetadataRecord record, MetadataFactory factory) :
+{
+}
+{
+  <OPTIONS> <LPAREN>
+  optionPair(record, factory) (<COMMA> optionPair(record, factory))*	   
+  <RPAREN> 
+}
+
+/*
+name=option pair
+description=An option key/value pair.
+example={code:sql}'key' 'value'{code}
+*/
+void optionPair(AbstractMetadataRecord record, MetadataFactory factory) :
+{
+	Constant value = null;
+	String key = null;
+	Token t = null;
+	String strVal = null;
+}
+{
+	 key = id(null)
+	 (value = nonNumericLiteral()
+	 | [strVal = plusMinus()] value = unsignedNumericLiteral(strVal))
+	 { 
+	 	key = resolvePropertyKey(factory, key);
+	 	String val = null;
+	 	if (value.getValue() != null) {
+	 		val = value.getValue().toString();
+	 	}
+	 	record.setProperty(key, val); 
+	 } 
+}
+
+/*
+name=alter options
+description=alters options of tables/procedure
+example={code:sql}ALTER FOREIGN TABLE foo OPTIONS (ADD cardinality 100){code}
+*/
+void alterStatement(MetadataFactory factory) :
+{
+	boolean table = false;
+	boolean proc = false;
+	boolean func = false;
+	String objectName = null;
+	AbstractMetadataRecord record = null;
+}
+{ 
+	<ALTER> [<VIRTUAL> | <FOREIGN>] (<TABLE> {table = true;} | <VIEW> {table = true;} | <PROCEDURE> {proc=true;})
+	objectName = id(null)
+	{
+		if (table){
+			record = factory.getSchema().getTable(objectName);
+			if (record == null){
+				throw new ParseException(Messages.getString(Messages.TeiidParser.alter_table_doesnot_exist, objectName));
+			}
+		}
+		if (proc){
+			record = factory.getSchema().getProcedure(objectName);
+			if (record == null){
+				throw new ParseException(Messages.getString(Messages.TeiidParser.alter_procedure_doesnot_exist, objectName));
+			}
+		}		
+	}
+	
+	(alterOptionsList(record, factory) | 
+	 alterColumn(record, factory))
+}
+
+/*
+name=alter options list
+description=a list of alterations to options
+example={code:sql}OPTIONS (ADD updatable true){code}
+*/
+void alterOptionsList(AbstractMetadataRecord record, MetadataFactory factory) :
+{
+
+}
+{
+  <OPTIONS> <LPAREN>
+  (addSetOption(record, factory) |
+   dropOption(record))
+  (<COMMA> (addSetOption(record, factory) |
+   dropOption(record)))*
+  <RPAREN>
+  {
+ 		setOptions(record);
+  }
+}
+
+/*
+name=drop option
+description=drop option
+example={code:sql}DROP updatable{code}
+*/
+void dropOption(AbstractMetadataRecord record) :
+{
+	String key = null;
+}
+{
+   <DROP> key = id(null) 
+   {
+ 		removeOption(key, record);
+   }
+}
+
+/*
+name=add set option
+description=add or set an option pair
+example={code:sql}ADD updatable true{code}
+*/
+void addSetOption(AbstractMetadataRecord record, MetadataFactory factory) :
+{
+}
+{
+   (<ADD>|<SET>) optionPair(record, factory) 
+}
+
+/*
+name=alter column options
+description=alters a set of column options
+example={code:sql}ALTER COLUMN bar OPTIONS (ADD updatable true){code}
+*/
+void alterColumn(AbstractMetadataRecord parent, MetadataFactory factory) :
+{
+	boolean param = false;
+	String objectName = null;
+	AbstractMetadataRecord record = null;
+	String key = null;
+}
+{ 
+	<ALTER> [<COLUMN>|<PARAMETER>{param=true;}]
+	objectName = id(null)
+	{
+		record = getChild(objectName, parent, param);
+	}
+	alterOptionsList(record, factory)
 }
 
 AssignmentStatement assignmentStatement(ElementSymbol elementSymbol, LanguageObject value) #AssignmentStatement :
-{}
-{    {
+{
+}
+{
+    {
         jjtThis.setVariable(elementSymbol);
-        if (value instanceof Expression)
+
+        if (value instanceof Expression)
             jjtThis.setExpression((Expression) value);
         else if (value instanceof QueryCommand)
             jjtThis.setExpression(scalarSubquery((QueryCommand) value));
@@ -4930,8 +5541,11 @@ AssignmentStatement assignmentStatement(ElementSymbol elementSymbol, LanguageObj
 }
 
 ScalarSubquery scalarSubquery(QueryCommand queryCommand) #ScalarSubquery :
-{}
-{    {        jjtThis.setCommand(queryCommand);
+{
+}
+{
+    {
+        jjtThis.setCommand(queryCommand);
         return jjtThis;
     }
 }
@@ -4990,16 +5604,20 @@ ElementSymbol elementSymbol(String name) #ElementSymbol :
 }
 
 Block block() #Block :
-{}
-{    {        return jjtThis;
+{
+}
+{
+    {
+        return jjtThis;
     }
 }
 
-Block asBlock(Statement stmt) #void :
+Block asBlock(Statement stmt) :
 {
   Block b = null;
 }
-{    {
+{
+    {
         if (stmt == null)
             return null;
 

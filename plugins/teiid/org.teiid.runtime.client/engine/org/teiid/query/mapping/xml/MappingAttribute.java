@@ -26,7 +26,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.xml.IMappingAttribute;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /** 

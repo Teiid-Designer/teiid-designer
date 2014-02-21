@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import junit.framework.TestCase;
 import org.teiid.query.resolver.util.AccessPattern;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 public class TestAccessPattern extends TestCase {
 

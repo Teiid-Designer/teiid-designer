@@ -28,9 +28,9 @@ import java.util.Set;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.symbol.ElementSymbol;
 
 
 /** 

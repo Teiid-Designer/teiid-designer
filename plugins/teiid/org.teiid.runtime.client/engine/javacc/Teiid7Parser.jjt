@@ -32,6 +32,7 @@ import org.teiid.runtime.client.Messages;
 import org.teiid.language.SortSpecification.NullOrdering;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.BaseColumn.NullType;
+import org.teiid.metadata.Table;
 import org.teiid.query.parser.AbstractTeiidParser;
 import org.teiid.query.parser.ParsedDataType;
 import org.teiid.query.parser.ParseInfo;
@@ -566,7 +567,7 @@ TOKEN : /* Punctuation */
 //----------------------------------------------------
 //----------------------------------------------------
 
-String stringVal() #void :
+String stringVal() :
 {
 	Token t = null;	
 }
@@ -577,7 +578,7 @@ String stringVal() #void :
   	}
 }
 
-String id() #void :
+String id() :
 {
 	Token t = null;
 }
@@ -594,7 +595,7 @@ String id() #void :
  * @return Parsed command
  * @throws ParseException if parsing failed
  */
-Command command(ParseInfo info) #void :
+Command command(ParseInfo info) :
 {
 	Command command = null;
 }
@@ -610,7 +611,7 @@ Command command(ParseInfo info) #void :
 	}
 }
 
-Command designerCommand(ParseInfo info) #void :
+Command designerCommand(ParseInfo info) :
 {
 	Command command = null;
 }
@@ -625,7 +626,7 @@ Command designerCommand(ParseInfo info) #void :
 	}
 }
 
-Command updateProcedure(ParseInfo info) #void :
+Command updateProcedure(ParseInfo info) :
 {
 	Command command = null;
 }
@@ -638,7 +639,7 @@ Command updateProcedure(ParseInfo info) #void :
 	}
 }
 
-Command createTrigger(ParseInfo info) #void :
+Command createTrigger(ParseInfo info) :
 {
   	String target = null;
   	TriggerAction triggerAction = null;
@@ -653,13 +654,13 @@ Command createTrigger(ParseInfo info) #void :
 		AlterTrigger trigger = alterTrigger();
         trigger.setTarget(groupSymbol(target));
         trigger.setDefinition(triggerAction);
-        trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
+        trigger.setEvent(Table.TriggerEvent.valueOf(event.image.toUpperCase()));
         trigger.setCreate(true);
         return trigger;
 	}
 }
 
-Command alter(ParseInfo info) #void :
+Command alter(ParseInfo info) :
 {
   	String target = null;
   	QueryCommand command = null;
@@ -707,7 +708,7 @@ Command alter(ParseInfo info) #void :
 		    AlterTrigger trigger = alterTrigger();
             trigger.setTarget(groupSymbol(target));
             trigger.setDefinition(triggerAction);
-            trigger.setEvent(AlterTrigger.Event.valueOf(event.image.toUpperCase()));
+            trigger.setEvent(Table.TriggerEvent.valueOf(event.image.toUpperCase()));
             if (enabled != null) {
                 trigger.setEnabled(enabled.equalsIgnoreCase("ENABLED"));
             }
@@ -747,7 +748,7 @@ TriggerAction forEachRowTriggerAction(ParseInfo info) #TriggerAction :
 	}
 }
 
-Command userCommand(ParseInfo info) #void :
+Command userCommand(ParseInfo info) :
 {
 	Command command = null;
 	SourceHint sourceHint = null;
@@ -848,7 +849,7 @@ Command createTempTable(ParseInfo info) #Create :
     }
 }
 
-Column tableElement(ParseInfo info) #void :
+Column tableElement(ParseInfo info) :
 {
     String element = null;
     String type = null;
@@ -885,7 +886,7 @@ Column tableElement(ParseInfo info) #void :
  * Parse error statement
  * @throws ParseException if parsing failed
  */
-RaiseErrorStatement errorStatement(ParseInfo info) #void :
+RaiseErrorStatement errorStatement(ParseInfo info) :
 {
     Expression errMsg = null;           
 }
@@ -913,7 +914,7 @@ RaiseErrorStatement raiseErrorStatement(Expression expression) #RaiseErrorStatem
  * Parse statement
  * @throws ParseException if parsing failed
  */
-Statement statement(ParseInfo info) #void :
+Statement statement(ParseInfo info) :
 {
     Statement statement;
     String label = null;
@@ -942,7 +943,7 @@ Statement statement(ParseInfo info) #void :
     }
 }
 
-Statement delimitedStatement(ParseInfo info) #void :
+Statement delimitedStatement(ParseInfo info) :
 {
     Statement stmt = null;
 }           
@@ -959,7 +960,7 @@ Statement delimitedStatement(ParseInfo info) #void :
 	 }
 }
 
-Block compoundStatement(ParseInfo info) #void :
+Block compoundStatement(ParseInfo info) :
 {
     Statement stmt = null;  
     Block block = block();
@@ -1199,7 +1200,7 @@ DeclareStatement declareStatement(ParseInfo info) #DeclareStatement :
  * Parse assignment statement
  * @throws ParseException if parsing failed
  */
-AssignmentStatement assignStatement(ParseInfo info) #void :
+AssignmentStatement assignStatement(ParseInfo info) :
 {
     LanguageObject value = null;
     String var = null;
@@ -1223,7 +1224,7 @@ AssignmentStatement assignStatement(ParseInfo info) #void :
  * arbitrarily deeply in parentheses.
  * @throws ParseException if parsing failed
  */
-LanguageObject assignStatementOperand(ParseInfo info) #void :
+LanguageObject assignStatementOperand(ParseInfo info) :
 {
     LanguageObject value = null;
 }
@@ -1476,7 +1477,7 @@ SetClause setClause(ElementSymbol symbol, Expression value) #SetClause :
  * Create elements with datatypes
  * @throws ParseException if parsing failed
  */
-List<ProjectedColumn> createElementsWithTypes(ParseInfo info) #void :
+List<ProjectedColumn> createElementsWithTypes(ParseInfo info) :
 {
 	String element = null;
 	String type = null;
@@ -1521,7 +1522,7 @@ ProjectedColumn projectedColumn(String name, String type) #ProjectedColumn :
     }
 }
 
-StoredProcedure callableStatement(ParseInfo info) #void :
+StoredProcedure callableStatement(ParseInfo info) :
 {
 	StoredProcedure storedProcedure = newStoredProcedure();
 	storedProcedure.setCallableStatement(true);
@@ -1571,7 +1572,7 @@ StoredProcedure callableStatement(ParseInfo info) #void :
  * * Parse stored query command
  * @throws ParseException if parsing failed
  */
-StoredProcedure storedProcedure(ParseInfo info, StoredProcedure storedProcedure) #void :
+StoredProcedure storedProcedure(ParseInfo info, StoredProcedure storedProcedure) :
 {
 	String procName = null;
 	Option option = null;
@@ -1619,7 +1620,7 @@ StoredProcedure newStoredProcedure() #StoredProcedure :
  * <p>Parse an exec statement with unnamed parameters</p>
  * @throws ParseException if parsing failed
  */
-StoredProcedure executeUnnamedParams(ParseInfo info, StoredProcedure storedProcedure, int parameterIndex) #void :
+StoredProcedure executeUnnamedParams(ParseInfo info, StoredProcedure storedProcedure, int parameterIndex) :
 {
 	SPParameter parameter = null;
     Expression value = null;	
@@ -1650,7 +1651,7 @@ StoredProcedure executeUnnamedParams(ParseInfo info, StoredProcedure storedProce
  * <p>Parse an exec statement with named parameters</p>
  * @throws ParseException if parsing failed
  */
-StoredProcedure executeNamedParams(ParseInfo info, StoredProcedure storedProcedure) #void :
+StoredProcedure executeNamedParams(ParseInfo info, StoredProcedure storedProcedure) :
 {
 	String name = null;
     Expression value = null;
@@ -1742,7 +1743,7 @@ Insert insert(ParseInfo info) #Insert :
 	}
 }
 
-List<ElementSymbol> columnList(boolean validate) #void :
+List<ElementSymbol> columnList(boolean validate) :
 {
 	String element = null;
 	List<ElementSymbol> symbols = new LinkedList<ElementSymbol>();
@@ -1784,7 +1785,7 @@ List<ElementSymbol> columnList(boolean validate) #void :
  * @return List of values, never null
  * @throws ParseException if parsing failed
  */
-ArrayList<Expression> expressionList(ParseInfo info) #void :
+ArrayList<Expression> expressionList(ParseInfo info) :
 {
 	ArrayList<Expression> rowVals = new ArrayList<Expression>(4);
 	Expression value = null;
@@ -1873,7 +1874,7 @@ Delete delete(ParseInfo info) #Delete :
 	}
 }
 
-QueryCommand queryExpression(ParseInfo info) #void :
+QueryCommand queryExpression(ParseInfo info) :
 {
     QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
@@ -1921,7 +1922,7 @@ WithQueryCommand withListElement(ParseInfo info) #WithQueryCommand :
 	}
 }
 
-QueryCommand queryExpressionBody(ParseInfo info) #void :
+QueryCommand queryExpressionBody(ParseInfo info) :
 {
     QueryCommand query = null;
     QueryCommand rightQuery = null;
@@ -1949,7 +1950,7 @@ QueryCommand queryExpressionBody(ParseInfo info) #void :
     }    
 }
 
-QueryCommand queryTerm(ParseInfo info) #void :
+QueryCommand queryTerm(ParseInfo info) :
 {
     QueryCommand query = null;
     QueryCommand rightQuery = null;
@@ -1983,7 +1984,7 @@ SetQuery setQuery(SetQuery.Operation operation, boolean all, QueryCommand leftQu
     }
 }
 
-QueryCommand queryPrimary(ParseInfo info) #void :
+QueryCommand queryPrimary(ParseInfo info) :
 {
     QueryCommand query = null;
     String name = null;
@@ -2103,7 +2104,7 @@ Select select(ParseInfo info) #Select :
 	}
 }
 
-Expression selectSymbol(ParseInfo info) #void :
+Expression selectSymbol(ParseInfo info) :
 {
 	Expression symbol = null;	
 }
@@ -2118,7 +2119,7 @@ Expression selectSymbol(ParseInfo info) #void :
 	}
 }
 
-SingleElementSymbol selectExpression(ParseInfo info) #void :
+SingleElementSymbol selectExpression(ParseInfo info) :
 {
 	Expression expression = null;
     String alias = null;
@@ -2191,7 +2192,7 @@ MultipleElementSymbol allInGroupSymbol() #MultipleElementSymbol :
 	}
 }
 
-AggregateSymbol orderedAgg(ParseInfo info) #void :
+AggregateSymbol orderedAgg(ParseInfo info) :
 {
     Token t = null;
 	Expression expression = null;
@@ -2215,7 +2216,7 @@ AggregateSymbol orderedAgg(ParseInfo info) #void :
 	}
 }
 
-AggregateSymbol textAgg(ParseInfo info) #void :
+AggregateSymbol textAgg(ParseInfo info) :
 {
 	DerivedColumn expression = null;
 	Character delimiter = null;
@@ -2274,7 +2275,7 @@ AggregateSymbol textAgg(ParseInfo info) #void :
 	}
 }
 
-AggregateSymbol aggregateSymbol(ParseInfo info) #void :
+AggregateSymbol aggregateSymbol(ParseInfo info) :
 {
 	String func = null;
 	Token starToken = null;
@@ -2322,7 +2323,7 @@ AggregateSymbol aggregateSymbol(ParseInfo info) #void :
 	}
 }
 
-Expression filterClause(ParseInfo info) #void :
+Expression filterClause(ParseInfo info) :
 {
 	Expression condition = null;
 }
@@ -2376,7 +2377,7 @@ From from(ParseInfo info) #From :
  * @return Join predicate
  * @throws ParseException if parsing failed
  */
-FromClause tableReference(ParseInfo info) #void :
+FromClause tableReference(ParseInfo info) :
 {
     FromClause fromClause = null;
 }
@@ -2395,7 +2396,7 @@ FromClause tableReference(ParseInfo info) #void :
 	}
 }	
 
-FromClause joinedTable(ParseInfo info) #void :
+FromClause joinedTable(ParseInfo info) :
 {
 	FromClause result = null;
 	JoinPredicate jp = null;
@@ -2416,7 +2417,7 @@ FromClause joinedTable(ParseInfo info) #void :
 	}
 }
 
-JoinPredicate crossJoin(ParseInfo info) #void :
+JoinPredicate crossJoin(ParseInfo info) :
 {
 	JoinPredicate result;
 	FromClause clause = null;
@@ -2434,7 +2435,7 @@ JoinPredicate crossJoin(ParseInfo info) #void :
 	}
 }
 
-JoinPredicate qualifiedJoin(ParseInfo info) #void :
+JoinPredicate qualifiedJoin(ParseInfo info) :
 {
 	JoinPredicate result;
 	FromClause clause = null;
@@ -2478,7 +2479,7 @@ JoinType joinType(IJoinType.Types kind) #JoinType :
     }
 }
 
-FromClause tablePrimary(ParseInfo info) #void :
+FromClause tablePrimary(ParseInfo info) :
 {
 	FromClause clause = null;
 	Token lparen = null;
@@ -2535,7 +2536,7 @@ XMLSerialize xmlSerialize(ParseInfo info) #XMLSerialize :
 	}
 }
 
-String nonReserved(String... expected) #void :
+String nonReserved(String... expected) :
 {
 	Token t = null;
 }
@@ -2827,7 +2828,7 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 	))
 }
 
-int intVal() #void :
+int intVal() :
 {
 	Token t;
 }
@@ -2914,7 +2915,7 @@ UnaryFromClause unaryFromClause(ParseInfo info) #UnaryFromClause :
  * @return Parsed where
  * @throws ParseException if parsing failed
  */
-Criteria where(ParseInfo info) #void :
+Criteria where(ParseInfo info) :
 {
     Criteria criteria = null;
 }
@@ -2948,7 +2949,7 @@ Criteria criteria(ParseInfo info) #Criteria :
  * @return Parsed OR criteria
  * @throws ParseException if parsing failed
  */
-Criteria compoundCritOr(ParseInfo info) #void :
+Criteria compoundCritOr(ParseInfo info) :
 {
     ArrayList logicList = new ArrayList(2);
     Criteria logicPart = null;
@@ -3029,7 +3030,7 @@ Criteria notCrit(ParseInfo info) #NotCriteria :
  * @return criteria
  * @throws ParseException if parsing failed
  */
-Expression booleanPrimary(ParseInfo info) #void :
+Expression booleanPrimary(ParseInfo info) :
 {
     Expression ex = null;
 }
@@ -3057,7 +3058,7 @@ Expression booleanPrimary(ParseInfo info) #void :
 	}
 }
 
-Token operator() #void :
+Token operator() :
 {
 	Token operator = null;
 }
@@ -3103,7 +3104,7 @@ CompareCriteria compareCrit(ParseInfo info, Expression expression) #CompareCrite
 	}
 }
 
-QueryCommand subquery(ParseInfo info) #void :
+QueryCommand subquery(ParseInfo info) :
 {
     QueryCommand subquery = null;
     StoredProcedure proc = null;
@@ -3139,7 +3140,7 @@ QueryCommand subquery(ParseInfo info) #void :
 	}
 }
 
-Object[] subqueryAndHint(ParseInfo info) #void :
+Object[] subqueryAndHint(ParseInfo info) :
 {
     QueryCommand subquery = null;
     Token lparen = null;
@@ -3224,7 +3225,7 @@ MatchCriteria matchCrit(ParseInfo info, Expression expression) #MatchCriteria :
    	}
 }
 
-MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) #void :
+MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) :
 {
 	Expression value = null;
 	boolean negated = false;
@@ -3243,7 +3244,7 @@ MatchCriteria regexMatchCrit(ParseInfo info, Expression expression) #void :
    	}
 }
 
-Character charVal(ParseInfo info, String type) #void :
+Character charVal(ParseInfo info, String type) :
 {
 	String escStr = null;
 }
@@ -3309,7 +3310,7 @@ IsNullCriteria isNullCrit(ParseInfo info, Expression expression) #IsNullCriteria
  * @return Parsed set criteria
  * @throws ParseException if parsing failed
  */
-AbstractSetCriteria setCrit(ParseInfo info, Expression expression) #void :
+AbstractSetCriteria setCrit(ParseInfo info, Expression expression) :
 {
     AbstractSetCriteria criteria = null;
 	Expression value = null;
@@ -3415,7 +3416,7 @@ GroupBy groupBy(ParseInfo info) #GroupBy :
  * @return Parsed having
  * @throws ParseException if parsing failed
  */
-Criteria having(ParseInfo info) #void :
+Criteria having(ParseInfo info) :
 {
     Criteria criteria = null;
 }
@@ -3474,7 +3475,7 @@ OrderByItem sortSpecification(ParseInfo info) #OrderByItem :
 	}
 }
 
-SingleElementSymbol sortKey(ParseInfo info) #void :
+SingleElementSymbol sortKey(ParseInfo info) :
 {
     Expression ex = null;
 }
@@ -3513,7 +3514,7 @@ ExpressionSymbol expressionSymbol() #ExpressionSymbol :
     }
 }
 
-Expression intParam(ParseInfo info) #void :
+Expression intParam(ParseInfo info) :
 {
    Integer val = null;
 }
@@ -3561,7 +3562,7 @@ Limit limit(ParseInfo info) #Limit :
 	}
 }
 
-Expression fetchLimit(ParseInfo info) #void :
+Expression fetchLimit(ParseInfo info) :
 {
     Expression limit = null;
 }
@@ -3635,7 +3636,7 @@ Option option(ParseInfo info) #Option :
  * @return Expression
  * @throws ParseException if parsing failed
  */
-Expression expression(ParseInfo info) #void :
+Expression expression(ParseInfo info) :
 {
 	Expression expression = null;
 }
@@ -3649,7 +3650,7 @@ Expression expression(ParseInfo info) #void :
 	}
 }
 
-Expression commonValueExpression(ParseInfo info) #void :
+Expression commonValueExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3679,7 +3680,7 @@ Expression commonValueExpression(ParseInfo info) #void :
  * @return Expression
  * @throws ParseException if parsing failed
  */
-Expression plusExpression(ParseInfo info) #void :
+Expression plusExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3711,7 +3712,7 @@ Expression plusExpression(ParseInfo info) #void :
  * @return "+" or "-"
  * @throws ParseException if parsing failed
  */
-String plusOperator() #void :
+String plusOperator() :
 {
 	Token operator = null;
 }
@@ -3730,7 +3731,7 @@ String plusOperator() #void :
  * @return Expression
  * @throws ParseException if parsing failed
  */
-Expression timesExpression(ParseInfo info) #void :
+Expression timesExpression(ParseInfo info) :
 {
 	Expression leftExpression = null;
 	Expression rightExpression = null;
@@ -3762,7 +3763,7 @@ Expression timesExpression(ParseInfo info) #void :
  * @return "*" or "/"
  * @throws ParseException if parsing failed
  */
-String timesOperator() #void :
+String timesOperator() :
 {
 	Token operator = null;
 }
@@ -3781,7 +3782,7 @@ String timesOperator() #void :
  * @return Expression
  * @throws ParseException if parsing failed
  */
-Expression valueExpressionPrimary(ParseInfo info) #void :
+Expression valueExpressionPrimary(ParseInfo info) :
 {
 	Token refToken = null;
 	Expression expression = null;
@@ -3883,7 +3884,7 @@ Reference reference(int referenceIndex) #Reference :
     }
 }
 
-Expression windowSpecification(Expression agg, ParseInfo info) #void :
+Expression windowSpecification(Expression agg, ParseInfo info) :
 {
 	List<Expression> partitionList = null;
 	OrderBy orderBy = null;
@@ -4207,7 +4208,7 @@ Expression function(ParseInfo info) #Function :
 	}
 }
 
-Constant stringConstant() #void :
+Constant stringConstant() :
 {
 	String val = null;
 }
@@ -4375,7 +4376,7 @@ XMLNamespaces xmlNamespaces(ParseInfo info) #XMLNamespaces :
 	}
 }
 
-NamespaceItem namespaceItem(ParseInfo info) #void :
+NamespaceItem namespaceItem(ParseInfo info) :
 {
 	String uri = null;
 	String prefix = null;
@@ -4399,7 +4400,7 @@ NamespaceItem namespaceItem(ParseInfo info) #void :
 	)
 }
 
-Constant idExpression() #void :
+Constant idExpression() :
 {
 	String id = null;
 }
@@ -4410,7 +4411,7 @@ Constant idExpression() #void :
 	}
 }
 
-String dataTypeString() #void : 
+String dataTypeString() : 
 {
 	Token typeToken = null;
 }
@@ -4449,7 +4450,7 @@ String dataTypeString() #void :
 }
 
 
-Constant dataType() #void :
+Constant dataType() :
 {
 	String type = null;
 }
@@ -4465,7 +4466,7 @@ Constant dataType() #void :
  * @return Interval type parsed into a constant string object
  * @throws ParseException if parsing failed
  */
-Constant intervalType() #void :
+Constant intervalType() :
 {
 	String type = null;
 }
@@ -4483,7 +4484,7 @@ Constant intervalType() #void :
  * @return Parsed literal
  * @throws ParseException if parsing failed
  */
-Constant literal() #void :
+Constant literal() :
 {
     Token t = null;
     String strVal = null;
@@ -4634,7 +4635,7 @@ Block block() #Block :
     }
 }
 
-Block asBlock(Statement stmt) #void :
+Block asBlock(Statement stmt) :
 {
   Block b = null;
 }

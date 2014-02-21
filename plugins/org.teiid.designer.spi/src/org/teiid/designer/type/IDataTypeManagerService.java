@@ -50,7 +50,37 @@ public interface IDataTypeManagerService {
         @Since("8.0.0")
         VARBINARY
     }
-    
+
+    public enum DataTypeAliases {
+        VARCHAR("varchar"), //$NON-NLS-1$
+
+        TINYINT("tinyint"), //$NON-NLS-1$
+
+        SMALLINT("smallint"), //$NON-NLS-1$
+
+        BIGINT("bigint"), //$NON-NLS-1$
+
+        REAL("real"), //$NON-NLS-1$
+
+        DECIMAL("decimal"); //$NON-NLS-1$
+        
+        private String id;
+
+        /**
+         * 
+         */
+        private DataTypeAliases(String id) {
+            this.id = id;
+        }
+
+        /**
+         * @return the id
+         */
+        public String getId() {
+            return this.id;
+        }
+    }
+
     /**
      * Types of data source supported by teiid instances
      */

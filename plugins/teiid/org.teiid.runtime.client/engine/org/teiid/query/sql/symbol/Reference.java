@@ -3,9 +3,9 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IReference;
+import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
@@ -44,6 +44,19 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
      */
     public void setType(Class<?> type) {
         this.type = type;
+    }
+
+    public boolean isCorrelated() {
+        if (this.isPositional()) {
+            return false;
+        }
+        //metadata hack
+        if (this.expression.getGroupSymbol() == null || !(this.expression.getGroupSymbol().getMetadataID() instanceof TempMetadataID)) {
+            return true;
+        }
+        
+        TempMetadataID tid = (TempMetadataID)this.expression.getGroupSymbol().getMetadataID();
+        return !tid.isScalarGroup();
     }
 
     @Override

@@ -25,7 +25,7 @@ package org.teiid.query.resolver;
 import java.util.Map;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.query.sql.lang.Command;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 
 

@@ -48,6 +48,7 @@ import org.teiid.metadata.ForeignKey;
 import org.teiid.metadata.KeyRecord;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.metadata.Table;
+import org.teiid.query.metadata.DDLConstants;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -63,7 +64,6 @@ import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.DynamicCommand;
-import org.teiid.query.sql.lang.ElementSymbol;
 import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.ExpressionCriteria;
 import org.teiid.query.sql.lang.From;
@@ -133,6 +133,7 @@ import org.teiid.query.sql.symbol.Array;
 import org.teiid.query.sql.symbol.CaseExpression;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
@@ -162,7 +163,7 @@ import org.teiid.translator.SourceSystemFunctions;
  * </p>
  */
 public class SQLStringVisitor extends LanguageVisitor
-    implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, SQLConstants.DDLConstants, ISQLStringVisitor<LanguageObject> {
+    implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, DDLConstants, ISQLStringVisitor<LanguageObject> {
 
     @Since("8.0.0")
     private final static Map<String, String> BUILTIN_PREFIXES = new HashMap<String, String>();

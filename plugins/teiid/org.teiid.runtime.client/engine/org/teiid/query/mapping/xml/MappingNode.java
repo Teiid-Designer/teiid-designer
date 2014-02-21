@@ -34,7 +34,7 @@ import java.util.Map;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.xml.IMappingNode;
 import org.teiid.query.parser.TeiidParser;
-import org.teiid.query.sql.lang.ElementSymbol;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.runtime.client.Messages;
 
 

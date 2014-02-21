@@ -3,6 +3,7 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
+import org.teiid.metadata.Table.TriggerEvent;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.proc.TriggerAction;
@@ -13,27 +14,7 @@ import org.teiid.query.sql.symbol.Expression;
  */
 public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<Expression, LanguageVisitor> {
 
-    /**
-     * Event Types
-     */
-    public static enum Event {
-        /**
-         * Insert event 
-         */
-        INSERT,
-
-        /**
-         * Update event
-         */
-        UPDATE,
-
-        /**
-         * Delete event
-         */
-        DELETE
-    }
-
-    private Event event;
+    private TriggerEvent event;
 
     private boolean create;
 
@@ -55,14 +36,14 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
     /**
      * @return the event
      */
-    public Event getEvent() {
+    public TriggerEvent getEvent() {
         return event;
     }
 
     /**
      * @param event the event to set
      */
-    public void setEvent(Event event) {
+    public void setEvent(TriggerEvent event) {
         this.event = event;
     }
 

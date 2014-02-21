@@ -29,6 +29,7 @@ import java.util.List;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 
