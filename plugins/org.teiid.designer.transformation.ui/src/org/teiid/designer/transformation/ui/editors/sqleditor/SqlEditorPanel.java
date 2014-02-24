@@ -80,6 +80,7 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
@@ -95,6 +96,7 @@ import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ToggleOpti
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.UpFont;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.Validate;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
+import org.teiid.designer.transformation.util.SqlStringUtil;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.text.ScaledFontManager;
@@ -377,12 +379,7 @@ public class SqlEditorPanel extends SashForm
         };
         this.applyTemplateAction.setToolTipText(Util.getString(APPLY_TEMPLATE_ACTION_TOOLTIP));
         this.applyTemplateAction.setText(Util.getString(APPLY_TEMPLATE_ACTION_TEXT));
-        String existingText = getText();
-        if (existingText != null && !existingText.isEmpty()) {
-            this.applyTemplateAction.setEnabled(false);
-        } else {
-            this.applyTemplateAction.setEnabled(true);
-        }
+        this.applyTemplateAction.setEnabled(true);
 
         manager.add(this.applyTemplateAction);
     }
@@ -391,7 +388,28 @@ public class SqlEditorPanel extends SashForm
         SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                                  SQLTemplateDialog.ALL_TEMPLATES);
         if (templateDialog.open() == Window.OK) {
-            setText(templateDialog.getSQL());
+        	boolean okToInsertOrReplace = true;
+        	if( templateDialog.getInsertOption() == ISQLConstants.INSERT_OPTIONS.REPLACE_ALL ) {
+        		// make sure user want to replace all
+        		okToInsertOrReplace = MessageDialog.openConfirm(templateDialog.getShell(), 
+        				Messages.confirmSqlReplaceDialogTitle, 
+        				Messages.confirmSqlReplaceDialogMessage);
+        		
+        	}
+        	if( okToInsertOrReplace ) {
+	        	int offset = getCaretOffset();
+	        	// Insert at the offset
+	        	
+	        	String currentSQL = getText();
+	        	
+	        	String newSql = SqlStringUtil.insertSql(
+	        			currentSQL, 
+	        			templateDialog.getSQL(), 
+	        			templateDialog.getInsertOption(), 
+	        			offset);
+	        	
+	            setText(newSql, templateDialog );
+        	}
         }
     }
 

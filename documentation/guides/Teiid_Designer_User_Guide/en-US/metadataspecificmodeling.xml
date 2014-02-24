@@ -285,7 +285,8 @@
 			dialog. Depending on usage context, the PROCEDURES tab may also be 
 			available in addition to the SELECT queries tab. The SQL Template 
 			dialog can also be accessed in the Transformation Editor, from the 
-			rt-click context menu.</para>
+			rt-click context menu. Note the options to replace your SQL completely or to 
+			insert at the beginning or end of your current statement or at the cursor location.</para>
 		</section>
 	</section>
 	<section id="xml-document-modeling-section">

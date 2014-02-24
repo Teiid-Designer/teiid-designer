@@ -62,6 +62,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -81,6 +82,7 @@ import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
+import org.teiid.designer.transformation.util.SqlStringUtil;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
@@ -1188,10 +1190,26 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
                 SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                                          SQLTemplateDialog.TABLE_TEMPLATES);
                 if (templateDialog.open() == Window.OK) {
-                	String sql = templateDialog.getSQL();
-                	getRelationalReference().setTransformationSQL(sql);
-                    sqlDocument.set(sql);
-                    handleInfoChanged();
+                	String originalSql = sqlDocument.get();
+                	boolean okToInsertOrReplace = true;
+                	if( templateDialog.getInsertOption() == ISQLConstants.INSERT_OPTIONS.REPLACE_ALL &&
+                			originalSql != null && originalSql.trim().length() > 0) {
+                		// make sure user want to replace all
+                		okToInsertOrReplace = MessageDialog.openConfirm(templateDialog.getShell(), 
+                				Messages.confirmSqlReplaceDialogTitle, 
+                				Messages.confirmSqlReplaceDialogMessage_2);
+                		
+                	}
+                	if( okToInsertOrReplace ) {
+	                	int caretOffset = sqlTextViewer.getTextWidget().getCaretOffset();
+	                	String newSql = SqlStringUtil.insertSql(
+	                			originalSql, 
+	                			templateDialog.getSQL(), 
+	                			templateDialog.getInsertOption(), 
+	                			caretOffset);
+	                	getRelationalReference().setTransformationSQL(newSql);
+                    sqlDocument.set(newSql);
+                	}
                 }
             }
         });
