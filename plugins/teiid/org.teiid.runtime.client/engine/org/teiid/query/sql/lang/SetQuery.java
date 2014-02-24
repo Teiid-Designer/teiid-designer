@@ -234,6 +234,8 @@ public class SetQuery extends QueryCommand
     public SetQuery clone() {
         SetQuery clone = new SetQuery(this.parser, this.id);
 
+        this.copyMetadataState(clone);
+
         if(getOperation() != null)
             clone.setOperation(getOperation());
         clone.setAll(isAll());
@@ -251,6 +253,9 @@ public class SetQuery extends QueryCommand
             clone.setSourceHint(getSourceHint());
         if(getOption() != null)
             clone.setOption(getOption().clone());
+        if (getProjectedTypes() != null) {
+            clone.setProjectedTypes(new ArrayList<Class<?>>(getProjectedTypes()), this.metadata);
+        }
 
         return clone;
     }

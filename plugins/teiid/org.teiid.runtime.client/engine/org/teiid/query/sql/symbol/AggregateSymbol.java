@@ -43,6 +43,16 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
     void setDistinct(boolean isDistinct);
 
     /**
+     * @return true if a boolean type
+     */
+    boolean isBoolean();
+
+    /**
+     * @return true if enhanced numeric
+     */
+    boolean isEnhancedNumeric();
+
+    /**
      * Get function arguments
      *
      * @return Get function arguments

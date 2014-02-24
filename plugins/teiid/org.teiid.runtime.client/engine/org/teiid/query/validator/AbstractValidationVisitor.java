@@ -50,6 +50,9 @@ public class AbstractValidationVisitor extends LanguageVisitor {
     protected Command currentCommand;
     protected Stack<LanguageObject> stack = new Stack<LanguageObject>();
     
+    /**
+     * @param teiidVersion
+     */
     public AbstractValidationVisitor(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
         this.report = new ValidatorReport();

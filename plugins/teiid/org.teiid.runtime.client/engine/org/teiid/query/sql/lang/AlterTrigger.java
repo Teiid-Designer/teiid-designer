@@ -122,6 +122,8 @@ public class AlterTrigger extends Alter<TriggerAction> implements IAlterTrigger<
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 

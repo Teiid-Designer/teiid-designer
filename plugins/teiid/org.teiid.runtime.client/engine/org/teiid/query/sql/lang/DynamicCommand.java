@@ -222,6 +222,8 @@ public class DynamicCommand extends Command implements IDynamicCommand<Expressio
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 

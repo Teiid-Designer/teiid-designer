@@ -162,6 +162,9 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
 
     private void resolveList(Collection<? extends Expression> elements, TempMetadataAdapter metadata,
                                   GroupContext externalGroups, Set<GroupSymbol> groups) throws QueryResolverException, Exception {
+        if (elements == null || elements.isEmpty())
+            return;
+
         ResolverVisitor visitor = new ResolverVisitor(elements.iterator().next().getTeiidVersion());
         for (Iterator<? extends Expression> i = elements.iterator(); i.hasNext();) {
             Expression expr = i.next();

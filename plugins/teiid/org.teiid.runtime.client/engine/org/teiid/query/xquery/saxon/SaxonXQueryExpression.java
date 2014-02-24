@@ -319,7 +319,11 @@ public class SaxonXQueryExpression {
     }
 
 	public void useDocumentProjection(List<XMLColumn> columns) {
-	    streamingPath = getStreamingPath(xQueryString, namespaceMap);
+	    try {
+            streamingPath = getStreamingPath(xQueryString, namespaceMap);
+        } catch (IllegalArgumentException e) {
+            // Ignored
+        }
 
 		this.contextRoot = null;
 		//we'll use a new pathmap, since we don't want to modify the one associated with the xquery.

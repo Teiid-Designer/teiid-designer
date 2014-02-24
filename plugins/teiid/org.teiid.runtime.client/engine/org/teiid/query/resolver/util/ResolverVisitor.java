@@ -1054,6 +1054,11 @@ public class ResolverVisitor extends LanguageVisitor
 			if (f.getFunctionDescriptor() != null) {
 				return;
 			}
+			Function oneInSet = unresolvedFunctions.keySet().iterator().next();
+			System.out.println(oneInSet.hashCode() + " v " + obj.hashCode());
+			System.out.println(oneInSet.equals(obj));
+			
+			
         	unresolvedFunctions.remove(obj);
 			obj.acceptVisitor(this);
 			Exception e = unresolvedFunctions.get(obj);

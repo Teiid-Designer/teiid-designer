@@ -210,11 +210,6 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             return false;
         if (this.isExternalReference != other.isExternalReference)
             return false;
-        if (this.metadataID == null) {
-            if (other.metadataID != null)
-                return false;
-        } else if (!this.metadataID.equals(other.metadataID))
-            return false;
         if (this.type == null) {
             if (other.type != null)
                 return false;

@@ -39,10 +39,10 @@ import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.UnaryFromClause;
-import org.teiid.query.sql.lang.symbol.Constant;
-import org.teiid.query.sql.lang.symbol.Expression;
-import org.teiid.query.sql.lang.symbol.GroupSymbol;
+import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.ElementSymbol;
+import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.util.SymbolMap;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -450,7 +450,7 @@ public class UpdateValidator {
             } else {
             	//TODO: look for reversable widening conversions
             	
-                report.handleValidationWarning(Messages.getString(Messages.ERR.ERR_015_012_0007), viewSymbols.get(i), symbol)); //$NON-NLS-1$
+                report.handleValidationWarning(Messages.getString(Messages.ERR.ERR_015_012_0007, viewSymbols.get(i), symbol)); //$NON-NLS-1$
             }
     	}
     	

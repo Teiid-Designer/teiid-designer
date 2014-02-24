@@ -146,12 +146,12 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         }
 
         DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit, DataTypeAliases... aliases) {
-            this(id, dataTypeName, klazz);
+            this(id, dataTypeName, klazz, aliases);
             this.limit = limit;
         }
 
         DefaultDataTypes(String id, DataTypeName dataTypeName, Class<?> klazz, int limit, String validChars, DataTypeAliases... aliases) {
-            this(id, dataTypeName, klazz, limit);
+            this(id, dataTypeName, klazz, limit, aliases);
             this.validChars = validChars;
         }
 
@@ -538,10 +538,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         }
 
         DefaultDataTypes dataType = findDefaultDataType(typeClass);
-        if (dataType != null)
-            return dataType.getId();
-
-        return DefaultDataTypes.OBJECT.getId();
+        if (dataType == null)
+            dataType = DefaultDataTypes.OBJECT;
+        
+        if (typeClass.isArray())
+            return dataType.getId() + ARRAY_SUFFIX;
+        
+        return dataType.getId();
     }
 
     @Override

@@ -22,6 +22,7 @@
 package org.teiid.query.metadata;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,6 +40,7 @@ import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeAliases;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.MetadataFactory;
@@ -46,6 +48,7 @@ import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Table;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.validator.ValidatorReport;
+import org.teiid.runtime.client.Messages;
 
 public class SystemMetadata {
 	
@@ -74,8 +77,16 @@ public class SystemMetadata {
 	 * @param teiidVersion
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
+	    if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionTooLow, this.getClass().getSimpleName()));
+
 		this.teiidVersion = teiidVersion;
-        InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream("org/teiid/metadata/types.dat"); //$NON-NLS-1$
+
+		String resourceLocation = this.getClass().getPackage().getName();
+        resourceLocation = resourceLocation.replaceAll("\\.", File.separator); //$NON-NLS-1$
+        resourceLocation = resourceLocation + File.separator;
+
+        InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + "types.dat"); //$NON-NLS-1$
 		try {
 			InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8")); //$NON-NLS-1$
 			BufferedReader br = new BufferedReader(isr);
@@ -118,7 +129,7 @@ public class SystemMetadata {
 		addAliasType(DataTypeManagerService.DataTypeAliases.TINYINT);
 		addAliasType(DataTypeManagerService.DataTypeAliases.VARCHAR);
 		for (String name : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
-			if (!name.equals(DefaultDataTypes.NULL)) {
+			if (!name.equals(DefaultDataTypes.NULL.getId())) {
 				ArgCheck.isNotNull(typeMap.get(name), name);
 			}
 		}
@@ -128,9 +139,9 @@ public class SystemMetadata {
 		vdb.setVersion(1);
 		Properties p = new Properties();
 		QueryParser parser = new QueryParser(teiidVersion);
-		systemStore = loadSchema(vdb, p, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
+		systemStore = loadSchema(vdb, p, resourceLocation, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
 		systemStore.addDataTypes(dataTypes);
-		loadSchema(vdb, p, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
+		loadSchema(vdb, p, resourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
 		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);
 		ValidatorReport report = validator.validate(vdb, systemStore);
 		if (report.hasItems()) {
@@ -138,11 +149,11 @@ public class SystemMetadata {
 		}
 	}
 
-	private MetadataFactory loadSchema(VDBMetaData vdb, Properties p, String name, QueryParser parser) {
+	private MetadataFactory loadSchema(VDBMetaData vdb, Properties p, String resourceLocation, String name, QueryParser parser) {
 		ModelMetaData mmd = new ModelMetaData();
 		mmd.setName(name);
 		vdb.addModel(mmd);
-		InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream("org/teiid/metadata/"+name+".sql"); //$NON-NLS-1$ //$NON-NLS-2$
+		InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + name + ".sql"); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
 			MetadataFactory factory = new MetadataFactory(vdb.getName(), vdb.getVersion(), name, typeMap, p, null);
 			parser.parseDDL(factory, new InputStreamReader(is, Charset.forName("UTF-8"))); //$NON-NLS-1$

@@ -40,7 +40,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /** 
  * @since 5.5
  */
-public class Create extends Command implements ICreate<Expression, LanguageVisitor> {
+public class Create extends Command
+    implements TargetedCommand, ICreate<Expression, LanguageVisitor> {
 
     /**
      * @param p

@@ -12,7 +12,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  *
  */
-public class Drop extends Command implements IDrop<Expression, LanguageVisitor> {
+public class Drop extends Command
+    implements TargetedCommand, IDrop<Expression, LanguageVisitor> {
 
     /** Identifies the table to be dropped. */
     private GroupSymbol table;
@@ -34,6 +35,11 @@ public class Drop extends Command implements IDrop<Expression, LanguageVisitor> 
      * @return the table
      */
     public GroupSymbol getTable() {
+        return table;
+    }
+
+    @Override
+    public GroupSymbol getGroup() {
         return table;
     }
 
@@ -85,6 +91,8 @@ public class Drop extends Command implements IDrop<Expression, LanguageVisitor> 
             clone.setSourceHint(getSourceHint());
         if(getOption() != null)
             clone.setOption(getOption().clone());
+
+        copyMetadataState(clone);
 
         return clone;
     }

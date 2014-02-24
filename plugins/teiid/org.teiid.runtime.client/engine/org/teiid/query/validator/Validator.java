@@ -35,7 +35,7 @@ import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 public class Validator {
 
     public static final ValidatorReport validate(LanguageObject object, IQueryMetadataInterface metadata) throws Exception {
-        ValidatorReport report1 = Validator.validate(object, metadata, new ValidationVisitor());
+        ValidatorReport report1 = Validator.validate(object, metadata, new ValidationVisitor(object.getTeiidVersion()));
         return report1;
     }
 
@@ -59,7 +59,7 @@ public class Validator {
         return visitor.getReport();
     }
 
-    private static final void executeValidation(LanguageObject object, final QueryMetadataInterface metadata, final AbstractValidationVisitor visitor) 
+    private static final void executeValidation(LanguageObject object, final IQueryMetadataInterface metadata, final AbstractValidationVisitor visitor) 
         throws Exception {
 
         // Reset visitor
@@ -98,7 +98,7 @@ public class Validator {
         }                
     }
     
-	private static void setTempMetadata(final QueryMetadataInterface metadata,
+	private static void setTempMetadata(final IQueryMetadataInterface metadata,
 			final AbstractValidationVisitor visitor,
 			LanguageObject obj) {
 		if (obj instanceof Command) {

@@ -69,7 +69,14 @@ public class QueryResolverException extends TeiidClientException {
     public QueryResolverException( Throwable e, String message ) {
         super( e, message );
     }
-    
+
+    @Override
+    public String getMessage() {
+        String msg = super.getMessage();
+        msg = msg.replaceAll(this.getClass().getName() + ": ", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        return msg;
+    }
+
 	/**
 	 * Set the list of unresolved symbols during QueryResolution
 	 * @param unresolvedSymbols List of <UnresolvedSymbolDescription> objects

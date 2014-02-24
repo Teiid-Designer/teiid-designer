@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
@@ -883,6 +882,7 @@ public abstract class AbstractTestResolver extends TestCase {
     @Test
     public void testCriteria1() {
         ElementSymbol es = getFactory().newElementSymbol("pm1.g1.e1"); //$NON-NLS-1$
+        es.setType(DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
         GroupSymbol gs = getFactory().newGroupSymbol("pm1.g1"); //$NON-NLS-1$
         es.setGroupSymbol(gs);
 
@@ -1224,7 +1224,7 @@ public abstract class AbstractTestResolver extends TestCase {
         Collection functions = FunctionCollectorVisitor.getFunctions(outerQuery, true);
         assertTrue(functions.size() == 1);
         Function function = (Function)functions.iterator().next();
-        assertTrue(function.getName().equals(IFunctionLibrary.FunctionName.CONVERT.name()));
+        assertTrue(function.getName().equals(IFunctionLibrary.FunctionName.CONVERT.text()));
         Expression[] args = function.getArgs();
         assertSame(e2, args[0]);
         assertTrue(args[1] instanceof Constant);
@@ -1419,7 +1419,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
         // Expected right expression
         Constant e2 = getFactory().newConstant(TimestampUtil.createDate(96, 0, 31), DataTypeManagerService.DefaultDataTypes.DATE.getTypeClass());
-        Function f1 = getFactory().newFunction("convert", new Expression[] {e2, getFactory().newConstant(DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass())}); //$NON-NLS-1$
+        Function f1 = getFactory().newFunction("convert", new Expression[] {e2, getFactory().newConstant(DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getId())}); //$NON-NLS-1$
         f1.makeImplicit();
 
         // Expected criteria
@@ -1955,7 +1955,7 @@ public abstract class AbstractTestResolver extends TestCase {
         // Check whether an implicit conversion was added on the correct side
         CompareCriteria crit = (CompareCriteria)command.getCriteria();
 
-        assertEquals(DataTypeManagerService.DefaultDataTypes.SHORT, crit.getRightExpression().getType());
+        assertEquals(DataTypeManagerService.DefaultDataTypes.SHORT.getTypeClass(), crit.getRightExpression().getType());
         assertEquals("Sql is incorrect after resolving", "SELECT intkey FROM bqt1.smalla WHERE shortvalue = 5", command.toString()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -1971,7 +1971,7 @@ public abstract class AbstractTestResolver extends TestCase {
         // Check whether an implicit conversion was added on the correct side
         CompareCriteria crit = (CompareCriteria)command.getCriteria();
 
-        assertEquals(DataTypeManagerService.DefaultDataTypes.SHORT, crit.getLeftExpression().getType());
+        assertEquals(DataTypeManagerService.DefaultDataTypes.SHORT.getTypeClass(), crit.getLeftExpression().getType());
         assertEquals("Sql is incorrect after resolving", "SELECT intkey FROM bqt1.smalla WHERE 5 = shortvalue", command.toString()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -2914,12 +2914,6 @@ public abstract class AbstractTestResolver extends TestCase {
             QueryResolverException qre = (QueryResolverException)e.getCause();
             assertTrue(qre.getMessage().contains("TEIID30070"));
         }
-    }
-
-    @Ignore( "currently not supported - we get type hints from the criteria not from the possible signatures" )
-    @Test
-    public void testSecondPassFunctionResolving2() {
-        helpResolve("SELECT pm1.g1.e1 FROM pm1.g1 where (lower(?) || 1) = e1 "); //$NON-NLS-1$
     }
 
     /**

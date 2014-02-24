@@ -134,6 +134,13 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
     }
 
     /**
+     * @param teiidVersion
+     */
+    public QueryResolver(ITeiidServerVersion teiidVersion) {
+        this(new QueryParser(teiidVersion));
+    }
+
+    /**
      * @return the query parser
      */
     public QueryParser getQueryParser() {
@@ -536,7 +543,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
             } else {
             	resolveCommand(result, qmi, false);
             }
-	        validateWithVisitor(new ValidationVisitor(), qmi, result);
+	        validateWithVisitor(new ValidationVisitor(getTeiidVersion()), qmi, result);
 
 	        validateProjectedSymbols(virtualGroup, qmi, result);
             cachedNode = new QueryNode(qnode.getQuery());

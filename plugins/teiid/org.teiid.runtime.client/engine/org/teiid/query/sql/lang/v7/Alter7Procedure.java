@@ -45,6 +45,8 @@ public class Alter7Procedure extends AlterProcedure<CreateUpdateProcedureCommand
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 

@@ -13,6 +13,17 @@ import org.teiid.query.sql.lang.SimpleNode;
  */
 public class Reference extends SimpleNode implements Expression, IReference<LanguageVisitor> {
 
+    /**
+     *
+     */
+    public interface Constraint {
+        /**
+         * @param value
+         * @throws Exception
+         */
+        public void validate(Object value) throws Exception;
+    }
+
     private int refIndex;
 
     private Class<?> type;
@@ -22,6 +33,8 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
     private boolean positional;
 
     private boolean optional;
+
+    private Constraint constraint;
 
     /**
      * @param p
@@ -46,6 +59,9 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
         this.type = type;
     }
 
+    /**
+     * @return true if correlated
+     */
     public boolean isCorrelated() {
         if (this.isPositional()) {
             return false;
@@ -111,6 +127,20 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
         this.optional = optional;
     }
 
+    /**
+     * @return constraint
+     */
+    public Constraint getConstraint() {
+        return constraint;
+    }
+    
+    /**
+     * @param constraint
+     */
+    public void setConstraint(Constraint constraint) {
+        this.constraint = constraint;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -155,7 +185,8 @@ public class Reference extends SimpleNode implements Expression, IReference<Lang
             clone.setType(this.type);
         clone.setPositional(isPositional());
         clone.setIndex(getIndex());
-
+        clone.setConstraint(clone.getConstraint());
+        
         return clone;
     }
 

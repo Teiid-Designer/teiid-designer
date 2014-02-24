@@ -16,7 +16,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  *
  */
 public class Insert extends ProcedureContainer
-    implements IInsert<ElementSymbol, Expression, GroupSymbol, QueryCommand, LanguageVisitor> {
+    implements TargetedCommand, IInsert<ElementSymbol, Expression, GroupSymbol, QueryCommand, LanguageVisitor> {
 
     /** Identifies the group to be updated. */
     private GroupSymbol group;

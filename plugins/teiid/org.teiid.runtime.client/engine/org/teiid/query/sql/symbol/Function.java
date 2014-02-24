@@ -161,14 +161,22 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
         func.makeImplicit();
     }
 
+    /**
+     * @return true if function is an aggregate
+     */
+    public boolean isAggregate() {
+        return getFunctionDescriptor().getMethod().getAggregateAttributes() != null;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Arrays.hashCode(this.args);
-        result = prime * result + (this.implicit ? 1231 : 1237);
         result = prime * result + ((this.name == null) ? 0 : this.name.toUpperCase().hashCode());
-        result = prime * result + ((this.type == null) ? 0 : this.type.hashCode());
+        if(this.args != null && this.args.length > 0 && this.args[0] != null) {
+            result = prime * result + Arrays.hashCode(this.args);
+        }
+
         return result;
     }
 
@@ -178,17 +186,21 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Function other = (Function)obj;
-        if (!Arrays.equals(this.args, other.args)) return false;
+
+        if (this.descriptor != null && other.descriptor != null) {
+            if (!this.descriptor.getMethod().equals(other.descriptor.getMethod())) {
+                return false;
+            }
+        }
+
+        if (this.getName() == null) {
+            if (other.getName() != null) return false;
+        } else if (!this.getName().equalsIgnoreCase(other.getName())) return false;
+
         if (this.implicit != other.implicit) return false;
-        if (this.name == null) {
-            if (other.name != null) return false;
-        } else if (!this.name.equalsIgnoreCase(other.name)) return false;
-        if (this.type == null) {
-            if (other.type != null) return false;
-        } else if (!this.type.equals(other.type)) return false;
-        if (this.descriptor == null) {
-            if (other.descriptor != null) return false;
-        } else if (!this.descriptor.equals(other.descriptor)) return false;
+
+        if (!Arrays.equals(this.args, other.args)) return false;
+
         return true;
     }
 

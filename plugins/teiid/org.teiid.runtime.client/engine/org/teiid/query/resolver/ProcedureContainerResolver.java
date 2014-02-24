@@ -138,8 +138,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
     	return info;
 	}
 
-	public String validateUpdateInfo(GroupSymbol group, int type,
-			UpdateInfo info) {
+	public static String validateUpdateInfo(GroupSymbol group, int type, UpdateInfo info) {
 		String error = info.getDeleteValidationError();
 		String name = "Delete"; //$NON-NLS-1$
 		if (type == ICommand.TYPE_UPDATE) {

@@ -221,13 +221,9 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((this.definition == null) ? 0 : this.definition.hashCode());
-        result = prime * result + (this.isProcedure ? 1231 : 1237);
-        result = prime * result + (this.isTempTable ? 1231 : 1237);
-        result = prime * result + ((this.metadataID == null) ? 0 : this.metadataID.hashCode());
-        result = prime * result + ((this.outputDefinition == null) ? 0 : this.outputDefinition.hashCode());
+        int result = 1;
         result = prime * result + ((this.schema == null) ? 0 : this.schema.hashCode());
+        result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
         return result;
     }
 
@@ -235,35 +231,16 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
+
         if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
         GroupSymbol other = (GroupSymbol)obj;
-        if (this.definition == null) {
-            if (other.definition != null)
-                return false;
-        } else if (!this.definition.equals(other.definition))
-            return false;
-        if (this.isProcedure != other.isProcedure)
-            return false;
-        if (this.isTempTable != other.isTempTable)
-            return false;
-        if (this.metadataID == null) {
-            if (other.metadataID != null)
-                return false;
-        } else if (!this.metadataID.equals(other.metadataID))
-            return false;
-        if (this.outputDefinition == null) {
-            if (other.outputDefinition != null)
-                return false;
-        } else if (!this.outputDefinition.equals(other.outputDefinition))
-            return false;
-
         if (this.schema == null || other.schema == null) {
             return this.getName().equals(other.getName());
         }
-
+        
         if (this.schema == null) {
             if (other.schema != null)
                 return false;

@@ -4,6 +4,8 @@ package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.script.CompiledScript;
+import javax.script.ScriptEngine;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IObjectTable;
 import org.teiid.query.parser.LanguageVisitor;
@@ -28,6 +30,10 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
     private List<DerivedColumn> passing = new ArrayList<DerivedColumn>();
 
     private String scriptingLanguage;
+
+    private CompiledScript compiledScript;
+
+    private ScriptEngine scriptEngine;
 
     /**
      * @param p
@@ -93,6 +99,34 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
         this.rowScript = query;
     }
 
+    /**
+     * @return script engine
+     */
+    public ScriptEngine getScriptEngine() {
+        return scriptEngine;
+    }
+    
+    /**
+     * @param scriptEngine
+     */
+    public void setScriptEngine(ScriptEngine scriptEngine) {
+        this.scriptEngine = scriptEngine;
+    }
+
+    /**
+     * @return compiled script
+     */
+    public CompiledScript getCompiledScript() {
+        return compiledScript;
+    }
+    
+    /**
+     * @param compiledScript
+     */
+    public void setCompiledScript(CompiledScript compiledScript) {
+        this.compiledScript = compiledScript;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -150,6 +184,10 @@ public class ObjectTable extends TableFunctionReference implements IObjectTable<
             clone.setColumns(cloneList(getColumns()));
         if(getScriptingLanguage() != null)
             clone.setScriptingLanguage(getScriptingLanguage());
+        if(getCompiledScript() != null)
+            clone.setCompiledScript(getCompiledScript());
+        if(getScriptEngine() != null)
+            clone.setScriptEngine(getScriptEngine());
         if(getPassing() != null)
             clone.setPassing(cloneList(getPassing()));
         if(getRowScript() != null)

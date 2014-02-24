@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import javax.script.CompiledScript;
 import org.teiid.designer.query.sql.lang.IObjectColumn;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
@@ -15,6 +16,8 @@ public class ObjectColumn extends ProjectedColumn implements IObjectColumn<Langu
     private String path;
 
     private Expression defaultExpression;
+
+    private CompiledScript compiledScript;
 
     /**
      * @param p
@@ -50,6 +53,20 @@ public class ObjectColumn extends ProjectedColumn implements IObjectColumn<Langu
      */
     public void setDefaultExpression(Expression defaultExpression) {
         this.defaultExpression = defaultExpression;
+    }
+
+    /**
+     * @return compiled script
+     */
+    public CompiledScript getCompiledScript() {
+        return compiledScript;
+    }
+    
+    /**
+     * @param compiledScript
+     */
+    public void setCompiledScript(CompiledScript compiledScript) {
+        this.compiledScript = compiledScript;
     }
 
     @Override
@@ -94,6 +111,8 @@ public class ObjectColumn extends ProjectedColumn implements IObjectColumn<Langu
             clone.setType(getType());
         if(getName() != null)
             clone.setName(getName());
+
+        clone.setCompiledScript(getCompiledScript());
 
         return clone;
     }

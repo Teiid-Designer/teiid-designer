@@ -37,16 +37,22 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import net.sf.saxon.om.Name11Checker;
 import net.sf.saxon.om.QNameException;
-import net.sf.saxon.trans.XPathException;
-import org.eclipse.datatools.modelbase.sql.tables.Table;
+import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
+import org.teiid.designer.query.metadata.IQueryNode;
+import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.query.sql.lang.ICommand;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
-import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
+import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AggregateAttributes;
+import org.teiid.metadata.Table;
 import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.function.source.XMLSystemFunctions;
-import org.teiid.query.metadata.StoredProcedureInfo;
+import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.resolver.util.ResolverUtil;
@@ -58,6 +64,7 @@ import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
+import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Drop;
@@ -71,6 +78,7 @@ import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Limit;
 import org.teiid.query.sql.lang.MatchCriteria;
+import org.teiid.query.sql.lang.NamespaceItem;
 import org.teiid.query.sql.lang.NotCriteria;
 import org.teiid.query.sql.lang.ObjectColumn;
 import org.teiid.query.sql.lang.ObjectTable;
@@ -90,6 +98,8 @@ import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
+import org.teiid.query.sql.lang.TargetedCommand;
+import org.teiid.query.sql.lang.TextColumn;
 import org.teiid.query.sql.lang.TextTable;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
@@ -126,29 +136,34 @@ import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.sql.visitor.AggregateSymbolCollectorVisitor;
 import org.teiid.query.sql.visitor.AggregateSymbolCollectorVisitor.AggregateStopNavigator;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.EvaluatableVisitor;
+import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.query.validator.UpdateValidator.UpdateInfo;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.translator.SourceSystemFunctions;
 
+/**
+ *
+ */
 public class ValidationVisitor extends AbstractValidationVisitor {
 
-    private final class PositiveIntegerConstraint implements
-			Reference.Constraint {
+    private final class PositiveIntegerConstraint implements Reference.Constraint {
     	
-    	private String msgKey;
+    	private Messages.ValidationVisitor msgKey;
     	
-    	public PositiveIntegerConstraint(String msgKey) {
-    		this.msgKey = msgKey;
+    	public PositiveIntegerConstraint(Messages.ValidationVisitor enumKey) {
+    		this.msgKey = enumKey;
 		}
-    	
+
 		@Override
-		public void validate(Object value) throws QueryValidatorException {
+        public void validate(Object value) throws Exception {
 			if (((Integer)value).intValue() < 0) {
-				 throw new QueryValidatorException(Messages.TEIID.TEIID30242, Messages.getString(msgKey));
+				 throw new TeiidClientException(Messages.getString(msgKey));
 			}
 		}
 	}
@@ -157,7 +172,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     private boolean isXML = false;	// only used for Query commands
     private boolean inQuery;
 	private CreateProcedureCommand createProc;
-    
+
+	/**
+     * @param teiidVersion
+     */
+    public ValidationVisitor(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
+	@Override
     public void reset() {
         super.reset();
         this.isXML = false;
@@ -167,43 +190,45 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
     // ############### Visitor methods for language objects ##################
     
-    public void visit(BatchedUpdateCommand obj) {
-        List<Command> commands = obj.getUpdateCommands();
-        Command command = null;
-        int type = 0;
-        for (int i = 0; i < commands.size(); i++) {
-            command = commands.get(i);
-            type = command.getType();
-            if (type != Command.TYPE_INSERT &&
-                type != Command.TYPE_UPDATE &&
-                type != Command.TYPE_DELETE &&
-                type != Command.TYPE_QUERY) { // SELECT INTO command
-                handleValidationError(Messages.getString("ValidationVisitor.invalid_batch_command"),command); //$NON-NLS-1$
-            } else if (type == Command.TYPE_QUERY) {
-                Into into = ((Query)command).getInto();
-                if (into == null) {
-                    handleValidationError(Messages.getString("ValidationVisitor.invalid_batch_command"),command); //$NON-NLS-1$
-                }
-            }
-        }
-    }
+//    public void visit(BatchedUpdateCommand obj) {
+//        List<Command> commands = obj.getUpdateCommands();
+//        Command command = null;
+//        int type = 0;
+//        for (int i = 0; i < commands.size(); i++) {
+//            command = commands.get(i);
+//            type = command.getType();
+//            if (type != Command.TYPE_INSERT &&
+//                type != Command.TYPE_UPDATE &&
+//                type != Command.TYPE_DELETE &&
+//                type != Command.TYPE_QUERY) { // SELECT INTO command
+//                handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_batch_command),command);
+//            } else if (type == Command.TYPE_QUERY) {
+//                Into into = ((Query)command).getInto();
+//                if (into == null) {
+//                    handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_batch_command),command);
+//                }
+//            }
+//        }
+//    }
 
-	public void visit(Delete obj) {
+	@Override
+    public void visit(Delete obj) {
     	validateNoXMLUpdates(obj);
         GroupSymbol group = obj.getGroup();
         validateGroupSupportsUpdate(group);
         if (obj.getUpdateInfo() != null && obj.getUpdateInfo().isInherentDelete()) {
-        	validateUpdate(obj, Command.TYPE_DELETE, obj.getUpdateInfo());
+        	validateUpdate(obj, ICommand.TYPE_DELETE, obj.getUpdateInfo());
         }
     }
 
+    @Override
     public void visit(GroupBy obj) {
     	// Get list of all group by IDs
         List<Expression> groupBySymbols = obj.getSymbols();
         validateSortable(groupBySymbols);
         for (Expression expr : groupBySymbols) {
             if (!ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(expr).isEmpty() || expr instanceof Constant || expr instanceof Reference) {
-            	handleValidationError(Messages.getString("ValidationVisitor.groupby_subquery", expr), expr); //$NON-NLS-1$
+            	handleValidationError(Messages.getString(Messages.ValidationVisitor.groupby_subquery, expr), expr);
             }
 		}
     }
@@ -212,15 +237,14 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     public void visit(GroupSymbol obj) {
     	try {
 			if (this.getMetadata().isScalarGroup(obj.getMetadataID())) {
-			    handleValidationError(Messages.getString("ValidationVisitor.invalid_scalar_group_reference", obj),obj); //$NON-NLS-1$    		
+			    handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_scalar_group_reference, obj),obj);    		
 			}
-		} catch (Exception e) {
-			handleException(e);
 		} catch (Exception e) {
 			handleException(e);
 		}
     }
 
+    @Override
     public void visit(Insert obj) {
         validateNoXMLUpdates(obj);
         validateGroupSupportsUpdate(obj.getGroup());
@@ -243,20 +267,18 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			}
 		} catch (Exception e1) {
 			handleException(e1);
-		} catch (Exception e1) {
-			handleException(e1);
 		}
         
         if (obj.getQueryExpression() != null) {
         	validateMultisourceInsert(obj.getGroup());
         }
         if (obj.getUpdateInfo() != null && obj.getUpdateInfo().isInherentInsert()) {
-        	validateUpdate(obj, Command.TYPE_INSERT, obj.getUpdateInfo());
+        	validateUpdate(obj, ICommand.TYPE_INSERT, obj.getUpdateInfo());
         	try {
 				if (obj.getUpdateInfo().findInsertUpdateMapping(obj, false) == null) {
 					handleValidationError(Messages.gs(Messages.TEIID.TEIID30376, obj.getVariables()), obj);
 				}
-			} catch (QueryValidatorException e) {
+			} catch (Exception e) {
 				handleValidationError(e.getMessage(), obj);
 			}
         }
@@ -267,12 +289,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	validateSortable(obj.getSymbol());
     }
     
+    @Override
     public void visit(Query obj) {
         validateHasProjectedSymbols(obj);
         if(isXMLCommand(obj)) {
             //no temp table (Select Into) allowed
             if(obj.getInto() != null){
-                handleValidationError(Messages.getString("ERR.015.012.0069"),obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0069),obj);
             }
 
         	this.isXML = true;
@@ -284,7 +307,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             //if it is select with no from, should not have ScalarSubQuery
             if(obj.getSelect() != null && obj.getFrom() == null){
                 if(!ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(obj.getSelect()).isEmpty()){
-                    handleValidationError(Messages.getString("ERR.015.012.0067"),obj); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0067),obj);
                 }
             }
             
@@ -294,17 +317,19 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         }
     }
 	
-	public void visit(Select obj) {
+	@Override
+    public void visit(Select obj) {
         validateSelectElements(obj);
         if(obj.isDistinct()) {
             validateSortable(obj.getProjectedSymbols());
         }
     }
 
-	public void visit(SubquerySetCriteria obj) {
+	@Override
+    public void visit(SubquerySetCriteria obj) {
 		validateSubquery(obj);
 		if (isNonComparable(obj.getExpression())) {
-			handleValidationError(Messages.getString("ERR.015.012.0027", obj),obj); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj),obj);
     	}
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
         
@@ -313,7 +338,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		//Subcommand should have one projected symbol (query with one expression
 		//in SELECT or stored procedure execution that returns a single value).
 		if(projSymbols.size() != 1) {
-			handleValidationError(Messages.getString("ERR.015.012.0011"),obj); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0011),obj);
 		}
 	}
 	
@@ -323,29 +348,28 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         	try {
 				Charset.forName(obj.getEncoding());
         	} catch (IllegalArgumentException e) {
-        		handleValidationError(Messages.getString("ValidationVisitor.invalid_encoding", obj.getEncoding()), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_encoding, obj.getEncoding()), obj);
         	}
-			if ((obj.getType() != DataTypeManager.DefaultDataClasses.BLOB && obj.getType() != DataTypeManager.DefaultDataClasses.VARBINARY)) {
-				handleValidationError(Messages.getString("ValidationVisitor.encoding_for_binary"), obj); //$NON-NLS-1$
+			if ((obj.getType() != DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass() && obj.getType() != DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass())) {
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.encoding_for_binary), obj);
 			}
 		}
 	}
 
-    public void visit(DependentSetCriteria obj) {
-        this.validateRowLimitFunctionNotInInvalidCriteria(obj);
-    }
-
+    @Override
     public void visit(SetQuery obj) {
         validateHasProjectedSymbols(obj);
         validateSetQuery(obj);
     }
     
+    @Override
     public void visit(Update obj) {
         validateNoXMLUpdates(obj);
         validateGroupSupportsUpdate(obj.getGroup());
         validateUpdate(obj);
     }
 
+    @Override
     public void visit(Into obj) {
         GroupSymbol target = obj.getGroup();
         validateGroupSupportsUpdate(target);
@@ -355,41 +379,38 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	private void validateMultisourceInsert(GroupSymbol group) {
 		try {
 			if (getMetadata().isMultiSource(getMetadata().getModelID(group.getMetadataID()))) {
-				handleValidationError(Messages.getString("ValidationVisitor.multisource_insert", group), group); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.multisource_insert, group), group);
 			}
         } catch (Exception e) {
-			handleException(e);
-		} catch (Exception e) {
 			handleException(e);
 		}
 	}
 
+    @Override
     public void visit(Function obj) {
     	if(IFunctionLibrary.FunctionName.LOOKUP.equalsIgnoreCase(obj.getName())) {
     		try {
 				ResolverUtil.ResolvedLookup resolvedLookup = ResolverUtil.resolveLookup(obj, getMetadata());
 				if(ValidationVisitor.isNonComparable(resolvedLookup.getKeyElement())) {
-		            handleValidationError(Messages.getString("ValidationVisitor.invalid_lookup_key", resolvedLookup.getKeyElement()), resolvedLookup.getKeyElement()); //$NON-NLS-1$            
+		            handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_lookup_key, resolvedLookup.getKeyElement()), resolvedLookup.getKeyElement());            
 		        }
 			} catch (Exception e) {
-				handleException(e, obj);
-			} catch (TeiidProcessingException e) {
 				handleException(e, obj);
 			}
     	} else if (IFunctionLibrary.FunctionName.CONTEXT.equalsIgnoreCase(obj.getName())) {
             if(!isXML) {
                 // can't use this pseudo-function in non-XML queries
-                handleValidationError(Messages.getString("ValidationVisitor.The_context_function_cannot_be_used_in_a_non-XML_command"), obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.The_context_function_cannot_be_used_in_a_non_XML_command), obj);
             } else {
                 if (!(obj.getArg(0) instanceof ElementSymbol)){
-                    handleValidationError(Messages.getString("ERR.015.004.0036"), obj);  //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_004_0036), obj); 
                 }
                 
                 for (Iterator<Function> functions = FunctionCollectorVisitor.getFunctions(obj.getArg(1), false).iterator(); functions.hasNext();) {
                     Function function = functions.next();
                     
                     if (IFunctionLibrary.FunctionName.CONTEXT.equalsIgnoreCase(function.getName())) {
-                        handleValidationError(Messages.getString("ValidationVisitor.Context_function_nested"), obj); //$NON-NLS-1$
+                        handleValidationError(Messages.getString(Messages.ValidationVisitor.Context_function_nested), obj);
                     }
                 }
             }
@@ -398,11 +419,11 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             if(isXML) {
                 if (!(obj.getArg(0) instanceof ElementSymbol)) {
                     // Arg must be an element symbol
-                    handleValidationError(Messages.getString("ValidationVisitor.2"), obj); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit2), obj);
                 }
             } else {
                 // can't use this pseudo-function in non-XML queries
-                handleValidationError(Messages.getString("ValidationVisitor.The_rowlimit_function_cannot_be_used_in_a_non-XML_command"), obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.The_rowlimit_function_cannot_be_used_in_a_non_XML_command), obj);
             }
         } else if(obj.getName().equalsIgnoreCase(SourceSystemFunctions.XPATHVALUE)) {
 	        // Validate the xpath value is valid
@@ -410,18 +431,18 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	            Constant xpathConst = (Constant) obj.getArgs()[1];
                 try {
                     XMLSystemFunctions.validateXpath((String)xpathConst.getValue());
-                } catch(XPathException e) {
-                	handleValidationError(Messages.getString("QueryResolver.invalid_xpath", e.getMessage()), obj); //$NON-NLS-1$
+                } catch(Exception e) {
+                	handleValidationError(Messages.getString(Messages.QueryResolver.invalid_xpath, e.getMessage()), obj);
                 }
 	        }
         } else if(obj.getName().equalsIgnoreCase(SourceSystemFunctions.TO_BYTES) || obj.getName().equalsIgnoreCase(SourceSystemFunctions.TO_CHARS)) {
         	try {
         		FunctionMethods.getCharset((String)((Constant)obj.getArg(1)).getValue());
         	} catch (IllegalArgumentException e) {
-        		handleValidationError(Messages.getString("ValidationVisitor.invalid_encoding", obj.getArg(1)), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_encoding, obj.getArg(1)), obj);
         	}
         } else if (obj.isAggregate()) {
-        	handleValidationError(Messages.getString("ValidationVisitor.user_defined_aggregate_as_function", obj, obj.getName()), obj); //$NON-NLS-1$
+        	handleValidationError(Messages.getString(Messages.ValidationVisitor.user_defined_aggregate_as_function, obj, obj.getName()), obj);
         } else if (IFunctionLibrary.FunctionName.JSONARRAY.equalsIgnoreCase(obj.getName())) {
         	Expression[] args = obj.getArgs();
         	for (Expression expression : args) {
@@ -437,22 +458,23 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		for (SPParameter param : obj.getInputParameters()) {
 			try {
                 if (!getMetadata().elementSupports(param.getMetadataID(), SupportConstants.Element.NULL) && EvaluatableVisitor.isFullyEvaluatable(param.getExpression(), true)) {
-	                try {
-	                    // If nextValue is an expression, evaluate it before checking for null
-	                    Object evaluatedValue = Evaluator.evaluate(param.getExpression());
-	                    if(evaluatedValue == null) {
-	                        handleValidationError(Messages.getString("ERR.015.012.0055", param.getParameterSymbol()), param.getParameterSymbol()); //$NON-NLS-1$
-	                    } else if (evaluatedValue instanceof ArrayImpl && getMetadata().isVariadic(param.getMetadataID())) {
-	            			ArrayImpl av = (ArrayImpl)evaluatedValue;
-	            			for (Object o : av.getValues()) {
-	            				if (o == null) {
-	            					handleValidationError(Messages.getString("ERR.015.012.0055", param.getParameterSymbol()), param.getParameterSymbol()); //$NON-NLS-1$
-	            				}
-	            			}
-	            		}
-	                } catch(ExpressionEvaluationException e) {
-	                    //ignore for now, we don't have the context which could be the problem
-	                }
+//	                TODO Do not want the Evaluator - check for nulls disabled
+//                    try {
+//	                    // If nextValue is an expression, evaluate it before checking for null
+//	                    Object evaluatedValue = Evaluator.evaluate(param.getExpression());
+//	                    if(evaluatedValue == null) {
+//	                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
+//	                    } else if (evaluatedValue instanceof ArrayImpl && getMetadata().isVariadic(param.getMetadataID())) {
+//	            			ArrayImpl av = (ArrayImpl)evaluatedValue;
+//	            			for (Object o : av.getValues()) {
+//	            				if (o == null) {
+//	            					handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
+//	            				}
+//	            			}
+//	            		}
+//	                } catch(ExpressionEvaluationException e) {
+//	                    //ignore for now, we don't have the context which could be the problem
+//	                }
 	            }
             } catch (Exception e) {
             	handleException(e);
@@ -468,15 +490,16 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         //Scalar subquery should have one projected symbol (query with one expression
         //in SELECT or stored procedure execution that returns a single value).
         if(projSymbols.size() != 1) {
-        	handleValidationError(Messages.getString("ERR.015.008.0032", obj.getCommand()), obj.getCommand()); //$NON-NLS-1$
+        	handleValidationError(Messages.getString(Messages.ERR.ERR_015_008_0032, obj.getCommand()), obj.getCommand());
         }
     }
 
+    @Override
     public void visit(CreateProcedureCommand obj) {
         //check that the procedure does not contain references to itself
-    	if (obj.getUpdateType() == Command.TYPE_UNKNOWN) {
+    	if (obj.getUpdateType() == ICommand.TYPE_UNKNOWN) {
 	        if (GroupCollectorVisitor.getGroups(obj,true).contains(obj.getVirtualGroup())) {
-	        	handleValidationError(Messages.getString("ValidationVisitor.Procedure_has_group_self_reference"),obj); //$NON-NLS-1$
+	        	handleValidationError(Messages.getString(Messages.ValidationVisitor.Procedure_has_group_self_reference),obj);
 	        }
 	        if (obj.getResultSetColumns() != null) {
 	        	//some unit tests bypass setting the columns
@@ -485,15 +508,16 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
     }
 
+    @Override
     public void visit(CompoundCriteria obj) {
         // Validate use of 'rowlimit' or 'rowlimitexception' pseudo-function - each occurrence must be in a single
         // CompareCriteria which is entirely it's own conjunct (not OR'ed with anything else)
         if (isXML) {
             // Collect all occurrances of rowlimit and rowlimitexception functions
             List<Function> rowLimitFunctions = new ArrayList<Function>();
-            FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
+            FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
             PreOrderNavigator.doVisit(obj, visitor); 
-            visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
+            visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
             PreOrderNavigator.doVisit(obj, visitor);
             final int functionCount = rowLimitFunctions.size();
             if (functionCount > 0) {
@@ -514,7 +538,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                     }
                 }
                 if (i<functionCount) {
-                    handleValidationError(Messages.getString("ValidationVisitor.3"), obj); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit3), obj);
                 }
             }
         }
@@ -535,13 +559,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             SupportConstants.Element.SELECT );
 
 		if(cantSelect != null) {
-            handleValidationError(Messages.getString("ERR.015.012.0024", cantSelect), cantSelect); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0024, cantSelect), cantSelect);
 		}
     }
 
     protected void validateHasProjectedSymbols(Command obj) {
         if(obj.getProjectedSymbols().size() == 0) {
-            handleValidationError(Messages.getString("ERR.015.012.0025"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0025), obj);
         }
     }
 
@@ -558,12 +582,17 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
 	private void validateSortable(Expression symbol) {
 		if (isNonComparable(symbol)) {
-		    handleValidationError(Messages.getString("ERR.015.012.0026", symbol), symbol); //$NON-NLS-1$
+		    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0026, symbol), symbol);
 		}
 	}
 
+    /**
+     * @param symbol
+     * @return whether symbol type is non-comparable
+     */
     public static boolean isNonComparable(Expression symbol) {
-        return DataTypeManager.isNonComparable(DataTypeManager.getDataTypeName(symbol.getType()));
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+        return dataTypeManager.isNonComparable(dataTypeManager.getDataTypeName(symbol.getType()));
     }
 
 	/**
@@ -572,7 +601,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	 */
     protected void validateNoXMLUpdates(Command obj) {
      	if(isXMLCommand(obj)) {
-            handleValidationError(Messages.getString("ERR.015.012.0029"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0029), obj);
      	}
     }
 
@@ -582,25 +611,25 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	 */
     protected void validateNoXMLProcedures(Command obj) {
      	if(isXMLCommand(obj)) {
-            handleValidationError(Messages.getString("ERR.015.012.0030"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0030), obj);
      	}
     }
 
     private void validateXMLQuery(Query obj) {
         if(obj.getGroupBy() != null) {
-            handleValidationError(Messages.getString("ERR.015.012.0031"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0031), obj);
         }
         if(obj.getHaving() != null) {
-            handleValidationError(Messages.getString("ERR.015.012.0032"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0032), obj);
         }
         if(obj.getLimit() != null) {
-            handleValidationError(Messages.getString("ValidationVisitor.limit_not_valid_for_xml"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ValidationVisitor.limit_not_valid_for_xml), obj);
         }
         if (obj.getOrderBy() != null) {
         	OrderBy orderBy = obj.getOrderBy();
         	for (OrderByItem item : orderBy.getOrderByItems()) {
 				if (!(item.getSymbol() instanceof ElementSymbol)) {
-					handleValidationError(Messages.getString("ValidationVisitor.orderby_expression_xml"), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.orderby_expression_xml), obj);
 				}
 			}
          }
@@ -609,7 +638,8 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     protected void validateGroupSupportsUpdate(GroupSymbol groupSymbol) {
     	try {
 	    	if(! getMetadata().groupSupports(groupSymbol.getMetadataID(), SupportConstants.Group.UPDATE)) {
-	            handleValidationError(Messages.getString("ERR.015.012.0033", SQLStringVisitor.getSQLString(groupSymbol)), groupSymbol); //$NON-NLS-1$
+	            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0033, 
+	                                                     SQLStringVisitor.getSQLString(getTeiidVersion(), groupSymbol)), groupSymbol);
 	        }
 	    } catch (Exception e) {
 	        handleException(e, groupSymbol);
@@ -621,10 +651,10 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         // also check the columns of each for comparability
         for (QueryCommand subQuery : query.getQueryCommands()) {
             if(isXMLCommand(subQuery)) {
-                handleValidationError(Messages.getString("ERR.015.012.0034"), query); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0034), query);
             }
             if (subQuery instanceof Query && ((Query)subQuery).getInto() != null) {
-            	handleValidationError(Messages.getString("ValidationVisitor.union_insert"), query); //$NON-NLS-1$
+            	handleValidationError(Messages.getString(Messages.ValidationVisitor.union_insert), query);
             }
         }
         
@@ -633,7 +663,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         }
         
         if (query.isAll() && (query.getOperation() == Operation.EXCEPT || query.getOperation() == Operation.INTERSECT)) {
-            handleValidationError(Messages.getString("ValidationVisitor.excpet_intersect_all"), query); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ValidationVisitor.excpet_intersect_all), query);
         }
     }
 
@@ -673,10 +703,10 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         	AggregateSymbolCollectorVisitor.getAggregates(symbol, aggs, invalid, null, null, groupSymbols);                                            
         }
         if ((!aggs.isEmpty() || hasAgg) && !invalid.isEmpty()) {
-    		handleValidationError(Messages.getString("ERR.015.012.0037", invalid), invalid); //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0037, invalid), invalid);
         }
         if (!invalidWindowFunctions.isEmpty()) {
-        	handleValidationError(Messages.getString("SQLParser.window_only_top_level", invalidWindowFunctions), invalidWindowFunctions); //$NON-NLS-1$
+        	handleValidationError(Messages.getString(Messages.TeiidParser.window_only_top_level, invalidWindowFunctions), invalidWindowFunctions);
         }
     }
 
@@ -689,8 +719,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		if (query.getFrom() == null) {
 			return;
 		}
-		ElementCollectorVisitor ecv = new ElementCollectorVisitor(invalid) {
-			public void visit(ElementSymbol obj) {
+		ElementCollectorVisitor ecv = new ElementCollectorVisitor(getTeiidVersion(), invalid) {
+			@Override
+            public void visit(ElementSymbol obj) {
 				if (obj.isExternalReference() && correlationGroups.contains(obj.getGroupSymbol())
 						 && (groupingSymbols == null || !groupingSymbols.contains(obj))) {
 					super.visit(obj);
@@ -708,7 +739,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		LinkedHashSet<Expression> aggs = new LinkedHashSet<Expression>();
 		AggregateSymbolCollectorVisitor.getAggregates(clause, aggs, null, null, aggs, null);
 		if (!aggs.isEmpty()) {
-			handleValidationError(Messages.getString("SQLParser.Aggregate_only_top_level", aggs), aggs); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.TeiidParser.Aggregate_only_top_level, aggs), aggs);
 		}
 	}
     
@@ -723,7 +754,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             // Validate that all elements in variable list are updatable
         	for (ElementSymbol insertElem : vars) {
                 if(! getMetadata().elementSupports(insertElem.getMetadataID(), SupportConstants.Element.UPDATE)) {
-                    handleValidationError(Messages.getString("ERR.015.012.0052", insertElem), insertElem); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0052, insertElem), insertElem);
                 }
                 if (multiSource && getMetadata().isMultiSourceElement(insertElem.getMetadataID())) {
                 	multiSource = false;
@@ -743,7 +774,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 				if(!getMetadata().elementSupports(nextElmnt.getMetadataID(), SupportConstants.Element.DEFAULT_VALUE) &&
 					!getMetadata().elementSupports(nextElmnt.getMetadataID(), SupportConstants.Element.NULL) &&
                     !getMetadata().elementSupports(nextElmnt.getMetadataID(), SupportConstants.Element.AUTO_INCREMENT)) {
-		                handleValidationError(Messages.getString("ERR.015.012.0053", new Object[] {insertGroup, nextElmnt}), nextElmnt); //$NON-NLS-1$
+		                handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0053, new Object[] {insertGroup, nextElmnt}), nextElmnt);
 				}
 			}
 
@@ -752,18 +783,18 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             while(valIter.hasNext() && varIter.hasNext()) {
                 Expression nextValue = (Expression) valIter.next();
                 ElementSymbol nextVar = varIter.next();
-
-                if (EvaluatableVisitor.isFullyEvaluatable(nextValue, true)) {
-                    try {
-                        // If nextValue is an expression, evaluate it before checking for null
-                        Object evaluatedValue = Evaluator.evaluate(nextValue);
-                        if(evaluatedValue == null && ! getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.NULL)) {
-                            handleValidationError(Messages.getString("ERR.015.012.0055", nextVar), nextVar); //$NON-NLS-1$
-                        }
-                    } catch(ExpressionEvaluationException e) {
-                        //ignore for now, we don't have the context which could be the problem
-                    }
-                }
+//              TODO Do not want the Evaluator - check for nulls disabled
+//                if (EvaluatableVisitor.isFullyEvaluatable(nextValue, true)) {
+//                    try {
+//                        // If nextValue is an expression, evaluate it before checking for null
+//                        Object evaluatedValue = Evaluator.evaluate(nextValue);
+//                        if(evaluatedValue == null && ! getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.NULL)) {
+//                            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar), nextVar);
+//                        }
+//                    } catch(ExpressionEvaluationException e) {
+//                        //ignore for now, we don't have the context which could be the problem
+//                    }
+//                }
             }// end of while
         } catch(Exception e) {
             handleException(e, obj);
@@ -780,7 +811,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	        }
 		}
 	    if(!dups.isEmpty()) {
-            handleValidationError(Messages.getString("ERR.015.012.0062", dups), dups); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0062, dups), dups);
 	    }
     }
     
@@ -794,39 +825,39 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
                 // Check that left side element is updatable
                 if(! getMetadata().elementSupports(elementID.getMetadataID(), SupportConstants.Element.UPDATE)) {
-                    handleValidationError(Messages.getString("ERR.015.012.0059", elementID), elementID); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0059, elementID), elementID);
                 }
                 
                 Object metadataID = elementID.getMetadataID();
                 if (getMetadata().isMultiSourceElement(metadataID)){
-                	handleValidationError(Messages.getString("multi_source_update_not_allowed", elementID), elementID); //$NON-NLS-1$
+                	handleValidationError(Messages.getString(Messages.ValidationVisitor.multi_source_update_not_allowed, elementID), elementID);
                 }
 
 			    // Check that right expression is a constant and is non-null
                 Expression value = entry.getValue();
-                
-                if (EvaluatableVisitor.isFullyEvaluatable(value, true)) {
-                    try {
-                        value = new Constant(Evaluator.evaluate(value));
-                    } catch (ExpressionEvaluationException err) {
-                    }
-                }
+//              TODO Do not want the Evaluator - check for nulls disabled    
+//                if (EvaluatableVisitor.isFullyEvaluatable(value, true)) {
+//                    try {
+//                        value = new Constant(Evaluator.evaluate(value));
+//                    } catch (ExpressionEvaluationException err) {
+//                    }
+//                }
                 
                 if(value instanceof Constant) {
     			    // If value is null, check that element supports this as a nullable column
-                    if(((Constant)value).isNull() && ! getMetadata().elementSupports(elementID.getMetadataID(), SupportConstants.Element.NULL)) {
-                        handleValidationError(Messages.getString("ERR.015.012.0060", SQLStringVisitor.getSQLString(elementID)), elementID); //$NON-NLS-1$
+                    if(((Constant)value).getValue() == null && ! getMetadata().elementSupports(elementID.getMetadataID(), SupportConstants.Element.NULL)) {
+                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0060, SQLStringVisitor.getSQLString(getTeiidVersion(), elementID)), elementID);
                     }// end of if
                 } 
 		    }
             if (info != null && info.isInherentUpdate()) {
-            	validateUpdate(update, Command.TYPE_UPDATE, info);
+            	validateUpdate(update, ICommand.TYPE_UPDATE, info);
             	Set<ElementSymbol> updateCols = update.getChangeList().getClauseMap().keySet();
             	if (!info.hasValidUpdateMapping(updateCols)) {
             		handleValidationError(Messages.gs(Messages.TEIID.TEIID30376, updateCols), update);
             	}
             }
-        } catch(TeiidException e) {
+        } catch(Exception e) {
             handleException(e, update);
         }
         
@@ -859,27 +890,28 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             
             // Check if there are too many elements in the SELECT clause
             if (symbols.size() != elementIDs.size()) {
-                handleValidationError(Messages.getString("ValidationVisitor.select_into_wrong_elements", new Object[] {new Integer(elementIDs.size()), new Integer(symbols.size())}), query); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.select_into_wrong_elements, new Object[] {new Integer(elementIDs.size()), new Integer(symbols.size())}), query);
                 return;
             }
-            
+
+            DataTypeManagerService dataTypeManagerService = DataTypeManagerService.getInstance();
             for (int symbolNum = 0; symbolNum < symbols.size(); symbolNum++) {
                 Expression symbol = symbols.get(symbolNum);
                 Object elementID = elementIDs.get(symbolNum);
                 // Check if supports updates
                 if (!getMetadata().elementSupports(elementID, SupportConstants.Element.UPDATE)) {
-                    handleValidationError(Messages.getString("ValidationVisitor.element_updates_not_allowed", getMetadata().getFullName(elementID)), intoGroup); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.element_updates_not_allowed, getMetadata().getFullName(elementID)), intoGroup);
                 }
 
                 Class<?> symbolType = symbol.getType();
-                String symbolTypeName = DataTypeManager.getDataTypeName(symbolType);
+                String symbolTypeName = dataTypeManagerService.getDataTypeName(symbolType);
                 String targetTypeName = getMetadata().getElementType(elementID);
                 if (symbolTypeName.equals(targetTypeName)) {
                     continue;
                 }
-                if (!DataTypeManager.isImplicitConversion(symbolTypeName, targetTypeName)) { // If there's no implicit conversion between the two
+                if (!dataTypeManagerService.isImplicitConversion(symbolTypeName, targetTypeName)) { // If there's no implicit conversion between the two
                     Object[] params = new Object [] {symbolTypeName, targetTypeName, new Integer(symbolNum + 1), query};
-                    handleValidationError(Messages.getString("ValidationVisitor.select_into_no_implicit_conversion", params), query); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.select_into_no_implicit_conversion, params), query);
                     continue;
                 }
             }
@@ -891,73 +923,80 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     private void validateRowLimitFunctionNotInInvalidCriteria(Criteria obj) {
         // Collect all occurrances of rowlimit and rowlimitexception functions
         List<Function> rowLimitFunctions = new ArrayList<Function>();
-        FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
+        FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
         PreOrderNavigator.doVisit(obj, visitor);      
-        visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
+        visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
         PreOrderNavigator.doVisit(obj, visitor); 
         if (rowLimitFunctions.size() > 0) {
-            handleValidationError(Messages.getString("ValidationVisitor.3"), obj); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit3), obj);
         }
     }
     
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.BetweenCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.BetweenCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(BetweenCriteria obj) {
     	if (isNonComparable(obj.getExpression())) {
-    		handleValidationError(Messages.getString("ERR.015.012.0027", obj),obj);    		 //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj),obj);    		
     	}
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.IsNullCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.IsNullCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(IsNullCriteria obj) {
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.MatchCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.MatchCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(MatchCriteria obj) {
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.NotCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.NotCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(NotCriteria obj) {
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.SetCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.SetCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(SetCriteria obj) {
     	if (isNonComparable(obj.getExpression())) {
-    		handleValidationError(Messages.getString("ERR.015.012.0027", obj),obj);    		 //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj),obj);    		
     	}
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
 
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.SubqueryCompareCriteria)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.SubqueryCompareCriteria)
      * @since 4.3
      */
+    @Override
     public void visit(SubqueryCompareCriteria obj) {
     	validateSubquery(obj);
     	if (isNonComparable(obj.getLeftExpression())) {
-    		handleValidationError(Messages.getString("ERR.015.012.0027", obj),obj);    		 //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj),obj);    		
     	}
         this.validateRowLimitFunctionNotInInvalidCriteria(obj);
     }
     
+    @Override
     public void visit(Option obj) {
         List<String> dep = obj.getDependentGroups();
         List<String> notDep = obj.getNotDependentGroups();
@@ -970,7 +1009,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 for (Iterator<String> j = notDep.iterator(); j.hasNext();) {
                     notDepGroup = j.next();
                     if (notDepGroup.equalsIgnoreCase(groupName)) {
-                        handleValidationError(Messages.getString("ValidationVisitor.group_in_both_dep", groupName), obj); //$NON-NLS-1$
+                        handleValidationError(Messages.getString(Messages.ValidationVisitor.group_in_both_dep, groupName), obj);
                         return;
                     }
                 }
@@ -979,8 +1018,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.DynamicCommand)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.DynamicCommand)
      */
+    @Override
     public void visit(DynamicCommand obj) {
         if (obj.getIntoGroup() != null) {
             validateInto(obj, obj.getAsColumns(), obj.getIntoGroup());
@@ -998,24 +1038,25 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	if (obj.getTableMetadata() != null) {
     		Table t = obj.getTableMetadata();
     		if (!t.getForeignKeys().isEmpty()) {
-    			handleValidationError(Messages.getString("ValidationVisitor.temp_fk", obj.getTable()), obj); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.temp_fk, obj.getTable()), obj);
     		}
     	}
     }
     
     /** 
-     * @see org.teiid.query.sql.LanguageVisitor#visit(org.teiid.query.sql.lang.Drop)
+     * @see LanguageVisitor#visit(org.teiid.query.sql.lang.Drop)
      */
+    @Override
     public void visit(Drop drop) {
         if (!drop.getTable().isTempTable()) {
-            handleValidationError(Messages.getString("ValidationVisitor.drop_of_nontemptable", drop.getTable()), drop); //$NON-NLS-1$
+            handleValidationError(Messages.getString(Messages.ValidationVisitor.drop_of_nontemptable, drop.getTable()), drop);
         }
     }
     
     @Override
     public void visit(CompareCriteria obj) {
     	if (isNonComparable(obj.getLeftExpression())) {
-    		handleValidationError(Messages.getString("ERR.015.012.0027", obj),obj);    		 //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0027, obj),obj);    		
     	}
     	
         // Validate use of 'rowlimit' and 'rowlimitexception' pseudo-functions - they cannot be nested within another
@@ -1023,9 +1064,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
         // Collect all occurrences of rowlimit function
         List rowLimitFunctions = new ArrayList();
-        FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
+        FunctionCollectorVisitor visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMIT.text());
         PreOrderNavigator.doVisit(obj, visitor);   
-        visitor = new FunctionCollectorVisitor(rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
+        visitor = new FunctionCollectorVisitor(getTeiidVersion(), rowLimitFunctions, IFunctionLibrary.FunctionName.ROWLIMITEXCEPTION.text());
         PreOrderNavigator.doVisit(obj, visitor);            
         final int functionCount = rowLimitFunctions.size();
         if (functionCount > 0) {
@@ -1051,45 +1092,46 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             }
             if (function == null) {
                 // must be nested, which is invalid
-                handleValidationError(Messages.getString("ValidationVisitor.0"), obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit0), obj);
             } else {
                 if (expr instanceof Constant) {
                     Constant constant = (Constant)expr;
                     if (constant.getValue() instanceof Integer) {
                         Integer integer = (Integer)constant.getValue();
                         if (integer.intValue() < 0) {
-                            handleValidationError(Messages.getString("ValidationVisitor.1"), obj); //$NON-NLS-1$
+                            handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit1), obj);
                         }
                     } else {
-                        handleValidationError(Messages.getString("ValidationVisitor.1"), obj); //$NON-NLS-1$
+                        handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit1), obj);
                     }
                 } else if (expr instanceof Reference) {
-                	((Reference)expr).setConstraint(new PositiveIntegerConstraint("ValidationVisitor.1")); //$NON-NLS-1$
+                	((Reference)expr).setConstraint(new PositiveIntegerConstraint(Messages.ValidationVisitor.rowlimit1));
                 } else {
-                    handleValidationError(Messages.getString("ValidationVisitor.1"), obj); //$NON-NLS-1$
+                    handleValidationError(Messages.getString(Messages.ValidationVisitor.rowlimit1), obj);
                 }
             }                 
         }
     }
     
+    @Override
     public void visit(Limit obj) {
         Expression offsetExpr = obj.getOffset();
         if (offsetExpr instanceof Constant) {
             Integer offset = (Integer)((Constant)offsetExpr).getValue();
             if (offset.intValue() < 0) {
-                handleValidationError(Messages.getString("ValidationVisitor.badoffset2"), obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.badoffset2), obj);
             }
         } else if (offsetExpr instanceof Reference) {
-        	((Reference)offsetExpr).setConstraint(new PositiveIntegerConstraint("ValidationVisitor.badoffset2")); //$NON-NLS-1$
+        	((Reference)offsetExpr).setConstraint(new PositiveIntegerConstraint(Messages.ValidationVisitor.badoffset2));
         }
         Expression limitExpr = obj.getRowLimit();
         if (limitExpr instanceof Constant) {
             Integer limit = (Integer)((Constant)limitExpr).getValue();
             if (limit.intValue() < 0) {
-                handleValidationError(Messages.getString("ValidationVisitor.badlimit2"), obj); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.badlimit2), obj);
             }
         } else if (limitExpr instanceof Reference) {
-        	((Reference)limitExpr).setConstraint(new PositiveIntegerConstraint("ValidationVisitor.badlimit2")); //$NON-NLS-1$
+        	((Reference)limitExpr).setConstraint(new PositiveIntegerConstraint(Messages.ValidationVisitor.badlimit2));
         }
     }
     
@@ -1105,6 +1147,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		}
     }
     
+    @Override
     public void visit(JSONObject obj) {
     	for (DerivedColumn dc : obj.getArgs()) {
     		validateJSONValue(obj, dc.getExpression());
@@ -1119,7 +1162,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	case DENSE_RANK:
     	case ROW_NUMBER:
     		if (windowFunction.getWindowSpecification().getOrderBy() == null) {
-    			handleValidationError(Messages.getString("ValidationVisitor.ranking_requires_order_by", windowFunction), windowFunction); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.ranking_requires_order_by, windowFunction), windowFunction);
     		}
     		break;
     	case TEXTAGG:
@@ -1128,13 +1171,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	case XMLAGG:
     	case STRING_AGG:
     		if (windowFunction.getWindowSpecification().getOrderBy() != null) {
-    			handleValidationError(Messages.getString("ValidationVisitor.window_order_by", windowFunction), windowFunction); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.window_order_by, windowFunction), windowFunction);
             }
     		break;
+    	default:
+    	    break;
     	}
     	validateNoSubqueriesOrOuterReferences(windowFunction);
         if (windowFunction.getFunction().getOrderBy() != null || (windowFunction.getFunction().isDistinct() && windowFunction.getWindowSpecification().getOrderBy() != null)) {
-        	handleValidationError(Messages.getString("ERR.015.012.0042", new Object[] {windowFunction.getFunction(), windowFunction}), windowFunction); //$NON-NLS-1$
+        	handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0042, new Object[] {windowFunction.getFunction(), windowFunction}), windowFunction);
         }
         if (windowFunction.getWindowSpecification().getPartition() != null) {
         	validateSortable(windowFunction.getWindowSpecification().getPartition());
@@ -1144,19 +1189,19 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     @Override
     public void visit(AggregateSymbol obj) {
     	if (!inQuery) {
-    		handleValidationError(Messages.getString("SQLParser.Aggregate_only_top_level", obj), obj); //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.TeiidParser.Aggregate_only_top_level, obj), obj);
     		return;
     	}
     	if (obj.getAggregateFunction() == AggregateSymbol.Type.USER_DEFINED) {
     		AggregateAttributes aa = obj.getFunctionDescriptor().getMethod().getAggregateAttributes();
     		if (!aa.allowsDistinct() && obj.isDistinct()) {
-    			handleValidationError(Messages.getString("ValidationVisitor.uda_not_allowed", "DISTINCT", obj), obj); //$NON-NLS-1$ //$NON-NLS-2$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.uda_not_allowed, "DISTINCT", obj), obj); //$NON-NLS-1$
     		}
     		if (!aa.allowsOrderBy() && obj.getOrderBy() != null) {
-    			handleValidationError(Messages.getString("ValidationVisitor.uda_not_allowed", "ORDER BY", obj), obj); //$NON-NLS-1$ //$NON-NLS-2$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.uda_not_allowed, "ORDER BY", obj), obj); //$NON-NLS-1$
     		}
     		if (aa.isAnalytic() && !obj.isWindowed()) {
-    			handleValidationError(Messages.getString("ValidationVisitor.uda_analytic", obj), obj); //$NON-NLS-1$  
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.uda_analytic, obj), obj);  
     		}
     	}
     	if (obj.getCondition() != null) {
@@ -1172,30 +1217,33 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         validateNoNestedAggs(obj.getCondition());
         
         // Verify data type of aggregate expression
-        Type aggregateFunction = obj.getAggregateFunction();
-        if((aggregateFunction == Type.SUM || aggregateFunction == Type.AVG) && obj.getType() == null) {
-            handleValidationError(Messages.getString("ERR.015.012.0041", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
-        } else if (obj.getType() != DataTypeManager.DefaultDataClasses.NULL) {
-        	if (aggregateFunction == Type.XMLAGG && aggExps[0].getType() != DataTypeManager.DefaultDataClasses.XML) {
-        		handleValidationError(Messages.getString("AggregateValidationVisitor.non_xml", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
-        	} else if (obj.isBoolean() && aggExps[0].getType() != DataTypeManager.DefaultDataClasses.BOOLEAN) {
-        		handleValidationError(Messages.getString("AggregateValidationVisitor.non_boolean", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
-        	} else if (aggregateFunction == Type.JSONARRAY_AGG) {
+        IAggregateSymbol.Type aggregateFunction = obj.getAggregateFunction();
+        if((aggregateFunction == IAggregateSymbol.Type.SUM || aggregateFunction == IAggregateSymbol.Type.AVG) && obj.getType() == null) {
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0041, new Object[] {aggregateFunction, obj}), obj);
+        } else if (obj.getType() != DataTypeManagerService.DefaultDataTypes.NULL.getTypeClass()) {
+        	if (aggregateFunction == IAggregateSymbol.Type.XMLAGG && aggExps[0].getType() != DataTypeManagerService.DefaultDataTypes.XML.getTypeClass()) {
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_xml, new Object[] {aggregateFunction, obj}), obj);
+        	} else if (obj.isBoolean() && aggExps[0].getType() != DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass()) {
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_boolean, new Object[] {aggregateFunction, obj}), obj);
+        	} else if (aggregateFunction == IAggregateSymbol.Type.JSONARRAY_AGG) {
 				validateJSONValue(obj, aggExps[0]);
         	}
         }
-        if((obj.isDistinct() || aggregateFunction == Type.MIN || aggregateFunction == Type.MAX) && DataTypeManager.isNonComparable(DataTypeManager.getDataTypeName(aggExps[0].getType()))) {
-    		handleValidationError(Messages.getString("AggregateValidationVisitor.non_comparable", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
+        if((obj.isDistinct() ||
+            aggregateFunction == IAggregateSymbol.Type.MIN ||
+            aggregateFunction == IAggregateSymbol.Type.MAX) &&
+            DataTypeManagerService.getInstance().isNonComparable(DataTypeManagerService.getInstance().getDataTypeName(aggExps[0].getType()))) {
+    		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_comparable, new Object[] {aggregateFunction, obj}), obj);
         }
         if(obj.isEnhancedNumeric()) {
         	if (!Number.class.isAssignableFrom(aggExps[0].getType())) {
-        		handleValidationError(Messages.getString("ERR.015.012.0041", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0041, new Object[] {aggregateFunction, obj}), obj);
         	}
         	if (obj.isDistinct()) {
-        		handleValidationError(Messages.getString("AggregateValidationVisitor.invalid_distinct", new Object[] {aggregateFunction, obj}), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_distinct, new Object[] {aggregateFunction, obj}), obj);
         	}
         }
-    	if (obj.getAggregateFunction() != Type.TEXTAGG) {
+    	if (obj.getAggregateFunction() != IAggregateSymbol.Type.TEXTAGG) {
     		return;
     	}
     	TextLine tl = (TextLine)aggExps[0];
@@ -1210,24 +1258,27 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     		try {
     			Charset.forName(tl.getEncoding());
     		} catch (IllegalArgumentException e) {
-    			handleValidationError(Messages.getString("ValidationVisitor.invalid_encoding", tl.getEncoding()), obj); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_encoding, tl.getEncoding()), obj);
     		}
     	}
     }
 
 	private void validateJSONValue(LanguageObject obj, Expression expr) {
-		if (expr.getType() != DataTypeManager.DefaultDataClasses.STRING && !DataTypeManager.isTransformable(expr.getType(), DataTypeManager.DefaultDataClasses.STRING)) {
-			handleValidationError(Messages.getString("ValidationVisitor.invalid_json_value", expr, obj), obj); //$NON-NLS-1$
+		if (expr.getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()
+		    && !DataTypeManagerService.getInstance().isTransformable(
+		                                               expr.getType(),
+		                                               DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass())) {
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_json_value, expr, obj), obj);
 		}
 	}
 
 	private void validateNoSubqueriesOrOuterReferences(Expression expr) {
 		if (!ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(expr).isEmpty()) {
-			handleValidationError(Messages.getString("ValidationVisitor.filter_subquery", expr), expr); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.filter_subquery, expr), expr);
 		}
 		for (ElementSymbol es : ElementCollectorVisitor.getElements(expr, false)) {
 			if (es.isExternalReference()) {
-				handleValidationError(Messages.getString("ValidationVisitor.filter_subquery", es), es); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.filter_subquery, es), es);
 			}
 		}
 	}
@@ -1238,7 +1289,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         	HashSet<Expression> nestedAggs = new LinkedHashSet<Expression>();
             AggregateSymbolCollectorVisitor.getAggregates(aggExp, nestedAggs, null, null, nestedAggs, null);
             if(!nestedAggs.isEmpty()) {
-                handleValidationError(Messages.getString("ERR.015.012.0039", nestedAggs), nestedAggs); //$NON-NLS-1$
+                handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0039, nestedAggs), nestedAggs);
             }
         }
 	}
@@ -1247,7 +1298,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		try {
 			return Name11Checker.getInstance().getQNameParts(name);
 		} catch (QNameException e) {
-			handleValidationError(Messages.getString("ValidationVisitor.xml_invalid_qname", name), obj); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_invalid_qname, name), obj);
 		}
 		return null;
 	}
@@ -1255,7 +1306,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	private void validateDerivedColumnNames(LanguageObject obj, List<DerivedColumn> cols) {
 		for (DerivedColumn dc : cols) {
     		if (dc.getAlias() == null && !(dc.getExpression() instanceof ElementSymbol)) {
-    			handleValidationError(Messages.getString("ValidationVisitor.expression_requires_name"), obj); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.expression_requires_name), obj);
         	} 
 		}
 	}
@@ -1268,14 +1319,14 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 				continue;
 			}
 			if ("xmlns".equals(dc.getAlias())) { //$NON-NLS-1$
-				handleValidationError(Messages.getString("ValidationVisitor.xml_attributes_reserved"), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_attributes_reserved), obj);
 			}
 			String[] parts = validateQName(obj, dc.getAlias());
 			if (parts == null) {
 				continue;
 			}
 			if ("xmlns".equals(parts[0])) { //$NON-NLS-1$
-				handleValidationError(Messages.getString("ValidationVisitor.xml_attributes_reserved", dc.getAlias()), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_attributes_reserved, dc.getAlias()), obj);
 			}
 		}
     }
@@ -1288,9 +1339,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	validateQName(obj, obj.getName());
     }
     
+    /**
+     * @param expression
+     * @param parent
+     */
     public void validateXMLContentTypes(Expression expression, LanguageObject parent) {
-		if (expression.getType() == DataTypeManager.DefaultDataClasses.OBJECT || expression.getType() == DataTypeManager.DefaultDataClasses.BLOB) {
-			handleValidationError(Messages.getString("ValidationVisitor.xml_content_type", expression), parent); //$NON-NLS-1$
+		if (expression.getType() == DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass() || expression.getType() == DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass()) {
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_content_type, expression), parent);
 		}
     }
     
@@ -1307,12 +1362,12 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	for (XMLColumn xc : obj.getColumns()) {
 			if (!xc.isOrdinal()) {
 				if (xc.getDefaultExpression() != null && !EvaluatableVisitor.isFullyEvaluatable(xc.getDefaultExpression(), false)) {
-					handleValidationError(Messages.getString("ValidationVisitor.invalid_default", xc.getDefaultExpression()), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_default, xc.getDefaultExpression()), obj);
 				}
 				continue;
 			}
 			if (hasOrdinal) {
-				handleValidationError(Messages.getString("ValidationVisitor.one_ordinal"), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.one_ordinal), obj);
 				break;
 			}
 			hasOrdinal = true;
@@ -1325,9 +1380,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	TreeSet<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
     	for (DerivedColumn dc : passing) {
     		if (dc.getAlias() == null) {
-				handleValidationError(Messages.getString("ValidationVisitor.context_item_not_allowed"), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.context_item_not_allowed), obj);
         	} else if (!names.add(dc.getAlias())) {
-    			handleValidationError(Messages.getString("ValidationVisitor.duplicate_passing", dc.getAlias()), obj); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.duplicate_passing, dc.getAlias()), obj);
         	}
 		}
     	Compilable scriptCompiler = null;
@@ -1339,11 +1394,10 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 				engine.put(ScriptEngine.FILENAME, SQLConstants.NonReserved.OBJECTTABLE);
 				obj.setCompiledScript(scriptCompiler.compile(obj.getRowScript()));
 			}
-		} catch (TeiidProcessingException e) {
+		} catch (Exception e) {
 			handleValidationError(e.getMessage(), obj);
-		} catch (ScriptException e) {
-			handleValidationError(Messages.gs(Messages.TEIID.TEIID31110, obj.getRowScript(), e.getMessage()), obj); //$NON-NLS
 		}
+
     	for (ObjectColumn xc : obj.getColumns()) {
     		if (scriptCompiler != null) {
     			try {
@@ -1353,7 +1407,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 				}
     		}
 			if (xc.getDefaultExpression() != null && !EvaluatableVisitor.isFullyEvaluatable(xc.getDefaultExpression(), false)) {
-				handleValidationError(Messages.getString("ValidationVisitor.invalid_default", xc.getDefaultExpression()), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_default, xc.getDefaultExpression()), obj);
 			}
 		}
     }
@@ -1370,43 +1424,43 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	for (DerivedColumn dc : passing) {
     		if (dc.getAlias() == null) {
     			Class<?> type = dc.getExpression().getType();
-    			if (type != DataTypeManager.DefaultDataClasses.XML) {
-    				handleValidationError(Messages.getString("ValidationVisitor.context_item_type"), obj); //$NON-NLS-1$
+    			if (type != DataTypeManagerService.DefaultDataTypes.XML.getTypeClass()) {
+    				handleValidationError(Messages.getString(Messages.ValidationVisitor.context_item_type), obj);
     			}
     			if (context && !hadError) {
-    				handleValidationError(Messages.getString("ValidationVisitor.passing_requires_name"), obj); //$NON-NLS-1$
+    				handleValidationError(Messages.getString(Messages.ValidationVisitor.passing_requires_name), obj);
     				hadError = true;
     			}
     			context = true;
         	} else { 
         		validateXMLContentTypes(dc.getExpression(), obj);
         		if (!names.add(dc.getAlias())) {
-        			handleValidationError(Messages.getString("ValidationVisitor.duplicate_passing", dc.getAlias()), obj); //$NON-NLS-1$
+        			handleValidationError(Messages.getString(Messages.ValidationVisitor.duplicate_passing, dc.getAlias()), obj);
         		}
         	}
 		}
     	if (xqe.usesContextItem() && !context) {
-			handleValidationError(Messages.getString("ValidationVisitor.context_required"), obj); //$NON-NLS-1$    		
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.context_required), obj);    		
     	}
 	}
     
     @Override
     public void visit(XMLNamespaces obj) {
     	boolean hasDefault = false;
-    	for (XMLNamespaces.NamespaceItem item : obj.getNamespaceItems()) {
+    	for (NamespaceItem item : obj.getNamespaceItems()) {
 			if (item.getPrefix() != null) {
 				if (item.getPrefix().equals("xml") || item.getPrefix().equals("xmlns")) { //$NON-NLS-1$ //$NON-NLS-2$
-					handleValidationError(Messages.getString("ValidationVisitor.xml_namespaces_reserved"), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_namespaces_reserved), obj);
 				} else if (!Name11Checker.getInstance().isValidNCName(item.getPrefix())) {
-					handleValidationError(Messages.getString("ValidationVisitor.xml_namespaces_invalid", item.getPrefix()), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_namespaces_invalid, item.getPrefix()), obj);
 				}
 				if (item.getUri().length() == 0) {
-					handleValidationError(Messages.getString("ValidationVisitor.xml_namespaces_null_uri"), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_namespaces_null_uri), obj);
 				}
 				continue;
 			}
 			if (hasDefault) {
-				handleValidationError(Messages.getString("ValidationVisitor.xml_namespaces"), obj); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.xml_namespaces), obj);
 				break;
 			}
 			hasDefault = true;
@@ -1419,45 +1473,45 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	Character delimiter = null;
     	Character quote = null;
     	boolean usingSelector = false;
-    	for (TextTable.TextColumn column : obj.getColumns()) {
+    	for (TextColumn column : obj.getColumns()) {
 			if (column.getWidth() != null) {
 				widthSet = true;
 				if (column.getWidth() < 0) {
-					handleValidationError(Messages.getString("ValidationVisitor.text_table_negative"), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_negative), obj);
 				}
 			} else if (widthSet) {
-    			handleValidationError(Messages.getString("ValidationVisitor.text_table_invalid_width"), obj); //$NON-NLS-1$
+    			handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_invalid_width), obj);
 			}
 			if (column.getSelector() != null) {
 				usingSelector = true;
 				if (obj.getSelector() != null && obj.getSelector().equals(column.getSelector())) {
-					handleValidationError(Messages.getString("ValidationVisitor.text_table_selector_required"), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_selector_required), obj);
 				}
 			}
         	if (column.getPosition() != null && column.getPosition() < 0) {
-	    		handleValidationError(Messages.getString("ValidationVisitor.text_table_negative"), obj); //$NON-NLS-1$
+	    		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_negative), obj);
 	    	}
 		}
     	if (widthSet) {
     		if (obj.getDelimiter() != null || obj.getHeader() != null || obj.getQuote() != null || obj.getSelector() != null || usingSelector) {
-        		handleValidationError(Messages.getString("ValidationVisitor.text_table_width"), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_width), obj);
     		}
     	} else {
         	if (obj.getHeader() != null && obj.getHeader() < 0) {
-	    		handleValidationError(Messages.getString("ValidationVisitor.text_table_negative"), obj); //$NON-NLS-1$
+	    		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_negative), obj);
 	    	}
         	if (!obj.isUsingRowDelimiter()) {
-        		handleValidationError(Messages.getString("ValidationVisitor.fixed_option"), obj); //$NON-NLS-1$
+        		handleValidationError(Messages.getString(Messages.ValidationVisitor.fixed_option), obj);
         	}
     		delimiter = obj.getDelimiter();
     		quote = obj.getQuote();
 			validateTextOptions(obj, delimiter, quote);
     	}
     	if (obj.getSkip() != null && obj.getSkip() < 0) {
-    		handleValidationError(Messages.getString("ValidationVisitor.text_table_negative"), obj); //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_negative), obj);
     	}
     	if (usingSelector && obj.getSelector() == null) {
-    		handleValidationError(Messages.getString("ValidationVisitor.text_table_selector_required"), obj); //$NON-NLS-1$
+    		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_selector_required), obj);
     	}
     }
 
@@ -1469,21 +1523,21 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		if (delimiter == null) {
 			delimiter = ',';
 		}
-		if (EquivalenceUtil.areEqual(quote, delimiter)) {
-			handleValidationError(Messages.getString("ValidationVisitor.text_table_delimiter"), obj); //$NON-NLS-1$
+		
+		if (quote.equals(delimiter)) {
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_delimiter), obj);
 		}
-		if (EquivalenceUtil.areEqual(quote, '\n') 
-				|| EquivalenceUtil.areEqual(delimiter, '\n')) {
-			handleValidationError(Messages.getString("ValidationVisitor.text_table_newline"), obj); //$NON-NLS-1$
+		if (quote.equals('\n') || delimiter.equals('\n')) {
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_newline), obj);
 		}
 	}
     
     @Override
     public void visit(XMLParse obj) {
-    	if (obj.getExpression().getType() != DataTypeManager.DefaultDataClasses.STRING && 
-    			obj.getExpression().getType() != DataTypeManager.DefaultDataClasses.CLOB &&
-    			obj.getExpression().getType() != DataTypeManager.DefaultDataClasses.BLOB) {
-    		handleValidationError(Messages.getString("ValidationVisitor.xmlparse_type"), obj); //$NON-NLS-1$
+    	if (obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass() && 
+    			obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass() &&
+    			obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass()) {
+    		handleValidationError(Messages.getString(Messages.ValidationVisitor.xmlparse_type), obj);
     	}
     }
     
@@ -1507,13 +1561,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	validateSubquery(obj);
     }
     
+    @Override
     public void visit(AlterView obj) {
     	try {
-			QueryResolver.validateProjectedSymbols(obj.getTarget(), getMetadata(), obj.getDefinition());
+    	    QueryResolver queryResolver = new QueryResolver(getTeiidVersion());
+            queryResolver.validateProjectedSymbols(obj.getTarget(), getMetadata(), obj.getDefinition());
 			Validator.validate(obj.getDefinition(), getMetadata(), this);
 			validateAlterTarget(obj);
-		} catch (QueryValidatorException e) {
-			handleValidationError(e.getMessage(), obj.getDefinition());
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -1521,7 +1575,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
 	private void validateAlterTarget(Alter<?> obj) {
 		if (getMetadata().getImportedModels().contains(obj.getTarget().getSchema())) {
-			handleValidationError(Messages.getString("ValidationVisitor.invalid_alter", obj.getTarget()), obj.getTarget()); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_alter, obj.getTarget()), obj.getTarget());
 		}
 	}
 
@@ -1531,24 +1585,24 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	validateAlterTarget(obj);
     	try {
 	    	if (!gs.isProcedure() || !getMetadata().isVirtualModel(getMetadata().getModelID(gs.getMetadataID()))) {
-	    		handleValidationError(Messages.getString("ValidationVisitor.not_a_procedure", gs), gs); //$NON-NLS-1$
+	    		handleValidationError(Messages.getString(Messages.ValidationVisitor.not_a_procedure, gs), gs);
 	    		return;
 	    	}
 	    	Validator.validate(obj.getDefinition(), getMetadata(), this);
-	    	StoredProcedureInfo info = getMetadata().getStoredProcedureInfoForProcedure(gs.getName());
-	    	for (SPParameter param : info.getParameters()) {
+	    	QueryResolver queryResolver = new QueryResolver(getTeiidVersion());
+	    	IStoredProcedureInfo<ISPParameter, IQueryNode> info = getMetadata().getStoredProcedureInfoForProcedure(gs.getName());
+	    	for (ISPParameter param : info.getParameters()) {
 	    		if (param.getParameterType() == SPParameter.RESULT_SET) {
-	    	    	QueryResolver.validateProjectedSymbols(gs, param.getResultSetColumns(), obj.getDefinition().getProjectedSymbols());
+	    	    	queryResolver.validateProjectedSymbols(gs, param.getResultSetColumns(), obj.getDefinition().getProjectedSymbols());
 	    	    	break;
 	    		}
 	    	}
-    	} catch (QueryValidatorException e) {
-			handleValidationError(e.getMessage(), obj.getDefinition().getBlock());
     	} catch (Exception e) {
-			handleException(e);
+    	    handleException(e);
 		}
     }
     
+    @Override
     public void visit(Block obj) {
     	if (obj.getLabel() == null) {
     		return;
@@ -1557,7 +1611,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			if (lo instanceof Labeled) {
 				Labeled labeled = (Labeled)lo;
 	    		if (obj.getLabel().equalsIgnoreCase(labeled.getLabel())) {
-	    			handleValidationError(Messages.getString("ValidationVisitor.duplicate_block_label", obj.getLabel()), obj); //$NON-NLS-1$
+	    			handleValidationError(Messages.getString(Messages.ValidationVisitor.duplicate_block_label, obj.getLabel()), obj);
 	    		}
 			}
 		}
@@ -1575,8 +1629,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			return;
 		}
 		try {
-			QueryResolver.validateProjectedSymbols(createProc.getVirtualGroup(), createProc.getResultSetColumns(), symbols);
-		} catch (QueryValidatorException e) {
+		    QueryResolver queryResolver = new QueryResolver(getTeiidVersion());
+            queryResolver.validateProjectedSymbols(createProc.getVirtualGroup(), createProc.getResultSetColumns(), symbols);
+		} catch (Exception e) {
 			handleValidationError(Messages.gs(Messages.TEIID.TEIID31121, createProc.getVirtualGroup(), obj, e.getMessage()), obj);
 		}
     }
@@ -1595,15 +1650,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			} else if (obj.getLabel() != null && lo instanceof Block && obj.getLabel().equalsIgnoreCase(((Block)lo).getLabel())) {
 				matchedLabel = true;
 				if (obj.getMode() != BranchingMode.LEAVE) {
-					handleValidationError(Messages.getString("ValidationVisitor.invalid_label", obj.getLabel()), obj); //$NON-NLS-1$
+					handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_label, obj.getLabel()), obj);
 				}
 			}
 		}
 		if (obj.getMode() != BranchingMode.LEAVE && !inLoop) {
-			handleValidationError(Messages.getString("ValidationVisitor.no_loop"), obj); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.no_loop), obj);
 		}
 		if (obj.getLabel() != null && !matchedLabel) {
-			handleValidationError(Messages.getString("ValidationVisitor.unknown_block_label", obj.getLabel()), obj); //$NON-NLS-1$
+			handleValidationError(Messages.getString(Messages.ValidationVisitor.unknown_block_label, obj.getLabel()), obj);
 		}
     }
     
@@ -1623,7 +1678,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     //TODO: it may be simpler to catch this in the parser
     private void validateSubquery(SubqueryContainer<?> subQuery) {
     	if (subQuery.getCommand() instanceof Query && ((Query)subQuery.getCommand()).getInto() != null) {
-        	handleValidationError(Messages.getString("ValidationVisitor.subquery_insert"), subQuery.getCommand()); //$NON-NLS-1$
+        	handleValidationError(Messages.getString(Messages.ValidationVisitor.subquery_insert), subQuery.getCommand());
         }
     }
     

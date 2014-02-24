@@ -14,7 +14,8 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  *
  */
-public class Update extends ProcedureContainer implements IUpdate<Expression, LanguageVisitor> {
+public class Update extends ProcedureContainer
+    implements TargetedCommand, IUpdate<Expression, LanguageVisitor> {
 
     private SetClauseList changeList;
 

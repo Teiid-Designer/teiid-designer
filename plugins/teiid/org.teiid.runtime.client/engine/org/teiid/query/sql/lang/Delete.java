@@ -13,7 +13,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  *
  */
 public class Delete extends ProcedureContainer
-    implements IDelete<Criteria, GroupSymbol, Expression, LanguageVisitor>{
+    implements TargetedCommand, IDelete<Criteria, GroupSymbol, Expression, LanguageVisitor>{
 
     /** Identifies the group to delete data from. */
     private GroupSymbol group;

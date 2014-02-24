@@ -169,7 +169,8 @@ public class Messages {
 
     @SuppressWarnings( "javadoc" )
     public enum Misc {
-        ReflectionHelper_errorConstructing;
+        ReflectionHelper_errorConstructing,
+        TeiidVersionTooLow;
 
         @Override
         public String toString() {
@@ -177,6 +178,84 @@ public class Messages {
         }
     }
 
+    @SuppressWarnings( "javadoc" )
+    public enum ValidationVisitor {
+        select_into_no_implicit_conversion,
+        excpet_intersect_all,
+        element_updates_not_allowed,
+        invalid_batch_command,
+        badoffset2,
+        badlimit2,
+        invalid_scalar_group_reference,
+        select_into_wrong_elements,
+        user_defined_aggregate_as_function,
+        uda_not_allowed,
+        uda_analytic,
+        groupby_subquery,
+        filter_subquery,
+        ranking_requires_order_by,
+        window_order_by,
+        Procedure_has_group_self_reference,
+        The_rowlimit_function_cannot_be_used_in_a_non_XML_command,
+        The_context_function_cannot_be_used_in_a_non_XML_command,
+        rowlimit0,
+        rowlimit1,
+        rowlimit2,
+        rowlimit3,
+        Context_function_nested,
+        expression_requires_name,
+        invalid_lookup_key,
+        limit_not_valid_for_xml,
+        union_insert ,
+        multisource_insert,
+        invalid_encoding,
+        invalid_alter,
+        duplicate_block_label ,
+        no_loop ,
+        invalid_label ,
+        unknown_block_label ,
+        encoding_for_binary,
+        drop_of_nontemptable,
+        orderby_expression_xml,
+        text_table_invalid_width,
+        text_table_width,
+        text_table_selector_required,
+        text_table_negative,
+        text_table_delimiter,
+        text_table_newline,
+        xml_namespaces,
+        xml_namespaces_reserved,
+        xml_namespaces_null_uri,
+        xml_namespaces_invalid,
+        xml_attributes_reserved,
+        xml_content_type,
+        xml_invalid_qname,
+        context_item_type,
+        passing_requires_name,
+        duplicate_passing,
+        context_item_not_allowed,
+        one_ordinal,
+        invalid_default,
+        context_required,
+        xmlparse_type,
+        subquery_insert,
+        group_in_both_dep,
+        fixed_option,
+        temp_fk,
+        invalid_json_value,
+        not_a_procedure,
+        non_comparable,
+        non_xml,
+        non_boolean,
+        invalid_distinct,
+        multi_source_update_not_allowed;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT + name();
+        }
+    }
+    
     @SuppressWarnings( "javadoc" )
     public enum SystemSource {
         array_length_description,
@@ -618,6 +697,7 @@ public class Messages {
         ERR_015_006_0054,
         ERR_015_008_0022,
         ERR_015_008_0025,
+        ERR_015_008_0032,
         ERR_015_008_0046,
         ERR_015_008_0047,
         ERR_015_008_0049,
@@ -670,6 +750,8 @@ public class Messages {
         ERR_015_012_0027,
         ERR_015_012_0029,
         ERR_015_012_0030,
+        ERR_015_012_0031,
+        ERR_015_012_0032,
         ERR_015_012_0033,
         ERR_015_012_0034,
         ERR_015_012_0037,

@@ -23,7 +23,7 @@ import org.teiid.runtime.client.Messages;
  *
  */
 public class StoredProcedure extends ProcedureContainer
-    implements IStoredProcedure<SPParameter, Expression, LanguageVisitor> {
+    implements TargetedCommand, IStoredProcedure<SPParameter, Expression, LanguageVisitor> {
 
     /** Used as parameters */
     private Map<Integer, SPParameter> mapOfParameters = new TreeMap<Integer, SPParameter>();

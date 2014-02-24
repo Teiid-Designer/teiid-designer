@@ -44,6 +44,8 @@ public class Alter8Procedure extends AlterProcedure<CreateProcedureCommand> {
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 

@@ -86,13 +86,15 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
         return false;
     }
 
-    private boolean isBoolean() {
+    @Override
+    public boolean isBoolean() {
         return this.aggregate == Type.EVERY 
                 || this.aggregate == Type.SOME 
                 || this.aggregate == Type.ANY;
     }
     
-    private boolean isEnhancedNumeric() {
+    @Override
+    public boolean isEnhancedNumeric() {
         return this.aggregate == Type.STDDEV_POP 
         || this.aggregate == Type.STDDEV_SAMP
         || this.aggregate == Type.VAR_SAMP

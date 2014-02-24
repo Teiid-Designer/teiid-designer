@@ -44,6 +44,8 @@ public class AlterView extends Alter<QueryCommand> implements IAlterView<Express
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 

@@ -328,6 +328,8 @@ public class Query extends QueryCommand
         if(getOption() != null)
             clone.setOption(getOption().clone());
 
+        copyMetadataState(clone);
+
         return clone;
     }
 
