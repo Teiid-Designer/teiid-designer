@@ -616,10 +616,10 @@
 						eligible. All of the properties are defined in the table below:
 							<table frame="all">
 								<title>Properties for RESTful Procedures</title>
-								<tgroup cols="2">
+								<tgroup cols="3">
 									<colspec colname="c1" colnum="1" colwidth="1.0*"/>
 									<colspec colname="c2" colnum="2" colwidth="1.0*"/>
-									<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+									<colspec colname="c3" colnum="3" colwidth="1.0*"/>
 									<thead>
 										<row>
 											<entry>Property Name</entry>
@@ -888,7 +888,7 @@
 						<imagedata fileref="images/screencaps/vdb-autogenerate-rest-war.png"/>
 						</imageobject></mediaobject>
 				</figure>
-			</section>
+			</section> 
 		</section>
 	</section>
 </chapter>
