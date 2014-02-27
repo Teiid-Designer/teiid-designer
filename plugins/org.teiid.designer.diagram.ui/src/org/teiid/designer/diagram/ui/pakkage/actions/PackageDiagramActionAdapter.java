@@ -23,6 +23,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
+import org.teiid.designer.diagram.ui.actions.LockDiagramAction;
 import org.teiid.designer.diagram.ui.actions.RefreshAction;
 import org.teiid.designer.diagram.ui.actions.RouterTypeMenuManager;
 import org.teiid.designer.diagram.ui.actions.SaveDiagramAction;
@@ -66,6 +67,8 @@ public class PackageDiagramActionAdapter
 	private RenameAction renameAction;
 
     private AbstractAction saveDiagramAction;
+    
+    private LockDiagramAction lockDiagramAction;
     
     // actions map is needed since we want to override the default print action
     private GlobalActionsMap actionsMap;
@@ -199,6 +202,10 @@ public class PackageDiagramActionAdapter
             this.renameAction = new RenameAction();
 			registerAction(this.renameAction);
 		}
+		
+		//----- SaveDiagramAction -----//
+        this.lockDiagramAction = new LockDiagramAction(((DiagramEditor)this.getEditorPage()));
+        registerAction(this.lockDiagramAction);
     }
 
     //============================================================================================================================
@@ -321,6 +328,7 @@ public class PackageDiagramActionAdapter
             tbm.removeAll();
             tbm.add(this.refreshDiagramAction);
             tbm.add(this.upPackageDiagramAction);
+            tbm.add(this.lockDiagramAction);
     		tbm.add(new Separator());
     		
             tbm.add(new Separator());

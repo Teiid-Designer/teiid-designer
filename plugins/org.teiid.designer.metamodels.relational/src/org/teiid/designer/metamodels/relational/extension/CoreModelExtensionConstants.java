@@ -53,6 +53,7 @@ public interface CoreModelExtensionConstants {
         String LOCKED = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "locked"); //$NON-NLS-1$
         String VDB_NAME = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "vdb-name"); //$NON-NLS-1$
         String VDB_VERSION = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "vdb-version"); //$NON-NLS-1$
+        String DIAGRAM_LOCKED = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "diagram-locked"); //$NON-NLS-1$
     }
 
 }

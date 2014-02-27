@@ -213,7 +213,9 @@ public interface DiagramUiConstants {
         String NEW_ASSOCIATION = PC.CVIEW + "tb_new_assoc.gif"; //$NON-NLS-1$
         String SHOW_PAGE_GRID = PC.CVIEW16 + "tb_grid_on.gif"; //$NON-NLS-1$
         String HIDE_PAGE_GRID = PC.CVIEW16 + "tb_grid_off.gif"; //$NON-NLS-1$
-
+        
+        String LOCKED_IMAGE = PC.CVIEW16 + "locked.png"; //$NON-NLS-1$
+        String UNLOCKED_IMAGE = PC.CVIEW16 + "unlocked.png"; //$NON-NLS-1$
     }
 
     interface Zoom {

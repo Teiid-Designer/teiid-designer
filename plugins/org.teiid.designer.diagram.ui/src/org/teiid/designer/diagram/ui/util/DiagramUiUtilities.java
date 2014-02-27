@@ -1039,6 +1039,11 @@ public class DiagramUiUtilities {
     }
 
     public static boolean getReadOnlyState( Object someObject ) {
+    	
+    	if(someObject != null && ModelUtilities.isModelDiagramLocked(someObject) ) {
+    		return true;
+    	}
+    	
         boolean rOnly = true;
         Diagram someDiagram = null;
 

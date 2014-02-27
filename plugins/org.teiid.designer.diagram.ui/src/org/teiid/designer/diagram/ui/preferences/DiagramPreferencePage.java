@@ -7,8 +7,6 @@
  */
 package org.teiid.designer.diagram.ui.preferences;
 
-import java.util.Iterator;
-import java.util.List;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,7 +22,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.teiid.designer.diagram.ui.DiagramNotationManager;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.PluginConstants;
@@ -48,9 +45,9 @@ public class DiagramPreferencePage extends PreferencePage
     // ////////////////////////////////////////////////////////////////////
     // Instance variables
     // ////////////////////////////////////////////////////////////////////
-    private NotationIDAndName[] notations;
+    //private NotationIDAndName[] notations;
     private String[] routers;
-    private Combo notationCombo;
+    //private Combo notationCombo;
     private Combo routerCombo;
     private AppearanceProcessor appearanceProcessor;
     private Button fkShowNameButton;
@@ -90,21 +87,23 @@ public class DiagramPreferencePage extends PreferencePage
         // -----------------------------------------
         // Diagram UML Notation Options
         // -----------------------------------------
-        String notationsHdr = Util.getString("DiagramPrefPage.notations"); //$NON-NLS-1$
-        Group notationsGroup = WidgetFactory.createGroup(comp, notationsHdr, GridData.FILL_HORIZONTAL, 1, 2);
-
-        Label notationLabel = new Label(notationsGroup, SWT.NONE);
-        String notationStr = Util.getString("DiagramPrefPage.defaultNotation"); //$NON-NLS-1$
-        notationLabel.setText(notationStr);
-        notationCombo = new Combo(notationsGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
-        GridData notationComboGridData = new GridData(GridData.FILL_HORIZONTAL);
-        notationComboGridData.horizontalIndent = 10;
-        notationCombo.setLayoutData(notationComboGridData);
-        notations = getNotations();
-        for (int i = 0; i < notations.length; i++) {
-            notationCombo.add(notations[i].getDisplayName());
-        }
-        selectCurrentNotation();
+//        String notationsHdr = Util.getString("DiagramPrefPage.notations"); //$NON-NLS-1$
+//        Group notationsGroup = WidgetFactory.createGroup(comp, notationsHdr, GridData.FILL_HORIZONTAL, 1, 2);
+//
+//        Label notationLabel = new Label(notationsGroup, SWT.NONE);
+//        String notationStr = Util.getString("DiagramPrefPage.defaultNotation"); //$NON-NLS-1$
+//        notationLabel.setText(notationStr);
+//        notationCombo = new Combo(notationsGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+//        GridData notationComboGridData = new GridData(GridData.FILL_HORIZONTAL);
+//        notationComboGridData.horizontalIndent = 10;
+//        notationCombo.setLayoutData(notationComboGridData);
+//        notations = getNotations();
+//        for (int i = 0; i < notations.length; i++) {
+//            notationCombo.add(notations[i].getDisplayName());
+//        }
+//        selectCurrentNotation();
+        
+        //
 
         // -----------------------------------------
         // Diagram Link Routing options
@@ -168,42 +167,42 @@ public class DiagramPreferencePage extends PreferencePage
         return comp;
     }
 
-    private NotationIDAndName[] getNotations() {
-        DiagramNotationManager mgr = DiagramUiPlugin.getDiagramNotationManager();
-        List<NotationIDAndName> notationList = mgr.getDiagramNotationInfo();
-        NotationIDAndName[] notationArray = new NotationIDAndName[notationList.size()];
-        Iterator<NotationIDAndName> it = notationList.iterator();
-        for (int i = 0; it.hasNext(); i++) {
-            notationArray[i] = it.next();
-        }
-        return notationArray;
-    }
+//    private NotationIDAndName[] getNotations() {
+//        DiagramNotationManager mgr = DiagramUiPlugin.getDiagramNotationManager();
+//        List<NotationIDAndName> notationList = mgr.getDiagramNotationInfo();
+//        NotationIDAndName[] notationArray = new NotationIDAndName[notationList.size()];
+//        Iterator<NotationIDAndName> it = notationList.iterator();
+//        for (int i = 0; it.hasNext(); i++) {
+//            notationArray[i] = it.next();
+//        }
+//        return notationArray;
+//    }
+//
+//    private void selectCurrentNotation() {
+//        String notationPrefName = PluginConstants.Prefs.DIAGRAM_NOTATION;
+//        String notation = getPreferenceStore().getString(notationPrefName);
+//        selectNotation(notation);
+//    }
 
-    private void selectCurrentNotation() {
-        String notationPrefName = PluginConstants.Prefs.DIAGRAM_NOTATION;
-        String notation = getPreferenceStore().getString(notationPrefName);
-        selectNotation(notation);
-    }
-
-    private void selectDefaultNotation() {
-        String notationPrefName = PluginConstants.Prefs.DIAGRAM_NOTATION;
-        String notationDefault = getPreferenceStore().getDefaultString(notationPrefName);
-        selectNotation(notationDefault);
-    }
-
-    private void selectNotation( String notation ) {
-        boolean selected = false;
-        int i = 0;
-        while ((!selected) && (i < notations.length)) {
-            String thisNotation = notations[i].getID();
-            if (thisNotation.equals(notation)) {
-                notationCombo.select(i);
-                selected = true;
-            } else {
-                i++;
-            }
-        }
-    }
+//    private void selectDefaultNotation() {
+//        String notationPrefName = PluginConstants.Prefs.DIAGRAM_NOTATION;
+//        String notationDefault = getPreferenceStore().getDefaultString(notationPrefName);
+//        selectNotation(notationDefault);
+//    }
+//
+//    private void selectNotation( String notation ) {
+//        boolean selected = false;
+//        int i = 0;
+//        while ((!selected) && (i < notations.length)) {
+//            String thisNotation = notations[i].getID();
+//            if (thisNotation.equals(notation)) {
+//                notationCombo.select(i);
+//                selected = true;
+//            } else {
+//                i++;
+//            }
+//        }
+//    }
 
     private void selectCurrentRouter() {
         String prefName = PluginConstants.Prefs.DIAGRAM_ROUTER_STYLE;
@@ -241,16 +240,18 @@ public class DiagramPreferencePage extends PreferencePage
     @Override
     public boolean performOk() {
         boolean savePrefs = false;
-        int selectedIndex = notationCombo.getSelectionIndex();
-        if (selectedIndex >= 0) {
-            String id = notations[selectedIndex].getID();
-            String currentStoredID = getPreferenceStore().getString(PluginConstants.Prefs.DIAGRAM_NOTATION);
-            if (!id.equals(currentStoredID)) {
-                savePrefs = true;
-                getPreferenceStore().setValue(PluginConstants.Prefs.DIAGRAM_NOTATION, id);
-            }
-        }
-        selectedIndex = routerCombo.getSelectionIndex();
+        // update FK display values
+
+//        int selectedIndex = notationCombo.getSelectionIndex();
+//        if (selectedIndex >= 0) {
+//            String id = notations[selectedIndex].getID();
+//            String currentStoredID = getPreferenceStore().getString(PluginConstants.Prefs.DIAGRAM_NOTATION);
+//            if (!id.equals(currentStoredID)) {
+//                savePrefs = true;
+//                getPreferenceStore().setValue(PluginConstants.Prefs.DIAGRAM_NOTATION, id);
+//            }
+//        }
+        int selectedIndex = routerCombo.getSelectionIndex();
         if (selectedIndex >= 0) {
             String id = routers[selectedIndex];
             String currentStoredID = getPreferenceStore().getString(PluginConstants.Prefs.DIAGRAM_ROUTER_STYLE);
@@ -297,7 +298,7 @@ public class DiagramPreferencePage extends PreferencePage
 
     @Override
     public void performDefaults() {
-        selectDefaultNotation();
+//        selectDefaultNotation();
         selectDefaultRouter();
         appearanceProcessor.performDefaults();
         modelSizeTextField.setText(String.valueOf(getPreferenceStore().getDefaultInt(PluginConstants.Prefs.LARGE_MODEL_SIZE)));
