@@ -101,11 +101,11 @@ public class TransformationDiagramUtil {
         if (transformationDiagrams.isEmpty()) {
             // create one here.
             Diagram newTransformationDiagram = null;
-            if (createIfNone) {
-                newTransformationDiagram = createTransformationDiagram(eObject, modelResource, persistance);
-            } else {
+//            if (createIfNone) {
+//                newTransformationDiagram = createTransformationDiagram(eObject, modelResource, persistance);
+//            } else {
                 newTransformationDiagram = createProxiedTransformationDiagram(eObject, modelResource);
-            }
+//            }
             if (newTransformationDiagram != null) transformationDiagrams.add(newTransformationDiagram);
         }
 
@@ -131,10 +131,11 @@ public class TransformationDiagramUtil {
             UiConstants.Util.log(IStatus.ERROR, e, message);
         }
 
-        if (tDiagram == null && createIfNone) {
-            // create one here.
-            tDiagram = createTransformationDiagram(eObject, modelResource, persistance);
-        } else if (tDiagram == null) {
+//        if (tDiagram == null && createIfNone) {
+//            // create one here.
+//            tDiagram = createTransformationDiagram(eObject, modelResource, persistance);
+//        } else 
+        if (tDiagram == null) {
             tDiagram = createProxiedTransformationDiagram(eObject, modelResource);
         }
 

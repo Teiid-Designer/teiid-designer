@@ -29,7 +29,8 @@ public class CoreModelExtensionAssistant  extends EmfModelObjectExtensionAssista
 
         LOCKED(getPropertyId("locked")), //$NON-NLS-1$
         VDB_NAME(getPropertyId("vdb-name")), //$NON-NLS-1$
-        VDB_VERSION(getPropertyId("vdb-version")); //$NON-NLS-1$
+        VDB_VERSION(getPropertyId("vdb-version")), //$NON-NLS-1$
+        DIAGRAM_LOCKED(getPropertyId("diagram-locked")); //$NON-NLS-1$
 
         public static boolean same(final PropertyName propName,
                                    final String value) {
@@ -71,7 +72,8 @@ public class CoreModelExtensionAssistant  extends EmfModelObjectExtensionAssista
         	if (modelObject instanceof ModelAnnotation) {
 	            if (PropertyName.same(PropertyName.LOCKED, propId) ||
 	            	PropertyName.same(PropertyName.VDB_NAME, propId) ||
-	            	PropertyName.same(PropertyName.VDB_VERSION, propId) ) {
+	            	PropertyName.same(PropertyName.VDB_VERSION, propId) ||
+	            	PropertyName.same(PropertyName.DIAGRAM_LOCKED, propId)) {
 	                return propDefn;
 	            }
 

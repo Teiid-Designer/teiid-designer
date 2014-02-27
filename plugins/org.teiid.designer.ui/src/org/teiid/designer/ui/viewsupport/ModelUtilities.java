@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -1947,5 +1948,58 @@ public abstract class ModelUtilities implements UiConstants {
             UiConstants.Util.log(ex);
         }
         return null;
+    }
+    
+    public static boolean isModelDiagramLocked(Object object) {
+    	boolean result = false;
+    	
+    	try {
+			ModelResource mr = getModelResource(object);
+			
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			CoreModelExtensionAssistant assistant = 
+					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+			final ModelAnnotation modelAnnotation = mr.getModelAnnotation();
+			String value = assistant.getPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.DIAGRAM_LOCKED);
+			result = Boolean.parseBoolean(value);
+		} catch (ModelWorkspaceException ex) {
+			UiConstants.Util.log(ex);
+		} catch (Exception ex) {
+			UiConstants.Util.log(ex);
+		}
+		
+		return result;
+    }
+    
+    public static void lockModelDiagrams(Object object) {
+    	try {
+			ModelResource mr = getModelResource(object);
+			
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			CoreModelExtensionAssistant assistant = 
+					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+			final ModelAnnotation modelAnnotation = mr.getModelAnnotation();
+			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.DIAGRAM_LOCKED, Boolean.TRUE.toString());
+		} catch (ModelWorkspaceException ex) {
+			UiConstants.Util.log(ex);
+		} catch (Exception ex) {
+			UiConstants.Util.log(ex);
+		}
+    }
+    
+    public static void unlockModelDiagrams(Object object) {
+    	try {
+			ModelResource mr = getModelResource(object);
+			
+			ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+			CoreModelExtensionAssistant assistant = 
+					(CoreModelExtensionAssistant)registry.getModelExtensionAssistant(CoreModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix());
+			final ModelAnnotation modelAnnotation = mr.getModelAnnotation();
+			assistant.setPropertyValue(modelAnnotation, CoreModelExtensionConstants.PropertyIds.DIAGRAM_LOCKED, Boolean.FALSE.toString());
+		} catch (ModelWorkspaceException ex) {
+			UiConstants.Util.log(ex);
+		} catch (Exception ex) {
+			UiConstants.Util.log(ex);
+		}
     }
 }

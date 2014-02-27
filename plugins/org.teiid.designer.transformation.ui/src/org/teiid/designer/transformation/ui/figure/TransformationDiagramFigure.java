@@ -32,6 +32,7 @@ import org.teiid.designer.transformation.ui.part.TransformationDiagramLayout;
 import org.teiid.designer.transformation.ui.util.TransformationDiagramUtil;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
+import org.teiid.designer.ui.util.DiagramProxy;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 
 
@@ -74,9 +75,22 @@ public class TransformationDiagramFigure extends FreeformLayer {
     @Override
     protected void paintFigure( Graphics theGraphics ) {
         super.paintFigure(theGraphics);
-
+        
+        if( dNode.getModelObject() == null) { 
+        	return;
+        }
+        
+        boolean doMorePainting = false;
+        EObject modelObject = dNode.getModelObject();
+        if( modelObject instanceof DiagramProxy && 
+        		((DiagramProxy)modelObject).getType() == PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID) {
+        	doMorePainting = true;
+        } else {
+        	doMorePainting = !ModelObjectUtilities.isStale(dNode.getModelObject());
+        }
         // Check to see that the backing diagram is still around
-        if (dNode.getModelObject() != null && !ModelObjectUtilities.isStale(dNode.getModelObject())) {
+        
+        if (doMorePainting) {
             // Call method to paint bkgd behind Target and to label Target & Sources
             if (!TransformationDiagramUtil.isTreeLayout()) {
                 paintBkgdAndTitles(theGraphics);

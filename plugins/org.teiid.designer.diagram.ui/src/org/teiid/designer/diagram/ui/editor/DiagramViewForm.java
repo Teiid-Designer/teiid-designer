@@ -276,13 +276,13 @@ public class DiagramViewForm extends Composite {
         Point toolBarSize = new Point(0, 0);
         if (toolBar != null && !toolBar.isDisposed()) {
 
-            int wHintToolBar = 25;
+            int wHintToolBar = 30;
             int count = toolBar.getItemCount();
 
             if (count > 0) {
                 final ToolItem firstItem = toolBar.getItem(0);
                 if (firstItem != null) {
-                    wHintToolBar = 25; //firstItem.getWidth();
+                    wHintToolBar = 30; //firstItem.getWidth();
                 }
             }
 

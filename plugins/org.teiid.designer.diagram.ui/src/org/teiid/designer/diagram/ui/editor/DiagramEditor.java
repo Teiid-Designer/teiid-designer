@@ -1168,6 +1168,9 @@ public class DiagramEditor extends GraphicalEditor
      */
     @Override
 	public void openContext( final Object input ) {
+    	if( input instanceof ModelResource ) {
+    		this.currentModelResource = (ModelResource)input;
+    	}
         openContext(input, false);
     }
 
