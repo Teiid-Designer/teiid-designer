@@ -254,6 +254,26 @@ public class SQLStringVisitor extends LanguageVisitor
         return getTeiidVersion().equals(TEIID_VERSION_8) || getTeiidVersion().isGreaterThan(TEIID_VERSION_8);
     }
 
+    /**
+     * @return the shortNameOnly
+     */
+    public boolean isShortNameOnly() {
+        if (!isTeiid8OrGreater())
+            return false; // Not applicable for teiid 7
+
+        return this.shortNameOnly;
+    }
+
+    /**
+     * @param shortNameOnly the shortNameOnly to set
+     */
+    private void setShortNameOnly(boolean shortNameOnly) {
+        if (!isTeiid8OrGreater())
+            return; // Not applicable for teiid 7
+
+        this.shortNameOnly = shortNameOnly;
+    }
+
     protected void visitNode(LanguageObject obj) {
         if (obj == null) {
             append(UNDEFINED);
@@ -436,9 +456,9 @@ public class SQLStringVisitor extends LanguageVisitor
             List<ElementSymbol> vars = obj.getVariables();
             if (vars != null) {
                 append("("); //$NON-NLS-1$
-                this.shortNameOnly = true;
+                setShortNameOnly(true);
                 registerNodes(vars, 0);
-                this.shortNameOnly = false;
+                setShortNameOnly(false);
                 append(")"); //$NON-NLS-1$
             }
         }
@@ -1327,9 +1347,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         if (obj.getColumns() != null && !obj.getColumns().isEmpty()) {
             append(Tokens.LPAREN);
-            shortNameOnly = true;
+            setShortNameOnly(true);
             registerNodes(obj.getColumns(), 0);
-            shortNameOnly = false;
+            setShortNameOnly(false);
             append(Tokens.RPAREN);
             append(SPACE);
         }
@@ -1887,7 +1907,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(ElementSymbol obj) {
-        if (obj.getDisplayMode().equals(ElementSymbol.DisplayMode.SHORT_OUTPUT_NAME) || shortNameOnly) {
+        if (obj.getDisplayMode().equals(ElementSymbol.DisplayMode.SHORT_OUTPUT_NAME) ||isShortNameOnly()) {
             outputShortName(obj);
             return;
         }

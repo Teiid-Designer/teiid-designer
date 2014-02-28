@@ -329,6 +329,20 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         if(result == null) {
              throw new Exception();
         }
+
+        /*
+         * A rather odd test which is necessary to maintain compatibility with 7.7.x
+         *
+         * The original code line is 7.7.x is:
+         * if(!DataTypeManager.isImplicitConversion(sourceTypeName, targetTypeName))
+         * and this version does the same thing. This may have been a fix to address a bug
+         * but if someone uses teiid 7, they will encounter this exception so the designer
+         * client resolver must mirror the same exception.
+         */
+        if(teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER) && result.isExplicit()) {
+            throw new Exception();
+        }
+
         return result;
 	}
 

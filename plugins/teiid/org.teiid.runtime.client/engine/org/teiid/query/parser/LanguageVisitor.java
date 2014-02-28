@@ -293,6 +293,19 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
                 return method;
         }
 
+        // Cannot find any method of this class or its interfaces but it may be
+        // a version specific class, such as Alter8Procedure with an abstract
+        // superclass.
+        Class<?> superClass = null;
+        do {
+           superClass = methodClass.getSuperclass();
+           if (superClass != null) {
+               method = methodCache.get(superClass);
+               if (method != null)
+                   return method;
+           }
+        } while (superClass != null);
+
         return null;
     }
 

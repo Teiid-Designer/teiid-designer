@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
@@ -56,6 +55,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 
 /**
@@ -70,11 +70,301 @@ public class ExecResolver extends ProcedureContainerResolver {
     }
 
     /**
+     * @param metadata
+     * @param storedProcedureCommand
+     * @param storedProcedureInfo
+     * @param oldParams
+     * @param namedParameters
+     * @throws TeiidClientException
+     * @throws TeiidComponentException
+     * @throws QueryMetadataException
+     */
+    private void findCommand7Metadata(IQueryMetadataInterface metadata, StoredProcedure storedProcedureCommand, IStoredProcedureInfo storedProcedureInfo, Collection<SPParameter> oldParams, boolean namedParameters)
+        throws Exception {
+        // Cache original input parameter expressions.  Depending on whether
+        // the procedure was parsed with named or unnamed parameters, the keys
+        // for this map will either be the String names of the parameters or
+        // the Integer indices, as entered in the user query
+        Map<Object, Expression> inputExpressions = new HashMap<Object, Expression>();
+        int adjustIndex = 0;
+        for (SPParameter param : oldParams) {
+            if(param.getExpression() == null) {
+                if (param.getParameterType() == SPParameter.RESULT_SET) {
+                    adjustIndex--;  //If this was already resolved, just pretend the result set param doesn't exist
+                }
+                continue;
+            }
+            if (namedParameters && param.getParameterType() != SPParameter.RETURN_VALUE) {
+                if (inputExpressions.put(param.getName().toUpperCase(), param.getExpression()) != null) {
+                    throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30138, param.getName().toUpperCase()));
+                }
+            } else {
+                inputExpressions.put(param.getIndex() + adjustIndex, param.getExpression());
+            }
+        }
+
+        storedProcedureCommand.clearParameters();
+        int origInputs = inputExpressions.size();
+        /*
+         * Take the values set from the stored procedure implementation, and match up with the
+         * types of parameter it is from the metadata and then reset the newly joined parameters
+         * into the stored procedure command.  If it is a result set get those columns and place
+         * them into the stored procedure command as well.
+         */
+        List<SPParameter> metadataParams = storedProcedureInfo.getParameters();
+        List<SPParameter> clonedMetadataParams = new ArrayList<SPParameter>(metadataParams.size());
+        int inputParams = 0;
+        int outParams = 0;
+        boolean hasReturnValue = false;
+        for (SPParameter metadataParameter : metadataParams) {
+            if( (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.IN.index()) ||
+                (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index())){
+
+                inputParams++;
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.OUT.index()) {
+                outParams++;
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
+                hasReturnValue = true;
+            }
+            SPParameter clonedParam = metadataParameter.clone();
+            clonedMetadataParams.add(clonedParam);
+            storedProcedureCommand.setParameter(clonedParam);
+        }
+        
+        if (storedProcedureCommand.isCalledWithReturn() && !hasReturnValue) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30139, storedProcedureCommand.getGroup()));
+        }
+
+        if(!namedParameters && (inputParams > inputExpressions.size())) {
+            throw new TeiidClientException(Messages.getString(Messages.ERR.ERR_015_008_0007, inputParams, origInputs, storedProcedureCommand.getGroup()));
+        }
+        
+        // Walk through the resolved parameters and set the expressions from the
+        // input parameters
+        int exprIndex = 1;
+        HashSet<String> expected = new HashSet<String>();
+        if (storedProcedureCommand.isCalledWithReturn() && hasReturnValue) {
+            for (SPParameter param : clonedMetadataParams) {
+                if (param.getParameterType() == SPParameter.RETURN_VALUE) {
+                    Expression expr = inputExpressions.remove(exprIndex++);
+                    param.setExpression(expr);
+                }
+            }
+        }
+        for (SPParameter param : clonedMetadataParams) {
+            if(param.getParameterType() == SPParameter.RESULT_SET || param.getParameterType() == SPParameter.RETURN_VALUE) {
+                continue;
+            }
+            if (namedParameters) {
+                String nameKey = param.getParameterSymbol().getShortCanonicalName();
+                Expression expr = inputExpressions.remove(nameKey);
+                // With named parameters, have to check on optional params and default values
+                if (expr == null && param.getParameterType() != ISPParameter.ParameterInfo.OUT.index()) {
+                    expr = ResolverUtil.getDefault(param.getParameterSymbol(), metadata);
+                    param.setUsingDefault(true);
+                    expected.add(nameKey);
+                } 
+                param.setExpression(expr);                    
+            } else {
+                if(param.getParameterType() == SPParameter.OUT) {
+                    continue;
+                }
+                Expression expr = inputExpressions.remove(exprIndex++);
+                param.setExpression(expr);
+            }
+        }
+        
+        // Check for leftovers, i.e. params entered by user w/ wrong/unknown names
+        if (!inputExpressions.isEmpty()) {
+            if (namedParameters) {
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30141, inputExpressions.keySet(), expected));
+            }
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31113, inputParams, origInputs, storedProcedureCommand.getGroup().toString()));
+        }
+    }
+
+    private void findCommand8Metadata(IQueryMetadataInterface metadata, StoredProcedure storedProcedureCommand, IStoredProcedureInfo storedProcedureInfo, Collection<SPParameter> oldParams, boolean namedParameters)
+        throws Exception {
+
+        // Cache original input parameter expressions.  Depending on whether
+        // the procedure was parsed with named or unnamed parameters, the keys
+        // for this map will either be the String names of the parameters or
+        // the Integer indices, as entered in the user query
+        Map<Integer, Expression> positionalExpressions = new HashMap<Integer, Expression>();
+        Map<String, Expression> namedExpressions = new TreeMap<String, Expression>(String.CASE_INSENSITIVE_ORDER);
+        int adjustIndex = 0;
+        for (SPParameter param : oldParams) {
+            if(param.getExpression() == null) {
+                if (param.getParameterType() == SPParameter.RESULT_SET) {
+                    adjustIndex--;  //If this was already resolved, just pretend the result set param doesn't exist
+                }
+                continue;
+            }
+            if (namedParameters && param.getParameterType() != SPParameter.RETURN_VALUE) {
+                if (namedExpressions.put(param.getParameterSymbol().getShortName(), param.getExpression()) != null) {
+                     throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30138, param.getName()));
+                }
+            } else {
+                positionalExpressions.put(param.getIndex() + adjustIndex, param.getExpression());
+            }
+        }
+
+        storedProcedureCommand.clearParameters();
+        int origInputs = positionalExpressions.size() + namedExpressions.size();
+        /*
+         * Take the values set from the stored procedure implementation, and match up with the
+         * types of parameter it is from the metadata and then reset the newly joined parameters
+         * into the stored procedure command.  If it is a result set get those columns and place
+         * them into the stored procedure command as well.
+         */
+        List<SPParameter> metadataParams = storedProcedureInfo.getParameters();
+        List<SPParameter> clonedMetadataParams = new ArrayList<SPParameter>(metadataParams.size());
+        int inputParams = 0;
+        int optionalParams = 0;
+        int outParams = 0;
+        boolean hasReturnValue = false;
+        boolean optional = false;
+        boolean varargs = false;
+        for (int i = 0; i < metadataParams.size(); i++) {
+            SPParameter metadataParameter = metadataParams.get(i);
+            if( (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.IN.index()) ||
+                (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index())){
+                if (ResolverUtil.hasDefault(metadataParameter.getMetadataID(), metadata) || metadataParameter.isVarArg()) {
+                    optional = true;
+                    optionalParams++;
+                } else {
+                    inputParams++;
+                    if (optional) {
+                        optional = false;
+                        inputParams += optionalParams;
+                        optionalParams = 0;
+                    }
+                }
+                if (metadataParameter.isVarArg()) {
+                    varargs = true;
+                }
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.OUT.index()) {
+                outParams++;
+                /*
+                 * TODO: it would consistent to do the following, but it is a breaking change for procedures that have intermixed out params with in.
+                 * we may need to revisit this later
+                 */
+                //optional = true;
+                //optionalParams++;
+            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
+                hasReturnValue = true;
+            }
+            SPParameter clonedParam = metadataParameter.clone();
+            clonedMetadataParams.add(clonedParam);
+            storedProcedureCommand.setParameter(clonedParam);
+        }
+        
+        if (storedProcedureCommand.isCalledWithReturn() && !hasReturnValue) {
+             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30139, storedProcedureCommand.getGroup()));
+        }
+
+        if(!namedParameters && (inputParams > positionalExpressions.size()) ) {
+             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30140, inputParams, inputParams + optionalParams + (varargs?"+":""), origInputs, storedProcedureCommand.getGroup())); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        // Walk through the resolved parameters and set the expressions from the
+        // input parameters
+        int exprIndex = 1;
+        HashSet<String> expected = new HashSet<String>();
+        if (storedProcedureCommand.isCalledWithReturn() && hasReturnValue) {
+            for (SPParameter param : clonedMetadataParams) {
+                if (param.getParameterType() == SPParameter.RETURN_VALUE) {
+                    Expression expr = positionalExpressions.remove(exprIndex++);
+                    param.setExpression(expr);
+                    break;
+                }
+            }
+        }
+        for (SPParameter param : clonedMetadataParams) {
+            if(param.getParameterType() == SPParameter.RESULT_SET || param.getParameterType() == SPParameter.RETURN_VALUE) {
+                continue;
+            }
+            if (namedParameters) {
+                String nameKey = param.getParameterSymbol().getShortName();
+                Expression expr = namedExpressions.remove(nameKey);
+                // With named parameters, have to check on optional params and default values
+                if (expr == null) {
+                    if (param.getParameterType() != ISPParameter.ParameterInfo.OUT.index()) {
+                        param.setUsingDefault(true);
+                        expected.add(nameKey);
+                        if (!param.isVarArg()) {
+                            expr = ResolverUtil.getDefault(param.getParameterSymbol(), metadata);
+                        } else {
+                            //zero length array
+                            List<Expression> exprs = new ArrayList<Expression>(0);
+                            Array array = create(ASTNodes.ARRAY); 
+                            array.setExpressions(exprs);
+                            array.setImplicit(true);
+                            array.setType(param.getClassType());
+                            expr = array;
+                        }
+                    }
+                } 
+                param.setExpression(expr);                    
+            } else {
+                Expression expr = positionalExpressions.remove(exprIndex++);
+                if(param.getParameterType() == SPParameter.OUT) {
+                    if (expr != null) {
+                        boolean isRef = expr instanceof Reference;
+                        if (!isRef || exprIndex <= inputParams + 1) {
+                            //for backwards compatibility, this should be treated instead as an input
+                            exprIndex--;
+                            positionalExpressions.put(exprIndex, expr);
+                        } else if (isRef) {
+                            //mimics the hack that was in PreparedStatementRequest.
+                            Reference ref = (Reference)expr;
+                            ref.setOptional(true); //may be an out
+                            /*
+                             * Note that there is a corner case here with out parameters intermixed with optional parameters
+                             * there's not a good way around this.
+                             */
+                        }
+                    }
+                    continue;
+                }
+                if (expr == null) {
+                    if (!param.isVarArg()) {
+                        expr = ResolverUtil.getDefault(param.getParameterSymbol(), metadata);
+                    }
+                    param.setUsingDefault(true);
+                } 
+                if (param.isVarArg()) {
+                    List<Expression> exprs = new ArrayList<Expression>(positionalExpressions.size() + 1);
+                    if (expr != null) {
+                        exprs.add(expr);
+                    }
+                    exprs.addAll(positionalExpressions.values());
+                    positionalExpressions.clear();
+                    Array array = create(ASTNodes.ARRAY); 
+                    array.setExpressions(exprs);
+                    array.setImplicit(true);
+                    array.setType(param.getClassType());
+                    expr = array;
+                }
+                param.setExpression(expr);
+            }
+        }
+        
+        // Check for leftovers, i.e. params entered by user w/ wrong/unknown names
+        if (!namedExpressions.isEmpty()) {
+             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30141, namedExpressions.keySet(), expected));
+        }
+        if (!positionalExpressions.isEmpty()) {
+             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31113, positionalExpressions.size(), origInputs, storedProcedureCommand.getGroup().toString()));
+        }
+    }
+
+    /**
      * @see org.teiid.query.resolver.CommandResolver#findCommandMetadata(org.teiid.query.sql.lang.Command,
      * org.teiid.query.metadata.QueryMetadataInterface)
      */
     private void findCommandMetadata(Command command, TempMetadataStore discoveredMetadata, IQueryMetadataInterface metadata)
-    throws Exception {
+        throws Exception {
 
         StoredProcedure storedProcedureCommand = (StoredProcedure) command;
         
@@ -115,179 +405,10 @@ public class ExecResolver extends ProcedureContainerResolver {
             namedParameters = true;
         }
         
-        // Cache original input parameter expressions.  Depending on whether
-        // the procedure was parsed with named or unnamed parameters, the keys
-        // for this map will either be the String names of the parameters or
-        // the Integer indices, as entered in the user query
-        Map<Integer, Expression> positionalExpressions = new HashMap<Integer, Expression>();
-        Map<String, Expression> namedExpressions = new TreeMap<String, Expression>(String.CASE_INSENSITIVE_ORDER);
-        int adjustIndex = 0;
-        for (SPParameter param : oldParams) {
-            if(param.getExpression() == null) {
-            	if (param.getParameterType() == SPParameter.RESULT_SET) {
-            		adjustIndex--;  //If this was already resolved, just pretend the result set param doesn't exist
-        		}
-            	continue;
-            }
-            if (namedParameters && param.getParameterType() != SPParameter.RETURN_VALUE) {
-                if (namedExpressions.put(param.getParameterSymbol().getShortName(), param.getExpression()) != null) {
-                	 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30138, param.getName()));
-                }
-            } else {
-                positionalExpressions.put(param.getIndex() + adjustIndex, param.getExpression());
-            }
-        }
-
-        storedProcedureCommand.clearParameters();
-        int origInputs = positionalExpressions.size() + namedExpressions.size();
-        /*
-         * Take the values set from the stored procedure implementation, and match up with the
-         * types of parameter it is from the metadata and then reset the newly joined parameters
-         * into the stored procedure command.  If it is a result set get those columns and place
-         * them into the stored procedure command as well.
-         */
-        List<SPParameter> metadataParams = storedProcedureInfo.getParameters();
-        List<SPParameter> clonedMetadataParams = new ArrayList<SPParameter>(metadataParams.size());
-        int inputParams = 0;
-        int optionalParams = 0;
-        int outParams = 0;
-        boolean hasReturnValue = false;
-        boolean optional = false;
-        boolean varargs = false;
-        for (int i = 0; i < metadataParams.size(); i++) {
-        	SPParameter metadataParameter = metadataParams.get(i);
-            if( (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.IN.index()) ||
-                (metadataParameter.getParameterType()==ISPParameter.ParameterInfo.INOUT.index())){
-            	if (ResolverUtil.hasDefault(metadataParameter.getMetadataID(), metadata) || metadataParameter.isVarArg()) {
-                	optional = true;
-                	optionalParams++;
-            	} else {
-                    inputParams++;
-                	if (optional) {
-                		optional = false;
-                		inputParams += optionalParams;
-                		optionalParams = 0;
-                	}
-            	}
-            	if (metadataParameter.isVarArg()) {
-            		varargs = true;
-            	}
-            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.OUT.index()) {
-            	outParams++;
-            	/*
-            	 * TODO: it would consistent to do the following, but it is a breaking change for procedures that have intermixed out params with in.
-            	 * we may need to revisit this later
-            	 */
-        		//optional = true;
-        		//optionalParams++;
-            } else if (metadataParameter.getParameterType() == ISPParameter.ParameterInfo.RETURN_VALUE.index()) {
-            	hasReturnValue = true;
-            }
-            SPParameter clonedParam = metadataParameter.clone();
-            clonedMetadataParams.add(clonedParam);
-            storedProcedureCommand.setParameter(clonedParam);
-        }
-        
-        if (storedProcedureCommand.isCalledWithReturn() && !hasReturnValue) {
-        	 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30139, storedProcedureCommand.getGroup()));
-        }
-
-        if(!namedParameters && (inputParams > positionalExpressions.size()) ) {
-             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30140, inputParams, inputParams + optionalParams + (varargs?"+":""), origInputs, storedProcedureCommand.getGroup())); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        
-        // Walk through the resolved parameters and set the expressions from the
-        // input parameters
-        int exprIndex = 1;
-        HashSet<String> expected = new HashSet<String>();
-        if (storedProcedureCommand.isCalledWithReturn() && hasReturnValue) {
-	        for (SPParameter param : clonedMetadataParams) {
-	        	if (param.getParameterType() == SPParameter.RETURN_VALUE) {
-	        		Expression expr = positionalExpressions.remove(exprIndex++);
-	                param.setExpression(expr);
-	                break;
-	        	}
-	        }
-        }
-        for (SPParameter param : clonedMetadataParams) {
-            if(param.getParameterType() == SPParameter.RESULT_SET || param.getParameterType() == SPParameter.RETURN_VALUE) {
-            	continue;
-            }
-            if (namedParameters) {
-                String nameKey = param.getParameterSymbol().getShortName();
-                Expression expr = namedExpressions.remove(nameKey);
-                // With named parameters, have to check on optional params and default values
-                if (expr == null) {
-                	if (param.getParameterType() != ISPParameter.ParameterInfo.OUT.index()) {
-                		param.setUsingDefault(true);
-	                	expected.add(nameKey);
-	                	if (getTeiidParser().getVersion().isGreaterThan(TeiidServerVersion.TEIID_7_SERVER)) {
-                            if (!param.isVarArg()) {
-                                expr = ResolverUtil.getDefault(param.getParameterSymbol(), metadata);
-                            } else {
-                                //zero length array
-                                List<Expression> exprs = new ArrayList<Expression>(0);
-                                Array array = create(ASTNodes.ARRAY);
-                                array.setExpressions(exprs);
-                                array.setImplicit(true);
-                                array.setType(param.getClassType());
-                                expr = array;
-                            }
-                        }
-                	}
-                } 
-                param.setExpression(expr);                    
-            } else {
-                Expression expr = positionalExpressions.remove(exprIndex++);
-                if(param.getParameterType() == SPParameter.OUT) {
-                	if (expr != null) {
-	                	boolean isRef = expr instanceof Reference;
-						if (!isRef || exprIndex <= inputParams + 1) {
-							//for backwards compatibility, this should be treated instead as an input
-	                		exprIndex--;
-	                		positionalExpressions.put(exprIndex, expr);
-	                	} else if (isRef) {
-	                		//mimics the hack that was in PreparedStatementRequest.
-	                		Reference ref = (Reference)expr;
-	                		ref.setOptional(true); //may be an out
-	                		/*
-	                		 * Note that there is a corner case here with out parameters intermixed with optional parameters
-	                		 * there's not a good way around this.
-	                		 */
-	                	}
-                	}
-            		continue;
-            	}
-                if (expr == null) {
-                	if (!param.isVarArg()) {
-                		expr = ResolverUtil.getDefault(param.getParameterSymbol(), metadata);
-                	}
-                	param.setUsingDefault(true);
-                } 
-                if (param.isVarArg()) {
-                	List<Expression> exprs = new ArrayList<Expression>(positionalExpressions.size() + 1);
-                	if (expr != null) {
-                		exprs.add(expr);
-                	}
-                	exprs.addAll(positionalExpressions.values());
-                	positionalExpressions.clear();
-                	Array array = create(ASTNodes.ARRAY);
-                	array.setExpressions(exprs);
-                	array.setImplicit(true);
-                	array.setType(param.getClassType());
-                    expr = array;
-                }
-                param.setExpression(expr);
-            }
-        }
-        
-        // Check for leftovers, i.e. params entered by user w/ wrong/unknown names
-        if (!namedExpressions.isEmpty()) {
-    		 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30141, namedExpressions.keySet(), expected));
-        }
-        if (!positionalExpressions.isEmpty()) {
-        	 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31113, positionalExpressions.size(), origInputs, storedProcedureCommand.getGroup().toString()));
-        }
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_7_SERVER))
+            findCommand7Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);
+        else
+            findCommand8Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);
         
         // Create temporary metadata that defines a group based on either the stored proc
         // name or the stored query name - this will be used later during planning
@@ -345,7 +466,7 @@ public class ExecResolver extends ProcedureContainerResolver {
             // and add implicit conversion if necessary
             Class<?> exprType = expr.getType();
             if(paramType == null || exprType == null) {
-                 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30143, storedProcedureCommand.getProcedureName(), param.getName()));
+                 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30143, storedProcedureCommand.getProcedureName(), param.getName()));
             }
             String tgtType = DataTypeManagerService.getInstance().getDataTypeName(paramType);
             String srcType = DataTypeManagerService.getInstance().getDataTypeName(exprType);
@@ -353,13 +474,13 @@ public class ExecResolver extends ProcedureContainerResolver {
                             
             if (param.getParameterType() == SPParameter.RETURN_VALUE || param.getParameterType() == SPParameter.OUT) {
             	if (!ResolverUtil.canImplicitlyConvert(tgtType, srcType)) {
-            		 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30144, param.getParameterSymbol(), tgtType, srcType));
+            		 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30144, param.getParameterSymbol(), tgtType, srcType));
             	}
             } else {
                 try {
                     result = ResolverUtil.convertExpression(expr, tgtType, metadata);
                 } catch (Exception e) {
-                     throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30145, new Object[] { param.getParameterSymbol(), srcType, tgtType}));
+                     throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30145, new Object[] { param.getParameterSymbol(), srcType, tgtType}));
                 }                                                       
                 param.setExpression(result);
             }
@@ -405,7 +526,7 @@ public class ExecResolver extends ProcedureContainerResolver {
         QueryNode plan = storedProcedureInfo.getQueryPlan();
         
         if (plan.getQuery() == null) {
-             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30146, group));
+             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30146, group));
         }
         
         return plan.getQuery();

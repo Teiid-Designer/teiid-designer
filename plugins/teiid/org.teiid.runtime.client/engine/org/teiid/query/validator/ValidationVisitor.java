@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.script.Compilable;
@@ -38,12 +39,14 @@ import javax.script.ScriptException;
 import net.sf.saxon.om.Name11Checker;
 import net.sf.saxon.om.QNameException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
+import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -56,6 +59,7 @@ import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.resolver.util.ResolverUtil;
+import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Alter;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -66,11 +70,13 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
 import org.teiid.query.sql.lang.IsNullCriteria;
@@ -101,16 +107,19 @@ import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.TargetedCommand;
 import org.teiid.query.sql.lang.TextColumn;
 import org.teiid.query.sql.lang.TextTable;
+import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
 import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
+import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement;
 import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.WhileStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
@@ -139,6 +148,7 @@ import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.EvaluatableVisitor;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.query.validator.UpdateValidator.UpdateInfo;
@@ -171,7 +181,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	// State during validation
     private boolean isXML = false;	// only used for Query commands
     private boolean inQuery;
-	private CreateProcedureCommand createProc;
+	private ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> createProc;
 
 	/**
      * @param teiidVersion
@@ -494,6 +504,51 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         }
     }
 
+    /**
+     * Validate that the command assigns a value to the ROWS_UPDATED variable 
+     * @param obj
+     * @since 4.2
+     */
+    @Removed("8.0.0")
+    protected void validateContainsRowsUpdatedVariable(CreateUpdateProcedureCommand obj) {
+        final Collection<ElementSymbol> assignVars = new ArrayList<ElementSymbol>();
+       // Use visitor to find assignment statements
+        LanguageVisitor visitor = new LanguageVisitor(getTeiidVersion()) {
+            @Override
+            public void visit(AssignmentStatement stmt) {
+                assignVars.add(stmt.getVariable());
+            }
+        };
+        PreOrderNavigator.doVisit(obj, visitor);
+        boolean foundVar = false;
+        for (ElementSymbol variable : assignVars) {
+            if(variable.getShortName().equalsIgnoreCase(ProcedureReservedWords.ROWS_UPDATED)) {
+                foundVar = true;
+                break;
+            }
+        }
+        if(!foundVar) {
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0016, ProcedureReservedWords.ROWS_UPDATED), obj);
+        }
+    }
+
+    @Override
+    public void visit(CreateUpdateProcedureCommand obj) {
+        if(!obj.isUpdateProcedure()){
+            
+            //check that the procedure does not contain references to itself
+            if (GroupCollectorVisitor.getGroups(obj,true).contains(obj.getVirtualGroup())) {
+                handleValidationError(Messages.getString(Messages.ValidationVisitor.Procedure_has_group_self_reference),obj);
+            }
+            
+            return;
+        }
+
+        // set the state to validate this procedure
+        this.createProc = obj;
+        validateContainsRowsUpdatedVariable(obj);
+    }
+
     @Override
     public void visit(CreateProcedureCommand obj) {
         //check that the procedure does not contain references to itself
@@ -506,6 +561,52 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		        this.createProc = obj;
 	        }
     	}
+    }
+
+    private boolean isUpdateProcedure() {
+        if (this.createProc == null)
+            return false;
+
+        if (!(this.createProc instanceof CreateUpdateProcedureCommand))
+            return false;
+
+        return ((CreateUpdateProcedureCommand) this.createProc).isUpdateProcedure();
+    }
+
+    @Override
+    @Removed("8.0.0")
+    public void visit(HasCriteria obj) {
+        if (! isUpdateProcedure()) {
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
+        }
+    }
+    
+    @Override
+    @Removed("8.0.0")
+    public void visit(TranslateCriteria obj) {
+        if (! isUpdateProcedure()) {
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
+        }
+        if(obj.hasTranslations()) {
+            Collection selectElmnts = null;
+            if(obj.getSelector().hasElements()) {
+                selectElmnts = obj.getSelector().getElements();
+            }
+            Iterator critIter = obj.getTranslations().iterator();
+            while(critIter.hasNext()) {
+                CompareCriteria transCrit = (CompareCriteria) critIter.next();
+                Collection<ElementSymbol> leftElmnts = ElementCollectorVisitor.getElements(transCrit.getLeftExpression(), true);
+                // there is always only one element
+                ElementSymbol leftExpr = leftElmnts.iterator().next();
+
+                if(selectElmnts != null && !selectElmnts.contains(leftExpr)) {
+                    handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0021), leftExpr);
+                }
+            }
+        }
+
+        // additional validation checks
+        validateTranslateCriteria(obj);
     }
 
     @Override
@@ -546,6 +647,91 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     // ######################### Validation methods #########################
+
+    /**
+     * A valid translated expression is not an <code>AggregateSymbol</code> and
+     * does not include elements not present on the groups of the command using
+     * the translated criteria.
+     */
+    @Removed("8.0.0")
+    protected void validateTranslateCriteria(TranslateCriteria obj) {
+        if(this.currentCommand == null) {
+            return;
+        }
+        if (! isUpdateProcedure()) {
+            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
+        }
+
+        CreateUpdateProcedureCommand updateProc = (CreateUpdateProcedureCommand) this.createProc;
+        Map<ElementSymbol, Expression> symbolMap = updateProc.getSymbolMap();
+        Command userCommand = updateProc.getUserCommand();
+        // modeler validation
+        if(userCommand == null) {
+            return;
+        }
+        Criteria userCrit = null;
+        int userCmdType = userCommand.getType();
+        switch(userCmdType) {
+            case ICommand.TYPE_DELETE:
+                userCrit = ((Delete)userCommand).getCriteria();
+                break;
+            case ICommand.TYPE_UPDATE:
+                userCrit = ((Update)userCommand).getCriteria();
+                break;
+            default:
+                break;
+        }
+        // nothing to validate if there is no user criteria
+        if(userCrit == null) {
+            return;
+        }
+
+        Collection<ElementSymbol> transleElmnts = ElementCollectorVisitor.getElements(obj, true);
+        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroups(this.currentCommand, true);
+        Operator selectType = obj.getSelector().getSelectorType();
+
+        for (Criteria predCrit : Criteria.separateCriteriaByAnd(userCrit)) {
+            if(selectType != Operator.NO_TYPE) {
+                if(predCrit instanceof CompareCriteria) {
+                    CompareCriteria ccCrit = (CompareCriteria) predCrit;
+                    if(selectType.getIndex() != ccCrit.getOperator()) {
+                        continue;
+                    }
+                } else if(predCrit instanceof MatchCriteria) {
+                    if(selectType != Operator.LIKE) {
+                        continue;
+                    }
+                } else if(predCrit instanceof IsNullCriteria) {
+                    if(selectType != Operator.IS_NULL) {
+                        continue;
+                    }
+                } else if(predCrit instanceof SetCriteria) {
+                    if(selectType != Operator.IN) {
+                        continue;
+                    }
+                } else if(predCrit instanceof BetweenCriteria) {
+                    if(selectType != Operator.BETWEEN) {
+                        continue;
+                    }
+                }
+            }
+            Iterator<ElementSymbol> critEmlntIter = ElementCollectorVisitor.getElements(predCrit, true).iterator();
+            // collect all elements elements on the criteria map to
+            while(critEmlntIter.hasNext()) {
+                ElementSymbol criteriaElement = critEmlntIter.next();
+                if(transleElmnts.contains(criteriaElement)) {
+                    Expression mappedExpr = symbolMap.get(criteriaElement);
+                    if(mappedExpr instanceof AggregateSymbol) {
+                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0022, criteriaElement), criteriaElement);
+                    }
+
+                    if (!groups.containsAll(GroupsUsedByElementsVisitor.getGroups(mappedExpr))) {
+                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0023, criteriaElement), criteriaElement);
+                    }
+                }
+            }
+        }
+    }
 
     protected void validateSelectElements(Select obj) {
     	if(isXML) {

@@ -62,6 +62,7 @@ import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.GroupContext;
+import org.teiid.query.sql.lang.ProcedureContainer;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SubqueryContainer;
 import org.teiid.query.sql.lang.UnaryFromClause;
@@ -159,6 +160,16 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
      */
     public ITeiidServerVersion getTeiidVersion() {
         return getTeiidParser().getVersion();
+    }
+
+    public Command expandCommand(ProcedureContainer proc, IQueryMetadataInterface metadata) throws Exception {
+        ProcedureContainerResolver cr = (ProcedureContainerResolver)chooseResolver(proc, metadata);
+        Command command = cr.expandCommand(proc, metadata);
+        if (command == null) {
+            return null;
+        }
+        resolveCommand(command, proc.getGroup(), proc.getType(), metadata.getDesignTimeMetadata(), false);
+        return command;
     }
 
 	/**

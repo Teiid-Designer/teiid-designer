@@ -34,11 +34,13 @@ import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataID.Type;
 import org.teiid.query.metadata.TempMetadataStore;
+import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.resolver.util.ResolverUtil;
@@ -47,6 +49,7 @@ import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.GroupContext;
 import org.teiid.query.sql.lang.ProcedureContainer;
+import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.TriggerAction;
@@ -55,6 +58,7 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.validator.UpdateValidator.UpdateInfo;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 
 public abstract class ProcedureContainerResolver extends CommandResolver {
@@ -68,6 +72,39 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 
     public abstract void resolveProceduralCommand(Command command,
                                                   TempMetadataAdapter metadata) throws Exception;
+
+    /**
+     * Expand a command by finding and attaching all subcommands to the command.  If
+     * some initial resolution must be done for this to be accomplished, that is ok, 
+     * but it should be kept to a minimum.
+     * @param procCcommand The command to expand
+     * @param metadata Metadata access
+     * 
+     * @throws Exception
+     */
+    public Command expandCommand(ProcedureContainer procCommand, IQueryMetadataInterface metadata)
+    throws Exception {
+        
+        // Resolve group so we can tell whether it is an update procedure
+        GroupSymbol group = procCommand.getGroup();
+
+        Command subCommand = null;
+        
+        String plan = getPlan(metadata, procCommand);
+        
+        if (plan == null) {
+            return null;
+        }
+        
+        QueryParser parser = getQueryResolver().getQueryParser();
+        try {
+            subCommand = parser.parseProcedure(plan, !(procCommand instanceof StoredProcedure));
+        } catch(Exception e) {
+             throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30060, group, procCommand.getClass().getSimpleName()));
+        }
+        
+        return subCommand;
+    }
 
     /** 
      * For a given resolver, this returns the unparsed command.
@@ -129,7 +166,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		if (info == null) {
 			return null;
 		}
-    	if (validate) {
+    	if (validate || getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
     		String error = validateUpdateInfo(group, type, info);
     		if (error != null) {
     			throw new QueryResolverException(error);

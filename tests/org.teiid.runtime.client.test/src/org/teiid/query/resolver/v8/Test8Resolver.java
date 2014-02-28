@@ -7,6 +7,8 @@
 */
 package org.teiid.query.resolver.v8;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,7 @@ import org.teiid.query.sql.v8.Test8Factory;
 /**
  *
  */
+@SuppressWarnings( {"nls" , "javadoc"})
 public class Test8Resolver extends AbstractTestResolver {
 
     private Test8Factory factory;
@@ -43,7 +46,7 @@ public class Test8Resolver extends AbstractTestResolver {
     @Override
     protected AbstractTestFactory getFactory() {
         if (factory == null)
-            factory = new Test8Factory(queryParser);
+            factory = new Test8Factory(getQueryParser());
 
         return factory;
     }
@@ -183,7 +186,7 @@ public class Test8Resolver extends AbstractTestResolver {
     //return should be first, then out
     @Test
     public void testParamOrder() {
-        Query resolvedQuery = (Query)helpResolve("SELECT * FROM (exec pm4.spRetOut()) as a", metadataFactory.exampleBQTCached()); //$NON-NLS-1$
+        Query resolvedQuery = (Query)helpResolve("SELECT * FROM (exec pm4.spRetOut()) as a", getMetadataFactory().exampleBQTCached()); //$NON-NLS-1$
 
         assertEquals("a.ret", resolvedQuery.getProjectedSymbols().get(0).toString()); //$NON-NLS-1$
     }
@@ -208,6 +211,7 @@ public class Test8Resolver extends AbstractTestResolver {
     @Test
     public void testForeignTempInvalidModel() {
         String sql = "create foreign temporary table x (y string) on x"; //$NON-NLS-1$
+        helpResolveException(sql, "TEIID31134 Could not create foreign temporary table, since schema x does not exist."); //$NON-NLS-1$
     }
 
     @Test

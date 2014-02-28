@@ -22,15 +22,25 @@
 
 package org.teiid.query.resolver;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.resolver.util.AccessPattern;
-import org.teiid.query.sql.symbol.ElementSymbol;
 
-public class TestAccessPattern extends TestCase {
+public abstract class AbstractTestAccessPattern extends AbstractTest {
 
+    /**
+     * @param teiidVersion
+     */
+    public AbstractTestAccessPattern(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
+    @Test
     public void testOrdering() {
         
         AccessPattern ap1 = new AccessPattern(createElements(1));
@@ -45,7 +55,8 @@ public class TestAccessPattern extends TestCase {
         
         assertEquals(ap1, accessPatterns.get(0));
     }
-    
+
+    @Test
     public void testClone() {
 
         AccessPattern ap2 = new AccessPattern(createElements(2));
@@ -62,9 +73,9 @@ public class TestAccessPattern extends TestCase {
      */
     private List createElements(int number) {
         List elements = new ArrayList();
-        
+
         for (int i = 0; i < number; i++) {
-            elements.add(new ElementSymbol(String.valueOf(i)));
+            elements.add(getFactory().newElementSymbol(String.valueOf(i)));
         }
         
         return elements;

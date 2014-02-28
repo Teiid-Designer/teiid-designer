@@ -22,6 +22,7 @@
 
 package org.teiid.query.resolver;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
@@ -46,6 +47,10 @@ public abstract class CommandResolver {
 
     protected QueryResolver getQueryResolver() {
         return this.queryResolver;
+    }
+
+    protected ITeiidServerVersion getTeiidVersion() {
+        return getQueryResolver().getTeiidVersion();
     }
 
     protected TeiidParser getTeiidParser() {

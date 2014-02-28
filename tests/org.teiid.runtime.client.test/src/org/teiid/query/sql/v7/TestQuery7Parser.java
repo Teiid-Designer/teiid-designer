@@ -7,6 +7,7 @@
  */
 package org.teiid.query.sql.v7;
 
+import static org.junit.Assert.assertEquals;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,13 @@ import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.proc.Statement;
-import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;

@@ -236,8 +236,8 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             clone.setMetadataID(getMetadataID());
         if(getDisplayMode() != null)
             clone.setDisplayMode(getDisplayMode());
-        if(getCanonicalShortName() != null)
-            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getShortCanonicalName() != null)
+            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

@@ -54,6 +54,8 @@ import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
@@ -218,6 +220,10 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         return teiidParser;
     }
 
+    public ITeiidServerVersion getTeiidVersion() {
+        return teiidParser.getVersion();
+    }
+
     //==================================================================================
     //                     I N T E R F A C E   M E T H O D S
     //==================================================================================
@@ -241,10 +247,13 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
          throw new TeiidClientException(elementName+TransformationMetadata.NOT_EXISTS_MESSAGE);
 	}
 
-    public Table getGroupID(final String groupName) throws Exception {
+    public Table getGroupID(String groupName) throws Exception {
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            groupName = groupName.toUpperCase();
+
         return getMetadataStore().findGroup(groupName);
     }
-    
+
     public Collection<String> getGroupsForPartialName(final String partialGroupName)
         throws Exception {
 		ArgCheck.isNotEmpty(partialGroupName);

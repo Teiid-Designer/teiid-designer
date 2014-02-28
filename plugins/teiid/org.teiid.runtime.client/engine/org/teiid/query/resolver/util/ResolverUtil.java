@@ -45,6 +45,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.metadata.ForeignKey;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
@@ -74,6 +75,7 @@ import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
+import org.teiid.query.sql.symbol.ExpressionSymbol;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.Reference;
@@ -436,15 +438,18 @@ public class ResolverUtil {
                         continue;
                     }
         		}
+        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+        	 // check for legacy positional
+                ExpressionSymbol es = (ExpressionSymbol)sortKey;
+        	    if (es.getExpression() instanceof Constant) {
+                    Constant c = (Constant)es.getExpression();
+                    setExpressionPosition(orderBy, knownElements, i, c);
+                    continue;
+        	    }
         	} else if (sortKey instanceof Constant) {
         		// check for legacy positional
         		Constant c = (Constant)sortKey;
-    		    int elementOrder = Integer.valueOf(c.getValue().toString()).intValue();
-    		    // adjust for the 1 based index.
-    		    if (elementOrder > knownElements.size() || elementOrder < 1) {
-        		     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30085, c));
-    		    }
-    		    orderBy.setExpressionPosition(i, elementOrder - 1);
+    		    setExpressionPosition(orderBy, knownElements, i, c);
     		    continue;
         	}
         	//handle order by expressions        	
@@ -467,6 +472,23 @@ public class ResolverUtil {
         	}
         	orderBy.setExpressionPosition(i, index);
         }
+    }
+
+    /**
+     * @param orderBy
+     * @param knownElements
+     * @param i
+     * @param c
+     * @throws QueryResolverException
+     */
+    private static void setExpressionPosition(OrderBy orderBy, List<Expression> knownElements, int i, Constant c)
+        throws QueryResolverException {
+        int elementOrder = Integer.valueOf(c.getValue().toString()).intValue();
+        // adjust for the 1 based index.
+        if (elementOrder > knownElements.size() || elementOrder < 1) {
+             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30085, c));
+        }
+        orderBy.setExpressionPosition(i, elementOrder - 1);
     }
     
     /** 

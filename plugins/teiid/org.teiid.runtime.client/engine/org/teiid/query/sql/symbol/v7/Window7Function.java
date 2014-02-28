@@ -102,8 +102,8 @@ public class Window7Function extends Symbol implements WindowFunction {
             clone.setFunction(getFunction().clone());
         if(getWindowSpecification() != null)
             clone.setWindowSpecification(getWindowSpecification().clone());
-        if(getCanonicalShortName() != null)
-            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getShortCanonicalName() != null)
+            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

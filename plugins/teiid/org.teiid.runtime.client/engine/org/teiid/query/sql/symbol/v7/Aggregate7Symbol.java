@@ -237,12 +237,12 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
 
     @Override
     public String getCanonicalName() {
-        return getCanonicalShortName();
+        return getShortCanonicalName();
     }
 
     @Override
     public void setCanonicalName(String canonicalName) {
-        setCanonicalShortName(canonicalName);
+        setShortCanonicalName(canonicalName);
     }
 
     /** Accept the visitor. **/
@@ -269,8 +269,8 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
             clone.setCanonicalName(getCanonicalName());
         if(getExpression() != null)
             clone.setExpression(getExpression().clone());
-        if(getCanonicalShortName() != null)
-            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getShortCanonicalName() != null)
+            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

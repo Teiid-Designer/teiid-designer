@@ -4,12 +4,14 @@ package org.teiid.query.sql.proc;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
@@ -18,7 +20,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  */
 @Removed("8.0.0")
 public class CreateUpdateProcedureCommand extends Command
-    implements ICreateProcedureCommand<Block, Expression, LanguageVisitor> {
+    implements ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> {
 
     // top level block for the procedure
     private Block block;
@@ -35,6 +37,10 @@ public class CreateUpdateProcedureCommand extends Command
     private Command userCommand;
 
     private GroupSymbol virtualGroup;
+
+    // map between elements on the virtual groups and the elements in the
+    // transformation query that define it.
+    private Map<ElementSymbol, Expression> symbolMap;
 
     /**
      * @param p
@@ -106,7 +112,7 @@ public class CreateUpdateProcedureCommand extends Command
                     symbols = sp.getResultSetColumns();
                 }
             }
-            setProjectedSymbols((List<Expression>) symbols);
+            setProjectedSymbols(symbols);
             return this.projectedSymbols;
         }
         this.projectedSymbols = getUpdateCommandSymbol();
@@ -160,8 +166,27 @@ public class CreateUpdateProcedureCommand extends Command
     /**
      * @param virtualGroup
      */
+    @Override
     public void setVirtualGroup(GroupSymbol virtualGroup) {
         this.virtualGroup = virtualGroup;
+    }
+
+    /**
+     * Set the symbol map between elements on the virtual group being updated and the
+     * elements on the transformation query.
+     * @param symbolMap Map of virtual group elements -> elements that define those
+     */
+    public void setSymbolMap(Map<ElementSymbol, Expression> symbolMap) {
+        this.symbolMap = symbolMap;
+    }
+
+    /**
+     * Get the symbol map between elements on the virtual group being updated and the
+     * elements on the transformation query.
+     * @return Map of virtual group elements -> elements that define those
+     */
+    public Map<ElementSymbol, Expression> getSymbolMap() {
+        return this.symbolMap;
     }
 
     @Override

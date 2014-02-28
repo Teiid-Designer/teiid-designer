@@ -19,7 +19,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
  */
 @Since("8.0.0")
 public class CreateProcedureCommand extends Command
-    implements ICreateProcedureCommand<Block, Expression, LanguageVisitor> {
+    implements ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> {
 
     // top level block for the procedure
     protected Block block;

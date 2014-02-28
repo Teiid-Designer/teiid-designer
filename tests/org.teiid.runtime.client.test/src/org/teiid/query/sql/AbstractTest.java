@@ -7,6 +7,9 @@
 */
 package org.teiid.query.sql;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -14,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
@@ -57,7 +59,6 @@ import org.teiid.query.sql.lang.SetClauseList;
 import org.teiid.query.sql.lang.SetCriteria;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria.PredicateQuantifier;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
@@ -65,17 +66,18 @@ import org.teiid.query.sql.lang.TextColumn;
 import org.teiid.query.sql.lang.TextTable;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
+import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.Statement;
 import org.teiid.query.sql.proc.WhileStatement;
-import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Constant;
@@ -101,7 +103,7 @@ import org.teiid.query.sql.symbol.XMLSerialize;
  * @param <T>
  */
 @SuppressWarnings( {"javadoc", "nls"} )
-public abstract class AbstractTest<T extends LanguageObject> extends TestCase {
+public abstract class AbstractTest<T extends LanguageObject> {
 
     protected ITeiidServerVersion teiidVersion;
 

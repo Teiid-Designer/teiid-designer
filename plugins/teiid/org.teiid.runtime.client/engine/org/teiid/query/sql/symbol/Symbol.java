@@ -118,7 +118,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
      * @return the canonicalShortName
      */
     @Removed("8.0.0")
-    public String getCanonicalShortName() {
+    public String getShortCanonicalName() {
         if (canonicalShortName == null && shortName != null) {
             canonicalShortName = shortName.toUpperCase();
         }
@@ -129,7 +129,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
      * @param canonicalShortName the canonicalShortName to set
      */
     @Removed("8.0.0")
-    public void setCanonicalShortName(String canonicalShortName) {
+    public void setShortCanonicalName(String canonicalShortName) {
         this.canonicalShortName = canonicalShortName;
     }
 
@@ -158,9 +158,9 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         Symbol other = (Symbol)obj;
-        if (this.getCanonicalShortName() == null) {
-            if (other.getCanonicalShortName() != null) return false;
-        } else if (!this.getCanonicalShortName().equalsIgnoreCase(other.getCanonicalShortName())) return false;
+        if (this.getShortCanonicalName() == null) {
+            if (other.getShortCanonicalName() != null) return false;
+        } else if (!this.getShortCanonicalName().equalsIgnoreCase(other.getShortCanonicalName())) return false;
         if (this.getName() == null) {
             if (other.getName() != null) return false;
         } else if (!this.getName().equalsIgnoreCase(other.getName())) return false;
@@ -177,8 +177,8 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     public Symbol clone() {
         Symbol clone = new Symbol(this.parser, this.id);
 
-        if(getCanonicalShortName() != null)
-            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getShortCanonicalName() != null)
+            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

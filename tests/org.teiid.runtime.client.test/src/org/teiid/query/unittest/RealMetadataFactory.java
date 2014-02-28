@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.ModelMetaData;
@@ -43,10 +44,12 @@ import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.Column.SearchType;
 import org.teiid.metadata.ColumnSet;
+import org.teiid.metadata.Datatype;
 import org.teiid.metadata.ForeignKey;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionParameter;
 import org.teiid.metadata.KeyRecord;
+import org.teiid.metadata.MetadataFactory;
 import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Procedure;
 import org.teiid.metadata.ProcedureParameter;
@@ -67,10 +70,13 @@ import org.teiid.query.mapping.xml.MappingSequenceNode;
 import org.teiid.query.mapping.xml.MappingVisitor;
 import org.teiid.query.mapping.xml.Navigator;
 import org.teiid.query.metadata.CompositeMetadataStore;
+import org.teiid.query.metadata.MetadataValidator;
+import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.optimizer.FakeFunctionMetadataSource;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.validator.ValidatorReport;
 
 @SuppressWarnings("nls")
 public class RealMetadataFactory {
@@ -2753,4 +2759,24 @@ public class RealMetadataFactory {
 			
 		return createTransformationMetadata(metadataStore, "example4");
 	}
+
+	public Map<String, Datatype> getDataTypes() {
+        return SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
+    }
+
+	public MetadataFactory helpParse(String ddl, String model) {
+        MetadataFactory mf = new MetadataFactory(null, 1, model, getDataTypes(), new Properties(), null); 
+        parser.parseDDL(mf, ddl);
+        return mf;
+    }
+
+	public TransformationMetadata fromDDL(String ddl, String vdbName, String modelName) throws Exception {
+        MetadataFactory mf = helpParse(ddl, modelName);
+        TransformationMetadata tm = createTransformationMetadata(mf.asMetadataStore(), vdbName);
+        ValidatorReport report = new MetadataValidator(teiidVersion).validate(tm.getVdbMetaData(), tm.getMetadataStore());
+        if (report.hasItems()) {
+            throw new RuntimeException(report.getFailureMessage());
+        }
+        return tm;
+    }
 }

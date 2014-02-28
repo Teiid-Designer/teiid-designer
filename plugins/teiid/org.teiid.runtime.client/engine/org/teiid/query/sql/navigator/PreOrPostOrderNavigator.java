@@ -23,6 +23,9 @@
 package org.teiid.query.sql.navigator;
 
 import java.util.Collection;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -65,6 +68,7 @@ import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.TextTable;
+import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
 import org.teiid.query.sql.lang.WithQueryCommand;
@@ -75,6 +79,7 @@ import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
+import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.ExceptionExpression;
 import org.teiid.query.sql.proc.IfStatement;
@@ -111,8 +116,6 @@ import org.teiid.query.sql.symbol.XMLParse;
 import org.teiid.query.sql.symbol.XMLQuery;
 import org.teiid.query.sql.symbol.XMLSerialize;
 
-
-
 /** 
  * @since 4.2
  */
@@ -127,10 +130,10 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
      * Post order flag
      */
     public static final boolean POST_ORDER = false;
-    
+
     private boolean order;
     private boolean deep;
-    
+
     /**
      * @param visitor
      * @param order
@@ -143,41 +146,50 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     protected void preVisitVisitor(LanguageObject obj) {
-        if(order == PRE_ORDER) {
+        if (order == PRE_ORDER) {
             visitVisitor(obj);
         }
     }
 
     protected void postVisitVisitor(LanguageObject obj) {
-        if(order == POST_ORDER) {
+        if (order == POST_ORDER) {
             visitVisitor(obj);
         }
     }
-    
+
     @Override
     public void visit(AggregateSymbol obj) {
         preVisitVisitor(obj);
-        Expression[] args = obj.getArgs();
-        if(args != null) {
-            for(int i=0; i<args.length; i++) {
-                visitNode(args[i]);
+
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            visitNode(obj.getExpression());
+        else {
+            Expression[] args = obj.getArgs();
+            if (args != null) {
+                for (int i = 0; i < args.length; i++) {
+                    visitNode(args[i]);
+                }
             }
         }
+
         visitNode(obj.getOrderBy());
         visitNode(obj.getCondition());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(AliasSymbol obj) {
         preVisitVisitor(obj);
         visitNode(obj.getSymbol());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(MultipleElementSymbol obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(AssignmentStatement obj) {
         preVisitVisitor(obj);
@@ -194,6 +206,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getUpperExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Block obj) {
         preVisitVisitor(obj);
@@ -201,30 +214,34 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNodes(obj.getExceptionStatements());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(BranchingStatement obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(CaseExpression obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
-        for(int i=0; i<obj.getWhenCount(); i++) {
+        for (int i = 0; i < obj.getWhenCount(); i++) {
             visitNode(obj.getWhenExpression(i));
             visitNode(obj.getThenExpression(i));
         }
         visitNode(obj.getElseExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(CommandStatement obj) {
         preVisitVisitor(obj);
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(CompareCriteria obj) {
         preVisitVisitor(obj);
@@ -232,23 +249,35 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getRightExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(CompoundCriteria obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getCriteria());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Constant obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
+    @Override
+    @Removed( "8.0.0" )
+    public void visit(CreateUpdateProcedureCommand obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getBlock());
+        postVisitVisitor(obj);
+    }
+
     @Override
     public void visit(CreateProcedureCommand obj) {
         preVisitVisitor(obj);
         visitNode(obj.getBlock());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(DeclareStatement obj) {
         preVisitVisitor(obj);
@@ -256,6 +285,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Delete obj) {
         preVisitVisitor(obj);
@@ -270,48 +300,55 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(ExistsCriteria obj) {
         preVisitVisitor(obj);
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
-        postVisitVisitor(obj);        
+        postVisitVisitor(obj);
     }
+
     @Override
     public void visit(ExpressionSymbol obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(From obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getClauses());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Function obj) {
         preVisitVisitor(obj);
         Expression[] args = obj.getArgs();
-        if(args != null) {
-            for(int i=0; i<args.length; i++) {
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
                 visitNode(args[i]);
             }
         }
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(GroupBy obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getSymbols());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(GroupSymbol obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(IfStatement obj) {
         preVisitVisitor(obj);
@@ -320,14 +357,15 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getElseBlock());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Insert obj) {
         preVisitVisitor(obj);
         visitNode(obj.getGroup());
         visitNodes(obj.getVariables());
         visitNodes(obj.getValues());
-        if(deep && obj.getQueryExpression()!=null) {
-        	visitNode(obj.getQueryExpression());
+        if (deep && obj.getQueryExpression() != null) {
+            visitNode(obj.getQueryExpression());
         }
         visitNode(obj.getOption());
         postVisitVisitor(obj);
@@ -348,18 +386,21 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getTable());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Into obj) {
         preVisitVisitor(obj);
         visitNode(obj.getGroup());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(IsNullCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(JoinPredicate obj) {
         preVisitVisitor(obj);
@@ -369,11 +410,13 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNodes(obj.getJoinCriteria());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(JoinType obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Limit obj) {
         preVisitVisitor(obj);
@@ -381,15 +424,17 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getRowLimit());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(LoopStatement obj) {
         preVisitVisitor(obj);
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         visitNode(obj.getBlock());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(MatchCriteria obj) {
         preVisitVisitor(obj);
@@ -397,29 +442,34 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getRightExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(NotCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getCriteria());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Option obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(OrderBy obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getOrderByItems());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(OrderByItem obj) {
-    	preVisitVisitor(obj);
+        preVisitVisitor(obj);
         visitNode(obj.getSymbol());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Query obj) {
         preVisitVisitor(obj);
@@ -435,41 +485,47 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getOption());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(RaiseStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Reference obj) {
         preVisitVisitor(obj);
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(ScalarSubquery obj) {
         preVisitVisitor(obj);
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SearchedCaseExpression obj) {
         preVisitVisitor(obj);
-        for(int i=0; i<obj.getWhenCount(); i++) {
+        for (int i = 0; i < obj.getWhenCount(); i++) {
             visitNode(obj.getWhenCriteria(i));
             visitNode(obj.getThenExpression(i));
         }
         visitNode(obj.getElseExpression());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Select obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getSymbols());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SetCriteria obj) {
         preVisitVisitor(obj);
@@ -477,6 +533,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNodes(obj.getValues());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SetQuery obj) {
         preVisitVisitor(obj);
@@ -491,51 +548,65 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(StoredProcedure obj) {
         preVisitVisitor(obj);
-        
+
         Collection<SPParameter> params = obj.getParameters();
-        if(params != null && !params.isEmpty()) {
-        	for (SPParameter parameter : params) {
+        if (params != null && !params.isEmpty()) {
+            for (SPParameter parameter : params) {
                 Expression expression = parameter.getExpression();
                 visitNode(expression);
             }
         }
-        
+
         visitNode(obj.getOption());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SubqueryCompareCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getLeftExpression());
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SubqueryFromClause obj) {
         preVisitVisitor(obj);
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         visitNode(obj.getGroupSymbol());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(SubquerySetCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
         if (deep) {
-        	visitNode(obj.getCommand());
+            visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
     }
+
+    @Override
+    @Removed( "8.0.0" )
+    public void visit(TranslateCriteria obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getSelector());
+        visitNodes(obj.getTranslations());
+        postVisitVisitor(obj);
+    }
+
     @Override
     public void visit(UnaryFromClause obj) {
         preVisitVisitor(obj);
         visitNode(obj.getGroup());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(Update obj) {
         preVisitVisitor(obj);
@@ -545,6 +616,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getOption());
         postVisitVisitor(obj);
     }
+
     @Override
     public void visit(WhileStatement obj) {
         preVisitVisitor(obj);
@@ -552,7 +624,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getBlock());
         postVisitVisitor(obj);
     }
-    
+
     /**
      * NOTE: we specifically don't need to visit the as columns or the using identifiers.
      * These will be resolved by the dynamic command resolver instead.
@@ -566,71 +638,72 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getIntoGroup());
         if (obj.getUsing() != null) {
             for (SetClause setClause : obj.getUsing().getClauses()) {
-				visitNode(setClause.getValue());
-			}
+                visitNode(setClause.getValue());
+            }
         }
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(SetClauseList obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getClauses());
+        preVisitVisitor(obj);
+        visitNodes(obj.getClauses());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(SetClause obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getSymbol());
-    	visitNode(obj.getValue());
+        preVisitVisitor(obj);
+        visitNode(obj.getSymbol());
+        visitNode(obj.getValue());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(TextLine obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getExpressions());
+        preVisitVisitor(obj);
+        visitNodes(obj.getExpressions());
         postVisitVisitor(obj);
-    }    
-    
+    }
+
     @Override
     public void visit(XMLForest obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getNamespaces());
-    	visitNodes(obj.getArgs());
+        preVisitVisitor(obj);
+        visitNode(obj.getNamespaces());
+        visitNodes(obj.getArgs());
         postVisitVisitor(obj);
     }
-    
+
     @Override
+    @Since( "8.0.0" )
     public void visit(JSONObject obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getArgs());
+        preVisitVisitor(obj);
+        visitNodes(obj.getArgs());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLAttributes obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getArgs());
+        preVisitVisitor(obj);
+        visitNodes(obj.getArgs());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLElement obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getNamespaces());
-    	visitNode(obj.getAttributes());
-    	visitNodes(obj.getContent());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getNamespaces());
+        visitNode(obj.getAttributes());
+        visitNodes(obj.getContent());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLNamespaces obj) {
-    	preVisitVisitor(obj);
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(TextTable obj) {
         preVisitVisitor(obj);
@@ -638,91 +711,92 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getGroupSymbol());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLTable obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getNamespaces());
-    	visitNodes(obj.getPassing());
-    	for (XMLColumn column : obj.getColumns()) {
-			visitNode(column.getDefaultExpression());
-		}
+        preVisitVisitor(obj);
+        visitNode(obj.getNamespaces());
+        visitNodes(obj.getPassing());
+        for (XMLColumn column : obj.getColumns()) {
+            visitNode(column.getDefaultExpression());
+        }
         visitNode(obj.getGroupSymbol());
         postVisitVisitor(obj);
     }
-    
+
     @Override
+    @Since( "8.0.0" )
     public void visit(ObjectTable obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getPassing());
-    	for (ObjectColumn column : obj.getColumns()) {
-			visitNode(column.getDefaultExpression());
-		}
+        preVisitVisitor(obj);
+        visitNodes(obj.getPassing());
+        for (ObjectColumn column : obj.getColumns()) {
+            visitNode(column.getDefaultExpression());
+        }
         visitNode(obj.getGroupSymbol());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLQuery obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getNamespaces());
-    	visitNodes(obj.getPassing());
+        preVisitVisitor(obj);
+        visitNode(obj.getNamespaces());
+        visitNodes(obj.getPassing());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(DerivedColumn obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getExpression());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLSerialize obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getExpression());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(QueryString obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getPath());
-    	visitNodes(obj.getArgs());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getPath());
+        visitNodes(obj.getArgs());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(XMLParse obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getExpression());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(ExpressionCriteria obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getExpression());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(WithQueryCommand obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getColumns());
-    	if (deep) {
-    		visitNode(obj.getCommand());
-    	}
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNodes(obj.getColumns());
+        if (deep) {
+            visitNode(obj.getCommand());
+        }
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(TriggerAction obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getBlock());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getBlock());
+        postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(ArrayTable obj) {
         preVisitVisitor(obj);
@@ -730,54 +804,55 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         visitNode(obj.getGroupSymbol());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(AlterProcedure obj) {
-    	preVisitVisitor(obj);
+        preVisitVisitor(obj);
         visitNode(obj.getTarget());
         if (deep) {
-        	visitNode(obj.getDefinition());
+            visitNode(obj.getDefinition());
         }
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(AlterTrigger obj) {
-    	preVisitVisitor(obj);
+        preVisitVisitor(obj);
         visitNode(obj.getTarget());
         if (deep) {
-        	visitNode(obj.getDefinition());
+            visitNode(obj.getDefinition());
         }
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(AlterView obj) {
-    	preVisitVisitor(obj);
+        preVisitVisitor(obj);
         visitNode(obj.getTarget());
         if (deep) {
-        	visitNode(obj.getDefinition());
+            visitNode(obj.getDefinition());
         }
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(WindowFunction obj) {
-    	preVisitVisitor(obj);
+        preVisitVisitor(obj);
         visitNode(obj.getFunction());
         visitNode(obj.getWindowSpecification());
         postVisitVisitor(obj);
     }
-    
+
     @Override
     public void visit(WindowSpecification obj) {
-    	preVisitVisitor(obj);
-    	visitNodes(obj.getPartition());
+        preVisitVisitor(obj);
+        visitNodes(obj.getPartition());
         visitNode(obj.getOrderBy());
         postVisitVisitor(obj);
     }
 
     @Override
+    @Since( "8.0.0" )
     public void visit(Array array) {
         preVisitVisitor(array);
         visitNodes(array.getExpressions());
@@ -785,31 +860,33 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
+    @Since( "8.0.0" )
     public void visit(ExceptionExpression exceptionExpression) {
-    	preVisitVisitor(exceptionExpression);
-    	visitNode(exceptionExpression.getMessage());
-    	visitNode(exceptionExpression.getSqlState());
-    	visitNode(exceptionExpression.getErrorCode());
-    	visitNode(exceptionExpression.getParent());
-    	postVisitVisitor(exceptionExpression);
+        preVisitVisitor(exceptionExpression);
+        visitNode(exceptionExpression.getMessage());
+        visitNode(exceptionExpression.getSqlState());
+        visitNode(exceptionExpression.getErrorCode());
+        visitNode(exceptionExpression.getParent());
+        postVisitVisitor(exceptionExpression);
     }
-    
+
     @Override
+    @Since( "8.0.0" )
     public void visit(ReturnStatement obj) {
-    	preVisitVisitor(obj);
-    	visitNode(obj.getExpression());
-    	postVisitVisitor(obj);
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
     }
-    
+
     /**
      * @param object
      * @param visitor
      * @param order
      */
     public static void doVisit(LanguageObject object, LanguageVisitor visitor, boolean order) {
-    	doVisit(object, visitor, order, false);
+        doVisit(object, visitor, order, false);
     }
-    
+
     /**
      * @param object
      * @param visitor

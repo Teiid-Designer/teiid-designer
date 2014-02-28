@@ -144,7 +144,7 @@ public class StoredProcedure extends ProcedureContainer
      * @return parameter at index
      */
     public SPParameter getParameter(int index){
-        return mapOfParameters.get(index);
+        return mapOfParameters.get(new Integer(index));
     }
 
     /**

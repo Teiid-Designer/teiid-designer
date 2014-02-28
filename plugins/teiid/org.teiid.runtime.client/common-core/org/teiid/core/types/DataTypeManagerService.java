@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,6 +45,7 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.query.function.FunctionLibrary;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -62,6 +64,16 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     
     private static final String ARRAY_SUFFIX = "[]"; //$NON-NLS-1$
 
+    /**
+     * The ordering of this list is important since it affects the iteration
+     * of functionMethods when determining the most appropriate
+     * typed function in
+     * {@link FunctionLibrary#determineNecessaryConversions(String, Class, org.teiid.query.sql.symbol.Expression[], Class[], boolean)}
+     * Since String and Object end up with the same score, its only because
+     * String appears first in the list will it be chosen above Object.
+     *
+     * @see <a href="https://issues.jboss.org/browse/TEIID-2876"/>
+     */
     public enum DefaultDataTypes {
 
         STRING ("string", DataTypeName.STRING, String.class, 256, DataTypeAliases.VARCHAR), //$NON-NLS-1$
@@ -549,7 +561,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     @Override
     public Set<String> getAllDataTypeNames() {
-        Set<String> dataTypeNames = new HashSet<String>();
+        Set<String> dataTypeNames = new LinkedHashSet<String>();
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
             dataTypeNames.add(defaultDataType.getId());
         }

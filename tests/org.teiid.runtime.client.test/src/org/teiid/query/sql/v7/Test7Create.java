@@ -22,6 +22,7 @@
 
 package org.teiid.query.sql.v7;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import java.util.ArrayList;
 import java.util.List;

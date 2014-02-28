@@ -85,12 +85,16 @@ public class MetadataValidator {
 	interface MetadataRule {
 		void execute(VDBMetaData vdb, MetadataStore vdbStore, ValidatorReport report, MetadataValidator metadataValidator);
 	}	
-	
+
 	public MetadataValidator(ITeiidServerVersion teiidVersion, Map<String, Datatype> typeMap) {
 		this.teiidVersion = teiidVersion;
         this.typeMap = typeMap;
 		this.queryParser = new QueryParser(teiidVersion);
 	}
+
+	public MetadataValidator(ITeiidServerVersion teiidVersion) {
+        this(teiidVersion, SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap());
+    }
 
 	private <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
 	    return queryParser.getTeiidParser().createASTNode(nodeType);

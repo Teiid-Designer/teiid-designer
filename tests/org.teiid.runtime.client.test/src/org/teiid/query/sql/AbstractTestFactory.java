@@ -73,6 +73,7 @@ import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.WhileStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
+import org.teiid.query.sql.symbol.Array;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -333,6 +334,7 @@ public abstract class AbstractTestFactory {
     public Reference newReference(int index) {
         Reference reference = newNode(ASTNodes.REFERENCE);
         reference.setIndex(index);
+        reference.setPositional(true);
         return reference;
     }
 
@@ -655,6 +657,13 @@ public abstract class AbstractTestFactory {
 
     public Drop newDrop() {
         return newNode(ASTNodes.DROP);
+    }
+
+    public Array newArray(Class<?> typeClass, List<Expression> args) {
+        Array array = newNode(ASTNodes.ARRAY);
+        array.setType(typeClass);
+        array.setExpressions(args);
+        return array;
     }
 
     public abstract AggregateSymbol newAggregateSymbol(String name, boolean isDistinct, Expression expression);

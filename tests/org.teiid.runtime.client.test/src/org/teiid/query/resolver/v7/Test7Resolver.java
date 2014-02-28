@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
@@ -33,6 +35,7 @@ import org.teiid.query.sql.v7.Test7Factory;
 /**
  *
  */
+@SuppressWarnings( {"nls" , "javadoc"})
 public class Test7Resolver extends AbstractTestResolver {
 
     private Test7Factory factory;
@@ -47,7 +50,7 @@ public class Test7Resolver extends AbstractTestResolver {
     @Override
     protected AbstractTestFactory getFactory() {
         if (factory == null)
-            factory = new Test7Factory(queryParser);
+            factory = new Test7Factory(getQueryParser());
 
         return factory;
     }
@@ -94,17 +97,19 @@ public class Test7Resolver extends AbstractTestResolver {
         StoredProcedure proc = (StoredProcedure)helpResolve("EXEC pm1.sq2('abc')"); //$NON-NLS-1$
 
         // Check number of resolved parameters
+        Collection<SPParameter> params = proc.getParameters();
         assertEquals("Did not get expected parameter count", 2, proc.getParameterCount()); //$NON-NLS-1$
 
         // Check resolved parameters
-        SPParameter param1 = proc.getParameter(1);
-        helpCheckParameter(param1, SPParameter.RESULT_SET, 2, "pm1.sq2.ret", java.sql.ResultSet.class, null); //$NON-NLS-1$
-
-        SPParameter param2 = proc.getParameter(0);
-        helpCheckParameter(param2,
+        Iterator<SPParameter> iterator = params.iterator();
+        SPParameter param1 = iterator.next();
+        helpCheckParameter(param1,
                            SPParameter.IN,
                            1,
                            "pm1.sq2.in", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass(), getFactory().newConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        SPParameter param2 = iterator.next();
+        helpCheckParameter(param2, SPParameter.RESULT_SET, 2, "pm1.sq2.ret", java.sql.ResultSet.class, null); //$NON-NLS-1$
     }
 
     /**
@@ -120,17 +125,19 @@ public class Test7Resolver extends AbstractTestResolver {
     public void testStoredQueryParamOrdering_8211() {
         StoredProcedure proc = (StoredProcedure)helpResolve("EXEC pm1.sq3a('abc', 123)"); //$NON-NLS-1$
 
-        // Check number of resolved parameters
-        assertEquals("Did not get expected parameter count", 3, proc.getParameterCount()); //$NON-NLS-1$
+     // Check number of resolved parameters
+        Collection<SPParameter> params = proc.getParameters();
+        assertEquals("Did not get expected parameter count", 3, params.size()); //$NON-NLS-1$
 
         // Check resolved parameters
-        SPParameter param1 = proc.getParameter(0);
+        Iterator<SPParameter> parameters = params.iterator();
+        SPParameter param1 = parameters.next();
         helpCheckParameter(param1,
                            SPParameter.IN,
                            1,
                            "pm1.sq3a.in", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass(), getFactory().newConstant("abc")); //$NON-NLS-1$ //$NON-NLS-2$
 
-        SPParameter param2 = proc.getParameter(1);
+        SPParameter param2 = parameters.next();
         helpCheckParameter(param2,
                            SPParameter.IN,
                            2,
@@ -230,7 +237,7 @@ public class Test7Resolver extends AbstractTestResolver {
     //return should be first, then out
     @Test
     public void testParamOrder() {
-        Query resolvedQuery = (Query)helpResolve("SELECT * FROM (exec pm4.spRetOut()) as a", metadataFactory.exampleBQTCached()); //$NON-NLS-1$
+        Query resolvedQuery = (Query)helpResolve("SELECT * FROM (exec pm4.spRetOut()) as a", getMetadataFactory().exampleBQTCached()); //$NON-NLS-1$
 
         List<Expression> projectedSymbols = resolvedQuery.getProjectedSymbols();
         assertFalse(projectedSymbols.isEmpty());

@@ -7,8 +7,11 @@
 */
 package org.teiid.query.sql.lang;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
-import junit.framework.TestCase;
+import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
@@ -16,7 +19,7 @@ import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 /**
  *
  */
-public class TestCriteriaOperator extends TestCase {
+public class TestCriteriaOperator {
 
     private class ExpectedResults {
         private final ITeiidServerVersion version;
@@ -39,6 +42,7 @@ public class TestCriteriaOperator extends TestCase {
      * function to ensure that the correct number of enum values are returned
      * given a specific {@link TeiidServerVersion}.
      */
+    @Test
     public void testGetOperator() {
         ExpectedResults[] expectedResults = new ExpectedResults[] {
             new ExpectedResults(version("7.0.0"), Operator.values().length), //$NON-NLS-1$

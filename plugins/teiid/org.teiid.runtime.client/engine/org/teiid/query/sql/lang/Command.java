@@ -237,7 +237,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
         // Add this command
         str.append(toString());
         str.append("\n"); //$NON-NLS-1$
-        
+
         // Add children recursively
         tabLevel++;
         for (Command subCommand : CommandCollectorVisitor.getCommands(this)) {

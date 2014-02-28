@@ -111,7 +111,7 @@ public class XMLSerialize extends SimpleNode implements Expression, IXMLSerializ
             if (typeString == null) {
                 type = DataTypeManagerService.DefaultDataTypes.CLOB.getClass();
             } else {
-                parser.getDataTypeService().getDataTypeClass(typeString);
+                type = parser.getDataTypeService().getDataTypeClass(typeString);
             }
         }
         return type;

@@ -161,9 +161,9 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
     @Removed("8.0.0")
     public String getCanonicalName() {
         if (this.schema != null) {
-            return this.schema + ISymbol.SEPARATOR + this.getCanonicalShortName();
+            return this.schema + ISymbol.SEPARATOR + this.getShortCanonicalName();
         }
-        return super.getCanonicalShortName();
+        return super.getShortCanonicalName();
     }
 
     /**
@@ -264,8 +264,8 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
             clone.setDefinition(getDefinition());
         if(getOutputDefinition() != null)
             clone.setOutputDefinition(getOutputDefinition());
-        if(getCanonicalShortName() != null)
-            clone.setCanonicalShortName(getCanonicalShortName());
+        if(getShortCanonicalName() != null)
+            clone.setShortCanonicalName(getShortCanonicalName());
         if(getOutputName() != null)
             clone.setOutputName(getOutputName());
         if(getShortName() != null)

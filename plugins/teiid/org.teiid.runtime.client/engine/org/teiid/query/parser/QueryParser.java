@@ -25,9 +25,11 @@ package org.teiid.query.parser;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashSet;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.v7.Teiid7Parser;
@@ -105,6 +107,21 @@ public class QueryParser implements IQueryParser {
 		return teiidParser;
 	}
 
+	@Deprecated
+	@Removed("8.0.0")
+	private Command parseUpdateProcedure(String sql) throws Exception {
+        try{
+            TeiidParser teiidParser = getTeiidParser(sql);
+            if (!(teiidParser instanceof Teiid7Parser))
+                throw new IllegalStateException();
+
+            Command result = ((Teiid7Parser) teiidParser).updateProcedure(new ParseInfo());
+            return result;
+        } catch(Exception pe) {
+            throw convertParserException(pe);
+        }
+    }
+
 	/**
 	 * Parses the given procedure sql string, returning the object
 	 * representation
@@ -117,6 +134,9 @@ public class QueryParser implements IQueryParser {
 	@Since("8.0.0")
 	public Command parseProcedure(String sql, boolean update) throws Exception {
         try{
+            if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+                return parseUpdateProcedure(sql);
+
             if (update) {
                 return getTeiidParser(sql).forEachRowTriggerAction(new ParseInfo());
             }

@@ -22,6 +22,13 @@
 
 package org.teiid.query.resolver;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -34,7 +41,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
@@ -58,8 +64,6 @@ import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.optimizer.FakeFunctionMetadataSource;
-import org.teiid.query.parser.QueryParser;
-import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
@@ -69,6 +73,7 @@ import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.OrderBy;
+import org.teiid.query.sql.lang.ProcedureContainer;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.Select;
@@ -92,17 +97,11 @@ import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupCollectorVisitor;
-import org.teiid.query.unittest.RealMetadataFactory;
 import org.teiid.query.unittest.TimestampUtil;
+import org.teiid.runtime.client.TeiidClientException;
 
 @SuppressWarnings( {"nls" , "javadoc"})
-public abstract class AbstractTestResolver extends TestCase {
-
-    private final ITeiidServerVersion teiidVersion;
-
-    protected final QueryParser queryParser;
-
-    protected final RealMetadataFactory metadataFactory;
+public abstract class AbstractTestResolver extends AbstractTest {
 
     protected IQueryMetadataInterface metadata;
 
@@ -110,23 +109,19 @@ public abstract class AbstractTestResolver extends TestCase {
      * @param teiidVersion
      */
     public AbstractTestResolver(ITeiidServerVersion teiidVersion) {
-        this.teiidVersion = teiidVersion;
-        this.queryParser = new QueryParser(teiidVersion);
-        this.metadataFactory = new RealMetadataFactory(teiidVersion);
+        super(teiidVersion);
     }
-
-    protected abstract AbstractTestFactory getFactory();
 
     @Before
     public void setUp() {
-        metadata = metadataFactory.example1Cached();
+        metadata = getMetadataFactory().example1Cached();
     }
 
     // ################################## TEST HELPERS ################################
 
-    Command helpParse(String sql) {
+    protected Command helpParse(String sql) {
         try {
-            return queryParser.parseCommand(sql);
+            return getQueryParser().parseCommand(sql);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -188,13 +183,13 @@ public abstract class AbstractTestResolver extends TestCase {
     protected Command helpResolve(Command command, IQueryMetadataInterface queryMetadataInterface) {
         // resolve
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCommand(command, queryMetadataInterface);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(teiidVersion);
+        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(getTeiidVersion());
         DeepPreOrderNavigator.doVisit(command, vis);
         Collection<LanguageObject> unresolvedSymbols = vis.getUnresolvedSymbols();
         assertTrue("Found unresolved symbols: " + unresolvedSymbols, unresolvedSymbols.isEmpty()); //$NON-NLS-1$
@@ -206,7 +201,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
         // parse
         try {
-            criteria = queryParser.parseCriteria(sql);
+            criteria = getQueryParser().parseCriteria(sql);
 
         } catch (Exception e) {
             fail("Exception during parsing (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -214,14 +209,14 @@ public abstract class AbstractTestResolver extends TestCase {
 
         // resolve
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCriteria(criteria, metadata);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception during resolution (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(teiidVersion);
+        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(getTeiidVersion());
         DeepPreOrderNavigator.doVisit(criteria, vis);
         Collection<LanguageObject> unresolvedSymbols = vis.getUnresolvedSymbols();
         assertTrue("Found unresolved symbols: " + unresolvedSymbols, unresolvedSymbols.isEmpty()); //$NON-NLS-1$
@@ -236,10 +231,10 @@ public abstract class AbstractTestResolver extends TestCase {
         QueryNode qn = new QueryNode(sql);
         qn.setBindings(bindings);
         // resolve
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         queryResolver.resolveWithBindingMetadata(command, metadata, qn, true);
 
-        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(teiidVersion);
+        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(getTeiidVersion());
         DeepPreOrderNavigator.doVisit(command, vis);
 
         Collection<LanguageObject> unresolvedSymbols = vis.getUnresolvedSymbols();
@@ -258,13 +253,11 @@ public abstract class AbstractTestResolver extends TestCase {
 
         // resolve
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCommand(command, queryMetadata);
             fail("Expected exception for resolving " + sql); //$NON-NLS-1$
         } catch (QueryResolverException e) {
-            if (expectedExceptionMessage != null) {
-                assertEquals(expectedExceptionMessage, e.getMessage());
-            }
+            assertNotNull(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -330,7 +323,7 @@ public abstract class AbstractTestResolver extends TestCase {
         Query query = (Query)helpParse(sql);
 
         // check whether it's xml
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         boolean actual = queryResolver.isXMLQuery(query, metadata);
         assertEquals("Wrong answer for isXMLQuery", isXML, actual); //$NON-NLS-1$
     }
@@ -367,12 +360,14 @@ public abstract class AbstractTestResolver extends TestCase {
     }
 
     protected Command helpResolveUpdateProcedure(String procedure, String userUpdateStr) throws Exception {
-        IQueryMetadataInterface metadata = metadataFactory.exampleUpdateProc(TriggerEvent.UPDATE, procedure);
+        IQueryMetadataInterface metadata = getMetadataFactory().exampleUpdateProc(TriggerEvent.UPDATE, procedure);
 
-        Command userCommand = queryParser.parseCommand(userUpdateStr);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        Command userCommand = getQueryParser().parseCommand(userUpdateStr);
+        assertTrue(userCommand instanceof ProcedureContainer);
+
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         queryResolver.resolveCommand(userCommand, metadata);
-        return userCommand;
+        return queryResolver.expandCommand((ProcedureContainer) userCommand, metadata);
     }
 
     // ################################## ACTUAL TESTS ################################
@@ -417,7 +412,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup1() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1"}); //$NON-NLS-1$
@@ -425,7 +420,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup2() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat1.g2"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm1.cat1.g2"}); //$NON-NLS-1$
@@ -433,7 +428,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup3() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat1.cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1"}); //$NON-NLS-1$
@@ -441,7 +436,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup4() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat2.g2"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm2.cat2.g2"}); //$NON-NLS-1$
@@ -449,7 +444,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup5() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat2.g3"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm1.cat2.g3"}); //$NON-NLS-1$
@@ -457,7 +452,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup6() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM cat1.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm2.cat1.g1"}); //$NON-NLS-1$
@@ -465,7 +460,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup7() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM g4"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm3.g4"}); //$NON-NLS-1$
@@ -473,7 +468,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroup8() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT e1 FROM pm2.g3"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm2.g3"}); //$NON-NLS-1$
@@ -481,7 +476,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedGroupWithAlias() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT X.e1 FROM cat2.cat3.g1 as X"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckFrom(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1"}); //$NON-NLS-1$
@@ -489,7 +484,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedElement1() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat2.cat3.g1.e1 FROM cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1"}); //$NON-NLS-1$
@@ -498,7 +493,7 @@ public abstract class AbstractTestResolver extends TestCase {
     /** defect 12536 */
     @Test
     public void testPartiallyQualifiedElement2() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1 FROM cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1"}); //$NON-NLS-1$
@@ -507,7 +502,7 @@ public abstract class AbstractTestResolver extends TestCase {
     /** defect 12536 */
     @Test
     public void testPartiallyQualifiedElement3() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1 FROM cat2.cat3.g1, cat1.g2"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1"}); //$NON-NLS-1$
@@ -516,7 +511,7 @@ public abstract class AbstractTestResolver extends TestCase {
     /** defect 12536 */
     @Test
     public void testPartiallyQualifiedElement4() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1, cat1.g2.e1 FROM cat2.cat3.g1, cat1.g2"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1", "pm1.cat1.g2.e1"}); //$NON-NLS-1$ //$NON-NLS-2$
@@ -524,7 +519,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedElement5() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1, cat1.g2.e1 FROM example3.pm1.cat1.cat2.cat3.g1, pm1.cat1.g2"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1", "pm1.cat1.g2.e1"}); //$NON-NLS-1$ //$NON-NLS-2$
@@ -533,7 +528,7 @@ public abstract class AbstractTestResolver extends TestCase {
     /** defect 12536 */
     @Test
     public void testPartiallyQualifiedElement6() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1, e2 FROM cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {"pm1.cat1.cat2.cat3.g1.e1", "pm1.cat1.cat2.cat3.g1.e2"}); //$NON-NLS-1$ //$NON-NLS-2$
@@ -541,7 +536,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testPartiallyQualifiedElement7() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         String sql = "SELECT cat3.g1.e1, cat2.cat3.g1.e2, g1.e3 FROM pm1.cat1.cat2.cat3.g1"; //$NON-NLS-1$
         Query resolvedQuery = (Query)helpResolve(sql);
         helpCheckSelect(resolvedQuery, new String[] {
@@ -550,61 +545,61 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testFailPartiallyQualifiedGroup1() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT e1 FROM cat3.g1"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedGroup2() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT e1 FROM g1"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedGroup3() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT e1 FROM g2"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedGroup4() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT e1 FROM g3"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedGroup5() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT e1 FROM g5"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedElement1() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT cat3.g1.e1 FROM pm1.cat1.cat2.cat3.g1, pm2.cat3.g1"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedElement2() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT g1.e1 FROM pm1.cat1.cat2.cat3.g1, pm2.cat3.g1"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedElement3() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT cat3.g1.e1 FROM pm2.cat2.g2, pm1.cat2.g3"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedElement4() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT cat3.g1.e1 FROM pm2.cat2.g2"); //$NON-NLS-1$
     }
 
     @Test
     public void testFailPartiallyQualifiedElement5() {
-        metadata = metadataFactory.example3();
+        metadata = getMetadataFactory().example3();
         helpResolveException("SELECT cat3.g1.e1 FROM g1"); //$NON-NLS-1$
     }
 
@@ -944,7 +939,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testStoredQueryTransformationWithVariable4() throws Exception {
-        Command command = queryParser.parseCommand("EXEC pm1.sq2(pm1.sq2.in)"); //$NON-NLS-1$
+        Command command = getQueryParser().parseCommand("EXEC pm1.sq2(pm1.sq2.in)"); //$NON-NLS-1$
 
         // resolve
         try {
@@ -957,7 +952,7 @@ public abstract class AbstractTestResolver extends TestCase {
             Map externalMetadata = new HashMap();
             externalMetadata.put(sqGroup, sqParams);
 
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCommand(command, metadata);
 
             fail("Expected exception on invalid variable pm1.sq2.in"); //$NON-NLS-1$
@@ -1123,7 +1118,7 @@ public abstract class AbstractTestResolver extends TestCase {
                      "WHERE (y.IntKey >= 10) AND (y.IntKey < 30) " + //$NON-NLS-1$
                      "ORDER BY IntKey, FloatNum"; //$NON-NLS-1$
 
-        helpResolve(sql, metadataFactory.exampleBQTCached());
+        helpResolve(sql, getMetadataFactory().exampleBQTCached());
     }
 
     @Test
@@ -1306,7 +1301,7 @@ public abstract class AbstractTestResolver extends TestCase {
         Query query = (Query)helpParse("SELECT * FROM docA"); //$NON-NLS-1$
 
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.isXMLQuery(query, metadata);
             fail("expected exception"); //$NON-NLS-1$
         } catch (QueryResolverException e) {
@@ -1325,7 +1320,7 @@ public abstract class AbstractTestResolver extends TestCase {
         String tgtTypeName = DataTypeManagerService.DefaultDataTypes.DATE.getId();
         Expression expression = getFactory().newConstant("2003-02-27"); //$NON-NLS-1$
 
-        FunctionLibrary library = metadataFactory.getSystemFunctionManager().getSystemFunctionLibrary();
+        FunctionLibrary library = getMetadataFactory().getSystemFunctionManager().getSystemFunctionLibrary();
         FunctionDescriptor fd = library.findFunction(IFunctionLibrary.FunctionName.CONVERT, new Class[] {srcType,
             DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()});
 
@@ -1361,7 +1356,7 @@ public abstract class AbstractTestResolver extends TestCase {
         String tgtTypeName = DataTypeManagerService.DefaultDataTypes.DATE.getId();
         Expression expression = getFactory().newConstant("2003-02-27"); //$NON-NLS-1$
 
-        FunctionLibrary library = metadataFactory.getSystemFunctionManager().getSystemFunctionLibrary();
+        FunctionLibrary library = getMetadataFactory().getSystemFunctionManager().getSystemFunctionLibrary();
         FunctionDescriptor fd = library.findFunction(IFunctionLibrary.FunctionName.CONVERT, new Class[] {srcType,
             DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()});
 
@@ -1480,24 +1475,24 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testLookupFunctionVirtualGroup() throws Exception {
         String sql = "SELECT lookup('vm1.g1', 'e1', 'e2', e2)  FROM vm1.g1 "; //$NON-NLS-1$
         Query command = (Query)helpParse(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadataFactory.example1Cached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(command, getMetadataFactory().example1Cached());
     }
 
     @Test
     public void testLookupFunctionPhysicalGroup() throws Exception {
         String sql = "SELECT lookup('pm1.g1', 'e1', 'e2', e2)  FROM pm1.g1 "; //$NON-NLS-1$
         Query command = (Query)helpParse(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadataFactory.example1Cached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(command, getMetadataFactory().example1Cached());
     }
 
     @Test
     public void testLookupFunctionFailBadKeyElement() throws Exception {
         String sql = "SELECT lookup('pm1.g1', 'e1', 'x', e2) AS x, lookup('pm1.g1', 'e4', 'e3', e3) AS y FROM pm1.g1"; //$NON-NLS-1$
-        Command command = queryParser.parseCommand(sql);
+        Command command = getQueryParser().parseCommand(sql);
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCommand(command, metadata);
             fail("exception expected"); //$NON-NLS-1$
         } catch (QueryResolverException e) {
@@ -1509,14 +1504,14 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testNamespacedFunction() throws Exception {
         String sql = "SELECT namespace.func('e1')  FROM vm1.g1 "; //$NON-NLS-1$
 
-        IQueryMetadataInterface metadata = metadataFactory.createTransformationMetadata(metadataFactory.example1Cached().getMetadataStore(),
+        IQueryMetadataInterface metadata = getMetadataFactory().createTransformationMetadata(getMetadataFactory().example1Cached().getMetadataStore(),
                                                                                         "example1",
                                                                                         new FunctionTree(
                                                                                                          "foo",
                                                                                                          new FakeFunctionMetadataSource()));
 
         Query command = (Query)helpParse(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         queryResolver.resolveCommand(command, metadata);
 
         command = (Query)helpParse("SELECT func('e1')  FROM vm1.g1 ");
@@ -1530,8 +1525,8 @@ public abstract class AbstractTestResolver extends TestCase {
         Criteria expected = null;
         Criteria actual = null;
         try {
-            actual = queryParser.parseCriteria("bqt1.smalla.shortvalue IN (1, 2)"); //$NON-NLS-1$
-            expected = queryParser.parseCriteria("convert(bqt1.smalla.shortvalue, integer) IN (1, 2)"); //$NON-NLS-1$
+            actual = getQueryParser().parseCriteria("bqt1.smalla.shortvalue IN (1, 2)"); //$NON-NLS-1$
+            expected = getQueryParser().parseCriteria("convert(bqt1.smalla.shortvalue, integer) IN (1, 2)"); //$NON-NLS-1$
 
         } catch (Exception e) {
             fail("Exception during parsing (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1539,9 +1534,9 @@ public abstract class AbstractTestResolver extends TestCase {
 
         // resolve
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
-            queryResolver.resolveCriteria(expected, metadataFactory.exampleBQTCached());
-            queryResolver.resolveCriteria(actual, metadataFactory.exampleBQTCached());
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
+            queryResolver.resolveCriteria(expected, getMetadataFactory().exampleBQTCached());
+            queryResolver.resolveCriteria(actual, getMetadataFactory().exampleBQTCached());
         } catch (Exception e) {
             fail("Exception during resolution (" + e.getClass().getName() + "): " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -1883,7 +1878,7 @@ public abstract class AbstractTestResolver extends TestCase {
         //String sql = "select intkey from SmallA where user() = 'bqt2'";
 
         // Expected left expression
-        FunctionLibrary library = metadataFactory.getSystemFunctionManager().getSystemFunctionLibrary();
+        FunctionLibrary library = getMetadataFactory().getSystemFunctionManager().getSystemFunctionLibrary();
         FunctionDescriptor fd = library.findFunction(IFunctionLibrary.FunctionName.USER, new Class[] {});
         Function user = getFactory().newFunction(fd.getName(), new Expression[] {});
         user.setFunctionDescriptor(fd);
@@ -1940,17 +1935,17 @@ public abstract class AbstractTestResolver extends TestCase {
     @Test
     public void testDefect10809() {
         String sql = "select * from LOB_TESTING_ONE where CLOB_COLUMN LIKE '%fff%'"; //$NON-NLS-1$
-        helpResolve(helpParse(sql), metadataFactory.exampleBQTCached());
+        helpResolve(helpParse(sql), getMetadataFactory().exampleBQTCached());
     }
 
     @Test
     public void testNonAutoConversionOfLiteralIntegerToShort() throws Exception {
         // parse
-        Query command = (Query)queryParser.parseCommand("SELECT intkey FROM bqt1.smalla WHERE shortvalue = 5"); //$NON-NLS-1$
+        Query command = (Query)getQueryParser().parseCommand("SELECT intkey FROM bqt1.smalla WHERE shortvalue = 5"); //$NON-NLS-1$
 
         // resolve
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadataFactory.exampleBQTCached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(command, getMetadataFactory().exampleBQTCached());
 
         // Check whether an implicit conversion was added on the correct side
         CompareCriteria crit = (CompareCriteria)command.getCriteria();
@@ -1962,11 +1957,11 @@ public abstract class AbstractTestResolver extends TestCase {
     @Test
     public void testNonAutoConversionOfLiteralIntegerToShort2() throws Exception {
         // parse
-        Query command = (Query)queryParser.parseCommand("SELECT intkey FROM bqt1.smalla WHERE 5 = shortvalue"); //$NON-NLS-1$
+        Query command = (Query)getQueryParser().parseCommand("SELECT intkey FROM bqt1.smalla WHERE 5 = shortvalue"); //$NON-NLS-1$
 
         // resolve
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadataFactory.exampleBQTCached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(command, getMetadataFactory().exampleBQTCached());
 
         // Check whether an implicit conversion was added on the correct side
         CompareCriteria crit = (CompareCriteria)command.getCriteria();
@@ -2033,29 +2028,29 @@ public abstract class AbstractTestResolver extends TestCase {
      */
     @Test
     public void testImplConversionBetweenIntAndShort() throws Exception {
-        Insert command = (Insert)queryParser.parseCommand("Insert into pm5.g3(e2) Values(100)"); //$NON-NLS-1$
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        Insert command = (Insert)getQueryParser().parseCommand("Insert into pm5.g3(e2) Values(100)"); //$NON-NLS-1$
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         queryResolver.resolveCommand(command, metadata);
-        assertTrue(((Expression)command.getValues().get(0)).getType() == DataTypeManagerService.DefaultDataTypes.SHORT.getTypeClass());
+        assertTrue(command.getValues().get(0).getType() == DataTypeManagerService.DefaultDataTypes.SHORT.getTypeClass());
     }
 
     public TransformationMetadata example_12968() {
         MetadataStore metadataStore = new MetadataStore();
         // Create models
-        Schema pm1 = metadataFactory.createPhysicalModel("myModel", metadataStore); //$NON-NLS-1$
-        Schema pm2 = metadataFactory.createPhysicalModel("myModel2", metadataStore); //$NON-NLS-1$
+        Schema pm1 = getMetadataFactory().createPhysicalModel("myModel", metadataStore); //$NON-NLS-1$
+        Schema pm2 = getMetadataFactory().createPhysicalModel("myModel2", metadataStore); //$NON-NLS-1$
 
-        Table pm1g1 = metadataFactory.createPhysicalGroup("myTable", pm1); //$NON-NLS-1$
-        Table pm2g1 = metadataFactory.createPhysicalGroup("mySchema.myTable2", pm2); //$NON-NLS-1$
+        Table pm1g1 = getMetadataFactory().createPhysicalGroup("myTable", pm1); //$NON-NLS-1$
+        Table pm2g1 = getMetadataFactory().createPhysicalGroup("mySchema.myTable2", pm2); //$NON-NLS-1$
 
-        metadataFactory.createElements(pm1g1, new String[] {"myColumn", "myColumn2"}, //$NON-NLS-1$ //$NON-NLS-2$ 
+        getMetadataFactory().createElements(pm1g1, new String[] {"myColumn", "myColumn2"}, //$NON-NLS-1$ //$NON-NLS-2$ 
                                        new String[] {DataTypeManagerService.DefaultDataTypes.STRING.getId(),
                                            DataTypeManagerService.DefaultDataTypes.INTEGER.getId()});
-        metadataFactory.createElements(pm2g1, new String[] {"myColumn", "myColumn2"}, //$NON-NLS-1$ //$NON-NLS-2$ 
+        getMetadataFactory().createElements(pm2g1, new String[] {"myColumn", "myColumn2"}, //$NON-NLS-1$ //$NON-NLS-2$ 
                                        new String[] {DataTypeManagerService.DefaultDataTypes.STRING.getId(),
                                            DataTypeManagerService.DefaultDataTypes.INTEGER.getId()});
 
-        return metadataFactory.createTransformationMetadata(metadataStore, "12968");
+        return getMetadataFactory().createTransformationMetadata(metadataStore, "12968");
     }
 
     @Test
@@ -2101,7 +2096,7 @@ public abstract class AbstractTestResolver extends TestCase {
         SetQuery command = (SetQuery)helpResolve("SELECT e2, e3 FROM pm1.g1 UNION (SELECT null, e3 FROM pm1.g2 UNION SELECT null, e3 from pm1.g1)"); //$NON-NLS-1$
 
         assertEquals(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
-                     ((Expression)command.getProjectedSymbols().get(0)).getType());
+                     command.getProjectedSymbols().get(0).getType());
     }
 
     @Test
@@ -2109,12 +2104,12 @@ public abstract class AbstractTestResolver extends TestCase {
         SetQuery command = (SetQuery)helpResolve("SELECT e2, e3 FROM pm1.g1 UNION SELECT e3, e2 from pm1.g1"); //$NON-NLS-1$
 
         assertEquals(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
-                     ((Expression)command.getProjectedSymbols().get(1)).getType());
+                     command.getProjectedSymbols().get(1).getType());
 
-        command = (SetQuery)command.clone();
+        command = command.clone();
 
         assertEquals(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
-                     ((Expression)command.getProjectedSymbols().get(1)).getType());
+                     command.getProjectedSymbols().get(1).getType());
     }
 
     @Test
@@ -2186,7 +2181,7 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testProcParamComparison_defect13653() {
         String userSql = "SELECT * FROM (EXEC mmspTest1.MMSP5('a')) AS a, (EXEC mmsptest1.mmsp6('b')) AS b"; //$NON-NLS-1$
 
-        IQueryMetadataInterface metadata = metadataFactory.exampleBQTCached();
+        IQueryMetadataInterface metadata = getMetadataFactory().exampleBQTCached();
 
         Query query = (Query)helpResolve(userSql, metadata);
         From from = query.getFrom();
@@ -2215,8 +2210,8 @@ public abstract class AbstractTestResolver extends TestCase {
         String userSql = "SELECT null as x"; //$NON-NLS-1$
         Query query = (Query)helpParse(userSql);
 
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(query, metadataFactory.exampleBQTCached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(query, getMetadataFactory().exampleBQTCached());
 
         // Check type of resolved null constant
         Expression symbol = query.getSelect().getSymbols().get(0);
@@ -2234,7 +2229,7 @@ public abstract class AbstractTestResolver extends TestCase {
         inputSetElements.add(inputSetElement);
         externalMetadata.put(inputSet, inputSetElements);
         Query command = (Query)helpParse(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
         queryResolver.resolveCommand(command, metadata);
         Collection groups = GroupCollectorVisitor.getGroups(command, false);
         assertFalse(groups.contains(inputSet));
@@ -2264,9 +2259,9 @@ public abstract class AbstractTestResolver extends TestCase {
     @Test
     public void testUnionInSubquery() throws Exception {
         String sql = "SELECT StringKey FROM (SELECT BQT2.SmallB.StringKey FROM BQT2.SmallB union SELECT convert(BQT2.SmallB.FloatNum, string) FROM BQT2.SmallB) x"; //$NON-NLS-1$
-        Command command = queryParser.parseCommand(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(command, metadataFactory.exampleBQTCached());
+        Command command = getQueryParser().parseCommand(sql);
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(command, getMetadataFactory().exampleBQTCached());
     }
 
     @Test
@@ -2425,7 +2420,7 @@ public abstract class AbstractTestResolver extends TestCase {
     @Test
     public void testProcedureConflict() {
         String sql = "create local temporary table MMSP6 (e1 string, e2 integer)"; //$NON-NLS-1$
-        helpResolveException(sql, metadataFactory.exampleBQTCached()); //$NON-NLS-1$
+        helpResolveException(sql, getMetadataFactory().exampleBQTCached()); //$NON-NLS-1$
     }
 
     @Test
@@ -2477,7 +2472,7 @@ public abstract class AbstractTestResolver extends TestCase {
                       + "        SELECT ID, Name, #temp.BITS AS source_bits FROM #temp;" //$NON-NLS-1$                                          
                       + "END"; //$NON-NLS-1$ 
 
-        helpResolveException(proc, metadataFactory.exampleBitwise(), "Group does not exist: #temp"); //$NON-NLS-1$
+        helpResolveException(proc, getMetadataFactory().exampleBitwise(), "Group does not exist: #temp"); //$NON-NLS-1$
     }
 
     @Test
@@ -2488,11 +2483,11 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testResolveUnqualifiedCriteria() throws Exception {
-        Criteria criteria = queryParser.parseCriteria("e1 = 1"); //$NON-NLS-1$
+        Criteria criteria = getQueryParser().parseCriteria("e1 = 1"); //$NON-NLS-1$
 
         // resolve
         try {
-            QueryResolver queryResolver = new QueryResolver(queryParser);
+            QueryResolver queryResolver = new QueryResolver(getQueryParser());
             queryResolver.resolveCriteria(criteria, metadata);
             fail("Exception expected"); //$NON-NLS-1$
         } catch (QueryResolverException e) {
@@ -2583,14 +2578,14 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testExecWithDuplicateNames() {
         MetadataStore metadataStore = new MetadataStore();
 
-        Schema pm1 = metadataFactory.createPhysicalModel("pm1", metadataStore);
+        Schema pm1 = getMetadataFactory().createPhysicalModel("pm1", metadataStore);
 
-        ColumnSet<Procedure> rs2 = metadataFactory.createResultSet("rs2", new String[] {"in", "e2"}, new String[] {DataTypeManagerService.DefaultDataTypes.STRING.getId(), DataTypeManagerService.DefaultDataTypes.INTEGER.getId()}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        ProcedureParameter rs2p2 = metadataFactory.createParameter("in", ISPParameter.ParameterInfo.IN, DataTypeManagerService.DefaultDataTypes.STRING.getId()); //$NON-NLS-1$
-        Procedure sq2 = metadataFactory.createStoredProcedure("sq2", pm1, Arrays.asList(rs2p2)); //$NON-NLS-1$
+        ColumnSet<Procedure> rs2 = getMetadataFactory().createResultSet("rs2", new String[] {"in", "e2"}, new String[] {DataTypeManagerService.DefaultDataTypes.STRING.getId(), DataTypeManagerService.DefaultDataTypes.INTEGER.getId()}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        ProcedureParameter rs2p2 = getMetadataFactory().createParameter("in", ISPParameter.ParameterInfo.IN, DataTypeManagerService.DefaultDataTypes.STRING.getId()); //$NON-NLS-1$
+        Procedure sq2 = getMetadataFactory().createStoredProcedure("sq2", pm1, Arrays.asList(rs2p2)); //$NON-NLS-1$
         sq2.setResultSet(rs2);
 
-        IQueryMetadataInterface metadata = metadataFactory.createTransformationMetadata(metadataStore, "example1");
+        IQueryMetadataInterface metadata = getMetadataFactory().createTransformationMetadata(metadataStore, "example1");
 
         helpResolveException("select * from pm1.sq2", metadata, "TEIID30114 Cannot access procedure pm1.sq2 using table semantics since the parameter and result set column names are not all unique."); //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -2726,16 +2721,16 @@ public abstract class AbstractTestResolver extends TestCase {
     }
 
     @Test
-    public void testCase6319() throws QueryResolverException, Exception {
+    public void testCase6319() throws Exception {
         String sql = "select floatnum from bqt1.smalla group by floatnum having sum(floatnum) between 51.0 and 100.0 "; //$NON-NLS-1$
         Query query = (Query)helpParse(sql);
-        QueryResolver queryResolver = new QueryResolver(queryParser);
-        queryResolver.resolveCommand(query, metadataFactory.exampleBQTCached());
+        QueryResolver queryResolver = new QueryResolver(getQueryParser());
+        queryResolver.resolveCommand(query, getMetadataFactory().exampleBQTCached());
     }
 
     @Test
     public void testUniqeNamesWithInlineView() {
-        helpResolveException("select * from (select count(intNum) a, count(stringKey) b, bqt1.smalla.intkey as b from bqt1.smalla group by bqt1.smalla.intkey) q1 order by q1.a", metadataFactory.exampleBQTCached(), "TEIID30091 Cannot create group 'q1' with multiple columns named 'b'"); //$NON-NLS-1$ //$NON-NLS-2$
+        helpResolveException("select * from (select count(intNum) a, count(stringKey) b, bqt1.smalla.intkey as b from bqt1.smalla group by bqt1.smalla.intkey) q1 order by q1.a", getMetadataFactory().exampleBQTCached(), "TEIID30091 Cannot create group 'q1' with multiple columns named 'b'"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Test
@@ -2769,7 +2764,7 @@ public abstract class AbstractTestResolver extends TestCase {
         String sql = "{call pm4.spTest9(?, ?)}"; //$NON-NLS-1$
 
         helpResolveException(sql,
-                             metadataFactory.exampleBQTCached(),
+                             getMetadataFactory().exampleBQTCached(),
                              "TEIID31113 1 extra positional parameter(s) passed to pm4.spTest9."); //$NON-NLS-1$
     }
 
@@ -2777,7 +2772,7 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testUpdateSetClauseReferenceType() {
         String sql = "UPDATE pm1.g1 SET pm1.g1.e1 = 1, pm1.g1.e2 = ?;"; //$NON-NLS-1$
 
-        Update update = (Update)helpResolve(sql, metadataFactory.example1Cached());
+        Update update = (Update)helpResolve(sql, getMetadataFactory().example1Cached());
 
         Expression ref = update.getChangeList().getClauses().get(1).getValue();
         assertTrue(ref instanceof Reference);
@@ -2789,14 +2784,14 @@ public abstract class AbstractTestResolver extends TestCase {
         String sql = "select * from pm1.g1 where ? = ?"; //$NON-NLS-1$
 
         helpResolveException(sql,
-                             metadataFactory.example1Cached(),
+                             getMetadataFactory().example1Cached(),
                              "TEIID30083 Expression '? = ?' has a parameter with non-determinable type information.  The use of an explicit convert may be necessary."); //$NON-NLS-1$
     }
 
     @Test
     public void testReferenceInSelect() {
         String sql = "select ?, e1 from pm1.g1"; //$NON-NLS-1$
-        Query command = (Query)helpResolve(sql, metadataFactory.example1Cached());
+        Query command = (Query)helpResolve(sql, getMetadataFactory().example1Cached());
         assertEquals(DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass(),
                      command.getProjectedSymbols().get(0).getType());
     }
@@ -2805,7 +2800,7 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testReferenceInSelect1() {
         String sql = "select convert(?, integer), e1 from pm1.g1"; //$NON-NLS-1$
 
-        Query command = (Query)helpResolve(sql, metadataFactory.example1Cached());
+        Query command = (Query)helpResolve(sql, getMetadataFactory().example1Cached());
         assertEquals(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
                      command.getProjectedSymbols().get(0).getType());
     }
@@ -2814,9 +2809,9 @@ public abstract class AbstractTestResolver extends TestCase {
     public void testUnionWithObjectTypeConversion() {
         String sql = "select convert(null, xml) from pm1.g1 union all select 1"; //$NON-NLS-1$
 
-        SetQuery query = (SetQuery)helpResolve(sql, metadataFactory.example1Cached());
+        SetQuery query = (SetQuery)helpResolve(sql, getMetadataFactory().example1Cached());
         assertEquals(DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass(),
-                     ((Expression)query.getProjectedSymbols().get(0)).getType());
+                     query.getProjectedSymbols().get(0).getType());
     }
 
     @Test
@@ -2869,7 +2864,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     @Test
     public void testSPOutParamWithExec() {
-        StoredProcedure proc = (StoredProcedure)helpResolve("exec pm2.spTest8(1)", metadataFactory.exampleBQTCached());
+        StoredProcedure proc = (StoredProcedure)helpResolve("exec pm2.spTest8(1)", getMetadataFactory().exampleBQTCached());
         assertEquals(2, proc.getProjectedSymbols().size());
     }
 
@@ -2879,24 +2874,24 @@ public abstract class AbstractTestResolver extends TestCase {
      */
     @Test
     public void testSPOutParamWithCallableStatement() {
-        StoredProcedure proc = (StoredProcedure)helpResolve("{call pm2.spTest8(1)}", metadataFactory.exampleBQTCached());
+        StoredProcedure proc = (StoredProcedure)helpResolve("{call pm2.spTest8(1)}", getMetadataFactory().exampleBQTCached());
         assertEquals(3, proc.getProjectedSymbols().size());
     }
 
     @Test
     public void testOutWithWrongType() {
-        helpResolveException("exec pm2.spTest8(inkey=>1, outkey=>{t '12:00:00'})", metadataFactory.exampleBQTCached());
+        helpResolveException("exec pm2.spTest8(inkey=>1, outkey=>{t '12:00:00'})", getMetadataFactory().exampleBQTCached());
     }
 
     @Test
     public void testProcRelationalWithOutParam() {
-        Query proc = (Query)helpResolve("select * from pm2.spTest8 where inkey = 1", metadataFactory.exampleBQTCached());
+        Query proc = (Query)helpResolve("select * from pm2.spTest8 where inkey = 1", getMetadataFactory().exampleBQTCached());
         assertEquals(3, proc.getProjectedSymbols().size());
     }
 
     @Test
     public void testSPReturnParamWithNoResultSet() {
-        StoredProcedure proc = (StoredProcedure)helpResolve("exec pm4.spTest9(1)", metadataFactory.exampleBQTCached());
+        StoredProcedure proc = (StoredProcedure)helpResolve("exec pm4.spTest9(1)", getMetadataFactory().exampleBQTCached());
         assertEquals(1, proc.getProjectedSymbols().size());
     }
 
@@ -3016,7 +3011,7 @@ public abstract class AbstractTestResolver extends TestCase {
     }
 
     // validating AssignmentStatement, ROWS_UPDATED element assigned
-    @Test( expected = QueryResolverException.class )
+    @Test( expected = TeiidClientException.class )
     public void testCreateUpdateProcedure9() throws Exception {
         String procedure = "CREATE PROCEDURE  "; //$NON-NLS-1$
         procedure = procedure + "BEGIN\n"; //$NON-NLS-1$
@@ -3032,7 +3027,7 @@ public abstract class AbstractTestResolver extends TestCase {
 
     // validating AssignmentStatement, variable type and assigned type 
     // do not match
-    @Test( expected = QueryResolverException.class )
+    @Test(expected=TeiidClientException.class)
     public void testCreateUpdateProcedure10() throws Exception {
         String procedure = "CREATE PROCEDURE  "; //$NON-NLS-1$
         procedure = procedure + "BEGIN\n"; //$NON-NLS-1$
@@ -3067,7 +3062,7 @@ public abstract class AbstractTestResolver extends TestCase {
     }
 
     // variables cannot be used among insert elements
-    @Test( expected = QueryResolverException.class )
+    @Test( expected = TeiidClientException.class )
     public void testCreateUpdateProcedure23() throws Exception {
         String procedure = "CREATE PROCEDURE  "; //$NON-NLS-1$
         procedure = procedure + "BEGIN\n"; //$NON-NLS-1$

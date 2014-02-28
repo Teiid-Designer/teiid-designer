@@ -20,10 +20,10 @@
  * 02110-1301 USA.
  */
 
-package org.teiid.query.resolver;
+package org.teiid84.resolver;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.resolver.util.ResolverUtil;
@@ -36,23 +36,23 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.unittest.RealMetadataFactory;
+import org.teiid84.unittest.RealMetadataFactory;
 
 
 public class TestXMLResolver {
     
     public Command helpResolve(String sql) {
-        Command cmd = AbstractTestResolver.helpResolve(sql, RealMetadataFactory.example1Cached());
+        Command cmd = TestResolver.helpResolve(sql, RealMetadataFactory.example1Cached());
         ResolverUtil.fullyQualifyElements(cmd);
         return cmd;
     }
     
     public void helpResolveException(String sql) {
-        AbstractTestResolver.helpResolveException(sql, RealMetadataFactory.example1Cached());
+        TestResolver.helpResolveException(sql, RealMetadataFactory.example1Cached());
     }
     
     public void helpResolveException(String sql, String expectedMessage) {
-        AbstractTestResolver.helpResolveException(sql, RealMetadataFactory.example1Cached(), expectedMessage);
+        TestResolver.helpResolveException(sql, RealMetadataFactory.example1Cached(), expectedMessage);
     }
 
     @Test public void testXMLCriteriaShortElement() {
@@ -398,7 +398,7 @@ public class TestXMLResolver {
         expected.setOperator(CompareCriteria.EQ);
         expected.setRightExpression(new Constant("yyz")); //$NON-NLS-1$
     
-        Query query = (Query) AbstractTestResolver.helpResolve(QueryParser.getQueryParser().parseCommand("select \"xml\" from xmltest.doc1 where node1 = 'yyz'"), RealMetadataFactory.example1Cached()); //$NON-NLS-1$
+        Query query = (Query) TestResolver.helpResolve(QueryParser.getQueryParser().parseCommand("select \"xml\" from xmltest.doc1 where node1 = 'yyz'"), RealMetadataFactory.example1Cached()); //$NON-NLS-1$
         Criteria actual = query.getCriteria();
         assertEquals("Did not match expected criteria", expected, actual);     //$NON-NLS-1$
     } 

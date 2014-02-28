@@ -20,10 +20,10 @@
  * 02110-1301 USA.
  */
 
-package org.teiid.query.resolver;
+package org.teiid84.resolver;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryParserException;
 import org.teiid.api.exception.query.QueryResolverException;
@@ -37,7 +37,7 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.XMLSerialize;
-import org.teiid.query.unittest.RealMetadataFactory;
+import org.teiid84.unittest.RealMetadataFactory;
 
 
 public class TestFunctionResolving {

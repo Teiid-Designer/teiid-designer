@@ -7,19 +7,20 @@
 */
 package org.teiid.language;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import java.util.Set;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.language.SQLConstants;
 import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
  *
  */
 @SuppressWarnings( {"javadoc", "nls"} )
-public class TestReservedWords extends TestCase {
+public class TestReservedWords {
 
     ITeiidServerVersion TEIID_VERSION_7 = new TeiidServerVersion("7.7.0");
 
