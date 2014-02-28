@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
+import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -75,6 +76,11 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     private final ILabelProvider labelProvider;
     private final ModelExtensionPropertyDefinition propDefn;
 
+    /**
+     * Constructor
+     * @param eObject the supplied EObject
+     * @param propDefn the model extension property definition
+     */
     public ModelExtensionPropertyDescriptor( EObject eObject,
                                              ModelExtensionPropertyDefinition propDefn ) {
         super(propDefn.getId(), (CoreStringUtil.isEmpty(propDefn.getDisplayName()) ? propDefn.getId()
@@ -200,6 +206,10 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
         return this;
     }
 
+    /**
+     * Get the Property Defn Id
+     * @return propDefn ID
+     */
     public String getPropDefnId() {
         return this.propDefn.getId();
     }
@@ -324,16 +334,6 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return getDisplayName();
-    }
-
-    /**
      * Used only for the value column in the properties view.
      */
     protected class ModelExtensionDescriptorLabelProvider extends LabelProvider {
@@ -415,6 +415,58 @@ public class ModelExtensionPropertyDescriptor extends PropertyDescriptor impleme
 
             return super.getText(element);
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
+
+    /** 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj == null ) {
+            return false;
+        }
+        if ( obj == this ) {
+            return true;
+        }
+        
+        // Instances must be of the same class
+        if ( !obj.getClass().equals(this.getClass()) ) {
+            return false;
+        }
+        final ModelExtensionPropertyDescriptor that = (ModelExtensionPropertyDescriptor)obj;
+        
+        // Check the PropertyDefns
+        if ( !this.getPropertyDefinition().equals(that.getPropertyDefinition()) ) {
+            return false;
+        }
+        
+        // Check the ModelObjects
+        if ( !this.getModelObject().equals(that.getModelObject()) ) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    /** 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int hc = 0;
+        hc = HashCodeUtil.hashCode(hc, this.getPropertyDefinition());
+        hc = HashCodeUtil.hashCode(hc, this.getModelObject());
+        return hc;
     }
 
 }
