@@ -15,6 +15,8 @@ import org.eclipse.wst.server.core.IServer;
 import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 /**
  *
@@ -116,5 +118,16 @@ public class JBossServerUtil {
             return false;
 
         return true;
+    }
+
+    /**
+     * @param parentServer
+     * @param jbossServer
+     *
+     * @return since the jboss server is the older version 5, it cannot be queried
+     *                 and can only be a maximum of version 7
+     */
+    public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBossServer jbossServer) {
+        return TeiidServerVersion.DEFAULT_TEIID_7_SERVER;
     }
 }
