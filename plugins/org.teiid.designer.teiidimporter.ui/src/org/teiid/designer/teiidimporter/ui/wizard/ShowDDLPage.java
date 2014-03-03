@@ -8,9 +8,21 @@
 package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
@@ -24,11 +36,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
@@ -44,7 +58,8 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 	private final int GROUP_HEIGHT_190 = 190;
 
     private Text ddlContentsBox;
-    private Button exportDDLButton;
+    private Button exportDDLToFileSystemButton;
+    private Button exportDDLToWorkspaceButton;
 		
 	private TeiidImportManager importManager;
 
@@ -118,31 +133,111 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
         buttonPanel.setLayout(new GridLayout(2, false));
         buttonPanel.setLayoutData(new GridData()); 
 
-        exportDDLButton = new Button(buttonPanel, SWT.PUSH);
-        exportDDLButton.setText(Messages.ShowDDLPage_exportDDLButton);
-        exportDDLButton.setToolTipText(Messages.ShowDDLPage_exportDDLButtonTooltip);
-        exportDDLButton.setLayoutData(new GridData());
-        exportDDLButton.setEnabled(false);
-        exportDDLButton.addSelectionListener(new SelectionAdapter() {
+        exportDDLToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
+        exportDDLToFileSystemButton.setText(Messages.ShowDDLPage_exportDDLToFileSystemButton);
+        exportDDLToFileSystemButton.setToolTipText(Messages.ShowDDLPage_exportDDLToFileSystemButtonTooltip);
+        exportDDLToFileSystemButton.setLayoutData(new GridData());
+        exportDDLToFileSystemButton.setEnabled(false);
+        exportDDLToFileSystemButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-               handleExportDDL();
+               handleExportDDLToFileSystem();
+            }
+
+        });
+
+        exportDDLToWorkspaceButton = new Button(buttonPanel, SWT.PUSH);
+        exportDDLToWorkspaceButton.setText(Messages.ShowDDLPage_exportDDLToWorkspaceButton);
+        exportDDLToWorkspaceButton.setToolTipText(Messages.ShowDDLPage_exportDDLToWorkspaceButtonTooltip);
+        exportDDLToWorkspaceButton.setLayoutData(new GridData());
+        exportDDLToWorkspaceButton.setEnabled(false);
+        exportDDLToWorkspaceButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+               handleExportDDLToWorkspace();
             }
 
         });
         
     }
-    
+
     /**
-     * Export the current string content of the DDL display to a user-selected file
+     * Export the current string content of the DDL display to a user-selected file on file system
      */
-    public void handleExportDDL() {
+    public void handleExportDDLToFileSystem() {
         FileDialog dlg = new FileDialog(getShell(), SWT.SAVE);
         dlg.setFilterExtensions(new String[] {"*.*"}); //$NON-NLS-1$ 
         dlg.setText(Messages.ShowDDLPage_exportDDLDialogTitle);
         dlg.setFileName(Messages.ShowDDLPage_exportDDLDialogDefaultFileName);
         String fileStr = dlg.open();
+        
+        // Export to the file
+        exportDDLToFile(fileStr);
+    }
+    
+    /**
+     * Export the current string content of the DDL display to a user-selected location in their workspace
+     */
+    private void handleExportDDLToWorkspace() {
+        // Show dialog for copying the DataSource
+        ExportDDLToWorkspaceDialog dialog = new ExportDDLToWorkspaceDialog(getShell());
+
+        dialog.open();
+        
+        // If Dialog was OKd, create the DataSource
+        if (dialog.getReturnCode() == Window.OK) {
+        	IContainer targetContainer = dialog.getTargetContainer();
+        	String fileName = dialog.getFileName();
+        	createDDLFile(targetContainer,fileName);
+        }
+    }    
+    
+    private void createDDLFile(final IContainer targetContainer, final String ddlFileName) {
+    	// Create the DDL File
+    	final IRunnableWithProgress op = new IRunnableWithProgress() {
+
+    		/**
+    		 * {@inheritDoc}
+    		 *
+    		 * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+    		 */
+    		@Override
+    		@SuppressWarnings("unchecked")
+    		public void run( final IProgressMonitor monitor ) throws InvocationTargetException {
+    			try {
+    	            final IFile ddlFileToCreate = targetContainer.getFile(new Path(ddlFileName));
+    	            
+    	            String ddl = getDDL();
+    	        	InputStream istream = new ByteArrayInputStream(ddl.getBytes());
+    	            
+    	            ddlFileToCreate.create(istream, false, monitor);
+    	            targetContainer.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+    			} catch (final Exception err) {
+    				throw new InvocationTargetException(err);
+    			} finally {
+    				monitor.done();
+    			}
+    		}
+    	};
+
+    	try {
+    		new ProgressMonitorDialog(getShell()).run(false, true, op);
+    	} catch (Throwable err) {
+    		if (err instanceof InvocationTargetException) {
+    			err = ((InvocationTargetException)err).getTargetException();
+    		}
+    		ModelerCore.Util.log(IStatus.ERROR, err, err.getMessage());
+    		WidgetUtil.showError(Messages.ShowDDLPage_exportDDLDialogExportToWorkspaceErrorMsg);
+    	}
+    }
+    
+    /**
+     * Export the current DDL to the supplied file
+     * @param fileStr
+     */
+    private void exportDDLToFile(String fileStr) {
         // If there is no file extension, add .sql
         if (fileStr != null && fileStr.indexOf('.') == -1) {
             fileStr = fileStr + "." + Messages.ShowDDLPage_exportDDLDialogDefaultFileExt;  //$NON-NLS-1$
@@ -179,7 +274,8 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
      */
     private void setButtonStates() {
         boolean enableExportButton = importManager.isVdbDeployed();
-        this.exportDDLButton.setEnabled(enableExportButton);
+        this.exportDDLToFileSystemButton.setEnabled(enableExportButton);
+        this.exportDDLToWorkspaceButton.setEnabled(enableExportButton);
     }
 
     @Override

@@ -120,13 +120,16 @@ public class Messages extends NLS {
 
     public static String ShowDDLPage_title;
     public static String ShowDDLPage_DDLContentsGroup;
-    public static String ShowDDLPage_exportDDLButton;
-    public static String ShowDDLPage_exportDDLButtonTooltip;
+    public static String ShowDDLPage_exportDDLToFileSystemButton;
+    public static String ShowDDLPage_exportDDLToFileSystemButtonTooltip;
+    public static String ShowDDLPage_exportDDLToWorkspaceButton;
+    public static String ShowDDLPage_exportDDLToWorkspaceButtonTooltip;
     public static String ShowDDLPage_vdbDeploymentErrorMsg;
     public static String ShowDDLPage_exportDDLDialogTitle;
     public static String ShowDDLPage_exportDDLDialogDefaultFileName;
     public static String ShowDDLPage_exportDDLDialogDefaultFileExt;
     public static String ShowDDLPage_exportDDLDialogExportErrorMsg;
+    public static String ShowDDLPage_exportDDLDialogExportToWorkspaceErrorMsg;
     
     public static String dataSourceManager_createOk;
     public static String dataSourceManager_createInterruptedMsg;
@@ -158,6 +161,16 @@ public class Messages extends NLS {
     public static String ShowVdbXmlDialog_title;
     public static String ShowVdbXmlAction_text;
     public static String ShowVdbXmlAction_tooltip;
+    
+    public static String ExportDDLToWorkspaceDialog_title;
+    public static String ExportDDLToWorkspaceDialog_errorSelectLocation;
+    public static String ExportDDLToWorkspaceDialog_errorEnterFileName;
+    public static String ExportDDLToWorkspaceDialog_errorCouldNotGetMembers;
+    public static String ExportDDLToWorkspaceDialog_locationLabel;
+    public static String ExportDDLToWorkspaceDialog_fileNameLabel;
+    public static String ExportDDLToWorkspaceDialog_browseButton;
+    public static String ExportDDLToWorkspaceDialog_defaultFileName;
+    public static String ExportDDLToWorkspaceDialog_Ok;
     
     static {
         NLS.initializeMessages("org.teiid.designer.teiidimporter.ui.messages", Messages.class); //$NON-NLS-1$
