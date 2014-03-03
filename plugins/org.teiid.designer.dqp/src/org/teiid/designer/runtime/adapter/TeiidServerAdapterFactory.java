@@ -23,7 +23,7 @@ import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  * Adapter factory that can adapt an {@link IServer} to a {@link ITeiidServer}
@@ -247,7 +247,7 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         optionList.add(ServerOptions.ADMIN_SECURE_CONNECTION);
         
         TeiidServerFactory factory = new TeiidServerFactory();
-        ITeiidServer teiidServer = factory.createTeiidServer(TeiidServerVersion.DEFAULT_TEIID_7_SERVER,
+        ITeiidServer teiidServer = factory.createTeiidServer(JBossServerUtil.getTeiidRuntimeVersion(parentServer, jbossServer),
                                                                                         getTeiidServerManager(),
                                                                                         parentServer, 
                                                                                         ITeiidAdminInfo.DEFAULT_LEGACY_PORT, 
@@ -281,5 +281,26 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         }
         
         return false;
+    }
+
+    /**
+     * @param server
+     *
+     * @return the teiid runtime version of the given server
+     * @throws Exception
+     */
+    public ITeiidServerVersion getTeiidRuntimeVersion(IServer server) throws Exception {
+        if (! getTeiidServerManager().isStarted())
+            return null;
+
+        JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+        if (jb7 != null) {
+            return JBoss7ServerUtil.getTeiidRuntimeVersion(server, jb7);
+        } else {
+            JBossServer jb = (JBossServer) server.loadAdapter(JBossServer.class, null);
+            if (jb != null)
+                return JBossServerUtil.getTeiidRuntimeVersion(server, jb);
+        }
+        return null;
     }
 }
