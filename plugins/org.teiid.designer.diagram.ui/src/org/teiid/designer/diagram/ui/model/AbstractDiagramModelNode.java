@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.ecore.EObject;
@@ -27,6 +28,7 @@ import org.teiid.designer.diagram.ui.util.DiagramEntityManager;
 import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.diagram.DiagramEntity;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
 /**
@@ -697,7 +699,7 @@ abstract public class AbstractDiagramModelNode implements DiagramModelNode, Diag
 
     @Override
 	public boolean isReadOnly() {
-        return readOnly;
+        return readOnly || ModelUtilities.isModelDiagramLocked(getDiagram().getTarget());
     }
 
     /* (non-Javadoc)

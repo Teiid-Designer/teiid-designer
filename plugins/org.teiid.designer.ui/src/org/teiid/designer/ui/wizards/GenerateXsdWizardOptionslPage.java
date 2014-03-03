@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -614,7 +613,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         IStatus status = ModelNameUtil.validate(modelName, ModelerCore.MODEL_FILE_EXTENSION, folder,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
         if (status.getSeverity() == IStatus.ERROR) {
-            setErrorMessage(status.getMessage());
+            setErrorMessage(ModelNameUtil.MESSAGES.INVALID_SCHEMA_FILE_NAME + status.getMessage());
             setPageComplete(false);
             return;
         }
@@ -634,7 +633,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
             		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
             
             if (status.getSeverity() == IStatus.ERROR) {
-                setErrorMessage(status.getMessage());
+                setErrorMessage(ModelNameUtil.MESSAGES.INVALID_SCHEMA_FILE_NAME + status.getMessage());
                 setPageComplete(false);
                 return;
             }
@@ -653,7 +652,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
         status = ModelNameUtil.validate(wsName, XMI_EXT, folder,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
         if (status.getSeverity() == IStatus.ERROR) {
-            setErrorMessage(status.getMessage());
+            setErrorMessage(ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME + status.getMessage());
             setPageComplete(false);
             return;
         }

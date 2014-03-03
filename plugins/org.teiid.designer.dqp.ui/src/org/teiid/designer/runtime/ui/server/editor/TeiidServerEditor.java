@@ -8,6 +8,10 @@
 package org.teiid.designer.runtime.ui.server.editor;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -17,8 +21,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -47,14 +53,18 @@ import org.teiid.designer.core.loading.ComponentLoadingManager;
 import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.IServersProvider;
+import org.teiid.designer.runtime.TeiidServerFactory;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
+import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.common.util.UiUtil;
 
 /**
@@ -91,7 +101,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
     private Label hostNameLabel;
     
-    private Label versionValueLabel;
+    private Combo versionValueCombo;
 
     private Label adminDescriptionLabel;
     
@@ -351,10 +361,38 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         
         Label versionLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.versionLabel")); //$NON-NLS-1$
         blueForeground(versionLabel);
-        
-        versionValueLabel = toolkit.createLabel(composite, teiidServer.getServerVersion().toString());
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(versionValueLabel);
-        blueForeground(versionValueLabel);
+
+        versionValueCombo = new Combo(composite, SWT.DROP_DOWN);
+        versionValueCombo.setToolTipText(UTIL.getString("TeiidServerOverviewSection.versionValueTooltip")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(false, false).applyTo(versionValueCombo);
+        versionValueCombo.addKeyListener(dirtyKeyListener);
+        versionValueCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TeiidServerEditor.this.setDirty();
+                execute(new TeiidServerCommand(parentServerWorkingCopy));
+            }
+        });
+
+        // Populate the version value combo with existing server versions
+        // and the current teiid server version
+        List<String> serverVersions = new ArrayList<String>();
+        serverVersions.add(teiidServer.getServerVersion().toString());
+        try {
+            Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+            for (ITeiidServerVersion version : registeredServerVersions) {
+                serverVersions.add(version.toString());
+            }
+        } catch (Exception ex) {
+            serverVersions.addAll(TeiidServerVersion.DEFAULT_TEIID_SERVER_IDS);
+        }
+
+        Collections.sort(serverVersions, Collections.reverseOrder());
+        versionValueCombo.setItems(serverVersions.toArray(new String[0]));
+        versionValueCombo.setText(teiidServer.getServerVersion().toString());
+
+        // Can only edit if teiid server has been stopped
+        versionValueCombo.setEnabled(! teiidServer.isConnected());
 
         Label jbLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
         blueForeground(jbLabel);
@@ -526,7 +564,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
         customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
         hostNameLabel.setText(teiidServer.getHost());
-        versionValueLabel.setText(teiidServer.getServerVersion().toString());
+        versionValueCombo.setText(teiidServer.getServerVersion().toString());
+        // Can only edit if teiid server has been stopped
+        versionValueCombo.setEnabled(! teiidServer.isConnected());
         jbServerNameLabel.setText(parentServer != null ? parentServer.getName() : ""); //$NON-NLS-1$
 
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
@@ -588,31 +628,38 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         if (teiidServer == null)
             return;
 
+        ITeiidServerVersion newTeiidServerVersion = teiidServer.getServerVersion();
+        if (versionValueCombo.getText() != null)
+            newTeiidServerVersion = new TeiidServerVersion(versionValueCombo.getText());
+
         // Overwrite the properties of the Teiid Instance
         teiidServer.setCustomLabel(customNameText.getText());
-        
-        ITeiidAdminInfo adminInfo = teiidServer.getTeiidAdminInfo();
-        
-        if (adminUserNameText != null) {
-            adminInfo.setUsername(adminUserNameText.getText());
-        }
-        
-        if (adminPasswdText != null) {
-            adminInfo.setPassword(adminPasswdText.getText());
-        }
-        
-        if (adminSSLCheckbox != null) {    
-            adminInfo.setSecure(adminSSLCheckbox.getSelection());
-        }
-        
-        ITeiidJdbcInfo jdbcInfo = teiidServer.getTeiidJdbcInfo();
-        jdbcInfo.setUsername(jdbcUserNameText.getText());
-        jdbcInfo.setPassword(jdbcPasswdText.getText());
-        jdbcInfo.setSecure(jdbcSSLCheckbox.getSelection());
-        
+
+        TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
+
+        List<ServerOptions> serverOptions = new ArrayList<ServerOptions>();
+        if (adminSSLCheckbox != null && adminSSLCheckbox.getSelection())
+            serverOptions.add(ServerOptions.ADMIN_SECURE_CONNECTION);
+        if (jdbcSSLCheckbox.getSelection())
+            serverOptions.add(ServerOptions.JDBC_SECURE_CONNECTION);
+
+        ITeiidServer newTeiidServer = teiidServerFactory.createTeiidServer(
+                                             newTeiidServerVersion,
+                                             getServerManager(),
+                                             teiidServer.getParent(),
+                                             teiidServer.getTeiidAdminInfo().getPort(),
+                                             adminUserNameText != null ? adminUserNameText.getText() : teiidServer.getTeiidAdminInfo().getUsername(),
+                                             adminPasswdText != null ? adminPasswdText.getText() : teiidServer.getTeiidAdminInfo().getPassword(),
+                                             jdbcPort instanceof Text ? ((Text) jdbcPort).getText() : teiidServer.getTeiidJdbcInfo().getPort(),
+                                             jdbcUserNameText.getText(),
+                                             jdbcPasswdText.getText(),
+                                             serverOptions.toArray(new ServerOptions[0]));
+
+        teiidServer.update(newTeiidServer);
+
         dirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
-        
+
         getServerManager().notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(teiidServer));
     }
 

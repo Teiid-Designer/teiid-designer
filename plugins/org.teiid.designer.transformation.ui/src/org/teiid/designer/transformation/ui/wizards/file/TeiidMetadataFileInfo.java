@@ -16,13 +16,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.query.IProcedureService;
@@ -37,11 +36,11 @@ import org.teiid.designer.transformation.ui.UiConstants;
  *
  * @since 8.0
  */
-@SuppressWarnings("javadoc")
+
 public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants, ITeiidMetadataFileInfo {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataFileInfo.class);
 	
-	private static final StringNameValidator validator = new RelationalStringNameValidator(false, true);
+	private static final StringNameValidator validator = new RelationalStringNameValidator(false);
 	
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + id);
@@ -245,10 +244,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
 		
 		//loadHeader();
-		
-		IPath filePath = new Path(getDataFile().getName());
-		String fileName = filePath.removeFileExtension().lastSegment();
-		setViewTableName(fileName + "View"); //$NON-NLS-1$
+
+		setViewTableName("new_table"); //$NON-NLS-1$
 	}
 
 	/**
@@ -905,7 +902,22 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 			}
 		} else {
 			String delim = "" + getDelimiter(); //$NON-NLS-1$
-			StringTokenizer strTokeniser = new StringTokenizer(rowString, delim);
+			char theDelim = getDelimiter().charAt(0);
+			
+			// For the case where no data value is in between delimiters, we need to add an ' ' space to allow the tokenizer
+			// to work
+			
+			StringBuilder sb = new StringBuilder();
+			int maxChar = rowString.length();
+			char[] chars = rowString.toCharArray();
+			for( int i=0; i<maxChar; i++ ) {
+				sb.append(chars[i]);
+				if( chars[i] == theDelim && chars[i+1] == theDelim) {
+					sb.append(StringUtilities.SPACE);
+				}
+			}
+			
+			StringTokenizer strTokeniser = new StringTokenizer(sb.toString(), delim);
 			while( strTokeniser.hasMoreTokens() ) {
 				String value = strTokeniser.nextToken().trim();
 				// Check for d_quoted column names

@@ -168,11 +168,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		
 		parsingStatus = parseXmlFile();
 		
-		String fileName = getDataFile().getName();
-		if(fileName.toLowerCase().endsWith(".xml")) { //$NON-NLS-1$
-			fileName = fileName.substring(0, fileName.length()-4);
-		}
-		setViewTableName(fileName + "View"); //$NON-NLS-1$
+		setViewTableName("new_table"); //$NON-NLS-1$
+
 		validate();
 	}
 	
@@ -358,6 +355,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 	 * 
 	 * @return doProcess the boolean indicator that the user wishes to create view table from this object
 	 */
+	@Override
 	public boolean doProcess() {
 		return this.doProcess;
 	}

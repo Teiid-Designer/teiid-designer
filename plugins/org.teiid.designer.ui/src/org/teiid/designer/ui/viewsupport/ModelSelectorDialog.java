@@ -41,7 +41,6 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -68,8 +67,6 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
     private final static int MODEL_NAME_TEXT_WIDTH = (int)(Display.getCurrent().getBounds().width * .25);
 
     private final static String MODEL_CREATE_ERROR_NO_NAME = getString("noName.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_ALREADY_EXISTS = getString("alreadyExists.message"); //$NON-NLS-1$
-    private final static String MODEL_CREATE_ERROR_SAME_NAME_AS = getString("sameNameAs.message"); //$NON-NLS-1$
     private final static String MODEL_CREATE_ERROR_IS_VALID = getString("isValid.message"); //$NON-NLS-1$
     private final static String MODEL_NAME_LABEL = getString("newModelName.text"); //$NON-NLS-1$
 
@@ -395,7 +392,7 @@ public class ModelSelectorDialog extends ModelWorkspaceDialog implements UiConst
         IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
         if( status.getSeverity() == IStatus.ERROR ) {
-        	return status.getMessage();
+        	return ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage();
         }
 
         // success

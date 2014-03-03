@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String errorNameInvalid;
     
     public static String createDataSourcePanel_name;
+    public static String createDataSourcePanel_jndiName;
     public static String createDataSourcePanel_driver;
     public static String createDataSourcePanel_driversGroupTxt;
     public static String createDataSourcePanel_dataSourcePropertiesGroupTxt;
@@ -57,6 +58,7 @@ public class Messages extends NLS {
     public static String dataSourcePanel_editButtonTooltip;
     public static String dataSourcePanel_copyButtonTooltip;
     public static String dataSourcePanel_nameColText;
+    public static String dataSourcePanel_jndiNameColText;
     public static String dataSourcePanel_typeColText;
     public static String dataSourcePanel_createErrorTitle;
     public static String dataSourcePanel_deleteErrorTitle;
@@ -87,6 +89,9 @@ public class Messages extends NLS {
     public static String selectDataSourcePage_dataSourcePropertiesGroupText;
     public static String selectDataSourcePage_NoSourceSelectedMsg;
     public static String selectDataSourcePage_CannotImportSourceTypeMsg;
+    public static String selectDataSourcePage_CannotImportModeshapeTypeMsg;
+    public static String selectDataSourcePage_CannotImportLdapTypeMsg;
+    public static String selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg;
     
     public static String SelectTranslatorPage_title;
     public static String SelectTranslatorPage_dsNameLabel;
@@ -148,6 +153,11 @@ public class Messages extends NLS {
     public static String AddGeneralPropertyDialog_emptyPropertyName;
     public static String AddGeneralPropertyDialog_invalidPropertyName;
     public static String AddGeneralPropertyDialog_emptyPropertyValue;
+    
+    public static String ShowVdbXmlDialog_dynamic_vdb_text;
+    public static String ShowVdbXmlDialog_title;
+    public static String ShowVdbXmlAction_text;
+    public static String ShowVdbXmlAction_tooltip;
     
     static {
         NLS.initializeMessages("org.teiid.designer.teiidimporter.ui.messages", Messages.class); //$NON-NLS-1$

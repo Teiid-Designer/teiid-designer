@@ -467,7 +467,10 @@ public class ImportWsdlSchemaHandler {
 			IStructuredSelection selection, ProcedureInfo responseInfo) {
 
 		SchemaNode node = (SchemaNode)selection.getFirstElement();
-		Object obj = ((SchemaNode)selection.getFirstElement()).getElement();
+		if( node == null )
+			return null;
+			
+		Object obj = node.getElement();
 		responseInfo.setTreeModel(this.responseSchemaTreeModel);
 		
 		if( !shouldCreateResponseColumn(obj) ) {

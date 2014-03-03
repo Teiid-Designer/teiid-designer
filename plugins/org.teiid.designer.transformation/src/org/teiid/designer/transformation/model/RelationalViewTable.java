@@ -18,6 +18,7 @@ import org.teiid.designer.relational.model.RelationalTable;
 public class RelationalViewTable extends RelationalTable {
 
     private String transformationSQL;
+    private boolean isGlobalTempTable;
 
     public RelationalViewTable() {
         super();
@@ -36,5 +37,13 @@ public class RelationalViewTable extends RelationalTable {
 
     public String getTransformationSQL() {
         return this.transformationSQL;
+    }
+    
+    public void setGlobalTempTable(boolean value) {
+    	this.isGlobalTempTable = value;
+    }
+    
+    public boolean isGlobalTempTable() {
+    	return this.isGlobalTempTable;
     }
 }

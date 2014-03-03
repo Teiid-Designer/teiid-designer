@@ -25,7 +25,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
  */
 public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
-    public final static String SALESFORCE_DATASOURCE_URL = "url"; //$NON-NLS-1$
+    public final static String SALESFORCE_DATASOURCE_URL = "URL"; //$NON-NLS-1$
     public final static String SALESFORCE_DATASOURCE_USERNAME = "username"; //$NON-NLS-1$
     public final static String SALESFORCE_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$
     public final static String SALESFORCE_TRANSLATOR_NAME = "salesforce"; //$NON-NLS-1$

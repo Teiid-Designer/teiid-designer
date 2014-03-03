@@ -558,7 +558,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.EDIT_VDB)) {
-			EditVdbAction action = new EditVdbAction();
+			EditVdbAction action = new EditVdbAction(properties);
 			action.run();
 	        return;
 		}
@@ -1020,10 +1020,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		
 		// CONNECTIONPROFILE OPTIONS
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_JDBC)) {
-			return ACTION_CREATE_CONNECTION_FLAT_FILE;
+			return ACTION_CREATE_CONNECTION_JDBC;
 		}
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_FLAT_FILE)) {
-			return ACTION_CREATE_CONNECTION_JDBC;
+			return ACTION_CREATE_CONNECTION_FLAT_FILE;
 		}
 		if( commandId.equalsIgnoreCase(COMMAND_IDS.CREATE_CONNECTION_LDAP)) {
 			return ACTION_CREATE_CONNECTION_LDAP;

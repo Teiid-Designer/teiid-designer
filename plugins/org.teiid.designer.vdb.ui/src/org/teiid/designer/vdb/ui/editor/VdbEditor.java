@@ -15,6 +15,7 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,6 +86,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -147,7 +150,9 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = i18n("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = i18n("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = i18n("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
-
+    static final String ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE = i18n("addFileDialogModelWithSameNameExistsSelectedMessage");  //$NON-NLS-1$
+    
+    
     static final String CONFIRM_DIRTY_MODELS_DIALOG_TITLE = i18n("confirmDirtyModelsDialogTitle"); //$NON-NLS-1$
     static final String CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE= i18n("confirmDirtyModelsSynchronizeMessage"); //$NON-NLS-1$
     static final String CONFIRM_DIALOG_TITLE = i18n("confirmDialogTitle"); //$NON-NLS-1$
@@ -158,6 +163,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String CONFIRM_OVERWRITE_USERFILE_MESSAGE = i18n("confirmOverwriteUserFileMessage"); //$NON-NLS-1$
     static final String CONFIRM_OVERWRITE_UDFJAR_MESSAGE = i18n("confirmOverwriteUdfJarMessage"); //$NON-NLS-1$
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
+    static final String CANNOT_ADD_DUPLICATE_MODEL_NAME_TITLE = i18n("cannotAddDuplicateModelNameTitle"); //$NON-NLS-1$
+    static final String CANNOT_ADD_DUPLICATE_MODEL_NAME_MESSAGE = i18n("cannotAddDuplicateModelNameMessage"); //$NON-NLS-1$
     
     static final int MODELS_PANEL_WIDTH_HINT = 300;  // Models Panel Overall Width
     static final int MODELS_PANEL_IMAGE_COL_WIDTH = 50;  // Image Cols Width
@@ -447,6 +454,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	}
                 	if( ModelUtilities.isVdbSourceModel(file) ) {
                 		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE, null);
+                	}
+                	
+                	// Check for duplicate model and/or user file names
+                	if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), getVdb()) ) {
+                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
+                				ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);
                 	}
                 }
             }
@@ -1609,10 +1622,36 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
                 // indicates if this is the first time models are being added
                 boolean firstTime = (modelsGroup.getTable().getViewer().getTable().getItemCount() == 0);
-
-                // add the models
-                for (final Object model : models) {
-                    getVdb().addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                
+                boolean success = false;
+                boolean foundDuplicateNames = false;
+                boolean proceed = false;
+                try {
+					// Check to see if any of the models or dependents will result in duplicate model names in VDB
+					for( final Object model : models ) {
+						boolean canAdd = VdbUtil.canAddModelToVdb((IFile)model, getVdb());
+						if( !canAdd ) {
+							MessageDialog.openError(Display.getCurrent().getActiveShell(),
+					                                  VdbEditor.CANNOT_ADD_DUPLICATE_MODEL_NAME_TITLE,
+					                                  CANNOT_ADD_DUPLICATE_MODEL_NAME_MESSAGE);
+							foundDuplicateNames = true;
+						}
+						break;
+					}
+					success = true;
+				} catch (ModelWorkspaceException ex) {
+					UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
+				} finally {
+					if( success ) {
+						proceed = !foundDuplicateNames;
+					}
+				}
+                
+                if( proceed ) {
+	                // add the models
+	                for (final Object model : models) {
+	                    getVdb().addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+	                }
                 }
 
                 // refresh table from model

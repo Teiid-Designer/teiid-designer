@@ -417,7 +417,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
         IStatus status = ModelNameUtil.validate(name, ModelerCore.MODEL_FILE_EXTENSION, targetModelLocation,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION);
         if( status.getSeverity() == IStatus.ERROR ) {
-        	WizardUtil.setPageComplete(this, status.getMessage(), IMessageProvider.ERROR);
+        	WizardUtil.setPageComplete(this, ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), IMessageProvider.ERROR);
         	return null;
         }
 

@@ -81,18 +81,15 @@ public class ShowParentDiagramAction extends DiagramEditorAction {
         
         if( diagramNode != null ) {
             Diagram currentDiagram = (Diagram)diagramNode.getModelObject();
-            if( currentDiagram != null &&
-                currentDiagram.eResource() != null &&
+            EObject diagramTarget = currentDiagram.getTarget(); // SHould be virtual group
+            if( diagramTarget != null && 
+            	diagramTarget.eResource() != null &&
                 currentDiagram.getType() != null ) {
                 if( currentDiagram.getType().equals(PluginConstants.TRANSFORMATION_DIAGRAM_TYPE_ID) ||
                     currentDiagram.getType().equals(PluginConstants.DEPENDENCY_DIAGRAM_TYPE_ID) ) {
-                    Object diagramTarget = currentDiagram.getTarget(); // SHould be virtual group
                     ModelResource modelResource = ModelUtilities.getModelResourceForModelObject(currentDiagram);
-                    if( diagramTarget != null && 
-                        diagramTarget instanceof EObject && 
-                        modelResource != null ) {
-                            EObject packageObject = (EObject)diagramTarget;
-                            Object parentObject = packageObject.eContainer();
+                    if( modelResource != null ) {
+                            Object parentObject = diagramTarget.eContainer();
                             if( parentObject != null && parentObject instanceof EObject ) {
                                 try {
                                     // get diagrams and find package diagram.

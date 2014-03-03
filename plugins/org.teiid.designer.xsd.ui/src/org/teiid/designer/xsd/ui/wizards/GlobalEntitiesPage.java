@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -299,7 +298,7 @@ public class GlobalEntitiesPage extends WizardPage implements InternalUiConstant
         IStatus status = ModelNameUtil.validate(fileText, fileExtension, project,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES | ModelNameUtil.NO_EXISTING_MODEL_AT_LOCATION );
         if( status.getSeverity() == IStatus.ERROR ) {
-        	fileNameMessage = status.getMessage();
+        	fileNameMessage = ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage();
             currentStatus = STATUS_BAD_FILENAME;
             setMessage(fileNameMessage, IMessageProvider.ERROR);
             return;

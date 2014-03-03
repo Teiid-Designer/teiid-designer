@@ -24,8 +24,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.printing.Printer;
-import org.eclipse.swt.printing.PrinterData;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.IDiagramType;
@@ -33,7 +31,6 @@ import org.teiid.designer.diagram.ui.PluginConstants;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.diagram.ui.pakkage.PackageDiagramContentProvider;
 import org.teiid.designer.diagram.ui.part.DiagramEditPart;
-import org.teiid.designer.diagram.ui.printing.DiagramPrintingAnalyzer;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -343,45 +340,45 @@ public class DiagramViewer extends ScrollingGraphicalViewer {
     public void updateForPrintPreferences() {
         //        System.out.println("[DiagramViewer.updateForPrintPreferences] TOP");  //$NON-NLS-1$
 
-        CustomScalableFreeformRootEditPart repCustom = null;
-        PageBoundaryGridLayer pgLayer = null;
-        if (getRootEditPart() != null && getRootEditPart() instanceof CustomScalableFreeformRootEditPart) {
-            repCustom = (CustomScalableFreeformRootEditPart)getRootEditPart();
-            pgLayer = repCustom.getPageGridLayer();
-        } else {
-            // quit if we have the wrong kind of root edit part
-            return;
-        }
-
-        PrinterData data = DiagramPrintingAnalyzer.getPrinterData();
-
-        if (data == null) {
-            return;
-        }
-
-        //        System.out.println("\n[DiagramViewer.updateForPrintPreferences] ..." );  //$NON-NLS-1$
-        DiagramPrintingAnalyzer analyzer = new DiagramPrintingAnalyzer(new Printer(data), this);
-
-        // Added this helper/debug method
-        // To enable, set DiagramPrintingAnalyzer & DigramPrintingOperation debugMode = TRUE
-        // Else, this call does nothing.
-        analyzer.printCurrentAnalysis();
-
-        Dimension dimSize = analyzer.getPageSize();
-        double dZoomFactor = getEditor().getCurrentZoomFactor();
-
-        int iZoomedWidth = (int)Math.floor(dimSize.width * dZoomFactor);
-        int iZoomedHeight = (int)Math.floor(dimSize.height * dZoomFactor);
-
-        Dimension dimZoomedSize = new Dimension(iZoomedWidth, iZoomedHeight);
-        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dimSize: " + dimSize);  //$NON-NLS-1$
-        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dZoomFactor: " + dZoomFactor);  //$NON-NLS-1$
-        //  System.out.println("[DiagramViewer.updateForPrintPreferences] iZoomedWidth: " + iZoomedWidth);  //$NON-NLS-1$
-        //  System.out.println("[DiagramViewer.updateForPrintPreferences] iZoomedHeight: " + iZoomedHeight);  //$NON-NLS-1$
-        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dimZoomedSize: " + dimZoomedSize + "\n");  //$NON-NLS-1$ //$NON-NLS-2$
-        //                                                   
-        //      System.out.println("\n[DiagramViewer.updateForPrintPreferences] ... done." );  //$NON-NLS-1$
-        pgLayer.setSpacing(dimZoomedSize);
+//        CustomScalableFreeformRootEditPart repCustom = null;
+//        PageBoundaryGridLayer pgLayer = null;
+//        if (getRootEditPart() != null && getRootEditPart() instanceof CustomScalableFreeformRootEditPart) {
+//            repCustom = (CustomScalableFreeformRootEditPart)getRootEditPart();
+//            pgLayer = repCustom.getPageGridLayer();
+//        } else {
+//            // quit if we have the wrong kind of root edit part
+//            return;
+//        }
+//
+//        PrinterData data = DiagramPrintingAnalyzer.getPrinterData();
+//
+//        if (data == null) {
+//            return;
+//        }
+//
+//        //        System.out.println("\n[DiagramViewer.updateForPrintPreferences] ..." );  //$NON-NLS-1$
+//        DiagramPrintingAnalyzer analyzer = new DiagramPrintingAnalyzer(new Printer(data), this);
+//
+//        // Added this helper/debug method
+//        // To enable, set DiagramPrintingAnalyzer & DigramPrintingOperation debugMode = TRUE
+//        // Else, this call does nothing.
+//        analyzer.printCurrentAnalysis();
+//
+//        Dimension dimSize = analyzer.getPageSize();
+//        double dZoomFactor = getEditor().getCurrentZoomFactor();
+//
+//        int iZoomedWidth = (int)Math.floor(dimSize.width * dZoomFactor);
+//        int iZoomedHeight = (int)Math.floor(dimSize.height * dZoomFactor);
+//
+//        Dimension dimZoomedSize = new Dimension(iZoomedWidth, iZoomedHeight);
+//        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dimSize: " + dimSize);  //$NON-NLS-1$
+//        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dZoomFactor: " + dZoomFactor);  //$NON-NLS-1$
+//        //  System.out.println("[DiagramViewer.updateForPrintPreferences] iZoomedWidth: " + iZoomedWidth);  //$NON-NLS-1$
+//        //  System.out.println("[DiagramViewer.updateForPrintPreferences] iZoomedHeight: " + iZoomedHeight);  //$NON-NLS-1$
+//        //  System.out.println("[DiagramViewer.updateForPrintPreferences] dimZoomedSize: " + dimZoomedSize + "\n");  //$NON-NLS-1$ //$NON-NLS-2$
+//        //                                                   
+//        //      System.out.println("\n[DiagramViewer.updateForPrintPreferences] ... done." );  //$NON-NLS-1$
+//        pgLayer.setSpacing(dimZoomedSize);
     }
 
     public boolean isValidViewer() {

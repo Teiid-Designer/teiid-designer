@@ -35,8 +35,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.roles.ui.wizard.panels.AllowedLanguagesPanel;
@@ -81,6 +83,8 @@ public class DataRoleWizard extends AbstractWizard {
     private StyledTextEditor descriptionTextEditor;
     
     private Button allowSystemTablesCheckBox;
+    private Button readSysCB;
+    private Button executeSysCB;
     private Button anyAuthenticatedCheckBox;
     private Button allowCreateTempTablesCheckBox;
     private ListPanel mappedRolesPanel;
@@ -100,6 +104,9 @@ public class DataRoleWizard extends AbstractWizard {
     private String description;
     private Set<String> mappedRoleNames;
     private boolean allowSystemTables;
+    private boolean allowSystemRead;
+    private boolean allowSystemExecute;
+    
     private boolean anyAuthentication;
     private boolean allowCreateTempTables;
 
@@ -368,6 +375,47 @@ public class DataRoleWizard extends AbstractWizard {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
                 allowSystemTables = allowSystemTablesCheckBox.getSelection();
+                readSysCB.setEnabled(allowSystemTables);
+                executeSysCB.setEnabled(allowSystemTables);
+                // If turned ON (checked) then auto-select READ
+                if( allowSystemTables ) {
+                	readSysCB.setSelection(true);
+                	allowSystemRead = true;
+                }
+            }
+        });
+        
+        final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup,
+                StringUtilities.EMPTY_STRING, GridData.FILL_HORIZONTAL, 2, 6);
+        
+        readSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.read.toUpperCase(), 0, 1, false);
+        readSysCB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                allowSystemRead = readSysCB.getSelection();
+                if( !allowSystemRead && !allowSystemExecute ) {
+                	allowSystemTables = false;
+                	allowSystemTablesCheckBox.setSelection(false);
+                	allowSystemTables = false;
+                } else {
+                	allowSystemTablesCheckBox.setSelection(true);
+                	allowSystemTables = true;
+                }
+            }
+        });
+        executeSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.execute.toUpperCase(), 0, 1, false);
+        executeSysCB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                allowSystemExecute = executeSysCB.getSelection();
+                if( !allowSystemRead && !allowSystemExecute ) {
+                	allowSystemTables = false;
+                	allowSystemTablesCheckBox.setSelection(false);
+                	allowSystemTables = false;
+                } else {
+                	allowSystemTablesCheckBox.setSelection(true);
+                	allowSystemTables = true;
+                }
             }
         });
 
@@ -396,12 +444,33 @@ public class DataRoleWizard extends AbstractWizard {
         
         this.treeProvider.loadPermissions(existingDataRole.getPermissions());
         
+        boolean foundSystemPermission = false;
+        
         for (Permission perm : existingDataRole.getPermissions()) {
             if (perm.getTargetName().equalsIgnoreCase(SYS_ADMIN_TABLE_TARGET) ||
     				perm.getTargetName().equalsIgnoreCase(SYS_TABLE_TARGET)) { // This is for backward compatability
                 allowSystemTables = true;
                 allowSystemTablesCheckBox.setSelection(allowSystemTables);
+                
+                foundSystemPermission = true;
+
+                allowSystemRead = perm.getCRUDValue(Type.READ).booleanValue();
+                readSysCB.setSelection(allowSystemRead);
+                allowSystemExecute = perm.getCRUDValue(Type.EXECUTE).booleanValue();
+                executeSysCB.setSelection(allowSystemExecute);
+                
+                readSysCB.setEnabled(allowSystemTables);
+                executeSysCB.setEnabled(allowSystemTables);
             }
+        }
+        
+        if( !foundSystemPermission ) {
+        	// Need to set system check-box to unchecked
+        	// read and execute check boxes to unchecked and disabled
+        	allowSystemTables = false;
+        	allowSystemTablesCheckBox.setSelection(false);
+            readSysCB.setEnabled(allowSystemTables);
+            executeSysCB.setEnabled(allowSystemTables);
         }
 
         this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
@@ -463,7 +532,9 @@ public class DataRoleWizard extends AbstractWizard {
     	Permission systemPerm = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET);
         if (allowSystemTables ) {
         	if( systemPerm == null ) {
-        		existingDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET, false, true, false, false, false, false));
+        		existingDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
+        				false, allowSystemRead, false, 
+        				false, allowSystemExecute, false));
         	}
         } else {
         	if( systemPerm != null ) {

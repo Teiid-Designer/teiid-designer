@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datatools.profiles.ldap.ILdapProfileConstants;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
@@ -49,6 +50,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 
 /**
  * Wizard page for specifying the connection parameters
@@ -431,6 +433,13 @@ public class LdapDefinitionPage extends WizardPage
         if (this.importManager.getSourceModelName() == null || this.importManager.getSourceModelName().length() == 0) {
             WizardUtil.setPageComplete(this, getString("statusSourceModelNameCannotBeNullOrEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
             return;
+        } else {
+        	IStatus status = ModelNameUtil.validate(this.importManager.getSourceModelName(), ModelerCore.MODEL_FILE_EXTENSION, null,
+                    ModelNameUtil.IGNORE_CASE );
+            if( status.getSeverity() == IStatus.ERROR ) {
+            	WizardUtil.setPageComplete(this, ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
+                return ;
+            }
         }
 
         if (sourceModelPanel.sourceModelExists()) {

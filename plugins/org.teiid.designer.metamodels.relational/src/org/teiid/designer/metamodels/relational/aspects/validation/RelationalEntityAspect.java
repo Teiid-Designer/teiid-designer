@@ -14,6 +14,7 @@ import org.teiid.designer.core.validation.ValidationRuleSet;
 import org.teiid.designer.core.validation.rules.StringLengthRule;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.AccessPatternColumnsRule;
+import org.teiid.designer.metamodels.relational.aspects.validation.rules.CharDatatypeLengthRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnDatatypeRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnIntegerDatatypeRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnNativeTypeRule;
@@ -61,6 +62,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
     public static final ValidationRule INDEX_REF_MULTIPLE_TABLES = new IndexReferenceOneTableRule();
     public static final ValidationRule EMPTY_COLUMN_NATIVE_TYPE_RULE = new ColumnNativeTypeRule();
     public static final ValidationRule TABLE_MISSING_NAME_IN_SOURCE_RULE = new MissingNameInSourceRule();
+    public static final ValidationRule CHAR_DATATYPE_LENGTH_RULE = new CharDatatypeLengthRule();
 
     protected RelationalEntityAspect(final MetamodelEntity entity) {
         super(entity);

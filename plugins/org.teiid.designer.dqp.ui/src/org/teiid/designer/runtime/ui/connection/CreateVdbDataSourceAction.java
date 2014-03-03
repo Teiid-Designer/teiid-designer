@@ -144,21 +144,7 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
             	if (! result ) return;
             }
             
-            VdbDataSourceInfo info = new VdbDataSourceInfo(vdbName, vdbName, vdbName);
-            
-            info.setPassword(teiidServer.getTeiidJdbcInfo().getPassword());
-            info.setUsername(teiidServer.getTeiidJdbcInfo().getUsername());
-
-            final CreateVdbDataSourceDialog dialog = new CreateVdbDataSourceDialog(iww.getShell(), info, teiidServer);
-
-            final int rc = dialog.open();
-            if (rc != Window.OK)
-                return;
-
-            teiidServer.getOrCreateDataSource(info.getDisplayName(),
-                                              info.getJndiName(),
-                                              "teiid", //$NON-NLS-1$
-                                              info.getProperties());
+            doCreateDataSource(vdbName, teiidServer);
 
         } catch (Exception e) {
             if (selectedVdb != null) {
@@ -171,6 +157,26 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
 
             }
         }
+    }
+    
+    public static void doCreateDataSource(String vdbName, ITeiidServer teiidServer) throws Exception {
+    	final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
+    	
+        VdbDataSourceInfo info = new VdbDataSourceInfo(vdbName, vdbName, vdbName);
+        
+        info.setPassword(teiidServer.getTeiidJdbcInfo().getPassword());
+        info.setUsername(teiidServer.getTeiidJdbcInfo().getUsername());
+
+        final CreateVdbDataSourceDialog dialog = new CreateVdbDataSourceDialog(iww.getShell(), info, teiidServer);
+
+        final int rc = dialog.open();
+        if (rc != Window.OK)
+            return;
+
+        teiidServer.getOrCreateDataSource(info.getDisplayName(),
+                                          info.getJndiName(),
+                                          "teiid", //$NON-NLS-1$
+                                          info.getProperties());
     }
 
     /**

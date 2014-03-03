@@ -19,11 +19,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
+import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.eclipse.xsd.impl.XSDSimpleTypeDefinitionImpl;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportWsdlSchemaHandler;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.SchemaTreeModel.SchemaNode;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -32,7 +37,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  */
 public class ResponseSchemaContentsGroup {
 	TreeViewer schemaTreeViewer;
-	Action createColumnAction;
+	Action createColumnAction, setRootPathAction;
 	ColumnsInfoPanel columnsInfoPanel;
 	
 	// TYPE either BODY or SOAP
@@ -71,7 +76,7 @@ public class ResponseSchemaContentsGroup {
 			/**
 			 * {@inheritDoc}
 			 * 
-			 * @see oblafond@redhat.comrg.eclipse.jface.viewers.
+			 * @see org.eclipse.jface.viewers.
 			 *      ISelectionChangedListener #selectionChanged(org.eclipse
 			 *      .jface.viewers.SelectionChangedEvent)
 			 */
@@ -83,9 +88,15 @@ public class ResponseSchemaContentsGroup {
 					Object element = ((SchemaNode)selection.getFirstElement()).getElement();
 					if( ImportWsdlSchemaHandler.shouldCreateResponseColumn(element) ) {
 						columnMenuManager.add(createColumnAction);
+					} else if (element instanceof XSDElementDeclarationImpl ) {
+						Object type = ((XSDElementDeclarationImpl) element).getTypeDefinition();
+						if( type instanceof XSDComplexTypeDefinition) {
+							columnMenuManager.add(setRootPathAction);
+						}
+					} else if (element instanceof XSDParticleImpl ) {
+						columnMenuManager.add(setRootPathAction);
 					}
 				}
-
 			}
 		});
 
@@ -109,7 +120,25 @@ public class ResponseSchemaContentsGroup {
 				createResponseColumn();
 			}
 		};
-	}
+		 this.setRootPathAction = new Action(Messages.SetAsRootPath) {
+	            @Override
+	            public void run() {
+	            	setRootPath();
+	            }
+			};
+		}
+		
+	    private void setRootPath() {
+	    	IStructuredSelection selection = (IStructuredSelection) schemaTreeViewer.getSelection();
+	    	Object obj = selection.getFirstElement();
+    		String pathValue = ((SchemaNode)obj).getChildren().iterator().next().getFullPath();
+    		if( pathValue.endsWith("/")) { //$NON-NLS-1$
+    			pathValue = pathValue.substring(0, pathValue.length()-1);
+			}
+    		this.columnsInfoPanel.getRootPathText().setText(pathValue);
+    		getResponseInfo().setRootPath(pathValue);
+    		this.columnsInfoPanel.refresh();
+	    }
 	
 	public void setColumnsInfoPanel(ColumnsInfoPanel panel) {
 		this.columnsInfoPanel = panel;

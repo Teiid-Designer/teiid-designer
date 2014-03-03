@@ -42,7 +42,18 @@ public class SourceElement implements Serializable {
 
     SourceElement( final VdbSource source ) {
         name = source.getName();
-        jndiName = source.getJndiName();
+        
+        // Note: if jndi name is really empty, then the proper value is null so the attribute is not included
+        // in the vdb.xml
+        
+        String tempName = source.getJndiName();
+        if( tempName != null ) {
+        	tempName = tempName.trim();
+        	if( !tempName.isEmpty() ) {
+        		jndiName = source.getJndiName();
+        	}
+        }
+        
         translatorName = source.getTranslatorName();
     }
 

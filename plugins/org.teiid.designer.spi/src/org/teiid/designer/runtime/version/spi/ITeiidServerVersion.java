@@ -39,12 +39,18 @@ public interface ITeiidServerVersion {
     /**
      * Default teiid 8 server version
      */
-    String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + FOUR + DOT + ZERO;
+    String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
 
     /**
      * Default teiid 7 server version
      */
     String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
+    
+    
+    /**
+     * teiid 8.6 server version - required due to method added to Admin API
+     */
+    String TEIID_8_6_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
     
     
     /**

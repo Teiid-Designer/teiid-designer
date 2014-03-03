@@ -56,7 +56,8 @@ public interface RelationalModelExtensionConstants {
         String JAVA_METHOD = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "java-method"); //$NON-NLS-1$
         String FUNCTION_CATEGORY = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "function-category"); //$NON-NLS-1$
         String UDF_JAR_PATH = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "udfJarPath"); //$NON-NLS-1$
-
+        String NATIVE_TYPE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "native_type"); //$NON-NLS-1$
+        String GLOBAL_TEMP_TABLE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "global-temp-table"); //$NON-NLS-1$
     }
     
     interface PropertyKeysNoPrefix {
@@ -77,6 +78,8 @@ public interface RelationalModelExtensionConstants {
         String NON_PREPARED = "non-prepared"; //$NON-NLS-1$
         String USES_DISTINCT_ROWS = "uses-distinct-rows"; //$NON-NLS-1$
         String ALLOW_JOIN = "allow-join"; //$NON-NLS-1$
+        String NATIVE_TYPE = "native_type"; //$NON-NLS-1$
+        String GLOBAL_TEMP_TABLE = "global-temp-table"; //$NON-NLS-1$
 
     }
 

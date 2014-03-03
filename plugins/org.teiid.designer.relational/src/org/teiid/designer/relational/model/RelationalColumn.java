@@ -64,6 +64,7 @@ public class RelationalColumn extends RelationalReference {
     public static final String DEFAULT_MAXIMUM_VALUE = null;
     public static final String DEFAULT_MINIMUM_VALUE = null;
     public static final int DEFAULT_PRECISION = 0;
+    public static final int DEFAULT_NUMERIC_PRECISION = 1;
     public static final int DEFAULT_RADIX = 0;
     public static final int DEFAULT_SCALE = 0;
     public static final boolean DEFAULT_SIGNED = true;
@@ -73,13 +74,13 @@ public class RelationalColumn extends RelationalReference {
     
     public static final int DEFAULT_STRING_LENGTH = 4000;
     
-    private int distinctValueCount;
-    private int nullValueCount;
+    private int distinctValueCount = DEFAULT_DISTINCT_VALUE_COUNT;
+    private int nullValueCount = DEFAULT_NULL_VALUE_COUNT;
     private String  datatype;
     private String  nativeType;
-    private String  nullable;
+    private String  nullable = DEFAULT_NULLABLE;
     private boolean autoIncremented;
-    private boolean caseSensitive;
+    private boolean caseSensitive = DEFAULT_CASE_SENSITIVE;
     private String  characterSetName;
     private String  collationName;
     private boolean currency;
@@ -93,7 +94,7 @@ public class RelationalColumn extends RelationalReference {
     private int scale;
     private int radix;
     private int characterOctetLength;
-	private boolean signed;
+	private boolean signed = DEFAULT_SIGNED;
     private String  searchability = DEFAULT_SEARCHABILITY;
     private boolean selectable = DEFAULT_SELECTABLE;
     private boolean updateable = DEFAULT_UPDATEABLE;
@@ -104,7 +105,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn() {
         super();
         setType(TYPES.COLUMN);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -114,7 +115,7 @@ public class RelationalColumn extends RelationalReference {
     public RelationalColumn( String name ) {
         super(name);
         setType(TYPES.COLUMN);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
 
     /**
@@ -152,6 +153,15 @@ public class RelationalColumn extends RelationalReference {
      */
     public void setDatatype( String datatype ) {
         this.datatype = datatype;
+        if( this.precision == DEFAULT_PRECISION &&
+        	(this.datatype.equalsIgnoreCase("INTEGER") || //$NON-NLS-1$
+        	this.datatype.equalsIgnoreCase("DECIMAL") || //$NON-NLS-1$
+        	this.datatype.equalsIgnoreCase("LONG") || //$NON-NLS-1$
+        	this.datatype.equalsIgnoreCase("SHORT") || //$NON-NLS-1$
+        	this.datatype.equalsIgnoreCase("BIGDECIMAL") || //$NON-NLS-1$
+        	this.datatype.equalsIgnoreCase("BIGINTEGER")) ) { //$NON-NLS-1$
+        	setPrecision(DEFAULT_NUMERIC_PRECISION);
+        }
     }
     /**
      * @return nativeType

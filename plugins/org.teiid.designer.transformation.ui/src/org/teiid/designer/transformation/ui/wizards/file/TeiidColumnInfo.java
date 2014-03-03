@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
@@ -81,6 +82,8 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 	 * <code>TeiidColumnInfo</code>
 	 */
 	private IStatus status;
+	
+	RelationalStringNameValidator validator = new RelationalStringNameValidator(true);
 	
 	/**
 	 * 

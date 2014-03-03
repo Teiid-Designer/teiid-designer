@@ -52,6 +52,8 @@ public class ModelBuilder extends AbstractTeiidProjectBuilder implements Ignorab
     protected void clean( final IProgressMonitor monitor ) throws CoreException {
         super.clean(monitor);
         final IProject proj = getProject();
+        
+        proj.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE); // clear current markers
 
         // construct visitor to be used
         SearchIndexResourceVisitor visitor = new SearchIndexResourceVisitor();
@@ -135,6 +137,11 @@ public class ModelBuilder extends AbstractTeiidProjectBuilder implements Ignorab
                 }
 
                 ModelBuildUtil.buildResources(monitor, visitor.getResources(), container, false);
+                
+                Collection<IResource> projectResources = new ArrayList<IResource>(1);
+                projectResources.add(getProject());
+                
+                ModelBuildUtil.buildResources(monitor, projectResources, container, false);
 
                 return null;
             }
@@ -219,6 +226,10 @@ public class ModelBuilder extends AbstractTeiidProjectBuilder implements Ignorab
                 }
                 // build the resources (index and validate)
                 final Container container = doGetContainer();
+                
+                if( !iResources.contains(getProject()) ) {
+                	iResources.add(getProject());
+                }		
 
                 ModelBuildUtil.buildResources(monitor, iResources, container, false);
 

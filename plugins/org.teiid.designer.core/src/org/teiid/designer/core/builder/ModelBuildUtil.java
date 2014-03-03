@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.eclipse.core.resources.IFile;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -161,6 +161,7 @@ public class ModelBuildUtil {
             		unValidatedResources.add(theRes);
             	}
             }
+            //unValidatedResources.add(proj);
 
             validateResources(monitor, unValidatedResources, container, validateInContext);
             validatedResources.addAll(unValidatedResources);
@@ -426,10 +427,10 @@ public class ModelBuildUtil {
                 final ModelWorkspace workspace = ModelerCore.getModelWorkspace();
                 final ModelResource mResource = workspace.findModelResource(iResource);
 
-                // Find the Resource for the given IResource (unless IResource is VDB Resource)
+                // Find the Resource for the given IResource (unless IResource is VDB Resource or IProject)
                 // VDB IResources do not have a corresponding Emf Resource.
                 Resource resource = null;
-                if (!ModelUtil.isVdbArchiveFile(iResource)) {
+                if (!ModelUtil.isVdbArchiveFile(iResource) && !(iResource instanceof IProject) ) {
                     try {
                         if (mResource != null && mResource.getEmfResource() != null) {
                             resource = mResource.getEmfResource();
@@ -490,6 +491,33 @@ public class ModelBuildUtil {
                 ModelerCore.Util.log(e);
             }
         }
+    }
+    
+    private static void internalValidateProject( final IProgressMonitor monitor,
+									            final IProject project,
+									            final ResourceValidator validator,
+									            final boolean clearMarkers ) {
+		// create a monitor if needed
+		final IProgressMonitor progresssMonitor = (monitor != null ? monitor : new NullProgressMonitor());
+		
+		if (progresssMonitor.isCanceled() || !validator.isValidatorForObject(project)) {
+			return;
+		}
+		
+        final Object objToValidate = (project != null ? (Object)project : (Object)project);
+
+        final Stopwatch totalWatch = new Stopwatch();
+        totalWatch.start();
+        try {
+			validator.validate(progresssMonitor, objToValidate, null);
+		} catch (ModelerCoreException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+        totalWatch.stop();
+			
+		// path to the resource in the workspace
+		progresssMonitor.setTaskName(MONITOR_RESOURCE_VALIDATION_MSG + project.getName());
     }
 
     /**
@@ -580,7 +608,11 @@ public class ModelBuildUtil {
                                          final IResource iResource,
                                          final ResourceValidator validator,
                                          final ValidationContext context ) {
-        internalValidateResource(monitor, iResource, validator, context, true);
+    	if( iResource instanceof IProject ) {
+    		internalValidateProject(monitor, (IProject)iResource, validator, true);
+    	} else {
+    		internalValidateResource(monitor, iResource, validator, context, true);
+    	}
     }
 
     /**
@@ -686,7 +718,7 @@ public class ModelBuildUtil {
 
                 if (ModelUtil.isModelFile(iResource)) {
                     try {
-                        final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource((IFile)iResource);
+                        final ModelResource modelResource = ModelerCore.getModelEditor().findModelResource(iResource);
 
                         if (modelResource != null) {
                             temp.add(modelResource.getEmfResource());

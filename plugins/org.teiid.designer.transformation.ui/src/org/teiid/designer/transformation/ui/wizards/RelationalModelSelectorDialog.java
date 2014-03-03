@@ -62,7 +62,6 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
     private Label lblRelationalModelName;
     private Text txtRelationalModelName;
     private IContainer newModelParent;
-    private IPath targetRelationalFilePath;
     private ModelResource mrRelationalModel;
     private EObject selectedEObject;
     private SelectionAdapter saCreateCbxAdapter;
@@ -370,7 +369,7 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
         IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES_OTHER_THAN_LOCATION | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
         if( status.getSeverity() == IStatus.ERROR ) {
-        	return status.getMessage();
+        	return ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage();
         }
 
         // success

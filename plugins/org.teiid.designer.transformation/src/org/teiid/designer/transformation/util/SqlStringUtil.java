@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.util;
 
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.query.sql.ISQLConstants;
 
 /**
@@ -336,5 +337,37 @@ public final class SqlStringUtil implements ISQLConstants {
                 start = source.toString().indexOf(search, start + replace.length());
             }
         }
-    }    
+    }
+    
+    /**
+     * Utility method used to insert or replace SQL text, or any text for that matter
+     * 
+     * @param originalSqlText
+     * @param newSqlText
+     * @param insertOption (See <code>ISQLConstants.INSERT_OPTIONS</code> for values)
+     * @param cursorOffset
+     * @return
+     */
+    public static String insertSql(final String originalSqlText, final String newSqlText, final int insertOption, final int cursorOffset) {
+    	CoreArgCheck.isTrue(insertOption <= INSERT_OPTIONS.INSERT_AT_END, "Insert SQL text option does not exist"); //$NON-NLS-1$
+    	// Insert at the offset
+    	switch( insertOption ) {
+
+    		case INSERT_OPTIONS.INSERT_AT_BEGINNING:  {
+        		return newSqlText + originalSqlText;
+        	}
+    		case INSERT_OPTIONS.INSERT_AT_CURSOR:  {
+    	    	StringBuilder sb = new StringBuilder();
+    	    	sb.append(originalSqlText.substring(0, cursorOffset));
+    	    	sb.append(newSqlText);
+    	    	sb.append(originalSqlText.substring(cursorOffset));
+    	    	return sb.toString();
+        	}
+    		case INSERT_OPTIONS.INSERT_AT_END:  {
+        		return originalSqlText + newSqlText;
+        	}
+    		case INSERT_OPTIONS.REPLACE_ALL:
+    		default: return newSqlText;
+    	}
+    }
 }

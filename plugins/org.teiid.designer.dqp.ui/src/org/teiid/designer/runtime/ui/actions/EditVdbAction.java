@@ -7,7 +7,10 @@
 */
 package org.teiid.designer.runtime.ui.actions;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
@@ -24,13 +27,18 @@ import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
+import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 
 /**
  * @since 8.0
  */
 public class EditVdbAction  extends Action implements VdbConstants {
 	private static final String PREFIX = I18nUtil.getPropertyPrefix(EditVdbAction.class);
+	
+	
+	Properties designerProperties;
 	
     /**
      * @since 5.0
@@ -40,48 +48,70 @@ public class EditVdbAction  extends Action implements VdbConstants {
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EDIT_VDB));
         setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
     }
+    
+    /**
+     * @since 5.0
+     */
+    public EditVdbAction(Properties properties) {
+        super();
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.EDIT_VDB));
+        setToolTipText(DqpUiConstants.UTIL.getString(PREFIX + "tooltip")); //$NON-NLS-1$
+        designerProperties = properties;
+    }
 
     @Override
 	public void run() {
-		ModelWorkspaceDialog vdbDialog = getSelectVdbDialog();
-
-		// add filters
-		vdbDialog.addFilter(new ClosedProjectFilter());
-
-		vdbDialog.open();
-
-		if (vdbDialog.getReturnCode() == Window.OK) {
-			Object[] selections = vdbDialog.getResult();
-			// should be single selection
-			IFile selectedVdb = (IFile) selections[0];
-			
+    	IResource theVdb = DesignerPropertiesUtil.getVDB(designerProperties);
+    	IFile selectedVdb = null;
+    	
+    	if( theVdb != null ) {
+    		selectedVdb = (IFile)theVdb;
+    	}
+    	
+    	if( selectedVdb == null ) {
+			ModelWorkspaceDialog vdbDialog = getSelectVdbDialog();
+	
+			// add filters
+			vdbDialog.addFilter(new ClosedProjectFilter());
+	
+			vdbDialog.open();
+	
+			if (vdbDialog.getReturnCode() == Window.OK) {
+				Object[] selections = vdbDialog.getResult();
+				// should be single selection
+				selectedVdb = (IFile) selections[0];
+			}
+    	}
+		
+		if( selectedVdb != null ) {
 			try {
 				IDE.openEditor(UiUtil.getWorkbenchPage(), selectedVdb, true);
 			} catch (PartInitException ex) {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();
 			}
-			
-			//ModelEditorManager.getModelEditorForFile(selectedVdb, true);
 		}
     }
 
     
     private ModelWorkspaceDialog getSelectVdbDialog() {
 
-		ModelWorkspaceDialog result = new ModelWorkspaceDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
+		ModelWorkspaceDialog selectVdbDialog = new ModelWorkspaceDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
 				null, new ModelExplorerLabelProvider(),
 				new ModelExplorerContentProvider());
+		// add filters
+		selectVdbDialog.addFilter(new ClosedProjectFilter());
+		selectVdbDialog.addFilter(new SingleProjectFilter(this.designerProperties));
 
 		String title = DqpUiConstants.UTIL.getString(PREFIX + "selectionDialog.title"); //$NON-NLS-1$
 		String message = DqpUiConstants.UTIL.getString(PREFIX + "selectionDialog.message"); //$NON-NLS-1$
-		result.setTitle(title);
-		result.setMessage(message);
-		result.setAllowMultiple(false);
+		selectVdbDialog.setTitle(title);
+		selectVdbDialog.setMessage(message);
+		selectVdbDialog.setAllowMultiple(false);
 
-		result.setInput(ModelerCore.getWorkspace().getRoot());
+		selectVdbDialog.setInput(ModelerCore.getWorkspace().getRoot());
 
-		result.setValidator(new ISelectionStatusValidator() {
+		selectVdbDialog.setValidator(new ISelectionStatusValidator() {
 			@Override
 			public IStatus validate(Object[] selection) {
 				if (selection != null
@@ -101,6 +131,6 @@ public class EditVdbAction  extends Action implements VdbConstants {
 			}
 		});
 
-		return result;
+		return selectVdbDialog;
 	}
 }

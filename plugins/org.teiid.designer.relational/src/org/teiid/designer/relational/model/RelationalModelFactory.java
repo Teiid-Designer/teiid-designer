@@ -101,7 +101,7 @@ public class RelationalModelFactory implements RelationalConstants {
         this.datatypeProcessor = new DatatypeProcessor();
     }
     
-    private RelationalModelExtensionAssistant getExtensionAssistant() {
+    protected RelationalModelExtensionAssistant getExtensionAssistant() {
     	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
         final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
@@ -791,7 +791,6 @@ public class RelationalModelFactory implements RelationalConstants {
 				assistant.setPropertyValue(baseTable, 
 						BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY, 
 						tableRef.getNativeQuery() );
-
 			} catch (Exception ex) {
 				RelationalPlugin.Util.log(IStatus.ERROR, ex, 
 	                	NLS.bind(Messages.relationalModelFactory_error_setting_extension_props_on_0, tableRef.getName()));

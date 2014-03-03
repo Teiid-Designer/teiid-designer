@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
@@ -25,9 +26,9 @@ import org.teiid.designer.modelgenerator.wsdl.WSDLReader;
 import org.teiid.designer.modelgenerator.wsdl.model.Model;
 import org.teiid.designer.modelgenerator.wsdl.model.ModelGenerationException;
 import org.teiid.designer.modelgenerator.wsdl.model.Operation;
-import org.teiid.designer.modelgenerator.wsdl.model.Port;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ImportManagerValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureGenerator;
+import org.teiid.designer.query.proc.wsdl.model.IPort;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -77,7 +78,7 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     
     private Model wsdlModel;
     
-    private String translatorDefaultBinding = Port.SOAP11;
+    private String translatorDefaultBinding = IPort.SOAP11;
     private String translatorDefaultServiceMode = PAYLOAD; 
     
     private Properties designerProperties;
@@ -275,7 +276,7 @@ public class WSDLImportWizardManager implements IChangeNotifier {
             if (binding != null) {
                 setTranslatorDefaultBinding(binding);
             } else {
-                setTranslatorDefaultBinding(Port.SOAP11);
+                setTranslatorDefaultBinding(IPort.SOAP11);
             }
 		}
 		setChanged(true);

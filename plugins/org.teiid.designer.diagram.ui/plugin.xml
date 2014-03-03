@@ -31,15 +31,6 @@
             id="diagramPreferencePage">
       </page>
    </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            name="%diagramPrintPreferences"
-            category="modelerPreferencePage"
-            class="org.teiid.designer.diagram.ui.preferences.DiagramPrintPreferencePage"
-            id="diagramPrintPreferencePage">
-      </page>
-   </extension>
 <!-- Adding the diagram editor as a Model Editor Page -->
    <extension
          id="diagramEditorPage"

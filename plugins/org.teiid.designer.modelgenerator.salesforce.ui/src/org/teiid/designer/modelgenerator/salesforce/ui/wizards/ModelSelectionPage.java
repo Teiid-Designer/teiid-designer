@@ -525,7 +525,7 @@ public class ModelSelectionPage extends AbstractWizardPage
             IStatus status = ModelNameUtil.validate(fileName, ModelerCore.MODEL_FILE_EXTENSION, targetModelLocation,
             		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
             if( status.getSeverity() == IStatus.ERROR ) {
-                WizardUtil.setPageComplete(this, status.getMessage(), ERROR);
+                WizardUtil.setPageComplete(this, ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
                 targetModelLocation = null;
             } else {
                 final String folderName = folderText.getText();

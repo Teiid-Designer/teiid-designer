@@ -87,7 +87,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		return Util.getString(I18N_PREFIX + id, param);
 	}
 
-	RelationalStringNameValidator validator = new RelationalStringNameValidator(true, true);
+	RelationalStringNameValidator validator = new RelationalStringNameValidator(true);
 	
 	// View Model Variables
 	private Text viewModelContainerText;
@@ -412,7 +412,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
         IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
         if( status.getSeverity() == IStatus.ERROR ) {
-        	setThisPageComplete(status.getMessage(), ERROR);
+        	setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME + status.getMessage(), ERROR);
 			return false;
 		}
 

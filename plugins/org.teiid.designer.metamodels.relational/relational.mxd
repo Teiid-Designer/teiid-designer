@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="3" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="4" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>
@@ -61,10 +61,21 @@
         <p:property advanced="false" index="true" masked="false" name="native-query" required="false" type="string">
             <p:display locale="en">Native Query</p:display>
         </p:property>
+        <p:property advanced="false" defaultValue="false" index="false" masked="false" name="global-temp-table" required="false" type="boolean">
+            <p:display locale="en_US">Global Temp Table</p:display>
+            <p:allowedValue>false</p:allowedValue>
+            <p:allowedValue>true</p:allowedValue>
+        </p:property>
     </p:extendedMetaclass>
     <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ForeignKeyImpl">
         <p:property advanced="false" defaultValue="true" index="true" masked="false" name="allow-join" required="false" type="boolean">
             <p:display locale="en">Allow Join</p:display>
+        </p:property>
+    </p:extendedMetaclass>
+    <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ProcedureParameterImpl">
+        <p:property advanced="false" index="true" masked="false" name="native_type" required="false" type="string">
+         <p:description locale="en">Allows specifying a native type for OUT parameters. Typical value is REF CURSOR</p:description>
+        	<p:display locale="en">Native Type</p:display>
         </p:property>
     </p:extendedMetaclass>
 </modelExtension>

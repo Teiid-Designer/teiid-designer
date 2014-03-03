@@ -88,6 +88,11 @@ public class TeiidServer implements ITeiidServer {
      */
     private final IServer parentServer;
 
+    /**
+     * Adapter factory providing adaption and teiid utilities
+     */
+    private TeiidServerAdapterFactory serverAdapterFactory;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -176,11 +181,11 @@ public class TeiidServer implements ITeiidServer {
         if (! isParentConnected()) {
             throw new Exception(DqpPlugin.Util.getString("jbossServerNotStartedMessage")); //$NON-NLS-1$
         }
-        
+
         if (this.admin == null) {
             try {
                 this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
-            
+
                 if (admin != null) {
                     /*
                      * Avoid the refresh listener being fired prematurely by the admin client.
@@ -189,6 +194,24 @@ public class TeiidServer implements ITeiidServer {
                      */
                     getEventManager().permitListeners(false);
 
+                    /*
+                     * Since we have connected successfully, query the runtime version
+                     * of the server to ensure it is correct rather than the guess made
+                     * when the server was stopped.
+                     */
+                    try {
+                        ITeiidServerVersion teiidVersion = getAdapterFactory().getTeiidRuntimeVersion(parentServer);
+                        if (teiidVersion != null)
+                            serverVersion = teiidVersion;
+                    } catch (Exception ex) {
+                        DqpPlugin.Util.log(ex);
+                    }
+
+                    /*
+                     * The version should be determined prior to this 'connect'
+                     * which is in fact nothing but a refresh, which may well
+                     * depend on the version being correct.
+                     */
                     this.admin.connect();
                 }
             } catch (Exception ex) {
@@ -201,7 +224,17 @@ public class TeiidServer implements ITeiidServer {
             notifyRefresh();
         }
     }
-    
+
+    /**
+     * @return server adapter factory
+     */
+    private TeiidServerAdapterFactory getAdapterFactory() {
+        if (serverAdapterFactory == null)
+            serverAdapterFactory = new TeiidServerAdapterFactory();
+
+        return serverAdapterFactory;
+    }
+
     @Override
     public void reconnect() {
         try {
@@ -328,8 +361,7 @@ public class TeiidServer implements ITeiidServer {
             return false;
         
         try {
-            TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
-            return factory.isParentServerConnected(parentServer);
+            return getAdapterFactory().isParentServerConnected(parentServer);
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
             return false;

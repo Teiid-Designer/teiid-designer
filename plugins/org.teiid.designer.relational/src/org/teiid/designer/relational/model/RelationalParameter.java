@@ -63,7 +63,7 @@ public class RelationalParameter extends RelationalReference {
     public RelationalParameter() {
         super();
         setType(TYPES.PARAMETER);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -73,7 +73,7 @@ public class RelationalParameter extends RelationalReference {
     public RelationalParameter( String name ) {
         super(name);
         setType(TYPES.PARAMETER);
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**

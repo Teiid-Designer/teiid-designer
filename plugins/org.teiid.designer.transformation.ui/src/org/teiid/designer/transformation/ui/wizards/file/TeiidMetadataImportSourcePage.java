@@ -14,11 +14,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -407,6 +408,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		this.fileViewer.getControl().setLayoutData(gd);
 		fileContentProvider = new DataFolderContentProvider();
 		fileContentProvider.setFilterString(FILTER_INIT);
+		this.fileViewer.setSorter(new ViewerSorter());
 		this.fileViewer.setContentProvider(fileContentProvider);
 		this.fileViewer.setLabelProvider(new FileSystemLabelProvider());
 
@@ -1064,10 +1066,18 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	}
     	this.selectedFileText.setText(fileName);
     	if( fileName_wo_extension != null && (this.info.getSourceModelName() == null || this.info.getSourceModelName().length() == 0) ) {
-    		this.info.setSourceModelName(fileName_wo_extension + "_source"); //$NON-NLS-1$
+    		String initialName = "SourceModel"; //$NON-NLS-1$
+			if( this.info.getSourceModelLocation() != null ) {
+				initialName = ModelNameUtil.getNewUniqueModelName(initialName, this.info.getTargetProject());
+			}
+			this.info.setSourceModelName(initialName);
     	}
     	if( fileName_wo_extension != null && (this.info.getViewModelName() == null || this.info.getViewModelName().length() == 0) ) {
-    		this.info.setViewModelName(fileName_wo_extension + "_view"); //$NON-NLS-1$
+    		String initialName = "ViewModel"; //$NON-NLS-1$
+			if( this.info.getViewModelLocation() != null ) {
+				initialName = ModelNameUtil.getNewUniqueModelName(initialName, this.info.getTargetProject());
+			}
+			this.info.setViewModelName(initialName);
     	}
     }
 
@@ -1177,7 +1187,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	setThisPageComplete(Util.getString(I18N_PREFIX + "sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
             return false;
         }				
-        IProject project = getTargetProject();
+        IProject project = this.info.getTargetProject();
         if (project == null) {
         	setThisPageComplete(Util.getString(I18N_PREFIX + "sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
             return false;
@@ -1188,7 +1198,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
         		ModelNameUtil.IGNORE_CASE );
         if( status.getSeverity() == IStatus.ERROR ) {
-        	setThisPageComplete(status.getMessage(), ERROR);
+        	setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_SOURCE_MODEL_NAME + status.getMessage(), ERROR);
             return false;
         }
         
@@ -1213,21 +1223,21 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
     	WizardUtil.setPageComplete(this, message, severity);
     }
 	
-    public IProject getTargetProject() {
-        IProject result = null;
-        String containerName = getSourceContainerName();
-
-        if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
-            IResource resource = root.findMember(new Path(containerName));
-
-            if (resource.exists()) {
-                result = resource.getProject();
-            }
-        }
-
-        return result;
-    }
+//    public IProject getTargetProject() {
+//        IProject result = null;
+//        String containerName = getSourceContainerName();
+//
+//        if (!CoreStringUtil.isEmpty(containerName)) {
+//            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
+//            IResource resource = root.findMember(new Path(containerName));
+//
+//            if (resource.exists()) {
+//                result = resource.getProject();
+//            }
+//        }
+//
+//        return result;
+//    }
 	
     public String getSourceContainerName() {
         String result = null;

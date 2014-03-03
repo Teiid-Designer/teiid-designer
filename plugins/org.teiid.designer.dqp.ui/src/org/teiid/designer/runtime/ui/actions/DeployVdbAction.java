@@ -35,6 +35,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.runtime.ui.connection.CreateVdbDataSourceAction;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
@@ -54,6 +55,8 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     private final Collection<IFile> selectedVDBs = new ArrayList<IFile>();
     
     Properties designerProperties;
+    
+    static String failedModelName = null;
 
     /**
      * Create a new instance
@@ -133,20 +136,32 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
             if (doDeploy) {
-                deployVdb(teiidServer, nextVDB);
+            	boolean deploySuccess = deployVdb(teiidServer, nextVDB);
 
+            	String vdbName = nextVDB.getFullPath().removeFileExtension().lastSegment();
                 try {
                     // make sure deployment worked before going on to the next one
-                    if (! teiidServer.hasVdb(nextVDB.getName())) {
+                    if (! teiidServer.hasVdb(vdbName)) {
+                    	deploySuccess = false;
                         break;
                     }
                 } catch (Exception ex) {
                     DqpPlugin.Util.log(ex);
 		    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-				    String vdbName = nextVDB.getFullPath().removeFileExtension().lastSegment();
 		    		String title = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.title", vdbName, teiidServer); //$NON-NLS-1$
 					String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbDataSource.msg", vdbName, teiidServer); //$NON-NLS-1$
 					ErrorDialog.openError(shell, title, null, new Status(IStatus.ERROR, PLUGIN_ID, message, ex));
+                }
+                
+                if( deploySuccess ) {
+                	try {
+						CreateVdbDataSourceAction.doCreateDataSource(vdbName, teiidServer);
+					} catch (Exception ex) {
+						Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+		                MessageDialog.openError(shell,
+                                UTIL.getString("CreateVdbDataSourceAction.errorCreatingDataSourceForVDB", vdbName), ex.getMessage()); //$NON-NLS-1$
+		                DqpUiConstants.UTIL.log(IStatus.ERROR, ex, UTIL.getString("CreateVdbDataSourceAction.errorCreatingDataSourceForVDB",vdbName)); //$NON-NLS-1$
+					}
                 }
             }
         }
@@ -240,9 +255,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
      * @param teiidServer the teiidServer where the VDB is being deployed to (can be <code>null</code>)
      * @param vdbOrVdbFile the VDB being deployed
      */
-    public static void deployVdb( ITeiidServer teiidServer,
+    public static boolean deployVdb( ITeiidServer teiidServer,
                                  final Object vdbOrVdbFile ) {
-    	deployVdb(teiidServer, vdbOrVdbFile, shouldAutoCreateDataSource());
+    	return deployVdb(teiidServer, vdbOrVdbFile, shouldAutoCreateDataSource());
     }
     
 	/**
@@ -252,9 +267,9 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 	 * @param vdbOrVdbFile the VDB
 	 * @param doCreateDataSource 'true' to create corresponding datasource, 'false' if not.
 	 */
-	public static void deployVdb(ITeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
+	public static boolean deployVdb(ITeiidServer teiidServer, final Object vdbOrVdbFile, final boolean doCreateDataSource) {
 		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-
+		
 		try {
 			if (!(vdbOrVdbFile instanceof IFile) && !(vdbOrVdbFile instanceof Vdb)) {
 				throw new IllegalArgumentException(UTIL.getString(I18N_PREFIX + "selectionIsNotAVdb")); //$NON-NLS-1$
@@ -262,7 +277,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 			// make sure there is a Teiid connection
 			if (! teiidServer.isConnected()) {
-				return;
+				return false;
 			}
 
 			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb(
@@ -271,12 +286,14 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 			if(!vdb.isSynchronized()) {
 	    		String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
 	    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
-	        	if (!MessageDialog.openQuestion(shell,title,msg)) return;
+	        	if (!MessageDialog.openQuestion(shell,title,msg)) return false;
 	     	}
 			
 			final VdbDeployer deployer = new VdbDeployer(shell, vdb, teiidServer, doCreateDataSource);
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-
+			
+			failedModelName = null;
+			
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 				/**
 				 * {@inheritDoc}
@@ -287,7 +304,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 				public void run(IProgressMonitor monitor)
 						throws InvocationTargetException {
 					try {
-						deployer.deploy(monitor);
+						failedModelName = deployer.deploy(monitor);
 					} catch (Exception e) {
 						throw new InvocationTargetException(e);
 					}
@@ -304,7 +321,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 				String message = null;
 
 				if (VdbDeployer.DeployStatus.CREATE_DATA_SOURCE_FAILED == status) {
-					message = UTIL.getString(I18N_PREFIX + "createDataSourceFailed", deployer.getVdbName()); //$NON-NLS-1$
+					message = UTIL.getString(I18N_PREFIX + "createDataSourceFailed", deployer.getVdbName(), failedModelName); //$NON-NLS-1$
 				} else if (VdbDeployer.DeployStatus.DEPLOY_VDB_FAILED == status) {
 					message = UTIL.getString(I18N_PREFIX + "vdbFailedToDeploy", deployer.getVdbName()); //$NON-NLS-1$
 				} else if (VdbDeployer.DeployStatus.TRANSLATOR_PROBLEM == status) {
@@ -321,6 +338,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 				// show user the error
 				MessageDialog.openError(shell,UTIL.getString(I18N_PREFIX+ "vdbNotDeployedTitle"), message); //$NON-NLS-1$
+				return false;
 			} else if (status.isDeployed()) {
 				if (teiidServer.wasVdbRemoved(deployer.getVdbName())) {
 					StringBuilder message = new StringBuilder(UTIL.getString(
@@ -333,7 +351,10 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 
 					MessageDialog
 							.openWarning(shell, UTIL.getString(I18N_PREFIX + "vdbNotActiveTitle"), message.toString()); //$NON-NLS-1$
+					return true;
 				}
+			} else {
+				return false;
 			}
 		} catch (Throwable e) {
 			if (e instanceof InvocationTargetException) {
@@ -353,7 +374,11 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 			String message = UTIL.getString(I18N_PREFIX + "problemDeployingVdbToServer", vdbName, teiidServer); //$NON-NLS-1$
 			UTIL.log(e);
 			ErrorDialog.openError(shell, message, null, new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+			
+			return false;
 		}
+		
+		return true;
 	}
 
     /**

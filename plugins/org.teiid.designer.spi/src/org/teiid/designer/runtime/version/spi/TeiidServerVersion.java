@@ -43,6 +43,11 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * The default teiid 7 server version
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
+    
+    /**
+     * The teiid 8.6 server version - this version introduced an Admin API change
+     */
+    public static final ITeiidServerVersion TEIID_8_6_SERVER = new TeiidServerVersion(TEIID_8_6_SERVER_ID);
 
     /**
      * The default preferred server

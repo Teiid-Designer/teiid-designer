@@ -25,6 +25,8 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ObjectExtension;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.ModelObjectPropertySource;
@@ -325,6 +327,10 @@ public class ModelRowElement {
      * @return the value object
      */
     public final Object getValue(int index){
+    	if( modelObject.eIsProxy()  ) {
+			return null;
+    	}
+    	
         Object result = null;
         Object propertyId = tableModel.getPropertyIdAtIndex(index);
         if (tableModel.isLocationColumn(propertyId)) {
@@ -332,7 +338,15 @@ public class ModelRowElement {
         	if( container != null ) {
         		result = ModelUtilities.getEMFLabelProvider().getText(modelObject.eContainer());
         	} else {
-        		result = ModelUtilities.getModelName(modelObject);
+        		try {
+					ModelResource mr = ModelUtilities.getModelResource(modelObject);
+					if( mr != null && mr.getCorrespondingResource() != null ) {
+						result = ModelUtilities.getModelName(modelObject);
+					}
+				} catch (ModelWorkspaceException ex) {
+					String message = "[ModelRowElement.getValue()]:  exception finding resource for model"; //$NON-NLS-1$
+		            UiConstants.Util.log(IStatus.ERROR, ex, message);
+				}
         	}
         } else if (tableModel.isDescriptionColumn(propertyId)) {
             result = ModelObjectUtilities.getDescription(modelObject);

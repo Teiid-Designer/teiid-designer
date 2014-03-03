@@ -226,7 +226,7 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (ITeiidServerVersion version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure1", version84, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+            addExpectedResult("testCreateUpdateProcedure1", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         addExpectedResult("testCreateUpdateProcedure2", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -236,7 +236,7 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (ITeiidServerVersion version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure2", version84, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+            addExpectedResult("testCreateUpdateProcedure2", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         addExpectedResult("testCreateUpdateProcedure3", VERSION_7_7_2, "CREATE PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tERROR 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -246,7 +246,7 @@ public class TestDisplayNodeFactory extends TestCase {
         }
 
         for (ITeiidServerVersion version84 : VERSIONS_8_4) {
-            addExpectedResult("testCreateUpdateProcedure3", version84, "CREATE VIRTUAL PROCEDURE\nBEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
+            addExpectedResult("testCreateUpdateProcedure3", version84, "BEGIN\n\tDELETE FROM g;\n\ta = 1;\n\tRAISE 'My Error';\nEND"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         addExpectedResult("testTrimAliasSymbol", VERSION_7_7_2, "SELECT\n\t\ttrim(' ' FROM X) AS ID\n\tFROM\n\t\tY"); //$NON-NLS-1$ //$NON-NLS-2$

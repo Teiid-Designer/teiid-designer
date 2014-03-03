@@ -366,6 +366,7 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
     	
     	boolean hasTableOrProcedure = false;
 
+		@SuppressWarnings("unused")
 		@Override
 		public boolean visit(EObject object) throws ModelerCoreException {
 			// Tables are contained by Catalogs, Schemas and Resources
@@ -388,6 +389,7 @@ public class GenerateXsdSchemaAction2 extends SortableSelectionAction {
 	        return false;
 		}
 
+		@SuppressWarnings("unused")
 		@Override
 		public boolean visit(Resource resource) throws ModelerCoreException {
 			return true;

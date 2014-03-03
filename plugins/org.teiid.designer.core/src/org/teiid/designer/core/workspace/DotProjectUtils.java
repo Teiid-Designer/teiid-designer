@@ -10,10 +10,10 @@ package org.teiid.designer.core.workspace;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.common.xml.JdomHelper;
 import org.teiid.designer.core.ModelerCore;
@@ -328,5 +327,9 @@ public class DotProjectUtils {
         }
 
         return openModelProjectList;
+    }
+    
+    public static Collection<IFile> getAllProjectResources(final IProject project) {
+    	return WorkspaceResourceFinderUtil.getProjectFileResources(project);  	
     }
 }

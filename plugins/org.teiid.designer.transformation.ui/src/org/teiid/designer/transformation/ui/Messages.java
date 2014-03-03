@@ -81,6 +81,7 @@ public class Messages extends NLS {
     public static String foreignKeysLabel;
     public static String primaryKeyLabel;
     public static String uniqueConstraintLabel;
+    public static String globalTempTableLabel;
 
     public static String nameLabel;
     public static String propertiesLabel;
@@ -163,6 +164,14 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogSqlAreaGroup;
     public static String sqlTemplateDialogSelectTabTitle;
     public static String sqlTemplateDialogProceduresTabTitle;
+    public static String sqlTemplateInsertTextOptionsTitle;
+    public static String sqlTemplateReplaceAllOptionLabel;
+    public static String sqlTemplateInsertAtBeginningOptionLabel;
+    public static String sqlTemplateInsertAtCursorOptionLabel;
+    public static String sqlTemplateInsertAtEndOptionLabel;
+    public static String confirmSqlReplaceDialogTitle;
+    public static String confirmSqlReplaceDialogMessage;
+    public static String confirmSqlReplaceDialogMessage_2;
     
     public static String DefaultUpdateMessageOK;
     public static String DefaultUpdateMessageAmbigious;

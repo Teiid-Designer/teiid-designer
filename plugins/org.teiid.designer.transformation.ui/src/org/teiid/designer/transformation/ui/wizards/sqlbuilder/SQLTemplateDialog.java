@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -62,6 +63,9 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
     Button xmlFileLocalSourceRB, xmlFileUrlSourceRB;
     Button simpleDefaultProcRB, insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, 
     	soapCreateProcRB, soapExtractProcRB, restProcedureRB;
+    Button replaceSQL_RB, insertAtBeginning_RB, insertAtCursor_RB, insertAtEnd_RB;
+    
+    int insertOptionValue = 0;
 
     //=============================================================
     // Constructors
@@ -159,6 +163,53 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
                 widgetSelected(e);
             }
         });
+        
+        Group optionsGroup = WidgetFactory.createGroup(parent, Messages.sqlTemplateInsertTextOptionsTitle, SWT.NONE, 1, 1);
+        optionsGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+        // Simple SELECT Query
+        this.replaceSQL_RB = WidgetFactory.createRadioButton(optionsGroup, Messages.sqlTemplateReplaceAllOptionLabel, SWT.NONE, 1, true);
+        this.replaceSQL_RB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                updateInsertOption();
+            }
+        });
+        this.insertAtBeginning_RB = WidgetFactory.createRadioButton(optionsGroup,  Messages.sqlTemplateInsertAtBeginningOptionLabel, SWT.NONE, 1, false);
+        this.insertAtBeginning_RB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                updateInsertOption();
+            }
+        });
+        this.insertAtCursor_RB = WidgetFactory.createRadioButton(optionsGroup,  Messages.sqlTemplateInsertAtCursorOptionLabel, SWT.NONE, 1, false);
+        this.insertAtCursor_RB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                updateInsertOption();
+            }
+        });
+        this.insertAtEnd_RB = WidgetFactory.createRadioButton(optionsGroup,  Messages.sqlTemplateInsertAtEndOptionLabel, SWT.NONE, 1, false);
+        this.insertAtEnd_RB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                updateInsertOption();
+            }
+        });
+    }
+    
+    void updateInsertOption() {
+    	this.insertOptionValue = ISQLConstants.INSERT_OPTIONS.REPLACE_ALL;
+    	if( insertAtCursor_RB.getSelection() ) {
+    		this.insertOptionValue = ISQLConstants.INSERT_OPTIONS.INSERT_AT_CURSOR;
+    	} else if( insertAtEnd_RB.getSelection() ) {
+    		this.insertOptionValue = ISQLConstants.INSERT_OPTIONS.INSERT_AT_END;
+    	} else if( insertAtBeginning_RB.getSelection() ) {
+    		this.insertOptionValue = ISQLConstants.INSERT_OPTIONS.INSERT_AT_BEGINNING;
+    	}
+    }
+    
+    public int getInsertOption() {
+    	return this.insertOptionValue;
     }
 
     /*

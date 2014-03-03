@@ -198,7 +198,7 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
                 this.ddlContentsBox.setText(ddl);
             } else {
                 IStatus deployStatus = importManager.deployDynamicVdb();
-                if(!deployStatus.isOK()) {
+                if(deployStatus == null || !deployStatus.isOK()) {
                     ddlContentsBox.setText(Messages.ShowDDLPage_vdbDeploymentErrorMsg);  
                 } else {
                     String ddl = importManager.getDdl();

@@ -7,16 +7,24 @@
 */
 package org.teiid.designer.advisor.ui.actions;
 
+import java.util.Properties;
+
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
+import org.teiid.designer.advisor.ui.util.DesignerPropertiesMapperUtil;
 
 public class AdvisorActionProvider implements ILabelProvider, ITreeContentProvider {
+	Properties designerProperties;
 
 	public AdvisorActionProvider() {
 		super();
+	}
+	
+	public void setProperties(Properties properties) {
+		designerProperties = properties;
 	}
 
 	
@@ -61,7 +69,8 @@ public class AdvisorActionProvider implements ILabelProvider, ITreeContentProvid
 	@Override
 	public String getText(Object element) {
 		if( element instanceof AdvisorActionInfo ) {
-			return ((AdvisorActionInfo)element).getDisplayName();
+			return addPropertyToDisplayName((AdvisorActionInfo)element);
+			//return ((AdvisorActionInfo)element).getDisplayName();
 		}
 		return null;
 	}
@@ -91,6 +100,19 @@ public class AdvisorActionProvider implements ILabelProvider, ITreeContentProvid
 	@Override
 	public boolean hasChildren(Object element) {
 		return getChildren(element).length > 0;
+	}
+	
+	private String addPropertyToDisplayName(AdvisorActionInfo actionInfo) {
+		StringBuilder sb = new StringBuilder(actionInfo.getDisplayName());
+		String valueLabel = DesignerPropertiesMapperUtil.getActionsValueLabel(actionInfo.getId(), designerProperties);
+		if( valueLabel != null && valueLabel.length() > 0 ) {
+			if( ! DesignerPropertiesMapperUtil.IGNORE.equals(valueLabel) ) {
+				sb.append(" >>    ").append("( " + valueLabel + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+		} else {
+			sb.append(" >>    ").append("<undefined>"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return sb.toString();
 	}
 
 }

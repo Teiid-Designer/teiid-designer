@@ -20,9 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-    <releaseinfo>8.3.1
+    <releaseinfo>8.4.0
     </releaseinfo>
-    <productnumber>8.3.1
+    <productnumber>8.4.0
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -34,7 +34,7 @@
       </imageobject>
     </mediaobject>
     <copyright>
-      <year>2013
+      <year>2014
       </year>
       <holder>Red Hat, Inc.
       </holder>

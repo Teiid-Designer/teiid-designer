@@ -36,6 +36,7 @@ public class ColumnAspect extends RelationalEntityAspect {
 		addRule(COLUMN_DATATYPE_RULE);  
 		addRule(COLUMN_INTEGER_DATATYPE_RULE);        
         addRule(EMPTY_COLUMN_NATIVE_TYPE_RULE);
+        addRule(CHAR_DATATYPE_LENGTH_RULE);
 		return super.getValidationRules();		
 	}
 }

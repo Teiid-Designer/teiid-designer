@@ -20,13 +20,6 @@ public interface IFunctionDescriptor {
      */
     String getName();
 
-    /**
-     * Get metadata id
-     * 
-     * @return id
-     */
-    Object getMetadataID();
-
 	/**
      * Get return type
      * 

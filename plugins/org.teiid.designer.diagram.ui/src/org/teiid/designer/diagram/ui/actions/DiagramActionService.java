@@ -24,7 +24,6 @@ import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.editor.DiagramEditor;
 import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.actions.ModelerActionService;
 import org.teiid.designer.ui.actions.ModelerGlobalActionsMap;
 import org.teiid.designer.ui.common.actions.AbstractActionService;
@@ -314,20 +313,14 @@ public final class DiagramActionService extends AbstractActionService implements
                 // rewrite:
 
                 //                System.out.println("[DiagramActionService.initializeGlobalActions] about to process actionId: " + actionId ); //$NON-NLS-1$
-                if (actionId.equals(IModelerActionConstants.EclipseGlobalActions.PRINT)) {
-                    //                    System.out.println("[DiagramActionService.initializeGlobalActions] Adding PrintWrapper to the defaultActionsMap" ); //$NON-NLS-1$
-                    final PrintWrapper printAction = new PrintWrapper();
-                    defaultActionsMap.put(IModelerActionConstants.EclipseGlobalActions.PRINT, printAction);
-                    registerEventHandler(printAction);
-                } else {
-                    // get Eclipse and Modeler global actions from the ModelerActionService so that
-                    // only one instance is constructed.
-                    if (GlobalActionsMap.isEclipseGlobalAction(actionId) || ModelerGlobalActionsMap.isModelerGlobalAction(actionId)) action = getModelerActionService().getAction(actionId);
-                    else // must be a diagram global action
-                    action = getAction(actionId);
 
-                    defaultActionsMap.put(actionId, action);
-                }
+                // get Eclipse and Modeler global actions from the ModelerActionService so that
+                // only one instance is constructed.
+                if (GlobalActionsMap.isEclipseGlobalAction(actionId) || ModelerGlobalActionsMap.isModelerGlobalAction(actionId)) action = getModelerActionService().getAction(actionId);
+                else // must be a diagram global action
+                action = getAction(actionId);
+
+                defaultActionsMap.put(actionId, action);
 
             } catch (final CoreException e) {
                 final String message = DiagramUiConstants.Util.getString(PREFIX + "actionErrorMessage", actionId); //$NON-NLS-1$

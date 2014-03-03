@@ -182,9 +182,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                                   return "ddl".equals(ext) || "sql".equals(ext); //$NON-NLS-1$ //$NON-NLS-2$
                                                               }
                                                           });
-        final IPath choice = showChooseDialog(dlg);
+        final IResource choice = showChooseDialog(dlg);
         if (choice == null) return;
-        ddlFileCombo.setText(choice.toString());
+        ddlFileCombo.setText(choice.getFullPath().removeFileExtension().toString());
         tabFromDdlFileCombo();
     }
 
@@ -199,9 +199,21 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                               }
                                                           });
         if (importer.modelFile() != null) dlg.setInitialSelection(importer.modelFile());
-        final IPath choice = showChooseDialog(dlg);
+        final IResource choice = showChooseDialog(dlg);
         if (choice == null) return;
-        ddlFileCombo.setText(choice.removeFileExtension().lastSegment());
+        
+        // Existing IReource is returned
+        
+        // Set the file text field
+        this.modelNameFld.setText(choice.getFullPath().removeFileExtension().lastSegment().toString());
+        
+        
+        // Set the file location text field
+        IPath folder = choice.getFullPath().removeLastSegments(1);
+        this.modelFolderFld.setText(folder.toString());
+        
+        
+        //ddlFileCombo.setText(choice.removeFileExtension().lastSegment());
     }
 
     void chooseModelFolder() {
@@ -233,9 +245,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                       }
                                                   });
         if (importer.modelFolder() != null) dlg.setInitialSelection(importer.modelFolder());
-        final IPath choice = showChooseDialog(dlg);
+        final IResource choice = showChooseDialog(dlg);
         if (choice == null) return;
-        modelFolderFld.setText(choice.toString());
+        modelFolderFld.setText(choice.getFullPath().toString());
         modelNameFld.setFocus();
     }
 
@@ -635,8 +647,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         if (importer.modelFolder() != null) ddlFileCombo.setFocus();
     }
 
-    private IPath showChooseDialog( final ElementTreeSelectionDialog dialog ) {
-        return dialog.open() == Window.OK ? ((IResource)dialog.getFirstResult()).getLocation() : null;
+    private IResource showChooseDialog( final ElementTreeSelectionDialog dialog ) {
+        return dialog.open() == Window.OK ? ((IResource)dialog.getFirstResult()) : null;
     }
 
     void sizeDdlFileContents() {

@@ -74,6 +74,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private String targetModelName = null;
     private String translatorName = null;
     private String dataSourceName = null;
+    private String dataSourceJndiName = null;
     private String dataSourceDriverName = null;
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
@@ -97,11 +98,27 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     }
     
     /**
-     * Get the current Connection name
-     * @return the Connection name
+     * Get the current DataSource name
+     * @return the DataSource name
      */
     public String getDataSourceName() {
         return this.dataSourceName;
+    }
+    
+    /**
+     * Set the data source JNDI name
+     * @param dsJndiName the data source JDNI name
+     */
+    public void setDataSourceJndiName(String dsJndiName) {
+        this.dataSourceJndiName = dsJndiName;
+    }
+    
+    /**
+     * Get the current DataSource jndi name
+     * @return the jndi name
+     */
+    public String getDataSourceJndiName() {
+        return this.dataSourceJndiName;
     }
     
     /**
@@ -239,6 +256,14 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         }
         
         return vdbDeploymentStatus;
+    }
+    
+    /**
+     * Get the DynamicVdb xml string
+     * @return the xml string
+     */
+    public String getDynamicVdbString() {
+        return getServerImportManager().createDynamicVdbString(IMPORT_VDB_NAME, dataSourceName, translatorName, getOptionalImportProps());
     }
 
     private String getTimeoutPrefSecs() {

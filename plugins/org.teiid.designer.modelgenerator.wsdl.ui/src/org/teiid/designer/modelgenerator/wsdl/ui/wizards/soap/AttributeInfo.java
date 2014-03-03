@@ -25,7 +25,7 @@ import org.teiid.designer.query.sql.symbol.IElementSymbol;
  * @since 8.0
  */
 public class AttributeInfo implements ModelGeneratorWsdlUiConstants, IWsdlAttributeInfo {
-	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false);
 	
     /**
      * The unique column name (never <code>null</code> or empty).

@@ -85,7 +85,7 @@ public class RelationalTable extends RelationalReference {
         this.foreignKeys = new ArrayList<RelationalForeignKey>();
         this.indexes = new ArrayList<RelationalIndex>();
         this.uniqueConstraints = new ArrayList<RelationalUniqueConstraint>();
-        setNameValidator(new RelationalStringNameValidator(true, true));
+        setNameValidator(new RelationalStringNameValidator(true));
     }
     
     /**

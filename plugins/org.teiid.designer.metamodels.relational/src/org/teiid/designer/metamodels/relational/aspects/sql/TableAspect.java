@@ -24,6 +24,8 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -34,6 +36,9 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.View;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 
 /**
@@ -74,6 +79,10 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
             final ModelAnnotation annot = ((EmfResource)resource).getModelAnnotation();
             if (annot.getModelType() == ModelType.MATERIALIZATION_LITERAL) {
                 return MetadataConstants.TABLE_TYPES.MATERIALIZED_TYPE;
+            }
+            
+            if( annot.getModelType() == ModelType.VIRTUAL_LITERAL && RelationalUtil.isGlobalTempTable(eObject)) {
+            	return MetadataConstants.TABLE_TYPES.GLOBAL_TEMPORARY_TABLE_TYPE;
             }
         }
         return MetadataConstants.TABLE_TYPES.TABLE_TYPE;

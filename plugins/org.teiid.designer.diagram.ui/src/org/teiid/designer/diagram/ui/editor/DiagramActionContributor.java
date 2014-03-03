@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -38,7 +39,6 @@ import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
 import org.teiid.designer.diagram.ui.actions.FontDownWrapper;
 import org.teiid.designer.diagram.ui.actions.FontUpWrapper;
 import org.teiid.designer.diagram.ui.actions.IDiagramActionConstants;
-import org.teiid.designer.diagram.ui.actions.PrintWrapper;
 import org.teiid.designer.diagram.ui.actions.ZoomComboActionContributeItem;
 import org.teiid.designer.diagram.ui.actions.ZoomComboWrapper;
 import org.teiid.designer.diagram.ui.actions.ZoomInWrapper;
@@ -184,7 +184,8 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
      */
     private IAction getRegisteredAction( String theActionId ) {
         IAction result = null;
-        ActionService actionService = getActionService();
+        ActionService actionService = getActionService();        /** Key for accessing the global print action. This constant should NOT show up in ALL_ACTIONS. */
+
         String key = DiagramActionService.constructKey(theActionId, getEditorPage());
 
         if (actionService.isRegistered(key)) {
@@ -200,7 +201,7 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
 
     /**
      * Registers the specified action with the action service and wires it to receive selection events.
-     * 
+     *
      * @param theAction the action being registered
      */
     private void registerAction( AbstractAction theAction ) {
@@ -228,7 +229,8 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
         // Each DiagramActionContributor will have their own actions so don't them from the DiagramActionService
         // create these in order that they willl appear
 
-        // construct start group marker
+        // construct start group marker        /** Key for accessing the global print action. This constant should NOT show up in ALL_ACTIONS. */
+
         diagramGroupStart = new GroupMarker(Toolbar.DIAGRAM_START);
         contributionItems.add(diagramGroupStart);
 
@@ -257,6 +259,7 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
         // ----- ZoomComboWrapper -----//
 
         action = (AbstractAction)getRegisteredAction(ZoomComboWrapper.class.getName());
+        /** Key for accessing the global print action. This constant should NOT show up in ALL_ACTIONS. */
 
         if (action == null) {
             action = new ZoomComboWrapper();
@@ -300,17 +303,6 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
         }
 
         autoLayout = createActionContributionItem(action);
-
-        // ----- PrintWrapper -----//
-
-        action = (AbstractAction)getRegisteredAction(PrintWrapper.class.getName());
-
-        if (action == null) {
-            action = new PrintWrapper();
-            registerAction(action);
-        }
-
-        createActionContributionItem(action);
 
         // construct end group marker
         diagramGroupEnd = new GroupMarker(Toolbar.DIAGRAM_END);

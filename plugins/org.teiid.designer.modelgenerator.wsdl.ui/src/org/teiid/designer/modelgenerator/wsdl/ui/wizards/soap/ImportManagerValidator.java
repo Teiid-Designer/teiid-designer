@@ -38,6 +38,8 @@ public class ImportManagerValidator {
 	
 	public static final DatatypeManager datatypeManager = ModelerCore.getWorkspaceDatatypeManager();
 	
+	String PLUGIN_ID = ModelGeneratorWsdlUiConstants.PLUGIN_ID;
+	
 	WSDLImportWizardManager manager;
 	IStatus connectionProfileStatus;
 	IStatus operationsStatus;
@@ -109,7 +111,7 @@ public class ImportManagerValidator {
 	}
 	
 	public IStatus getWorstProcedureStatus() {
-		MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+		MultiStatus status = new MultiStatus(PLUGIN_ID, 0, null, null);
 		
 		for(ProcedureGenerator generator : this.manager.getProcedureGenerators() ) {
 			IStatus theStatus = this.proceduresStatusMap.get(generator);
@@ -122,7 +124,7 @@ public class ImportManagerValidator {
 	}
 
 	private IStatus validateConnectionProfile() {
-	    MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+	    MultiStatus status = new MultiStatus(PLUGIN_ID, 0, null, null);
 
 	    IConnectionProfile connectionProfile = manager.getConnectionProfile();
 	    if (connectionProfile == null) {
@@ -149,7 +151,7 @@ public class ImportManagerValidator {
 	}
 
 	private IStatus validateResourceInfo() {
-		MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+		MultiStatus status = new MultiStatus(PLUGIN_ID, 0, null, null);
 
 		// Validate Source location & model name
 		if (this.manager.getSourceModelLocation() == null ) {
@@ -162,7 +164,9 @@ public class ImportManagerValidator {
 		} else {
 		    nameStatus = ModelNameUtil.validate(this.manager.getSourceModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
 		    if (nameStatus.getSeverity() == IStatus.ERROR) {
-		        status.add(nameStatus);
+		    	Status newStatus = new Status(nameStatus.getSeverity(), nameStatus.getPlugin(), 
+		    			ModelNameUtil.MESSAGES.INVALID_SOURCE_MODEL_NAME + nameStatus.getMessage());
+		        status.add(newStatus);
 		    }
 		}
 
@@ -177,7 +181,9 @@ public class ImportManagerValidator {
 		else {
 		    nameStatus = ModelNameUtil.validate(this.manager.getViewModelName(), ModelerCore.MODEL_FILE_EXTENSION, ModelNameUtil.IGNORE_CASE );
 		    if (nameStatus.getSeverity() == IStatus.ERROR) {
-		        status.add(nameStatus);
+		    	Status newStatus = new Status(nameStatus.getSeverity(), nameStatus.getPlugin(), 
+		    			ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME + nameStatus.getMessage());
+		        status.add(newStatus);
 		    }
 		}
 
@@ -199,7 +205,7 @@ public class ImportManagerValidator {
 			return createStatus(IStatus.WARNING, Messages.Error_NoOperationsSelected);
     	}
     	
-		MultiStatus status = new MultiStatus(ProcedureGenerator.PLUGIN_ID, 0, null, null);
+		MultiStatus status = new MultiStatus(PLUGIN_ID, 0, null, null);
 		for(ProcedureGenerator generator : this.manager.getProcedureGenerators() ) {
 			IStatus theStatus = generator.validate();
 			this.proceduresStatusMap.put(generator, theStatus);
@@ -212,7 +218,7 @@ public class ImportManagerValidator {
 	}
 	
 	private IStatus createStatus(int severity, String message) {
-		return new Status(severity, ProcedureGenerator.PLUGIN_ID, message);
+		return new Status(severity, PLUGIN_ID, message);
 	}
 	
 	public static boolean isValidDatatype(String type) {

@@ -27,6 +27,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.TeiidDataSourceFactory;
+import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
@@ -151,11 +152,13 @@ public class VdbDeployer {
      * 
      * @param monitor the progress monitor (can be <code>null</code>)
      */
-    public void deploy( IProgressMonitor monitor ) {
+    public String deploy( IProgressMonitor monitor ) {
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
 
+        String failedModelName = null;
+        
         try {
             // since we need to deploy lets first check to make sure all the data sources exist on server
             if (!this.vdb.getModelEntries().isEmpty()) {
@@ -169,7 +172,7 @@ public class VdbDeployer {
                     // see if user canceled monitor
                     if (monitor.isCanceled()) {
                         this.status = DeployStatus.MONITOR_CANCELLED;
-                        return; // don't do anything else
+                        return null; // don't do anything else
                     }
 
                     String modelName = modelEntry.getName().toFile().getName();
@@ -207,10 +210,14 @@ public class VdbDeployer {
                     // DS with matching jndi not found on server
                     if (!StringUtilities.isEmpty(jndiName) && !dataSourceWithJndiExists(jndiName)) {
 
-                        // auto-create if user did not change the default DS name
-                        String defaultName = VdbModelEntry.createDefaultSourceName(modelEntry.getName());
-
-                        if (sourceName.equals(defaultName) && this.autoCreateDsOnServer) {
+                        // auto-create if jndiName not different than sourceName
+                        String jndiNameWithoutContext = jndiName;
+                    	// incoming jndiName may not have context, so try that also since server can match it
+                    	if(jndiName.startsWith(JNDI_CONTEXT)) {
+                    		jndiNameWithoutContext = jndiName.substring(JNDI_CONTEXT.length());
+                    	}
+                        
+                        if (sourceName.equals(jndiNameWithoutContext) && this.autoCreateDsOnServer) {
                             autoCreate = true; // create without asking user
                         }
 
@@ -253,11 +260,15 @@ public class VdbDeployer {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
                             TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-                            if (factory.createDataSource(teiidServer,
-                                                                 model,
-                                                                 sourceName,
-                                                                 false) == null) {
-                                this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                            
+                            ITeiidDataSource ds = factory.createDataSource(teiidServer, model, jndiNameWithoutContext, false);
+                            
+                            if( ds == null ) {
+                            	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                                break; // don't try again to create a DS
+                            } else if( ds instanceof FailedTeiidDataSource ) {
+                            	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
+                            	failedModelName = model.getFullPath().removeFileExtension().lastSegment();
                                 break; // don't try again to create a DS
                             }
                         } else if (!hasJndiProblems) {
@@ -301,6 +312,12 @@ public class VdbDeployer {
         } finally {
             monitor.done();
         }
+        
+        if( failedModelName != null ) {
+        	return failedModelName;
+        }
+        
+        return null;
     }
     
     /*

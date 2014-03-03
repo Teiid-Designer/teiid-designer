@@ -32,7 +32,7 @@ public class RelationalAccessPattern extends RelationalReference {
         super();
         setType(TYPES.AP);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**
@@ -43,7 +43,7 @@ public class RelationalAccessPattern extends RelationalReference {
         super(name);
         setType(TYPES.AP);
         this.columns = new ArrayList<RelationalColumn>();
-        setNameValidator(new RelationalStringNameValidator(false, true));
+        setNameValidator(new RelationalStringNameValidator(false));
     }
     
     /**

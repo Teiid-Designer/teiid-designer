@@ -272,7 +272,7 @@ public class StringNameValidator {
 	protected String isValidChar(char c, int index) {
 		if ( !Character.isLetter(c)) {
 			if (!Character.isDigit(c) && !isValidNonLetterOrDigit(c) ) {
-			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
+			    final Object[] params = new Object[] {new Character(c), new Integer(index+1), getValidNonLetterOrDigitMessageSuffix()};
 			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
 			} 
 		} 
@@ -284,7 +284,7 @@ public class StringNameValidator {
 			if (c != CoreStringUtil.Constants.DOT_CHAR && 
 				!Character.isDigit(c) && 
 				!isValidNonLetterOrDigit(c) ) {
-			    final Object[] params = new Object[] {new Character(c), new Integer(index), getValidNonLetterOrDigitMessageSuffix()};
+			    final Object[] params = new Object[] {new Character(c), new Integer(index+1), getValidNonLetterOrDigitMessageSuffix()};
 			    return ModelerCore.Util.getString("StringNameValidator.The_character___{0}___(at_position_{1})_is_not_allowed;_only_alphabetic,_digit_or_underscore", params); //$NON-NLS-1$
 			} 
 		} 

@@ -85,17 +85,25 @@ public interface ISQLConstants {
     String FUNCTION_INVOKE = "invoke"; //$NON-NLS-1$
     String FUNCTION_INVOKE_HTTP = "invokeHttp"; //$NON-NLS-1$
     
-    String ROWCOUNT = "ROWCOUNT"; //$NON-NLS-1
+    String ROWCOUNT = "ROWCOUNT"; //$NON-NLS-1$
     String CHANGING = "CHANGING"; //$NON-NLS-1$
     String VARIABLES = "VARIABLES"; //$NON-NLS-1$
     String DVARS = "DVARS"; //$NON-NLS-1$
     
-    String DEFAULT_DELIMITER = ",";
-    String DEFAULT_QUOTE = "\"";
-    String DEFAULT_ESCAPE = "\\";
+    String DEFAULT_DELIMITER = ","; //$NON-NLS-1$
+    String DEFAULT_QUOTE = "\""; //$NON-NLS-1$
+    String DEFAULT_ESCAPE = "\\"; //$NON-NLS-1$
     
     String HEADER = "HEADER"; //$NON-NLS-1$
     String SKIP = "SKIP"; //$NON-NLS-1$
     String WIDTH = "width"; //$NON-NLS-1$
+    
+    interface INSERT_OPTIONS {
+    	int REPLACE_ALL = 0;
+    	int INSERT_AT_BEGINNING = 1;
+    	int INSERT_AT_CURSOR =  2;
+    	int INSERT_AT_END = 3;
+    	
+    }
 
 }

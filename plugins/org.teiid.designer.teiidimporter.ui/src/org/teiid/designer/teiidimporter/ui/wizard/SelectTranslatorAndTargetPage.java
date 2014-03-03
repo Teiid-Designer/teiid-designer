@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -32,9 +33,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -49,9 +52,11 @@ import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.ImportPropertiesPanel;
 import org.teiid.designer.teiidimporter.ui.panels.TranslatorHelper;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
+import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -86,6 +91,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
     private Text targetModelFileText;
     private Text targetModelInfoText;
     private Button createConnProfileCB;
+    private Button showVdbXMLButton;
 
     /**
      * SelectedTranslatorAndTargetPage Constructor
@@ -120,6 +126,25 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
                 
         // Group for Selection of target Source Model
         createTargetModelGroup(pnl);
+        
+        showVdbXMLButton = new Button(pnl, SWT.PUSH);
+        showVdbXMLButton.setText(Messages.ShowVdbXmlAction_text);
+        showVdbXMLButton.setToolTipText(Messages.ShowVdbXmlAction_tooltip);
+        showVdbXMLButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// Launch a dialog to show vdb.xml text contents
+				ShowVdbXmlDialog dialog = new ShowVdbXmlDialog(getShell(), importManager.getDynamicVdbString());
+				dialog.open();
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
         
         // Validate the page
         validatePage();
@@ -519,7 +544,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
                 ModelNameUtil.IGNORE_CASE );
         if( status.getSeverity() == IStatus.ERROR ) {
-            setThisPageComplete(status.getMessage(), ERROR);
+            setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
             return false;
         }
         
@@ -648,5 +673,78 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
             return doSelect;
         }
     };
+    
+    class ShowVdbXmlDialog extends Dialog {
+        
+        //============================================================================================================================
+        // Variables
+        
+        private StyledTextEditor textEditor;
+        
+        private String theXmlText;
+
+
+        //============================================================================================================================
+        // Constructors
+            
+        /**<p>
+         * </p>
+         * @param shell the shell
+         * @param theXmlText the xml text
+         * @since 4.0
+         */
+        public ShowVdbXmlDialog(final Shell shell, final String theXmlText) {
+            super(shell, Messages.ShowVdbXmlDialog_title);
+            this.theXmlText = theXmlText;
+        }
+        
+        //============================================================================================================================
+        // Overridden Methods
+
+        /**<p>
+         * </p>
+         * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+         * @since 4.0
+         */
+        @Override
+        protected Control createDialogArea(final Composite parent) {
+            final Composite dlgPanel = (Composite)super.createDialogArea(parent);
+            
+            Group descGroup = WidgetFactory.createGroup(dlgPanel, Messages.ShowVdbXmlDialog_dynamic_vdb_text, SWT.NONE);
+            descGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
+            
+            Composite innerPanel = new Composite(descGroup, SWT.NONE);
+            innerPanel.setLayout(new GridLayout());
+            GridData pgd = new GridData(GridData.FILL_BOTH);
+            pgd.minimumWidth = 400;
+            pgd.minimumHeight = 400;
+            pgd.grabExcessVerticalSpace = true;
+            pgd.grabExcessHorizontalSpace = true;
+            innerPanel.setLayoutData(pgd);
+            
+            this.textEditor = new StyledTextEditor(innerPanel, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+            GridData gdt = new GridData(GridData.FILL_BOTH);
+            gdt.widthHint = 400;
+            gdt.heightHint = 400;
+            this.textEditor.setLayoutData(gdt);
+            this.textEditor.setEditable(false);
+            this.textEditor.setAllowFind(false);
+            this.textEditor.getTextWidget().setWordWrap(false);
+            
+            this.textEditor.setText(theXmlText);
+            
+            return dlgPanel;
+        }
+
+    	@Override
+    	protected Control createContents(Composite parent) {
+    		// TODO Auto-generated method stub
+    		Control superControl =  super.createContents(parent);
+    		
+    		getButton(IDialogConstants.OK_ID).setEnabled(true);
+    		
+    		return superControl;
+    	}
+    }
     
 }

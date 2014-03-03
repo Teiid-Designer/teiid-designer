@@ -370,7 +370,7 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
         IStatus status = ModelNameUtil.validate(sModelName, ModelerCore.MODEL_FILE_EXTENSION, newModelParent,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
         if( status.getSeverity() == IStatus.ERROR ) {
-        	return status.getMessage();
+        	return ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage();
         }
 
         // success

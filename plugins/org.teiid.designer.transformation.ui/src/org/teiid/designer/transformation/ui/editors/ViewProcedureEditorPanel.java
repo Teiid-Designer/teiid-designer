@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.Document;
@@ -49,6 +51,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalParameter;
@@ -60,6 +63,7 @@ import org.teiid.designer.transformation.model.RelationalViewProcedure;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
+import org.teiid.designer.transformation.util.SqlStringUtil;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
@@ -231,7 +235,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         if( this.isFunction() ) {
         	// Assume UDF
         	if( this.getRelationalReference().getUdfJarPath() != null ) {
+        		int caret = this.udfJarPathText.getCaretPosition();
         		this.udfJarPathText.setText(this.getRelationalReference().getUdfJarPath());
+        		this.udfJarPathText.setSelection(caret);
         	}
         }
 	}
@@ -973,10 +979,27 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
                 SQLTemplateDialog templateDialog = new SQLTemplateDialog(UiUtil.getWorkbenchShellOnlyIfUiThread(),
                                                                          SQLTemplateDialog.PROC_TEMPLATES);
                 if (templateDialog.open() == Window.OK) {
-                	String sql = templateDialog.getSQL();
-                	getRelationalReference().setTransformationSQL(sql);
-                    sqlDocument.set(sql);
+                	String originalSql = sqlDocument.get();
+                	boolean okToInsertOrReplace = true;
+                	if( templateDialog.getInsertOption() == ISQLConstants.INSERT_OPTIONS.REPLACE_ALL &&
+                			originalSql != null && originalSql.trim().length() > 0) {
+                		// make sure user want to replace all
+                		okToInsertOrReplace = MessageDialog.openConfirm(templateDialog.getShell(), 
+                				Messages.confirmSqlReplaceDialogTitle, 
+                				Messages.confirmSqlReplaceDialogMessage_2);
+                		
+                	}
+                	if( okToInsertOrReplace ) {
+	                	int caretOffset = sqlTextViewer.getTextWidget().getCaretOffset();
+	                	String newSql = SqlStringUtil.insertSql(
+	                			originalSql, 
+	                			templateDialog.getSQL(), 
+	                			templateDialog.getInsertOption(), 
+	                			caretOffset);
+	                	getRelationalReference().setTransformationSQL(newSql);
+	                    sqlDocument.set(newSql);
                     handleInfoChanged();
+                	}
                 }
             }
         });

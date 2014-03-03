@@ -46,6 +46,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
     private JdbcDatabase db;
     private boolean isVdbSourceModel;
     private String vdbSourceModelName;
+    private boolean reachedObjectsPage;
 
 	/**
      * @since 4.0
@@ -74,6 +75,7 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
      */
     public void setDatabase( final JdbcDatabase database ) {
         this.db = database;
+        setReachedObjectsPage(false);
     }
 
     /**
@@ -258,4 +260,20 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 	public void setVdbSourceModelName(String name) {
 		this.vdbSourceModelName = name;
 	}
+
+	/**
+	 * @return the reachedObjectsPage
+	 */
+	public boolean isReachedObjectsPage() {
+		return this.reachedObjectsPage;
+	}
+
+	/**
+	 * @param reachedObjectsPage the reachedObjectsPage to set
+	 */
+	public void setReachedObjectsPage(boolean reachedObjectsPage) {
+		this.reachedObjectsPage = reachedObjectsPage;
+	}
+	
+	
 }

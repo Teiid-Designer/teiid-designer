@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -141,8 +140,6 @@ public class NewModelWizardMetamodelPage extends WizardPage
     private boolean builderAutoSelected = false;
     
     private Properties designerProperties;
-    
-    private IProject project;
 
     /**
      * Constructor for NewModelWizardSpecifyModelPage
@@ -404,7 +401,6 @@ public class NewModelWizardMetamodelPage extends WizardPage
                                                                        new ModelProjectSelectionStatusValidator());
 
         if (folder != null && containerText != null) {
-        	project = folder.getProject();
             containerText.setText(folder.getFullPath().makeRelative().toString());
             if( this.designerProperties != null ) {
             	DesignerPropertiesUtil.setProjectName(this.designerProperties, folder.getProject().getName());
@@ -510,7 +506,7 @@ public class NewModelWizardMetamodelPage extends WizardPage
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
 
         if (nameStatus.getSeverity() == IStatus.ERROR) {
-        	fileNameMessage =  nameStatus.getMessage();
+        	fileNameMessage =  ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + nameStatus.getMessage();
             currentStatus = STATUS_BAD_FILENAME;
             return false;
         }

@@ -37,7 +37,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  */
 public class ProcedureGenerator implements IWsdlWrapperInfo, ISQLConstants, ModelGeneratorWsdlUiConstants {
 	
-	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false, true);
+	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false);
 
 	private RequestInfo requestInfo;
 	private ResponseInfo responseInfo;

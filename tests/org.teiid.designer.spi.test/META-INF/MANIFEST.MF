@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.spi.test;singleton:=true
-Bundle-Version: 8.3.1.qualifier
+Bundle-Version: 8.4.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.designer.spi;bundle-version="[8.3.1,8.4.0)"
+Fragment-Host: org.teiid.designer.spi;bundle-version="[8.3.1,8.9.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)"

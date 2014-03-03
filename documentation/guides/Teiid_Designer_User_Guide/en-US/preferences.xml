@@ -125,30 +125,6 @@
 			</figure>
 		</section>
 		
-		<!-- ####### DIAGRAM PRINTING PREFERENCES ############################### -->
-		
-		<section id="diagram-printing-prefs">
-			<title>Diagram Printing Preferences</title>
-			<para>Diagram print options are stored as preferences. These can be accessed through 
-			this preference page, by right-click on diagram <emphasis role="bold">Page Setup action</emphasis> <inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/tb-page-setup.png" />
-						</imageobject>
-					</inlinemediaobject>, 
-			or via the <emphasis role="bold">Modify Diagram Printing Preferences</emphasis> action <inlinemediaobject>
-						<imageobject>
-							<imagedata fileref="images/icons/tb-page-setup.png" />
-						</imageobject>
-					</inlinemediaobject> located on the vertical diagram toolbar .</para>
-			<figure>
-				<title>Diagram Preferences Panel</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/diagram-printing-preferences.png" />
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</section>
 		
 		<!-- ####### EDITOR PREFERENCES ######################################### -->
 		

@@ -45,6 +45,23 @@ public class SelectDataSourcePage extends AbstractWizardPage
     	DISALLOWED_SOURCES = new ArrayList<String>();
     	DISALLOWED_SOURCES.add("ldap");  //$NON-NLS-1$
     	DISALLOWED_SOURCES.add("mongodb"); //$NON-NLS-1$
+    	DISALLOWED_SOURCES.add("modeshape"); //$NON-NLS-1$
+    }
+    
+    // Built-in types
+    private static final List<String> BUILTIN_TYPES;
+    static {
+    	BUILTIN_TYPES = new ArrayList<String>();
+    	BUILTIN_TYPES.add("file");  //$NON-NLS-1$
+    	BUILTIN_TYPES.add("google"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("infinispan"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("ldap");  //$NON-NLS-1$
+    	BUILTIN_TYPES.add("modeshape"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("mongodb"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("salesforce");  //$NON-NLS-1$
+    	BUILTIN_TYPES.add("teiid"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("teiid-local"); //$NON-NLS-1$
+    	BUILTIN_TYPES.add("webservice"); //$NON-NLS-1$
     }
 
     private TeiidImportManager importManager;
@@ -160,8 +177,18 @@ public class SelectDataSourcePage extends AbstractWizardPage
         if(!CoreStringUtil.isEmpty(selectedDataSourceDriverName)) {
         	String driverNameLC = selectedDataSourceDriverName.toLowerCase();
         	if(DISALLOWED_SOURCES.contains(driverNameLC)) {  
-                setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportSourceTypeMsg, driverNameLC) , ERROR);
+        		if(driverNameLC.equals("modeshape")) {  //$NON-NLS-1$
+        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportModeshapeTypeMsg, driverNameLC) , ERROR);
+        		} else if(driverNameLC.equals("ldap")) { //$NON-NLS-1$
+        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportLdapTypeMsg, driverNameLC) , ERROR);
+        		}  else {
+        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportSourceTypeMsg, driverNameLC) , ERROR);
+        		}
                 return false;        		
+        	}
+        	if(!BUILTIN_TYPES.contains(driverNameLC)) {
+    			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg, driverNameLC) , WARNING);
+    			return true;
         	}
         }
         setThisPageComplete(EMPTY_STR, NONE);
@@ -178,6 +205,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     @Override
     public void selectionChanged(String selectedSourceName) {
         importManager.setDataSourceName(this.dataSourcePanel.getSelectedDataSourceName());
+        importManager.setDataSourceJndiName(this.dataSourcePanel.getSelectedDataSourceJndiName());
         importManager.setDataSourceDriverName(this.dataSourcePanel.getSelectedDataSourceDriver());
         importManager.setDataSourceProperties(this.propertiesPanel.getDataSourceProperties());
         
