@@ -188,6 +188,8 @@ public class GenerateXsdWizard extends AbstractWizard implements INewWizard, UiC
             wsbh.createWebServices(webServiceOptions, true, result, monitor);
             helper.doSave();
             wsModel = wsbh.getWebServiceModel();
+            
+            wsbh.postProcess();
         }
 
         // Log the result
