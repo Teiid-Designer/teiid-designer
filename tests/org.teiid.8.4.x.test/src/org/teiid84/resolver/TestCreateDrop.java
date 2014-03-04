@@ -24,7 +24,7 @@ package org.teiid84.resolver;
 
 import java.util.ArrayList;
 import java.util.List;
-import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.metadata.BaseColumn.NullType;
@@ -39,7 +39,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid84.parser.TestParser;
 
 @SuppressWarnings("nls")
-public class TestCreateDrop extends TestCase {
+public class TestCreateDrop {
 
     @Test public void testCreateTempTable1() {
         Create create = new Create();
@@ -70,7 +70,7 @@ public class TestCreateDrop extends TestCase {
         TestParser.helpTest("Create local TEMPORARY table tempTable(c1 boolean not null, c2 byte)", "CREATE LOCAL TEMPORARY TABLE tempTable (c1 boolean NOT NULL, c2 byte)", create); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
-    @Test public void testCreateTempTable3() {
+    @Test @Ignore public void testCreateTempTable3() {
         TestParser.helpException("Create TEMPORARY table tempTable (c1 boolean, c2 byte)"); //$NON-NLS-1$ 
     }
     

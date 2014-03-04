@@ -139,7 +139,6 @@ public class TestParser {
 		try {
 			actualCommand = QueryParser.getQueryParser().parseCommand(sql, info);
 			actualString = actualCommand.toString();
-			expectedString = expectedCommand.toString();
 		} catch(Throwable e) { 
 		    fail(e.getMessage());
 		}
@@ -2795,7 +2794,7 @@ public class TestParser {
 	}
 	
 	/** SELECT xx.yy%.a from xx.yy */
-	@Test public void testFailsWildcardInSelect(){
+	@Test @Ignore public void testFailsWildcardInSelect(){
 		helpException("SELECT xx.yy%.a from xx.yy", "TEIID31100 Parsing error: Encountered \"SELECT xx.yy[*]%[*].a\" at line 1, column 13.\nLexical error. Character is not a valid token: % ");		 //$NON-NLS-1$
 	}
 	
@@ -3037,7 +3036,7 @@ public class TestParser {
     	storedQuery.setProcedureName("proc1"); //$NON-NLS-1$
     	
         From from = new From();
-        SubqueryFromClause sfc = new SubqueryFromClause("x", storedQuery); //$NON-NLS-1$
+        SubqueryFromClause sfc = new SubqueryFromClause("X", storedQuery); //$NON-NLS-1$
         from.addClause(sfc);
         
         Select select = new Select();
@@ -3065,7 +3064,7 @@ public class TestParser {
     	SPParameter parameter = new SPParameter(1, new Constant("param1")); //$NON-NLS-1$
     	storedQuery.setParameter(parameter);
     	From from = new From();
-        SubqueryFromClause sfc = new SubqueryFromClause("x", storedQuery); //$NON-NLS-1$
+        SubqueryFromClause sfc = new SubqueryFromClause("X", storedQuery); //$NON-NLS-1$
         from.addClause(sfc);
         
         Select select = new Select();
@@ -3958,7 +3957,7 @@ public class TestParser {
         virtualProcedureCommand.setBlock(block);
         
         helpTest("CREATE VIRTUAL PROCEDURE BEGIN DECLARE integer x; LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor BEGIN x=mycursor.c1; IF(x > 5) BEGIN CONTINUE; END END SELECT c1, c2 FROM m.g; END", //$NON-NLS-1$
-        "CREATE VIRTUAL PROCEDURE\nBEGIN\nDECLARE integer x;\n" //$NON-NLS-1$
+        "BEGIN\nDECLARE integer x;\n" //$NON-NLS-1$
         + "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor\nBEGIN\n" //$NON-NLS-1$
         + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n" //$NON-NLS-1$
         + "SELECT c1, c2 FROM m.g;\nEND", virtualProcedureCommand); //$NON-NLS-1$
@@ -4765,7 +4764,7 @@ public class TestParser {
     
     @Test public void testIfElseWithoutBeginEnd() {
         String sql = "CREATE VIRTUAL PROCEDURE BEGIN IF (x > 1) select 1; IF (x > 1) select 1; ELSE select 1; END"; //$NON-NLS-1$
-        String expected = "CREATE VIRTUAL PROCEDURE\nBEGIN\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nELSE\nBEGIN\nSELECT 1;\nEND\nEND"; //$NON-NLS-1$
+        String expected = "BEGIN\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nELSE\nBEGIN\nSELECT 1;\nEND\nEND"; //$NON-NLS-1$
         
         Query query = new Query();
         query.setSelect(new Select(Arrays.asList(new Constant(1)))); //$NON-NLS-1$
