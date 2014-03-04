@@ -76,7 +76,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
      */
     @Test
     public void testDefect23257() throws Exception {
-        CreateUpdateProcedureCommand command = (CreateUpdateProcedureCommand) helpResolve("EXEC pm6.vsp59()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        CreateUpdateProcedureCommand command = (CreateUpdateProcedureCommand) resolveProcedure("EXEC pm6.vsp59()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
 
         CommandStatement cs = (CommandStatement)command.getBlock().getStatements().get(1);
 
@@ -346,7 +346,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userUpdateStr,
                                 Table.TriggerEvent.UPDATE,
-                                "Error Code:ERR.015.008.0027 Message:The expressions in this criteria are being compared but are of differing types (boolean and date) and no implicit conversion is available:  CHANGING.e4 = {d'2000-01-01'}"); //$NON-NLS-1$
+                                "The expressions in this criteria are being compared but are of differing types (boolean and date) and no implicit conversion is available"); //$NON-NLS-1$
     }
 
     // virtual group elements used in procedure(HAS CRITERIA)
@@ -1237,7 +1237,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userQuery,
                                 Table.TriggerEvent.UPDATE,
-                                "Column variables do not reference columns on group \"pm1.g1\": [Unable to resolve 'var1': Element \"var1\" is not defined by any relevant group.]"); //$NON-NLS-1$
+                                "Column variables do not reference columns on group \"pm1.g1\""); //$NON-NLS-1$
     }
 
     // variables cannot be used among insert elements
@@ -1255,7 +1255,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userQuery,
                                 Table.TriggerEvent.UPDATE,
-                                "Column variables do not reference columns on group \"pm1.g1\": [Unable to resolve 'INPUTS.x': Symbol INPUTS.x is specified with an unknown group context]"); //$NON-NLS-1$
+                                "Column variables do not reference columns on group \"pm1.g1\""); //$NON-NLS-1$
     }
 
     //should resolve first to the table's column
@@ -1285,7 +1285,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userUpdateStr,
                                 Table.TriggerEvent.UPDATE,
-                                "Element \"e1\" is ambiguous, it exists in two or more groups."); //$NON-NLS-1$
+                                "Element \"e1\" is ambiguous"); //$NON-NLS-1$
     }
 
     @Test
@@ -1469,7 +1469,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userUpdateStr,
                                 Table.TriggerEvent.UPDATE,
-                                "Error Code:ERR.015.008.0041 Message:Cannot set symbol 'pm1.g1.e4' with expected type double to expression 'convert(var1, string)'"); //$NON-NLS-1$
+                                "Cannot set symbol 'pm1.g1.e4' with expected type double to expression 'convert(var1, string)'"); //$NON-NLS-1$
     }
 
     // special variable INPUT compared against invalid type
@@ -1488,5 +1488,10 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
                                 userUpdateStr,
                                 Table.TriggerEvent.UPDATE,
                                 "Cannot set symbol 'pm1.g1.e2' with expected type integer to expression 'INPUTS.e1'"); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testLoopRedefinition2() throws Exception {
+        helpResolveException("EXEC pm1.vsp11()", getMetadataFactory().example1Cached(), "Nested Loop can not use the same cursor name as that of its parent."); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

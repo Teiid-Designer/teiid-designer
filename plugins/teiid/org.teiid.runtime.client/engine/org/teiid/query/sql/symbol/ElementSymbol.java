@@ -204,8 +204,6 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             return super.equals(obj);
         }
 
-        if (this.displayMode != other.displayMode)
-            return false;
         if (this.isAggregate != other.isAggregate)
             return false;
         if (this.isExternalReference != other.isExternalReference)

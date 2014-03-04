@@ -23,7 +23,9 @@
 package org.teiid.query.resolver;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import java.util.Collection;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
@@ -31,7 +33,10 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.ProcedureContainer;
+import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.runtime.client.TeiidClientException;
 
 @SuppressWarnings( {"javadoc"} )
 public abstract class AbstractTestProcedureResolving extends AbstractTest {
@@ -51,13 +56,30 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
         return queryResolver.expandCommand(userCommand, metadata);
     }
 
-    protected Command helpResolve(String userUpdateStr, IQueryMetadataInterface metadata) throws Exception {
-        return resolveProcedure(userUpdateStr, metadata);
+    protected Command helpResolve(Command command, IQueryMetadataInterface queryMetadataInterface) {       
+        // resolve
+        try { 
+            QueryResolver resolver = new QueryResolver(getTeiidVersion());
+            resolver.resolveCommand(command, queryMetadataInterface);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        } 
+
+        CheckSymbolsAreResolvedVisitor vis = new CheckSymbolsAreResolvedVisitor(getTeiidVersion());
+        DeepPreOrderNavigator.doVisit(command, vis);
+        Collection<LanguageObject> unresolvedSymbols = vis.getUnresolvedSymbols();
+        assertTrue("Found unresolved symbols: " + unresolvedSymbols, unresolvedSymbols.isEmpty()); //$NON-NLS-1$
+        return command; 
+    }
+
+    protected Command helpResolve(String sql, IQueryMetadataInterface queryMetadata) throws Exception {
+        Command command = getQueryParser().parseCommand(sql);
+        return helpResolve(command, queryMetadata);
     }
 
     protected void helpResolveException(String userUpdateStr, IQueryMetadataInterface metadata, String msg) throws Exception {
         try {
-            helpResolve(userUpdateStr, metadata);
+            resolveProcedure(userUpdateStr, metadata);
             fail();
         } catch (QueryResolverException e) {
             assertEquals(msg, e.getMessage());
@@ -76,9 +98,9 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
         try {
             helpResolveUpdateProcedure(procedure, userUpdateStr, procedureType);
             fail("Expected a QueryResolverException but got none."); //$NON-NLS-1$
-        } catch (QueryResolverException ex) {
+        } catch (TeiidClientException ex) {
             if (msg != null) {
-                assertEquals(msg, ex.getMessage());
+                assertTrue(ex.getMessage().contains(msg));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -87,17 +109,17 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
 
     @Test
     public void testVirtualProcedure() throws Exception {
-        helpResolve("EXEC pm1.vsp1()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp1()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testVirtualProcedure2() throws Exception {
-        helpResolve("EXEC pm1.vsp14()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp14()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testVirtualProcedurePartialParameterReference() throws Exception {
-        helpResolve("EXEC pm1.vsp58(5)", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp58(5)", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     //cursor starts with "#" Defect14924
@@ -108,32 +130,27 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
 
     @Test
     public void testVirtualProcedureWithOrderBy() throws Exception {
-        helpResolve("EXEC pm1.vsp29()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp29()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testVirtualProcedureWithTempTableAndOrderBy() throws Exception {
-        helpResolve("EXEC pm1.vsp33()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp33()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testVirtualProcedureWithConstAndOrderBy() throws Exception {
-        helpResolve("EXEC pm1.vsp34()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp34()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testVirtualProcedureWithNoFromAndOrderBy() throws Exception {
-        helpResolve("EXEC pm1.vsp28()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC pm1.vsp28()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 
     @Test
     public void testInvalidVirtualProcedure2() throws Exception {
         helpResolveException("EXEC pm1.vsp12()", getMetadataFactory().example1Cached(), "TEIID31119 Symbol mycursor.e2 is specified with an unknown group context"); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    @Test
-    public void testLoopRedefinition2() throws Exception {
-        helpResolveException("EXEC pm1.vsp11()", getMetadataFactory().example1Cached(), "TEIID30124 Loop cursor or exception group name mycursor already exists."); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Test
@@ -151,6 +168,6 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
 
     @Test
     public void testVDBQualified() throws Exception {
-        helpResolve("EXEC example1.pm1.vsp29()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
+        resolveProcedure("EXEC example1.pm1.vsp29()", getMetadataFactory().example1Cached()); //$NON-NLS-1$
     }
 }

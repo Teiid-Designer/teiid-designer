@@ -35,6 +35,7 @@ import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Create;
+import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.DynamicCommand;
@@ -42,6 +43,7 @@ import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.ExpressionCriteria;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.GroupBy;
+import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
 import org.teiid.query.sql.lang.IsNullCriteria;
@@ -84,6 +86,7 @@ import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.ExceptionExpression;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.proc.RaiseStatement;
 import org.teiid.query.sql.proc.ReturnStatement;
 import org.teiid.query.sql.proc.TriggerAction;
@@ -279,6 +282,14 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
+    @Removed( "8.0.0" )
+    public void visit(CriteriaSelector obj) {
+        preVisitVisitor(obj);
+        visitNodes(obj.getElements());
+        postVisitVisitor(obj);
+    }
+
+    @Override
     public void visit(DeclareStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getVariable());
@@ -346,6 +357,14 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(GroupSymbol obj) {
         preVisitVisitor(obj);
+        postVisitVisitor(obj);
+    }
+
+    @Override
+    @Removed("8.0.0")
+    public void visit(HasCriteria obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getSelector());
         postVisitVisitor(obj);
     }
 
@@ -488,6 +507,14 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
 
     @Override
     public void visit(RaiseStatement obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
+    }
+
+    @Override
+    @Removed("8.0.0")
+    public void visit(RaiseErrorStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
         postVisitVisitor(obj);

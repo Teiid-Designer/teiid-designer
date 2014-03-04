@@ -115,9 +115,10 @@ public interface TeiidParser {
      *
      * @param parseInfo
      * @return command
+     * @throws Exception 
      */
     @Since("8.0.0")
-    Command procedureBodyCommand(ParseInfo parseInfo);
+    Command procedureBodyCommand(ParseInfo parseInfo) throws Exception;
 
     /**
      * @param factory

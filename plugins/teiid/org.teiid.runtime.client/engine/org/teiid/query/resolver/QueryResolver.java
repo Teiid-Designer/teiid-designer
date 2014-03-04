@@ -168,6 +168,17 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
         if (command == null) {
             return null;
         }
+
+        if (command instanceof CreateUpdateProcedureCommand) {
+            CreateUpdateProcedureCommand cupCommand = (CreateUpdateProcedureCommand)command;
+            cupCommand.setUserCommand(proc);
+            //if the subcommand is virtual stored procedure, it must have the same
+            //projected symbol as its parent.
+            if(!cupCommand.isUpdateProcedure()){
+                cupCommand.setProjectedSymbols(proc.getProjectedSymbols());
+            } 
+        }
+
         resolveCommand(command, proc.getGroup(), proc.getType(), metadata.getDesignTimeMetadata(), false);
         return command;
     }

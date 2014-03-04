@@ -20,6 +20,7 @@ import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.TriggerAction;
+import org.teiid.query.sql.symbol.Array;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.v8.Test8Factory;
 
@@ -248,7 +249,7 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
         helpFailUpdateProcedure(procedure,
                                 userUpdateStr,
                                 Table.TriggerEvent.UPDATE,
-                                "TEIID30082 Cannot set symbol 'pm1.g1.e4' with expected type double to expression 'convert(var1, string)'"); //$NON-NLS-1$
+                                "Cannot set symbol 'pm1.g1.e4' with expected type double to expression 'convert(var1, string)'"); //$NON-NLS-1$
     }
 
     // special variable INPUT compared against invalid type
@@ -312,11 +313,18 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
         StoredProcedure sp = (StoredProcedure) helpResolve(sql, tm);
         assertEquals("EXEC proc(1, 2, 3)", sp.toString());
         assertEquals(getFactory().newConstant(1), sp.getParameter(1).getExpression());
-        assertEquals(getFactory().newArray(
+        Array expectedArray = getFactory().newArray(
                                            DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
                                            Arrays.asList((Expression) getFactory().newConstant(2),
-                                                                                         getFactory().newConstant(3))),
-                     sp.getParameter(2).getExpression());
+                                                                                         getFactory().newConstant(3)));
+        expectedArray.setImplicit(true);
+        assertEquals(expectedArray,
+                                           sp.getParameter(2).getExpression());
         assertEquals(SPParameter.RESULT_SET, sp.getParameter(3).getParameterType());
+    }
+
+    @Test
+    public void testLoopRedefinition2() throws Exception {
+        helpResolveException("EXEC pm1.vsp11()", getMetadataFactory().example1Cached(), "TEIID30124 Loop cursor or exception group name mycursor already exists."); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

@@ -1488,6 +1488,26 @@ CreateProcedureCommand createProcedure(ParseInfo info) # CreateProcedureCommand 
 }
 
 /*
+name=procedure body definition
+description=Defines a procedure body on a Procedure metadata object.
+example={code:sql}CREATE VIRTUAL PROCEDURE BEGIN ... END{code}
+index=true
+*/
+CreateProcedureCommand procedureBodyCommand(ParseInfo info) :
+{
+    CreateProcedureCommand procCmd = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
+    Statement stmt = null;
+}
+{ 
+    [LOOKAHEAD(2) <CREATE> [<VIRTUAL>] <PROCEDURE>]
+    stmt = statement(info)
+    {
+        procCmd.setBlock(asBlock(stmt));
+        return procCmd;
+    }
+} 
+
+/*
 name=dynamic data statement
 description=A procedure statement that can execute arbitrary sql.
 example={code:sql}EXECUTE IMMEDIATE 'SELECT * FROM tbl' AS x STRING INTO #temp{code}

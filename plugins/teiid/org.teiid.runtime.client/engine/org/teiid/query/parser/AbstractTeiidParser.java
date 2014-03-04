@@ -302,7 +302,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     }
 
     @Override
-    public Command procedureBodyCommand(ParseInfo parseInfo) {
+    public Command procedureBodyCommand(ParseInfo parseInfo) throws Exception {
         throw new UnsupportedOperationException("Not supported in Teiid Version " + getVersion()); //$NON-NLS-1$
     }
 

@@ -122,8 +122,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaShortElement() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es = getFactory().newElementSymbol("root.node1");
-        es.setGroupSymbol(gs);
+        ElementSymbol es = getFactory().newElementSymbol("root.node1", gs);
         CompareCriteria expected = getFactory().newCompareCriteria(es, Operator.EQ, getFactory().newConstant("yyz"));
 
         Query query = (Query)helpResolve("select * from xmltest.doc1 where node1 = 'yyz'");
@@ -134,8 +133,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaLongElement1() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es = getFactory().newElementSymbol("root.node1");
-        es.setGroupSymbol(gs);
+        ElementSymbol es = getFactory().newElementSymbol("root.node1", gs);
         CompareCriteria expected = getFactory().newCompareCriteria(es, Operator.EQ, getFactory().newConstant("yyz"));
 
         Query query = (Query)helpResolve("select * from xmltest.doc1 where root.node1 = 'yyz'");
@@ -146,8 +144,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaLongElement2() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc4");
-        ElementSymbol es1 = getFactory().newElementSymbol("root.node1");
-        es1.setGroupSymbol(gs);
+        ElementSymbol es1 = getFactory().newElementSymbol("root.node1", gs);
         CompareCriteria expected1 = getFactory().newCompareCriteria(es1, Operator.EQ, getFactory().newConstant("xyz"));
         
         Query query = (Query)helpResolve("select * from xmltest.doc4 where root.node1 = 'xyz'");
@@ -158,8 +155,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaLongElement3() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc4");
-        ElementSymbol es2 = getFactory().newElementSymbol("root.node1.@node2");
-        es2.setGroupSymbol(gs);
+        ElementSymbol es2 = getFactory().newElementSymbol("root.node1.@node2", gs);
         CompareCriteria expected2 = getFactory().newCompareCriteria(es2, Operator.EQ, getFactory().newConstant("xyz"));
 
         Query query = (Query)helpResolve("select * from xmltest.doc4 where root.node1.@node2 = 'xyz'");
@@ -170,8 +166,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaLongElement4() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc4");
-        ElementSymbol es3 = getFactory().newElementSymbol("root.node3");
-        es3.setGroupSymbol(gs);
+        ElementSymbol es3 = getFactory().newElementSymbol("root.node3", gs);
         CompareCriteria expected3 = getFactory().newCompareCriteria(es3, Operator.EQ, getFactory().newConstant("xyz"));
         
         Query query = (Query)helpResolve("select * from xmltest.doc4 where root.node3 = 'xyz'");
@@ -268,8 +263,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLCriteriaLongElementInAnonymous() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc2");
-        ElementSymbol es = getFactory().newElementSymbol("root.node1.node3");
-        es.setGroupSymbol(gs);
+        ElementSymbol es = getFactory().newElementSymbol("root.node1.node3", gs);
         CompareCriteria expected = getFactory().newCompareCriteria(es, Operator.EQ, getFactory().newConstant("yyz"));
         
         Query query = (Query)helpResolve("select * from xmltest.doc2 where root.node1.node3 = 'yyz'");
@@ -394,10 +388,8 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testContext() {
         GroupSymbol gs1 = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3");
-        es1.setGroupSymbol(gs1);
-        ElementSymbol es2 = getFactory().newElementSymbol("root.node1");
-        es2.setGroupSymbol(gs1);
+        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3", gs1);
+        ElementSymbol es2 = getFactory().newElementSymbol("root.node1", gs1);
         Expression[] exprs = new Expression[] {es1, es2};
 
         Function context = getFactory().newFunction("context", exprs);
@@ -411,8 +403,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testRowLimit() {
         GroupSymbol gs1 = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3");
-        es1.setGroupSymbol(gs1);
+        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3", gs1);
         Expression[] exprs = new Expression[] {es1};
 
         Function context = getFactory().newFunction("rowlimit", exprs);
@@ -426,8 +417,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testRowLimitException() {
         GroupSymbol gs1 = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3");
-        es1.setGroupSymbol(gs1);
+        ElementSymbol es1 = getFactory().newElementSymbol("root.node1.node2.node3", gs1);
         Expression[] exprs = new Expression[] {es1};
 
         Function context = getFactory().newFunction("rowlimitexception", exprs);
@@ -462,9 +452,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     public void testConversionInXML() {
         // Expected left expression
         GroupSymbol gs1 = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es1 = getFactory().newElementSymbol("root.node1");
-        es1.setGroupSymbol(gs1);
-
+        ElementSymbol es1 = getFactory().newElementSymbol("root.node1", gs1);
         // Expected right expression
         Function convert = getFactory().newFunction("convert",
                                                     new Expression[] {
@@ -485,8 +473,7 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLWithSelect1() throws Exception {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es = getFactory().newElementSymbol("root.node1");
-        es.setGroupSymbol(gs);
+        ElementSymbol es = getFactory().newElementSymbol("root.node1", gs);
         CompareCriteria expected = getFactory().newCompareCriteria(es, Operator.EQ, getFactory().newConstant("yyz"));
 
         Query query = (Query)helpResolve(getQueryParser().parseCommand("select \"xml\" from xmltest.doc1 where node1 = 'yyz'"),
@@ -503,10 +490,9 @@ public abstract class AbstractTestXMLResolver extends AbstractTest {
     @Test
     public void testXMLWithSelect2() {
         GroupSymbol gs = getFactory().newGroupSymbol("xmltest.doc1");
-        ElementSymbol es = getFactory().newElementSymbol("root.node1");
-        es.setGroupSymbol(gs);
+        ElementSymbol es = getFactory().newElementSymbol("root.node1", gs);
         CompareCriteria expected = getFactory().newCompareCriteria(es, Operator.EQ, getFactory().newConstant("yyz"));
-        
+
         Query query = (Query)helpResolve("select xmltest.doc1.xml from xmltest.doc1 where node1 = 'yyz'");
         Criteria actual = query.getCriteria();
         assertEquals("Did not match expected criteria", expected, actual);

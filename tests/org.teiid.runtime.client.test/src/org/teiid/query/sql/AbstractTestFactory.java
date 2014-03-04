@@ -10,6 +10,7 @@ package org.teiid.query.sql;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -270,6 +271,18 @@ public abstract class AbstractTestFactory {
     public ElementSymbol newElementSymbol(String symbolName) {
         ElementSymbol elementSymbol = newNode(ASTNodes.ELEMENT_SYMBOL);
         elementSymbol.setName(symbolName);
+        return elementSymbol;
+    }
+
+    public ElementSymbol newElementSymbol(String shortName, GroupSymbol gs) {
+        return newElementSymbol(shortName, gs, DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
+    }
+
+    public ElementSymbol newElementSymbol(String shortName, GroupSymbol gs, Class<?> typeClass) {
+        ElementSymbol elementSymbol = newNode(ASTNodes.ELEMENT_SYMBOL);
+        elementSymbol.setShortName(shortName);
+        elementSymbol.setGroupSymbol(gs);
+        elementSymbol.setType(typeClass);
         return elementSymbol;
     }
 
@@ -661,7 +674,7 @@ public abstract class AbstractTestFactory {
 
     public Array newArray(Class<?> typeClass, List<Expression> args) {
         Array array = newNode(ASTNodes.ARRAY);
-        array.setType(typeClass);
+        array.setComponentType(typeClass);
         array.setExpressions(args);
         return array;
     }
