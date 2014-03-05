@@ -132,6 +132,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.JSONObject;
 import org.teiid.query.sql.symbol.QueryString;
 import org.teiid.query.sql.symbol.Reference;
+import org.teiid.query.sql.symbol.Reference.Constraint;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
@@ -162,7 +163,7 @@ import org.teiid.translator.SourceSystemFunctions;
  */
 public class ValidationVisitor extends AbstractValidationVisitor {
 
-    private final class PositiveIntegerConstraint implements Reference.Constraint {
+    private static final class PositiveIntegerConstraint implements Reference.Constraint {
     	
     	private Messages.ValidationVisitor msgKey;
     	
@@ -177,6 +178,8 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			}
 		}
 	}
+
+    public static final Constraint LIMIT_CONSTRAINT = new PositiveIntegerConstraint(Messages.ValidationVisitor.badlimit2);
 
 	// State during validation
     private boolean isXML = false;	// only used for Query commands
@@ -533,6 +536,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     @Override
+	@Removed("8.0.0")
     public void visit(CreateUpdateProcedureCommand obj) {
         if(!obj.isUpdateProcedure()){
             
@@ -1237,6 +1241,13 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         if (!drop.getTable().isTempTable()) {
             handleValidationError(Messages.getString(Messages.ValidationVisitor.drop_of_nontemptable, drop.getTable()), drop);
         }
+        try {
+			if (getMetadata().isVirtualGroup(drop.getTable().getMetadataID())) {
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.drop_of_globaltemptable, drop.getTable()), drop); //$NON-NLS-1$
+			}
+		} catch (Exception e) {
+			handleException(e);
+		}
     }
     
     @Override
@@ -1301,25 +1312,24 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     
     @Override
     public void visit(Limit obj) {
-        Expression offsetExpr = obj.getOffset();
-        if (offsetExpr instanceof Constant) {
-            Integer offset = (Integer)((Constant)offsetExpr).getValue();
-            if (offset.intValue() < 0) {
-                handleValidationError(Messages.getString(Messages.ValidationVisitor.badoffset2), obj);
-            }
-        } else if (offsetExpr instanceof Reference) {
-        	((Reference)offsetExpr).setConstraint(new PositiveIntegerConstraint(Messages.ValidationVisitor.badoffset2));
-        }
-        Expression limitExpr = obj.getRowLimit();
-        if (limitExpr instanceof Constant) {
-            Integer limit = (Integer)((Constant)limitExpr).getValue();
-            if (limit.intValue() < 0) {
-                handleValidationError(Messages.getString(Messages.ValidationVisitor.badlimit2), obj);
-            }
-        } else if (limitExpr instanceof Reference) {
-        	((Reference)limitExpr).setConstraint(new PositiveIntegerConstraint(Messages.ValidationVisitor.badlimit2));
-        }
+        validateLimitExpression(obj, obj.getOffset());
+        validateLimitExpression(obj, obj.getRowLimit());
     }
+
+	private void validateLimitExpression(Limit obj, Expression limitExpr) {
+		if (limitExpr != null) {
+	        if (limitExpr instanceof Constant) {
+	            Integer limit = (Integer)((Constant)limitExpr).getValue();
+	            if (limit.intValue() < 0) {
+	                handleValidationError(Messages.getString(Messages.ValidationVisitor.badlimit2), obj);
+	            }
+	        } else if (limitExpr instanceof Reference) {
+	        	((Reference)limitExpr).setConstraint(LIMIT_CONSTRAINT); 
+	        } else if (!EvaluatableVisitor.willBecomeConstant(limitExpr)) {
+	        	handleValidationError(Messages.getString(Messages.ValidationVisitor.badlimit1), obj);
+	        }
+        }
+	}
     
     @Override
     public void visit(XMLForest obj) {

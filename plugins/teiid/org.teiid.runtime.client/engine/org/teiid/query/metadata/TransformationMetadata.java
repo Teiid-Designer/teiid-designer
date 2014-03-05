@@ -159,6 +159,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Set<String> importedModels;
     private Set<String> allowedLanguages;
     private Map<String, DataPolicyMetadata> policies = new TreeMap<String, DataPolicyMetadata>(String.CASE_INSENSITIVE_ORDER);
+    private boolean useOutputNames = true;
     
     /*
      * TODO: move caching to jboss cache structure
@@ -327,6 +328,12 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
             AbstractMetadataRecord parent = columnRecord.getParent();
             if (parent instanceof Table) {
             	return parent;
+            }
+            if (parent instanceof ColumnSet) {
+            	parent = ((ColumnSet<?>)parent).getParent();
+            	if (parent instanceof Procedure) {
+            		return parent;
+            	}
             }
         } 
         if(elementID instanceof ProcedureParameter) {
@@ -812,8 +819,8 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         return Collections.emptySet();
     }
 
-    public int getCardinality(final Object groupID) throws Exception {
-        return ((Table) groupID).getCardinality();
+    public float getCardinality(final Object groupID) throws Exception {
+        return ((Table) groupID).getCardinalityAsFloat();
     }
 
     public List<SQLXMLImpl> getXMLSchemas(final Object groupID) throws Exception {
@@ -932,9 +939,9 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         }
     }
 
-    public int getDistinctValues(final Object elementID) throws Exception {
+    public float getDistinctValues(final Object elementID) throws Exception {
         if(elementID instanceof Column) {
-            return ((Column) elementID).getDistinctValues();
+            return ((Column) elementID).getDistinctValuesAsFloat();
         } else if(elementID instanceof ProcedureParameter) {
             return -1;            
         } else {
@@ -942,9 +949,9 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
         }
     }
 
-    public int getNullValues(final Object elementID) throws Exception {
+    public float getNullValues(final Object elementID) throws Exception {
         if(elementID instanceof Column) {
-            return ((Column) elementID).getNullValues();
+            return ((Column) elementID).getNullValuesAsFloat();
         } else if(elementID instanceof ProcedureParameter) {
             return -1;            
         } else {
@@ -1171,6 +1178,15 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	
 	public Map<String, DataPolicyMetadata> getPolicies() {
 		return policies;
+	}
+	
+	@Override
+	public boolean useOutputName() {
+		return useOutputNames;
+	}
+	
+	public void setUseOutputNames(boolean useOutputNames) {
+		this.useOutputNames = useOutputNames;
 	}
 	
 }

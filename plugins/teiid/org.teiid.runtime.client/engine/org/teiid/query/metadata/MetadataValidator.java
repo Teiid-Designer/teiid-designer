@@ -230,7 +230,7 @@ public class MetadataValidator {
 								|| t.getTableType() == Table.Type.XmlStagingTable) {
 							continue;
 						}
-						if (t.isVirtual()) {
+						if (t.isVirtual() && t.getTableType() != Table.Type.TemporaryTable) {
 							if (t.getSelectTransformation() == null) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31079, t.getFullName(), model.getName()));
 							}
@@ -413,13 +413,21 @@ public class MetadataValidator {
 						}
 					}
 						
+					for (KeyRecord record : t.getAllKeys()) {
+						if (record.getColumns() == null || record.getColumns().isEmpty()) {
+							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31149, t.getFullName(), record.getName()));
+						}
+					}
+
 					List<ForeignKey> fks = t.getForeignKeys();
 					if (fks == null || fks.isEmpty()) {
 						continue;
 					}
 					
 					for (ForeignKey fk:fks) {
-						if (fk.getPrimaryKey() != null) {
+						if (fk.getReferenceKey() != null) {
+							//ensure derived fields are set
+							fk.setReferenceKey(fk.getReferenceKey());
 							continue;
 						}
 						
@@ -429,25 +437,25 @@ public class MetadataValidator {
 							continue;
 						}
 						
-						Table referenceTable = null;
-						String referenceSchemaName = schema.getName(); 
+						String referenceSchemaName = schema.getName();
+						//TODO there is an ambiguity here because we don't properly track the name parts
+						//so we have to first check for a table name that may contain .
+						Table referenceTable = schema.getTable(referenceTableName);
 						int index = referenceTableName.indexOf(Table.NAME_DELIM_CHAR);
-						if (index == -1) {
-							referenceTable = schema.getTable(referenceTableName);
-						}
-						else {
-							referenceSchemaName = referenceTableName.substring(0, index);
-							Schema referenceSchema = store.getSchema(referenceSchemaName);
-							if (referenceSchema == null) {
-								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31093, referenceSchemaName, t.getFullName()));
+						if (referenceTable == null) {
+							if (index != -1) {
+								referenceSchemaName = referenceTableName.substring(0, index);
+								Schema referenceSchema = store.getSchema(referenceSchemaName);
+								if (referenceSchema == null) {
+									metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31093, referenceSchemaName, t.getFullName()));
+									continue;
+								}
+								referenceTable = referenceSchema.getTable(referenceTableName.substring(index+1));
+							}
+							if (referenceTable == null) {
+								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31092, t.getFullName(), referenceTableName.substring(index+1), referenceSchemaName));
 								continue;
 							}
-							referenceTable = referenceSchema.getTable(referenceTableName.substring(index+1));
-						}
-						
-						if (referenceTable == null) {
-							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31092, t.getFullName(), referenceTableName.substring(index+1), referenceSchemaName));
-							continue;
 						}
 
 						KeyRecord uniqueKey = null;
@@ -474,8 +482,7 @@ public class MetadataValidator {
 							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31095, t.getFullName(), referenceTableName.substring(index+1), referenceSchemaName, fk.getReferenceColumns()));
 						}
 						else {
-							fk.setPrimaryKey(uniqueKey);
-							fk.setUniqueKeyID(uniqueKey.getUUID());
+							fk.setReferenceKey(uniqueKey);
 						}
 					}
 				}						

@@ -49,6 +49,8 @@ import org.teiid.query.sql.symbol.Function;
  */
 public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionDescriptor> {
 	
+	public static final String MVSTATUS = "mvstatus"; //$NON-NLS-1$
+
     // Function tree for system functions (never reloaded)
     private FunctionTree systemFunctions;
 
@@ -316,7 +318,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	public boolean isVarArgArrayParam(FunctionMethod method, Class<?>[] types,
 			int i, Class<?> targetType) {
 		return i == types.length - 1 && method.isVarArgs() && i == method.getInputParameterCount() - 1 
-				&& types[i].getComponentType() == targetType;
+				&& types[i].isArray() && targetType.isAssignableFrom(types[i].getComponentType());
 	}
 	
 	private Transform getConvertFunctionDescriptor(Class<?> sourceType, Class<?> targetType) throws Exception {

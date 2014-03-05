@@ -185,6 +185,7 @@ public class Messages {
         element_updates_not_allowed,
         invalid_batch_command,
         badoffset2,
+        badlimit1,
         badlimit2,
         invalid_scalar_group_reference,
         select_into_wrong_elements,
@@ -216,6 +217,7 @@ public class Messages {
         unknown_block_label ,
         encoding_for_binary,
         drop_of_nontemptable,
+        drop_of_globaltemptable,
         orderby_expression_xml,
         text_table_invalid_width,
         text_table_width,
@@ -666,7 +668,18 @@ public class Messages {
         decode_description,
         decode_arg1,
         decode_arg2,
-        decode_result;
+        decode_result,
+        mvstatus_param1,
+        mvstatus_param2,
+        mvstatus_param3,
+        mvstatus_param4, 
+        mvstatus_param5,
+        mvstatus_result,
+        mvstatus_description,
+        tokenize_param1,
+        tokenize_param2,
+        tokenize_result,
+        tokenize_description;
 
         @Override
         public String toString() {
@@ -1154,7 +1167,10 @@ public class Messages {
         TEIID31142,
         TEIID31143,
         TEIID31144,
+        TEIID31145,
         TEIID31146,
+        TEIID31147,
+        TEIID31149,
         TEIID60001,
         TEIID60004,
         TEIID60008,

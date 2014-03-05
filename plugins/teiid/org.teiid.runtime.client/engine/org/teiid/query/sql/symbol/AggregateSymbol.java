@@ -172,8 +172,15 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
     FunctionDescriptor getFunctionDescriptor();
 
     /**
+     * @param functionDescriptor
+     */
+    @Since("8.0.0")
+    void setFunctionDescriptor(FunctionDescriptor functionDescriptor);
+
+    /**
      * Clone this aggregate symbol
      */
     @Override
     AggregateSymbol clone();
+
 }

@@ -989,8 +989,10 @@ public class ResolverUtil {
 	        // should not come here
 	    } 
 	    
-	    symbol.setOutputDefinition(definition);
-	    symbol.setOutputName(name);
+	    if (metadata.useOutputName()) {
+	    	symbol.setOutputDefinition(definition);
+	    	symbol.setOutputName(name);
+		}
 	}
 	
 	public static void findKeyPreserved(Query query, Set<GroupSymbol> keyPreservingGroups, IQueryMetadataInterface metadata)

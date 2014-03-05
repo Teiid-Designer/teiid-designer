@@ -153,7 +153,7 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
      * @since 4.3
      */
     @Override
-    public int getDistinctValues(Object elementID) throws Exception {
+    public float getDistinctValues(Object elementID) throws Exception {
         return -1;
     }
     /** 
@@ -161,7 +161,7 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
      * @since 4.3
      */
     @Override
-    public int getNullValues(Object elementID) throws Exception {
+    public float getNullValues(Object elementID) throws Exception {
         return -1;
     }
     
@@ -426,7 +426,7 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
     }
     
     @Override
-    public int getCardinality(Object groupID) 
+    public float getCardinality(Object groupID) 
     	throws Exception{
     		
     	return IQueryMetadataInterface.UNKNOWN_CARDINALITY;
@@ -617,5 +617,14 @@ public class BasicQueryMetadata implements IQueryMetadataInterface {
 			boolean checkUnqualified) {
 		return null;
 	}
-	
+
+	@Override
+    public boolean findShortName() {
+        return false;
+    }
+    
+    @Override
+    public boolean useOutputName() {
+        return true;
+    }
 }

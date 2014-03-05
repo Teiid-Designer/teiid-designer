@@ -301,7 +301,35 @@ public final class StringUtil {
             throw e;
         }
     }
- 
+
+    public static List<String> tokenize(String str, char delim) {
+        ArrayList<String> result = new ArrayList<String>();
+        StringBuilder current = new StringBuilder();
+        boolean escaped = false;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == delim) {
+                if (escaped) {
+                    current.append(c);
+                    escaped = false;
+                } else {
+                    escaped = true;
+                }
+            } else {
+                if (escaped && current.length() > 0) {
+                    result.add(current.toString());
+                    current.setLength(0);
+                    escaped = false;
+                }
+                current.append(c);
+            }
+        }
+        if (current.length()>0) {
+            result.add(current.toString());
+        }
+        return result;
+    }
+
     /**
      * Unescape the given string
      * @param string

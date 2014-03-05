@@ -293,7 +293,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @throws Exception implementation detected a problem during the request
      */
-    int getDistinctValues(Object elementID) throws Exception;
+    float getDistinctValues(Object elementID) throws Exception;
 
     /**
      * Get the number of distinct values for this column.  Negative values (typically -1)
@@ -305,7 +305,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @throws Exception implementation detected a problem during the request
      */
-    int getNullValues(Object elementID) throws Exception;
+    float getNullValues(Object elementID) throws Exception;
 
     /**
      * Determine whether a group is virtual or not.
@@ -569,7 +569,7 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * 
      * @throws Exception
      */
-    int getCardinality(Object groupID) throws Exception;
+    float getCardinality(Object groupID) throws Exception;
 
     /**
      * Get XML schemas for a document group.
@@ -854,4 +854,14 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
      * @return extension property for given parameters
      */
     String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified);
+
+    /**
+     * @return whether to use output name
+     */
+    boolean useOutputName();
+
+    /**
+     * @return short name use property
+     */
+    boolean findShortName();
 }

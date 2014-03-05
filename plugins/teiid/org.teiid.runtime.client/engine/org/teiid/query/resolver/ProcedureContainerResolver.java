@@ -166,7 +166,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		if (info == null) {
 			return null;
 		}
-    	if (validate || getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+    	if (validate || group.getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
     		String error = validateUpdateInfo(group, type, info);
     		if (error != null) {
     			throw new QueryResolverException(error);
@@ -214,7 +214,9 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
         // Resolve group so we can tell whether it is an update procedure
         GroupSymbol group = procCommand.getGroup();
         ResolverUtil.resolveGroup(group, metadata);
-        procCommand.setUpdateInfo(getUpdateInfo(group, metadata, procCommand.getType(), false));
+        if (!group.isTempTable()) {
+        	procCommand.setUpdateInfo(getUpdateInfo(group, metadata, procCommand.getType(), false));
+        }
     }
 
     public static GroupSymbol addScalarGroup(TeiidParser teiidParser, String name, TempMetadataStore metadata, GroupContext externalGroups, List<? extends Expression> symbols) {

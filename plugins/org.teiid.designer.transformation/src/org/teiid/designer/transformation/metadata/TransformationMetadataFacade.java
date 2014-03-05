@@ -781,12 +781,12 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getDistinctValues(Object elementID) throws Exception {
+    public float getDistinctValues(Object elementID) throws Exception {
         return 0;
     }
 
     @Override
-    public int getNullValues(Object elementID) throws Exception {
+    public float getNullValues(Object elementID) throws Exception {
         return 0;
     }
 
@@ -834,7 +834,7 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getCardinality(Object groupID) throws Exception {
+    public float getCardinality(Object groupID) throws Exception {
         return 0;
     }
 
@@ -993,4 +993,13 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
         return null;
     }
 
+    @Override
+    public boolean findShortName() {
+        return false;
+    }
+
+    @Override
+    public boolean useOutputName() {
+        return false;
+    }
 }

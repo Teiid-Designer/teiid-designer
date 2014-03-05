@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
@@ -60,6 +61,7 @@ import org.teiid.core.util.TimestampWithTimezone;
 import org.teiid.designer.annotation.Since;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
+import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
@@ -582,18 +584,18 @@ public final class FunctionMethods {
             		count = ts2 / 60 - ts1 / 60;
             	} else if(intervalType.equalsIgnoreCase(NonReserved.SQL_TSI_HOUR)) {
             		TimeZone tz = TimestampWithTimezone.getCalendar().getTimeZone();
-            		if (tz.getDSTSavings() > 0) {
+            		if (tz.getDSTSavings() > 0 || tz.getRawOffset() % 3600000 != 0) {
             			ts1 += tz.getOffset(ts1Obj.getTime())/1000;
             			ts2 += tz.getOffset(ts2Obj.getTime())/1000;
             		}
             		count = ts2 / (60*60) - ts1 / (60*60);	
             	} else if(intervalType.equalsIgnoreCase(NonReserved.SQL_TSI_DAY) || intervalType.equalsIgnoreCase(NonReserved.SQL_TSI_WEEK)) {
             		TimeZone tz = TimestampWithTimezone.getCalendar().getTimeZone();
-            		if (tz.getDSTSavings() > 0) {
+            		if (tz.getDSTSavings() > 0 || tz.getRawOffset() % 3600000 != 0) {
             			ts1 += tz.getOffset(ts1Obj.getTime())/1000;
             			ts2 += tz.getOffset(ts2Obj.getTime())/1000;
             		}
-            		//since we are no effectively using GMT we can simply divide since the unix epoch starts at midnight.
+            		//since we are now effectively using GMT we can simply divide since the unix epoch starts at midnight.
             		count = ts2 / (60*60*24) - ts1 / (60*60*24);
                 	if (intervalType.equalsIgnoreCase(NonReserved.SQL_TSI_WEEK)) {
                     	//TODO:  this behavior matches SQL Server - but not Derby which expects only whole week
@@ -1468,6 +1470,28 @@ public final class FunctionMethods {
 			return Array.getLength(array);
 		}
 		 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30416, array.getClass()));
+	}
+
+	private enum ErrorAction {THROW_EXCEPTION, IGNORE, WAIT}
+	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism=Determinism.NONDETERMINISTIC)
+	@Since("8.6.0")	
+	public static int mvstatus(CommandContext context, String schemaName, String viewName, Boolean validity, String status, String action) throws Exception {
+		if (!validity) {
+			if (ErrorAction.THROW_EXCEPTION.name().equalsIgnoreCase(action)) {
+				throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31147, schemaName, viewName));
+			}
+			if (ErrorAction.WAIT.name().equalsIgnoreCase(action)){
+				throw new TeiidClientException("BLOCKED"); //$NON-NLS-1$
+			}
+		}
+		return 1;
+	}	
+	
+	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM)
+	@Since("8.6.0")
+	public static String[] tokenize(String str, char delimiter) {
+		List<String> tokens = StringUtil.tokenize(str, delimiter);
+		return tokens.toArray(new String[tokens.size()]);
 	}
 	
 }

@@ -41,6 +41,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstant
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -56,6 +57,7 @@ import org.teiid.query.sql.lang.FromClause;
 import org.teiid.query.sql.lang.Into;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.lang.Limit;
 import org.teiid.query.sql.lang.ObjectColumn;
 import org.teiid.query.sql.lang.ObjectTable;
 import org.teiid.query.sql.lang.Query;
@@ -75,16 +77,20 @@ import org.teiid.query.sql.lang.WithQueryCommand;
 import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.navigator.PostOrderNavigator;
+import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
+import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
+import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.MultipleElementSymbol;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.ScalarSubquery;
 import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.ExpressionMappingVisitor;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -115,6 +121,25 @@ public class SimpleQueryResolver extends CommandResolver {
             qrv.visit(query);
             ResolverVisitor visitor = (ResolverVisitor)qrv.getVisitor();
 			visitor.throwException(true);
+			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_6_SERVER)) {
+				ExpressionMappingVisitor emv = new ExpressionMappingVisitor(getTeiidVersion(), null) {
+					@Override
+                    public Expression replaceExpression(Expression element) {
+						if (element instanceof Function && !(element instanceof AggregateSymbol) && ((Function) element).isAggregate()) {
+							Function f = (Function)element;
+							AggregateSymbol as = create(ASTNodes.AGGREGATE_SYMBOL);
+							as.setName(f.getName());
+							as.setDistinct(false);
+							as.setArgs(f.getArgs());
+							as.setType(f.getType());
+							as.setFunctionDescriptor(f.getFunctionDescriptor());
+							return as;
+						}
+						return element;
+					}
+				};
+				PreOrPostOrderNavigator.doVisit(query, emv, PreOrPostOrderNavigator.POST_ORDER);
+			}
         } catch (Exception e) {
             if (e.getCause() instanceof Exception) {
                 throw (Exception)e.getCause();
@@ -205,7 +230,6 @@ public class SimpleQueryResolver extends CommandResolver {
         }
         GroupSymbol gs = allInGroupSymbol.getGroup();
         allInGroupSymbol.setGroup(groupSymbols.get(0).clone());
-        allInGroupSymbol.getGroup().setOutputName(gs.getOutputName());
         return groupSymbols.get(0);
     }
     
@@ -255,6 +279,7 @@ public class SimpleQueryResolver extends CommandResolver {
             visitNode(obj.getGroupBy());
             visitNode(obj.getHaving());
             visitNode(obj.getSelect());        
+            visitNode(obj.getLimit());
         }
         
         @Override
@@ -649,6 +674,27 @@ public class SimpleQueryResolver extends CommandResolver {
 					checkImplicit(jp.getRightClause());
 				}
 			}
+		}
+		
+		@Override
+		public void visit(Limit obj) {
+			super.visit(obj);
+			if (obj.getOffset() != null) {
+				ResolverUtil.setTypeIfNull(obj.getOffset(), DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
+				try {
+					obj.setOffset(ResolverUtil.convertExpression(obj.getOffset(), DataTypeManagerService.DefaultDataTypes.INTEGER.getId(), metadata));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+			if (obj.getRowLimit() != null) {
+                ResolverUtil.setTypeIfNull(obj.getRowLimit(), DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
+                try {
+                    obj.setRowLimit(ResolverUtil.convertExpression(obj.getRowLimit(), DataTypeManagerService.DefaultDataTypes.INTEGER.getId(), metadata));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
 		}
     }
 }

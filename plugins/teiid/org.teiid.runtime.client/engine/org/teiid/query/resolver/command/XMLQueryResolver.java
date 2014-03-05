@@ -530,7 +530,9 @@ public class XMLQueryResolver extends CommandResolver {
         elem.setMetadataID(exactMatch.getMetadataID());
         elem.setType(exactMatch.getType());
         elem.setGroupSymbol(exactMatch.getGroupSymbol());
-        elem.setOutputName(name);
+        if (metadata.useOutputName()) {
+        	elem.setOutputName(name);
+    	}
     }
 
     List<ElementSymbol> getElementsUnderNode(Object mid, Collection<ElementSymbol> validElements, IQueryMetadataInterface metadata) 

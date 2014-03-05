@@ -157,8 +157,16 @@ public class Column extends BaseColumn implements Comparable<Column> {
         return this.distinctValues;
     }
 
+    public float getDistinctValuesAsFloat() {
+        return Table.asFloat(distinctValues);
+    }
+
     public int getNullValues() {
         return this.nullValues;
+    }
+
+    public float getNullValuesAsFloat() {
+        return Table.asFloat(nullValues);
     }
 
     /**

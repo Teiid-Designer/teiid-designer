@@ -310,5 +310,11 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
     public FunctionDescriptor getFunctionDescriptor() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    @Since("8.0.0")
+    public void setFunctionDescriptor(FunctionDescriptor functionDescriptor) {
+        throw new UnsupportedOperationException();
+    }
 }
 /* JavaCC - OriginalChecksum=7efdc98eb15b01c236003d9dc5fca445 (do not edit this line) */

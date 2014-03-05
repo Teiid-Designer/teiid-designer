@@ -90,6 +90,7 @@ public class ResolverVisitor extends LanguageVisitor
 
 	private static final String SYS_PREFIX = CoreConstants.SYSTEM_MODEL + '.';
 
+	@Removed("8.5.0")
     private static ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
     	@Override
         protected Boolean initialValue() {
@@ -111,6 +112,7 @@ public class ResolverVisitor extends LanguageVisitor
     private boolean findShortName;
     private List<ElementSymbol> matches = new ArrayList<ElementSymbol>(2);
     private List<GroupSymbol> groupMatches = new ArrayList<GroupSymbol>(2);
+	private boolean hasUserDefinedAggregate;
     
     /**
      * Constructor for ResolverVisitor.
@@ -131,11 +133,12 @@ public class ResolverVisitor extends LanguageVisitor
      * @param groups
      * @param externalContext
      */
-    public ResolverVisitor(ITeiidServerVersion teiidVersion, IQueryMetadataInterface metadata, Collection<GroupSymbol> groups, GroupContext externalContext) {
+    public ResolverVisitor(ITeiidServerVersion teiidVersion, IQueryMetadataInterface metadata, Collection<GroupSymbol> internalGroups, GroupContext externalContext) {
         this(teiidVersion);
-        this.metadata = metadata;
-        setGroups(groups);
+		this.groups = internalGroups;
         this.externalContext = externalContext;
+        this.metadata = metadata;
+        this.findShortName = metadata.findShortName();
     }
 
 	/**
@@ -266,7 +269,9 @@ public class ResolverVisitor extends LanguageVisitor
         elementSymbol.setMetadataID(resolvedSymbol.getMetadataID());
         elementSymbol.setGroupSymbol(resolvedGroup);
         elementSymbol.setShortName(resolvedSymbol.getShortName());
-        elementSymbol.setOutputName(oldName);
+        if (metadata.useOutputName()) {
+        	elementSymbol.setOutputName(oldName);
+        }
         return true;
 	}
     
@@ -350,6 +355,9 @@ public class ResolverVisitor extends LanguageVisitor
     public void visit(Function obj) {
         try {
             resolveFunction(obj, (FunctionLibrary) this.metadata.getFunctionLibrary());
+			if (obj.isAggregate()) {
+            	hasUserDefinedAggregate = true;
+            }
         } catch(Exception e) {
             String msg = e.getMessage();
         	if (msg != null && (msg.contains(Messages.TEIID.TEIID30069.name()) || msg.contains(Messages.TEIID.TEIID30067.name()))) {
@@ -371,17 +379,25 @@ public class ResolverVisitor extends LanguageVisitor
 	    		for (int i = 0; i < array.getExpressions().size(); i++) {
 	    			Expression expr = array.getExpressions().get(i);
 	    			setDesiredType(expr, array.getComponentType(), array);
-	    			array.getExpressions().set(i, ResolverUtil.convertExpression(expr, type, metadata));
+	    			if (array.getComponentType() != DefaultDataTypes.OBJECT.getTypeClass()) {
+	    				array.getExpressions().set(i, ResolverUtil.convertExpression(expr, type, metadata));
+	    			}
 	    		}
 	    	} else {
-	    		String[] types = new String[array.getExpressions().size()];
-	    		for (int i = 0; i < array.getExpressions().size(); i++) {
-	    			Expression expr = array.getExpressions().get(i);
-	    			types[i] = DataTypeManagerService.getInstance().getDataTypeName(expr.getType());
-	    		}
-	    		String commonType = ResolverUtil.getCommonType(types);
-	    		array.setComponentType(DataTypeManagerService.getInstance().getDataTypeClass(commonType));
-	    	}
+	    	    Class<?> type = null;
+                for (int i = 0; i < array.getExpressions().size(); i++) {
+                    Expression expr = array.getExpressions().get(i);
+                    if (type == null) {
+                        type = expr.getType();
+                    } else if (type != expr.getType()) {
+                        type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
+                    }
+                }
+                if (type == null) {
+                    type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
+                }
+                array.setComponentType(type);
+            }
     	} catch (Exception e) {
     		handleException(e);
     	}
@@ -677,8 +693,17 @@ public class ResolverVisitor extends LanguageVisitor
 			ResolverUtil.ResolvedLookup lookup = ResolverUtil.resolveLookup(function, metadata);
 			fd = library.copyFunctionChangeReturnType(fd, lookup.getReturnElement().getType());
 	    } else if (fd.isSystemFunction(IFunctionLibrary.FunctionName.ARRAY_GET) && args[0].getType().isArray()) {
-	    	//hack to use typed array values
-			fd = library.copyFunctionChangeReturnType(fd, args[0].getType().getComponentType());
+			if (args[0].getType().isArray()) {
+	    		//hack to use typed array values
+				fd = library.copyFunctionChangeReturnType(fd, args[0].getType().getComponentType());
+	    	} else {
+	    		if (function.getType() != null) {
+	    			setDesiredType(args[0], function.getType(), function);
+	    		}
+	    		if (args[0].getType() != DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass()) {
+	    			throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31145, DataTypeManagerService.getInstance().getDataTypeName(args[0].getType()), function));
+	    		}
+	    	}
 	    } else if (Boolean.valueOf(fd.getMethod().getProperty(TEIID_PASS_THROUGH_TYPE, false))) {
 	    	//hack largely to support pg
 	    	fd = library.copyFunctionChangeReturnType(fd, args[0].getType());
@@ -1057,11 +1082,6 @@ public class ResolverVisitor extends LanguageVisitor
 			if (f.getFunctionDescriptor() != null) {
 				return;
 			}
-			Function oneInSet = unresolvedFunctions.keySet().iterator().next();
-			System.out.println(oneInSet.hashCode() + " v " + obj.hashCode());
-			System.out.println(oneInSet.equals(obj));
-			
-			
         	unresolvedFunctions.remove(obj);
 			obj.acceptVisitor(this);
 			Exception e = unresolvedFunctions.get(obj);
@@ -1165,6 +1185,10 @@ public class ResolverVisitor extends LanguageVisitor
 	    // Resolve elements, deal with errors
 	    PostOrderNavigator.doVisit(obj, this);
 	    this.throwException(true);
+	}
+
+	public boolean hasUserDefinedAggregate() {
+		return hasUserDefinedAggregate;
 	}
 
 	@Override

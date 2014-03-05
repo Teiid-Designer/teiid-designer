@@ -96,7 +96,14 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 	
 	private volatile transient long lastModified;
 	private volatile transient long lastDataModification;
-	
+
+	static final float asFloat(int i) {
+        if (i >= -1) {
+            return i;
+        }
+        return Float.intBitsToFloat(i & 0x7fffffff);
+    }
+
     public List<String> getBindings() {
 		return bindings;
 	}
@@ -117,6 +124,10 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
         return cardinality;
     }
 
+    public float getCardinalityAsFloat() {
+        return asFloat(cardinality);
+    }
+    
     public boolean isVirtual() {
         return isVirtual;
     }

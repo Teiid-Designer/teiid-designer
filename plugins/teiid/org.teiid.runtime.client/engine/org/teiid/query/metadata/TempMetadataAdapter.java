@@ -34,6 +34,8 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.xml.IMappingNode;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.Procedure;
 import org.teiid.metadata.Table;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.TempMetadataID.Type;
@@ -205,13 +207,23 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     	groupOrElementID = getActualMetadataId(groupOrElementID);
     	
         if(groupOrElementID instanceof TempMetadataID) {
-//            TODO Consider this given its supposed to be a metadata procedure
-//            TempMetadataID tid = (TempMetadataID)groupOrElementID;
-//        	   Object oid = tid.getOriginalMetadataID();
-//            if (oid instanceof Procedure) {
-//            	return actualMetadata.getModelID(oid);
-//            }
+        	TempMetadataID tid = (TempMetadataID)groupOrElementID;
+        	Object oid = tid.getOriginalMetadataID();
+            if (oid instanceof Procedure) {
+            	return actualMetadata.getModelID(oid);
+            }
             return TempMetadataAdapter.TEMP_MODEL;    
+        }
+        //special handling for global temp tables
+        Object id = groupOrElementID;
+        if (groupOrElementID instanceof Column) {
+        	id = ((Column)id).getParent();
+        }
+        if (id instanceof Table) {
+        	Table t = (Table)id;
+        	if (t.getTableType() == Table.Type.TemporaryTable && t.isVirtual()) {
+        		return TempMetadataAdapter.TEMP_MODEL;
+        	}
         }        
  		return this.actualMetadata.getModelID(groupOrElementID);
 	}
@@ -315,7 +327,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
      * @see IQueryMetadataInterface#getDistinctValues(java.lang.Object)
      */
     @Override
-    public int getDistinctValues(Object elementID) throws Exception {
+    public float getDistinctValues(Object elementID) throws Exception {
         if(elementID instanceof TempMetadataID) {
             return -1;
         }         
@@ -326,7 +338,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
      * @see IQueryMetadataInterface#getNullValues(java.lang.Object)
      */
     @Override
-    public int getNullValues(Object elementID) throws Exception {
+    public float getNullValues(Object elementID) throws Exception {
         if (elementID instanceof TempMetadataID) {
             TempMetadataID id = (TempMetadataID)elementID;
             elementID = id.getOriginalMetadataID();
@@ -640,13 +652,22 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     }
     
     @Override
-    public int getCardinality(Object groupID) 
+    public float getCardinality(Object groupID) 
     	throws Exception{
     	
     	groupID = getActualMetadataId(groupID);
     	
         if(groupID instanceof TempMetadataID) {	
            return ((TempMetadataID)groupID).getCardinality(); 
+        }
+        if (this.isSession() && groupID instanceof Table) {
+        	Table t = (Table)groupID;
+        	if (t.getTableType() == Table.Type.TemporaryTable && t.isVirtual()) {
+        		TempMetadataID id = this.tempStore.getTempGroupID(t.getName());
+        		if (id != null) {
+        			return id.getCardinality();
+        		}
+        	}
         }
         return this.actualMetadata.getCardinality(groupID);    
     }
@@ -867,7 +888,9 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     @Override
     public String getExtensionProperty(Object metadataID, String key,
     		boolean checkUnqualified) {
-    	// TODO Auto-generated method stub
+    	if (metadataID instanceof TempMetadataID) {
+    		return null;
+    	}
     	return super.getExtensionProperty(metadataID, key, checkUnqualified);
     }
 

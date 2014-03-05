@@ -71,7 +71,7 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	}
 
 	@Override
-    public int getCardinality(Object groupID)
+	public float getCardinality(Object groupID)
 			throws Exception {
 		return actualMetadata.getCardinality(groupID);
 	}
@@ -95,7 +95,7 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	}
 
 	@Override
-    public int getDistinctValues(Object elementID)
+	public float getDistinctValues(Object elementID)
 			throws Exception {
 		return actualMetadata.getDistinctValues(elementID);
 	}
@@ -245,7 +245,7 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	}
 
 	@Override
-    public int getNullValues(Object elementID)
+	public float getNullValues(Object elementID)
 			throws Exception {
 		return actualMetadata.getNullValues(elementID);
 	}
@@ -484,6 +484,16 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	public String getExtensionProperty(Object metadataID, String key,
 			boolean checkUnqualified) {
 		return actualMetadata.getExtensionProperty(metadataID, key, checkUnqualified);
+	}
+
+	@Override
+	public boolean findShortName() {
+		return actualMetadata.findShortName();
+	}
+	
+	@Override
+	public boolean useOutputName() {
+		return actualMetadata.useOutputName();
 	}
 
     @Override

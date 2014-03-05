@@ -865,7 +865,7 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getCardinality(final Object groupID) {
+    public float getCardinality(final Object groupID) {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).getCardinality();
     }
@@ -993,7 +993,7 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getDistinctValues(final Object elementID) {
+    public float getDistinctValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getDistinctValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1004,7 +1004,7 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getNullValues(final Object elementID) {
+    public float getNullValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getNullValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1921,5 +1921,15 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     @Override
     public String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified) {
         return null;
+    }
+
+    @Override
+    public boolean findShortName() {
+        return false;
+    }
+
+    @Override
+    public boolean useOutputName() {
+        return false;
     }
 }

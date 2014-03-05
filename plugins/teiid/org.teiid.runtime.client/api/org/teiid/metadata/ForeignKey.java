@@ -22,6 +22,7 @@
 
 package org.teiid.metadata;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,18 +56,53 @@ public class ForeignKey extends KeyRecord {
     
     /**
      * @return the primary key or unique key referenced by this foreign key
+     * @deprecated
+     * @see #getReferenceKey()
      */
     public KeyRecord getPrimaryKey() {
-    	return this.primaryKey;
+        return this.primaryKey;
     }
     
     /**
-     * 
+     * @return the primary or unique key referenced by this foreign key
+     */
+    public KeyRecord getReferenceKey() {
+        return this.primaryKey;
+    }
+    
+    /**
+     * Note: does not need to be directly called.  The engine can resolve the
+     * referenced key if {@link #setReferenceColumns(List)} and {@link #setReferenceTableName(String)}
+     * are used.
      * @param primaryKey,  the primary key or unique key referenced by this foreign key
      */
+    public void setReferenceKey(KeyRecord primaryKey) {
+        this.primaryKey = primaryKey;
+        if (this.primaryKey != null) {
+            this.referenceColumns = new ArrayList<String>();
+            for (Column c : primaryKey.getColumns()) {
+                this.referenceColumns.add(c.getName());
+            }
+            if (primaryKey.getParent() != null) {
+                this.referenceTableName = primaryKey.getParent().getName();
+            }
+            this.uniqueKeyID = primaryKey.getUUID();
+        } else {
+            this.referenceColumns = null;
+            this.referenceTableName = null;
+            this.uniqueKeyID = null;
+        }
+    }
+
+    /**
+     * 
+     * @param primaryKey,  the primary key or unique key referenced by this foreign key
+     * @deprecated
+     * @see #setReferenceKey(KeyRecord)
+     */
     public void setPrimaryKey(KeyRecord primaryKey) {
-		this.primaryKey = primaryKey;
-	}
+        this.setReferenceKey(primaryKey);
+    }
 
 	public String getReferenceTableName() {
 		if (referenceTableName == null && primaryKey != null) {
