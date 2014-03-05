@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
+import org.teiid.designer.validator.IUpdateValidator;
 import org.teiid.query.optimizer.relational.PartitionAnalyzer;
 import org.teiid.query.resolver.util.ResolverUtil;
 import org.teiid.query.sql.lang.Command;
@@ -53,7 +54,7 @@ import org.teiid.runtime.client.TeiidClientException;
  * this <code>Query</code> and verifies if the virtual group definition will allows it to be
  * updated.</p>
  */
-public class UpdateValidator {
+public class UpdateValidator implements IUpdateValidator<Command, ElementSymbol> {
 	
 	public enum UpdateType {
 		/**

@@ -24,21 +24,17 @@ package org.teiid.query.validator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.query.report.ReportItem;
 import org.teiid.query.sql.lang.LanguageObject;
 
-public class ValidatorFailure extends ReportItem {
-	
-	public enum Status {
-		ERROR,
-		WARNING
-	}
+public class ValidatorFailure extends ReportItem implements IValidatorFailure {
 
 	public static final String VALIDATOR_FAILURE = "ValidatorFailure"; //$NON-NLS-1$
 
     // Don't want to pass this around, so make it transient
     private transient Collection<LanguageObject> invalidObjects;  
-    private Status status = Status.ERROR;
+    private VFStatus status = VFStatus.ERROR;
         
     public ValidatorFailure(String description) { 
         super(VALIDATOR_FAILURE);
@@ -58,12 +54,13 @@ public class ValidatorFailure extends ReportItem {
         this.invalidObjects = new ArrayList<LanguageObject>(objects);
     }
     
-    public void setStatus(Status status) {
+    public void setStatus(VFStatus status) {
 		this.status = status;
 	}
-    
-    public Status getStatus() {
-		return status;
+
+    @Override
+    public VFStatus getStatus() {
+        return status;
 	}
     
     /** 
@@ -89,6 +86,7 @@ public class ValidatorFailure extends ReportItem {
      * Return description
      * @return Description of failure
      */    
+    @Override
     public String toString() { 
         return getMessage();
     }

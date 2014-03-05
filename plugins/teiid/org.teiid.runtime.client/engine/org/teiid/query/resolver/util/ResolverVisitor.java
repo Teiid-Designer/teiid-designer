@@ -37,10 +37,12 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol.DisplayMode;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionForm;
@@ -94,7 +96,8 @@ public class ResolverVisitor extends LanguageVisitor
     		return false;
     	}
     };
-    
+
+    @Removed("8.5.0")
     public static void setFindShortName(boolean enabled) {
     	determinePartialName.set(enabled);
     }
@@ -1166,7 +1169,14 @@ public class ResolverVisitor extends LanguageVisitor
 
 	@Override
     public void setProperty(String propertyName, Object value) {
-        if (SHORT_NAME.equals(propertyName) && value instanceof Boolean)
+        if (SHORT_NAME.equals(propertyName) && value instanceof Boolean) {
+            if (getTeiidVersion().isLessThan(new TeiidServerVersion(
+                                                                    ITeiidServerVersion.EIGHT,
+                                                                    ITeiidServerVersion.FIVE,
+                                                                    ITeiidServerVersion.ZERO)))
+                return;
+
             ResolverVisitor.setFindShortName((Boolean) value);
+        }
     }
 }

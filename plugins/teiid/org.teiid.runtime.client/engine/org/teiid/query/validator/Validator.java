@@ -24,6 +24,7 @@ package org.teiid.query.validator;
 
 import java.util.Iterator;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.validator.IValidator;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.sql.lang.Command;
@@ -32,10 +33,11 @@ import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 
 
-public class Validator {
+public class Validator implements IValidator<LanguageObject> {
 
-    public static final ValidatorReport validate(LanguageObject object, IQueryMetadataInterface metadata) throws Exception {
-        ValidatorReport report1 = Validator.validate(object, metadata, new ValidationVisitor(object.getTeiidVersion()));
+    @Override
+    public ValidatorReport validate(LanguageObject object, IQueryMetadataInterface metadata) throws Exception {
+        ValidatorReport report1 = validate(object, metadata, new ValidationVisitor(object.getTeiidVersion()));
         return report1;
     }
 
@@ -70,7 +72,8 @@ public class Validator {
         
         PreOrderNavigator nav = new PreOrderNavigator(visitor) {
         	
-        	protected void visitNode(LanguageObject obj) {
+        	@Override
+            protected void visitNode(LanguageObject obj) {
         		IQueryMetadataInterface previous = visitor.getMetadata();
         		setTempMetadata(metadata, visitor, obj);
         		super.visitNode(obj);

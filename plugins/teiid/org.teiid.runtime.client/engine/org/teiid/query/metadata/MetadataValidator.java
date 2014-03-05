@@ -35,6 +35,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.Column;
@@ -276,7 +277,8 @@ public class MetadataValidator {
     			gs.setName(p.getFullName());
     			QueryResolver resolver = new QueryResolver(queryParser);
     			resolver.resolveCommand(command, gs, ICommand.TYPE_STORED_PROCEDURE, metadata, false);
-    			resolverReport =  Validator.validate(command, metadata);
+    			Validator validator = new Validator();
+    			resolverReport =  validator.validate(command, metadata);
     		} else if (record instanceof Table) {
     			Table t = (Table)record;
     			
@@ -287,7 +289,8 @@ public class MetadataValidator {
     				QueryCommand command = (QueryCommand) queryParser.parseCommand(t.getSelectTransformation());
     				QueryResolver resolver = new QueryResolver(queryParser);
     				resolver.resolveCommand(command, metadata);
-    				resolverReport =  Validator.validate(command, metadata);
+    				Validator validator = new Validator();
+    				resolverReport =  validator.validate(command, metadata);
     				if(!resolverReport.hasItems()) {
     					List<Expression> symbols = command.getProjectedSymbols();
     					for (Expression column:symbols) {
@@ -337,7 +340,7 @@ public class MetadataValidator {
     		}
 			if(resolverReport != null && resolverReport.hasItems()) {
 				for (ValidatorFailure v:resolverReport.getItems()) {
-					log(report, model, v.getStatus() == ValidatorFailure.Status.ERROR?Severity.ERROR:Severity.WARNING, v.getMessage());
+					log(report, model, v.getStatus() == IValidatorFailure.VFStatus.ERROR?Severity.ERROR:Severity.WARNING, v.getMessage());
 				}
 			}
 		} catch (Exception e) {

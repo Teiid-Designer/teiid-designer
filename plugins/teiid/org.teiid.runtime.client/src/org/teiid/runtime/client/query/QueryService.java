@@ -58,7 +58,18 @@ import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.CommandCollectorVisitor;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
+import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupCollectorVisitor;
+import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
+import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
+import org.teiid.query.validator.PredicateCollectorVisitor;
+import org.teiid.query.validator.ReferenceCollectorVisitor;
+import org.teiid.query.validator.UpdateValidator;
+import org.teiid.query.validator.UpdateValidator.UpdateType;
+import org.teiid.query.validator.Validator;
 import org.teiid.runtime.client.proc.ProcedureService;
 import org.teiid.runtime.client.xml.MappingDocumentFactory;
 
@@ -229,77 +240,72 @@ public class QueryService implements IQueryService {
         return new SQLStringVisitor(teiidVersion);
     }
 
-    //
-    //    @Override
-    //    public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
-    //        return new CallbackSQLStringVisitor(visitorCallback);
-    //    }
-    //
-    //    @Override
-    //    public IGroupCollectorVisitor getGroupCollectorVisitor(boolean removeDuplicates) {
-    //        return new GroupCollectorVisitor(removeDuplicates);
-    //    }
-    //
-    //    @Override
-    //    public IGroupsUsedByElementsVisitor getGroupsUsedByElementsVisitor() {
-    //        return new GroupsUsedByElementsVisitor();
-    //    }
-    //
-    //    @Override
-    //    public IElementCollectorVisitor getElementCollectorVisitor(boolean removeDuplicates) {
-    //        return new ElementCollectorVisitor(removeDuplicates);
-    //    }
-    //
-    //    @Override
-    //    public ICommandCollectorVisitor getCommandCollectorVisitor() {
-    //        return new CommandCollectorVisitor();
-    //    }
-    //
-    //    @Override
-    //    public IFunctionCollectorVisitor getFunctionCollectorVisitor(boolean removeDuplicates) {
-    //        return new FunctionCollectorVisitor(removeDuplicates);
-    //    }
-    //
-    //    @Override
-    //    public IPredicateCollectorVisitor getPredicateCollectorVisitor() {
-    //        return new PredicateCollectorVisitor();
-    //    }
-    //
-    //    @Override
-    //    public IReferenceCollectorVisitor getReferenceCollectorVisitor() {
-    //        return new ReferenceCollectorVisitor();
-    //    }
-    //
-    //    @Override
-    //    public IValueIteratorProviderCollectorVisitor getValueIteratorProviderCollectorVisitor() {
-    //        return new ValueIteratorProviderCollectorVisitor();
-    //    }
-    //
+    @Override
+    public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
+//        return new CallbackSQLStringVisitor(visitorCallback);
+        return null;
+    }
+
+    @Override
+    public IGroupCollectorVisitor getGroupCollectorVisitor(boolean removeDuplicates) {
+        return new GroupCollectorVisitor(teiidVersion, removeDuplicates);
+    }
+
+    @Override
+    public IGroupsUsedByElementsVisitor getGroupsUsedByElementsVisitor() {
+        return new GroupsUsedByElementsVisitor();
+    }
+
+    @Override
+    public IElementCollectorVisitor getElementCollectorVisitor(boolean removeDuplicates) {
+        return new ElementCollectorVisitor(teiidVersion, removeDuplicates);
+    }
+
+    @Override
+    public ICommandCollectorVisitor getCommandCollectorVisitor() {
+        return new CommandCollectorVisitor(teiidVersion);
+    }
+
+    @Override
+    public IFunctionCollectorVisitor getFunctionCollectorVisitor(boolean removeDuplicates) {
+        return new FunctionCollectorVisitor(teiidVersion, removeDuplicates);
+    }
+
+    @Override
+    public IPredicateCollectorVisitor getPredicateCollectorVisitor() {
+        return new PredicateCollectorVisitor(teiidVersion);
+    }
+
+    @Override
+    public IReferenceCollectorVisitor getReferenceCollectorVisitor() {
+        return new ReferenceCollectorVisitor(teiidVersion);
+    }
+
+    @Override
+    public IValueIteratorProviderCollectorVisitor getValueIteratorProviderCollectorVisitor() {
+        return new ValueIteratorProviderCollectorVisitor(teiidVersion);
+    }
+
     @Override
     public IResolverVisitor getResolverVisitor() {
         return new ResolverVisitor(teiidVersion);
     }
 
-    //
-    //    @Override
-    //    public IValidator getValidator() {
-    //        return new WrappedValidator();
-    //    }
-    //
-    //    @Override
-    //    public IUpdateValidator getUpdateValidator(QueryMetadataInterface metadata,
-    //                                               TransformUpdateType tInsertType,
-    //                                               TransformUpdateType tUpdateType,
-    //                                               TransformUpdateType tDeleteType) {
-    //        
-    //        CrossQueryMetadata crossMetadata = new CrossQueryMetadata(metadata);
-    //        UpdateType insertType = UpdateType.valueOf(tInsertType.name());
-    //        UpdateType updateType = UpdateType.valueOf(tUpdateType.name());
-    //        UpdateType deleteType = UpdateType.valueOf(tDeleteType.name());
-    //        
-    //        return new WrappedUpdateValidator(crossMetadata, insertType, updateType, deleteType);
-    //    }
-    //
+    @Override
+    public IValidator getValidator() {
+        return new Validator();
+    }
+
+    @Override
+    public IUpdateValidator getUpdateValidator(IQueryMetadataInterface metadata, TransformUpdateType tInsertType, TransformUpdateType tUpdateType, TransformUpdateType tDeleteType) {
+
+        UpdateType insertType = UpdateType.valueOf(tInsertType.name());
+        UpdateType updateType = UpdateType.valueOf(tUpdateType.name());
+        UpdateType deleteType = UpdateType.valueOf(tDeleteType.name());
+
+        return new UpdateValidator(metadata, insertType, updateType, deleteType);
+    }
+
     @Override
     public void resolveGroup(IGroupSymbol groupSymbol, IQueryMetadataInterface metadata) throws Exception {
         ResolverUtil.resolveGroup((GroupSymbol)groupSymbol, metadata);
@@ -319,60 +325,5 @@ public class QueryService implements IQueryService {
     @Override
     public ProcedureService getProcedureService() {
         return new ProcedureService(teiidVersion);
-    }
-
-    @Override
-    public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
-        return null;
-    }
-
-    @Override
-    public IGroupCollectorVisitor getGroupCollectorVisitor(boolean removeDuplicates) {
-        return null;
-    }
-
-    @Override
-    public IGroupsUsedByElementsVisitor getGroupsUsedByElementsVisitor() {
-        return null;
-    }
-
-    @Override
-    public IElementCollectorVisitor getElementCollectorVisitor(boolean removeDuplicates) {
-        return null;
-    }
-
-    @Override
-    public ICommandCollectorVisitor getCommandCollectorVisitor() {
-        return null;
-    }
-
-    @Override
-    public IFunctionCollectorVisitor getFunctionCollectorVisitor(boolean removeDuplicates) {
-        return null;
-    }
-
-    @Override
-    public IPredicateCollectorVisitor getPredicateCollectorVisitor() {
-        return null;
-    }
-
-    @Override
-    public IReferenceCollectorVisitor getReferenceCollectorVisitor() {
-        return null;
-    }
-
-    @Override
-    public IValueIteratorProviderCollectorVisitor getValueIteratorProviderCollectorVisitor() {
-        return null;
-    }
-
-    @Override
-    public IValidator getValidator() {
-        return null;
-    }
-
-    @Override
-    public IUpdateValidator getUpdateValidator(IQueryMetadataInterface metadata, TransformUpdateType insertType, TransformUpdateType updateType, TransformUpdateType deleteType) {
-        return null;
     }
 }

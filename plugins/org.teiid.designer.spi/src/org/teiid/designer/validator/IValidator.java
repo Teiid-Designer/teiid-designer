@@ -8,7 +8,6 @@
 package org.teiid.designer.validator;
 
 import java.util.Collection;
-import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
 
@@ -31,16 +30,21 @@ public interface IValidator<L extends ILanguageObject> {
         /**
          * @return
          */
-        Collection<IValidatorFailure> getItems();
+        Collection<? extends IValidatorFailure> getItems();
         
     }
 
     public interface IValidatorFailure {
 
+        enum VFStatus {
+            ERROR,
+            WARNING
+        }
+
         /**
          * @return
          */
-        IStatus getStatus();
+        VFStatus getStatus();
         
     }
     

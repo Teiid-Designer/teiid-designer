@@ -24,13 +24,14 @@ package org.teiid.query.validator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import org.teiid.designer.validator.IValidator.IValidatorFailure;
+import org.teiid.designer.validator.IValidator.IValidatorReport;
 import org.teiid.query.report.ActivityReport;
 import org.teiid.query.sql.lang.LanguageObject;
-import org.teiid.query.validator.ValidatorFailure.Status;
 import org.teiid.runtime.client.Messages;
 
 
-public class ValidatorReport extends ActivityReport<ValidatorFailure> {
+public class ValidatorReport extends ActivityReport<ValidatorFailure> implements IValidatorReport {
 
 	public static final String VALIDATOR_REPORT = "Validator Report"; //$NON-NLS-1$
 
@@ -71,13 +72,18 @@ public class ValidatorReport extends ActivityReport<ValidatorFailure> {
         }
     }
 
+    @Override
+    public Collection<ValidatorFailure> getItems() {
+        return super.getItems();
+    }
+
     public String toString() {
         return this.getFailureMessage();
     }
     
     public void handleValidationWarning(String message) {
     	ValidatorFailure vf = new ValidatorFailure(message);
-    	vf.setStatus(Status.WARNING);
+    	vf.setStatus(IValidatorFailure.VFStatus.WARNING);
         this.addItem(vf);
     }
     
