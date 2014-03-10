@@ -25,6 +25,14 @@ import org.teiid.query.sql.v8.Test8Create;
 import org.teiid.query.sql.v8.Test8CreateDrop;
 import org.teiid.query.sql.v8.TestQuery8Parser;
 import org.teiid.query.sql.v8.TestSQLString8Visitor;
+import org.teiid.query.validator.v7.Test7AlterValidation;
+import org.teiid.query.validator.v7.Test7FunctionMetadataValidator;
+import org.teiid.query.validator.v7.Test7UpdateValidator;
+import org.teiid.query.validator.v7.Test7Validator;
+import org.teiid.query.validator.v8.Test8AlterValidation;
+import org.teiid.query.validator.v8.Test8FunctionMetadataValidator;
+import org.teiid.query.validator.v8.Test8UpdateValidator;
+import org.teiid.query.validator.v8.Test8Validator;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {
@@ -39,7 +47,11 @@ import org.teiid.query.sql.v8.TestSQLString8Visitor;
                                         Test8AlterResolving.class, Test7AlterResolving.class,
                                         Test8FunctionResolving.class, Test7FunctionResolving.class,
                                         Test8ProcedureResolving.class, Test7ProcedureResolving.class,
-                                        Test8XMLResolver.class, Test7XMLResolver.class
+                                        Test8XMLResolver.class, Test7XMLResolver.class,
+                                        Test8AlterValidation.class, Test7AlterValidation.class,
+                                        Test8FunctionMetadataValidator.class, Test7FunctionMetadataValidator.class,
+                                        Test8Validator.class, Test7Validator.class,
+                                        Test8UpdateValidator.class, Test7UpdateValidator.class
                                     } )
 public class AllTests {
     // nothing to do

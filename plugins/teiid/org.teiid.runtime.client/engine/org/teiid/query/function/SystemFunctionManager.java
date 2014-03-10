@@ -60,7 +60,7 @@ public class SystemFunctionManager {
 			// Validate the system source - should never fail
 	    	ValidatorReport report = new ValidatorReport("Function Validation"); //$NON-NLS-1$
 	        Collection<FunctionMethod> functionMethods = systemSource.getFunctionMethods();
-	    	FunctionMetadataValidator.validateFunctionMethods(functionMethods,report);
+	    	FunctionMetadataValidator.validateFunctionMethods(teiidVersion, functionMethods,report);
 			if(report.hasItems()) {
 			    // Should never happen as SystemSourcTe doesn't change
 			    System.err.println(Messages.getString(Messages.ERR.ERR_015_001_0005, report));

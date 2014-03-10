@@ -118,23 +118,23 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
             expressionType = this.getExpression().getType();
             return AVG_TYPES.get(expressionType);
         case ARRAY_AGG:
-            return DataTypeManagerService.DefaultDataTypes.OBJECT.getClass();
+            return DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
         case TEXTAGG:
-            return DataTypeManagerService.DefaultDataTypes.BLOB.getClass();
+            return DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass();
         default:
             break;
         }
 
         if (isBoolean()) {
-            return DataTypeManagerService.DefaultDataTypes.BOOLEAN.getClass();
+            return DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass();
         }
 
         if (isEnhancedNumeric()) {
-            return DataTypeManagerService.DefaultDataTypes.DOUBLE.getClass();
+            return DataTypeManagerService.DefaultDataTypes.DOUBLE.getTypeClass();
         }
 
         if (isAnalytical()) {
-            return DataTypeManagerService.DefaultDataTypes.INTEGER.getClass();
+            return DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass();
         }
 
         return this.getExpression().getType();

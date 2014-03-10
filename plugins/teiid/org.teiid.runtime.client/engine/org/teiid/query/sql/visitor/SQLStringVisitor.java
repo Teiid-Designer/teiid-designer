@@ -216,13 +216,12 @@ public class SQLStringVisitor extends LanguageVisitor
     /**
      * Helper to quickly get the parser string for an object using the visitor.
      *
-     * @param teiidVersion
      * @param obj Language object
      *
      * @return String SQL String for obj
      */
-    public static final String getSQLString(ITeiidServerVersion teiidVersion, LanguageObject obj) {
-        SQLStringVisitor visitor = new SQLStringVisitor(teiidVersion);
+    public static final String getSQLString(LanguageObject obj) {
+        SQLStringVisitor visitor = new SQLStringVisitor(obj.getTeiidVersion());
         return visitor.returnSQLString(obj);
     }
 

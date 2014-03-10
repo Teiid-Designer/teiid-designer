@@ -23,6 +23,7 @@
 package org.teiid.query.xquery.saxon;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,12 +50,13 @@ import net.sf.saxon.expr.PathMap.PathMapNodeSet;
 import net.sf.saxon.expr.PathMap.PathMapRoot;
 import net.sf.saxon.expr.RootExpression;
 import net.sf.saxon.om.Axis;
-import net.sf.saxon.om.Name11Checker;
+import net.sf.saxon.om.Item;
 import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SequenceIterator;
 import net.sf.saxon.om.StructuredQName;
 import net.sf.saxon.pattern.AnyNodeTest;
 import net.sf.saxon.pattern.NodeKindTest;
+import net.sf.saxon.query.QueryResult;
 import net.sf.saxon.query.StaticQueryContext;
 import net.sf.saxon.query.XQueryExpression;
 import net.sf.saxon.sxpath.IndependentContext;
@@ -67,8 +69,11 @@ import net.sf.saxon.type.TypeHierarchy;
 import net.sf.saxon.value.SequenceType;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.types.SQLXMLImpl;
+import org.teiid.core.types.XMLTranslator;
 import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
+import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.sql.lang.NamespaceItem;
 import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.symbol.DerivedColumn;
@@ -261,66 +266,9 @@ public class SaxonXQueryExpression {
     	return this.xQuery.usesContextItem();
     }
 
-    /**
-     * Taken from StreamingUtils
-     *
-     * Pre-parser that adds validation and handles a default name space
-     * 
-     * TODO: add support for more general paths including node tests
-     *   this could be done as a secondary expression applied to the 
-     *   context item 
-     * 
-     * @param locationPath
-     * @param prefixMap
-     * @return
-     */
-    private String getStreamingPath(String locationPath, Map<String, String> prefixMap) {
-        if (locationPath.indexOf("//") >= 0) //$NON-NLS-1$
-            throw new IllegalArgumentException("DESCENDANT axis is not supported"); //$NON-NLS-1$
-        
-        String path = locationPath.trim();
-        if (path.startsWith("/")) path = path.substring(1); //$NON-NLS-1$
-        if (path.endsWith("/")) path = path.substring(0, path.length() - 1); //$NON-NLS-1$
-        path = path.trim();
-        String[] localNames = path.split("/"); //$NON-NLS-1$
-        
-        if (localNames.length == 1) {
-            throw new IllegalArgumentException(locationPath + " refers to only the root element"); //$NON-NLS-1$
-        }
-
-        String fixedPath = ""; //$NON-NLS-1$
-                
-        // parse prefix:localName pairs and resolve prefixes to namespaceURIs
-        for (int i = 0; i < localNames.length; i++) {
-            fixedPath += "/"; //$NON-NLS-1$
-            int k = localNames[i].indexOf(':');
-            if (k >= 0 && localNames[i].indexOf(':', k+1) >= 0)
-                throw new IllegalArgumentException(
-                    "QName must not contain more than one colon: " //$NON-NLS-1$
-                    + "qname='" + localNames[i] + "', path='" + path + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            if (k <= 0) {
-                fixedPath += SaxonXQueryExpression.DEFAULT_PREFIX+":"; //$NON-NLS-1$
-            } else {
-                String prefix = localNames[i].substring(0, k).trim();
-                if (k >= localNames[i].length() - 1)
-                    throw new IllegalArgumentException(
-                        "Missing localName for prefix: " + "prefix='" //$NON-NLS-1$ //$NON-NLS-2$
-                        + prefix + "', path='" + path + "', prefixes=" + prefixMap); //$NON-NLS-1$ //$NON-NLS-2$
-                fixedPath += prefix + ":"; //$NON-NLS-1$
-            } // end if
-            
-            localNames[i] = localNames[i].substring(k + 1).trim();
-            if (!localNames[i].equals("*") && !Name11Checker.getInstance().isValidNCName(localNames[i])) { //$NON-NLS-1$
-                throw new IllegalArgumentException(localNames[i] + " is not a valid local name."); //$NON-NLS-1$
-            }
-            fixedPath += localNames[i];
-        }
-        return fixedPath;
-    }
-
 	public void useDocumentProjection(List<XMLColumn> columns) {
 	    try {
-            streamingPath = getStreamingPath(xQueryString, namespaceMap);
+            streamingPath = StreamingUtils.getStreamingPath(xQueryString, namespaceMap);
         } catch (IllegalArgumentException e) {
             // Ignored
         }
@@ -523,6 +471,33 @@ public class SaxonXQueryExpression {
 	    	xmlColumn.setPathExpression(exp);
 		}
 	}
+
+	public XMLType createXMLType(final SequenceIterator iter, boolean emptyOnEmpty) throws Exception {
+        Item item = iter.next();
+        if (item == null && !emptyOnEmpty) {
+            return null;
+        }
+        XMLType.Type type = Type.CONTENT;
+        if (item instanceof NodeInfo) {
+            NodeInfo info = (NodeInfo)item;
+            type = getType(info);
+        }
+        Item next = iter.next();
+        if (next != null) {
+            type = Type.CONTENT;
+        }
+        SQLXMLImpl xml = XMLSystemFunctions.saveToBufferManager(new XMLTranslator() {
+            
+            @Override
+            public void translate(Writer writer) throws TransformerException,
+                    IOException {
+                QueryResult.serializeSequence(iter.getAnother(), config, writer, DEFAULT_OUTPUT_PROPERTIES);
+            }
+        });
+        XMLType value = new XMLType(xml);
+        value.setType(type);
+        return value;
+    }
 
 	public static XMLType.Type getType(NodeInfo info) {
         switch (info.getNodeKind()) {

@@ -2,13 +2,19 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.symbol;
 
+import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.query.sql.symbol.IAliasSymbol;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SingleElementSymbol;
+import org.teiid.runtime.client.Messages;
 
 /**
- *
+ * An AliasSymbol wraps a SingleElementSymbol and changes it's name.  AliasSymbols
+ * should be used to perform the aliasing of elements in a SELECT clause.  They
+ * should typically NOT be used elsewhere in a query.  The alias symbol takes on
+ * the type of it's underlying SingleElementSymbol.  AliasSymbols are typically
+ * applied to ElementSymbol, ExpressionSymbol, and AggregateSymbol.
  */
 @SuppressWarnings( "unused" )
 public class AliasSymbol extends Symbol
@@ -46,6 +52,8 @@ public class AliasSymbol extends Symbol
      */
     @Override
     public void setSymbol(Expression symbol) {
+		ArgCheck.isTrue(! (symbol instanceof AliasSymbol), Messages.getString(Messages.ERR.ERR_015_010_0029));
+		ArgCheck.isNotNull(symbol, Messages.getString(Messages.ERR.ERR_015_010_0029));
         this.symbol = symbol;
     }
 

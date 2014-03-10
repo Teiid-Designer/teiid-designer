@@ -53,10 +53,10 @@ public class ExpressionSymbol extends Symbol
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((this.expression == null) ? 0 : this.expression.hashCode());
-        return result;
+        if (expression != null) {
+            return expression.hashCode();
+        }
+        return super.hashCode();
     }
 
     @Override

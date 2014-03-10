@@ -58,6 +58,7 @@ import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.ProcedureReservedWords;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.visitor.CallbackSQLStringVisitor;
 import org.teiid.query.sql.visitor.CommandCollectorVisitor;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.FunctionCollectorVisitor;
@@ -242,8 +243,7 @@ public class QueryService implements IQueryService {
 
     @Override
     public ISQLStringVisitor getCallbackSQLStringVisitor(ISQLStringVisitorCallback visitorCallback) {
-//        return new CallbackSQLStringVisitor(visitorCallback);
-        return null;
+        return new CallbackSQLStringVisitor(teiidVersion, visitorCallback);
     }
 
     @Override

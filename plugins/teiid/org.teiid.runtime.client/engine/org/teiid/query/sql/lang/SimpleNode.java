@@ -107,7 +107,7 @@ public class SimpleNode implements Node, LanguageObject {
      */
     @Override
     public String toString() {
-        return SQLStringVisitor.getSQLString(parser.getVersion(), this);
+        return SQLStringVisitor.getSQLString(this);
     }
 
     /* Override this method if you want to customize how the node dumps

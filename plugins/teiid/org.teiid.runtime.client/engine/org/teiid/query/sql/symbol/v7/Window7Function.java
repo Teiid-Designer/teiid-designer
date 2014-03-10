@@ -41,6 +41,7 @@ public class Window7Function extends Symbol implements WindowFunction {
     @Override
     public void setFunction(AggregateSymbol function) {
         this.function = function;
+        this.function.setWindowed(true);
     }
 
     /**

@@ -417,7 +417,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     private DefaultDataTypes findDefaultDataType(String id) {
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
-            if (defaultDataType.getId().equals(id)) {
+            if (defaultDataType.getId().equalsIgnoreCase(id)) {
                 return defaultDataType;
             }
         }

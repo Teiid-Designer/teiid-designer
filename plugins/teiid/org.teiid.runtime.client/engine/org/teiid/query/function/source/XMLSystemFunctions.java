@@ -80,7 +80,6 @@ import net.sf.saxon.value.TimeValue;
 import org.teiid.common.buffer.FileStore;
 import org.teiid.common.buffer.FileStoreInputStreamFactory;
 import org.teiid.common.buffer.impl.MemoryStorageManager;
-import org.teiid.core.types.BaseLob;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.BlobImpl;
 import org.teiid.core.types.BlobType;
@@ -99,6 +98,8 @@ import org.teiid.core.util.ReaderInputStream;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
+import org.teiid.query.eval.Evaluator;
+import org.teiid.query.eval.Evaluator.NameValuePair;
 import org.teiid.query.function.CharsetUtils;
 import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.util.CommandContext;
@@ -154,16 +155,6 @@ public class XMLSystemFunctions {
 			return !event.isStartDocument() && !event.isEndDocument();
 		}
 	};
-
-	private static class NameValuePair<T> {
-        public String name;
-        public T value;
-        
-        public NameValuePair(String name, T value) {
-            this.name = name;
-            this.value = value;
-        }
-    }
 
 	private static final class DeclarationStaxSourceProvider implements
 			StAXSourceProvider {
@@ -469,7 +460,7 @@ public class XMLSystemFunctions {
 		}
     }
 
-	public static XMLType xmlForest(final CommandContext context, final NameValuePair[] namespaces, final NameValuePair[] values) throws Exception {
+	public static XMLType xmlForest(final NameValuePair[] namespaces, final NameValuePair[] values) throws Exception {
 		boolean valueExists = false;
 		for (NameValuePair nameValuePair : values) {
 			if (nameValuePair.value != null) {
@@ -512,10 +503,9 @@ public class XMLSystemFunctions {
 	 * @param name
 	 * @param contents
 	 * @return
-	 * @throws TeiidComponentException
-	 * @throws TeiidProcessingException 
+	 * @throws Exception
 	 */
-	public static XMLType xmlElement(CommandContext context, final String name, 
+	public static XMLType xmlElement(final String name, 
 			final NameValuePair<String>[] namespaces, final NameValuePair<?>[] attributes, final List<?> contents) throws Exception {
 		    XMLType result = new XMLType(saveToBufferManager(new XMLTranslator() {
 			
@@ -932,13 +922,13 @@ public class XMLSystemFunctions {
 		return cb.append("_").flip().toString();  //$NON-NLS-1$
 	}
 
-    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Blob json) throws Exception {
-    	return jsonToXml(context, rootName, json, false);
+    public static SQLXML jsonToXml(final String rootName, final Blob json) throws Exception {
+    	return jsonToXml(rootName, json, false);
     }
     
-    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Blob json, boolean stream) throws Exception {
+    public static SQLXML jsonToXml(final String rootName, final Blob json, boolean stream) throws Exception {
 		Reader r = getJsonReader(json);
-		return jsonToXml(context, rootName, r, stream);
+		return jsonToXml(rootName, r, stream);
     }
 	public static InputStreamReader getJsonReader(final Blob json) throws SQLException,
 			IOException {
@@ -966,37 +956,15 @@ public class XMLSystemFunctions {
 		return new InputStreamReader(pStream, charset);
 	}
 
-	private static InputStreamFactory getInputStreamFactory(Streamable<?> s) {
-        if (s.getReference() instanceof Streamable<?>) {
-            return getInputStreamFactory((Streamable<?>) s.getReference());
-        }
-        if (s.getReference() instanceof BaseLob) {
-            BaseLob bl = (BaseLob) s.getReference();
-            try {
-                InputStreamFactory isf = bl.getStreamFactory();
-                if (isf != null) {
-                    return isf;
-                }
-            } catch (SQLException e) {
-            }
-        }
-        if (s instanceof ClobType) {
-            return new InputStreamFactory.ClobInputStreamFactory((Clob)s.getReference());
-        } else if (s instanceof BlobType){
-            return new InputStreamFactory.BlobInputStreamFactory((Blob)s.getReference());
-        }
-        return new InputStreamFactory.SQLXMLInputStreamFactory((SQLXML)s.getReference());
-    }
-
-	public static SQLXML jsonToXml(CommandContext context, final String rootName, final Clob json) throws Exception {
-        return jsonToXml(context, rootName, json, false);
+	public static SQLXML jsonToXml(final String rootName, final Clob json) throws Exception {
+        return jsonToXml(rootName, json, false);
     }
     
-    public static SQLXML jsonToXml(CommandContext context, final String rootName, final Clob json, boolean stream) throws Exception {
-        return jsonToXml(context, rootName, json.getCharacterStream(), stream);
+    public static SQLXML jsonToXml(final String rootName, final Clob json, boolean stream) throws Exception {
+        return jsonToXml(rootName, json.getCharacterStream(), stream);
     }
     
-    private static SQLXML jsonToXml(CommandContext context,
+    private static SQLXML jsonToXml(
             final String rootName, final Reader r, boolean stream) throws Exception {
         JSONParser parser = new JSONParser();
         final JsonToXmlContentHandler reader = new JsonToXmlContentHandler(rootName, r, parser, threadLocalEventtFactory.get());
@@ -1111,7 +1079,7 @@ public class XMLSystemFunctions {
 			return DataTypeManagerService.getInstance().transformValue(value, xs.getType());
 		}
 		if (xs.getType() == DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass()) {
-			InputStreamFactory isf = getInputStreamFactory(value);
+			InputStreamFactory isf = Evaluator.getInputStreamFactory(value);
 			return new ClobType(new ClobImpl(isf, -1));
 		}
 		if (xs.getType() == DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass()) {
@@ -1143,7 +1111,7 @@ public class XMLSystemFunctions {
 				}
 			};
 		} else {
-			isf = getInputStreamFactory(value);
+			isf = Evaluator.getInputStreamFactory(value);
 		}
 		return new BlobType(new BlobImpl(isf));
 	}

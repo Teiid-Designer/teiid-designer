@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.api.exception.query.QueryValidatorException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.IQueryResolver;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
@@ -595,7 +596,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 
 	public void validateProjectedSymbols(GroupSymbol virtualGroup,
 			IQueryMetadataInterface qmi, Command result)
-			throws Exception {
+			throws QueryValidatorException, Exception {
 		//ensure that null types match the view
 		List<ElementSymbol> symbols = ResolverUtil.resolveElementsInGroup(virtualGroup, qmi);
 		List<Expression> projectedSymbols = result.getProjectedSymbols();
@@ -605,9 +606,9 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 	public void validateProjectedSymbols(GroupSymbol virtualGroup,
 			List<? extends Expression> symbols,
 			List<? extends Expression> projectedSymbols)
-			throws Exception {
+			throws QueryValidatorException {
 		if (symbols.size() != projectedSymbols.size()) {
-			 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30066, virtualGroup, symbols.size(), projectedSymbols.size()));
+			 throw new QueryValidatorException(Messages.gs(Messages.TEIID.TEIID30066, virtualGroup, symbols.size(), projectedSymbols.size()));
 		}
 		for (int i = 0; i < projectedSymbols.size(); i++) {
 			Expression projectedSymbol = projectedSymbols.get(i);
@@ -618,7 +619,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 			    String symbolTypeName = DataTypeManagerService.getInstance().getDataTypeName(symbols.get(i).getType());
 			    String projSymbolTypeName = DataTypeManagerService.getInstance().getDataTypeName(projectedSymbol.getType());
 			    
-				throw new TeiidClientException(Messages.getString(Messages.QueryResolver.wrong_view_symbol_type, virtualGroup, i+1, symbolTypeName, projSymbolTypeName));
+				throw new QueryValidatorException(Messages.getString(Messages.QueryResolver.wrong_view_symbol_type, virtualGroup, i+1, symbolTypeName, projSymbolTypeName));
 			}
 		}
 	}

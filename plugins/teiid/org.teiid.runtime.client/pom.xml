@@ -15,6 +15,8 @@
     <description>Teiid SQL runtime client</description>
     <properties>
         <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
+        <version.nux>1.6</version.nux>
+        <version.xom>1.2</version.xom>
     </properties>
     <build>
         <plugins>
@@ -49,6 +51,16 @@
                                     <groupId>org.jboss</groupId>
                                     <artifactId>jboss-vfs</artifactId>
                                     <version>${version.org.jboss.jboss-vfs}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>nux</groupId>
+                                    <artifactId>nux</artifactId>
+                                    <version>${version.nux}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>xom</groupId>
+                                    <artifactId>xom</artifactId>
+                                    <version>${version.xom}</version>
                                 </artifactItem>
                             </artifactItems>
                             <skip>false</skip>
@@ -255,6 +267,14 @@
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
         </dependency>
+        <dependency>
+            <groupId>nux</groupId>
+            <artifactId>nux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xom</groupId>
+            <artifactId>xom</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement> 
         <dependencies>
@@ -262,6 +282,16 @@
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>
                 <version>${version.org.jboss.jboss-vfs}</version>
+            </dependency>
+            <dependency>
+                <groupId>nux</groupId>
+                <artifactId>nux</artifactId>
+                <version>${version.nux}</version>
+            </dependency>
+            <dependency>
+                <groupId>xom</groupId>
+                <artifactId>xom</artifactId>
+                <version>${version.xom}</version>
             </dependency>                         
         </dependencies>
     </dependencyManagement>

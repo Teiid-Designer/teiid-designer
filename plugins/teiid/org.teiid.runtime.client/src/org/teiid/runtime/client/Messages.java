@@ -170,7 +170,8 @@ public class Messages {
     @SuppressWarnings( "javadoc" )
     public enum Misc {
         ReflectionHelper_errorConstructing,
-        TeiidVersionTooLow;
+        TeiidVersionTooLow,
+        Evaluator_noValue;
 
         @Override
         public String toString() {
@@ -694,6 +695,7 @@ public class Messages {
         ERR_015_001_0005,
         ERR_015_001_0044,
         ERR_015_001_0052,
+        ERR_015_001_0057,
         ERR_015_001_0066,
         ERR_015_001_0069,
         ERR_015_002_0009,
@@ -752,6 +754,7 @@ public class Messages {
         ERR_015_012_0009,
         ERR_015_012_0010,
         ERR_015_012_0011,
+        ERR_015_012_0012,
         ERR_015_012_0013,
         ERR_015_012_0014,
         ERR_015_012_0015,

@@ -42,7 +42,7 @@ import org.teiid.runtime.client.Messages;
  * This is wrapper on top of a "clob" object, which implements the "java.sql.Clob"
  * interface. This class also implements the Streamable interface
  */
-public final class ClobType extends Streamable<Clob> implements NClob, Comparable<ClobType> {
+public final class ClobType extends Streamable<Clob> implements NClob, Sequencable, Comparable<ClobType> {
 	
 	public enum Type {
 		TEXT, JSON

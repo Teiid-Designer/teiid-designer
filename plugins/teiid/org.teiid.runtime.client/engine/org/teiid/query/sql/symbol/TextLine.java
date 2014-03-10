@@ -13,6 +13,8 @@ import org.teiid.query.sql.lang.SimpleNode;
  */
 public class TextLine extends SimpleNode implements Expression, ITextLine<LanguageVisitor> {
 
+    public static final String nl = System.getProperty("line.separator"); //$NON-NLS-1$
+
     private Character delimiter;
 
     private Character quote;
@@ -22,6 +24,8 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
     private List<DerivedColumn> expressions;
 
     private String encoding;
+
+    private String lineEnding = nl;
 
     /**
      * @param p
@@ -99,6 +103,14 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
      */
     public void setExpressions(List<DerivedColumn> expressions) {
         this.expressions = expressions;
+    }
+
+    public String getLineEnding() {
+        return lineEnding;
+    }
+    
+    public void setLineEnding(String lineEnding) {
+        this.lineEnding = lineEnding;
     }
 
     @Override

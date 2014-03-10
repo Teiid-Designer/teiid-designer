@@ -38,8 +38,11 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import net.sf.saxon.om.Name11Checker;
 import net.sf.saxon.om.QNameException;
+import org.teiid.api.exception.query.QueryValidatorException;
+import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
@@ -49,13 +52,16 @@ import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AggregateAttributes;
 import org.teiid.metadata.Table;
+import org.teiid.query.eval.Evaluator;
 import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.ProcedureContainerResolver;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.resolver.util.ResolverUtil;
@@ -183,7 +189,10 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
 	// State during validation
     private boolean isXML = false;	// only used for Query commands
+    
     private boolean inQuery;
+
+	// update procedure being validated
 	private ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> createProc;
 
 	/**
@@ -198,7 +207,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         super.reset();
         this.isXML = false;
         this.inQuery = false;
-        this.createProc = null;
+
+        if (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+            this.createProc = null;
     }
 
     // ############### Visitor methods for language objects ##################
@@ -466,28 +477,54 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
     // ############### Visitor methods for stored procedure lang objects ##################
 
+    public void visit(AssignmentStatement obj) {
+    	
+    	ElementSymbol variable = obj.getVariable();
+
+    	validateAssignment(obj, variable);
+    }
+    
+    @Override
+    public void visit(CommandStatement obj) {
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            visit7(obj);
+        else
+            visit8(obj);
+    }
+    
+    private void visit7(CommandStatement obj) {
+    	if (obj.getCommand() instanceof StoredProcedure) {
+    		StoredProcedure proc = (StoredProcedure)obj.getCommand();
+    		for (SPParameter param : proc.getParameters()) {
+				if ((param.getParameterType() == SPParameter.RETURN_VALUE 
+						|| param.getParameterType() == SPParameter.OUT) && param.getExpression() instanceof ElementSymbol) {
+					validateAssignment(obj, (ElementSymbol)param.getExpression());
+				}
+			}
+    	}
+    }
+    
     @Override
     public void visit(StoredProcedure obj) {
 		for (SPParameter param : obj.getInputParameters()) {
 			try {
                 if (!getMetadata().elementSupports(param.getMetadataID(), SupportConstants.Element.NULL) && EvaluatableVisitor.isFullyEvaluatable(param.getExpression(), true)) {
-//	                TODO Do not want the Evaluator - check for nulls disabled
-//                    try {
-//	                    // If nextValue is an expression, evaluate it before checking for null
-//	                    Object evaluatedValue = Evaluator.evaluate(param.getExpression());
-//	                    if(evaluatedValue == null) {
-//	                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
-//	                    } else if (evaluatedValue instanceof ArrayImpl && getMetadata().isVariadic(param.getMetadataID())) {
-//	            			ArrayImpl av = (ArrayImpl)evaluatedValue;
-//	            			for (Object o : av.getValues()) {
-//	            				if (o == null) {
-//	            					handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
-//	            				}
-//	            			}
-//	            		}
-//	                } catch(ExpressionEvaluationException e) {
-//	                    //ignore for now, we don't have the context which could be the problem
-//	                }
+                    try {
+	                    // If nextValue is an expression, evaluate it before checking for null
+	                    Object evaluatedValue = Evaluator.assess(param.getExpression());
+	                    if(evaluatedValue == null) {
+	                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
+	                    } else if (evaluatedValue instanceof ArrayImpl && getMetadata().isVariadic(param.getMetadataID())) {
+	            			ArrayImpl av = (ArrayImpl)evaluatedValue;
+	            			for (Object o : av.getValues()) {
+	            				if (o == null) {
+	            					handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, param.getParameterSymbol()), param.getParameterSymbol());
+	            				}
+	            			}
+	            		}
+	                } catch(Exception e) {
+	                    //ignore for now, we don't have the context which could be the problem
+	                }
 	            }
             } catch (Exception e) {
             	handleException(e);
@@ -495,6 +532,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 		}
     }
 
+	private void validateAssignment(LanguageObject obj,
+			ElementSymbol variable) {
+		String groupName = variable.getGroupSymbol().getCanonicalName();
+		//This will actually get detected by the resolver, since we inject an automatic declaration.
+    	if(groupName.equals(ProcedureReservedWords.CHANGING) || groupName.equals(ProcedureReservedWords.INPUTS)) {
+			handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0012, ProcedureReservedWords.INPUTS, ProcedureReservedWords.CHANGING), obj);
+		}
+	}
+    
     @Override
     public void visit(ScalarSubquery obj) {
     	validateSubquery(obj);
@@ -829,7 +875,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	try {
 	    	if(! getMetadata().groupSupports(groupSymbol.getMetadataID(), SupportConstants.Group.UPDATE)) {
 	            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0033, 
-	                                                     SQLStringVisitor.getSQLString(getTeiidVersion(), groupSymbol)), groupSymbol);
+	                                                     SQLStringVisitor.getSQLString(groupSymbol)), groupSymbol);
 	        }
 	    } catch (Exception e) {
 	        handleException(e, groupSymbol);
@@ -973,18 +1019,17 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             while(valIter.hasNext() && varIter.hasNext()) {
                 Expression nextValue = (Expression) valIter.next();
                 ElementSymbol nextVar = varIter.next();
-//              TODO Do not want the Evaluator - check for nulls disabled
-//                if (EvaluatableVisitor.isFullyEvaluatable(nextValue, true)) {
-//                    try {
-//                        // If nextValue is an expression, evaluate it before checking for null
-//                        Object evaluatedValue = Evaluator.evaluate(nextValue);
-//                        if(evaluatedValue == null && ! getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.NULL)) {
-//                            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar), nextVar);
-//                        }
-//                    } catch(ExpressionEvaluationException e) {
-//                        //ignore for now, we don't have the context which could be the problem
-//                    }
-//                }
+                if (EvaluatableVisitor.isFullyEvaluatable(nextValue, true)) {
+                    try {
+                        // If nextValue is an expression, evaluate it before checking for null
+                        Object evaluatedValue = Evaluator.assess(nextValue);
+                        if(evaluatedValue == null && ! getMetadata().elementSupports(nextVar.getMetadataID(), SupportConstants.Element.NULL)) {
+                            handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0055, nextVar), nextVar);
+                        }
+                    } catch(Exception e) {
+                        //ignore for now, we don't have the context which could be the problem
+                    }
+                }
             }// end of while
         } catch(Exception e) {
             handleException(e, obj);
@@ -1024,19 +1069,20 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 }
 
 			    // Check that right expression is a constant and is non-null
-                Expression value = entry.getValue();
-//              TODO Do not want the Evaluator - check for nulls disabled    
-//                if (EvaluatableVisitor.isFullyEvaluatable(value, true)) {
-//                    try {
-//                        value = new Constant(Evaluator.evaluate(value));
-//                    } catch (ExpressionEvaluationException err) {
-//                    }
-//                }
+                Expression value = entry.getValue();    
+                if (EvaluatableVisitor.isFullyEvaluatable(value, true)) {
+                    try {
+                        Constant c = getTeiidParser().createASTNode(ASTNodes.CONSTANT);
+                        c.setValue(Evaluator.assess(value));
+                        value = c;
+                    } catch (Exception err) {
+                    }
+                }
                 
                 if(value instanceof Constant) {
     			    // If value is null, check that element supports this as a nullable column
                     if(((Constant)value).getValue() == null && ! getMetadata().elementSupports(elementID.getMetadataID(), SupportConstants.Element.NULL)) {
-                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0060, SQLStringVisitor.getSQLString(getTeiidVersion(), elementID)), elementID);
+                        handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0060, SQLStringVisitor.getSQLString(elementID)), elementID);
                     }// end of if
                 } 
 		    }
@@ -1243,7 +1289,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         }
         try {
 			if (getMetadata().isVirtualGroup(drop.getTable().getMetadataID())) {
-				handleValidationError(Messages.getString(Messages.ValidationVisitor.drop_of_globaltemptable, drop.getTable()), drop); //$NON-NLS-1$
+				handleValidationError(Messages.getString(Messages.ValidationVisitor.drop_of_globaltemptable, drop.getTable()), drop);
 			}
 		} catch (Exception e) {
 			handleException(e);
@@ -1344,6 +1390,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
+	@Since("8.0.0")
     public void visit(JSONObject obj) {
     	for (DerivedColumn dc : obj.getArgs()) {
     		validateJSONValue(obj, dc.getExpression());
@@ -1404,11 +1451,20 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     		Expression condition = obj.getCondition();
     		validateNoSubqueriesOrOuterReferences(condition);
     	}
-        Expression[] aggExps = obj.getArgs();
-        
-        for (Expression expression : aggExps) {
-            validateNoNestedAggs(expression);
-		}
+
+        Expression aggExp = null;
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+            aggExp = obj.getExpression();
+            validateNoNestedAggs(aggExp);
+        } else {
+            Expression[] aggExps = obj.getArgs();
+            for (Expression expression : aggExps) {
+                validateNoNestedAggs(expression);
+            }
+            if (aggExps.length > 0)
+                aggExp = aggExps[0];
+        }
+
         validateNoNestedAggs(obj.getOrderBy());
         validateNoNestedAggs(obj.getCondition());
         
@@ -1417,22 +1473,22 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         if((aggregateFunction == IAggregateSymbol.Type.SUM || aggregateFunction == IAggregateSymbol.Type.AVG) && obj.getType() == null) {
             handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0041, new Object[] {aggregateFunction, obj}), obj);
         } else if (obj.getType() != DataTypeManagerService.DefaultDataTypes.NULL.getTypeClass()) {
-        	if (aggregateFunction == IAggregateSymbol.Type.XMLAGG && aggExps[0].getType() != DataTypeManagerService.DefaultDataTypes.XML.getTypeClass()) {
+        	if (aggregateFunction == IAggregateSymbol.Type.XMLAGG && aggExp.getType() != DataTypeManagerService.DefaultDataTypes.XML.getTypeClass()) {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_xml, new Object[] {aggregateFunction, obj}), obj);
-        	} else if (obj.isBoolean() && aggExps[0].getType() != DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass()) {
+        	} else if (obj.isBoolean() && aggExp.getType() != DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass()) {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_boolean, new Object[] {aggregateFunction, obj}), obj);
         	} else if (aggregateFunction == IAggregateSymbol.Type.JSONARRAY_AGG) {
-				validateJSONValue(obj, aggExps[0]);
+				validateJSONValue(obj, aggExp);
         	}
         }
         if((obj.isDistinct() ||
             aggregateFunction == IAggregateSymbol.Type.MIN ||
             aggregateFunction == IAggregateSymbol.Type.MAX) &&
-            DataTypeManagerService.getInstance().isNonComparable(DataTypeManagerService.getInstance().getDataTypeName(aggExps[0].getType()))) {
+            DataTypeManagerService.getInstance().isNonComparable(DataTypeManagerService.getInstance().getDataTypeName(aggExp.getType()))) {
     		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_comparable, new Object[] {aggregateFunction, obj}), obj);
         }
         if(obj.isEnhancedNumeric()) {
-        	if (!Number.class.isAssignableFrom(aggExps[0].getType())) {
+        	if (!Number.class.isAssignableFrom(aggExp.getType())) {
         		handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0041, new Object[] {aggregateFunction, obj}), obj);
         	}
         	if (obj.isDistinct()) {
@@ -1442,7 +1498,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	if (obj.getAggregateFunction() != IAggregateSymbol.Type.TEXTAGG) {
     		return;
     	}
-    	TextLine tl = (TextLine)aggExps[0];
+    	TextLine tl = (TextLine)aggExp;
     	if (tl.isIncludeHeader()) {
     		validateDerivedColumnNames(obj, tl.getExpressions());
     	}
@@ -1459,6 +1515,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
     }
 
+	@Since("8.0.0")
 	private void validateJSONValue(LanguageObject obj, Expression expr) {
 		if (expr.getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()
 		    && !DataTypeManagerService.getInstance().isTransformable(
@@ -1571,6 +1628,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
+	@Since("8.0.0")
     public void visit(ObjectTable obj) {
     	List<DerivedColumn> passing = obj.getPassing();
     	TreeSet<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
@@ -1764,9 +1822,11 @@ public class ValidationVisitor extends AbstractValidationVisitor {
             queryResolver.validateProjectedSymbols(obj.getTarget(), getMetadata(), obj.getDefinition());
 			Validator.validate(obj.getDefinition(), getMetadata(), this);
 			validateAlterTarget(obj);
-		} catch (Exception e) {
-			handleException(e);
-		}
+		} catch (QueryValidatorException e) {
+            handleValidationError(e.getMessage(), obj.getDefinition());
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
 
 	private void validateAlterTarget(Alter<?> obj) {
@@ -1793,9 +1853,15 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	    	    	break;
 	    		}
 	    	}
-    	} catch (Exception e) {
-    	    handleException(e);
-		}
+    	} catch (QueryValidatorException e) {
+            Command command = obj.getDefinition();
+            if (command instanceof CreateUpdateProcedureCommand)
+                handleValidationError(e.getMessage(), ((CreateUpdateProcedureCommand) command).getBlock());
+            else if (command instanceof CreateProcedureCommand)
+                handleValidationError(e.getMessage(), ((CreateProcedureCommand) command).getBlock());
+        } catch (Exception e) {
+            handleException(e);
+        }
     }
     
     @Override
@@ -1812,9 +1878,8 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 			}
 		}
     }
-    
-    @Override
-    public void visit(CommandStatement obj) {
+
+    private void visit8(CommandStatement obj) {
     	if (this.createProc == null || this.createProc.getResultSetColumns().isEmpty() || !obj.isReturnable() || !obj.getCommand().returnsResultSet()) {
     		return;
     	}

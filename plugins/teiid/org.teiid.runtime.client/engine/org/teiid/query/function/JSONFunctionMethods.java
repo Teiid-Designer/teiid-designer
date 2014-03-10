@@ -43,6 +43,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
+import org.teiid.query.eval.Evaluator;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.util.CommandContext;
@@ -267,40 +268,12 @@ public class JSONFunctionMethods {
 		}
 	}
 
-	/**
-	 * Taken from Evaluator
-	 *
-	 * @param vals
-	 * @return
-	 * @throws Exception
-	 */
-	private static ClobType jsonArray(Object[] vals) throws Exception {
-        JSONBuilder builder = new JSONBuilder();
-        try {
-            builder.start(true);
-
-            for (Object object : vals) {
-                builder.addValue(object);
-            }
-
-            builder.end(true);
-            
-            ClobType result = builder.close();
-            builder = null;
-            return result;
-        } finally {
-            if (builder != null) {
-                builder.remove();
-            }
-        }
-    }
-
 	@TeiidFunction(category=FunctionCategoryConstants.JSON)
 	public static ClobType jsonArray(CommandContext context, Object... vals) throws Exception {
 		if (vals == null) {
 			return null;
 		}
-		return jsonArray(vals);
+		return Evaluator.jsonArray(null, vals, null, null);
 	}
 
 }

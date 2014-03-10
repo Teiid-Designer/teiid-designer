@@ -25,6 +25,9 @@ package org.teiid.query.function.metadata;
 import java.util.Collection;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
@@ -54,10 +57,10 @@ public class FunctionMetadataValidator {
 	 * @param methods Collection of {@link FunctionMethod} objects
 	 * @param report Report to store validation errors
 	 */
-	public static final void validateFunctionMethods(Collection<FunctionMethod> methods, ValidatorReport report) {
+	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report) {
 	    if(methods != null) {
 	    	for (FunctionMethod method : methods) {
-	    		validateFunctionMethod(method, report);
+	    		validateFunctionMethod(teiidVersion, method, report);
 	    	}
 	    }
 	}
@@ -72,10 +75,11 @@ public class FunctionMetadataValidator {
      * <LI>Validate all input parameters</LI>
      * <LI>Validate output parameter</LI>
      * </UL>
+     * @param teiidVersion teiid version
      * @param method The method to validate
      * @param report The report to update during validation
      */
-    public static final void validateFunctionMethod(FunctionMethod method, ValidatorReport report) {
+    public static final void validateFunctionMethod(ITeiidServerVersion teiidVersion, FunctionMethod method, ValidatorReport report) {
         if(method == null) {
             updateReport(report, method, Messages.getString(Messages.ERR.ERR_015_001_0052, "FunctionMethod")); //$NON-NLS-1$ //$NON-NLS-2$
             return;  // can't validate
@@ -83,7 +87,7 @@ public class FunctionMetadataValidator {
 
         try {
 	        // Validate attributes
-	        validateName(method.getName());
+	        validateName(teiidVersion, method.getName());
 	        validateDescription(method.getDescription());
 	        validateCategory(method.getCategory());
 	        validateInvocationMethod(method.getInvocationClass(), method.getInvocationMethod(), method.getPushdown());
@@ -92,12 +96,12 @@ public class FunctionMetadataValidator {
 	       List<FunctionParameter> params = method.getInputParameters();
 	        if(params != null && !params.isEmpty()) {
 	            for(int i=0; i<params.size(); i++) {
-	                validateFunctionParameter(params.get(i));
+	                validateFunctionParameter(teiidVersion, params.get(i));
 	            }
 	        }
 
 	        // Validate output parameters
-	        validateFunctionParameter(method.getOutputParameter());
+	        validateFunctionParameter(teiidVersion, method.getOutputParameter());
         } catch(Exception e) {
         	updateReport(report, method, e.getMessage());
         }
@@ -123,13 +127,13 @@ public class FunctionMetadataValidator {
      * @param param The parameter to validate
      * @throws Exception Thrown if function parameter is not valid in some way
      */
-    public static final void validateFunctionParameter(FunctionParameter param) throws Exception {
+    public static final void validateFunctionParameter(ITeiidServerVersion teiidVersion, FunctionParameter param) throws Exception {
         if(param == null) {
              throw new Exception(Messages.gs(Messages.TEIID.TEIID30427));
         }
 
         // Validate attributes
-        validateName(param.getName());
+        validateName(teiidVersion, param.getName());
         validateType(param.getType());
         validateDescription(param.getDescription());
     }
@@ -142,12 +146,15 @@ public class FunctionMetadataValidator {
      * <LI>Validate that name starts with alphabetic character</LI>
      * <LI>Validate that name contains only valid characters: letters, numbers, and _</LI>
      * </UL>
+     * @param teiidVersion teiid version
      * @param name Name to validate
      * @throws Exception Thrown if function or parameter name is not valid in some way
      */
-    public static final void validateName(String name) throws Exception {
+    public static final void validateName(ITeiidServerVersion teiidVersion, String name) throws Exception {
         validateIsNotNull(name, "Name"); //$NON-NLS-1$
         validateLength(name, MAX_LENGTH, "Name"); //$NON-NLS-1$
+        if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            validateNameCharacters(name, "Name"); //$NON-NLS-1$
     }
 
     /**
@@ -205,6 +212,7 @@ public class FunctionMetadataValidator {
      * </UL>
      * @param invocationClass Invocation class to validate
      * @param invocationMethod Invocation method to validate
+     * @param pushdown
      * @throws Exception Thrown if invocation method is not valid in some way
      */
     public static final void validateInvocationMethod(String invocationClass, String invocationMethod, PushDown pushdown) throws Exception {
@@ -241,6 +249,20 @@ public class FunctionMetadataValidator {
 	 	 	 throw new Exception(Messages.gs(Messages.TEIID.TEIID30430,strName, new Integer(maxLength)));
 	 	}
 	}
+
+	/**
+     * Check that specified string uses valid allowed character set.  If not, an exception is thrown using
+     * strName for the exception message.
+     * @param name String to check
+     * @param strName String to use in exception message
+     * @throws FunctionMetadataException Thrown when string uses characters not in allowed character sets
+     */
+	@Removed("8.0.0")
+    private static final void validateNameCharacters(String name, String strName) throws Exception {
+        if (name.indexOf('.') > 0) {
+            throw new Exception(Messages.getString(Messages.ERR.ERR_015_001_0057,strName, '.'));
+        }
+    }
 
     /**
      * Check that specified string is valid Java identifier.  If not, an exception is thrown using

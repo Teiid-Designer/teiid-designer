@@ -113,7 +113,7 @@ public class MetadataValidator {
 	}
 	
 	// At minimum the model must have table/view, procedure or function 
-	static class MinimalMetadata implements MetadataRule {
+	private class MinimalMetadata implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			for (Schema schema:store.getSchemaList()) {
@@ -138,7 +138,7 @@ public class MetadataValidator {
 				
 				if (!schema.getFunctions().isEmpty()) {
 			    	ActivityReport<ReportItem> funcReport = new ActivityReport<ReportItem>("Translator metadata load " + model.getName()); //$NON-NLS-1$
-					FunctionMetadataValidator.validateFunctionMethods(schema.getFunctions().values(),report);
+					FunctionMetadataValidator.validateFunctionMethods(teiidVersion, schema.getFunctions().values(),report);
 					if(report.hasItems()) {
 						metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31073, funcReport));
 					}						

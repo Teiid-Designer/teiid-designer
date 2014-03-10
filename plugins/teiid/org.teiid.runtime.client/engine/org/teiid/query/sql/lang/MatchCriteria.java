@@ -2,11 +2,18 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.query.sql.lang.IMatchCriteria;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
+import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidClientException;
 
 /**
  *
@@ -181,5 +188,144 @@ public class MatchCriteria extends Criteria
         return clone;
     }
 
+    private final static LRUCache<List<?>, Pattern> patternCache = new LRUCache<List<?>, Pattern>(100);
+    
+    /**
+     * @param newPattern
+     * @param originalPattern
+     * @param flags
+     * @return patter object based on the given parameters
+     * @throws Exception
+     */
+    public static Pattern getPattern(String newPattern, String originalPattern, int flags) throws Exception {
+        List<?> key = Arrays.asList(newPattern, flags);
+        Pattern p = patternCache.get(key);
+        if (p == null) {
+            try {           
+                p = Pattern.compile(newPattern, Pattern.DOTALL);
+                patternCache.put(key, p);
+            } catch(PatternSyntaxException e) {
+                 throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30448, new Object[]{originalPattern, e.getMessage()}));
+            }
+        }
+        return p;
+    }
+
+    /**
+     * <p>Utility to convert the pattern into a different match syntax</p>
+     */
+    public static class PatternTranslator {
+        private char[] reserved;
+        private char newEscape;
+        private char[] toReplace;
+        private String[] replacements;
+        private int flags;
+        private final LRUCache<List<?>, Pattern> cache = new LRUCache<List<?>, Pattern>(100);
+
+        /**
+         * @param toReplace replacement for %
+         * @param replacements replacement for _
+         * @param reserved sorted array of reserved chars in the new match syntax
+         * @param newEscape escape char in the new syntax
+         * @param flags extra bitwise flags
+         */
+        public PatternTranslator(char[] toReplace, String[] replacements, char[] reserved, char newEscape, int flags) {
+            this.reserved = reserved;
+            this.newEscape = newEscape;
+            this.toReplace = toReplace;
+            this.replacements = replacements;
+            this.flags = flags;
+        }
+        
+        /**
+         * @param pattern
+         * @param escape
+         * @return translated pattern
+         * @throws Exception
+         */
+        public Pattern translate(String pattern, char escape) throws Exception {
+            List<?> key = Arrays.asList(pattern, escape);
+            Pattern result = null;
+            synchronized (cache) {
+                result = cache.get(key);
+            }
+            if (result == null) {
+                String newPattern = getPatternString(pattern, escape);
+                result = getPattern(newPattern, pattern, flags);
+                synchronized (cache) {
+                    cache.put(key, result);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * @param pattern
+         * @param escape
+         * @return pattern string based on given pattern
+         * @throws Exception
+         */
+        public String getPatternString(String pattern, char escape)
+                throws Exception {
+            int startChar = 0;
+            StringBuffer newPattern = new StringBuffer(pattern.length());
+            if (pattern.length() > 0 && pattern.charAt(0) == '%') {
+                startChar = 1;
+            } else {
+                newPattern.append('^');
+            }
+            
+            boolean escaped = false;
+            boolean endsWithMatchAny = false;
+            for (int i = startChar; i < pattern.length(); i++) {
+                char character = pattern.charAt(i);
+                
+                if (character == escape && character != NULL_ESCAPE_CHAR) {
+                    if (escaped) {
+                        appendCharacter(newPattern, character);
+                        escaped = false;
+                    } else {
+                        escaped = true;
+                    }
+                } else {
+                    int index = Arrays.binarySearch(toReplace, character);
+                    if (index >= 0) {
+                        if (escaped) {
+                            appendCharacter(newPattern, character);
+                            escaped = false;
+                        } else {
+                            if (character == '%' && i == pattern.length() - 1) {
+                                endsWithMatchAny = true;
+                                continue;
+                            }
+                            newPattern.append(replacements[index]);
+                        }
+                    } else {
+                        if (escaped) {
+                             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30449, new Object[] {pattern, new Character(escape)}));
+                        }
+                        appendCharacter(newPattern, character);
+                    }
+                }
+            }
+            
+            if (escaped) {
+                 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30449, new Object[] {pattern, new Character(escape)}));
+            }
+            
+            if (!endsWithMatchAny) {
+                newPattern.append('$');
+            }
+            return newPattern.toString();
+        }
+        
+        private void appendCharacter(StringBuffer newPattern, char character) {
+            if (Arrays.binarySearch(this.reserved, character) >= 0) {
+                newPattern.append(this.newEscape);
+            } 
+            newPattern.append(character);
+        }
+        
+    }
 }
 /* JavaCC - OriginalChecksum=0f89c892141b9a7e6acaf4cfc0d222f5 (do not edit this line) */

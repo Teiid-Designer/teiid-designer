@@ -5,6 +5,7 @@ package org.teiid.query.sql.symbol;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
@@ -214,17 +215,25 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
      * @param other Other group
      * @return -1, 0, or 1 depending on how this compares to group
      */
-    public int compareTo(GroupSymbol o) {
-        return getName().compareTo(o.getName());
+    public int compareTo(GroupSymbol other) {
+        return getName().compareTo(other.getName());
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.schema == null) ? 0 : this.schema.hashCode());
-        result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
-        return result;
+        if (this.schema != null) {
+            result = prime * result + this.schema.hashCode();
+            if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+                result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
+            else
+                result = prime * result + ((this.getShortCanonicalName() == null) ? 0 : this.getShortCanonicalName().hashCode());
+
+            return result;
+        }
+
+        return super.hashCode();
     }
 
     @Override

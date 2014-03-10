@@ -40,6 +40,7 @@ public class Window8Function extends SimpleNode implements WindowFunction {
     @Override
     public void setFunction(AggregateSymbol function) {
         this.function = function;
+        this.function.setWindowed(true);
     }
 
     /**

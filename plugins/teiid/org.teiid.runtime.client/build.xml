@@ -19,7 +19,9 @@
 	<import file="${GIT-HOME}/scripts/build-common.xml" />
 
 	<!-- Comma-separated list of required libraries -->
-	<property name="libs" value="jboss-vfs.jar"/>
+	<property name="libs" value="jboss-vfs.jar,
+		                         nux.jar,
+		                         xom.jar"/>
 
 	<!-- Location of the generated SQLParser class -->
 	<property name="parsers" value="v7/Teiid7Parser.java,

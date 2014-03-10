@@ -153,6 +153,11 @@ public class EvaluatableVisitor extends LanguageVisitor {
     }
     
     public void visit(ScalarSubquery obj){
+        /*
+         * Purposely excluded since only the optimizer ever sets
+         * a scalarsubquery's shouldEvaluate flag to true and this
+         * never occurs in this client
+         */
 //    	if (obj.shouldEvaluate()) {
 //    		evaluationNotPossible(EvaluationLevel.PROCESSING);
 //    	} else {

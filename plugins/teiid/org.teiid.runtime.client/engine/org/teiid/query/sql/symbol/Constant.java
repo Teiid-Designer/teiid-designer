@@ -3,11 +3,21 @@
 package org.teiid.query.sql.symbol;
 
 import java.math.BigDecimal;
+import java.text.Collator;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import org.teiid.core.types.ClobType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.query.sql.symbol.IConstant;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.query.function.FunctionMethods;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
@@ -19,6 +29,98 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
     private Class<?> type = DataTypeManagerService.DefaultDataTypes.NULL.getTypeClass();
 
     private boolean multiValued;
+
+    private static Map<ITeiidServerVersion, Constant> nullCache = new HashMap<ITeiidServerVersion, Constant>();
+    
+    /**
+     * @param teiidParser
+     * @return a null constant for the given teiid parser if one has not already been created
+     */
+    public static Constant getNullConstant(TeiidParser teiidParser) {
+        Constant constant = nullCache.get(teiidParser.getVersion());
+        if (constant == null) {
+            constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
+            nullCache.put(teiidParser.getVersion(), constant);
+        }
+
+        return constant;
+    }
+
+    /**
+     * locale for comparison of constant values
+     */
+    public static final String COLLATION_LOCALE = System.getProperties().getProperty("org.teiid.collationLocale"); //$NON-NLS-1$
+
+    /**
+     * System property indicating whether to compare padded constant values
+     */
+    public static final boolean PAD_SPACE = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.padSpace", false); //$NON-NLS-1$
+
+    /**
+     * Comparator for comparing constants
+     */
+    public static final Comparator<Object> COMPARATOR = getComparator(COLLATION_LOCALE, PAD_SPACE);
+    
+    static Comparator<Object> getComparator(String localeString, final boolean padSpace) {
+        if (localeString == null) {
+            return getComparator(padSpace);
+        }
+        String[] parts = localeString.split("_"); //$NON-NLS-1$
+        Locale locale = null;
+        if (parts.length == 1) {
+            locale = new Locale(parts[0]);
+        } else if (parts.length == 2) {
+            locale = new Locale(parts[0], parts[1]);
+        } else if (parts.length == 3) {
+            locale = new Locale(parts[0], parts[1], parts[2]);
+        } else {
+            return getComparator(padSpace);
+        }
+        final Collator c = Collator.getInstance(locale);
+        return new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Class<?> clazz = o1.getClass();
+                if (clazz == String.class) {
+                    String s1 = (String)o1;
+                    String s2 = (String)o2;
+                    if (padSpace) {
+                        s1 = FunctionMethods.rightTrim(s1, ' ', false);
+                        s2 = FunctionMethods.rightTrim(s2, ' ', false);
+                    }
+                    return c.compare(s1, s2);
+                }
+                return ((Comparable<Object>)o1).compareTo(o2);
+            }
+        };
+    }
+    
+    static Comparator<Object> getComparator(boolean padSpace) {
+        if (!padSpace) {
+            return new Comparator<Object>() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    return ((Comparable<Object>)o1).compareTo(o2);
+                }
+            };
+        }
+        return new Comparator<Object>() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                Class<?> clazz = o1.getClass();
+                if (clazz == String.class) {
+                    CharSequence s1 = (CharSequence)o1;
+                    CharSequence s2 = (CharSequence)o2;
+                    return comparePadded(s1, s2);
+                } else if (clazz == ClobType.class) {
+                    CharSequence s1 = ((ClobType)o1).getCharSequence();
+                    CharSequence s2 = ((ClobType)o2).getCharSequence();
+                    return comparePadded(s1, s2);
+                }
+                return ((Comparable<Object>)o1).compareTo(o2);
+            }
+        };
+    }
 
     /**
      * @param p
@@ -85,6 +187,33 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
     @Override
     public boolean isMultiValued() {
         return multiValued;
+    }
+
+    final static int comparePadded(CharSequence s1, CharSequence s2) {
+        int len1 = s1.length();
+        int len2 = s2.length();
+        int n = Math.min(len1, len2);
+        int i = 0;
+        int result = 0;
+        for (; i < n; i++) {
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
+            if (c1 != c2) {
+                return c1 - c2;
+            }
+        }
+        result = len1 - len2;
+        for (int j = i; j < len1; j++) {
+            if (s1.charAt(j) != ' ') {
+                return result;
+            }
+        }
+        for (int j = i; j < len2; j++) {
+            if (s2.charAt(j) != ' ') {
+                return result;
+            }
+        }
+        return 0;
     }
 
     /**

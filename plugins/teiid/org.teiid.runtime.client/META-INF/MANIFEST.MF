@@ -20,5 +20,7 @@ Require-Bundle: org.teiid.designer.spi;bundle-version="8.3.0",
  org.jboss.ide.eclipse.as.core;bundle-version="[2.4.0,3.0.0)",
  org.jboss.ide.eclipse.as.management.core;bundle-version="[2.4.0,3.0.0)"
 Bundle-ClassPath: lib/jboss-vfs.jar,
+ lib/nux.jar,
+ lib/xom.jar,
  .
 
