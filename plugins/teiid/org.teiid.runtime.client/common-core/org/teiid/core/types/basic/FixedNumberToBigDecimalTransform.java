@@ -31,7 +31,8 @@ public class FixedNumberToBigDecimalTransform extends Transform {
 
 	private Class<?> sourceType;
 	
-	public FixedNumberToBigDecimalTransform(Class<?> sourceType) {
+	public FixedNumberToBigDecimalTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 	

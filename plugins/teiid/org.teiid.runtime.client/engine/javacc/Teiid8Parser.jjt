@@ -1015,7 +1015,7 @@ Column tableElement(ParseInfo info) :
      )
      [<NOT> <NULL> { notNull = true; }]
      {
-        Column c = new Column();
+        Column c = new Column(getVersion());
         c.setName(element);
         c.setRuntimeType(type.getType());
         c.setAutoIncremented(autoIncrement);

@@ -1288,7 +1288,7 @@ public class SQLStringVisitor extends LanguageVisitor
                 ElementSymbol symbol = (ElementSymbol)obj.getAsColumns().get(i);
                 outputShortName(symbol);
                 append(SPACE);
-                append(DataTypeManagerService.getInstance().getDataTypeName(symbol.getType()));
+                append(getDataTypeManager().getDataTypeName(symbol.getType()));
                 if (i < obj.getAsColumns().size() - 1) {
                     append(", "); //$NON-NLS-1$
                 }

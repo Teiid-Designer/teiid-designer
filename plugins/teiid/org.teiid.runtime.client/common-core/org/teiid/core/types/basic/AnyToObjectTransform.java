@@ -29,7 +29,8 @@ public class AnyToObjectTransform extends Transform {
 	
 	private Class<?> sourceType;
 	
-	public AnyToObjectTransform(Class<?> sourceType) {
+	public AnyToObjectTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 	

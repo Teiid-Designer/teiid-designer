@@ -145,19 +145,8 @@ public interface CriteriaOperator {
                 if (! foundSymbol)
                     continue;
 
-                // Check if the operator has a removed annotation. If it does then check it
-                // against the given parser version. In effect, the annotation will cause the
-                // operator to be 'hidden' for server versions greated than the version in
-                // the annotation.
-                try {
-                    if (AnnotationUtils.hasAnnotation(operator, Removed.class)) {
-                        Removed removed = AnnotationUtils.getAnnotation(operator, Removed.class);
-                        if (AnnotationUtils.isGreaterThanOrEqualTo(removed, version))
-                            continue;
-                    }
-                } catch (Exception ex) {
-                    // Unlikely to occur since operators are collected from the enum itself
-                }
+                if (! AnnotationUtils.isApplicable(operator, version))
+                    continue;
 
                 return operator;
             }

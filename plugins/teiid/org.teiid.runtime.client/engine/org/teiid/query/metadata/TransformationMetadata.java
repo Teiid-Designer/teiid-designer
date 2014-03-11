@@ -151,6 +151,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 
     private final TeiidParser teiidParser;
     private final CompositeMetadataStore store;
+    private DataTypeManagerService dataTypeManager;
     private Map<String, VDBResources.Resource> vdbEntries;
     private FunctionLibrary functionLibrary;
     private VDBMetaData vdbMetaData;
@@ -179,6 +180,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
      * @param functionTrees
      */
     public TransformationMetadata(TeiidParser teiidParser, VDBMetaData vdbMetadata, final CompositeMetadataStore store, Map<String, VDBResources.Resource> vdbEntries, FunctionTree systemFunctions, Collection<FunctionTree> functionTrees) {
+        super(teiidParser.getVersion());
     	ArgCheck.isNotNull(store);
     	this.teiidParser = teiidParser;
     	this.vdbMetaData = vdbMetadata;
@@ -211,6 +213,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     }
 
     private TransformationMetadata(TeiidParser teiidParser, final CompositeMetadataStore store, FunctionLibrary functionLibrary) {
+        super(teiidParser.getVersion());
         this.teiidParser = teiidParser;
         this.store = store;
     	this.vdbEntries = Collections.emptyMap();
@@ -223,6 +226,16 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 
     public ITeiidServerVersion getTeiidVersion() {
         return teiidParser.getVersion();
+    }
+
+    /**
+     * @return the dataTypeManager
+     */
+    public DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+        return this.dataTypeManager;
     }
 
     //==================================================================================
@@ -393,10 +406,10 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
                     // create a parameter and add it to the procedure object
                     SPParameter spParam = new SPParameter(getTeiidParser(), paramRecord.getPosition(), direction, paramRecord.getFullName());
                     spParam.setMetadataID(paramRecord);
-                    spParam.setClassType(DataTypeManagerService.getInstance().getDataTypeClass(runtimeType));
+                    spParam.setClassType(getDataTypeManager().getDataTypeClass(runtimeType));
                     if (paramRecord.isVarArg()) {
                     	spParam.setVarArg(true);
-                    	spParam.setClassType(DataTypeManagerService.getInstance().getDataType(spParam.getClassType()).getTypeArrayClass());
+                    	spParam.setClassType(getDataTypeManager().getDataType(spParam.getClassType()).getTypeArrayClass());
                     }
                     procInfo.addParameter(spParam);
                 }
@@ -412,7 +425,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 
                     for (Column columnRecord : resultRecord.getColumns()) {
                         String colType = columnRecord.getRuntimeType();
-                        param.addResultSetColumn(columnRecord.getFullName(), DataTypeManagerService.getInstance().getDataTypeClass(colType), columnRecord);
+                        param.addResultSetColumn(columnRecord.getFullName(), getDataTypeManager().getDataTypeClass(colType), columnRecord);
                     }
 
                     procInfo.addParameter(param);            

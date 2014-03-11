@@ -34,7 +34,16 @@ import org.teiid.runtime.client.TeiidClientException;
  * is the source name, etc.
  */
 public abstract class Transform {
-	
+
+    protected final DataTypeManagerService dataTypeManager;
+
+    /**
+     * @param dataTypeManager
+     */
+    public Transform(DataTypeManagerService dataTypeManager) {
+        this.dataTypeManager = dataTypeManager;
+    }
+
 	/**
 	 * This method transforms a value of the source type into a value
 	 * of the target type.
@@ -64,7 +73,7 @@ public abstract class Transform {
 	 * @return Name of source type
 	 */
 	public String getSourceTypeName() {
-	    return DataTypeManagerService.getInstance().getDataTypeName(getSourceType());
+	    return dataTypeManager.getDataTypeName(getSourceType());
 	}
 
 	/**
@@ -78,7 +87,7 @@ public abstract class Transform {
 	 * @return Name of target type
 	 */
 	public String getTargetTypeName() {
-	    return DataTypeManagerService.getInstance().getDataTypeName(getTargetType());
+	    return dataTypeManager.getDataTypeName(getTargetType());
 	}
 
 	/**
@@ -110,11 +119,10 @@ public abstract class Transform {
 	}
 
 	protected void checkValueRange(Object value, Number min, Number max) throws Exception {
-	    DataTypeManagerService service = DataTypeManagerService.getInstance();
-	    DefaultDataTypes sourceDataType = service.getDataType(getSourceType());
+	    DefaultDataTypes sourceDataType = dataTypeManager.getDataType(getSourceType());
 	    
-		if (((Comparable)value).compareTo(service.transformValue(min, sourceDataType)) < 0 
-		    || ((Comparable)value).compareTo(service.transformValue(max, sourceDataType)) > 0) {
+		if (((Comparable)value).compareTo(dataTypeManager.transformValue(min, sourceDataType)) < 0 
+		    || ((Comparable)value).compareTo(dataTypeManager.transformValue(max, sourceDataType)) > 0) {
 			  throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10058, value, getSourceType().getSimpleName(), getTargetType().getSimpleName()));
 		}
 	}

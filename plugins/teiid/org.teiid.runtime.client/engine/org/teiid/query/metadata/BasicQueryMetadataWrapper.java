@@ -31,6 +31,7 @@ import javax.script.ScriptEngine;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
 import org.teiid.query.sql.symbol.Expression;
@@ -50,6 +51,11 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	 */
 	public BasicQueryMetadataWrapper(IQueryMetadataInterface actualMetadata) {
 		this.actualMetadata = actualMetadata;
+	}
+
+	@Override
+	public ITeiidServerVersion getTeiidVersion() {
+	    return actualMetadata.getTeiidVersion();
 	}
 
 	@Override

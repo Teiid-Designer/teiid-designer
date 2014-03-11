@@ -89,7 +89,7 @@ public class Create extends Command
     		for (Column column : columns) {
 				ElementSymbol es = getTeiidParser().createASTNode(ASTNodes.ELEMENT_SYMBOL); 
 				es.setName(column.getName());
-				es.setType(DataTypeManagerService.getInstance().getDataTypeClass(column.getRuntimeType()));
+				es.setType(getTeiidParser().getDataTypeService().getDataTypeClass(column.getRuntimeType()));
 				es.setGroupSymbol(table);
 				columnSymbols.add(es);
 			}
@@ -124,9 +124,9 @@ public class Create extends Command
     public void setElementSymbolsAsColumns(List<ElementSymbol> columns) {
     	this.columns.clear();
     	for (ElementSymbol elementSymbol : columns) {
-    		Column c = new Column();
+    		Column c = new Column(getTeiidVersion());
     		c.setName(elementSymbol.getName());
-    		c.setRuntimeType(DataTypeManagerService.getInstance().getDataTypeName(elementSymbol.getType()));
+    		c.setRuntimeType(getTeiidParser().getDataTypeService().getDataTypeName(elementSymbol.getType()));
     		c.setNullType(NullType.Nullable);
     		this.columns.add(c);
 		}
@@ -191,7 +191,7 @@ public class Create extends Command
             for (int i = 0; i < this.columns.size(); i++) {
                 Column c = this.columns.get(i);
                 Column o = other.columns.get(i);
-                DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+                DataTypeManagerService dataTypeManager = getTeiidParser().getDataTypeService();
                 if (!c.getName().equalsIgnoreCase(o.getName()) 
                     || dataTypeManager.getDataTypeClass(c.getRuntimeType().toLowerCase()) != dataTypeManager.getDataTypeClass(o.getRuntimeType().toLowerCase())
                     || c.isAutoIncremented() != o.isAutoIncremented()
@@ -237,7 +237,7 @@ public class Create extends Command
 
         clone.columns = new ArrayList<Column>(columns.size());
         for (Column column : columns) {
-            Column copyColumn = new Column();
+            Column copyColumn = new Column(getTeiidVersion());
             copyColumn.setName(column.getName());
             copyColumn.setRuntimeType(column.getRuntimeType());
             copyColumn.setAutoIncremented(column.isAutoIncremented());

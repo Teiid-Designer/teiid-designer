@@ -109,7 +109,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     @Override
     public IQueryMetadataInterface getSessionMetadata() {
     	if (isSession()) {
-    		TempMetadataAdapter tma = new TempMetadataAdapter(new BasicQueryMetadata(), this.tempStore);
+    		TempMetadataAdapter tma = new TempMetadataAdapter(new BasicQueryMetadata(getTeiidVersion()), this.tempStore);
     		tma.session = true;
     		return tma;
     	}
@@ -282,7 +282,7 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
 		if(elementID instanceof TempMetadataID) { 
             TempMetadataID tempID = (TempMetadataID)elementID;
             if (tempID.getType() != null) {
-                return DataTypeManagerService.getInstance().getDataTypeName( tempID.getType() );
+                return DataTypeManagerService.getInstance(getTeiidVersion()).getDataTypeName( tempID.getType() );
             } 
             throw new AssertionError("No type set for element " + elementID); //$NON-NLS-1$
         }

@@ -200,7 +200,7 @@ public class MetadataValidator {
 	}	
 	
 	// Resolves metadata query plans to make sure they are accurate
-	static class ResolveQueryPlans implements MetadataRule {
+	private class ResolveQueryPlans implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			IQueryMetadataInterface metadata = vdb.getAttachment(IQueryMetadataInterface.class);
@@ -210,7 +210,7 @@ public class MetadataValidator {
 					continue;
 				}
 				ModelMetaData model = vdb.getModel(schema.getName());
-				MetadataFactory mf = new MetadataFactory(vdb.getName(), vdb.getVersion(), metadataValidator.typeMap, model) {
+				MetadataFactory mf = new MetadataFactory(teiidVersion, vdb.getName(), vdb.getVersion(), metadataValidator.typeMap, model) {
 					@Override
 					protected void setUUID(AbstractMetadataRecord record) {
 						if (count >= 0) {
@@ -352,7 +352,7 @@ public class MetadataValidator {
 		if (type == null) {
 			throw new Exception(Messages.gs(Messages.TEIID.TEIID31086, name, table.getFullName()));
 		}
-		Column column = mf.addColumn(name, DataTypeManagerService.getInstance().getDataTypeName(type), table);
+		Column column = mf.addColumn(name, DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(type), table);
 		column.setUpdatable(table.supportsUpdate());
 		return column;		
 	}

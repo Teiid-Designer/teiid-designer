@@ -96,7 +96,7 @@ public abstract class AbstractTestUpdateValidator extends AbstractTest {
 		int i = 0;
 		for (Expression singleElementSymbol : symbols) {
 			names[i] = Symbol.getShortName(singleElementSymbol);
-			types[i++] = DataTypeManagerService.getInstance().getDataTypeName(singleElementSymbol.getType());
+			types[i++] = getDataTypeManager().getDataTypeName(singleElementSymbol.getType());
 		}
 		
 		getMetadataFactory().createElements(vm1g1, names, types);

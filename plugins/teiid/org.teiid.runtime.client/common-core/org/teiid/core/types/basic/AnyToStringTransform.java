@@ -33,7 +33,8 @@ public class AnyToStringTransform extends Transform {
 
 	private Class<?> sourceType;
 	
-	public AnyToStringTransform(Class<?> sourceType) {
+	public AnyToStringTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 	

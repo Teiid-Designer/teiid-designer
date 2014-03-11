@@ -22,6 +22,8 @@
 
 package org.teiid.metadata;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+
 
 /**
  * ColumnRecordImpl
@@ -64,7 +66,13 @@ public class Column extends BaseColumn implements Comparable<Column> {
     private volatile  int nullValues = -1;
     private ColumnSet<?> parent;
     
-    
+    /**
+     * @param teiidVersion
+     */
+    public Column(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     @Override
     public void setDatatype(Datatype datatype, boolean copyAttributes) {
     	super.setDatatype(datatype, copyAttributes);

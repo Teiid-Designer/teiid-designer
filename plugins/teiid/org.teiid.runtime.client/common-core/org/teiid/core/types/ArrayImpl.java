@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import org.teiid.core.util.ExternalizeUtil;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  * Provides a serializable {@link Array} implementation with minimal JDBC functionality. 
@@ -50,15 +51,22 @@ public final class ArrayImpl implements Comparable<ArrayImpl>, Externalizable, A
 	@SuppressWarnings("serial")
 	public final static class NullException extends RuntimeException {};
 	private final static NullException ex = new NullException();
+
+	private final ITeiidServerVersion teiidVersion;
+    private DataTypeManagerService dataTypeManager;
 	
-	public ArrayImpl(Object[] values) {
-		this.values = values;
+	public ArrayImpl(ITeiidServerVersion teiidVersion, Object[] values) {
+		this.teiidVersion = teiidVersion;
+        this.values = values;
 	}
 
-	public ArrayImpl() {
-		
+	private DataTypeManagerService getDataTypeManager() {
+	    if (dataTypeManager == null)
+	        dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
+
+	    return dataTypeManager;
 	}
-	
+
 	private void checkValues() throws SQLException {
 		if (values == null) {
 			throw new SQLException("Already freed or invalid"); //$NON-NLS-1$
@@ -192,13 +200,13 @@ public final class ArrayImpl implements Comparable<ArrayImpl>, Externalizable, A
 	@Override
 	public int getBaseType() throws SQLException {
 		checkValues();
-		return JDBCSQLTypeInfo.getSQLType(DataTypeManagerService.getInstance().getDataTypeName(values.getClass().getComponentType()));
+		return JDBCSQLTypeInfo.getSQLType(getDataTypeManager().getDataTypeName(values.getClass().getComponentType()));
 	}
 
 	@Override
 	public String getBaseTypeName() throws SQLException {
 		checkValues();
-		return DataTypeManagerService.getInstance().getDataTypeName(values.getClass().getComponentType());
+		return getDataTypeManager().getDataTypeName(values.getClass().getComponentType());
 	}
 
 	@Override
@@ -230,7 +238,7 @@ public final class ArrayImpl implements Comparable<ArrayImpl>, Externalizable, A
 		if (INVALID.equalsIgnoreCase(componentType)) {
 			return;
 		}
-		this.values = ExternalizeUtil.readArray(in, DataTypeManagerService.getInstance().getDataTypeClass(componentType));
+		this.values = ExternalizeUtil.readArray(in, getDataTypeManager().getDataTypeClass(componentType));
 		zeroBased = in.readBoolean();
 	}
 	
@@ -240,7 +248,7 @@ public final class ArrayImpl implements Comparable<ArrayImpl>, Externalizable, A
 			out.writeUTF(INVALID);  
 			return;
 		}
-		out.writeUTF(DataTypeManagerService.getInstance().getDataTypeName(this.values.getClass().getComponentType()));
+		out.writeUTF(getDataTypeManager().getDataTypeName(this.values.getClass().getComponentType()));
 		ExternalizeUtil.writeArray(out, values);
 		out.writeBoolean(zeroBased);
 	}

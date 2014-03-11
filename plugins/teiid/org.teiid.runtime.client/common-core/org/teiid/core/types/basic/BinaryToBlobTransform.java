@@ -29,6 +29,13 @@ import org.teiid.core.types.Transform;
 public class BinaryToBlobTransform extends Transform {
 
 	/**
+     * @param dataTypeManager
+     */
+    public BinaryToBlobTransform(DataTypeManagerService dataTypeManager) {
+        super(dataTypeManager);
+    }
+
+    /**
 	 * This method transforms a value of the source type into a value
 	 * of the target type.
 	 * @param value Incoming value of source type

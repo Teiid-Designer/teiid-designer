@@ -22,6 +22,7 @@
 
 package org.teiid.query.resolver;
 
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -37,6 +38,8 @@ import org.teiid.query.sql.lang.LanguageObject;
 public abstract class CommandResolver {
 
     private final QueryResolver queryResolver;
+
+    private DataTypeManagerService dataTypeManager;
 
     /**
      * @param queryResolver
@@ -59,6 +62,13 @@ public abstract class CommandResolver {
 
     protected <T extends LanguageObject> T create(ASTNodes type) {
         return getTeiidParser().createASTNode(type);
+    }
+
+    protected DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+        return dataTypeManager;
     }
 
     /**

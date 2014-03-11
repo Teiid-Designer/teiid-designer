@@ -23,8 +23,8 @@
 package org.teiid.core.types.basic;
 
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.core.types.Transform;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.core.types.Transform;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -32,7 +32,8 @@ public class ObjectToAnyTransform extends Transform {
 
     private Class targetClass;
     
-    public ObjectToAnyTransform(Class targetClass) {
+    public ObjectToAnyTransform(DataTypeManagerService dataTypeManager, Class targetClass) {
+        super(dataTypeManager);
         this.targetClass = targetClass;
     }
     
@@ -52,14 +53,13 @@ public class ObjectToAnyTransform extends Transform {
         if(targetClass.isAssignableFrom(value.getClass())) {
             return value;
         }
-        
-        DataTypeManagerService service = DataTypeManagerService.getInstance();
-        DefaultDataTypes valueDataType = service.getDataType(value.getClass());
-        DefaultDataTypes targetDataType = service.getDataType(getTargetType());
-        Transform transform = service.getTransform(valueDataType, targetDataType);
+
+        DefaultDataTypes valueDataType = dataTypeManager.getDataType(value.getClass());
+        DefaultDataTypes targetDataType = dataTypeManager.getDataType(getTargetType());
+        Transform transform = dataTypeManager.getTransform(valueDataType, targetDataType);
         boolean valid = true;
         if (transform instanceof ObjectToAnyTransform) {
-        	Object v1 = service.convertToRuntimeType(value, true);
+        	Object v1 = dataTypeManager.convertToRuntimeType(value, true);
         	if (v1 != value) {
 				try {
 					return transformDirect(v1);

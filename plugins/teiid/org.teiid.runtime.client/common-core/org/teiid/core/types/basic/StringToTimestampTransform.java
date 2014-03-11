@@ -24,6 +24,7 @@ package org.teiid.core.types.basic;
 
 import java.sql.Timestamp;
 import java.util.regex.Pattern;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.Transform;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -41,6 +42,13 @@ public class StringToTimestampTransform extends Transform {
 			validate = false;
 		}
 	}
+
+	/**
+     * @param dataTypeManager
+     */
+    public StringToTimestampTransform(DataTypeManagerService dataTypeManager) {
+        super(dataTypeManager);
+    }
 
 	/**
 	 * This method transforms a value of the source type into a value

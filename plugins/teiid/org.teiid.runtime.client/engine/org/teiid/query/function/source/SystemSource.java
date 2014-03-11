@@ -60,7 +60,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     private static final String XML_FUNCTION_CLASS = XMLSystemFunctions.class.getName(); 
     private static final String SECURITY_FUNCTION_CLASS = SecuritySystemFunctions.class.getName();
 
-    private final ITeiidServerVersion teiidVersion; 
+    private final ITeiidServerVersion teiidVersion;
+    private final DataTypeManagerService dataTypeManager;
     
     /**
      * Construct a source of system metadata.
@@ -71,6 +72,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     public SystemSource(ITeiidServerVersion teiidVersion, boolean allowEnvFunction) {
     	super(new ArrayList<FunctionMethod>());
         this.teiidVersion = teiidVersion;
+        this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 
 		// +, -, *, /
         addArithmeticFunction(SourceSystemFunctions.ADD_OP, Messages.getString(Messages.SystemSource.Add_description), "plus", Messages.getString(Messages.SystemSource.Add_result_description)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
@@ -202,8 +204,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addJsonToXml();
         
         addSecurityFunctions();
-        
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+
         for (String type : dataTypeManager.getAllDataTypeNames()) {
         	if (!dataTypeManager.isNonComparable(type)) {
         		addTypedNullIfFunction(type);
@@ -246,26 +247,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         return clazz;
     }
 
-    private boolean isApplicable(Class<?> clazz) {
-        if (AnnotationUtils.hasAnnotation(clazz, Removed.class)) {
-            Removed removed = AnnotationUtils.getAnnotation(clazz, Removed.class);
-            if (AnnotationUtils.isGreaterThanOrEqualTo(removed, teiidVersion)) {
-                return false;
-            }
-        }
-
-        if (AnnotationUtils.hasAnnotation(clazz, Since.class)) {
-            Since since = AnnotationUtils.getAnnotation(clazz, Since.class);
-            if (!AnnotationUtils.isGreaterThanOrEqualTo(since, teiidVersion)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private void addFunctions(Class<?> clazz) {
-        if(! isApplicable(clazz))
+        if(! AnnotationUtils.isApplicable(clazz, teiidVersion))
             return;
         
 		Method[] methods = clazz.getMethods();
@@ -279,7 +262,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 				name = method.getName();
 			}
 
-			FunctionMethod func = MetadataFactory.createFunctionFromMethod(name, method);
+			FunctionMethod func = MetadataFactory.createFunctionFromMethod(teiidVersion, name, method);
 
 			Messages.SystemSource descKey = Messages.SystemSource.valueOf(name + "_description"); //$NON-NLS-1$
 			Messages.SystemSource resultKey = Messages.SystemSource.valueOf(name + "_result"); //$NON-NLS-1$
@@ -904,7 +887,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
     
     private void addConversionFunctions() {
-    	for (String type : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String type : dataTypeManager.getAllDataTypeNames()) {
             addTypedConversionFunction(SourceSystemFunctions.CONVERT, type); 
             addTypedConversionFunction("cast", type); //$NON-NLS-1$
     	}
@@ -920,8 +903,8 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }    
 
     private void addContextFunctions() {
-    	for (String contextType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
-    		for (String exprType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String contextType : dataTypeManager.getAllDataTypeNames()) {
+    		for (String exprType : dataTypeManager.getAllDataTypeNames()) {
                 addTypedContextFunction(contextType, exprType);
         	}
     	}
@@ -937,7 +920,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     } 
     
     private void addRowLimitFunctions() {
-    	for (String exprType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String exprType : dataTypeManager.getAllDataTypeNames()) {
             functions.add(
                     new FunctionMethod("rowlimit", Messages.getString(Messages.SystemSource.Rowlimit_description), MISCELLANEOUS, FUNCTION_CLASS, "rowlimit", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         new FunctionParameter[] {
@@ -947,7 +930,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
     
     private void addRowLimitExceptionFunctions() {
-    	for (String exprType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String exprType : dataTypeManager.getAllDataTypeNames()) {
             functions.add(
                     new FunctionMethod("rowlimitexception", Messages.getString(Messages.SystemSource.RowlimitException_description), MISCELLANEOUS, FUNCTION_CLASS, "rowlimitexception", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         new FunctionParameter[] {
@@ -982,7 +965,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
 
     private void addLookupFunctions() {
-    	for (String keyValueType : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String keyValueType : dataTypeManager.getAllDataTypeNames()) {
             functions.add(
                     new FunctionMethod("lookup", Messages.getString(Messages.SystemSource.Lookup_description), MISCELLANEOUS, PushDown.CANNOT_PUSHDOWN, FUNCTION_CLASS, "lookup", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         Arrays.asList(
@@ -1036,7 +1019,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
     }
     
     private void addIfNullFunctions() {
-    	for (String type : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+    	for (String type : dataTypeManager.getAllDataTypeNames()) {
             addNvlFunction(type);
             addIfNullFunction(type);
     	}

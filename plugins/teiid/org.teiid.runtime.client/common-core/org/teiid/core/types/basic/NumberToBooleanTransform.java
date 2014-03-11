@@ -30,7 +30,8 @@ public class NumberToBooleanTransform extends Transform {
 	private Comparable falseVal;
 	private Class<?> sourceType;
 	
-	public NumberToBooleanTransform(Comparable falseVal) {
+	public NumberToBooleanTransform(DataTypeManagerService dataTypeManager, Comparable falseVal) {
+	    super(dataTypeManager);
 		this.falseVal = falseVal;
 		this.sourceType = falseVal.getClass();
 	}

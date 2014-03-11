@@ -1076,7 +1076,7 @@ public class XMLSystemFunctions {
 			value.setType(Type.DOCUMENT);
 		}
 		if (xs.getType() == DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()) {
-			return DataTypeManagerService.getInstance().transformValue(value, xs.getType());
+			return DataTypeManagerService.getInstance(xs.getTeiidVersion()).transformValue(value, xs.getType());
 		}
 		if (xs.getType() == DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass()) {
 			InputStreamFactory isf = Evaluator.getInputStreamFactory(value);

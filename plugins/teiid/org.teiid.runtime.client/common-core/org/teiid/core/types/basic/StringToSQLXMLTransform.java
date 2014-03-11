@@ -40,6 +40,13 @@ import org.teiid.runtime.client.TeiidClientException;
 public class StringToSQLXMLTransform extends Transform {
 
 	/**
+     * @param dataTypeManager
+     */
+    public StringToSQLXMLTransform(DataTypeManagerService dataTypeManager) {
+        super(dataTypeManager);
+    }
+
+    /**
 	 * This method transforms a value of the source type into a value
 	 * of the target type.
 	 * @param value Incoming value of source type

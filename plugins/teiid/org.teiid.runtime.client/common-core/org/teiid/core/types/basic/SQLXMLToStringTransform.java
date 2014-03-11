@@ -25,16 +25,16 @@ package org.teiid.core.types.basic;
 import java.io.IOException;
 import java.io.Reader;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.core.types.XMLType;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.core.types.XMLType;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
 
 public class SQLXMLToStringTransform extends AnyToStringTransform {
 
-	public SQLXMLToStringTransform() {
-		super(DefaultDataTypes.XML.getTypeClass());
+	public SQLXMLToStringTransform(DataTypeManagerService dataTypeManager) {
+		super(dataTypeManager, DefaultDataTypes.XML.getTypeClass());
 	}
 	
     /**

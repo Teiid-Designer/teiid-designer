@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
@@ -81,6 +82,11 @@ public interface IQueryMetadataInterface<F extends IFunctionLibrary,
         }
 
     }
+
+    /**
+     * @return the version of teiid for which this metadata is applicable
+     */
+    ITeiidServerVersion getTeiidVersion();
 
     /**
      * Get the metadata-implementation identifier object for the given element name.  

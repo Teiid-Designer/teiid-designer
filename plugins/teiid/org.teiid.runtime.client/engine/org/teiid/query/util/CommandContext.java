@@ -29,6 +29,7 @@ import java.util.Random;
 import java.util.TimeZone;
 import javax.security.auth.Subject;
 import org.teiid.core.util.LRUCache;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod.Determinism;
 
 /** 
@@ -50,7 +51,17 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 
 	private Determinism[] determinismLevel = new Determinism[] {Determinism.DETERMINISTIC};
 
-    public CommandContext() {
+    private final ITeiidServerVersion teiidVersion;
+
+    public CommandContext(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
+
+    /**
+     * @return teiid version
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return teiidVersion;
     }
 
     public Determinism getDeterminismLevel() {

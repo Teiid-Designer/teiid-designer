@@ -37,6 +37,7 @@ import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.MetadataStore.Grant;
 import org.teiid.query.util.CommandContext;
@@ -60,6 +61,8 @@ public class MetadataFactory implements Serializable {
 
 	private static final long serialVersionUID = 8590341087771685630L;
 
+	private final ITeiidServerVersion teiidVersion;
+
     private String vdbName;
     private int vdbVersion;
     private Map<String, Datatype> enterpriseTypes;
@@ -72,7 +75,6 @@ public class MetadataFactory implements Serializable {
     private Schema schema = new Schema();
     private String idPrefix;
     protected int count;
-//    private transient Parser parser;
     private transient ModelMetaData model;
     private transient Map<String, ? extends VDBResource> vdbResources;
     private List<Grant> grants;
@@ -83,6 +85,7 @@ public class MetadataFactory implements Serializable {
 	public static final String ODATA_URI = "{http://www.jboss.org/teiiddesigner/ext/odata/2012}"; //$NON-NLS-1$
 
 	public static final Map<String, String> BUILTIN_NAMESPACES;
+
 	static {
 		Map<String, String> map = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
 		map.put(TEIID_RELATIONAL, AbstractMetadataRecord.RELATIONAL_URI.substring(1, AbstractMetadataRecord.RELATIONAL_URI.length()-1));
@@ -93,12 +96,13 @@ public class MetadataFactory implements Serializable {
 		BUILTIN_NAMESPACES = Collections.unmodifiableMap(map);
 	}
 
-	public MetadataFactory(String vdbName, int vdbVersion, Map<String, Datatype> runtimeTypes, ModelMetaData model) {
-        this(vdbName, vdbVersion, model.getName(), runtimeTypes, model.getProperties(), model.getSchemaText());
+	public MetadataFactory(ITeiidServerVersion teiidVersion, String vdbName, int vdbVersion, Map<String, Datatype> runtimeTypes, ModelMetaData model) {
+        this(teiidVersion, vdbName, vdbVersion, model.getName(), runtimeTypes, model.getProperties(), model.getSchemaText());
         this.model = model;
     }
 
-    public MetadataFactory(String vdbName, int vdbVersion, String schemaName, Map<String, Datatype> runtimeTypes, Properties modelProperties, String rawMetadata) {
+    public MetadataFactory(ITeiidServerVersion teiidVersion, String vdbName, int vdbVersion, String schemaName, Map<String, Datatype> runtimeTypes, Properties modelProperties, String rawMetadata) {
+        this.teiidVersion = teiidVersion;
         this.vdbName = vdbName;
         this.vdbVersion = vdbVersion;
         this.dataTypes = runtimeTypes;
@@ -200,7 +204,7 @@ public class MetadataFactory implements Serializable {
         if (table.getColumnByName(name) != null) {
             throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60016, table.getFullName() + AbstractMetadataRecord.NAME_DELIM_CHAR + name));
         }
-        Column column = new Column();
+        Column column = new Column(teiidVersion);
         column.setName(name);
         table.addColumn(column);
         column.setParent(table);
@@ -307,7 +311,7 @@ public class MetadataFactory implements Serializable {
         for (int i = 0; i < expressions.size(); i++) {
             String expr = expressions.get(i);
             if (nonColumnExpressions.get(i)) {
-                Column c = new Column();
+                Column c = new Column(teiidVersion);
                 //TODO: we could choose a derived name at this point, but we delay that to get a single unique name across all index expressions
                 c.setName(expr);
                 c.setNameInSource(expr);
@@ -399,7 +403,7 @@ public class MetadataFactory implements Serializable {
      *
      */
     public ProcedureParameter addProcedureParameter(String name, String type, ProcedureParameter.Type parameterType, Procedure procedure) {
-        ProcedureParameter param = new ProcedureParameter();
+        ProcedureParameter param = new ProcedureParameter(teiidVersion);
         param.setName(name);
         setUUID(param);
         param.setType(parameterType);
@@ -465,7 +469,7 @@ public class MetadataFactory implements Serializable {
      *
      */
     public FunctionMethod addFunction(String name, Method method) {
-        FunctionMethod func = createFunctionFromMethod(name, method);
+        FunctionMethod func = createFunctionFromMethod(teiidVersion, name, method);
         setUUID(func);
         getSchema().addFunction(func);
         return func;
@@ -491,8 +495,8 @@ public class MetadataFactory implements Serializable {
         return clazz;
     }
 
-    public static FunctionMethod createFunctionFromMethod(String name, Method method) {
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+    public static FunctionMethod createFunctionFromMethod(ITeiidServerVersion teiidVersion, String name, Method method) {
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
         String returnType = dataTypeManager.getDataTypeName(method.getReturnType());
         Class<?>[] params = method.getParameterTypes();
         String[] paramTypes = new String[params.length];

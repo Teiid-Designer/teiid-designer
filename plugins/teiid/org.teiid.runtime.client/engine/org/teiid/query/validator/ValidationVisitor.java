@@ -195,11 +195,14 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	// update procedure being validated
 	private ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> createProc;
 
+	private final DataTypeManagerService dataTypeManager;
+
 	/**
      * @param teiidVersion
      */
     public ValidationVisitor(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
+        dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
     }
 
 	@Override
@@ -827,7 +830,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
      * @return whether symbol type is non-comparable
      */
     public static boolean isNonComparable(Expression symbol) {
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(symbol.getTeiidVersion());
         return dataTypeManager.isNonComparable(dataTypeManager.getDataTypeName(symbol.getType()));
     }
 
@@ -1130,7 +1133,6 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 return;
             }
 
-            DataTypeManagerService dataTypeManagerService = DataTypeManagerService.getInstance();
             for (int symbolNum = 0; symbolNum < symbols.size(); symbolNum++) {
                 Expression symbol = symbols.get(symbolNum);
                 Object elementID = elementIDs.get(symbolNum);
@@ -1140,12 +1142,12 @@ public class ValidationVisitor extends AbstractValidationVisitor {
                 }
 
                 Class<?> symbolType = symbol.getType();
-                String symbolTypeName = dataTypeManagerService.getDataTypeName(symbolType);
+                String symbolTypeName = dataTypeManager.getDataTypeName(symbolType);
                 String targetTypeName = getMetadata().getElementType(elementID);
                 if (symbolTypeName.equals(targetTypeName)) {
                     continue;
                 }
-                if (!dataTypeManagerService.isImplicitConversion(symbolTypeName, targetTypeName)) { // If there's no implicit conversion between the two
+                if (!dataTypeManager.isImplicitConversion(symbolTypeName, targetTypeName)) { // If there's no implicit conversion between the two
                     Object[] params = new Object [] {symbolTypeName, targetTypeName, new Integer(symbolNum + 1), query};
                     handleValidationError(Messages.getString(Messages.ValidationVisitor.select_into_no_implicit_conversion, params), query);
                     continue;
@@ -1484,7 +1486,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         if((obj.isDistinct() ||
             aggregateFunction == IAggregateSymbol.Type.MIN ||
             aggregateFunction == IAggregateSymbol.Type.MAX) &&
-            DataTypeManagerService.getInstance().isNonComparable(DataTypeManagerService.getInstance().getDataTypeName(aggExp.getType()))) {
+            dataTypeManager.isNonComparable(dataTypeManager.getDataTypeName(aggExp.getType()))) {
     		handleValidationError(Messages.getString(Messages.ValidationVisitor.non_comparable, new Object[] {aggregateFunction, obj}), obj);
         }
         if(obj.isEnhancedNumeric()) {
@@ -1518,7 +1520,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	@Since("8.0.0")
 	private void validateJSONValue(LanguageObject obj, Expression expr) {
 		if (expr.getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()
-		    && !DataTypeManagerService.getInstance().isTransformable(
+		    && !dataTypeManager.isTransformable(
 		                                               expr.getType(),
 		                                               DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass())) {
 			handleValidationError(Messages.getString(Messages.ValidationVisitor.invalid_json_value, expr, obj), obj);

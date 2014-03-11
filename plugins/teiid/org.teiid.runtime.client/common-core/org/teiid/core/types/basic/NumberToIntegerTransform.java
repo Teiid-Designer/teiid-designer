@@ -30,7 +30,8 @@ public class NumberToIntegerTransform extends Transform {
 	private Class<?> sourceType;
 	private boolean isNarrowing;
 	
-	public NumberToIntegerTransform(Class<?> sourceType, boolean isNarrowing) {
+	public NumberToIntegerTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType, boolean isNarrowing) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 		this.isNarrowing = isNarrowing;
 	}

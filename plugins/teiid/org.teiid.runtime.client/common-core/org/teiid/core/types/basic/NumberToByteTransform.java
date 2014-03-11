@@ -29,7 +29,8 @@ public class NumberToByteTransform extends Transform {
 	
 	private Class<?> sourceType;
 	
-	public NumberToByteTransform(Class<?> sourceType) {
+	public NumberToByteTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 	

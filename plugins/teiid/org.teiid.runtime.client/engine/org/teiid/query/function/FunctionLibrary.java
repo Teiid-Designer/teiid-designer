@@ -59,6 +59,8 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 
     private final ITeiidServerVersion teiidVersion;
 
+    private DataTypeManagerService dataTypeManager;
+
 	/**
 	 * Construct the function library.  This should be called only once by the
 	 * FunctionLibraryManager.
@@ -79,6 +81,12 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         return this.teiidVersion;
     }
 
+    public DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+        return dataTypeManager;
+    }
     /**
      * Get all function categories, sorted in alphabetical order
      * @return List of function category names, sorted in alphabetical order
@@ -217,7 +225,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
             int i = 0;
             for(; i < types.length; i++) {
                 final String tmpTypeName = methodTypes.get(Math.min(i, methodTypes.size() - 1)).getType();
-                Class<?> targetType = DataTypeManagerService.getInstance().getDataTypeClass(tmpTypeName);
+                Class<?> targetType = getDataTypeManager().getDataTypeClass(tmpTypeName);
 
                 Class<?> sourceType = types[i];
                 if (sourceType == null) {
@@ -236,7 +244,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 					Transform t = getConvertFunctionDescriptor(sourceType, targetType);
 					if (t != null) {
 		                if (t.isExplicit()) {
-		                	if (!(args[i] instanceof Constant) || ResolverUtil.convertConstant(DataTypeManagerService.getInstance().getDataTypeName(sourceType), tmpTypeName, (Constant)args[i]) == null) {
+		                	if (!(args[i] instanceof Constant) || ResolverUtil.convertConstant(getDataTypeManager().getDataTypeName(sourceType), tmpTypeName, (Constant)args[i]) == null) {
 		                		break;
 		                	}
 		                	currentScore++;
@@ -257,7 +265,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
             if (hasUnknownType) {
             	if (returnType != null) {
             		try {
-						Transform t = getConvertFunctionDescriptor(DataTypeManagerService.getInstance().getDataTypeClass(nextMethod.getOutputParameter().getType()), returnType);
+						Transform t = getConvertFunctionDescriptor(getDataTypeManager().getDataTypeClass(nextMethod.getOutputParameter().getType()), returnType);
 						if (t != null) {
 							if (t.isExplicit()) {
 								//there still may be a common type, but use any other valid conversion over this one
@@ -299,7 +307,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         for(int i = 0; i < types.length; i++) {
         	//treat all varags as the same type
             final String tmpTypeName = methodTypes.get(Math.min(i, methodTypes.size() - 1)).getType();
-            Class<?> targetType = DataTypeManagerService.getInstance().getDataTypeClass(tmpTypeName);
+            Class<?> targetType = getDataTypeManager().getDataTypeClass(tmpTypeName);
 
             Class<?> sourceType = types[i];
             if (sourceType == null) {
@@ -326,7 +334,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         if(sourceType.equals(targetType)) {
             return null;
         }
-        Transform result = DataTypeManagerService.getInstance().getTransform(sourceType, targetType);
+        Transform result = getDataTypeManager().getTransform(sourceType, targetType);
         //Else see if an implicit conversion is possible.
         if(result == null) {
              throw new Exception();

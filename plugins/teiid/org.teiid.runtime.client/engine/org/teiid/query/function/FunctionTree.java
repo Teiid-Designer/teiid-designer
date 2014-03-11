@@ -38,6 +38,7 @@ import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ReflectionHelper;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
@@ -59,6 +60,8 @@ import org.teiid.runtime.client.TeiidClientException;
  */
 public class FunctionTree {
 
+    private final ITeiidServerVersion teiidVersion;
+
     // Constant used to look up the special descriptor key in a node map
     private static final Integer DESCRIPTOR_KEY = -1;
 
@@ -73,20 +76,25 @@ public class FunctionTree {
 	 */
     private Map<String, Map<Object, Object>> treeRoot = new TreeMap<String, Map<Object, Object>>(String.CASE_INSENSITIVE_ORDER);
     private boolean validateClass;
-    
+
+    private DataTypeManagerService dataTypeManager;
+
     /**
      * Construct a new tree with the given source of function metadata.
+     * @param teiidVersion
      * @param source The metadata source
      */
-    public FunctionTree(String name, FunctionMetadataSource source) {
-    	this(name, source, false);
+    public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source) {
+    	this(teiidVersion, name, source, false);
     }
     
     /**
      * Construct a new tree with the given source of function metadata.
+     * @param teiidVersion
      * @param source The metadata source
      */
-    public FunctionTree(String name, FunctionMetadataSource source, boolean validateClass) {
+    public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source, boolean validateClass) {
+        this.teiidVersion = teiidVersion;
         // Load data structures
     	this.validateClass = validateClass;
     	boolean system = CoreConstants.SYSTEM_MODEL.equalsIgnoreCase(name) || CoreConstants.SYSTEM_ADMIN_MODEL.equalsIgnoreCase(name);
@@ -102,6 +110,12 @@ public class FunctionTree {
         }
     }
 
+    public DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
+
+        return dataTypeManager;
+    }
 	// ---------------------- FUNCTION SELECTION USE METHODS ----------------------
 
 	/*
@@ -214,7 +228,7 @@ public class FunctionTree {
         	types = new Class<?>[inputParams.size()];
             for(int i=0; i<inputParams.size(); i++) {
                 String typeName = inputParams.get(i).getType();
-                Class<?> clazz = DataTypeManagerService.getInstance().getDataTypeClass(typeName);
+                Class<?> clazz = getDataTypeManager().getDataTypeClass(typeName);
                 types[i] = clazz;
             }
         } else {
@@ -256,7 +270,7 @@ public class FunctionTree {
 	        		node.put(DESCRIPTOR_KEY, descriptor);
 	                Map<Object, Object> alternate = new HashMap<Object, Object>(2);
 	                alternate.put(DESCRIPTOR_KEY, descriptor);
-	                DefaultDataTypes dataType = DataTypeManagerService.getInstance().getDataType(pathPart);
+	                DefaultDataTypes dataType = getDataTypeManager().getDataType(pathPart);
 	                node.put(dataType.getTypeArrayClass(), alternate);
 	            }
 	            node = children;
@@ -285,7 +299,7 @@ public class FunctionTree {
             FunctionParameter outputParam = method.getOutputParameter();
             Class<?> outputType = null;
             if (outputParam != null) {
-                outputType = DataTypeManagerService.getInstance().getDataTypeClass(outputParam.getType());
+                outputType = getDataTypeManager().getDataTypeClass(outputParam.getType());
             }
             List<Class<?>> inputTypes = new ArrayList<Class<?>>(Arrays.asList(types));
             boolean hasWrappedArg = false;
@@ -299,7 +313,7 @@ public class FunctionTree {
             }
             if (method.isVarArgs()) {
                 Class<?> klazz = inputTypes.get(inputTypes.size() - 1);
-                DefaultDataTypes dataType = DataTypeManagerService.getInstance().getDataType(klazz);
+                DefaultDataTypes dataType = getDataTypeManager().getDataType(klazz);
                 inputTypes.set(inputTypes.size() - 1, dataType.getTypeArrayClass());
             }
 
@@ -373,7 +387,7 @@ public class FunctionTree {
                 }
             }
 
-            FunctionDescriptor result = new FunctionDescriptor(method, types, outputType, invocationMethod, requiresContext);
+            FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType, invocationMethod, requiresContext);
             if (method.getAggregateAttributes() != null
                 && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
                 result.newInstance();

@@ -34,8 +34,8 @@ import org.teiid.runtime.client.TeiidClientException;
 
 public class ClobToStringTransform extends AnyToStringTransform {
 
-	public ClobToStringTransform() {
-		super(DefaultDataTypes.CLOB.getTypeClass());
+	public ClobToStringTransform(DataTypeManagerService dataTypeManager) {
+		super(dataTypeManager, DefaultDataTypes.CLOB.getTypeClass());
 	}
 	
     /**

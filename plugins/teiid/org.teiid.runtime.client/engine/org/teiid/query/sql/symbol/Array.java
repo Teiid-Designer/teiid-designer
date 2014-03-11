@@ -23,7 +23,6 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.List;
-import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.query.parser.LanguageVisitor;
@@ -77,7 +76,7 @@ public class Array extends SimpleNode implements Expression {
 	 */
 	public void setComponentType(Class<?> baseType) {
 		if (baseType != null) {
-		    DefaultDataTypes dataType = DataTypeManagerService.getInstance().getDataType(baseType);
+		    DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(baseType);
 		    this.type = dataType.getTypeArrayClass();
 		} else {
 			this.type = null;

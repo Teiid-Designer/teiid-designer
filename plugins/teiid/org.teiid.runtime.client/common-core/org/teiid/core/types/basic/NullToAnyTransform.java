@@ -22,6 +22,7 @@
 
 package org.teiid.core.types.basic;
 
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.NullType;
 import org.teiid.core.types.Transform;
 
@@ -34,7 +35,8 @@ public class NullToAnyTransform extends Transform {
 
 	private Class<?> targetType;
 	
-	public NullToAnyTransform(Class<?> targetType) {
+	public NullToAnyTransform(DataTypeManagerService dataTypeManager, Class<?> targetType) {
+	    super(dataTypeManager);
 		this.targetType = targetType;
 	}
 	

@@ -57,6 +57,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -110,6 +111,11 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     // ==================================================================================
     // I N T E R F A C E M E T H O D S
     // ==================================================================================
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return ModelerCore.getTeiidServerVersion();
+    }
 
     @Override
     public Object getElementID(final String elementName) throws Exception {

@@ -610,14 +610,15 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		if (symbols.size() != projectedSymbols.size()) {
 			 throw new QueryValidatorException(Messages.gs(Messages.TEIID.TEIID30066, virtualGroup, symbols.size(), projectedSymbols.size()));
 		}
+		DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
 		for (int i = 0; i < projectedSymbols.size(); i++) {
 			Expression projectedSymbol = projectedSymbols.get(i);
 			
 			ResolverUtil.setTypeIfNull(projectedSymbol, symbols.get(i).getType());
 			
 			if (projectedSymbol.getType() != symbols.get(i).getType()) {
-			    String symbolTypeName = DataTypeManagerService.getInstance().getDataTypeName(symbols.get(i).getType());
-			    String projSymbolTypeName = DataTypeManagerService.getInstance().getDataTypeName(projectedSymbol.getType());
+                String symbolTypeName = dataTypeManager.getDataTypeName(symbols.get(i).getType());
+			    String projSymbolTypeName = dataTypeManager.getDataTypeName(projectedSymbol.getType());
 			    
 				throw new QueryValidatorException(Messages.getString(Messages.QueryResolver.wrong_view_symbol_type, virtualGroup, i+1, symbolTypeName, projSymbolTypeName));
 			}

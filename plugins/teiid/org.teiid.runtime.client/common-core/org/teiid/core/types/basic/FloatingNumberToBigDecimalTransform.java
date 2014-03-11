@@ -31,7 +31,8 @@ public class FloatingNumberToBigDecimalTransform extends Transform {
 
 	private Class<?> sourceType;
 	
-	public FloatingNumberToBigDecimalTransform(Class<?> sourceType) {
+	public FloatingNumberToBigDecimalTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 

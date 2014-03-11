@@ -30,7 +30,8 @@ public class NumberToShortTransform extends Transform {
 	private Class<?> sourceType;
 	private boolean isNarrowing;
 	
-	public NumberToShortTransform(Class<?> sourceType, boolean isNarrowing) {
+	public NumberToShortTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType, boolean isNarrowing) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 		this.isNarrowing = isNarrowing;
 	}

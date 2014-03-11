@@ -69,10 +69,11 @@ public class SystemMetadata {
 	}
 
 	private final ITeiidServerVersion teiidVersion;
+	private final DataTypeManagerService dataTypeManager;
 	private List<Datatype> dataTypes = new ArrayList<Datatype>();
 	private Map<String, Datatype> typeMap = new TreeMap<String, Datatype>(String.CASE_INSENSITIVE_ORDER);
 	private MetadataStore systemStore;
-	
+
 	/**
 	 * @param teiidVersion
 	 */
@@ -81,6 +82,7 @@ public class SystemMetadata {
 	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionTooLow, this.getClass().getSimpleName()));
 
 		this.teiidVersion = teiidVersion;
+		this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 
 		String resourceLocation = this.getClass().getPackage().getName();
         resourceLocation = resourceLocation.replaceAll("\\.", File.separator); //$NON-NLS-1$
@@ -128,7 +130,7 @@ public class SystemMetadata {
 		addAliasType(DataTypeManagerService.DataTypeAliases.SMALLINT);
 		addAliasType(DataTypeManagerService.DataTypeAliases.TINYINT);
 		addAliasType(DataTypeManagerService.DataTypeAliases.VARCHAR);
-		for (String name : DataTypeManagerService.getInstance().getAllDataTypeNames()) {
+		for (String name : dataTypeManager.getAllDataTypeNames()) {
 			if (!name.equals(DefaultDataTypes.NULL.getId())) {
 				ArgCheck.isNotNull(typeMap.get(name), name);
 			}
@@ -155,7 +157,7 @@ public class SystemMetadata {
 		vdb.addModel(mmd);
 		InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + name + ".sql"); //$NON-NLS-1$ //$NON-NLS-2$
 		try {
-			MetadataFactory factory = new MetadataFactory(vdb.getName(), vdb.getVersion(), name, typeMap, p, null);
+			MetadataFactory factory = new MetadataFactory(teiidVersion, vdb.getName(), vdb.getVersion(), name, typeMap, p, null);
 			parser.parseDDL(factory, new InputStreamReader(is, Charset.forName("UTF-8"))); //$NON-NLS-1$
 			for (Table t : factory.getSchema().getTables().values()) {
 				t.setSystem(true);
@@ -171,13 +173,13 @@ public class SystemMetadata {
 	}
 	
 	private void addAliasType(DataTypeAliases alias) {
-	    DefaultDataTypes dataType = DataTypeManagerService.getInstance().getDataType(alias);
+	    DefaultDataTypes dataType = dataTypeManager.getDataType(alias);
 		String primaryType = dataType.getId();
 		Datatype dt = typeMap.get(primaryType);
 		ArgCheck.isNotNull(dt, alias.getId());
 		typeMap.put(alias.getId(), dt);
 	}
-	
+
 	/**
 	 * List of all "built-in" datatypes.  Note that the datatype names do not necessarily match the corresponding runtime type names i.e. int vs. integer
 	 * @return

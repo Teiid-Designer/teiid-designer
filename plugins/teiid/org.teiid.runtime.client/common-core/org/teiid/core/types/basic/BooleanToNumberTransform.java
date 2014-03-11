@@ -31,7 +31,8 @@ public class BooleanToNumberTransform extends Transform {
 	private Object falseVal;
 	private Class<?> targetType;
 	
-	public BooleanToNumberTransform(Object trueVal, Object falseVal) {
+	public BooleanToNumberTransform(DataTypeManagerService dataTypeManager, Object trueVal, Object falseVal) {
+	    super(dataTypeManager);
 		this.trueVal = trueVal;
 		this.falseVal = falseVal;
 		this.targetType = trueVal.getClass();

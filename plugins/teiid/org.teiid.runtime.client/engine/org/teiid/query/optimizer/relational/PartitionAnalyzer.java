@@ -149,7 +149,7 @@ public class PartitionAnalyzer {
 		Map<ElementSymbol, Set<Constant>> result = new HashMap<ElementSymbol, Set<Constant>>();
 		for (int i = 0; i < projected.size(); i++) {
 			Expression ex = SymbolMap.getExpression(projected.get(i));
-			if (DataTypeManagerService.getInstance().isNonComparable(ex.getType())) {
+			if (DataTypeManagerService.getInstance(ex.getTeiidVersion()).isNonComparable(ex.getType())) {
 				continue;
 			}
 			if (ex instanceof Constant) {

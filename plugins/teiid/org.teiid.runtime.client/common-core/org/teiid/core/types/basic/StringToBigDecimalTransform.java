@@ -32,6 +32,13 @@ import org.teiid.runtime.client.TeiidClientException;
 public class StringToBigDecimalTransform extends Transform {
 
 	/**
+     * @param dataTypeManager
+     */
+    public StringToBigDecimalTransform(DataTypeManagerService dataTypeManager) {
+        super(dataTypeManager);
+    }
+
+    /**
 	 * This method transforms a value of the source type into a value
 	 * of the target type.
 	 * @param value Incoming value of source type

@@ -199,14 +199,13 @@ public class InsertResolver extends ProcedureContainerResolver implements Variab
 				ResolverUtil.setDesiredType(SymbolMap.getExpression(expression), element.getType(), insert);
 			}
 
-			DataTypeManagerService managerService = DataTypeManagerService.getInstance();
             if(element.getType() != null && expression.getType() != null) {
-                String elementTypeName = managerService.getDataTypeName(element.getType());
+                String elementTypeName = getDataTypeManager().getDataTypeName(element.getType());
                 if (!usingQuery) {
                     newValues.add(ResolverUtil.convertExpression(expression, elementTypeName, metadata));
                 } else if (element.getType() != expression.getType()
-                           && !managerService.isImplicitConversion(managerService.getDataTypeName(expression.getType()),
-                                                                    managerService.getDataTypeName(element.getType()))) {
+                           && !getDataTypeManager().isImplicitConversion(getDataTypeManager().getDataTypeName(expression.getType()),
+                                                                         getDataTypeManager().getDataTypeName(element.getType()))) {
                     //TODO: a special case here is a projected literal
                      throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30128, new Object[] {expression, expression.getType().getName(), element, element.getType().getName()}));
                 }

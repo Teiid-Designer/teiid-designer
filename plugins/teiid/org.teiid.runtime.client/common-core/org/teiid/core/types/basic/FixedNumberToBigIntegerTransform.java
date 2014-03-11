@@ -31,7 +31,8 @@ public class FixedNumberToBigIntegerTransform extends Transform {
 
 	private Class<?> sourceType;
 	
-	public FixedNumberToBigIntegerTransform(Class<?> sourceType) {
+	public FixedNumberToBigIntegerTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 	

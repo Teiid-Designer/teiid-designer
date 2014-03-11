@@ -161,7 +161,6 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
      */
     public void setValue(Object value) {
         jjtSetValue(value);
-        DataTypeManagerService service = DataTypeManagerService.getInstance();
         if (this.value == null) {
             this.type = DataTypeManagerService.DefaultDataTypes.NULL.getClass();
         } else { 
@@ -172,7 +171,7 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
                 type = type.getComponentType();
             }
 
-            DefaultDataTypes dataType = service.getDataType(type);
+            DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(type);
             if (dataType != null) {
                 //array of a runtime-type
                 this.type = originalType;

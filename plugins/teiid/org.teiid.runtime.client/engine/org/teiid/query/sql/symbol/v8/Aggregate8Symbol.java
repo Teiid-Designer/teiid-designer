@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.OrderBy;
@@ -65,7 +66,7 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
         SUM_TYPES.put(bigDecimalClass, bigDecimalClass);
         
         AVG_TYPES = new HashMap<Class<?>, Class<?>>();
-        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(TeiidServerVersion.TEIID_8_SERVER);
         if(dataTypeManager.isDecimalAsDouble()) {
             AVG_TYPES.put(byteClass, doubleClass);
             AVG_TYPES.put(shortClass, doubleClass);
@@ -149,9 +150,8 @@ public class Aggregate8Symbol extends Function implements AggregateSymbol {
                 if (this.getArg(0) == null) {
                     return null;
                 }
-                
-                DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
-                DefaultDataTypes dataType = dataTypeManager.getDataType(this.getArg(0).getType());
+
+                DefaultDataTypes dataType = getTeiidParser().getDataTypeService().getDataType(this.getArg(0).getType());
                 return dataType.getTypeArrayClass();
             case TEXTAGG:
                 return DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass();

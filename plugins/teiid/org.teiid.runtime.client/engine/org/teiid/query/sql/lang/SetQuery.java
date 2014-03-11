@@ -178,7 +178,7 @@ public class SetQuery extends QueryCommand
             if (symbol.getType() != type) {
                 symbol = SymbolMap.getExpression(originalSymbol);
                 try {
-                    symbol = ResolverUtil.convertExpression(symbol, DataTypeManagerService.getInstance().getDataTypeName(type), metadata);
+                    symbol = ResolverUtil.convertExpression(symbol, DataTypeManagerService.getInstance(symbol.getTeiidVersion()).getDataTypeName(type), metadata);
                 } catch (Exception err) {
                      throw new RuntimeException(err);
                 }

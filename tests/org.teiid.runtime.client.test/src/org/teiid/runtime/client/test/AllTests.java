@@ -33,6 +33,8 @@ import org.teiid.query.validator.v8.Test8AlterValidation;
 import org.teiid.query.validator.v8.Test8FunctionMetadataValidator;
 import org.teiid.query.validator.v8.Test8UpdateValidator;
 import org.teiid.query.validator.v8.Test8Validator;
+import org.teiid.types.Test7DataTypeManagerService;
+import org.teiid.types.Test8DataTypeManagerService;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {
@@ -51,7 +53,8 @@ import org.teiid.query.validator.v8.Test8Validator;
                                         Test8AlterValidation.class, Test7AlterValidation.class,
                                         Test8FunctionMetadataValidator.class, Test7FunctionMetadataValidator.class,
                                         Test8Validator.class, Test7Validator.class,
-                                        Test8UpdateValidator.class, Test7UpdateValidator.class
+                                        Test8UpdateValidator.class, Test7UpdateValidator.class,
+                                        Test8DataTypeManagerService.class, Test7DataTypeManagerService.class
                                     } )
 public class AllTests {
     // nothing to do

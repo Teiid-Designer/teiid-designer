@@ -690,6 +690,7 @@ public class Messages {
 
     @SuppressWarnings( "javadoc" )
     public enum ERR {
+        ERR_100_001_0001,
         ERR_003_029_0002,
         ERR_003_029_0003,
         ERR_015_001_0005,

@@ -1326,7 +1326,7 @@ public abstract class AbstractTestResolver extends AbstractTest {
 
         Function conversion = getFactory().newFunction(fd.getName(),
                                                        new Expression[] {expression, getFactory().newConstant(tgtTypeName)});
-        conversion.setType(DataTypeManagerService.getInstance().getDataTypeClass(tgtTypeName));
+        conversion.setType(getDataTypeManager().getDataTypeClass(tgtTypeName));
         conversion.setFunctionDescriptor(fd);
         conversion.makeImplicit();
 
@@ -1362,7 +1362,7 @@ public abstract class AbstractTestResolver extends AbstractTest {
 
         Function conversion = getFactory().newFunction(fd.getName(),
                                                        new Expression[] {expression, getFactory().newConstant(tgtTypeName)});
-        conversion.setType(DataTypeManagerService.getInstance().getDataTypeClass(tgtTypeName));
+        conversion.setType(getDataTypeManager().getDataTypeClass(tgtTypeName));
         conversion.setFunctionDescriptor(fd);
         conversion.makeImplicit();
 
@@ -1507,6 +1507,7 @@ public abstract class AbstractTestResolver extends AbstractTest {
         IQueryMetadataInterface metadata = getMetadataFactory().createTransformationMetadata(getMetadataFactory().example1Cached().getMetadataStore(),
                                                                                         "example1",
                                                                                         new FunctionTree(
+                                                                                                         getTeiidVersion(),
                                                                                                          "foo",
                                                                                                          new FakeFunctionMetadataSource()));
 

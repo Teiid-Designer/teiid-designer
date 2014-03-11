@@ -22,6 +22,8 @@
 
 package org.teiid.metadata;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+
 /**
  * Represents a procedure parameter
  */
@@ -40,7 +42,14 @@ public class ProcedureParameter extends BaseColumn {
 	private boolean optional;
 	private Procedure procedure;
 	private boolean isVarArg;
-	
+
+	/**
+     * @param teiidVersion
+     */
+    public ProcedureParameter(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
 	public void setType(Type type) {
 		this.type = type;
 	}

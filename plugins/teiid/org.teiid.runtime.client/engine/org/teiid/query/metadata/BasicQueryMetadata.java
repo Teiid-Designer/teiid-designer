@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
 import org.teiid.query.eval.TeiidScriptEngine;
@@ -44,11 +45,20 @@ import org.teiid.query.sql.symbol.Expression;
  */
 public class BasicQueryMetadata implements IQueryMetadataInterface {
 	
+    private final ITeiidServerVersion teiidVersion;
+
     /**
      * Constructor for AbstractQueryMetadata.
+     * @param teiidVersion
      */
-    public BasicQueryMetadata() {
+    public BasicQueryMetadata(ITeiidServerVersion teiidVersion) {
         super();
+        this.teiidVersion = teiidVersion;
+    }
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return teiidVersion;
     }
 
     /**

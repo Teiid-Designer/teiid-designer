@@ -10,6 +10,7 @@ package org.teiid.query.parser;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
@@ -211,6 +212,8 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
      */
     private final QueryParser parser;
 
+    private DataTypeManagerService dataTypeManager;
+
     private boolean abort = false;
 
     private static final Map<Class<?>, Method> methodCache = new HashMap<Class<?>, Method>();
@@ -262,6 +265,13 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
 
     protected TeiidParser getTeiidParser() {
         return parser.getTeiidParser();
+    }
+
+    protected DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+        return dataTypeManager;
     }
 
     protected <T extends LanguageObject> T createNode(ASTNodes nodeType) {

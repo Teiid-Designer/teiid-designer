@@ -871,7 +871,7 @@ Column tableElement(ParseInfo info) :
      [<NOT> <NULL> { notNull = true; }]
      {
         try {
-          Column c = new Column();
+          Column c = new Column(getVersion());
           c.setName(validateName(element, true));
           c.setRuntimeType(type);
           c.setAutoIncremented(autoIncrement);

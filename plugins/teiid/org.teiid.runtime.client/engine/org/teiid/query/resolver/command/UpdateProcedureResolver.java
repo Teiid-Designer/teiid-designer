@@ -87,6 +87,8 @@ public class UpdateProcedureResolver extends CommandResolver {
 
     private final List<ElementSymbol> exceptionGroup;
 
+    private DataTypeManagerService dataTypeManager;
+
     /**
      * @param queryResolver
      */
@@ -114,6 +116,16 @@ public class UpdateProcedureResolver extends CommandResolver {
         es5.setType(Exception.class);
 
         exceptionGroup = Arrays.asList(es1, es2, es3, es4, es5);
+    }
+
+    /**
+     * @return the dataTypeManager
+     */
+    public DataTypeManagerService getDataTypeManager() {
+        if (dataTypeManager == null)
+            dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+        return this.dataTypeManager;
     }
 
     private void resolveCommand(TriggerAction ta, TempMetadataAdapter metadata, boolean resolveNullLiterals) throws Exception {
@@ -413,7 +425,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                     if (exprType == null) {
                         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30123));
                     }
-                    String varTypeName = DataTypeManagerService.getInstance().getDataTypeName(varType);
+                    String varTypeName = getDataTypeManager().getDataTypeName(varType);
                     exprStmt.setExpression(ResolverUtil.convertExpression(exprStmt.getExpression(), varTypeName, metadata));
                 }
                 break;
@@ -577,7 +589,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                     if (exprType == null) {
                         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30123));
                     }
-                    String varTypeName = DataTypeManagerService.getInstance().getDataTypeName(varType);
+                    String varTypeName = getDataTypeManager().getDataTypeName(varType);
                     exprStmt.setExpression(ResolverUtil.convertExpression(exprStmt.getExpression(), varTypeName, metadata));
                     if (statement.getType() == StatementType.TYPE_ERROR) {
                         ResolverVisitor.checkException(exprStmt.getExpression());
@@ -684,7 +696,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         if (exists) {
             handleUnresolvableDeclaration(variable, Messages.getString(Messages.ERR.ERR_015_010_0032, variable.getOutputName()));
         }
-        variable.setType(DataTypeManagerService.getInstance().getDataTypeClass(typeName));
+        variable.setType(getDataTypeManager().getDataTypeClass(typeName));
         variable.setGroupSymbol(variables);
         TempMetadataID id = new TempMetadataID(
                                                variable.getName(),

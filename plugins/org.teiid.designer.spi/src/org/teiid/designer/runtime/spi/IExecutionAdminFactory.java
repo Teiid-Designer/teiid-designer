@@ -9,6 +9,7 @@ package org.teiid.designer.runtime.spi;
 
 import java.sql.Driver;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -29,10 +30,11 @@ public interface IExecutionAdminFactory {
 
     /**
      * Get the teiid data type manager service
-     * 
+     * @param teiidVersion
+     *
      * @return instance of {@link IDataTypeManagerService}
      */
-    IDataTypeManagerService getDataTypeManagerService();
+    IDataTypeManagerService getDataTypeManagerService(ITeiidServerVersion teiidVersion);
 
     /**
      * Get the {@link Driver} for the Teiid Instance

@@ -401,7 +401,7 @@ public class SimpleQueryResolver extends CommandResolver {
 						continue;
 					}
 					visitNode(column.getDefaultExpression());
-					Expression ex = ResolverUtil.convertExpression(column.getDefaultExpression(), DataTypeManagerService.getInstance().getDataTypeName(column.getSymbol().getType()), metadata);
+					Expression ex = ResolverUtil.convertExpression(column.getDefaultExpression(), getDataTypeManager().getDataTypeName(column.getSymbol().getType()), metadata);
 					column.setDefaultExpression(ex);
 				}
 			} catch (Exception e) {
@@ -421,7 +421,7 @@ public class SimpleQueryResolver extends CommandResolver {
 						continue;
 					}
 					visitNode(column.getDefaultExpression());
-					Expression ex = ResolverUtil.convertExpression(column.getDefaultExpression(), DataTypeManagerService.getInstance().getDataTypeName(column.getSymbol().getType()), metadata);
+					Expression ex = ResolverUtil.convertExpression(column.getDefaultExpression(), getDataTypeManager().getDataTypeName(column.getSymbol().getType()), metadata);
 					column.setDefaultExpression(ex);
 				}
 			} catch (Exception e) {

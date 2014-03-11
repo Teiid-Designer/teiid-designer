@@ -121,7 +121,7 @@ public class SetQueryResolver extends CommandResolver {
                     Expression ses = (Expression)projectedSymbols.get(j);
                     Class<?> targetType = firstProjectTypes.get(j);
                     if (ses.getType() != targetType && orderByContainsVariable(child.getOrderBy(), ses, j)) {
-                        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+                        DataTypeManagerService dataTypeManager = getDataTypeManager();
                         String sourceTypeName = dataTypeManager.getDataTypeName(ses.getType());
                         String targetTypeName = dataTypeManager.getDataTypeName(targetType);
                         throw new QueryResolverException(Messages.getString(Messages.QueryResolver.type_conversion,
@@ -148,7 +148,7 @@ public class SetQueryResolver extends CommandResolver {
         return false;
     }
     
-	static void checkSymbolTypes(List firstProjectTypes, List projSymbols) {
+	private void checkSymbolTypes(List firstProjectTypes, List projSymbols) {
         for(int j=0; j<projSymbols.size(); j++){
             Class firstProjType = (Class)firstProjectTypes.get(j);
     		Expression projSymbol = (Expression)projSymbols.get(j);
@@ -157,12 +157,12 @@ public class SetQueryResolver extends CommandResolver {
             if(firstProjType.equals(projType)){
                 continue;
             }
-            DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+            DataTypeManagerService dataTypeManager = getDataTypeManager();
 
             String sourceType = dataTypeManager.getDataTypeName(firstProjType);
             String targetType = dataTypeManager.getDataTypeName(projType);
             
-            String commonType = ResolverUtil.getCommonType(new String[] {sourceType, targetType});
+            String commonType = ResolverUtil.getCommonType(getTeiidVersion(), new String[] {sourceType, targetType});
             
             if (commonType == null) {
             	commonType = DataTypeManagerService.DefaultDataTypes.OBJECT.getId();

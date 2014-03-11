@@ -40,6 +40,7 @@ import org.teiid.core.types.InputStreamFactory;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
@@ -104,13 +105,15 @@ public class JSONFunctionMethods {
 	};
 	
 	public static class JSONBuilder {
+	    private final ITeiidServerVersion teiidVersion;
 		private Writer writer;
 		private FileStoreInputStreamFactory fsisf;
 		private FileStore fs;
 		private Stack<Integer> position = new Stack<Integer>();
-		
-		public JSONBuilder() {
-		    MemoryStorageManager manager = new MemoryStorageManager();
+
+		public JSONBuilder(ITeiidServerVersion teiidVersion) {
+		    this.teiidVersion = teiidVersion;
+            MemoryStorageManager manager = new MemoryStorageManager();
 			fs = manager.createFileStore("xml"); //$NON-NLS-1$
 			fsisf = new FileStoreInputStreamFactory(fs, Streamable.ENCODING);
 		    writer = fsisf.getWriter();
@@ -160,7 +163,7 @@ public class JSONFunctionMethods {
 					writer.write(object.toString());
 				} else {
 					writer.append('"');
-					String text = (String) DataTypeManagerService.getInstance().transformValue(object, 
+					String text = (String) DataTypeManagerService.getInstance(teiidVersion).transformValue(object, 
 					                                                                  DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
 					JSONParser.escape(text, writer);
 					writer.append('"');

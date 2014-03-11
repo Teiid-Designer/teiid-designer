@@ -134,7 +134,7 @@ public class FunctionMetadataValidator {
 
         // Validate attributes
         validateName(teiidVersion, param.getName());
-        validateType(param.getType());
+        validateType(teiidVersion, param.getType());
         validateDescription(param.getDescription());
     }
 
@@ -166,10 +166,10 @@ public class FunctionMetadataValidator {
      * @param type Type to validate
      * @throws Exception Thrown if parameter type is not valid in some way
      */
-    public static final void validateType(String type) throws Exception {
+    public static final void validateType(ITeiidServerVersion teiidVersion, String type) throws Exception {
         validateIsNotNull(type, "Type"); //$NON-NLS-1$
 
-        if(DataTypeManagerService.getInstance().getDataTypeClass(type) == null) {
+        if(DataTypeManagerService.getInstance(teiidVersion).getDataTypeClass(type) == null) {
              throw new Exception(Messages.gs(Messages.TEIID.TEIID30428, type));
         }
     }

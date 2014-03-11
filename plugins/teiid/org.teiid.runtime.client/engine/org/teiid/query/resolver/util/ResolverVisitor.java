@@ -375,7 +375,7 @@ public class ResolverVisitor extends LanguageVisitor
     public void visit(Array array) {
     	try {
 	    	if (array.getComponentType() != null) {
-	    		String type = DataTypeManagerService.getInstance().getDataTypeName(array.getComponentType());
+	    		String type = getDataTypeManager().getDataTypeName(array.getComponentType());
 	    		for (int i = 0; i < array.getExpressions().size(); i++) {
 	    			Expression expr = array.getExpressions().get(i);
 	    			setDesiredType(expr, array.getComponentType(), array);
@@ -423,12 +423,12 @@ public class ResolverVisitor extends LanguageVisitor
     
     @Override
     public void visit(SetClause obj) {
-    	String type = DataTypeManagerService.getInstance().getDataTypeName(obj.getSymbol().getType());
+    	String type = getDataTypeManager().getDataTypeName(obj.getSymbol().getType());
     	try {
     		setDesiredType(obj.getValue(), obj.getSymbol().getType(), obj);
             obj.setValue(ResolverUtil.convertExpression(obj.getValue(), type, metadata));                    
         } catch(Exception e) {
-            handleException(new QueryResolverException(e, Messages.getString(Messages.QueryResolver.setClauseResolvingError, new Object[] {obj.getValue(), obj.getSymbol(), type}))); //$NON-NLS-1$
+            handleException(new QueryResolverException(e, Messages.getString(Messages.QueryResolver.setClauseResolvingError, new Object[] {obj.getValue(), obj.getSymbol(), type})));
         } 
     }
     
@@ -644,7 +644,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    //special case handling for convert of an untyped reference
 	    if (FunctionLibrary.isConvert(function) && hasArgWithoutType) {
 	        Constant constant = (Constant)function.getArg(1);
-	        Class<?> type = DataTypeManagerService.getInstance().getDataTypeClass((String)constant.getValue());
+	        Class<?> type = getDataTypeManager().getDataTypeClass((String)constant.getValue());
 	
 	        setDesiredType(function.getArg(0), type, function);
 	        types[0] = type;
@@ -678,16 +678,16 @@ public class ResolverVisitor extends LanguageVisitor
 	    
 	    if(fd.isSystemFunction(IFunctionLibrary.FunctionName.CONVERT) || fd.isSystemFunction(IFunctionLibrary.FunctionName.CAST)) {
 	        String dataType = (String) ((Constant)args[1]).getValue();
-	        Class<?> dataTypeClass = DataTypeManagerService.getInstance().getDataTypeClass(dataType);
+	        Class<?> dataTypeClass = getDataTypeManager().getDataTypeClass(dataType);
 	        fd = library.findTypedConversionFunction(args[0].getType(), dataTypeClass);
 	
 	        // Verify that the type conversion from src to type is even valid
 	        Class<?> srcTypeClass = args[0].getType();
 	        if(srcTypeClass != null && dataTypeClass != null &&
 	           !srcTypeClass.equals(dataTypeClass) &&
-	           !DataTypeManagerService.getInstance().isTransformable(srcTypeClass, dataTypeClass)) {
+	           !getDataTypeManager().isTransformable(srcTypeClass, dataTypeClass)) {
 	
-	             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30071, new Object[] {DataTypeManagerService.getInstance().getDataTypeName(srcTypeClass), dataType}));
+	             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30071, new Object[] {getDataTypeManager().getDataTypeName(srcTypeClass), dataType}));
 	        }
 	    } else if(fd.isSystemFunction(IFunctionLibrary.FunctionName.LOOKUP)) {
 			ResolverUtil.ResolvedLookup lookup = ResolverUtil.resolveLookup(function, metadata);
@@ -701,7 +701,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    			setDesiredType(args[0], function.getType(), function);
 	    		}
 	    		if (args[0].getType() != DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass()) {
-	    			throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31145, DataTypeManagerService.getInstance().getDataTypeName(args[0].getType()), function));
+	    			throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31145, getDataTypeManager().getDataTypeName(args[0].getType()), function));
 	    		}
 	    	}
 	    } else if (Boolean.valueOf(fd.getMethod().getProperty(TEIID_PASS_THROUGH_TYPE, false))) {
@@ -796,14 +796,14 @@ public class ResolverVisitor extends LanguageVisitor
 	    setDesiredType(upper, exp.getType(), criteria);
 	    // invariants: none of the types is null
 	
-	    String expTypeName = DataTypeManagerService.getInstance().getDataTypeName(exp.getType());
-	    String lowerTypeName = DataTypeManagerService.getInstance().getDataTypeName(lower.getType());
-	    String upperTypeName = DataTypeManagerService.getInstance().getDataTypeName(upper.getType());
+	    String expTypeName = getDataTypeManager().getDataTypeName(exp.getType());
+	    String lowerTypeName = getDataTypeManager().getDataTypeName(lower.getType());
+	    String upperTypeName = getDataTypeManager().getDataTypeName(upper.getType());
 	    if (exp.getType().equals(lower.getType()) && exp.getType().equals(upper.getType())) {
 	        return;
 	    }
 	
-	    String commonType = ResolverUtil.getCommonType(new String[] {expTypeName, lowerTypeName, upperTypeName});
+	    String commonType = ResolverUtil.getCommonType(getTeiidVersion(), new String[] {expTypeName, lowerTypeName, upperTypeName});
 	    if (commonType != null) {
 	        criteria.setExpression(ResolverUtil.convertExpression(exp, expTypeName, commonType, metadata));
 	        criteria.setLowerExpression(ResolverUtil.convertExpression(lower, lowerTypeName, commonType, metadata));
@@ -830,8 +830,8 @@ public class ResolverVisitor extends LanguageVisitor
 		}
 	
 		// Try to apply an implicit conversion from one side to the other
-		String leftTypeName = DataTypeManagerService.getInstance().getDataTypeName(leftExpression.getType());
-		String rightTypeName = DataTypeManagerService.getInstance().getDataTypeName(rightExpression.getType());
+		String leftTypeName = getDataTypeManager().getDataTypeName(leftExpression.getType());
+		String rightTypeName = getDataTypeManager().getDataTypeName(rightExpression.getType());
 	
 	    // Special cases when right expression is a constant
 	    if(rightExpression instanceof Constant) {
@@ -857,17 +857,17 @@ public class ResolverVisitor extends LanguageVisitor
 	
 	    // Try to apply a conversion generically
 		
-	    if(ResolverUtil.canImplicitlyConvert(leftTypeName, rightTypeName)) {
+	    if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), leftTypeName, rightTypeName)) {
 			ccrit.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata) );
 			return;
 		}
 	
-		if(ResolverUtil.canImplicitlyConvert(rightTypeName, leftTypeName)) {
+		if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), rightTypeName, leftTypeName)) {
 			ccrit.setRightExpression(ResolverUtil.convertExpression(rightExpression, rightTypeName, leftTypeName, metadata) );
 			return;
 	    }
 	
-		String commonType = ResolverUtil.getCommonType(new String[] {leftTypeName, rightTypeName});
+		String commonType = ResolverUtil.getCommonType(getTeiidVersion(), new String[] {leftTypeName, rightTypeName});
 		
 		if (commonType == null) {
 	        // Neither are aggs, but types can't be reconciled
@@ -897,17 +897,17 @@ public class ResolverVisitor extends LanguageVisitor
 	Expression resolveMatchCriteriaExpression(MatchCriteria mcrit, Expression expr)
 	throws Exception {
 	    // Check left expression == string or CLOB
-	    String type = DataTypeManagerService.getInstance().getDataTypeName(expr.getType());
+	    String type = getDataTypeManager().getDataTypeName(expr.getType());
 	    Expression result = expr;
 	    if(type != null) {
 	        if (! type.equals(DefaultDataTypes.STRING) &&
 	            ! type.equals(DefaultDataTypes.CLOB)) {
 	                
-	            if(ResolverUtil.canImplicitlyConvert(type, DefaultDataTypes.STRING.getId())) {
+	            if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), type, DefaultDataTypes.STRING.getId())) {
 	
 	                result = ResolverUtil.convertExpression(expr, type, DefaultDataTypes.STRING.getId(), metadata);
 	                
-	            } else if (ResolverUtil.canImplicitlyConvert(type, DefaultDataTypes.CLOB.getId())){
+	            } else if (ResolverUtil.canImplicitlyConvert(getTeiidVersion(), type, DefaultDataTypes.CLOB.getId())){
 	                    
 	                result = ResolverUtil.convertExpression(expr, type, DefaultDataTypes.CLOB.getId(), metadata);
 	
@@ -928,7 +928,7 @@ public class ResolverVisitor extends LanguageVisitor
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, scrit.getExpression()));
 	    }
 	
-	    String exprTypeName = DataTypeManagerService.getInstance().getDataTypeName(exprType);
+	    String exprTypeName = getDataTypeManager().getDataTypeName(exprType);
 	    boolean changed = false;
 	    List<Expression> newVals = new ArrayList<Expression>();
 	
@@ -941,8 +941,8 @@ public class ResolverVisitor extends LanguageVisitor
 	        setDesiredType(value, exprType, scrit);
 	        if(! value.getType().equals(exprType)) {
 	            // try to apply cast
-	            String valTypeName = DataTypeManagerService.getInstance().getDataTypeName(value.getType());
-	            if(ResolverUtil.canImplicitlyConvert(valTypeName, exprTypeName)) {
+	            String valTypeName = getDataTypeManager().getDataTypeName(value.getType());
+	            if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), valTypeName, exprTypeName)) {
 	                // Apply cast and replace current value
 	                newVals.add(ResolverUtil.convertExpression(value, valTypeName, exprTypeName, metadata) );
 	                changed = true;
@@ -960,8 +960,8 @@ public class ResolverVisitor extends LanguageVisitor
 	    // set is the same and the convert can be placed on the left side
 	    if(convertLeft) {
 	        // Is there a possible conversion from left to right?
-	        String setTypeName = DataTypeManagerService.getInstance().getDataTypeName(setType);
-	        if(ResolverUtil.canImplicitlyConvert(exprTypeName, setTypeName)) {
+	        String setTypeName = getDataTypeManager().getDataTypeName(setType);
+	        if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), exprTypeName, setTypeName)) {
 	            valIter = scrit.getValues().iterator();
 	            while(valIter.hasNext()) {
 	                Expression value = (Expression) valIter.next();
@@ -1019,7 +1019,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    ArrayList<String> thenTypeNames = new ArrayList<String>(whenCount + 1);
 	    setDesiredType(expr, whenType, obj);
 	    // Add the expression's type to the WHEN types
-	    whenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(expr.getType()));
+	    whenTypeNames.add(getDataTypeManager().getDataTypeName(expr.getType()));
 	    Expression when = null;
 	    Expression then = null;
 	    // Set the types of the WHEN and THEN parts
@@ -1030,29 +1030,29 @@ public class ResolverVisitor extends LanguageVisitor
 	        setDesiredType(when, expr.getType(), obj);
 	        setDesiredType(then, thenType, obj);
 	
-	        if (!whenTypeNames.contains(DataTypeManagerService.getInstance().getDataTypeName(when.getType()))) {
-	            whenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(when.getType()));
+	        if (!whenTypeNames.contains(getDataTypeManager().getDataTypeName(when.getType()))) {
+	            whenTypeNames.add(getDataTypeManager().getDataTypeName(when.getType()));
 	        }
-	        if (!thenTypeNames.contains(DataTypeManagerService.getInstance().getDataTypeName(then.getType()))) {
-	            thenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(then.getType()));
+	        if (!thenTypeNames.contains(getDataTypeManager().getDataTypeName(then.getType()))) {
+	            thenTypeNames.add(getDataTypeManager().getDataTypeName(then.getType()));
 	        }
 	    }
 	    // Set the type of the else expression
 	    if (elseExpr != null) {
 	        setDesiredType(elseExpr, thenType, obj);
-	        if (!thenTypeNames.contains(DataTypeManagerService.getInstance().getDataTypeName(elseExpr.getType()))) {
-	            thenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(elseExpr.getType()));
+	        if (!thenTypeNames.contains(getDataTypeManager().getDataTypeName(elseExpr.getType()))) {
+	            thenTypeNames.add(getDataTypeManager().getDataTypeName(elseExpr.getType()));
 	        }
 	    }
 	
 	    // Invariants: all the expressions' types are non-null
 	
 	    // 3. Perform implicit type conversions
-	    String whenTypeName = ResolverUtil.getCommonType(whenTypeNames.toArray(new String[whenTypeNames.size()]));
+	    String whenTypeName = ResolverUtil.getCommonType(getTeiidVersion(), whenTypeNames.toArray(new String[whenTypeNames.size()]));
 	    if (whenTypeName == null) {
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30079, "WHEN", obj));//$NON-NLS-1$
 	    }
-	    String thenTypeName = ResolverUtil.getCommonType(thenTypeNames.toArray(new String[thenTypeNames.size()]));
+	    String thenTypeName = ResolverUtil.getCommonType(getTeiidVersion(), thenTypeNames.toArray(new String[thenTypeNames.size()]));
 	    if (thenTypeName == null) {
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30079, "THEN/ELSE", obj));//$NON-NLS-1$
 	    }
@@ -1068,7 +1068,7 @@ public class ResolverVisitor extends LanguageVisitor
 	        obj.setElseExpression(ResolverUtil.convertExpression(elseExpr, thenTypeName, metadata));
 	    }
 	    // Set this CASE expression's type to the common THEN type, and we're done.
-	    obj.setType(DataTypeManagerService.getInstance().getDataTypeClass(thenTypeName));
+	    obj.setType(getDataTypeManager().getDataTypeClass(thenTypeName));
 	}
 
 	private void setDesiredType(Expression obj, Class<?> type, LanguageObject surrounding) throws Exception {
@@ -1123,18 +1123,18 @@ public class ResolverVisitor extends LanguageVisitor
 	    for (int i = 0; i < whenCount; i++) {
 	        then = obj.getThenExpression(i);
 	        setDesiredType(then, thenType, obj);
-            thenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(then.getType()));
+            thenTypeNames.add(getDataTypeManager().getDataTypeName(then.getType()));
 	    }
 	    // Set the type of the else expression
 	    if (elseExpr != null) {
 	        setDesiredType(elseExpr, thenType, obj);
-            thenTypeNames.add(DataTypeManagerService.getInstance().getDataTypeName(elseExpr.getType()));
+            thenTypeNames.add(getDataTypeManager().getDataTypeName(elseExpr.getType()));
 	    }
 	
 	    // Invariants: all the expressions' types are non-null
 	
 	    // 3. Perform implicit type conversions
-	    String thenTypeName = ResolverUtil.getCommonType(thenTypeNames.toArray(new String[thenTypeNames.size()]));
+	    String thenTypeName = ResolverUtil.getCommonType(getTeiidVersion(), thenTypeNames.toArray(new String[thenTypeNames.size()]));
 	    if (thenTypeName == null) {
 	         throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30079, "THEN/ELSE", obj)); //$NON-NLS-1$
 	    }
@@ -1147,7 +1147,7 @@ public class ResolverVisitor extends LanguageVisitor
 	        obj.setElseExpression(ResolverUtil.convertExpression(elseExpr, thenTypeName, metadata));
 	    }
 	    // Set this CASE expression's type to the common THEN type, and we're done.
-	    obj.setType(DataTypeManagerService.getInstance().getDataTypeClass(thenTypeName));
+	    obj.setType(getDataTypeManager().getDataTypeClass(thenTypeName));
 	}
 	
     @Override

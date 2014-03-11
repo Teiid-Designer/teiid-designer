@@ -20,6 +20,7 @@ import javax.script.ScriptEngine;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.LRUCache;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
@@ -32,6 +33,7 @@ import org.teiid.designer.metadata.runtime.TableRecord.TableRecordProperties;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
 
@@ -82,6 +84,11 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     // ==================================================================================
     // I N T E R F A C E M E T H O D S
     // ==================================================================================
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return ModelerCore.getTeiidServerVersion();
+    }
 
     @Override
 	public Object getElementID( final String elementName ) throws Exception {

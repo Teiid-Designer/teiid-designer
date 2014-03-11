@@ -3,7 +3,6 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.Arrays;
-import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
@@ -142,7 +141,7 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
     public void insertConversion(int index, FunctionDescriptor functionDescriptor) { 
         // Get target type for conversion
         Class<?> t = functionDescriptor.getReturnType();
-        String typeName = DataTypeManagerService.getInstance().getDataTypeName(t);
+        String typeName = getTeiidParser().getDataTypeService().getDataTypeName(t);
         
         // Pull old expression at index
         Constant constant = getTeiidParser().createASTNode(ASTNodes.CONSTANT);

@@ -176,7 +176,7 @@ public class QueryService implements IQueryService {
 
             FunctionTree tree = functionTrees.get(descriptor.getSchema());
             if (tree == null) {
-                tree = new FunctionTree(descriptor.getSchema(), new UDFSource(Collections.EMPTY_LIST), false);
+                tree = new FunctionTree(teiidVersion, descriptor.getSchema(), new UDFSource(Collections.EMPTY_LIST), false);
                 functionTrees.put(descriptor.getSchema(), tree);
             }
 

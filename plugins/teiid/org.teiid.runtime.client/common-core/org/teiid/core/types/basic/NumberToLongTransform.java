@@ -31,7 +31,8 @@ public class NumberToLongTransform extends Transform {
 	private boolean isNarrowing;
 	private boolean isLossy;
 	
-	public NumberToLongTransform(Class<?> sourceType, boolean isNarrowing, boolean isLossy) {
+	public NumberToLongTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType, boolean isNarrowing, boolean isLossy) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 		this.isNarrowing = isNarrowing;
 		this.isLossy = isLossy;

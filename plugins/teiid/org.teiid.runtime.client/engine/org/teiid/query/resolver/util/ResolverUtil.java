@@ -45,6 +45,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstants;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.metadata.ForeignKey;
 import org.teiid.query.function.FunctionDescriptor;
@@ -139,11 +140,12 @@ public class ResolverUtil {
      *       the given types can be implicitly converted, and therefore returns
      *       a null.</li>
      * </ul>
+     * @param teiidVersion
      * @param typeNames an ordered array of unique type names.
      * @return a type name to which all the given types can be converted
      */
     @SuppressWarnings("null")
-	public static String getCommonType(String[] typeNames) {
+	public static String getCommonType(ITeiidServerVersion teiidVersion, String[] typeNames) {
         if (typeNames == null || typeNames.length == 0) {
             return null;
         }
@@ -168,13 +170,13 @@ public class ResolverUtil {
 		        // conversions as well as the original type in the working list of
 		        // conversions.
 		        commonConversions.add(string);
-		        DataTypeManagerService.getInstance().getImplicitConversions(string, commonConversions);
+		        DataTypeManagerService.getInstance(teiidVersion).getImplicitConversions(string, commonConversions);
 		        first = false;
 			} else {
 				if (conversions == null) {
 					conversions = new HashSet<String>();
 				}
-				DataTypeManagerService.getInstance().getImplicitConversions(string, conversions);
+				DataTypeManagerService.getInstance(teiidVersion).getImplicitConversions(string, conversions);
 	            conversions.add(string);
 	            // Equivalent to set intersection
 	            commonConversions.retainAll(conversions);
@@ -205,14 +207,15 @@ public class ResolverUtil {
     /**
      * Gets whether there exists an implicit conversion from the source type to
      * the target type
+     * @param teiidVersion 
      * @param fromType
      * @param toType
      * @return true if there exists an implicit conversion from the
      * <code>fromType</code> to the <code>toType</code>.
      */
-    public static boolean canImplicitlyConvert(String fromType, String toType) {
+    public static boolean canImplicitlyConvert(ITeiidServerVersion teiidVersion, String fromType, String toType) {
         if (fromType.equals(toType)) return true;
-        return DataTypeManagerService.getInstance().isImplicitConversion(fromType, toType);
+        return DataTypeManagerService.getInstance(teiidVersion).isImplicitConversion(fromType, toType);
     }
 
     /**
@@ -226,7 +229,7 @@ public class ResolverUtil {
      */
     public static Expression convertExpression(Expression sourceExpression, String targetTypeName, IQueryMetadataInterface metadata) throws Exception {
         return convertExpression(sourceExpression,
-                                 DataTypeManagerService.getInstance().getDataTypeName(sourceExpression.getType()),
+                                 DataTypeManagerService.getInstance(sourceExpression.getTeiidVersion()).getDataTypeName(sourceExpression.getType()),
                                  targetTypeName, metadata);
     }
 
@@ -245,7 +248,7 @@ public class ResolverUtil {
             return sourceExpression;
         }
         
-        if(canImplicitlyConvert(sourceTypeName, targetTypeName) 
+        if(canImplicitlyConvert(sourceExpression.getTeiidVersion(), sourceTypeName, targetTypeName) 
                         || (sourceExpression instanceof Constant && convertConstant(sourceTypeName, targetTypeName, (Constant)sourceExpression) != null)) {
             return getConversion(sourceExpression, sourceTypeName, targetTypeName, true, (FunctionLibrary) metadata.getFunctionLibrary());
         }
@@ -257,14 +260,14 @@ public class ResolverUtil {
     public static Constant convertConstant(String sourceTypeName,
                                            String targetTypeName,
                                            Constant constant) {
-        if (!DataTypeManagerService.getInstance().isTransformable(sourceTypeName, targetTypeName)) {
+        if (!DataTypeManagerService.getInstance(constant.getTeiidVersion()).isTransformable(sourceTypeName, targetTypeName)) {
         	return null;
         }
 
         try {
 	        //try to get the converted constant, if this fails then it is not in a valid format
 	        Constant result = getProperlyTypedConstant(constant.getValue(),
-	                                                   DataTypeManagerService.getInstance().getDataTypeClass(targetTypeName),
+	                                                   DataTypeManagerService.getInstance(constant.getTeiidVersion()).getDataTypeClass(targetTypeName),
 	                                                   constant.getTeiidParser());
 
 	        if (DataTypeManagerService.DefaultDataTypes.STRING.getId().equals(sourceTypeName)) {
@@ -278,7 +281,7 @@ public class ResolverUtil {
 	        }
 	        
 	        //for non-strings, ensure that the conversion is consistent
-	        if (!DataTypeManagerService.getInstance().isTransformable(targetTypeName, sourceTypeName)) {
+	        if (!DataTypeManagerService.getInstance(constant.getTeiidVersion()).isTransformable(targetTypeName, sourceTypeName)) {
 	        	return null;
 	        }
         
@@ -302,7 +305,7 @@ public class ResolverUtil {
                                             String sourceTypeName,
                                             String targetTypeName,
                                             boolean implicit, FunctionLibrary library) {
-        DataTypeManagerService dataTypeManagerService = DataTypeManagerService.getInstance();
+        DataTypeManagerService dataTypeManagerService = DataTypeManagerService.getInstance(sourceExpression.getTeiidVersion());
         Class<?> srcType = dataTypeManagerService.getDataTypeClass(sourceTypeName);
 
         FunctionDescriptor fd = library.findTypedConversionFunction(srcType, dataTypeManagerService.getDataTypeClass(targetTypeName));
@@ -541,7 +544,7 @@ public class ResolverUtil {
     private static Constant getProperlyTypedConstant(Object defaultValue, Class<?> parameterType, TeiidParser teiidParser)
         throws QueryResolverException{
         try {
-            Object newValue = DataTypeManagerService.getInstance().transformValue(defaultValue, parameterType);
+            Object newValue = DataTypeManagerService.getInstance(teiidParser.getVersion()).transformValue(defaultValue, parameterType);
             Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
             constant.setValue(newValue);
             constant.setType(parameterType);
@@ -582,7 +585,7 @@ public class ResolverUtil {
             for (Object elementID : elementIDs) {
             	String elementName = metadata.getName(elementID);
             	String elementType = metadata.getElementType(elementID);
-            	Class<?> elementTypeClass = DataTypeManagerService.getInstance().getDataTypeClass(elementType);
+            	Class<?> elementTypeClass = DataTypeManagerService.getInstance(group.getTeiidVersion()).getDataTypeClass(elementType);
 
                 // Form an element symbol from the ID
             	ElementSymbol element = parser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
@@ -825,14 +828,14 @@ public class ResolverUtil {
 		if(exprType == null) {
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, expression));
 		}
-		String exprTypeName = DataTypeManagerService.getInstance().getDataTypeName(exprType);
+		String exprTypeName = DataTypeManagerService.getInstance(expression.getTeiidVersion()).getDataTypeName(exprType);
 	
 		Collection<Expression> projectedSymbols = crit.getCommand().getProjectedSymbols();
 		if (projectedSymbols.size() != 1){
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30093, crit.getCommand()));
 		}
 		Class<?> subqueryType = projectedSymbols.iterator().next().getType();
-		String subqueryTypeName = DataTypeManagerService.getInstance().getDataTypeName(subqueryType);
+		String subqueryTypeName = DataTypeManagerService.getInstance(expression.getTeiidVersion()).getDataTypeName(subqueryType);
 		Expression result = null;
 	    try {
 	        result = convertExpression(expression, exprTypeName, subqueryTypeName, metadata);
@@ -886,7 +889,7 @@ public class ResolverUtil {
              throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30099, keyElementName));
         }
 		result.setKeyElement(keyElement);
-		args[3] = convertExpression(args[3], DataTypeManagerService.getInstance().getDataTypeName(keyElement.getType()), metadata);
+		args[3] = convertExpression(args[3], DataTypeManagerService.getInstance(lookup.getTeiidVersion()).getDataTypeName(keyElement.getType()), metadata);
 		return result;
 	}
 

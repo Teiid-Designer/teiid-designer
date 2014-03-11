@@ -31,7 +31,8 @@ public class NumberToDoubleTransform extends Transform {
 	private boolean isNarrowing;
 	private boolean isLossy;
 	
-	public NumberToDoubleTransform(Class<?> sourceType, boolean isNarrowing, boolean isLossy) {
+	public NumberToDoubleTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType, boolean isNarrowing, boolean isLossy) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 		this.isNarrowing = isNarrowing;
 		this.isLossy = isLossy;

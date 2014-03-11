@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ISPParameter;
@@ -468,12 +467,12 @@ public class ExecResolver extends ProcedureContainerResolver {
             if(paramType == null || exprType == null) {
                  throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30143, storedProcedureCommand.getProcedureName(), param.getName()));
             }
-            String tgtType = DataTypeManagerService.getInstance().getDataTypeName(paramType);
-            String srcType = DataTypeManagerService.getInstance().getDataTypeName(exprType);
+            String tgtType = getDataTypeManager().getDataTypeName(paramType);
+            String srcType = getDataTypeManager().getDataTypeName(exprType);
             Expression result = null;
                             
             if (param.getParameterType() == SPParameter.RETURN_VALUE || param.getParameterType() == SPParameter.OUT) {
-            	if (!ResolverUtil.canImplicitlyConvert(tgtType, srcType)) {
+            	if (!ResolverUtil.canImplicitlyConvert(getTeiidVersion(), tgtType, srcType)) {
             		 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30144, param.getParameterSymbol(), tgtType, srcType));
             	}
             } else {

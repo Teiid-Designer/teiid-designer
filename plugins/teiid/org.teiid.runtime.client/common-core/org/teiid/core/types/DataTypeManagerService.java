@@ -16,12 +16,14 @@ import java.sql.Date;
 import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -43,7 +45,9 @@ import org.teiid.core.types.basic.NumberToShortTransform;
 import org.teiid.core.types.basic.ObjectToAnyTransform;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.runtime.client.Messages;
@@ -218,6 +222,26 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         public static boolean isLOB(String type) {
             return BLOB.equals(type) ||CLOB.equals(type) || XML.equals(type);
         }
+
+        /**
+         * Use instead of values() since it will only return the enumerated values
+         * that conform to the given teiid version.
+         *
+         * @param teiidVersion
+         *
+         * @return set of values for teiid version
+         */
+        public static List<DefaultDataTypes> getValues(ITeiidServerVersion teiidVersion) {
+            List<DefaultDataTypes> appDataTypes = new ArrayList<DefaultDataTypes>();
+            for (DefaultDataTypes dataType : DefaultDataTypes.values()) {
+                if (! AnnotationUtils.isApplicable(dataType, teiidVersion))
+                    continue;
+
+                appDataTypes.add(dataType);
+            }
+
+            return appDataTypes;
+        }
     }
 
     /**
@@ -226,15 +250,19 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      */
     private static Map<DefaultDataTypes, Map<DefaultDataTypes, Transform>> transforms = new HashMap<DefaultDataTypes, Map<DefaultDataTypes, Transform>>(128);
 
-    private static DataTypeManagerService instance = null;
+    private static Map<ITeiidServerVersion, DataTypeManagerService> instances = new HashMap<ITeiidServerVersion, DataTypeManagerService>();
+
+    private final ITeiidServerVersion teiidVersion;
 
     /**
+     * @param teiidVersion 
      * @return the singleton instance
      */
-    public static DataTypeManagerService getInstance() {
+    public static DataTypeManagerService getInstance(ITeiidServerVersion teiidVersion) {
+        DataTypeManagerService instance = instances.get(teiidVersion);
         if (instance == null) {
-            instance = new DataTypeManagerService();
-            instance.loadBasicTransforms();
+            instance = new DataTypeManagerService(teiidVersion);
+            instances.put(teiidVersion, instance);
         }
 
         return instance;
@@ -246,6 +274,14 @@ public class DataTypeManagerService implements IDataTypeManagerService {
             result <<= 1;
         }
         return result;
+    }
+
+    /**
+     * @param teiidVersion
+     */
+    private DataTypeManagerService(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+        loadBasicTransforms();
     }
 
     /**
@@ -262,148 +298,152 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         Class<?> bigIntegerClass = DataTypeManagerService.DefaultDataTypes.BIG_INTEGER.getTypeClass();
         Class<?> floatClass = DataTypeManagerService.DefaultDataTypes.FLOAT.getTypeClass();
 
-        addTransform(new BooleanToNumberTransform(Byte.valueOf((byte)1), Byte.valueOf((byte)0)));
-        addTransform(new BooleanToNumberTransform(Short.valueOf((short)1), Short.valueOf((short)0)));
-        addTransform(new BooleanToNumberTransform(Integer.valueOf(1), Integer.valueOf(0)));
-        addTransform(new BooleanToNumberTransform(Long.valueOf(1), Long.valueOf(0)));
-        addTransform(new BooleanToNumberTransform(BigInteger.valueOf(1), BigInteger.valueOf(0)));
-        addTransform(new BooleanToNumberTransform(Float.valueOf(1), Float.valueOf(0)));
-        addTransform(new BooleanToNumberTransform(Double.valueOf(1), Double.valueOf(0)));
-        addTransform(new BooleanToNumberTransform(BigDecimal.valueOf(1), BigDecimal.valueOf(0)));
-        addTransform(new AnyToStringTransform(DefaultDataTypes.BOOLEAN.getTypeClass()));
+        addTransform(new BooleanToNumberTransform(this, Byte.valueOf((byte)1), Byte.valueOf((byte)0)));
+        addTransform(new BooleanToNumberTransform(this, Short.valueOf((short)1), Short.valueOf((short)0)));
+        addTransform(new BooleanToNumberTransform(this, Integer.valueOf(1), Integer.valueOf(0)));
+        addTransform(new BooleanToNumberTransform(this, Long.valueOf(1), Long.valueOf(0)));
+        addTransform(new BooleanToNumberTransform(this, BigInteger.valueOf(1), BigInteger.valueOf(0)));
+        addTransform(new BooleanToNumberTransform(this, Float.valueOf(1), Float.valueOf(0)));
+        addTransform(new BooleanToNumberTransform(this, Double.valueOf(1), Double.valueOf(0)));
+        addTransform(new BooleanToNumberTransform(this, BigDecimal.valueOf(1), BigDecimal.valueOf(0)));
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.BOOLEAN.getTypeClass()));
 
-        addTransform(new NumberToBooleanTransform(Byte.valueOf((byte)0)));
-        addTransform(new NumberToShortTransform(byteClass, false));
-        addTransform(new NumberToIntegerTransform(byteClass, false));
-        addTransform(new NumberToLongTransform(byteClass, false, false));
-        addTransform(new FixedNumberToBigIntegerTransform(byteClass));
-        addTransform(new NumberToFloatTransform(byteClass, false, false));
-        addTransform(new NumberToDoubleTransform(byteClass, false, false));
-        addTransform(new FixedNumberToBigDecimalTransform(byteClass));
-        addTransform(new AnyToStringTransform(byteClass));
+        addTransform(new NumberToBooleanTransform(this, Byte.valueOf((byte)0)));
+        addTransform(new NumberToShortTransform(this, byteClass, false));
+        addTransform(new NumberToIntegerTransform(this, byteClass, false));
+        addTransform(new NumberToLongTransform(this, byteClass, false, false));
+        addTransform(new FixedNumberToBigIntegerTransform(this, byteClass));
+        addTransform(new NumberToFloatTransform(this, byteClass, false, false));
+        addTransform(new NumberToDoubleTransform(this, byteClass, false, false));
+        addTransform(new FixedNumberToBigDecimalTransform(this, byteClass));
+        addTransform(new AnyToStringTransform(this, byteClass));
 
-        addTransform(new AnyToStringTransform(DefaultDataTypes.CHAR.getTypeClass()));
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.CHAR.getTypeClass()));
 
-        addTransform(new NumberToBooleanTransform(Short.valueOf((short)0)));
-        addTransform(new NumberToByteTransform(shortClass));
-        addTransform(new NumberToIntegerTransform(shortClass, false));
-        addTransform(new NumberToLongTransform(shortClass, false, false));
-        addTransform(new FixedNumberToBigIntegerTransform(shortClass));
-        addTransform(new NumberToFloatTransform(shortClass, false, false));
-        addTransform(new NumberToDoubleTransform(shortClass, false, false));
-        addTransform(new FixedNumberToBigDecimalTransform(shortClass));
-        addTransform(new AnyToStringTransform(shortClass));
+        addTransform(new NumberToBooleanTransform(this, Short.valueOf((short)0)));
+        addTransform(new NumberToByteTransform(this, shortClass));
+        addTransform(new NumberToIntegerTransform(this, shortClass, false));
+        addTransform(new NumberToLongTransform(this, shortClass, false, false));
+        addTransform(new FixedNumberToBigIntegerTransform(this, shortClass));
+        addTransform(new NumberToFloatTransform(this, shortClass, false, false));
+        addTransform(new NumberToDoubleTransform(this, shortClass, false, false));
+        addTransform(new FixedNumberToBigDecimalTransform(this, shortClass));
+        addTransform(new AnyToStringTransform(this, shortClass));
 
-        addTransform(new NumberToBooleanTransform(Integer.valueOf(0)));
-        addTransform(new NumberToByteTransform(integerClass));
-        addTransform(new NumberToShortTransform(integerClass, true));
-        addTransform(new NumberToLongTransform(integerClass, false, false));
-        addTransform(new FixedNumberToBigIntegerTransform(integerClass));
-        addTransform(new NumberToFloatTransform(integerClass, false, true)); //lossy, but not narrowing
-        addTransform(new NumberToDoubleTransform(integerClass, false, false));
-        addTransform(new FixedNumberToBigDecimalTransform(integerClass));
-        addTransform(new AnyToStringTransform(integerClass));
+        addTransform(new NumberToBooleanTransform(this, Integer.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, integerClass));
+        addTransform(new NumberToShortTransform(this, integerClass, true));
+        addTransform(new NumberToLongTransform(this, integerClass, false, false));
+        addTransform(new FixedNumberToBigIntegerTransform(this, integerClass));
+        addTransform(new NumberToFloatTransform(this, integerClass, false, true)); //lossy, but not narrowing
+        addTransform(new NumberToDoubleTransform(this, integerClass, false, false));
+        addTransform(new FixedNumberToBigDecimalTransform(this, integerClass));
+        addTransform(new AnyToStringTransform(this, integerClass));
 
-        addTransform(new NumberToBooleanTransform(Long.valueOf(0)));
-        addTransform(new NumberToByteTransform(longClass));
-        addTransform(new NumberToShortTransform(longClass, true));
-        addTransform(new NumberToIntegerTransform(longClass, true));
-        addTransform(new FixedNumberToBigIntegerTransform(longClass));
-        addTransform(new NumberToFloatTransform(longClass, false, true)); //lossy, but not narrowing
-        addTransform(new NumberToDoubleTransform(longClass, false, true)); //lossy, but not narrowing
-        addTransform(new FixedNumberToBigDecimalTransform(longClass));
-        addTransform(new AnyToStringTransform(longClass));
+        addTransform(new NumberToBooleanTransform(this, Long.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, longClass));
+        addTransform(new NumberToShortTransform(this, longClass, true));
+        addTransform(new NumberToIntegerTransform(this, longClass, true));
+        addTransform(new FixedNumberToBigIntegerTransform(this, longClass));
+        addTransform(new NumberToFloatTransform(this, longClass, false, true)); //lossy, but not narrowing
+        addTransform(new NumberToDoubleTransform(this, longClass, false, true)); //lossy, but not narrowing
+        addTransform(new FixedNumberToBigDecimalTransform(this, longClass));
+        addTransform(new AnyToStringTransform(this, longClass));
 
-        addTransform(new NumberToBooleanTransform(BigInteger.valueOf(0)));
-        addTransform(new NumberToByteTransform(bigIntegerClass));
-        addTransform(new NumberToShortTransform(bigIntegerClass, true));
-        addTransform(new NumberToIntegerTransform(bigIntegerClass, true));
-        addTransform(new NumberToLongTransform(bigIntegerClass, true, false));
-        addTransform(new NumberToFloatTransform(bigIntegerClass, true, false));
-        addTransform(new NumberToDoubleTransform(bigIntegerClass, true, false));
-        addTransform(new org.teiid.core.types.basic.BigIntegerToBigDecimalTransform());
-        addTransform(new AnyToStringTransform(bigIntegerClass));
+        addTransform(new NumberToBooleanTransform(this, BigInteger.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, bigIntegerClass));
+        addTransform(new NumberToShortTransform(this, bigIntegerClass, true));
+        addTransform(new NumberToIntegerTransform(this, bigIntegerClass, true));
+        addTransform(new NumberToLongTransform(this, bigIntegerClass, true, false));
+        addTransform(new NumberToFloatTransform(this, bigIntegerClass, true, false));
+        addTransform(new NumberToDoubleTransform(this, bigIntegerClass, true, false));
+        addTransform(new org.teiid.core.types.basic.BigIntegerToBigDecimalTransform(this));
+        addTransform(new AnyToStringTransform(this, bigIntegerClass));
 
-        addTransform(new NumberToBooleanTransform(BigDecimal.valueOf(0)));
-        addTransform(new NumberToByteTransform(bigDecimalClass));
-        addTransform(new NumberToShortTransform(bigDecimalClass, true));
-        addTransform(new NumberToIntegerTransform(bigDecimalClass, true));
-        addTransform(new NumberToLongTransform(bigDecimalClass, true, false));
-        addTransform(new org.teiid.core.types.basic.BigDecimalToBigIntegerTransform());
-        addTransform(new NumberToFloatTransform(bigDecimalClass, true, false));
-        addTransform(new NumberToDoubleTransform(bigDecimalClass, true, false));
-        addTransform(new AnyToStringTransform(bigDecimalClass));
+        addTransform(new NumberToBooleanTransform(this, BigDecimal.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, bigDecimalClass));
+        addTransform(new NumberToShortTransform(this, bigDecimalClass, true));
+        addTransform(new NumberToIntegerTransform(this, bigDecimalClass, true));
+        addTransform(new NumberToLongTransform(this, bigDecimalClass, true, false));
+        addTransform(new org.teiid.core.types.basic.BigDecimalToBigIntegerTransform(this));
+        addTransform(new NumberToFloatTransform(this, bigDecimalClass, true, false));
+        addTransform(new NumberToDoubleTransform(this, bigDecimalClass, true, false));
+        addTransform(new AnyToStringTransform(this, bigDecimalClass));
 
-        addTransform(new NumberToBooleanTransform(Float.valueOf(0)));
-        addTransform(new NumberToByteTransform(floatClass));
-        addTransform(new NumberToShortTransform(floatClass, true));
-        addTransform(new NumberToIntegerTransform(floatClass, true));
-        addTransform(new NumberToLongTransform(floatClass, false, true)); //lossy, but not narrowing
-        addTransform(new FloatingNumberToBigIntegerTransform(floatClass));
-        addTransform(new NumberToDoubleTransform(floatClass, false, false));
-        addTransform(new FloatingNumberToBigDecimalTransform(floatClass));
-        addTransform(new AnyToStringTransform(floatClass));
+        addTransform(new NumberToBooleanTransform(this, Float.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, floatClass));
+        addTransform(new NumberToShortTransform(this, floatClass, true));
+        addTransform(new NumberToIntegerTransform(this, floatClass, true));
+        addTransform(new NumberToLongTransform(this, floatClass, false, true)); //lossy, but not narrowing
+        addTransform(new FloatingNumberToBigIntegerTransform(this, floatClass));
+        addTransform(new NumberToDoubleTransform(this, floatClass, false, false));
+        addTransform(new FloatingNumberToBigDecimalTransform(this, floatClass));
+        addTransform(new AnyToStringTransform(this, floatClass));
 
-        addTransform(new NumberToBooleanTransform(Double.valueOf(0)));
-        addTransform(new NumberToByteTransform(doubleClass));
-        addTransform(new NumberToShortTransform(doubleClass, true));
-        addTransform(new NumberToIntegerTransform(doubleClass, true));
-        addTransform(new NumberToLongTransform(doubleClass, false, true)); //lossy, but not narrowing
-        addTransform(new FloatingNumberToBigIntegerTransform(doubleClass));
-        addTransform(new NumberToFloatTransform(doubleClass, true, false));
-        addTransform(new FloatingNumberToBigDecimalTransform(doubleClass));
-        addTransform(new AnyToStringTransform(doubleClass));
+        addTransform(new NumberToBooleanTransform(this, Double.valueOf(0)));
+        addTransform(new NumberToByteTransform(this, doubleClass));
+        addTransform(new NumberToShortTransform(this, doubleClass, true));
+        addTransform(new NumberToIntegerTransform(this, doubleClass, true));
+        addTransform(new NumberToLongTransform(this, doubleClass, false, true)); //lossy, but not narrowing
+        addTransform(new FloatingNumberToBigIntegerTransform(this, doubleClass));
+        addTransform(new NumberToFloatTransform(this, doubleClass, true, false));
+        addTransform(new FloatingNumberToBigDecimalTransform(this, doubleClass));
+        addTransform(new AnyToStringTransform(this, doubleClass));
 
-        addTransform(new org.teiid.core.types.basic.DateToTimestampTransform());
-        addTransform(new AnyToStringTransform(DefaultDataTypes.DATE.getTypeClass()));
+        addTransform(new org.teiid.core.types.basic.DateToTimestampTransform(this));
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.DATE.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.TimeToTimestampTransform());
-        addTransform(new AnyToStringTransform(DefaultDataTypes.TIME.getTypeClass()));
+        addTransform(new org.teiid.core.types.basic.TimeToTimestampTransform(this));
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.TIME.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.TimestampToTimeTransform());
-        addTransform(new org.teiid.core.types.basic.TimestampToDateTransform());
-        addTransform(new AnyToStringTransform(DefaultDataTypes.TIMESTAMP.getTypeClass()));
+        addTransform(new org.teiid.core.types.basic.TimestampToTimeTransform(this));
+        addTransform(new org.teiid.core.types.basic.TimestampToDateTransform(this));
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.TIMESTAMP.getTypeClass()));
 
-        addTransform(new org.teiid.core.types.basic.StringToBooleanTransform());
-        addTransform(new org.teiid.core.types.basic.StringToByteTransform());
-        addTransform(new org.teiid.core.types.basic.StringToShortTransform());
-        addTransform(new org.teiid.core.types.basic.StringToIntegerTransform());
-        addTransform(new org.teiid.core.types.basic.StringToLongTransform());
-        addTransform(new org.teiid.core.types.basic.StringToBigIntegerTransform());
-        addTransform(new org.teiid.core.types.basic.StringToFloatTransform());
-        addTransform(new org.teiid.core.types.basic.StringToDoubleTransform());
-        addTransform(new org.teiid.core.types.basic.StringToBigDecimalTransform());
-        addTransform(new org.teiid.core.types.basic.StringToTimeTransform());
-        addTransform(new org.teiid.core.types.basic.StringToDateTransform());
-        addTransform(new org.teiid.core.types.basic.StringToTimestampTransform());
-        addTransform(new org.teiid.core.types.basic.StringToCharacterTransform());
-        addTransform(new org.teiid.core.types.basic.StringToClobTransform());
-        addTransform(new org.teiid.core.types.basic.StringToSQLXMLTransform());
+        addTransform(new org.teiid.core.types.basic.StringToBooleanTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToByteTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToShortTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToIntegerTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToLongTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToBigIntegerTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToFloatTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToDoubleTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToBigDecimalTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToTimeTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToDateTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToTimestampTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToCharacterTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToClobTransform(this));
+        addTransform(new org.teiid.core.types.basic.StringToSQLXMLTransform(this));
 
-        addTransform(new org.teiid.core.types.basic.BinaryToBlobTransform());
+        addTransform(new org.teiid.core.types.basic.BinaryToBlobTransform(this));
 
-        addTransform(new org.teiid.core.types.basic.ClobToStringTransform());
+        addTransform(new org.teiid.core.types.basic.ClobToStringTransform(this));
 
-        addTransform(new org.teiid.core.types.basic.BlobToBinaryTransform());
+        addTransform(new org.teiid.core.types.basic.BlobToBinaryTransform(this));
 
-        addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform());
+        addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform(this));
 
         for (Class<?> type : getAllDataTypeClasses()) {
             if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
-                addTransform(new AnyToObjectTransform(type));
-                addTransform(new ObjectToAnyTransform(type));
+                addTransform(new AnyToObjectTransform(this, type));
+                addTransform(new ObjectToAnyTransform(this, type));
             }
             if (type != DefaultDataTypes.NULL.getTypeClass()) {
-                addTransform(new NullToAnyTransform(type));
+                addTransform(new NullToAnyTransform(this, type));
             }
         }
 
-        addTransform(new AnyToStringTransform(DefaultDataTypes.OBJECT.getTypeClass()) {
+        addTransform(new AnyToStringTransform(this, DefaultDataTypes.OBJECT.getTypeClass()) {
             @Override
             public boolean isExplicit() {
                 return true;
             }
         });
+    }
+
+    private void checkDataType(DefaultDataTypes dataType, String dataTypeName) {
+        ArgCheck.isNotNull(dataType, Messages.getString(Messages.ERR.ERR_100_001_0001, teiidVersion, dataTypeName));
     }
 
     /** Utility to get Transform given srcType and targetType */
@@ -416,7 +456,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
 
     private DefaultDataTypes findDefaultDataType(String id) {
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getId().equalsIgnoreCase(id)) {
                 return defaultDataType;
             }
@@ -426,7 +466,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
     
     private DefaultDataTypes findDefaultDataType(DataTypeName dataTypeName) {
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        ArgCheck.isTrue(AnnotationUtils.isApplicable(dataTypeName, teiidVersion),
+                                    Messages.getString(Messages.ERR.ERR_100_001_0001, teiidVersion, dataTypeName));
+
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getDataTypeName().equals(dataTypeName)) {
                 return defaultDataType;
             }
@@ -436,7 +479,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     }
 
     private DefaultDataTypes findDefaultDataType(Class<?> typeClass) {
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getTypeClass().equals(typeClass) || defaultDataType.getTypeArrayClass().equals(typeClass)) {
                 return defaultDataType;
             }
@@ -445,7 +488,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         return null;
     }
 
-    public boolean isArrayType(String name) {
+    public static boolean isArrayType(String name) {
         return name.endsWith(ARRAY_SUFFIX);
     }
 
@@ -456,12 +499,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     @Override
     public String getDefaultDataType(DataTypeName dataTypeName) {
         ArgCheck.isNotNull(dataTypeName);
+        ArgCheck.isTrue(AnnotationUtils.isApplicable(dataTypeName, teiidVersion),
+                        Messages.getString(Messages.ERR.ERR_100_001_0001, teiidVersion, dataTypeName));
 
         DefaultDataTypes dataType = findDefaultDataType(dataTypeName);
-        if (dataType != null)
-            return dataType.getId();
+        checkDataType(dataType, dataTypeName.toString());
 
-        throw new RuntimeException();
+        return dataType.getId();
     }
 
     /**
@@ -508,12 +552,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     @Override
     public Class<?> getDefaultDataClass(DataTypeName dataTypeName) {
         ArgCheck.isNotNull(dataTypeName);
+        ArgCheck.isTrue(AnnotationUtils.isApplicable(dataTypeName, teiidVersion),
+                        Messages.getString(Messages.ERR.ERR_100_001_0001, teiidVersion, dataTypeName));
 
         DefaultDataTypes dataType = findDefaultDataType(dataTypeName);
-        if (dataType != null)
-            return dataType.getTypeClass();
+        checkDataType(dataType, dataTypeName.toString());
 
-        throw new RuntimeException();
+        return dataType.getTypeClass();
     }
 
     public DefaultDataTypes getDataType(Class<?> typeClass) {
@@ -534,13 +579,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     public DefaultDataTypes getDataType(DataTypeAliases alias) {
         ArgCheck.isNotNull(alias);
 
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.hasAlias(alias)) {
                 return defaultDataType;
             }
         }
 
-        throw new IllegalArgumentException("No data type for the alias " + alias.getId()); //$NON-NLS-1$
+        throw new IllegalArgumentException("No data type for the alias " + alias.getId() + " for teiid version " + teiidVersion); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override
@@ -562,7 +607,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     @Override
     public Set<String> getAllDataTypeNames() {
         Set<String> dataTypeNames = new LinkedHashSet<String>();
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             dataTypeNames.add(defaultDataType.getId());
         }
 
@@ -577,7 +622,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      */
     public Set<Class<?>> getAllDataTypeClasses() {
         Set<Class<?>> dataTypeNames = new HashSet<Class<?>>();
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             dataTypeNames.add(defaultDataType.getTypeClass());
         }
 
@@ -588,7 +633,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     public Integer getDataTypeLimit(String dataType) {
         ArgCheck.isNotNull(dataType);
 
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getId().equals(dataType)) {
                 return defaultDataType.getLimit();
             }
@@ -601,7 +646,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     public String getDataTypeValidChars(String dataType) {
         ArgCheck.isNotNull(dataType);
         
-        for (DefaultDataTypes defaultDataType : DefaultDataTypes.values()) {
+        for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getId().equals(dataType)) {
                 return defaultDataType.getValidChars();
             }
@@ -615,7 +660,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         if (dataSourceType == null)
             return DataSourceTypes.UNKNOWN.id();
 
-        return dataSourceType.id();
+        ArgCheck.isTrue(AnnotationUtils.isApplicable(dataSourceType, teiidVersion),
+                        Messages.getString(Messages.ERR.ERR_100_001_0001, teiidVersion, dataSourceType.id()));
+
+        return AnnotationUtils.getUpdatedName(dataSourceType, dataSourceType.id(), teiidVersion);
     }
 
     /**
@@ -626,6 +674,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      */
     public boolean isNonComparable(String type) {
         DefaultDataTypes dataType = findDefaultDataType(type);
+        checkDataType(dataType, type);
         return isNonComparable(dataType.getTypeClass());
     }
 
@@ -655,6 +704,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         DefaultDataTypes sourceType = findDefaultDataType(sourceTypeName);
         DefaultDataTypes targetType = findDefaultDataType(targetTypeName);
 
+        if (sourceType == null || targetType == null)
+            return null;
+
         return getTransformFromMaps(sourceType, targetType);
     }
 
@@ -670,6 +722,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         DefaultDataTypes sourceDataType = findDefaultDataType(sourceType);
         DefaultDataTypes targetDataType = findDefaultDataType(targetType);
+
+        if (sourceDataType == null || targetDataType == null)
+            return null;
 
         return getTransformFromMaps(sourceDataType, targetDataType);
     }
@@ -718,14 +773,16 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         }
 
         DefaultDataTypes sourceType = findDefaultDataType(sourceTypeName);
-        Map<DefaultDataTypes, Transform> innerMap = transforms.get(sourceType);
-        if (innerMap != null) {
-            for (Entry<DefaultDataTypes, Transform> entry : innerMap.entrySet()) {
-                if (!entry.getValue().isExplicit()) {
-                    result.add(entry.getKey().getId());
+        if (sourceType != null) {
+            Map<DefaultDataTypes, Transform> innerMap = transforms.get(sourceType);
+            if (innerMap != null) {
+                for (Entry<DefaultDataTypes, Transform> entry : innerMap.entrySet()) {
+                    if (!entry.getValue().isExplicit()) {
+                        result.add(entry.getKey().getId());
+                    }
                 }
+                return;
             }
-            return;
         }
 
         String previous = DefaultDataTypes.OBJECT.getId();
@@ -770,8 +827,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         String targetName = transform.getTargetTypeName();
 
         DefaultDataTypes sourceDataType = findDefaultDataType(sourceName);
+        checkDataType(sourceDataType, sourceName);
         DefaultDataTypes targetDataType = findDefaultDataType(targetName);
-        
+        checkDataType(targetDataType, targetName);
+
         Map<DefaultDataTypes, Transform> innerMap = transforms.get(sourceDataType);
         if (innerMap == null) {
             innerMap = new LinkedHashMap<DefaultDataTypes, Transform>();
@@ -794,8 +853,11 @@ public class DataTypeManagerService implements IDataTypeManagerService {
             return (T) value;
         }
 
+        Transform transform = null;
         DefaultDataTypes sourceDataType = findDefaultDataType(sourceType);
-        Transform transform = getTransformFromMaps(sourceDataType, targetDataType);
+        if (sourceDataType != null)
+            transform = getTransformFromMaps(sourceDataType, targetDataType);
+
         if (transform == null) {
             Object[] params = new Object[] { sourceType, targetDataType, value};
             throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID10076, params));

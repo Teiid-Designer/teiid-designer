@@ -90,6 +90,8 @@ public class RealMetadataFactory {
     private final ITeiidServerVersion teiidVersion;
 
     private final QueryParser parser;
+
+    private DataTypeManagerService dataTypeManager;
         
 	public RealMetadataFactory(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
@@ -105,6 +107,12 @@ public class RealMetadataFactory {
 	    return parser.getTeiidParser();
 	}
 
+	public DataTypeManagerService getDataTypeManager() {
+	    if (dataTypeManager == null) 
+	        dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
+
+	    return dataTypeManager;
+	}
 	public SystemFunctionManager getSystemFunctionManager() {
 	    return SFM;
 	}
@@ -394,7 +402,7 @@ public class RealMetadataFactory {
     	for (Schema schema : metadataStore.getSchemas().values()) {
 			vdbMetaData.addModel(createModel(schema.getName(), schema.isPhysical()));
 			if (!schema.getFunctions().isEmpty()) {
-				udfs.add(new FunctionTree(schema.getName(), new UDFSource(schema.getFunctions().values()), true));
+				udfs.add(new FunctionTree(getTeiidVersion(), schema.getName(), new UDFSource(schema.getFunctions().values()), true));
 			}
 		}
     	TransformationMetadata metadata = new TransformationMetadata(getTeiidParser(), vdbMetaData, store, null, SFM.getSystemFunctions(), udfs);
@@ -1702,7 +1710,7 @@ public class RealMetadataFactory {
 					String type) {
 				if (type != null) {
 					//TODO: choose the appropriate runtime type
-					Class<?> c = DataTypeManagerService.getInstance().getDataTypeClass(type);
+					Class<?> c = getDataTypeManager().getDataTypeClass(type);
 					if (c == DefaultDataTypes.OBJECT.getTypeClass()) {
 						type = DefaultDataTypes.STRING.getId();
 					}
@@ -1747,13 +1755,13 @@ public class RealMetadataFactory {
     }
 		
     public Column createElement(String name, ColumnSet<?> group, String type) { 
-        Column column = new Column();
+        Column column = new Column(teiidVersion);
         column.setName(name);
         group.addColumn(column);
         column.setRuntimeType(type);
         if(type.equals(DataTypeManagerService.DefaultDataTypes.STRING.getId())) {  
             column.setSearchType(SearchType.Searchable);        
-        } else if (DataTypeManagerService.getInstance().isNonComparable(type)){
+        } else if (getDataTypeManager().isNonComparable(type)){
         	column.setSearchType(SearchType.Unsearchable);
         } else {        	
         	column.setSearchType(SearchType.All_Except_Like);
@@ -1792,7 +1800,7 @@ public class RealMetadataFactory {
      * Create stored procedure parameter.
      */
     public ProcedureParameter createParameter(String name, ISPParameter.ParameterInfo direction, String type) {
-        ProcedureParameter param = new ProcedureParameter();
+        ProcedureParameter param = new ProcedureParameter(teiidVersion);
         param.setName(name);
         switch (direction) {
         case IN:
@@ -2765,7 +2773,7 @@ public class RealMetadataFactory {
     }
 
 	public MetadataFactory helpParse(String ddl, String model) {
-        MetadataFactory mf = new MetadataFactory(null, 1, model, getDataTypes(), new Properties(), null); 
+        MetadataFactory mf = new MetadataFactory(teiidVersion, null, 1, model, getDataTypes(), new Properties(), null); 
         parser.parseDDL(mf, ddl);
         return mf;
     }

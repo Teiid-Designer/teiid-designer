@@ -59,6 +59,7 @@ import org.teiid.core.types.basic.StringToSQLXMLTransform;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.FunctionMethod.PushDown;
@@ -226,7 +227,14 @@ public class Evaluator {
     		new String[] {"([a]|[^a])*", "(", ")", "*", "?", "+", //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$ //$NON-NLS-6$
     				"[", "]", "([a]|[^a])", "{", "|", "}"},  SIMILAR_REGEX_RESERVED, '\\', 0);  //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$ //$NON-NLS-6$  
 
-    private final CommandContext commandContext = new CommandContext();
+    private final CommandContext commandContext;
+
+    /**
+     * @param teiidVersion
+     */
+    public Evaluator(ITeiidServerVersion teiidVersion) {
+        commandContext = new CommandContext(teiidVersion);
+    }
 
     /**
      * @param criteria
@@ -234,7 +242,7 @@ public class Evaluator {
      * @throws Exception
      */
     public static boolean assess(Criteria criteria) throws Exception {
-    	return new Evaluator().evaluate(criteria);
+    	return new Evaluator(criteria.getTeiidVersion()).evaluate(criteria);
     }
     
     /**
@@ -243,7 +251,7 @@ public class Evaluator {
      * @throws Exception
      */
     public static Object assess(Expression expression) throws Exception {
-    	return new Evaluator().evaluate(expression);
+    	return new Evaluator(expression.getTeiidVersion()).evaluate(expression);
     }
 
 	/**
@@ -732,7 +740,7 @@ public class Evaluator {
 			   }
 			   result[i] = eval;
 		   }
-		   return new ArrayImpl(result);
+		   return new ArrayImpl(expression.getTeiidVersion(), result);
 	   } else if (expression instanceof ExceptionExpression) {
 		   return evaluate((ExceptionExpression)expression);
 	   } else {
@@ -968,9 +976,10 @@ public class Evaluator {
         }
         String doubleQuote = quoteStr + quoteStr;
         ArrayList<String> result = new ArrayList<String>();
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(textLine.getTeiidVersion());
         for (Iterator<T> iterator = values.iterator(); iterator.hasNext();) {
             T t = iterator.next();
-            String text = (String)DataTypeManagerService.getInstance().transformValue(
+            String text = (String)dataTypeManager.transformValue(
                                                                                       valueExtractor.getValue(t),
                                                                                       DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass());
             if (text == null) {
@@ -992,7 +1001,7 @@ public class Evaluator {
 		Evaluator.NameValuePair<Object>[] nameValuePairs = getNameValuePairs(args, true, true);
 		
 		try {
-			return new ArrayImpl(evaluate(Arrays.asList(nameValuePairs), defaultExtractor, function));
+			return new ArrayImpl(function.getTeiidVersion(), evaluate(Arrays.asList(nameValuePairs), defaultExtractor, function));
 		} catch (Exception e) {
 			 throw new TeiidClientException(e);
 		}
@@ -1022,7 +1031,7 @@ public class Evaluator {
 				for (SubqueryContainer<?> container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(function)) {
 					evaluateSubquery(container);
 				}
-				builder = new JSONBuilder();
+				builder = new JSONBuilder(function.getTeiidVersion());
 			}
 			builder.start(false);
 			for (NameValuePair<Object> nameValuePair : nameValuePairs) {
@@ -1086,7 +1095,7 @@ public class Evaluator {
 						eval.evaluateSubquery(container);
 					}
 				}
-				builder = new JSONBuilder();
+				builder = new JSONBuilder(f.getTeiidVersion());
 			}
 			builder.start(true);
 			for (Object object : vals) {
@@ -1137,6 +1146,10 @@ public class Evaluator {
 
 	/**
 	 * Evaluate the parameters and return the context item if it exists
+	 * @param cols
+	 * @param parameters 
+	 * @return context item
+	 * @throws Exception 
 	 */
 	public Object evaluateParameters(List<DerivedColumn> cols,
 			Map<String, Object> parameters)

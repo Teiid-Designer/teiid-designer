@@ -23,6 +23,7 @@
 package org.teiid.metadata;
 
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 public abstract class BaseColumn extends AbstractMetadataRecord {
@@ -39,7 +40,9 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 		Nullable,
 		Unknown		
 	}
-	
+
+    private final ITeiidServerVersion teiidVersion;
+
 	private String datatypeUUID;
     private String runtimeType;
     private String defaultValue;
@@ -50,6 +53,10 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     private NullType nullType;
     private int position;
     private Datatype datatype;
+
+    public BaseColumn(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
 
     public String getDefaultValue() {
         return defaultValue;
@@ -64,7 +71,7 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     }
     
     public Class<?> getJavaType() {
-        return DataTypeManagerService.getInstance().getDataTypeClass(runtimeType);
+        return DataTypeManagerService.getInstance(teiidVersion).getDataTypeClass(runtimeType);
     }
 
     public int getLength() {

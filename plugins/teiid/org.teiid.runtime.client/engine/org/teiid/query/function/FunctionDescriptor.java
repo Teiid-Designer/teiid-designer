@@ -33,6 +33,7 @@ import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.AbstractMetadataRecord;
@@ -51,7 +52,8 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 	private static final long serialVersionUID = 5374103983118037242L;
 
 	private static final boolean ALLOW_NAN_INFINITY = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.allowNanInfinity", false); //$NON-NLS-1$
-	
+
+	private final ITeiidServerVersion teiidVersion;
 	private Class<?>[] types;
 	private Class<?> returnType;	
     private boolean requiresContext;
@@ -65,14 +67,12 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
     // a different VM.  This function descriptor can be used to look up 
     // the real VM descriptor for execution.
     private transient Method invocationMethod;
-	
-    FunctionDescriptor() {
-    }
-    
-	FunctionDescriptor(FunctionMethod method, Class<?>[] types,
+
+	FunctionDescriptor(ITeiidServerVersion teiidVersion, FunctionMethod method, Class<?>[] types,
 			Class<?> outputType, Method invocationMethod,
 			boolean requiresContext) {
-		this.types = types;
+		this.teiidVersion = teiidVersion;
+        this.types = types;
 		this.returnType = outputType;
         this.invocationMethod = invocationMethod;
         this.requiresContext = requiresContext;
@@ -198,6 +198,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 	/**
 	 * Invoke the function described in the function descriptor, using the
 	 * values provided.  Return the result of the function.
+	 * @param teiidVersion
 	 * @param values Values that should match 1-to-1 with the types described in the
 	 * function descriptor
 	 * @param context 
@@ -288,7 +289,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 		}
 	}
 
-	public static Object importValue(Object result, Class<?> expectedType)
+	public Object importValue(Object result, Class<?> expectedType)
 			throws Exception {
 		if (!ALLOW_NAN_INFINITY) {
 			if (result instanceof Double) {
@@ -303,7 +304,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 		    	}
 		    }
 		}
-		DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+		DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 		result = dataTypeManager.convertToRuntimeType(result, expectedType != DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass());
 		if (expectedType.isArray() && result instanceof ArrayImpl) {
 			return result;

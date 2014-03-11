@@ -32,6 +32,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
  * <p> This is a helper class used to obtain SQL type information for java types.
@@ -140,7 +141,7 @@ public final class JDBCSQLTypeInfo {
         TypeInfo sqlType = NAME_TO_TYPEINFO.get(typeName);
         
         if (sqlType == null) {
-        	if (DataTypeManagerService.getInstance().isArrayType(typeName)) {
+            if (DataTypeManagerService.isArrayType(typeName)) {
         		return Types.ARRAY;
         	}
             return Types.JAVA_OBJECT;
@@ -168,25 +169,6 @@ public final class JDBCSQLTypeInfo {
         }
         
         return sqlType.jdbcTypes[0];
-    } 
-    
-    /**
-     * Get the sql type from the given runtime type 
-     * @param type
-     * @return
-     */
-    public static final int getSQLTypeFromRuntimeType(Class<?> type) {
-    	if (type == null) {
-    		return Types.NULL;
-    	}
-    	
-        String name = DataTypeManagerService.getInstance().getDataTypeName(type);
-        
-        if (name == null) {
-            return Types.JAVA_OBJECT;
-        }
-        
-        return getSQLType(name);
     }
     
     /**
@@ -220,8 +202,8 @@ public final class JDBCSQLTypeInfo {
     	return NAME_TO_TYPEINFO.keySet();
     }
 
-	public static Integer getMaxDisplaySize(Class<?> dataTypeClass) {
-	    return getMaxDisplaySize(DataTypeManagerService.getInstance().getDataTypeName(dataTypeClass));
+	public static Integer getMaxDisplaySize(ITeiidServerVersion teiidVersion, Class<?> dataTypeClass) {
+	    return getMaxDisplaySize(DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
 	}
 
 	public static Integer getMaxDisplaySize(String typeName) {
@@ -232,8 +214,8 @@ public final class JDBCSQLTypeInfo {
 	    return ti.maxDisplaySize;
 	}
 
-	public static Integer getDefaultPrecision(Class<?> dataTypeClass) {
-	    return getDefaultPrecision(DataTypeManagerService.getInstance().getDataTypeName(dataTypeClass));
+	public static Integer getDefaultPrecision(ITeiidServerVersion teiidVersion, Class<?> dataTypeClass) {
+	    return getDefaultPrecision(DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
 	}
 
 	public static Integer getDefaultPrecision(String typeName) {

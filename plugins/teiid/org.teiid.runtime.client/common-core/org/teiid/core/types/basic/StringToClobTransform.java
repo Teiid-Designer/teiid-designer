@@ -24,11 +24,19 @@ package org.teiid.core.types.basic;
 
 import org.teiid.core.types.ClobImpl;
 import org.teiid.core.types.ClobType;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.Transform;
 
 public class StringToClobTransform extends Transform {
 
 	/**
+     * @param dataTypeManager
+     */
+    public StringToClobTransform(DataTypeManagerService dataTypeManager) {
+        super(dataTypeManager);
+    }
+
+    /**
 	 * This method transforms a value of the source type into a value
 	 * of the target type.
 	 * @param value Incoming value of source type

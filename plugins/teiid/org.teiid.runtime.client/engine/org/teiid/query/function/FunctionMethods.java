@@ -1053,9 +1053,9 @@ public final class FunctionMethods {
 
 	// ================== Function = convert =====================
 
-	public static Object convert(Object src, String type)
+	public static Object convert(CommandContext commandContext, Object src, String type)
 		throws TeiidClientException {
-	    DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance();
+	    DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(commandContext.getTeiidVersion());
 		try {
 			return dataTypeManager.transformValue(src, dataTypeManager.getDataTypeClass(type));
 		} catch(Exception e) {

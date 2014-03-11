@@ -83,7 +83,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     @Override
     public DataTypeManagerService getDataTypeService() {
-        return DataTypeManagerService.getInstance();
+        return DataTypeManagerService.getInstance(getVersion());
     }
 
     @Override
@@ -832,7 +832,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     @Since("8.0.0")
     protected MetadataFactory getTempMetadataFactory() {
         if (this.metadataFactory == null) {
-            this.metadataFactory = new MetadataFactory("temp", 1, "temp", //$NON-NLS-1$ //$NON-NLS-2$
+            this.metadataFactory = new MetadataFactory(version, "temp", 1, "temp", //$NON-NLS-1$ //$NON-NLS-2$
                                                        SystemMetadata.getInstance(getVersion()).getRuntimeTypeMap(), null, null);
         }
         return this.metadataFactory;

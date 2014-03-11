@@ -10,6 +10,9 @@ package org.teiid.designer.annotation;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -46,12 +49,14 @@ public class AnnotationUtils {
      * @param annotationClass
      *
      * @return given enumValue has the given annotation on its field
-     *
-     * @throws Exception
      */
-    public static boolean hasAnnotation(Enum<?> enumValue, Class<? extends Annotation> annotationClass) throws Exception {
-        Field enumField = enumValue.getClass().getField(enumValue.name());
-        return hasAnnotation(enumField, annotationClass);
+    public static boolean hasAnnotation(Enum<?> enumValue, Class<? extends Annotation> annotationClass) {
+        try {
+            Field enumField = enumValue.getClass().getField(enumValue.name());
+            return hasAnnotation(enumField, annotationClass);
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     /**
@@ -79,12 +84,14 @@ public class AnnotationUtils {
      * @param annotationClass
      *
      * @return the annotation of the given class from the given enumValue
-     *
-     * @throws Exception
      */
-    public static <T extends Annotation> T getAnnotation(Enum<?> enumValue, Class<T> annotationClass) throws Exception {
-        Field enumField = enumValue.getClass().getField(enumValue.name());
-        return getAnnotation(enumField, annotationClass);
+    public static <T extends Annotation> T getAnnotation(Enum<?> enumValue, Class<T> annotationClass) {
+        try {
+            Field enumField = enumValue.getClass().getField(enumValue.name());
+            return getAnnotation(enumField, annotationClass);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -159,5 +166,186 @@ public class AnnotationUtils {
             return true;
 
         return isGreaterOrEqualThan(new TeiidServerVersion(since.value()), currentVersion);
+    }
+
+    /**
+     * Convenience function that draws on the other functions to give a single
+     * answer of whether the given object is applicable for the given teiid version
+     *
+     * @param obj
+     * @param currentVersion
+     * @return true if the given object is applicable for the given teiid version
+     */
+    public static boolean isApplicable(Class<?> obj, ITeiidServerVersion currentVersion) {
+        if (hasAnnotation(obj, Removed.class)) {
+            Removed removed = getAnnotation(obj, Removed.class);
+            if (isGreaterThanOrEqualTo(removed, currentVersion)) {
+                return false;
+            }
+        }
+
+        if (hasAnnotation(obj, Since.class)) {
+            Since since = getAnnotation(obj, Since.class);
+            if (!isGreaterThanOrEqualTo(since, currentVersion)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Convenience function that draws on the other functions to give a single
+     * answer of whether the given object is applicable for the given teiid version
+     *
+     * @param obj
+     * @param currentVersion
+     * @return true if the given object is applicable for the given teiid version
+     */
+    public static boolean isApplicable(AccessibleObject obj, ITeiidServerVersion currentVersion) {
+        if (hasAnnotation(obj, Removed.class)) {
+            Removed removed = getAnnotation(obj, Removed.class);
+            if (isGreaterThanOrEqualTo(removed, currentVersion)) {
+                return false;
+            }
+        }
+
+        if (hasAnnotation(obj, Since.class)) {
+            Since since = getAnnotation(obj, Since.class);
+            if (!isGreaterThanOrEqualTo(since, currentVersion)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Convenience function that draws on the other functions to give a single
+     * answer of whether the given object is applicable for the given teiid version
+     *
+     * @param obj
+     * @param currentVersion
+     * @return true if the given object is applicable for the given teiid version
+     */
+    public static boolean isApplicable(Enum<?> obj, ITeiidServerVersion currentVersion) {
+        try {
+            if (hasAnnotation(obj, Removed.class)) {
+                Removed removed = getAnnotation(obj, Removed.class);
+                if (isGreaterThanOrEqualTo(removed, currentVersion)) {
+                    return false;
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+        try {
+            if (hasAnnotation(obj, Since.class)) {
+                Since since = getAnnotation(obj, Since.class);
+                if (!isGreaterThanOrEqualTo(since, currentVersion)) {
+                    return false;
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static class UpdateVersionPair implements Comparable<UpdateVersionPair>{
+
+        private final ITeiidServerVersion version;
+
+        private final String replacedValue;
+
+        public UpdateVersionPair(ITeiidServerVersion version, String replacedValue) {
+            this.version = version;
+            this.replacedValue = replacedValue;
+        }
+
+        /**
+         * @return the version
+         */
+        public ITeiidServerVersion getVersion() {
+            return this.version;
+        }
+
+        /**
+         * @return the replacedValue
+         */
+        public String getReplacedValue() {
+            return this.replacedValue;
+        }
+
+        @Override
+        public int compareTo(UpdateVersionPair other) {
+            if (getVersion().equals(other.getVersion()))
+                return 0;
+            else if (getVersion().isLessThan(other.getVersion()))
+                return -1;
+            else
+                return 1;
+        }
+    }
+
+    /**
+     * @param enumValue
+     * @param updatedName
+     * @param currentVersion
+     *
+     * @return old name from {@link Updated} name or given updated name depending on teiid version
+     */
+    public static String getUpdatedName(Enum<?> enumValue, String updatedName, ITeiidServerVersion currentVersion) {
+        if (! hasAnnotation(enumValue, Updated.class))
+            return updatedName;
+
+        Updated updated = getAnnotation(enumValue, Updated.class);
+        String[] versions = updated.version();
+        String[] replacements = updated.replaces();
+
+        List<UpdateVersionPair> pairs = new ArrayList<UpdateVersionPair>();
+        for (int i = 0; i < versions.length; ++i) {
+            String version = versions[i];
+            if (i >= replacements.length)
+                break;
+
+            String replaced = replacements[i];
+            pairs.add(new UpdateVersionPair(new TeiidServerVersion(version), replaced));
+        }
+
+        Collections.sort(pairs);
+
+        // Check biggest version and if current version is greater than
+        // it then returned the updated name since the latest value is
+        // the correct one.
+        UpdateVersionPair maxPair = pairs.get(pairs.size() - 1);
+        if (currentVersion.isGreaterThanOrEqualTo(maxPair.getVersion()))
+            return updatedName;
+
+        UpdateVersionPair rangePair = null;
+        for (UpdateVersionPair pair : pairs) {
+            if (rangePair == null) {
+                rangePair = pair;
+                continue;
+            }
+
+            if (currentVersion.isLessThan(pair.getVersion())) {
+                // the last rangePair will have been selected
+                break;
+            }
+
+            rangePair = pair;
+            if (currentVersion.equals(rangePair.getVersion())) {
+                // the new rangePair is the correct version 
+                break;
+            }
+
+            // current version is greater than range pair so keep iterating
+        }
+
+        // Found appropriate version pair so return its replaced value
+        return rangePair.getReplacedValue();
     }
 }

@@ -31,7 +31,8 @@ public class FloatingNumberToBigIntegerTransform extends Transform {
 
 	private Class<?> sourceType;
 	
-	public FloatingNumberToBigIntegerTransform(Class<?> sourceType) {
+	public FloatingNumberToBigIntegerTransform(DataTypeManagerService dataTypeManager, Class<?> sourceType) {
+	    super(dataTypeManager);
 		this.sourceType = sourceType;
 	}
 

@@ -65,7 +65,7 @@ public class SystemFunctionManager {
 			    // Should never happen as SystemSourcTe doesn't change
 			    System.err.println(Messages.getString(Messages.ERR.ERR_015_001_0005, report));
 			}
-			systemFunctionTree = new FunctionTree(CoreConstants.SYSTEM_MODEL, systemSource, true);
+			systemFunctionTree = new FunctionTree(teiidVersion, CoreConstants.SYSTEM_MODEL, systemSource, true);
     	}
     	return systemFunctionTree;
     }
