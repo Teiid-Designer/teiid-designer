@@ -20,6 +20,99 @@ import org.teiid.runtime.client.TeiidClientException;
  */
 public class PropertiesUtils {
 
+    /**
+     * Performs a correct deep clone of the properties object by capturing
+     * all properties in the default(s) and placing them directly into the
+     * new Properties object.  If the input is an instance of
+     * <code>UnmodifiableProperties</code>, this method returns an
+     * <code>UnmodifiableProperties</code> instance around a new (flattened)
+     * copy of the underlying Properties object.
+     */
+    public static Properties clone( Properties props ) {
+        return clone(props, null, false);
+    }
+
+    /**
+     * Performs a correct deep clone of the properties object by capturing
+     * all properties in the default(s) and placing them directly into the
+     * new Properties object.  If the input is an instance of
+     * <code>UnmodifiableProperties</code>, this method returns an
+     * <code>UnmodifiableProperties</code> instance around a new (flattened)
+     * copy of the underlying Properties object.
+     */
+    public static Properties clone( Properties props, Properties defaults, boolean deepClone ) {
+        Properties result = null;
+        if ( defaults != null ) {
+            if ( deepClone ) {
+                defaults = clone(defaults);
+            }
+            result = new Properties(defaults);
+        } else {
+            result = new Properties();
+        }
+        
+        putAll(result, props);
+        
+        return result;
+    }
+
+    /**
+     * <p>This method is intended to replace the use of the <code>putAll</code>
+     * method of <code>Properties</code> inherited from <code>java.util.Hashtable</code>.
+     * The problem with that method is that, since it is inherited from
+     * <code>Hashtable</code>, <i>default</i> properties are lost.
+     * </p>
+     * <p>For example, the following code
+     * <pre><code>
+     * Properties a;
+     * Properties b;
+     * //initialize ...
+     * a.putAll(b);
+     * </code></pre>
+     * will fail <i>if</i> <code>b</code> had been constructed with a default
+     * <code>Properties</code> object.  Those defaults would be lost and
+     * not added to <code>a</code>.</p>
+     *
+     * <p>The above code could be correctly performed with this method,
+     * like this:
+     * <pre><code>
+     * Properties a;
+     * Properties b;
+     * //initialize ...
+     * PropertiesUtils.putAll(a,b);
+     * </code></pre>
+     * In the above example, <code>a</code> is modified - properties are added to
+     * it (note that if <code>a</code> has defaults they will remain unaffected.)
+     * The properties from <code>b</code>, <i>including defaults</i>, will be
+     * added to <code>a</code> using its <code>setProperty</code> method -
+     * these new properties will overwrite any pre-existing ones of the same
+     * name.
+     * </p>
+     *
+     * @param addToThis This Properties object is modified; the properties
+     * of the other parameter are added to this.  The added property values
+     * will replace any current property values of the same names.
+     * @param withThese The properties (including defaults) of this
+     * object are added to the "addToThis" parameter.
+     */
+    public static void putAll(Properties addToThis,
+                              Properties withThese) {
+        if ( withThese != null && addToThis != null ) {
+            Enumeration enumeration = withThese.propertyNames();
+            while ( enumeration.hasMoreElements() ) {
+                String propName = (String) enumeration.nextElement();
+                Object propValue = withThese.get(propName);
+                if ( propValue == null ) {
+                    //defaults can only be retrieved as strings
+                    propValue = withThese.getProperty(propName);
+                }
+                if ( propValue != null ) {
+                    addToThis.put(propName, propValue);
+                }
+            }
+        }
+    }
+
     public static boolean getBooleanProperty(Properties props, String propName, boolean defaultValue) {
         String stringVal = props.getProperty(propName);
         if (stringVal == null) {

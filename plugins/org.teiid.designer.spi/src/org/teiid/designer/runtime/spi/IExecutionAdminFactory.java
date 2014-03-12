@@ -38,17 +38,19 @@ public interface IExecutionAdminFactory {
 
     /**
      * Get the {@link Driver} for the Teiid Instance
+     * @param teiidVersion
      *
      * @return the driver
      */
-    Driver getTeiidDriver();
+    Driver getTeiidDriver(ITeiidServerVersion teiidVersion);
 
     /**
      * Get the query service
+     * @param teiidVersion
      * 
      * @return instance of {@link IQueryService}
      */
-    IQueryService getQueryService();
+    IQueryService getQueryService(ITeiidServerVersion teiidVersion);
 
     /**
      * Get the location of this class' parent plugin

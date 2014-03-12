@@ -48,6 +48,161 @@ public class Messages {
     }
 
     @SuppressWarnings( "javadoc" )
+    public enum ExecutionAdmin {
+        mergeVdbUnsupported,
+        dynamicVdbInvalidName,
+        jarDeploymentJarNotFound,
+        jarDeploymentFailed,
+        jarDeploymentJarNotReadable,
+        jdbcSourceForClassNameNotFound,
+        dataSourceTypeDoesNotExist,
+        errorCreatingDataSource,
+        invalidPropertyValue,
+        cannotConnectToServer,
+        serverDeployUndeployProblemPingingTeiidJdbc,
+        invalidPropertyEditorConstrainedValue,
+        invalidPropertyEditorValue,
+        invalidNullPropertyValue,
+        missingPropertyDefinition,
+        unknownPropertyType,Property,
+        connectorDetailedName,
+        failedToGetDriverMappings,
+        cannotLoadDriverClass;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT +  name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
+    public enum TeiidURL {
+        invalid_format,
+        invalid_ipv6_hostport,
+        invalid_hostport,
+        non_numeric_port,
+        port_out_of_range;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT + name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
+    public enum Socket {
+        keystore_not_found,
+        alias_no_key_entry,
+        anon_not_available;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT + name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
+    public enum GSS {
+        client_prop_missing,
+        ambigious_gss_selection,
+        no_gss_selection,
+        system_prop_missing,
+        gss_auth_failed,
+        no_krb_ticket;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT +  name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
+    public enum JDBC {
+        Connection_success,
+        continuous,
+        DataTypeTransformer_blob_too_big,
+        DataTypeTransformer_Err_converting,
+        DeferredMetadataProvider_Invalid_data,
+        Err_registering,
+        forward_only_resultset,
+        Method_not_supported,
+        MMCallableStatement_Param_not_found,
+        MMConnection_Cant_use_closed_connection,
+        MMConnection_Commit_success,
+        MMConnection_Concurrency_type_not_supported,
+        MMConnection_Connection_close_success,
+        MMConnection_Err_closing_stmts,
+        MMConnection_Err_connection_close,
+        MMConnection_Rollback_success,
+        MMConnection_Scrollable_type_not_supported,
+        MMConnection_Session_success,
+        MMConnection_SQL_cannot_be_null,
+        MMDatabaseMetadata_Best_row_sucess,
+        MMDatabaseMetadata_Catalog_success,
+        MMDatabaseMetadata_Err_getting_primary_keys,
+        MMDatabaseMetadata_getCols_error,
+        MMDatabaseMetadata_getCols_success,
+        MMDatabaseMetadata_getCrossRef_error,
+        MMDatabaseMetadata_getCrossRef_success,
+        MMDatabaseMetadata_getExpKey_error,
+        MMDatabaseMetadata_getExpKey_success,
+        MMDatabaseMetadata_getImpKey_error,
+        MMDatabaseMetadata_getImpKey_success,
+        MMDatabaseMetadata_getIndex_error,
+        MMDatabaseMetadata_getIndex_success,
+        MMDatabaseMetadata_getPrimaryKey_error,
+        MMDatabaseMetadata_getPrimaryKey_success,
+        MMDatabaseMetadata_getProcCol_error,
+        MMDatabaseMetadata_getProcCol_success,
+        MMDatabaseMetadata_getProc_error,
+        MMDatabaseMetadata_getProc_success,
+        MMDatabaseMetadata_getRefKey_success,
+        MMDatabaseMetadata_getschema_error,
+        MMDatabaseMetadata_getschema_success,
+        MMDatabaseMetadata_getTable_error,
+        MMDatabaseMetadata_getTable_success,
+        MMDatabaseMetadata_getTableType_success,
+        MMDatabaseMetadata_getTypes_success,
+        MMDatabaseMetadata_getVersionCols_success,
+        MMPreparedStatement_Err_prep_sql,
+        MMPreparedStatement_Invalid_param_index,
+        MMResultSet_cannot_convert_to_binary_stream,
+        MMResultSet_Cant_call_closed_resultset,
+        MMResultsImpl_Col_doesnt_exist,
+        MMStatement_Bad_timeout_value,
+        MMStatement_Close_stmt_success,
+        MMStatement_Error_timing_out,
+        MMStatement_Invalid_During_Transaction,
+        MMStatement_Invalid_fetch_size,
+        MMStatement_Invalid_field_size,
+        MMStatement_Stmt_closed,
+        MMStatement_Success_query,
+        MMStatement_Timeout_before_complete,
+        MMStatement_Timeout_ocurred_in_Statement,
+        MMXAConnection_rolling_back,
+        MMXAConnection_rolling_back_error,
+        PlanNode_unexpected_element,
+        ResultsImpl_Invalid_col_index,
+        ResultsImpl_Op_invalid_fwd_only,
+        ResultsImpl_The_cursor_is_not_on_a_valid_row_1,
+        StatementImpl_set_result_set,
+        StatementImpl_show_update_count,
+        StaticMetadataProvider_Invalid_column,
+        StoredProcedureResultsImpl_Invalid_parameter_index__0_2,
+        StoredProcedureResultsImpl_ResultSet_cursor_is_after_the_last_row_1,
+        stream_closed,
+        Unable_to_read_data_from_stream,
+        urlFormat,
+        WarningUtil_Failures_occurred,
+        wrong_class;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT +  name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
     public enum ProcedureService {
         procedureServiceTextTableSqlTemplate,
         procedureServiceTextInvokeHttpTableSqlTemplate,
@@ -171,7 +326,8 @@ public class Messages {
     public enum Misc {
         ReflectionHelper_errorConstructing,
         TeiidVersionTooLow,
-        Evaluator_noValue;
+        Evaluator_noValue,
+        ExceptionHolder_convertedException;
 
         @Override
         public String toString() {
@@ -802,6 +958,18 @@ public class Messages {
 
     @SuppressWarnings( "javadoc" )
     public enum TEIID {
+        TEIID10006,
+        TEIID10007,
+        TEIID10008,
+        TEIID10009,
+        TEIID10010,
+        TEIID10011,
+        TEIID10013,
+        TEIID10014,
+        TEIID10015,
+        TEIID10016,
+        TEIID10017,
+        TEIID10018,
         TEIID10030,
         TEIID10032,
         TEIID10052,
@@ -822,6 +990,22 @@ public class Messages {
         TEIID10080,
         TEIID10081,
         TEIID10083,
+        TEIID20000,
+        TEIID20001,
+        TEIID20005,
+        TEIID20007,
+        TEIID20009,
+        TEIID20016,
+        TEIID20018,
+        TEIID20019,
+        TEIID20020,
+        TEIID20021,
+        TEIID20023,
+        TEIID20028,
+        TEIID20029,
+        TEIID20030,
+        TEIID20031,
+        TEIID20032,
         TEIID30001,
         TEIID30002,
         TEIID30003,

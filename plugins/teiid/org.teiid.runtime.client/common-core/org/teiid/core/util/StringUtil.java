@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * This is a common place to put String utility methods.
@@ -93,6 +94,71 @@ public final class StringUtil {
         }
 	    return source;    
 	}
+
+    /**
+     * Return a stringified version of the array.
+     * @param array the array
+     * @param delim the delimiter to use between array components
+     * @return the string form of the array
+     */
+    public static String toString( final Object[] array, final String delim ) {
+        return toString(array, delim, true);
+    }
+    
+    /**
+     * Return a stringified version of the array.
+     * @param array the array
+     * @param delim the delimiter to use between array components
+     * @return the string form of the array
+     */
+    public static String toString( final Object[] array, final String delim, boolean includeBrackets) {
+        if ( array == null ) {
+            return ""; //$NON-NLS-1$
+        }
+        final StringBuffer sb = new StringBuffer();
+        if (includeBrackets) {
+            sb.append('[');
+        }
+        for (int i = 0; i < array.length; ++i) {
+            if ( i != 0 ) {
+                sb.append(delim);
+            }
+            sb.append(array[i]);
+        }
+        if (includeBrackets) {
+            sb.append(']');
+        }
+        return sb.toString();
+    }
+
+    
+    /**
+     * Return a stringified version of the array, using a ',' as a delimiter
+     * @param array the array
+     * @return the string form of the array
+     * @see #toString(Object[], String)
+     */
+    public static String toString( final Object[] array ) {
+        return toString(array, ",", true); //$NON-NLS-1$
+    }
+
+	/**
+     * Split a string into pieces based on delimiters.  Similar to the perl function of
+     * the same name.  The delimiters are not included in the returned strings.
+     * @see #join
+     *
+     * @param str Full string
+     * @param splitter Characters to split on
+     * @return List of String pieces from full string
+     */
+    public static List<String> split(String str, String splitter) {
+        StringTokenizer tokens = new StringTokenizer(str, splitter);
+        ArrayList<String> l = new ArrayList<String>(tokens.countTokens());
+        while(tokens.hasMoreTokens()) {
+            l.add(tokens.nextToken());
+        }
+        return l;
+    }
 
 	/**
      * Return the last token in the string.

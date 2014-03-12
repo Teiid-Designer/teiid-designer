@@ -242,6 +242,25 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
             return appDataTypes;
         }
+
+        /**
+         * Return enum value for code but only if available for given teiid version
+         *
+         * @param teiidVersion
+         * @param ordinal
+         * @return enum value for ordinal
+         */
+        public static DefaultDataTypes valueOf(ITeiidServerVersion teiidVersion, int ordinal) {
+            for (DefaultDataTypes dataType : DefaultDataTypes.values()) {
+                if (! AnnotationUtils.isApplicable(dataType, teiidVersion))
+                    continue;
+
+                if (dataType.ordinal() == ordinal)
+                    return dataType;
+            }
+
+            return null;
+        }
     }
 
     /**

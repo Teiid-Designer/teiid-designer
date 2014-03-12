@@ -51,8 +51,12 @@ public interface ITeiidServerVersion {
      * teiid 8.6 server version - required due to method added to Admin API
      */
     String TEIID_8_6_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
-    
-    
+
+    /**
+     * Teiid version property constant
+     */
+    String TEIID_VERSION_PROPERTY = "org.teiid.version"; //$NON-NLS-1$
+
     /**
      * @return the major version segment
      */
