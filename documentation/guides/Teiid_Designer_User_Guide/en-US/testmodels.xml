@@ -26,7 +26,7 @@
 			Development perspective will be available to use as your import source. From these import wizards you can also create 
 			new connection profiles or edit existing connection profiles without leaving the wizard. 
 		</para>
-		<para>The <xref linkend="servers-view" /> provides access to running Teiid instances and shows data source
+		<para>The Teiid server contents in the <xref linkend="server-setup-section" /> provides access to running Teiid instances and shows data source
 			and VDB artifacts deployed there.  The "Create Data Source" action available on this view utilizes the available 
 			and applicable connection profiles.
 		</para>

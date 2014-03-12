@@ -567,14 +567,12 @@
             </para>
             <itemizedlist>
                 <listitem>Consuming a SOAP Web Service</listitem>
-                <listitem>Creating a REST WAR archive</listitem>
-                <listitem>Creating a SOAP WAR archive</listitem>
                 <listitem>Modelling from a Flat File Source (a text file)</listitem>
                 <listitem>Modelling from a JDBC Data Source</listitem>
                 <listitem>Modelling from a Local XML File Source</listitem>
                 <listitem>Modelling from a Remote XML File Source</listitem>
                 <listitem>Modelling from a Teiid Data Source (deployed on server)</listitem>
-                <listitem>Connecting to a Teiid Server</listitem>
+                <listitem>Managing your a Teiid Server</listitem>
             </itemizedlist>
         </section>
         
@@ -740,6 +738,7 @@
 			complete state, meaning that there are no "missing pieces" and 
 			no references to non-existent entities. Validation of multiple models 
 			checks that all inter-model dependencies are present and resolvable.</para>
+		  <para>Modle and VDB validation is scoped to a model project.</para>
 		  <para>Models must always be validated when they are deployed in a VDB for data 
 			access purposes.</para>
 		  <para>Teiid Designer will automatically validate all models 
@@ -763,7 +762,7 @@
 			by simply selecting the table, view, procedure or XML document. The
 			preview functionality insures that data access behavior in Teiid Designer will
 			reliably match when the VDB is deployed to the Server. 
-			( See:  <xref linkend="teiid-designer-server-section"/> for details)</para> 
+			( See:  <xref linkend="server-management-chapter"/> for details)</para> 
 			
 			<para> Previewing information is a fast and easy way to sample the data. Of course, to
 			run more complicated queries like what your application likely uses,

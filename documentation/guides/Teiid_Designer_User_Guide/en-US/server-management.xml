@@ -78,12 +78,16 @@
                     <listitem>
                         <para>Version 8.4 - supports Teiid Server 8.4, installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
                     </listitem>
+                    <listitem>
+                        <para>Version 8.6 - supports Teiid Server 8.5, installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
+                    </listitem>
                 </itemizedlist>
                 This allows multiple client runtime support from within a single installation of Teiid Designer. However, in order
                 to facilitate this support it is necessary for a default server to be chosen by the user. The setting of the default
                 server can be performed from the Teiid Server section of the Guides View or the Servers view, as described in 
                 <xref linkend="server-version-definition"/>. Care should be taken to ensure that any new models are created against
-                the correct version of server to ensure functionality and internal architecture is correct.
+                the correct version of server to ensure functionality and internal architecture is correct. Note that VDBs are validated
+                against a server version and noted as such in the editor.
             </para>
         </section>
     </section>
