@@ -258,7 +258,7 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
         try {
             return getStoredProcInfoDirect(name) != null;
         } catch (Exception e) {
-            return true;
+            return false;
         }
     }
 
