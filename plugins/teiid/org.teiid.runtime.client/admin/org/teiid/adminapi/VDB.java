@@ -23,6 +23,8 @@
 package org.teiid.adminapi;
 
 import java.util.List;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 
 /**
  * Represents a Virtual Database in the Teiid System.
@@ -44,7 +46,13 @@ public interface VDB extends AdminObject, DomainAware {
     	/**
     	 * Initial state waiting for metadata to load
     	 */
-    	LOADING,     
+		@Since("8.0.0")
+    	LOADING,
+		/**
+		 * In the vdb repository but no querable
+		 */
+		@Removed("8.0.0")
+		INACTIVE,
     	/**
     	 * In the vdb repository and querable, but not necessarily valid
     	 */
@@ -52,7 +60,9 @@ public interface VDB extends AdminObject, DomainAware {
     	/**
     	 * A invalid vdb that cannot transition to active
     	 */
+		@Since("8.0.0")
     	FAILED,
+		@Since("8.0.0")
     	REMOVED
     };
     
@@ -77,7 +87,14 @@ public interface VDB extends AdminObject, DomainAware {
      * @return the VDB version
      */
     public int getVersion();
-    
+
+	/**
+     * Get the URL for the VDB
+     * @return
+     */
+	@Removed("8.0.0")
+    public String getUrl();
+
     /**
      * Get the description of the VDB
      * @return
@@ -112,11 +129,13 @@ public interface VDB extends AdminObject, DomainAware {
      * Get the list of vdb imports
      * @return
      */
+	@Since("8.0.0")
     public List<? extends VDBImport> getVDBImports();
     
     /**
      * Get the list of other resources included in the VDB
      * @return
      */
+	@Since("8.0.0")
     public List<? extends Entry> getEntries();
 }

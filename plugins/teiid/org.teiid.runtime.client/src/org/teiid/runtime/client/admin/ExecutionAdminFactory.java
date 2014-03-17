@@ -16,6 +16,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.jdbc.TeiidDriver;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
 import org.teiid.runtime.client.query.QueryService;
 
 /**

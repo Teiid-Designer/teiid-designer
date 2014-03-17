@@ -14,7 +14,9 @@
 	  <version>8.4.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
+        <jbossas-version>7.2.0.Final</jbossas-version>
         <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
+        <version.org.jboss.jboss-dmr>1.1.6.Final</version.org.jboss.jboss-dmr>
         <version.nux>1.6</version.nux>
         <version.xom>1.2</version.xom>
     </properties>
@@ -47,6 +49,26 @@
                         </goals>
                         <configuration>
                             <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jboss.as</groupId>
+                                    <artifactId>jboss-as-cli</artifactId>
+                                    <version>${jbossas-version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.as</groupId>
+                                    <artifactId>jboss-as-controller</artifactId>
+                                    <version>${jbossas-version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.as</groupId>
+                                    <artifactId>jboss-as-controller-client</artifactId>
+                                    <version>${jbossas-version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss</groupId>
+                                    <artifactId>jboss-dmr</artifactId>
+                                    <version>${version.org.jboss.jboss-dmr}</version>
+                                </artifactItem>
                                 <artifactItem>
                                     <groupId>org.jboss</groupId>
                                     <artifactId>jboss-vfs</artifactId>
@@ -264,6 +286,22 @@
     </repositories>
     <dependencies>
         <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-cli</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jboss-dmr</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
         </dependency>
@@ -278,6 +316,26 @@
     </dependencies>
     <dependencyManagement> 
         <dependencies>
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-cli</artifactId>
+                <version>${jbossas-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller</artifactId>
+                <version>${jbossas-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller-client</artifactId>
+                <version>${jbossas-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-dmr</artifactId>
+                <version>${version.org.jboss.jboss-dmr}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>

@@ -67,11 +67,111 @@ public class Messages {
         unknownPropertyType,Property,
         connectorDetailedName,
         failedToGetDriverMappings,
-        cannotLoadDriverClass;
+        cannotLoadDriverClass,
+        admin_conn_closed,
+        invalid_parameter,
+        properties_describe,
+        import_vdbs_describe,
+        models_describe,
+        override_translators_describe,
+        data_policies_describe,
+        source_mappings_describe,
+        validity_errors_describe,
+        data_permissions_describe,
+        mapped_role_names_describe;
 
         @Override
         public String toString() {
             return getEnumName(this) + DOT +  name();
+        }
+    }
+
+    @SuppressWarnings( "javadoc" )
+    public enum VDBMetadata {
+        description_describe,
+        vdb_name_describe,
+        model_name_describe,
+        model_path_describe,
+        translator_name_describe,
+        connection_type_describe,
+        status_describe,
+        vdb_version_describe,
+        url_describe,
+        xml_deployment_describe,
+        property_name_describe,
+        property_value_describe,
+        visible_describe,
+        model_type_describe,
+        source_name_describe,
+        jndi_name_describe,
+        translator_description_describe,
+        error_path_describe,
+        severity_describe,
+        message_describe,
+        base_type_describe,
+        module_name_describe,
+        allow_create_temp_tables_describe,
+        any_authenticated_describe,
+        policy_name_describe,
+        properties_describe,
+        source_mappings_describe,
+        validity_errors_describe,
+        models_describe,
+        import_vdbs_describe,
+        import_vdb_name_describe,
+        import_vdb_version_describe,
+        import_policies_describe,
+        override_translators_describe,
+        data_policies_describe,
+        data_permissions_describe,
+        mapped_role_names_describe,
+        policy_description_describe,
+        vdb_description_describe,
+        resource_name_describe,
+        metadata_status_describe,
+        execution_id_describe,
+
+        session_id_describe,
+        start_time_describe,
+        command_describe,
+        source_request_describe,
+        node_id_describe,
+        transaction_id_describe,
+        processing_state_describe,
+        thread_state_describe,
+
+        application_name_describe,
+        created_time_describe,
+        client_host_address_describe,
+        ip_address_describe,
+        last_ping_time_describe,
+        user_name_describe,
+        security_domain_describe,
+
+        txn_created_time_describe,
+        txn_scope_describe,
+        txn_id_describe,
+
+        max_threads_describe,
+        highest_queued_describe,
+        queued_describe,
+        queue_name_describe,
+        total_submitted_describe,
+        total_completed_describe,
+        highest_active_threads_describe,
+        active_threads_describe,
+
+        allow_create_describe,
+        allow_read_describe,
+        allow_update_describe,
+        allow_delete_describe,
+        allow_execute_describe,
+        allow_alter_describe,
+        allow_language_describe;
+
+        @Override
+        public String toString() {
+            return getEnumName(this) + DOT + name();
         }
     }
 
@@ -1372,7 +1472,16 @@ public class Messages {
         TEIID60016,
         TEIID60017,
         TEIID60018,
-        TEIID70053;
+        TEIID70000,
+        TEIID70003,
+        TEIID70004,
+        TEIID70005,
+        TEIID70008,
+        TEIID70016,
+        TEIID70051,
+        TEIID70053,
+        TEIID70054,
+        TEIID70055;
 
         @Override
         public String toString() {

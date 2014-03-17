@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import org.teiid.adminapi.AdminObject;
+import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.StringUtil;

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-as-controller.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-as-cli.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-dmr.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-as-controller-client.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/nux.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xom.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-vfs.jar"/>

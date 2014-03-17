@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.LogManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -35,13 +34,16 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
+import org.teiid.adminapi.Admin;
+import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.designer.annotation.AnnotationUtils;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
-import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -50,7 +52,9 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
 
 
 
@@ -61,20 +65,10 @@ import org.teiid.runtime.client.Messages;
  */
 public class ExecutionAdmin implements IExecutionAdmin {
 
-    private static String PLUGIN_ID = "org.teiid.8.4.x";  //$NON-NLS-1$
+    private static String PLUGIN_ID = "org.teiid.runtime.client";  //$NON-NLS-1$
     private static String DYNAMIC_VDB_SUFFIX = "-vdb.xml"; //$NON-NLS-1$
     private static int VDB_LOADING_TIMEOUT_SEC = 300;
-    
-    /**
-     * Test VDB model
-     */
-    public static final String TEST_VDB = "<vdb name=\"ping\" version=\"1\">" + //$NON-NLS-1$
-    "<model visible=\"true\" name=\"Foo\" type=\"PHYSICAL\" path=\"/dummy/Foo\">" + //$NON-NLS-1$
-    "<source name=\"s\" translator-name=\"loopback\"/>" + //$NON-NLS-1$
-    "<metadata type=\"DDL\"><![CDATA[CREATE FOREIGN TABLE G1 (e1 string, e2 integer);]]> </metadata>" + //$NON-NLS-1$
-    "</model>" + //$NON-NLS-1$
-    "</vdb>"; //$NON-NLS-1$ +
-    
+
     private final Admin admin;
     protected Map<String, ITeiidTranslator> translatorByNameMap;
     protected Collection<String> dataSourceNames;
@@ -82,6 +76,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     protected Set<String> dataSourceTypeNames;
     private final EventManager eventManager;
     private final ITeiidServer teiidServer;
+    private final AdminSpec adminSpec;
     private Map<String, ITeiidVdb> teiidVdbs;
     private final ModelConnectionMatcher connectionMatcher;
 
@@ -100,6 +95,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         
         this.admin = admin;
         this.teiidServer = teiidServer;
+        this.adminSpec = AdminSpec.getInstance(teiidServer.getServerVersion());
         this.eventManager = teiidServer.getEventManager();
         this.connectionMatcher = new ModelConnectionMatcher();
         
@@ -115,19 +111,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public ExecutionAdmin(ITeiidServer teiidServer) throws Exception {
         ArgCheck.isNotNull(teiidServer, "server"); //$NON-NLS-1$
-        
-        ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
-        char[] passwordArray = null;
-        if (teiidAdminInfo.getPassword() != null) {
-            passwordArray = teiidAdminInfo.getPassword().toCharArray();
-        }
-        
-        this.admin = AdminFactory.getInstance().createAdmin( teiidServer.getHost(), 
-                                                                                              teiidAdminInfo.getPortNumber(), 
-                                                                                              teiidAdminInfo.getUsername(),
-                                                                                              passwordArray);
+
+        this.adminSpec = AdminSpec.getInstance(teiidServer.getServerVersion());
+
+        this.admin = adminSpec.createAdmin(teiidServer);
         ArgCheck.isNotNull(admin, "admin"); //$NON-NLS-1$
-        
+
         this.teiidServer = teiidServer;
         this.eventManager = teiidServer.getEventManager();
         this.connectionMatcher = new ModelConnectionMatcher();
@@ -382,7 +371,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         } catch (Exception ex) {
             // Failed to get mapping
-            LogManager.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.failedToGetDriverMappings, requestDriverClass));
+            TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.failedToGetDriverMappings, requestDriverClass));
         }
 
         return null;
@@ -407,22 +396,22 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     try {
                         iStream = new FileInputStream(theFile);
                     } catch (FileNotFoundException ex) {
-                        LogManager.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
+                        TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
                         continue;
                     }
                     try {
                         admin.deploy(fileName, iStream);
                     } catch (Exception ex) {
                         // Jar deployment failed
-                        LogManager.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
+                        TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
                     }
                 } else {
                     // Could not read the file
-                    LogManager.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, theFile.getPath()));
+                    TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, theFile.getPath()));
                 }
             } else {
                 // The file was not found
-                LogManager.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
+                TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, theFile.getPath()));
             }
 
         }
@@ -437,7 +426,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 try {
                     iStream = new FileInputStream(jarOrRarFile);
                 } catch (FileNotFoundException ex) {
-                    LogManager.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, jarOrRarFile.getPath()));
+                    TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, jarOrRarFile.getPath()));
                     throw ex;
                 }
                 try {
@@ -445,16 +434,16 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     refreshDataSourceTypes();
                 } catch (Exception ex) {
                     // Jar deployment failed
-                    LogManager.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, jarOrRarFile.getPath()));
+                    TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, jarOrRarFile.getPath()));
                     throw ex;
                 }
             } else {
                 // Could not read the file
-                LogManager.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, jarOrRarFile.getPath()));
+                TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotReadable, jarOrRarFile.getPath()));
             }
         } else {
             // The file was not found
-            LogManager.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, jarOrRarFile.getPath()));
+            TeiidRuntimePlugin.logError(getClass().getSimpleName(), Messages.getString(Messages.ExecutionAdmin.jarDeploymentJarNotFound, jarOrRarFile.getPath()));
         }
     }
 
@@ -834,7 +823,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
         String url = "jdbc:teiid:ping@mm://" + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
         
         try {
-            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(TEST_VDB.getBytes())); //$NON-NLS-1$
+
+            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(adminSpec.getTestVDB().getBytes())); //$NON-NLS-1$
             
             try{
                 String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
@@ -872,12 +862,16 @@ public class ExecutionAdmin implements IExecutionAdmin {
         
         throw new Exception(Messages.getString(Messages.ExecutionAdmin.cannotLoadDriverClass, driverClass));
     }
-    
+
     @Override
     @Deprecated
+    @Removed("8.0.0")
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
-        throw new UnsupportedOperationException(Messages.ExecutionAdmin.mergeVdbUnsupported);
+        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs"), getServer().getServerVersion()))
+            throw new UnsupportedOperationException(Messages.getString(Messages.ExecutionAdmin.mergeVdbUnsupported));
+
+        admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
     }
 
     /**

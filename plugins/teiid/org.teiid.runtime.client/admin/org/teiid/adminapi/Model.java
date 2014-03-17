@@ -23,6 +23,7 @@
 package org.teiid.adminapi;
 
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 
 
 /** 
@@ -94,11 +95,13 @@ public interface Model extends AdminObject {
      * Shows any validity errors present in the model
      * @return
      */
+	@Since("8.0.0")
     List<String> getValidityErrors();
     
     /**
      * Metadata Load status of the model.
      * @return
      */
+	@Since("8.0.0")
     MetadataStatus getMetadataStatus();    
 }

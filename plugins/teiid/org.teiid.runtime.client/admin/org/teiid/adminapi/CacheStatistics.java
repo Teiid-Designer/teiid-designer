@@ -19,25 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
+package org.teiid.adminapi;
 
-package org.teiid.net;
-
-import java.util.Properties;
-
-
-/**
- *
- */
-public interface ServerConnectionFactory {
+public interface CacheStatistics extends AdminObject, DomainAware {
 	
-    /**
-     * Establish a connection to the server.  
-     * @param connectionProperties The properties used by the transport to find a connection.  These 
-     * properties are typically specific to the transport.
-     * @return A connection, never null
-     * @throws ConnectionException If an error occurs communicating between client and server
-     * @throws CommunicationException If an error occurs in connecting, typically due to 
-     * problems with the connection properties (bad user name, bad password, bad host name, etc)
-     */
-	ServerConnection getConnection(Properties connectionProperties) throws CommunicationException, ConnectionException;
+	double getHitRatio();
+	
+	int getTotalEntries();
+	
+	int getRequestCount();
+
 }

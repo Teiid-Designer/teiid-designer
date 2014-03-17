@@ -21,6 +21,7 @@
  */
 package org.teiid.adminapi.impl;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,6 +34,8 @@ import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
 import org.teiid.adminapi.impl.ModelMetaData.Message;
 import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
+import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Removed;
 
 
 public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
@@ -54,6 +57,9 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 	private ConnectionType connectionType = VDB.ConnectionType.BY_VERSION;
 	private long queryTimeout = Long.MIN_VALUE;
 	private Set<String> importedModels = Collections.emptySet();
+
+	@Removed("8.0.0")
+    private String fileUrl;
 
 	public String getFullName() {
 		return getName() + VERSION_DELIM + getVersion();
@@ -95,6 +101,36 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 		this.version = version;
 	}	
 		
+	@Override
+	@Removed("8.0.0")
+	public String getUrl() {
+		return this.fileUrl;
+	}
+
+	@Removed("8.0.0")
+	public void setUrl(String url) {
+		this.fileUrl = url;
+	}
+
+	@Removed("8.0.0")	
+	public void setUrl(URL url) {
+		this.setUrl(url.toExternalForm());
+		String path = url.getPath();
+		if (path.endsWith("/")) { //$NON-NLS-1$
+			path = path.substring(0, path.length() - 1);
+		}
+		String fileName = StringUtil.getLastToken(path, "/"); //$NON-NLS-1$
+		String[] parts = fileName.split("\\."); //$NON-NLS-1$
+		if (parts[0].equalsIgnoreCase(getName()) && parts.length >= 3) {
+			try {
+				int fileVersion = Integer.parseInt(parts[parts.length - 2]);
+				this.setVersion(fileVersion);
+			} catch (NumberFormatException e) {
+				
+			}
+		}
+	}
+
 	@Override
 	public List<Model> getModels(){
 		return new ArrayList<Model>(this.models.values());

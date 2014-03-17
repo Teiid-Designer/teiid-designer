@@ -20,24 +20,45 @@
  * 02110-1301 USA.
  */
 
-package org.teiid.net;
+package org.teiid.adminapi;
 
-import java.util.Properties;
 
 
 /**
+ * An <code>AdminProcessingException</code> indicates that an error occured during processing as a result
+ * of user input.  This exception is the result of handling an invalid user
+ * request, not the result of an internal error.</p>
  *
+ * <p>This exception class is capable of containing multiple exceptions.  See
+ * {@link AdminException} for details.
  */
-public interface ServerConnectionFactory {
-	
-    /**
-     * Establish a connection to the server.  
-     * @param connectionProperties The properties used by the transport to find a connection.  These 
-     * properties are typically specific to the transport.
-     * @return A connection, never null
-     * @throws ConnectionException If an error occurs communicating between client and server
-     * @throws CommunicationException If an error occurs in connecting, typically due to 
-     * problems with the connection properties (bad user name, bad password, bad host name, etc)
+public final class AdminProcessingException extends AdminException {
+
+	private static final long serialVersionUID = -878521636838205857L;
+
+	/**
+     * No-arg ctor.
+     *
+     * @since 4.3
      */
-	ServerConnection getConnection(Properties connectionProperties) throws CommunicationException, ConnectionException;
+    public AdminProcessingException() {
+        super();
+    }
+
+    /**
+     * Construct with a message.
+     * @param msg the error message.
+     * @since 4.3
+     */
+    public AdminProcessingException(String msg) {
+        super(msg);
+    }
+    
+    public AdminProcessingException(Throwable cause) {
+    	super(cause);
+    }
+
+    public AdminProcessingException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }

@@ -23,6 +23,7 @@ package org.teiid.adminapi;
 
 
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 
 public interface DataPolicy {
 	
@@ -31,6 +32,7 @@ public interface DataPolicy {
 		DROP,
 		QUERY,
 		INSERT,
+		@Since("8.0.0")
 		MERGE,
 		UPDATE,
 		DELETE,
@@ -39,7 +41,16 @@ public interface DataPolicy {
 		STORED_PROCEDURE;
     }
 	
-	public enum PermissionType {CREATE, READ, UPDATE, DELETE, ALTER, EXECUTE, DROP, LANGUAGE};
+	public enum PermissionType {
+		CREATE,
+		READ,
+		UPDATE,
+		DELETE,
+		ALTER,
+		EXECUTE,
+		DROP,
+		@Since("8.0.0")
+		LANGUAGE};
 	
 	
 	/**
@@ -125,26 +136,31 @@ public interface DataPolicy {
 		 * Is "LANGUAGE" allowed?
 		 * @return
 		 */
+		@Since("8.0.0")
 		Boolean getAllowLanguage();
 
 		/**
 		 * The condition string
 		 */
+		@Since("8.0.0")
 		String getCondition();
 		
 		/**
 		 * The column mask string
 		 */
+		@Since("8.0.0")
 		String getMask();
 
 		/**
 		 * The column mask order
 		 */
+		@Since("8.0.0")
 		Integer getOrder();
 		
 		/**
 		 * If the condition acts as a constraint.
 		 */
+		@Since("8.0.0")
 		Boolean getConstraint();
 		
 	}

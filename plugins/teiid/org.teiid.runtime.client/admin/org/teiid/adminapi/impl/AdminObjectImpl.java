@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.teiid.adminapi.AdminObject;
 
 public abstract class AdminObjectImpl implements AdminObject, Serializable {
@@ -121,8 +120,8 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
       		throw new IllegalArgumentException("Null type"); //$NON-NLS-1$
   		Object result = this.attachments.put(type, attachment);
   		return type.cast(result);
-	}
-	
+	}	
+			
    /**
     * Remove attachment
     * 
@@ -137,7 +136,7 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 		Object result = this.attachments.remove(type);
 		return type.cast(result);
 	}
-	
+		
    /**
     * Get attachment
     * 

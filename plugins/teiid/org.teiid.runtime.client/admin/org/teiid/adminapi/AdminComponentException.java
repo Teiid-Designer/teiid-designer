@@ -20,24 +20,40 @@
  * 02110-1301 USA.
  */
 
-package org.teiid.net;
-
-import java.util.Properties;
+package org.teiid.adminapi;
 
 
 /**
+ * An <code>AdminComponentException</code> is thrown when an error occurs as a
+ * result of an internal component error.
  *
+ * <p>This exception class is capable of containing multiple exceptions.  See
+ * {@link AdminException} for details.
  */
-public interface ServerConnectionFactory {
-	
+public final class AdminComponentException extends AdminException {
+
+	private static final long serialVersionUID = 7117721841515240902L;
+
+
+    public AdminComponentException() {
+        super();
+    }
+
     /**
-     * Establish a connection to the server.  
-     * @param connectionProperties The properties used by the transport to find a connection.  These 
-     * properties are typically specific to the transport.
-     * @return A connection, never null
-     * @throws ConnectionException If an error occurs communicating between client and server
-     * @throws CommunicationException If an error occurs in connecting, typically due to 
-     * problems with the connection properties (bad user name, bad password, bad host name, etc)
+     * Construct with a message.
+     * @param msg the error message.
+     * @since 4.3
      */
-	ServerConnection getConnection(Properties connectionProperties) throws CommunicationException, ConnectionException;
+    public AdminComponentException(String msg) {
+        super(msg);
+    }
+    
+    public AdminComponentException(Throwable cause) {
+    	super(cause);
+    }
+    
+    public AdminComponentException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+
 }
