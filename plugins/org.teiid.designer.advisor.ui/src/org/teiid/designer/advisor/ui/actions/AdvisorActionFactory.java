@@ -110,6 +110,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 	static IAction ACTION_NEW_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_TEIID_MODEL_PROJECT;
 	static IAction ACTION_DEFINE_VIEW_TABLE;
+	static IAction ACTION_DEFINE_VIEW_PROCEDURE;
 	static IAction ACTION_DEFINE_REST_PROCEDURE;
 
 	static void loadHandlers() {
@@ -679,7 +680,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.CREATE_AND_TEST_VDB) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FLAT_FILE_SOURCE) ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_FROM_JDBC_SOURCE) ||
- id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE)
+				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_LOCAL_SOURCE)
             || id.equalsIgnoreCase(CHEAT_SHEET_IDS.MODEL_XML_REMOTE_SOURCE)
             ||
 				id.equalsIgnoreCase(CHEAT_SHEET_IDS.MULTI_SOURCE_VDB) ) {
@@ -937,8 +938,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.DEFINE_MODELS, ASPECT_DEFINE_MODELS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_CONNECTIONS, ASPECT_MANAGE_CONNECTIONS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MODEL_DATA_SOURCES, ASPECT_MODEL_DATA_SOURCES);
-		//addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_REST_WS, ASPECT_CONSUME_REST_WS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_REST_WS, ASPECT_CONSUME_REST_WS);
 //		addMenuForAspect(manager, MODELING_ASPECT_LABELS.CONSUME_SOAP_WS, ASPECT_CONSUME_SOAP_WS);
+		addMenuForAspect(manager, MODELING_ASPECT_LABELS.DEFINE_MODEL_OBJECTS, ASPECT_DEFINE_MODEL_OBJECTS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.MANAGE_VDBS, ASPECT_MANAGE_VDBS);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEIID_SERVER, ASPECT_TEIID_SERVER);
 		addMenuForAspect(manager, MODELING_ASPECT_LABELS.TEST, ASPECT_TEST);
@@ -1104,6 +1106,14 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         if (commandId.equalsIgnoreCase(COMMAND_IDS.REFRESH_TEIID_SERVER)) {
             return ACTION_REFRESH_TEIID_SERVER;
         }
+        
+        if (commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
+            return ACTION_DEFINE_VIEW_TABLE;
+        }
+        
+        if (commandId.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_PROCEDURE)) {
+            return ACTION_DEFINE_VIEW_PROCEDURE;
+        }
 
 		return null;
 	}
@@ -1163,6 +1173,9 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		ACTION_REFRESH_TEIID_SERVER = createAction(COMMAND_IDS.REFRESH_TEIID_SERVER);
 		ACTION_NEW_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.NEW_TEIID_MODEL_PROJECT);
 		ACTION_DEFINE_TEIID_MODEL_PROJECT = createAction(COMMAND_IDS.DEFINE_TEIID_MODEL_PROJECT);
+		ACTION_DEFINE_VIEW_TABLE = createAction(COMMAND_IDS.DEFINE_VIEW_TABLE);
+		ACTION_DEFINE_VIEW_PROCEDURE = createAction(COMMAND_IDS.DEFINE_VIEW_PROCEDURE);
+		ACTION_DEFINE_REST_PROCEDURE = createAction(COMMAND_IDS.NEW_OBJECT_REST_PROCEDURE);
 		
 	}
 	
@@ -1211,7 +1224,7 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
             IExtension[] extensions = extensionPoint.getExtensions();
 
             if (extensions.length != 0) {
-                List temp = new ArrayList();
+                List<IConfigurationElement> temp = new ArrayList<IConfigurationElement>();
 
                 for (int i = 0; i < extensions.length; ++i) {
                     IConfigurationElement[] elements = extensions[i].getConfigurationElements();

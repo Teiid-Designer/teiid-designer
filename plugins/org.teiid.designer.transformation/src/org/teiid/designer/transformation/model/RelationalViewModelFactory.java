@@ -24,6 +24,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
 import org.teiid.designer.relational.RelationalPlugin;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
@@ -182,5 +183,14 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 			}
         }
     }
+
+	@Override
+	protected void applyProcedureExtensionProperties(
+			RelationalProcedure procedureRef, Procedure procedure) {
+		RelationalViewProcedure viewProcedure = (RelationalViewProcedure)procedureRef;
+		RestModelExtensionAssistant.setRestProperties(
+				procedure, viewProcedure.getRestMethod(), viewProcedure.getRestUri(),  viewProcedure.getRestCharSet(),  viewProcedure.getRestHeaders());
+		super.applyProcedureExtensionProperties(procedureRef, procedure);
+	}
 
 }

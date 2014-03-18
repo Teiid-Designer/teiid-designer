@@ -18,6 +18,16 @@ import org.teiid.designer.relational.model.RelationalProcedure;
 public class RelationalViewProcedure extends RelationalProcedure {
 
     private String transformationSQL;
+    
+    private boolean restEnabled;
+    
+    private String restMethod;
+    
+    private String restUri;
+    
+    private String restCharSet;
+    
+    private String restHeaders;
 
     /**
      * 
@@ -61,6 +71,95 @@ public class RelationalViewProcedure extends RelationalProcedure {
 	public void setSourceFunction(boolean isSourceFunction) {
 		throw new UnsupportedOperationException("RelationalViewProcedure.setSourceFunction() method is not supported");  //$NON-NLS-1$
 	}
+	
+	/**
+	 * Rest enablement flag
+	 * 
+	 * @return
+	 */
+	public boolean isRestEnabled() {
+		return restEnabled;
+	}
+	
+	/**
+	 * Sets Rest enablement
+	 * 
+	 * @param restEnabled
+	 */
+	public void setRestEnabled(boolean restEnabled) {
+		this.restEnabled = restEnabled;
+	}
+	
+	/**
+	 * Returns the current Rest method (GET, PUT, POST, DELETE)
+	 * 
+	 * @return
+	 */
+	public String getRestMethod() {
+		return restMethod;
+	}
+	
+	/**
+	 * Sets the Rest method
+	 * 
+	 * @param restMethod
+	 */
+	public void setRestMethod(String restMethod) {
+		this.restMethod = restMethod;
+	}
+	
+	/**
+	 * Returns the current Rest URI value
+	 * 
+	 * @return
+	 */
+	public String getRestUri() {
+		return restUri;
+	}
+	
+	/**
+	 * Sets the Rest URI value
+	 * 
+	 * @param restUri
+	 */
+	public void setRestUri(String restUri) {
+		this.restUri = restUri;
+	}
     
+	/**
+	 * Returns the current Rest CharSet value
+	 * 
+	 * @return
+	 */
+	public String getRestCharSet() {
+		return restCharSet;
+	}
+	
+	/**
+	 * Sets the Rest CharSet value
+	 * 
+	 * @param restCharSet
+	 */
+	public void setRestCharSet(String restCharSet) {
+		this.restCharSet = restCharSet;
+	}
+	
+	/**
+	 * Returns the current Rest Headers value
+	 * 
+	 * @return
+	 */
+	public String getRestHeaders() {
+		return restHeaders;
+	}
+	
+	/**
+	 * Sets the Rest Headers value
+	 * 
+	 * @param restHeaders
+	 */
+	public void setRestHeaders(String restHeaders) {
+		this.restHeaders = restHeaders;
+	}
     
 }

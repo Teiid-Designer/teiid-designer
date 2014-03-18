@@ -227,5 +227,11 @@
             metaclassProviderClass="org.teiid.designer.metamodels.relational.extension.CoreExtendableClassnameProvider">
       </definition>
    </extension>
-   
+      <extension
+         point="org.teiid.designer.extension.modelExtensionProvider">
+      <extensionDefinition
+            className="org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant"
+            path="rest.mxd">
+      </extensionDefinition>
+   </extension>
 </plugin>

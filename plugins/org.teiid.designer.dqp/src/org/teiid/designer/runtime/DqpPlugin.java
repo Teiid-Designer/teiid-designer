@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime;
 
 import java.util.ResourceBundle;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -31,8 +32,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceNotification;
 import org.teiid.designer.core.workspace.ModelWorkspaceNotificationAdapter;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant;
-import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 

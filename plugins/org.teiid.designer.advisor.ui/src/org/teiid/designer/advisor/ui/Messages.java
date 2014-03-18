@@ -95,6 +95,7 @@ public class Messages  extends NLS {
     public static String DefineRelationalViewProcedure;
     public static String DefineRelationalViewTable;
     public static String DefineSource;
+    public static String DefineTablesViewsProcedures;
     public static String DefineTeiidModelProject;
     public static String DefineTeiidModelProject_Short;
     public static String DefineVdb;

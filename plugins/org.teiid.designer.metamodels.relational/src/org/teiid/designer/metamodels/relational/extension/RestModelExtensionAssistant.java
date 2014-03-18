@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.extension.rest;
+package org.teiid.designer.metamodels.relational.extension;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
@@ -15,11 +15,14 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.PropertyIds;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.PropertyIds;
 
 /**
  * 
@@ -72,13 +75,32 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
     }
 
     /**
-         * {@inheritDoc}
-         *
-         * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
-         */
-        @Override
-        public boolean supportsMedOperation(String proposedOperationName,
-                                            Object context) {
-            return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
+     * {@inheritDoc}
+     *
+     * @see org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant#supportsMedOperation(java.lang.String, java.lang.Object)
+     */
+    @Override
+    public boolean supportsMedOperation(String proposedOperationName,
+                                        Object context) {
+        return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
+    }
+    
+    public static boolean setRestProperties(EObject procedure, String restMethod, String restUri, String restCharSet, String restHeaders) {
+		final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        final String prefix = RestModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        final RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+        if( assistant != null ) {
+			try {
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI, restUri);
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, restMethod);
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, restCharSet);
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, restHeaders);
+			} catch (Exception e) {
+				RelationalPlugin.Util.log(e);
+				return false;
+			}
         }
+        
+        return true;
+    }
 }

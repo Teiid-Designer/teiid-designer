@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.editors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -36,6 +37,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -51,6 +53,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
@@ -101,6 +104,17 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     
     private Text javaClassText, javaMethodText, functionCategoryText, udfJarPathText; 
     private Button udfJarPathBrowse;
+    
+	private Button applyRestWarPropertiesCB;
+	
+	private String restMethodValue = RestModelExtensionConstants.METHODS.GET;
+	private Combo restMethodsCombo;
+	private String restUriValue;
+	private Text restUriText;
+	private String restCharSetValue;
+	private Combo restCharSetsCombo;
+	private String restHeadersValue;
+	private Text restHeadersText;
 
 	/**
 	 * @param parent the parent panel
@@ -477,6 +491,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     	return thePanel;
 	}
 
+	@SuppressWarnings("unused")
 	private Composite createPropertiesPanel(Composite parent) {
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
 		GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
@@ -510,6 +525,117 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	                handleInfoChanged();
 	            }
 	        });
+	        
+			REST_PROPERTIES : {
+				Group restGroup = WidgetFactory.createGroup(thePanel, Messages.restOptions, SWT.FILL, 1, 2);
+				GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+				gd.horizontalSpan=4;
+				restGroup.setLayoutData(gd);
+				
+				this.applyRestWarPropertiesCB = WidgetFactory.createCheckBox(restGroup, Messages.enableRestForThisProcedure); //$NON-NLS-1$
+				this.applyRestWarPropertiesCB.setEnabled(true);
+				this.applyRestWarPropertiesCB.setSelection(true);
+
+				gd = new GridData();
+				gd.horizontalSpan=2;
+				this.applyRestWarPropertiesCB.setLayoutData(gd);
+				this.applyRestWarPropertiesCB.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						boolean checked = applyRestWarPropertiesCB.getSelection();
+						getRelationalReference().setRestEnabled(checked);
+						restMethodsCombo.setEnabled(checked);
+						restUriText.setEnabled(checked);
+						restCharSetsCombo.setEnabled(checked);
+						restHeadersText.setEnabled(checked);
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
+				
+				label = new Label(restGroup, SWT.NONE);
+		        label.setText(Messages.restMethod);
+		        label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		        
+				restMethodsCombo = new Combo(restGroup, SWT.NONE | SWT.READ_ONLY);
+				gd = new GridData(GridData.FILL_HORIZONTAL);
+				gd.verticalAlignment = GridData.CENTER;
+				gd.horizontalSpan = 1;
+				restMethodsCombo.setLayoutData(gd);
+				
+				List<String> comboItems = new ArrayList<String>();
+				for( String str : RestModelExtensionConstants.METHODS_ARRAY ) {
+					comboItems.add(str);
+				}
+				WidgetUtil.setComboItems(restMethodsCombo, comboItems, null, true);
+				restMethodsCombo.addSelectionListener(new SelectionAdapter() {
+		            @Override
+		            public void widgetSelected( SelectionEvent ev ) {
+		            	selectMethodComboItem(restMethodsCombo.getSelectionIndex());
+		            }
+		        });
+				
+				label = new Label(restGroup, SWT.NONE);
+				label.setText(Messages.restUri);
+				label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+				// text field for named type
+				this.restUriText = WidgetFactory.createTextField(restGroup, GridData.FILL_HORIZONTAL);
+				this.restUriText.setToolTipText(Messages.restUriTooltip);
+				this.restUriText.setEditable(true);
+				this.restUriText.addModifyListener(new ModifyListener() {
+					
+					@Override
+					public void modifyText(ModifyEvent e) {
+						restUriValue = restUriText.getText();
+						getRelationalReference().setRestUri(restUriValue);
+					}
+				});
+				label = new Label(restGroup, SWT.NONE);
+		        label.setText(Messages.restCharSet);
+		        label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		        
+		        
+				restCharSetsCombo = new Combo(restGroup, SWT.NONE | SWT.READ_ONLY);
+				gd = new GridData(GridData.FILL_HORIZONTAL);
+				gd.verticalAlignment = GridData.CENTER;
+				gd.horizontalSpan = 1;
+				restCharSetsCombo.setLayoutData(gd);
+				
+				comboItems = new ArrayList<String>();
+				for( String str : RestModelExtensionConstants.CHARSETS_ARRAY ) {
+					comboItems.add(str);
+				}
+				WidgetUtil.setComboItems(restCharSetsCombo, comboItems, null, true);
+				restCharSetsCombo.addSelectionListener(new SelectionAdapter() {
+		            @Override
+		            public void widgetSelected( SelectionEvent ev ) {
+		            	selectCharSetComboItem(restCharSetsCombo.getSelectionIndex());
+		            }
+		        });
+				
+				label = new Label(restGroup, SWT.NONE);
+				label.setText(Messages.restHeaders);
+				label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+
+				// text field for named type
+				this.restHeadersText = WidgetFactory.createTextField(restGroup, GridData.FILL_HORIZONTAL);
+				this.restHeadersText.setToolTipText(Messages.restHeadersTooltip);
+				this.restHeadersText.setEditable(true);
+				this.restHeadersText.addModifyListener(new ModifyListener() {
+					
+					@Override
+					public void modifyText(ModifyEvent e) {
+						restHeadersValue = restHeadersText.getText();
+						getRelationalReference().setRestHeaders(restHeadersValue);
+					}
+				});
+			}
         }
 
         if (this.isFunction()) {
@@ -1034,6 +1160,23 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         sqlDocument.set(CoreStringUtil.Constants.EMPTY_STRING);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(sqlTextViewer.getControl());
     }
+    
+	
+    private void selectMethodComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		restMethodsCombo.select(selectionIndex);
+    		this.restMethodValue = restMethodsCombo.getItem(selectionIndex);
+    		getRelationalReference().setRestMethod(restMethodValue);
+    	}
+    }
+    
+    private void selectCharSetComboItem(int selectionIndex) {
+    	if( selectionIndex >=0 ) {
+    		restCharSetsCombo.select(selectionIndex);
+    		this.restCharSetValue = restCharSetsCombo.getItem(selectionIndex);
+    		getRelationalReference().setRestCharSet(restCharSetValue);
+    	}
+    }
 	
 	private void setUiState() {
 		if( ! this.isFunction() ) {
@@ -1047,11 +1190,28 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				}
 			}
 			
+			boolean restEnabled = getRelationalReference().isRestEnabled();
+			this.applyRestWarPropertiesCB.setSelection(restEnabled);
+			
+//			if( restEnabled ) {
+//				if( getRelationalReference().getRestUri() != null ) {
+//					restUriText.setText(getRelationalReference().getRestUri());
+//				} else {
+//					restUriText.setText(StringUtilities.EMPTY_STRING);
+//				}
+//			} else {
+//				restUriText.setText(StringUtilities.EMPTY_STRING);
+//			}
+			restMethodsCombo.setEnabled(restEnabled);
+			restUriText.setEnabled(restEnabled);
+			restCharSetsCombo.setEnabled(restEnabled);
+			restHeadersText.setEnabled(restEnabled);
+			
 			return;
 		}
 
 		if( isFunction() ) {
-        boolean functionState = true;
+			boolean functionState = true;
 	        this.deterministicCB.setEnabled(functionState);
 	        this.returnsNullCB.setEnabled(functionState);
 	        this.variableArgsCB.setEnabled(functionState);

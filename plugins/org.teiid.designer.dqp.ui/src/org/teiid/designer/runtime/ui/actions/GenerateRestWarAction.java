@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.runtime.ui.actions;
 
-import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
+import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.nio.charset.Charset;
@@ -49,8 +49,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
-import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.wizards.webservices.RestWarDeploymentInfoDialog;
