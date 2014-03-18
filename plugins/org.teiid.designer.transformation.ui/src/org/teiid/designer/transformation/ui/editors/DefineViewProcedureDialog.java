@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.editors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -51,6 +52,8 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.actions.CreateViewProcedureAction;
@@ -98,7 +101,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 	private Button applyRestWarPropertiesCB;
 	private boolean doApplyRestWarProperties;
 	
-	private String restMethodValue = METHODS.GET;
+	private String restMethodValue = RestModelExtensionConstants.METHODS.GET;
 	private Combo restMethodsCombo;
 	private String restUriValue;
 	private Text restUriText;
@@ -290,7 +293,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 			restMethodsCombo.setLayoutData(gd);
 			
 			List<String> comboItems = new ArrayList<String>();
-			for( String str : METHODS_ARRAY ) {
+			for( String str : RestModelExtensionConstants.METHODS_ARRAY ) {
 				comboItems.add(str);
 			}
 			WidgetUtil.setComboItems(restMethodsCombo, comboItems, null, true);
@@ -306,7 +309,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 
 			// textfield for named type
 			this.restUriText = WidgetFactory.createTextField(restGroup, GridData.FILL_HORIZONTAL);
-			this.restUriText.setToolTipText(getString("viewModelNameTooltip")); //$NON-NLS-1$
+			this.restUriText.setToolTipText(getString("restUriTooltip")); //$NON-NLS-1$
 			this.restUriText.setEditable(true);
 			this.restUriText.addModifyListener(new ModifyListener() {
 				
@@ -361,7 +364,10 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 	@Override
 	protected void okPressed() {
 		this.doApplyRestWarProperties = this.applyRestWarPropertiesCB.getSelection();
-
+		if( doApplyRestWarProperties() ) {
+			RestModelExtensionAssistant.setRestProperties(
+					getViewProcedure(), getRestMethod(), getRestUri(), null, null);
+		}
 		super.okPressed();
 	}
 	

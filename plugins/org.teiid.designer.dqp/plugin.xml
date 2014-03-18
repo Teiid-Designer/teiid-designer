@@ -12,13 +12,6 @@
    <extension
          point="org.teiid.designer.extension.modelExtensionProvider">
       <extensionDefinition
-            className="org.teiid.designer.runtime.extension.rest.RestModelExtensionAssistant"
-            path="meds/rest.mxd">
-      </extensionDefinition>
-   </extension>
-   <extension
-         point="org.teiid.designer.extension.modelExtensionProvider">
-      <extensionDefinition
             className="org.teiid.designer.runtime.extension.odata.ODataModelExtensionAssistant"
             path="meds/odata.mxd">
       </extensionDefinition>

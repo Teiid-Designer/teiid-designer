@@ -6,6 +6,7 @@
         <p:property advanced="false" index="false" masked="false" name="charset" required="false" type="string">
             <p:description locale="en_US">Optional property for procedures that return a Blob with content type that is text-based. This character set to used to convert the data. </p:description>
             <p:display locale="en_US">CHARSET</p:display>
+            <p:allowedValue> </p:allowedValue>
             <p:allowedValue>UTF-8</p:allowedValue>
             <p:allowedValue>US-ASCII</p:allowedValue>
         </p:property>

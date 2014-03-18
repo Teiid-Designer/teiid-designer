@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.extension.rest;
+package org.teiid.designer.metamodels.relational.extension;
 
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.extension.properties.NamespaceProvider;
@@ -31,6 +31,19 @@ public interface RestModelExtensionConstants {
      * 
      */
     String[] METHODS_ARRAY = {METHODS.GET, METHODS.PUT, METHODS.POST, METHODS.DELETE };
+    
+    /**
+    *
+    */
+   interface CHARSETS {
+   	String UDF8 = "UTF-8"; //$NON-NLS-1$
+   	String USASCII = "US-ASCII"; //$NON-NLS-1$
+   }
+   
+   /**
+    * 
+    */
+   String[] CHARSETS_ARRAY = {CHARSETS.UDF8, CHARSETS.USASCII};
 
     /**
      * 

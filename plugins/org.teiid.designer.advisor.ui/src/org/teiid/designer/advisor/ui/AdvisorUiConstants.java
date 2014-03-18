@@ -119,6 +119,11 @@ public interface AdvisorUiConstants {
 			COMMAND_IDS.EXECUTE_VDB
 			
 	};
+	
+	String[] ASPECT_DEFINE_MODEL_OBJECTS = {
+			COMMAND_IDS.DEFINE_VIEW_TABLE,
+			COMMAND_IDS.DEFINE_VIEW_PROCEDURE
+	};
     
     interface MODEL_CLASSES {
 		String RELATIONAL = "Relational";  //$NON-NLS-1$
@@ -414,6 +419,7 @@ public interface AdvisorUiConstants {
 		String DEFINE_MODELS= Messages.DefineModels;
 		String TEST = Messages.Test;
 		String TEIID_SERVER = Messages.TeiidServer;
+		String DEFINE_MODEL_OBJECTS = Messages.DefineTablesViewsProcedures;
 	}
 	
 	interface VIEW_IDS {

@@ -195,6 +195,15 @@ public class Messages extends NLS {
     public static String datatypeReconciler_matchedDatatypeTooltip;
     public static String datatypeReconciler_convertSourceDatatypeTooltip;
     
+    public static String restOptions;
+    public static String enableRestForThisProcedure;
+    public static String restMethod;
+    public static String restUri;
+    public static String restUriTooltip;
+    public static String restCharSet;
+    public static String restHeaders;
+    public static String restHeadersTooltip;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$
     }

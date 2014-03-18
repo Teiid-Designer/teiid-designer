@@ -16,6 +16,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.advisor.ui.AdvisorUiConstants;
 import org.teiid.designer.advisor.ui.AdvisorUiPlugin;
 import org.teiid.designer.transformation.ui.editors.DefineViewProcedureDialog;
+import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -51,6 +52,11 @@ public class DefineViewProcedureAction extends Action implements AdvisorUiConsta
      */
     @Override
 	public void run() {
+    	boolean tempProperties = false;
+    	if( this.designerProperties == null ) {
+    		tempProperties = true;
+    		this.designerProperties = new DesignerProperties("unknown");
+    	}
         if( !ModelerUiViewUtils.workspaceHasOpenModelProjects() ) {
         	IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
         	
@@ -69,8 +75,11 @@ public class DefineViewProcedureAction extends Action implements AdvisorUiConsta
 		sdDialog.open();
 
 		if (sdDialog.getReturnCode() == Window.OK) {
-			// Should do nothing since the user can select or create new project or do nothing
-			// and the property for the Project will be set in the "designerProperties"
+			// Here we get to set the properties on the new procedure
+		}
+		
+		if( tempProperties ) {
+			this.designerProperties = null;
 		}
     }
 }
