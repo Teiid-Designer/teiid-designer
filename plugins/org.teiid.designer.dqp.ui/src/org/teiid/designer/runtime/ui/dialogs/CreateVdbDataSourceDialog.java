@@ -16,6 +16,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -28,6 +29,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.connection.VdbDataSourceInfo;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.Label;
 
 /**
  *
@@ -110,7 +112,9 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
         vdbNameText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         GridDataFactory.fillDefaults().grab(true, false).applyTo(vdbNameText);
         
-        WidgetFactory.createLabel(pnl, getString("jndiNameLabel")); //$NON-NLS-1$
+        Label label = WidgetFactory.createLabel(pnl, getString("jndiNameLabel")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(label);
+        
         dataSourceNameText = new Text(pnl, SWT.BORDER);
         dataSourceNameText.setText(this.vdbDataSourceInfo.getJndiName());
         GridDataFactory.fillDefaults().grab(true, false).applyTo(dataSourceNameText);
