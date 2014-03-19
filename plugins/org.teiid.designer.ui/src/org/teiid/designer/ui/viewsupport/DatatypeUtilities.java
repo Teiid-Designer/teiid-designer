@@ -14,6 +14,8 @@ import org.teiid.designer.core.metamodel.aspect.MetamodelAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 
 
 
@@ -196,5 +198,38 @@ public abstract class DatatypeUtilities {
             return sqAspect.getDatatype(eObject);
         }
         return null;
+    }
+    
+    public static EObject getSqlParameterDatatype(EObject eObject) {
+        MetamodelAspect mmAspect = ModelObjectUtilities.getSqlAspect(eObject);
+        if( mmAspect instanceof SqlProcedureParameterAspect ) {
+        	SqlProcedureParameterAspect sqAspect = (SqlProcedureParameterAspect)mmAspect;
+            return sqAspect.getDatatype(eObject);
+        }
+        return null;
+    }
+    
+    public static EObject getSqlDatatype(EObject eObject) {
+        if( eObject instanceof Column ) {
+        	return getSqlColumnDatatype(eObject);
+        } else if( eObject instanceof ProcedureParameter ) {
+        	return getSqlParameterDatatype(eObject);
+        }
+        return null;
+    }
+    
+    public static boolean canSetLength(EObject eObject, int length) {
+    	EObject datatype = getSqlDatatype(eObject);
+    	if( datatype != null ) {
+    		String typeName = ModelerCore.getWorkspaceDatatypeManager().getRuntimeTypeName(datatype);
+    		if( typeName != null && typeName.equals(DatatypeConstants.BuiltInNames.CHAR) ) {
+    	    	if( length == 1 ) {
+    	    		return true;
+    	    	}       
+    			return false;
+    		}
+    	}
+    	
+    	return true;
     }
 }
