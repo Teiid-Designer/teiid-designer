@@ -36,6 +36,7 @@ import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.extension.ModelExtensionPropertySource;
 import org.teiid.designer.ui.properties.udp.ExtensionPropertySource;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
@@ -225,10 +226,26 @@ public class ModelObjectPropertySource extends PropertySource {
     }
     
     private boolean isValidPropertyChange(EObject eObject, Object propertyId, Object value) {
-    	if( eObject instanceof Column || eObject instanceof ProcedureParameter) {
+    	if( eObject instanceof Column ) {
     		if( propertyId instanceof String && ((String)propertyId).equals("length") && value instanceof Integer ) { //$NON-NLS-1$
 	    		Integer intValue = (Integer)value;
-	    		if( intValue != 1 ) {
+	    		
+	    		if( !DatatypeUtilities.canSetLength(eObject, intValue.intValue()) ) {
+	    			if( eObject instanceof Column ) {
+		    			// Throw up a Message dialog that you cannot change a char type length
+		    			UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString("ModelObjectPropertySource.cannotChangeColumnCharLengthWarning")); //$NON-NLS-1$
+	    			} else {
+	    				// Throw up a Message dialog that you cannot change a char type length
+		    			UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString("ModelObjectPropertySource.cannotChangeParameterCharLengthWarning")); //$NON-NLS-1$
+	    			}
+	    			return false;
+	    		}
+    		}
+    	} else if( eObject instanceof ProcedureParameter) {
+    		if( propertyId instanceof String && ((String)propertyId).equals("length") && value instanceof Integer ) { //$NON-NLS-1$
+	    		Integer intValue = (Integer)value;
+	    		
+	    		if( !DatatypeUtilities.canSetLength(eObject, intValue.intValue()) ) {
 	    			if( eObject instanceof Column ) {
 		    			// Throw up a Message dialog that you cannot change a char type length
 		    			UiConstants.Util.log(IStatus.WARNING, UiConstants.Util.getString("ModelObjectPropertySource.cannotChangeColumnCharLengthWarning")); //$NON-NLS-1$
