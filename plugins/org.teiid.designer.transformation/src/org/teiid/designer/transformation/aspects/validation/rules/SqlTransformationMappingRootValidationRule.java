@@ -50,6 +50,7 @@ import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
+import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
@@ -81,6 +82,7 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.metadata.TransformationMetadata;
 import org.teiid.designer.transformation.util.AttributeMappingHelper;
+import org.teiid.designer.transformation.util.SqlMappingRootCache;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.validation.SqlTransformationResult;
 import org.teiid.designer.transformation.validation.TransformationValidationResult;
@@ -697,10 +699,26 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         if (validationResult.isFatalObject(transRoot)) {
             return;
         }
+        
+        EObject target = transRoot.getTarget();
+        String targetName = ModelerCore.getModelEditor().getName(target);
 
+        // Check if sql is empty
+        String selectSQL = SqlMappingRootCache.getSelectSql(transRoot);
+        if( selectSQL == null) {
+        	int pref = validationContext.getPreferenceStatus(ValidationPreferences.RELATIONAL_EMPTY_TRANSFORMATIONS, IStatus.ERROR);
+        	if (pref != IStatus.OK) {
+	            final String msg = TransformationPlugin.Util.getString(
+	            		"SqlTransformationMappingRootValidationRule.No_sql_defined_for_{0}", targetName); //$NON-NLS-1$
+	            ValidationProblem problem  = new ValidationProblemImpl(0, pref, msg);
+	            validationResult.addProblem(problem);
+	            return;
+        	}
+        }
+        
         TransformationValidationResult transformResult = validator.validateTransformation();
         // get target group/procedure
-        EObject target = transRoot.getTarget();
+        
 
         // validate further only if transformation is valid
         if (!transformResult.isValid()) {
