@@ -343,7 +343,7 @@ public class TestDisplayNodeFactory extends TestCase {
         DisplayNode displayNode = DisplayNodeFactory.createDisplayNode(null, obj);
 
         String actualStr = displayNode.toString();
-        assertEquals("Expected and actual strings don't match: ", expectedStr, actualStr); //$NON-NLS-1$
+        assertEquals("Expected and actual strings don't match", expectedStr, actualStr); //$NON-NLS-1$
     }
 
     // ################################## ACTUAL TESTS ################################
@@ -2222,14 +2222,15 @@ public class TestDisplayNodeFactory extends TestCase {
         }
     }
 
-    public void testCacheHint() throws Exception {
-        for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
-            ILanguageObject ex = parser.parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
-            helpTest(ex, "/*+ cache(pref_mem) */\nSELECT\n\t\t*\n\tFROM\n\t\tdb.g2"); //$NON-NLS-1$
-        }
-    }
-    
+    /* Cache hints have been removed from the teiid runtime client */
+//    public void testCacheHint() throws Exception {
+//        for (ITeiidServerVersion version : serverVersions) {
+//            setDefaultServerVersion(version);
+//            ILanguageObject ex = parser.parseCommand("/*+ cache(pref_mem) */ select * from db.g2"); //$NON-NLS-1$
+//            helpTest(ex, "/*+ cache(pref_mem) */\nSELECT\n\t\t*\n\tFROM\n\t\tdb.g2"); //$NON-NLS-1$
+//        }
+//    }
+
     public void testConstantAliasSymbol() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
             setDefaultServerVersion(version);

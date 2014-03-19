@@ -247,7 +247,11 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
             return false;
         GroupSymbol other = (GroupSymbol)obj;
         if (this.schema == null || other.schema == null) {
-            return this.getName().equals(other.getName());
+            if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+                return this.getCanonicalName().equals(other.getCanonicalName());
+            } else {
+                return this.getName().equals(other.getName());
+            }
         }
         
         if (this.schema == null) {
@@ -255,6 +259,9 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
                 return false;
         } else if (!this.schema.equals(other.schema))
             return false;
+
+        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            return this.getShortCanonicalName().equals(other.getShortCanonicalName());
 
         return this.getShortName().equals(other.getShortName());
     }

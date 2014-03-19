@@ -85,12 +85,15 @@ import org.teiid84.resolver.FakeFunctionMetadataSource;
 public class RealMetadataFactory {
 
 	public static final SystemFunctionManager SFM = new SystemFunctionManager();
+	static {
+	    SFM.setClassloader(RealMetadataFactory.class.getClassLoader());
+	}
 
     private static TransformationMetadata CACHED_EXAMPLE1 = example1();
 	private static TransformationMetadata CACHED_BQT = exampleBQT();
 	static TransformationMetadata CACHED_AGGREGATES = exampleAggregates();
         
-	private RealMetadataFactory() { }
+	private RealMetadataFactory() {}
 	
     public static TransformationMetadata exampleBQTCached() {
         return CACHED_BQT;

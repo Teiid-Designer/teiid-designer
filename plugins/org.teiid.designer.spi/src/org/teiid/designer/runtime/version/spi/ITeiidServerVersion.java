@@ -45,8 +45,12 @@ public interface ITeiidServerVersion {
      * Default teiid 7 server version
      */
     String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
-    
-    
+
+    /**
+     * teiid 8.4 server version - made the CREATE VIRTUAL PROCEDURE keywords optional
+     */
+    String TEIID_8_4_SERVER_ID = EIGHT + DOT + FOUR + DOT + ZERO;
+
     /**
      * teiid 8.6 server version - required due to method added to Admin API
      */

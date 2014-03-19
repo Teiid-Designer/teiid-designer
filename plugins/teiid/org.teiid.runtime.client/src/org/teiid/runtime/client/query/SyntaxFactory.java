@@ -64,8 +64,8 @@ import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory;
-import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
+import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
@@ -147,7 +147,8 @@ public class SyntaxFactory implements IQueryFactory <Expression,
     }
 
     private boolean isGreaterThanOrEqualTo(ITeiidServerVersion teiidVersion) {
-        return teiidParser.getVersion().equals(teiidVersion) || teiidParser.getVersion().isGreaterThan(teiidVersion);
+        ITeiidServerVersion minVersion = teiidParser.getVersion().getMinimumVersion();
+        return minVersion.equals(teiidVersion) || minVersion.isGreaterThan(teiidVersion);
     }
 
     private <T extends LanguageObject> T create(ASTNodes nodeType) {
@@ -173,10 +174,12 @@ public class SyntaxFactory implements IQueryFactory <Expression,
         aggregateSymbol.setAggregateFunction(functionType);
         aggregateSymbol.setDistinct(isDistinct);
 
-        if (isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
-            aggregateSymbol.setArgs(new Expression[] { expression });
-        else
-            aggregateSymbol.setExpression(expression);
+        if (expression != null) {
+            if (isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+                aggregateSymbol.setArgs(new Expression[] { expression });
+            else
+                aggregateSymbol.setExpression(expression);
+        }
 
         return aggregateSymbol;
     }

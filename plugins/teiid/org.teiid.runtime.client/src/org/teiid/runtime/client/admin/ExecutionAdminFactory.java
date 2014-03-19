@@ -8,6 +8,8 @@
 package org.teiid.runtime.client.admin;
 
 import java.sql.Driver;
+import java.util.HashMap;
+import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
@@ -24,9 +26,9 @@ import org.teiid.runtime.client.query.QueryService;
  */
 public class ExecutionAdminFactory implements IExecutionAdminFactory {
 
-    private DataTypeManagerService dataTypeManagerService;
+    private final Map<ITeiidServerVersion, DataTypeManagerService> dataTypeManagerServiceCache = new HashMap<ITeiidServerVersion, DataTypeManagerService>();
     
-    private QueryService queryService;
+    private final Map<ITeiidServerVersion, QueryService> queryServiceCache = new HashMap<ITeiidServerVersion, QueryService>();
 
     @Override
     public IExecutionAdmin createExecutionAdmin(ITeiidServer teiidServer) throws Exception {
@@ -35,10 +37,12 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
     
     @Override
     public IDataTypeManagerService getDataTypeManagerService(ITeiidServerVersion teiidVersion) {
+        DataTypeManagerService dataTypeManagerService = dataTypeManagerServiceCache.get(teiidVersion);
         if (dataTypeManagerService == null) {
             dataTypeManagerService = DataTypeManagerService.getInstance(teiidVersion);
+            dataTypeManagerServiceCache.put(teiidVersion, dataTypeManagerService);
         }
-        
+
         return dataTypeManagerService;
     }
 
@@ -51,10 +55,12 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
 
     @Override
     public IQueryService getQueryService(ITeiidServerVersion teiidVersion) {
+        QueryService queryService = queryServiceCache.get(teiidVersion);
         if (queryService == null) {
             queryService = new QueryService(teiidVersion);
+            queryServiceCache.put(teiidVersion, queryService);
         }
-        
+
         return queryService;
     }
 

@@ -43,7 +43,12 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * The default teiid 7 server version
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
-    
+
+    /**
+     * The teiid 8.4 server version - this version made the CREATE VIRTUAL PROCEDURE keywords optional
+     */
+    public static final ITeiidServerVersion TEIID_8_4_SERVER = new TeiidServerVersion(TEIID_8_4_SERVER_ID);
+
     /**
      * The teiid 8.6 server version - this version introduced an Admin API change
      */

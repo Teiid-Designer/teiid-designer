@@ -210,7 +210,7 @@ public class SQLStringVisitor extends LanguageVisitor
      * @param teiidVersion
      */
     public SQLStringVisitor(ITeiidServerVersion teiidVersion) {
-        super(teiidVersion.getMaximumVersion());
+        super(teiidVersion);
     }
 
     /**
@@ -250,7 +250,8 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     protected boolean isTeiid8OrGreater() {
-        return getTeiidVersion().equals(TEIID_VERSION_8) || getTeiidVersion().isGreaterThan(TEIID_VERSION_8);
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.equals(TEIID_VERSION_8) || minVersion.isGreaterThan(TEIID_VERSION_8);
     }
 
     /**
@@ -2170,13 +2171,16 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(CreateProcedureCommand obj) {
-        append(CREATE);
-        append(SPACE);
-        append(VIRTUAL);
-        append(SPACE);
-        append(PROCEDURE);
-        append("\n"); //$NON-NLS-1$
-        addTabs(0);
+        ITeiidServerVersion version = getTeiidVersion().getMinimumVersion();
+        if (version.isLessThan(TeiidServerVersion.TEIID_8_4_SERVER)) {
+            append(CREATE);
+            append(SPACE);
+            append(VIRTUAL);
+            append(SPACE);
+            append(PROCEDURE);
+            append("\n"); //$NON-NLS-1$
+            addTabs(0);
+        }
         visitNode(obj.getBlock());
     }
 

@@ -203,11 +203,13 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
     }
 
     protected boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.isGreaterThan(TeiidServerVersion.TEIID_8_SERVER);
     }
 
     protected boolean isGreaterThanTeiidSeven() {
-        return getTeiidVersion().isGreaterThan(TeiidServerVersion.TEIID_7_SERVER);
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.isGreaterThan(TeiidServerVersion.TEIID_7_SERVER);
     }
 
     protected void checkSupportedVersion() {

@@ -96,6 +96,7 @@ public class RealMetadataFactory {
 	public RealMetadataFactory(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
         SFM = new SystemFunctionManager(teiidVersion);
+        SFM.setClassloader(getClass().getClassLoader());
         parser = new QueryParser(teiidVersion);
 	}
 
@@ -400,10 +401,12 @@ public class RealMetadataFactory {
     	List<FunctionTree> udfs = new ArrayList<FunctionTree>();
     	udfs.addAll(Arrays.asList(functionModels));
     	for (Schema schema : metadataStore.getSchemas().values()) {
-			vdbMetaData.addModel(createModel(schema.getName(), schema.isPhysical()));
-			if (!schema.getFunctions().isEmpty()) {
-				udfs.add(new FunctionTree(getTeiidVersion(), schema.getName(), new UDFSource(schema.getFunctions().values()), true));
-			}
+            vdbMetaData.addModel(createModel(schema.getName(), schema.isPhysical()));
+            if (!schema.getFunctions().isEmpty()) {
+                UDFSource source = new UDFSource(schema.getFunctions().values());
+                source.setClassLoader(getClass().getClassLoader());
+                udfs.add(new FunctionTree(getTeiidVersion(), schema.getName(), source, true));
+            }
 		}
     	TransformationMetadata metadata = new TransformationMetadata(getTeiidParser(), vdbMetaData, store, null, SFM.getSystemFunctions(), udfs);
     	vdbMetaData.addAttchment(TransformationMetadata.class, metadata);
