@@ -33,6 +33,7 @@ import org.teiid.designer.metamodels.relational.aspects.validation.rules.TableCh
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.TableMaterializedRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.TableUniqueKeysRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.UniqueKeyColumnsRule;
+import org.teiid.designer.metamodels.relational.aspects.validation.rules.ViewProcedureValidationRule;
 
 
 /**
@@ -63,6 +64,7 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
     public static final ValidationRule EMPTY_COLUMN_NATIVE_TYPE_RULE = new ColumnNativeTypeRule();
     public static final ValidationRule TABLE_MISSING_NAME_IN_SOURCE_RULE = new MissingNameInSourceRule();
     public static final ValidationRule CHAR_DATATYPE_LENGTH_RULE = new CharDatatypeLengthRule();
+    public static final ValidationRule VIEW_PROCEDCURE_REST_PROPERTIES_RULE = new ViewProcedureValidationRule(); 
 
     protected RelationalEntityAspect(final MetamodelEntity entity) {
         super(entity);

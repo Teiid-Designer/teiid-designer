@@ -8,12 +8,14 @@
 package org.teiid.designer.metamodels.relational.aspects.validation;
 
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationRuleSet;
+import org.teiid.designer.metamodels.relational.aspects.validation.rules.ViewProcedureValidationRule;
 
 
 /**
@@ -39,6 +41,7 @@ public class ProcedureAspect extends RelationalEntityAspect {
 		addRule(PROC_PARAM_RULE);
         addRule(PROC_FUNCTION_RULE);
         addRule(SOURCE_PROC_UNIQUENESS_RULE);
+        addRule(VIEW_PROCEDCURE_REST_PROPERTIES_RULE);
 		return super.getValidationRules();		
 	}
 
