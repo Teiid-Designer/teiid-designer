@@ -85,10 +85,14 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
     
-    public static boolean setRestProperties(EObject procedure, String restMethod, String restUri, String restCharSet, String restHeaders) {
-		final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+    private static RestModelExtensionAssistant getRestAssistant() {
+    	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         final String prefix = RestModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
-        final RestModelExtensionAssistant assistant = (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+        return (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+    }
+    
+    public static boolean setRestProperties(EObject procedure, String restMethod, String restUri, String restCharSet, String restHeaders) {
+        final RestModelExtensionAssistant assistant = getRestAssistant();
         if( assistant != null ) {
 			try {
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI, restUri);
@@ -102,5 +106,19 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         }
         
         return true;
+    }
+    
+    public static String getRestProperty(EObject procedure, String key) {
+    	String result = null;
+    	final RestModelExtensionAssistant assistant = getRestAssistant();
+        if( assistant != null ) {
+			try {
+				result = assistant.getPropertyValue(procedure, key);
+			} catch (Exception e) {
+				RelationalPlugin.Util.log(e);
+			}
+        }
+        
+        return result;
     }
 }
