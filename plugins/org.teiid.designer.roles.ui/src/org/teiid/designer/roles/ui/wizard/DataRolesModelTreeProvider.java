@@ -63,9 +63,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private static final Image GRAY_CHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_CHECKED_BOX_ICON);
     private static final Image GRAY_UNCHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_UNCHECKED_BOX_ICON);
     
-    private static final Image GRAY_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_BOX_ICON);
-    private static final Image WHITE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.WHITE_BOX_ICON);
-    private static final Image BLUE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.BLUE_BOX_ICON);
+    private static final Image GRAY_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_BALL_ICON);
+    private static final Image WHITE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.WHITE_BALL_ICON);
+    private static final Image BLUE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.BLUE_BALL_ICON);
     
     private static final int CHECKED = 0;
     private static final int UNCHECKED = 1;
