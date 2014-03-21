@@ -57,7 +57,7 @@ public class Test8DataTypeManagerService extends AbstractTestDataTypeManagerServ
     public void testGetAllDataTypeNames() {
         Set<String> names = dataTypeManager.getAllDataTypeNames();
         assertTrue(! names.isEmpty());
-        assertTrue(names.contains(DefaultDataTypes.DECIMAL.getId()));
+        assertTrue(names.contains(DefaultDataTypes.BIG_DECIMAL.getId()));
         assertTrue(names.contains(DefaultDataTypes.STRING.getId()));
         assertTrue(names.contains(DefaultDataTypes.VARBINARY.getId()));
     }

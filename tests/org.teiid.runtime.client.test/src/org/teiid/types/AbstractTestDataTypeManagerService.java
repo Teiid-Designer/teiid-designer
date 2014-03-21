@@ -106,7 +106,7 @@ public abstract class AbstractTestDataTypeManagerService {
             // should throw an exception
         }
 
-        assertSame(DefaultDataTypes.BIGINT, dataTypeManager.getDataType(Long.class));
+        assertSame(DefaultDataTypes.LONG, dataTypeManager.getDataType(Long.class));
         assertSame(DefaultDataTypes.STRING, dataTypeManager.getDataType(String.class));
     }
 

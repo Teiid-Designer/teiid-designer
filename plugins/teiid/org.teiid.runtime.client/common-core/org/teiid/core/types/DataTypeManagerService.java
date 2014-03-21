@@ -81,25 +81,16 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     public enum DefaultDataTypes {
 
         STRING ("string", DataTypeName.STRING, String.class, 256, DataTypeAliases.VARCHAR), //$NON-NLS-1$
-
-        VARCHAR ("varchar", DataTypeName.VARCHAR , String.class, 256), //$NON-NLS-1$
         
         BOOLEAN ("boolean", DataTypeName.BOOLEAN, Boolean.class), //$NON-NLS-1$
 
         BYTE ("byte", DataTypeName.BYTE, Byte.class, 3, "0123456789-", DataTypeAliases.TINYINT), //$NON-NLS-1$ //$NON-NLS-2$
-
-        TINYINT ("tinyint", DataTypeName.TINYINT, Byte.class, 3, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
         
         SHORT ("short", DataTypeName.SHORT, Short.class, 5, "0123456789-", DataTypeAliases.SMALLINT), //$NON-NLS-1$ //$NON-NLS-2$
-
-        SMALLINT ("smallint", DataTypeName.SMALLINT, Short.class, 5, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
         CHAR ("char", DataTypeName.CHAR, Character.class, 1), //$NON-NLS-1$
 
         INTEGER ("integer", DataTypeName.INTEGER, Integer.class, 10, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
-
-        /* Not to be confused with BIG_INTEGER which comes from a different domain */
-        BIGINT ("bigint", DataTypeName.BIGINT, Long.class, 19, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
         LONG ("long", DataTypeName.LONG, Long.class, 19, "0123456789-", DataTypeAliases.BIGINT), //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -107,11 +98,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         FLOAT ("float", DataTypeName.FLOAT, Float.class, 30, "0123456789-+.eE", DataTypeAliases.REAL), //$NON-NLS-1$ //$NON-NLS-2$
 
-        REAL ("real", DataTypeName.REAL, Float.class, 30, "0123456789-+.eE"), //$NON-NLS-1$ //$NON-NLS-2$
-        
         DOUBLE ("double", DataTypeName.DOUBLE, Double.class, 30, "0123456789-+.eE"), //$NON-NLS-1$ //$NON-NLS-2$
-
-        DECIMAL ("decimal", DataTypeName.DECIMAL, BigDecimal.class, 30, "0123456789-.eE"), //$NON-NLS-1$ //$NON-NLS-2$
 
         BIG_DECIMAL ("bigdecimal", DataTypeName.BIG_DECIMAL, BigDecimal.class, 30, "0123456789-.eE", DataTypeAliases.DECIMAL), //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -133,7 +120,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         @Since("8.0.0")
         VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class); //$NON-NLS-1$
-
+        
         private String id;
 
         private DataTypeName dataTypeName;
@@ -201,6 +188,19 @@ public class DataTypeManagerService implements IDataTypeManagerService {
          */
         public boolean hasAlias(DataTypeAliases alias) {
             return aliases.contains(alias);
+        }
+
+        /**
+         * @param alias
+         * @return true if this type contains the given alias, false otherwise
+         */
+        public boolean hasAlias(String aliasId) {
+            for (DataTypeAliases alias : aliases) {
+                if(alias.getId().equalsIgnoreCase(aliasId))
+                    return true;
+            }
+
+            return false;
         }
 
         /**
@@ -479,6 +479,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
             if (defaultDataType.getId().equalsIgnoreCase(id)) {
                 return defaultDataType;
             }
+
+            if(defaultDataType.hasAlias(id)) {
+                return defaultDataType;
+            }
         }
 
         return null;
@@ -490,6 +494,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         for (DefaultDataTypes defaultDataType : DefaultDataTypes.getValues(teiidVersion)) {
             if (defaultDataType.getDataTypeName().equals(dataTypeName)) {
+                return defaultDataType;
+            }
+
+            if(defaultDataType.hasAlias(dataTypeName.name())) {
                 return defaultDataType;
             }
         }
