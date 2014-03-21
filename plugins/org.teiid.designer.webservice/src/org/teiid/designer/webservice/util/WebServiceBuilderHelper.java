@@ -10,9 +10,11 @@ package org.teiid.designer.webservice.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -64,6 +66,7 @@ import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.metamodels.xml.XmlElement;
 import org.teiid.designer.metamodels.xml.XmlSequence;
 import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.transformation.util.SqlMappingRootCache;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.util.TransformationSqlHelper;
@@ -241,6 +244,8 @@ public class WebServiceBuilderHelper {
     private boolean useLocationContainer;
 
     private IContainer locationContainer;
+    
+    private PostProcessor postProcessor;
 
     /**
      * Public constructor
@@ -604,6 +609,8 @@ public class WebServiceBuilderHelper {
                     resource = model.getEmfResource();
                 } else if (HEADLESS && returnedObj instanceof Resource) resource = (Resource)returnedObj;
             }
+            
+            postProcessor = new PostProcessor(model);
 
             // ---------------------------------------------------------
             // Create interface or use existing interface if selected
@@ -1096,7 +1103,7 @@ public class WebServiceBuilderHelper {
             ModelResource mr = null;
             if (resource instanceof IFile) {
                 try {
-                    mr = ModelerCore.getModelEditor().findModelResource((IFile)resource);
+                    mr = ModelerCore.getModelEditor().findModelResource(resource);
                 } catch (final ModelWorkspaceException e) {
                     e.printStackTrace();
                 }
@@ -1203,6 +1210,12 @@ public class WebServiceBuilderHelper {
     public void setParentPath( final String parentPath ) {
         this.parentPath = parentPath;
     }
+    
+    public void postProcess() {
+    	if( postProcessor != null ) {
+    		postProcessor.execute();
+    	}
+    }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // TransformationFinisher INNER CLASS
@@ -1243,7 +1256,51 @@ public class WebServiceBuilderHelper {
             // reconcile mappings
             TransformationMappingHelper.reconcileMappingsOnSqlChange(mappingRoot, null);
             
-            TransformationMappingHelper.reconcileTargetAttributes(mappingRoot, null);
+            postProcessor.addRoot(operation, mappingRoot);
         }
     }
+    
+    private class PostProcessor {
+    	ModelResource wsModel;
+    	Map<EObject, EObject> operationsMappingRoots;
+    	
+    	public PostProcessor( final ModelResource wsModel) {
+    		super();
+    		this.wsModel = wsModel;
+    		operationsMappingRoots = new HashMap<EObject, EObject>();
+    	}
+    	
+    	protected void addRoot(EObject operation, EObject root) {
+    		operationsMappingRoots.put(operation, root);
+    	}
+    	
+    	public void execute() {
+    		if( wsModel == null || operationsMappingRoots.isEmpty() ) {
+    			return;
+    		}
+            // This operation is not undoable OR significant.
+            final boolean startedTxn = ModelerCore.startTxn(false, false, "Reconciling Operations", WebServiceBuilderHelper.this); //$NON-NLS-1$
+            
+            try {
+            	// Need to invalidate the cache because it's currently "invalid" and needs to start from scratch
+            	for( EObject nextOperation: operationsMappingRoots.keySet() ) {
+	    			SqlMappingRootCache.invalidateStatus(operationsMappingRoots.get(nextOperation), false, this);
+            	}
+            
+	    		for( EObject nextOperation: operationsMappingRoots.keySet() ) {	    			
+	                TransformationMappingHelper.reconcileTargetAttributes(operationsMappingRoots.get(nextOperation), null);
+	    		}
+
+    			wsModel.save(new NullProgressMonitor(), true);
+    			wsModel.getEmfResource().setModified(false);
+    			
+            } catch (final Exception e) {
+	            WebServicePlugin.Util.log(IStatus.ERROR, e.getMessage());
+	        } finally {
+	            // This Txn is not undoable and not significant. Always commit.
+	            if (startedTxn) ModelerCore.commitTxn();
+	        }
+    	}
+    }
 }
+;
