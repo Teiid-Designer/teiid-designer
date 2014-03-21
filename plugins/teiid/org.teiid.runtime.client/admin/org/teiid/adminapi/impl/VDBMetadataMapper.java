@@ -21,7 +21,6 @@
  */
 package org.teiid.adminapi.impl;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.jboss.as.controller.AttributeDefinition;
@@ -31,16 +30,12 @@ import org.jboss.as.controller.SimpleAttributeDefinition;
 import org.jboss.as.controller.StringListAttributeDefinition;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
-import org.teiid.adminapi.DataPolicy;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.Request.ProcessingState;
 import org.teiid.adminapi.Request.ThreadState;
-import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.adminapi.VDB.Status;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
-import org.teiid.adminapi.impl.ModelMetaData.Message;
-import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.Messages.VDBMetadata;
  
@@ -60,74 +55,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 	private static final String ENTRIES = "entries"; //$NON-NLS-1$
 	
 	public static VDBMetadataMapper INSTANCE = new VDBMetadataMapper();
-	
-	public ModelNode wrap(VDBMetaData vdb, ModelNode node) {
-		if (vdb == null) {
-			return null;
-		}
-		node.get(TYPE).set(ModelType.OBJECT);
-		node.get(VDBNAME).set(vdb.getName());
-		node.get(CONNECTIONTYPE).set(vdb.getConnectionType().toString());
-		node.get(STATUS).set(vdb.getStatus().toString());
-		node.get(VERSION).set(vdb.getVersion());
-		if (vdb.getDescription() != null) {
-			node.get(VDB_DESCRIPTION).set(vdb.getDescription());
-		}
-		node.get(XML_DEPLOYMENT).set(vdb.isXmlDeployment());
-		
-		//PROPERTIES
-		addProperties(node, vdb);
-		
-		// IMPORT-VDBS
-		List<VDBImportMetadata> imports = vdb.getVDBImports();
-		if (imports != null && !imports.isEmpty()) {
-			ModelNode importNodes = node.get(IMPORT_VDBS);		
-			for(VDBImportMetadata vdbImport:imports) {
-				importNodes.add(VDBImportMapper.INSTANCE.wrap(vdbImport, new ModelNode()));
-			}
-		}
-		
-		// ENTRIES
-		List<EntryMetaData> entries = vdb.getEntries();
-		if (entries != null && !entries.isEmpty()) {
-			ModelNode entryNodes = node.get(ENTRIES);		
-			for(EntryMetaData entry:entries) {
-				entryNodes.add(EntryMapper.INSTANCE.wrap(entry, new ModelNode()));
-			}
-		}		
-		
-		// MODELS
-		Map<String, ModelMetaData> models = vdb.getModelMetaDatas();
-		if (models != null && !models.isEmpty()) {
-			ModelNode modelNodes = node.get(MODELS);		
-			for(ModelMetaData model:models.values()) {
-				modelNodes.add(ModelMetadataMapper.INSTANCE.wrap(model, new ModelNode()));
-			}
-		}
-		
-		// OVERRIDE_TRANSLATORS
-		List<Translator> translators = vdb.getOverrideTranslators();
-		if (translators != null && !translators.isEmpty()) {
-			ModelNode translatorNodes = node.get(OVERRIDE_TRANSLATORS);
-			for (Translator translator:translators) {
-				translatorNodes.add(VDBTranslatorMetaDataMapper.INSTANCE.wrap((VDBTranslatorMetaData)translator,  new ModelNode()));
-			}
-		}
-		
-		// DATA_POLICIES
-		List<DataPolicy> policies = vdb.getDataPolicies();
-		if (policies != null && !policies.isEmpty()) {
-			ModelNode dataPoliciesNodes = node.get(DATA_POLICIES);
-			for (DataPolicy policy:policies) {
-				dataPoliciesNodes.add(DataPolicyMetadataMapper.INSTANCE.wrap((DataPolicyMetadata)policy,  new ModelNode()));
-			}
-		}
-		
-		wrapDomain(vdb, node);
-		return node;
-	}
 
-	public VDBMetaData unwrap(ModelNode node) {
+	@Override
+    public VDBMetaData unwrap(ModelNode node) {
 		if (node == null)
 			return null;
 			
@@ -221,7 +151,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		return vdb;
 	}
 	
-	public ModelNode describe(ModelNode node) {
+	@Override
+    public ModelNode describe(ModelNode node) {
 		addAttribute(node, VDBNAME, ModelType.STRING, true); 
 
 		ModelNode connectionsAllowed = new ModelNode();
@@ -321,50 +252,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		
 		
 		public static ModelMetadataMapper INSTANCE = new ModelMetadataMapper();
-		
-		public ModelNode wrap(ModelMetaData model, ModelNode node) {
-			if (model == null) {
-				return null;
-			}
-			
-			node.get(MODEL_NAME).set(model.getName());
-			if (model.getDescription() != null) {
-				node.get(DESCRIPTION).set(model.getDescription());
-			}
-			node.get(VISIBLE).set(model.isVisible());
-			node.get(MODEL_TYPE).set(model.getModelType().toString());
-			if (model.getPath() != null) {
-				node.get(MODELPATH).set(model.getPath());
-			}
 
-			addProperties(node, model);
-			
-			Collection<SourceMappingMetadata> sources = model.getSourceMappings();
-			if (sources != null && !sources.isEmpty()) {
-				ModelNode sourceMappingNode = node.get(SOURCE_MAPPINGS);
-				for(SourceMappingMetadata source:sources) {
-					sourceMappingNode.add(SourceMappingMetadataMapper.INSTANCE.wrap(source,  new ModelNode()));
-				}
-			}
-			
-			List<Message> errors = model.getMessages();
-			if (errors != null && !errors.isEmpty()) {
-				ModelNode errorsNode = node.get(VALIDITY_ERRORS);
-				for (Message error:errors) {
-					errorsNode.add(ValidationErrorMapper.INSTANCE.wrap(error, new ModelNode()));
-				}
-			}
-			if (model.getSchemaText() != null) {
-				node.get(METADATA).set(model.getSchemaText());
-			}
-			if (model.getSchemaSourceType() != null) {
-				node.get(METADATA_TYPE).set(model.getSchemaSourceType());
-			}
-			node.get(METADATA_STATUS).set(model.getMetadataStatus().name());
-			return node;
-		}
-		
-		public ModelMetaData unwrap(ModelNode node) {
+		@Override
+        public ModelMetaData unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -409,7 +299,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(VALIDITY_ERRORS).isDefined()) {
 				List<ModelNode> errorNodes = node.get(VALIDITY_ERRORS).asList();
 				for(ModelNode errorNode:errorNodes) {
-					Message error = ValidationErrorMapper.INSTANCE.unwrap(errorNode);
+				    ModelMetaData.Message error = ValidationErrorMapper.INSTANCE.unwrap(errorNode);
 					if (error != null) {
 						model.addMessage(error);
 					}
@@ -427,7 +317,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return model;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			ModelNode modelTypes = new ModelNode();
 			modelTypes.add(Model.Type.PHYSICAL.toString());
 			modelTypes.add(Model.Type.VIRTUAL.toString());
@@ -496,20 +387,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String IMPORT_POLICIES = "import-policies"; //$NON-NLS-1$
 		
 		public static VDBImportMapper INSTANCE = new VDBImportMapper();
-		
+
 		@Override
-		public ModelNode wrap(VDBImportMetadata obj, ModelNode node) {
-			if (obj == null) {
-				return null;
-			}
-			
-			node.get(VDB_NAME).set(obj.getName());
-			node.get(VDB_VERSION).set(obj.getVersion());
-			node.get(IMPORT_POLICIES).set(obj.isImportDataPolicies());
-			return node;
-		}
-		
-		public VDBImportMetadata unwrap(ModelNode node) {
+        public VDBImportMetadata unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -527,7 +407,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return vdbImport;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, VDB_NAME, ModelType.STRING, true);
 			addAttribute(node, VDB_VERSION, ModelType.INT, true);
 			addAttribute(node, IMPORT_POLICIES, ModelType.BOOLEAN, false);
@@ -547,7 +428,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 	/**
 	 * validation error mapper
 	 */
-	public static class ValidationErrorMapper implements MetadataMapper<Message>{
+	public static class ValidationErrorMapper implements MetadataMapper<ModelMetaData.Message>{
 		private static final String ERROR_PATH = "error-path"; //$NON-NLS-1$
 		private static final String SEVERITY = "severity"; //$NON-NLS-1$
 		private static final String MESSAGE = "message"; //$NON-NLS-1$
@@ -555,31 +436,18 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		
 		public static ValidationErrorMapper INSTANCE = new ValidationErrorMapper();
 		
-		public ModelNode wrap(Message error, ModelNode node) {
-			if (error == null) {
-				return null;
-			}
-			
-			if (error.getPath() != null) {
-				node.get(ERROR_PATH).set(error.getPath());
-			}
-			node.get(SEVERITY).set(error.getSeverity().name());
-			node.get(MESSAGE).set(error.getValue());
-			
-			return node;
-		}
-		
-		public Message unwrap(ModelNode node) {
+		@Override
+        public ModelMetaData.Message unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
 			
-			Message error = new Message();
+			ModelMetaData.Message error = new ModelMetaData.Message();
 			if (node.has(ERROR_PATH)) {
 				error.setPath(node.get(ERROR_PATH).asString());
 			}
 			if (node.has(SEVERITY)) {
-				error.setSeverity(Severity.valueOf(node.get(SEVERITY).asString()));
+				error.setSeverity(ModelMetaData.Message.Severity.valueOf(node.get(SEVERITY).asString()));
 			}
 			if(node.has(MESSAGE)) {
 				error.setValue(node.get(MESSAGE).asString());
@@ -587,7 +455,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return error;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, ERROR_PATH, ModelType.STRING, false); 
 			addAttribute(node, SEVERITY, ModelType.STRING, true);
 			addAttribute(node, MESSAGE, ModelType.STRING, true);
@@ -614,20 +483,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		
 		public static SourceMappingMetadataMapper INSTANCE = new SourceMappingMetadataMapper();
 		
-		public ModelNode wrap(SourceMappingMetadata source, ModelNode node) {
-			if (source == null) {
-				return null;
-			}
-			
-			node.get(SOURCE_NAME).set(source.getName());
-			if (source.getConnectionJndiName() != null) {
-				node.get(JNDI_NAME).set(source.getConnectionJndiName());
-			}
-			node.get(TRANSLATOR_NAME).set(source.getTranslatorName());
-			return node;
-		}
-		
-		public SourceMappingMetadata unwrap(ModelNode node) {
+		@Override
+        public SourceMappingMetadata unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -644,7 +501,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return source;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, SOURCE_NAME, ModelType.STRING, true); 
 			addAttribute(node, JNDI_NAME, ModelType.STRING, true);
 			addAttribute(node, TRANSLATOR_NAME, ModelType.STRING, true);
@@ -673,30 +531,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		
 		
 		public static VDBTranslatorMetaDataMapper INSTANCE = new VDBTranslatorMetaDataMapper();
-		
-		public ModelNode wrap(VDBTranslatorMetaData translator, ModelNode node) {
-			if (translator == null) {
-				return null;
-			}
-			
-			node.get(TRANSLATOR_NAME).set(translator.getName());
-			if (translator.getType() != null) {
-				node.get(BASETYPE).set(translator.getType());
-			}
-			if (translator.getDescription() != null) {
-				node.get(TRANSLATOR_DESCRIPTION).set(translator.getDescription());
-			}
-			
-			if (translator.getModuleName() != null) {
-				node.get(MODULE_NAME).set(translator.getModuleName());
-			}
 
-			addProperties(node, translator);
-			wrapDomain(translator, node);
-			return node;
-		}
-		
-		public VDBTranslatorMetaData unwrap(ModelNode node) {
+		@Override
+        public VDBTranslatorMetaData unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -727,7 +564,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return translator;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, TRANSLATOR_NAME, ModelType.STRING, true); 
 			addAttribute(node, BASETYPE, ModelType.STRING, true);
 			addAttribute(node, TRANSLATOR_DESCRIPTION, ModelType.STRING, false);
@@ -810,24 +648,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String PATH = "path"; //$NON-NLS-1$
 		
 		public static EntryMapper INSTANCE = new EntryMapper();
-		
+
 		@Override
-		public ModelNode wrap(EntryMetaData obj, ModelNode node) {
-			if (obj == null) {
-				return null;
-			}
-			
-			node.get(PATH).set(obj.getPath());
-			if (obj.getDescription() != null) {
-				node.get(DESCRIPTION).set(obj.getDescription());
-			}
-			
-			//PROPERTIES
-			addProperties(node, obj);
-			return node;
-		}
-		
-		public EntryMetaData unwrap(ModelNode node) {
+        public EntryMetaData unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -854,7 +677,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return entry;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, PATH, ModelType.STRING, true);
 			
 			ModelNode props = node.get(PROPERTIES);
@@ -887,41 +711,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String POLICY_DESCRIPTION = "policy-description"; //$NON-NLS-1$
 		
 		public static DataPolicyMetadataMapper INSTANCE = new DataPolicyMetadataMapper();
-		
-		public ModelNode wrap(DataPolicyMetadata policy, ModelNode node) {
-			if (policy == null) {
-				return null;
-			}			
 
-			node.get(POLICY_NAME).set(policy.getName());
-			if (policy.getDescription() != null) {
-				node.get(POLICY_DESCRIPTION).set(policy.getDescription());
-			}
-			if (policy.isAllowCreateTemporaryTables() != null) {
-				node.get(ALLOW_CREATE_TEMP_TABLES).set(policy.isAllowCreateTemporaryTables());
-			}
-			node.get(ANY_AUTHENTICATED).set(policy.isAnyAuthenticated());
-			
-			//DATA_PERMISSIONS
-			List<DataPolicy.DataPermission> permissions = policy.getPermissions();
-			if (permissions != null && !permissions.isEmpty()) {
-				ModelNode permissionNodes = node.get(DATA_PERMISSIONS); 
-				for (DataPolicy.DataPermission dataPermission:permissions) {
-					permissionNodes.add(PermissionMetaDataMapper.INSTANCE.wrap((PermissionMetaData)dataPermission,  new ModelNode()));
-				}			
-			}
-			
-			//MAPPED_ROLE_NAMES
-			if (policy.getMappedRoleNames() != null && !policy.getMappedRoleNames().isEmpty()) {
-				ModelNode mappedRoleNodes = node.get(MAPPED_ROLE_NAMES);
-				for (String role:policy.getMappedRoleNames()) {
-					mappedRoleNodes.add(role);
-				}
-			}
-			return node;
-		}
-		
-		public DataPolicyMetadata unwrap(ModelNode node) {
+		@Override
+        public DataPolicyMetadata unwrap(ModelNode node) {
 			if(node == null) {
 				return null;
 			}
@@ -960,7 +752,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return policy;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, POLICY_NAME, ModelType.STRING, true);
 			addAttribute(node, POLICY_DESCRIPTION, ModelType.STRING, false);
 			addAttribute(node, ALLOW_CREATE_TEMP_TABLES, ModelType.BOOLEAN, false);
@@ -1009,51 +802,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String CONSTRAINT = "constraint"; //$NON-NLS-1$
 		
 		public static PermissionMetaDataMapper INSTANCE = new PermissionMetaDataMapper();
-		
-		public ModelNode wrap(PermissionMetaData permission, ModelNode node) {
-			if (permission == null) {
-				return null;
-			}
-			
-			node.get(RESOURCE_NAME).set(permission.getResourceName());
-			if(permission.getAllowLanguage() != null) {
-				node.get(ALLOW_LANGUAGE).set(permission.getAllowLanguage().booleanValue());
-				return node;
-			}
-			if (permission.getAllowCreate() != null) {
-				node.get(ALLOW_CREATE).set(permission.getAllowCreate().booleanValue());
-			}
-			if (permission.getAllowDelete() != null) {
-				node.get(ALLOW_DELETE).set(permission.getAllowDelete().booleanValue());
-			}
-			if (permission.getAllowUpdate() != null) {
-				node.get(ALLOW_UPADTE).set(permission.getAllowUpdate().booleanValue());
-			}
-			if (permission.getAllowRead() != null) {
-				node.get(ALLOW_READ).set(permission.getAllowRead().booleanValue());
-			}
-			if (permission.getAllowExecute() != null) {
-				node.get(ALLOW_EXECUTE).set(permission.getAllowExecute().booleanValue());
-			}
-			if(permission.getAllowAlter() != null) {
-				node.get(ALLOW_ALTER).set(permission.getAllowAlter().booleanValue());
-			}
-			if(permission.getCondition() != null) {
-				node.get(CONDITION).set(permission.getCondition());
-			}
-			if(permission.getMask() != null) {
-				node.get(MASK).set(permission.getMask());
-			}
-			if(permission.getOrder() != null) {
-				node.get(ORDER).set(permission.getOrder());
-			}
-			if (permission.getConstraint() != null) {
-				node.get(CONSTRAINT).set(permission.getConstraint());
-			}
-			return node;
-		}
-		
-		public PermissionMetaData unwrap(ModelNode node) {
+
+		@Override
+        public PermissionMetaData unwrap(ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -1098,7 +849,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			}
 			return permission;
 		}
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, RESOURCE_NAME, ModelType.STRING, true);
 			addAttribute(node, ALLOW_CREATE, ModelType.BOOLEAN, false);
 			addAttribute(node, ALLOW_DELETE, ModelType.BOOLEAN, false);
@@ -1139,28 +891,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String MAX_WAIT_PLAN_COUNT = "max-waitplan-watermark"; //$NON-NLS-1$
 		
 		public static EngineStatisticsMetadataMapper INSTANCE = new EngineStatisticsMetadataMapper();
-		
-		public ModelNode wrap(EngineStatisticsMetadata object, ModelNode node) {
-			if (object == null)
-				return null;
-			
-			node.get(SESSION_COUNT).set(object.getSessionCount());
-			node.get(TOTAL_MEMORY_USED_IN_KB).set(object.getTotalMemoryUsedInKB());
-			node.get(MEMORY_IN_USE_BY_ACTIVE_PLANS).set(object.getMemoryUsedByActivePlansInKB());
-			node.get(DISK_WRITE_COUNT).set(object.getDiskWriteCount());
-			node.get(DISK_READ_COUNT).set(object.getDiskReadCount());
-			node.get(CACHE_WRITE_COUNT).set(object.getCacheWriteCount());	
-			node.get(CACHE_READ_COUNT).set(object.getCacheReadCount());
-			node.get(DISK_SPACE_USED).set(object.getDiskSpaceUsedInMB());
-			node.get(ACTIVE_PLAN_COUNT).set(object.getActivePlanCount());
-			node.get(WAITING_PLAN_COUNT).set(object.getWaitPlanCount());
-			node.get(MAX_WAIT_PLAN_COUNT).set(object.getMaxWaitPlanWaterMark());
-			
-			wrapDomain(object, node);
-			return node;
-		}
 
-		public EngineStatisticsMetadata unwrap(ModelNode node) {
+		@Override
+        public EngineStatisticsMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -1181,7 +914,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return stats;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, SESSION_COUNT, ModelType.INT, true);
 			addAttribute(node, TOTAL_MEMORY_USED_IN_KB, ModelType.LONG, true);
 			addAttribute(node, MEMORY_IN_USE_BY_ACTIVE_PLANS, ModelType.LONG, true);
@@ -1219,20 +953,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String REQUEST_COUNT = "request-count"; //$NON-NLS-1$
 		
 		public static CacheStatisticsMetadataMapper INSTANCE = new CacheStatisticsMetadataMapper();
-		
-		public ModelNode wrap(CacheStatisticsMetadata object, ModelNode node) {
-			if (object == null)
-				return null;
-			
-			node.get(TOTAL_ENTRIES).set(object.getTotalEntries());
-			node.get(HITRATIO).set(object.getHitRatio());
-			node.get(REQUEST_COUNT).set(object.getRequestCount());
-			
-			wrapDomain(object, node);
-			return node;
-		}
 
-		public CacheStatisticsMetadata unwrap(ModelNode node) {
+		@Override
+        public CacheStatisticsMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -1245,7 +968,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return cache;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, TOTAL_ENTRIES, ModelType.STRING, true);
 			addAttribute(node, HITRATIO, ModelType.STRING, true);
 			addAttribute(node, REQUEST_COUNT, ModelType.STRING, true);
@@ -1273,31 +997,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String THREAD_STATE = "thread-state"; //$NON-NLS-1$
 		
 		public static RequestMetadataMapper INSTANCE = new RequestMetadataMapper();
-		
-		public ModelNode wrap(RequestMetadata request, ModelNode node) {
-			if (request == null) {
-				return null;
-			}
-			
-			node.get(EXECUTION_ID).set(request.getExecutionId());
-			node.get(SESSION_ID).set(request.getSessionId());
-			node.get(START_TIME).set(request.getStartTime());
-			node.get(COMMAND).set(request.getCommand());
-			node.get(SOURCE_REQUEST).set(request.sourceRequest());
-			if (request.getNodeId() != null) {
-				node.get(NODE_ID).set(request.getNodeId());
-			}
-			if (request.getTransactionId() != null) {
-				node.get(TRANSACTION_ID).set(request.getTransactionId());
-			}
-			node.get(STATE).set(request.getState().name());
-			node.get(THREAD_STATE).set(request.getThreadState().name());
-			
-			wrapDomain(request, node);
-			return node;
-		}
 
-		public RequestMetadata unwrap(ModelNode node) {
+		@Override
+        public RequestMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1320,7 +1022,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return request;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, EXECUTION_ID, ModelType.LONG, true);
 			addAttribute(node, SESSION_ID, ModelType.STRING, true);
 			addAttribute(node, START_TIME, ModelType.LONG, true);
@@ -1362,40 +1065,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String CLIENT_HARDWARE_ADRESS = "client-hardware-address"; //$NON-NLS-1$
 		
 		public static SessionMetadataMapper INSTANCE = new SessionMetadataMapper();
-		
-		public ModelNode wrap(SessionMetadata session, ModelNode node) {
-			if (session == null) {
-				return null;
-			}
-				
-			if (session.getApplicationName() != null) {
-				node.get(APPLICATION_NAME).set(session.getApplicationName());
-			}
-			
-			node.get(CREATED_TIME).set(session.getCreatedTime());
-			
-			if (session.getClientHostName() != null) {
-				node.get(CLIENT_HOST_NAME).set(session.getClientHostName());
-			}
-			if (session.getIPAddress() != null) {
-				node.get(IP_ADDRESS).set(session.getIPAddress());
-			}
-			node.get(LAST_PING_TIME).set(session.getLastPingTime());
-			node.get(SESSION_ID).set(session.getSessionId());
-			node.get(USER_NAME).set(session.getUserName());
-			node.get(VDB_NAME).set(session.getVDBName());
-			node.get(VDB_VERSION).set(session.getVDBVersion());
-			if (session.getSecurityDomain() != null){
-				node.get(SECURITY_DOMAIN).set(session.getSecurityDomain());
-			}
-			if (session.getClientHardwareAddress() != null) {
-				node.get(CLIENT_HARDWARE_ADRESS).set(session.getClientHardwareAddress());
-			}
-			wrapDomain(session, node);
-			return node;
-		}
 
-		public SessionMetadata unwrap(ModelNode node) {
+		@Override
+        public SessionMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -1428,7 +1100,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return session;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, APPLICATION_NAME, ModelType.STRING, false);
 			addAttribute(node, CREATED_TIME, ModelType.LONG, true);
 			addAttribute(node, CLIENT_HOST_NAME, ModelType.LONG, true);
@@ -1465,20 +1138,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String ASSOCIATED_SESSION = "session-id"; //$NON-NLS-1$
 		
 		public static TransactionMetadataMapper INSTANCE = new TransactionMetadataMapper();
-		
-		public ModelNode wrap(TransactionMetadata object, ModelNode transaction) {
-			if (object == null)
-				return null;
-			
-			transaction.get(ASSOCIATED_SESSION).set(object.getAssociatedSession());
-			transaction.get(CREATED_TIME).set(object.getCreatedTime());
-			transaction.get(SCOPE).set(object.getScope());
-			transaction.get(ID).set(object.getId());
-			wrapDomain(object, transaction);
-			return transaction;
-		}
 
-		public TransactionMetadata unwrap(ModelNode node) {
+		@Override
+        public TransactionMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1491,7 +1153,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return transaction;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, ASSOCIATED_SESSION, ModelType.STRING, true);
 			addAttribute(node, CREATED_TIME, ModelType.LONG, true);
 			addAttribute(node, SCOPE, ModelType.LONG, true);
@@ -1520,24 +1183,9 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String ACTIVE_THREADS = "active-threads"; //$NON-NLS-1$
 		
 		public static WorkerPoolStatisticsMetadataMapper INSTANCE = new WorkerPoolStatisticsMetadataMapper();
-		
-		public ModelNode wrap(WorkerPoolStatisticsMetadata stats, ModelNode node) {
-			if (stats == null)
-				return null;
-			node.get(TYPE).set(ModelType.OBJECT);
-			node.get(ACTIVE_THREADS).set(stats.getActiveThreads());
-			node.get(HIGHEST_ACTIVE_THREADS).set(stats.getHighestActiveThreads());
-			node.get(TOTAL_COMPLETED).set(stats.getTotalCompleted());
-			node.get(TOTAL_SUBMITTED).set(stats.getTotalSubmitted());
-			node.get(QUEUE_NAME).set(stats.getQueueName());
-			node.get(QUEUED).set(stats.getQueued());
-			node.get(HIGHEST_QUEUED).set(stats.getHighestQueued());
-			node.get(MAX_THREADS).set(stats.getMaxThreads());
-			wrapDomain(stats, node);
-			return node;
-		}
 
-		public WorkerPoolStatisticsMetadata unwrap(ModelNode node) {
+		@Override
+        public WorkerPoolStatisticsMetadata unwrap(ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1554,7 +1202,8 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return stats;
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		@Override
+        public ModelNode describe(ModelNode node) {
 			addAttribute(node, ACTIVE_THREADS, ModelType.INT, true);
 			addAttribute(node, HIGHEST_ACTIVE_THREADS, ModelType.INT, true);
 			addAttribute(node, TOTAL_COMPLETED, ModelType.LONG, true);

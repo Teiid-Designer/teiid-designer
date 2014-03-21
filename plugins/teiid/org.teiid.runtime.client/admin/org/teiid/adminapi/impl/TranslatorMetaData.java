@@ -21,9 +21,14 @@
  */
 package org.teiid.adminapi.impl;
 
-import org.jboss.dmr.ModelNode;
+import org.teiid.designer.annotation.Removed;
 
-public interface MetadataMapper<T> {
-	T unwrap(ModelNode node);
-	ModelNode describe(ModelNode node);
+@Removed("8.0.0")
+public class TranslatorMetaData extends VDBTranslatorMetaData {
+    private static final long serialVersionUID = 116875548438603151L;
+
+    /**
+     * Translator prefix constant
+     */
+    public static final String TRANSLATOR_PREFIX = "translator-"; //$NON-NLS-1$
 }

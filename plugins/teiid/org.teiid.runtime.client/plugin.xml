@@ -63,7 +63,6 @@
       </runtimeFactory>
    </extension>
 
-<!--
    <extension
          point="org.eclipse.datatools.connectivity.driverExtension">
       <driverTemplate
@@ -71,11 +70,11 @@
             defaultDefinitionName="%TEIID_DRIVER_DEFAULT_INSTANCE_NAME"
             description="%TEIID_DRIVER_TEMPLATE_DESCRIPTION"
             emptyJarListIsOK="false"
-            id="org.teiid.8.4.driver.serverDriverTemplate"
-            jarList="TEIID_HOME/client/teiid-8.4-client.jar"
+            id="org.teiid.runtime.driver.serverDriverTemplate"
+            jarList="TEIID_HOME/client/teiid-client.jar"
             name="%TEIID_DRIVER_TEMPLATE_NAME"
             parentCategory="org.teiid.datatools.connectivity.driver.teiidCategory"
-            valuesProvider="org.teiid84.internal.teiid.driver.TeiidDriverValuesProvider">
+            valuesProvider="org.teiid.runtime.client.driver.provider.TeiidDriverValuesProvider">
             <properties>
                 <property
                     generated="false"
@@ -95,7 +94,7 @@
                     generated="false"
                     id="org.eclipse.datatools.connectivity.db.version"
                     name="%VERSION_PROPERTY_NAME"
-                    value="8.4"
+                    value="7.7.+"
                     required="true"
                     visible="false"/>
                 <property
@@ -128,10 +127,10 @@
       <definition
           allowsConnections="true"
           description="Definition of the Teiid Database 8.4"
-          file="designer/org/teiid84/internal/teiid/database/teiidDB.xmi"
+          file="src/org/teiid/runtime/client/database/teiidDB.xmi"
           product="Teiid"
           productDisplayString="%PRODUCT_DISPLAY_STRING"
-          version="8.4"
+          version="7.7+"
           versionDisplayString="%VERSION_DISPLAY_STRING">
       </definition>
    </extension>
@@ -142,12 +141,12 @@
             provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
             eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
             product="Teiid"
-            version="8.4"/>
+            version="7.7+"/>
    </extension>
    <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
       <driverUIContributor
             class="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor"
-            driverTemplateID="org.teiid.8.4.driver.serverDriverTemplate"
+            driverTemplateID="org.teiid.runtime.client.driver.serverDriverTemplate"
             id="org.teiid.datatools.connectivity.ui.TeiidServerUIContributor">
       </driverUIContributor>
    </extension>
@@ -156,7 +155,7 @@
       <propertyEditor
             customPropertyDescriptor="org.eclipse.datatools.connectivity.ui.PasswordTextPropertyDescriptor"
             driverPropertyID="org.eclipse.datatools.connectivity.db.password"
-            driverTemplateID="org.teiid.8.4.driver.serverDriverTemplate"
+            driverTemplateID="org.teiid.runtime.client.driver.serverDriverTemplate"
             id="org.eclipse.datatools.connectivity.teiid.ui.propertyEditor.password">
       </propertyEditor>
    </extension>
@@ -167,7 +166,7 @@
             configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
             default="false"
             product="Teiid"
-            version="8.4">
+            version="7.7+">
       </dbUIConfiguration>
    </extension>
 
@@ -178,9 +177,8 @@
             default="false"
             product="Teiid"
             supportsDebugging="false"
-            version="8.4">
+            version="7.7+">
       </dbConfiguration>
    </extension>
--->
 
 </plugin>

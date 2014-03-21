@@ -603,7 +603,7 @@ public class Batch0Serializer extends BatchSerializer {
     
     @Override
     public List<List<Object>> readBatch(ObjectInput in, String[] types) throws IOException, ClassNotFoundException {
-    	return readBatch(in, types, (byte)1);
+    	return readBatch(in, types, (byte)0);
     }
     
     private List<List<Object>> readBatch(ObjectInput in, String[] types, byte version) throws IOException, ClassNotFoundException {

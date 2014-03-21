@@ -7,8 +7,10 @@
 */
 package org.teiid.runtime.client.admin;
 
+import java.io.InputStream;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -47,14 +49,35 @@ public abstract class AdminSpec {
     }
 
     /**
-     * @return test VDB configuration
-     */
-    public abstract String getTestVDB();
-
-    /**
      * @param teiidServer
      * @return new admin instance
      * @throws AdminException 
      */
     public abstract Admin createAdmin(ITeiidServer teiidServer) throws AdminException;
+
+    /**
+     * @return test VDB configuration
+     */
+    public abstract String getTestVDB();
+
+    /**
+     * @return the loading status value
+     */
+    public abstract VDB.Status getLoadingVDBStatus();
+
+    /**
+     * @param admin
+     * @param fileName
+     * @param iStream
+     * @throws AdminException 
+     */
+    public abstract void deploy(Admin admin, String fileName, InputStream iStream) throws AdminException;
+
+    /**
+     * @param admin
+     * @param vdbName
+     * @param version
+     * @throws AdminException 
+     */
+    public abstract void undeploy(Admin admin, String vdbName, int version) throws AdminException;
 }

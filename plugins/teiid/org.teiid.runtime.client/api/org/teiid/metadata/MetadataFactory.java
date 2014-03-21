@@ -34,7 +34,6 @@ import java.util.Properties;
 import java.util.TreeMap;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
-import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -75,7 +74,7 @@ public class MetadataFactory implements Serializable {
     private Schema schema = new Schema();
     private String idPrefix;
     protected int count;
-    private transient ModelMetaData model;
+    private transient Model model;
     private transient Map<String, ? extends VDBResource> vdbResources;
     private List<Grant> grants;
 
@@ -96,7 +95,7 @@ public class MetadataFactory implements Serializable {
 		BUILTIN_NAMESPACES = Collections.unmodifiableMap(map);
 	}
 
-	public MetadataFactory(ITeiidServerVersion teiidVersion, String vdbName, int vdbVersion, Map<String, Datatype> runtimeTypes, ModelMetaData model) {
+	public MetadataFactory(ITeiidServerVersion teiidVersion, String vdbName, int vdbVersion, Map<String, Datatype> runtimeTypes, Model model) {
         this(teiidVersion, vdbName, vdbVersion, model.getName(), runtimeTypes, model.getProperties(), model.getSchemaText());
         this.model = model;
     }
@@ -713,7 +712,7 @@ public class MetadataFactory implements Serializable {
 //        this.parser.parseDDL(this, ddl);
 //    }
 
-    public void setModel(ModelMetaData model) {
+    public void setModel(Model model) {
         this.model = model;
     }
 

@@ -22,34 +22,101 @@
 
 package org.teiid.adminapi.impl;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputStream.GetField;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import org.teiid.adminapi.Model;
-import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 
 
-public class ModelMetaData extends AdminObjectImpl implements Model {
+public class ModelMetaData extends AdminObjectImpl implements Model, Serializable {
 	
 	private static final int DEFAULT_ERROR_HISTORY = 10;
 	private static final String SUPPORTS_MULTI_SOURCE_BINDINGS_KEY_OLD = "supports-multi-source-bindings"; //$NON-NLS-1$
 	private static final String SUPPORTS_MULTI_SOURCE_BINDINGS_KEY = "multisource"; //$NON-NLS-1$
 	private static final long serialVersionUID = 3714234763056162230L;
-		
+
+	/**
+     * This ONLY exists to ensure that the serialisation framework
+     * has access to the anonymous class ModelMetaData$1.
+     *
+     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
+     */
+    @Removed("8.0.0")
+	private transient ListOverMap<SourceMappingMetadata> sevenSources = new ListOverMap<SourceMappingMetadata>(new KeyBuilder<SourceMappingMetadata>() {
+        private static final long serialVersionUID = 2273673984691112369L;
+
+        @Override
+        public String getKey(SourceMappingMetadata entry) {
+            return entry.getName();
+        }
+    });
+
 	protected LinkedHashMap<String, SourceMappingMetadata> sources = new LinkedHashMap<String, SourceMappingMetadata>();	
 	protected String modelType = Type.PHYSICAL.name();
 	protected String description;	
 	protected String path; 
     protected Boolean visible = true;
+
+    @Since("8.0.0")
     protected List<Message> messages;
+
     protected transient List<Message> runtimeMessages;
+
+    @Since("8.0.0")
     protected String schemaSourceType;
+
+    @Since("8.0.0")
 	protected String schemaText;
+
+    @Since("8.0.0")
 	protected MetadataStatus metadataStatus = MetadataStatus.LOADING;
+
+	private LinkedHashMap<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {
+        LinkedHashMap<String, SourceMappingMetadata> newMap = new LinkedHashMap<String, SourceMappingMetadata>();
+        for (Entry<String, SourceMappingMetadata> entry : overMap.getMap().entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return newMap;
+    }
+
+	/*
+     * Helper method for serialization to deal with differences between Teiid 7 and 8
+     */
+	@SuppressWarnings("nls")
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        GetField serFields = ois.readFields();
+
+        Object serSources = serFields.get("sources", null);
+        if (isLinkedHashMap(serSources)) { /* Teiid Version 8+ */
+            sources = (LinkedHashMap<String, SourceMappingMetadata>)serSources;
+        } else if (isListOverMap(serSources)) { /* Teiid Version 7 */
+            ListOverMap<SourceMappingMetadata> overMap = (ListOverMap<SourceMappingMetadata>)serSources;
+            sources = convertSources(overMap);
+        } else
+            throw new IllegalStateException();
+
+        modelType = (String) serFields.get("modelType", null);
+        description= (String) serFields.get("description", null);
+        path = (String) serFields.get("path", null);
+        visible = (Boolean) serFields.get("visible", null);
+
+        /* Teiid 8+ */
+        messages = (List<Message>) serFields.get("messages", null);
+        schemaSourceType = (String) serFields.get("schemaSourceType", null);
+        schemaText = (String) serFields.get("schemaText", null);
+        metadataStatus = (MetadataStatus) serFields.get("metadataStatus", null);
+    }
 
 	@Override
 	public String getDescription() {
@@ -184,14 +251,14 @@ public class ModelMetaData extends AdminObjectImpl implements Model {
 	public synchronized boolean hasErrors() {
 		if (this.messages != null) {
 			for (Message error : this.messages) {
-				if (error.getSeverity() == Severity.ERROR) {
+				if (error.getSeverity() == Message.Severity.ERROR) {
 					return true;
 				}
 			}
 		}
 		if (this.runtimeMessages != null) {
 			for (Message error : this.runtimeMessages) {
-				if (error.getSeverity() == Severity.ERROR) {
+				if (error.getSeverity() == Message.Severity.ERROR) {
 					return true;
 				}
 			}
@@ -218,7 +285,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model {
 	}
 	
     public Message addMessage(String severity, String message) {
-        Message ve = new Message(Severity.valueOf(severity), message);
+        Message ve = new Message(Message.Severity.valueOf(severity), message);
         addMessage(ve);
         return ve;
     }
@@ -228,10 +295,10 @@ public class ModelMetaData extends AdminObjectImpl implements Model {
 	}    
     
     public synchronized Message addRuntimeError(String message) {
-    	return addRuntimeMessage(Severity.ERROR, message);
+    	return addRuntimeMessage(Message.Severity.ERROR, message);
     }    
     
-    public synchronized Message addRuntimeMessage(Severity severity, String message) {
+    public synchronized Message addRuntimeMessage(Message.Severity severity, String message) {
         Message ve = new Message(severity, message);
         if (this.runtimeMessages == null) {
             this.runtimeMessages = new LinkedList<Message>();
@@ -333,6 +400,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model {
 		this.schemaSourceType = schemaSourceType;
 	}
 
+	@Override
 	public String getSchemaText() {
 		return schemaText;
 	}
@@ -347,7 +415,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model {
 		List<Message> errors = getMessages();
 		if (errors != null && !errors.isEmpty()) {
 			for (Message m:errors) {
-				if (m.getSeverity() == Severity.ERROR) {
+				if (m.getSeverity() == Message.Severity.ERROR) {
 					allErrors.add(m.getValue());
 				}
 			}

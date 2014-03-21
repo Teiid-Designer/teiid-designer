@@ -29,6 +29,7 @@ import java.util.Properties;
 import java.util.Set;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 
 public interface Admin {
 
@@ -107,15 +108,35 @@ public interface Admin {
      * @param content
      * @throws AdminException
      */
-    public void deploy(String deployName, InputStream content) throws AdminException;
+    @Since("8.0.0")
+    void deploy(String deployName, InputStream content) throws AdminException;
 
+    /**
+     * Deploy a {@link VDB} file.
+     * @param name  Name of the VDB file to save under
+     * @param VDB   VDB.
+     * @throws AdminException
+     *
+     * @return the {@link VDB} representing the current property values and runtime state.
+     */
+    @Removed("8.0.0")
+    void deployVDB(String fileName, InputStream vdb) throws AdminException;
 
     /**
      * Undeploy artifact (VDB, JAR, RAR files)
      * @param deployedName
      * @throws AdminException
      */
+    @Since("8.0.0")
     void undeploy(String deployedName) throws AdminException;
+
+    /**
+     * Delete a vdb
+     * @param vdbName
+     * @param version
+     */
+    @Removed("8.0.0")
+    void deleteVDB(String vdbName, int version);
 
     /**
      * Get the VDBs that currently deployed in the system
@@ -397,4 +418,5 @@ public interface Admin {
      * @throws AdminException
      */
     void restart();
+
 }

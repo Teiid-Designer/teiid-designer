@@ -7,8 +7,11 @@
 */
 package org.teiid.runtime.client.admin.v8;
 
+import java.io.InputStream;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.VDB;
+import org.teiid.adminapi.VDB.Status;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -34,11 +37,6 @@ public class Admin8Spec extends AdminSpec {
     }
 
     @Override
-    public String getTestVDB() {
-        return TEST_VDB;
-    }
-
-    @Override
     public Admin createAdmin(ITeiidServer teiidServer) throws AdminException {
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         char[] passwordArray = null;
@@ -52,5 +50,25 @@ public class Admin8Spec extends AdminSpec {
                                                                                               passwordArray);
 
         return admin;
+    }
+
+    @Override
+    public String getTestVDB() {
+        return TEST_VDB;
+    }
+
+    @Override
+    public Status getLoadingVDBStatus() {
+        return VDB.Status.LOADING;
+    }
+
+    @Override
+    public void deploy(Admin admin, String fileName, InputStream iStream) throws AdminException {
+        admin.deploy(fileName, iStream);
+    }
+
+    @Override
+    public void undeploy(Admin admin, String vdbName, int version) throws AdminException {
+        admin.undeploy(vdbName);
     }
 }

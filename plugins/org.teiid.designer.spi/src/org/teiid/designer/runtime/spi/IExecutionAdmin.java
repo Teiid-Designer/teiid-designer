@@ -23,6 +23,11 @@ import org.eclipse.core.runtime.IStatus;
 public interface IExecutionAdmin {
 
     /**
+     * VDB name for the ping test
+     */
+    String PING_VDB = "ping-vdb.xml"; //$NON-NLS-1$
+
+    /**
      * Type of ping to be performed
      */
     enum PingType {

@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 
 /**
@@ -63,33 +65,38 @@ public final class ApplicationInfo implements Serializable {
 
     private static final String LINE_SEPARATOR = "\n"; //$NON-NLS-1$
 
+    private static final String COPYRIGHT = "copyright"; //$NON-NLS-1$
+
+    private static final String URL = "url"; //$NON-NLS-1$
+    
 	private Properties props = new Properties();
 
+	private ITeiidServerVersion teiidVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+
     private ApplicationInfo() {
-		InputStream is = this.getClass().getResourceAsStream("application.properties"); //$NON-NLS-1$
-		try {
-			try {
-				props.load(is);
-			} finally {
-				is.close();
-			}
-		} catch (IOException e) {
-			  throw new RuntimeException(e);
-		}
+        props.setProperty(COPYRIGHT, "Copyright (C) 2008-2009 Red Hat, Inc"); //$NON-NLS-1$
+        props.setProperty(URL, "http://www.jboss.org/teiid"); //$NON-NLS-1$
     }
-    
+
+    /**
+     * @param teiidVersion
+     */
+    public void setTeiidVersion(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
+
     /**
      * @return release number
      */
     public String getReleaseNumber() {
-		return props.getProperty("build.releaseNumber"); //$NON-NLS-1$
+		return teiidVersion.toString();
 	}
     
 	/**
 	 * @return major release version
 	 */
 	public int getMajorReleaseVersion() {
-		String version = getReleaseNumber().substring(0, getReleaseNumber().indexOf('.'));
+		String version = teiidVersion.getMajor();
 		return Integer.parseInt(version);
 	}
 	
@@ -97,37 +104,22 @@ public final class ApplicationInfo implements Serializable {
      * @return minor release version
      */
     public int getMinorReleaseVersion() {
-    	int majorIndex = getReleaseNumber().indexOf('.');
-    	String version = getReleaseNumber().substring(majorIndex+1, getReleaseNumber().indexOf('.', majorIndex+1));
+    	String version = teiidVersion.getMinor();
         return Integer.parseInt(version);
     }
-	
-	/**
-	 * @return build number
-	 */
-	public String getBuildNumber() {
-		return props.getProperty("build.number"); //$NON-NLS-1$
-	}
 	
 	/**
 	 * @return url property
 	 */
 	public String getUrl() {
-		return props.getProperty("url"); //$NON-NLS-1$
+		return props.getProperty(URL);
 	}
 	
 	/**
 	 * @return copyright property
 	 */
 	public String getCopyright() {
-		return props.getProperty("copyright"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * @return build date
-	 */
-	public String getBuildDate() {
-		return props.getProperty("build.date"); //$NON-NLS-1$
+		return props.getProperty(COPYRIGHT);
 	}
 
     /**

@@ -44,6 +44,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
+import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -51,6 +52,7 @@ import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
@@ -124,6 +126,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
         init();
     }
 
+    private boolean isLessThanTeiidEight() {
+        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
+        return minVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+    }
+
     @Override
     public boolean dataSourceExists( String name ) {
         // Check if exists, return false
@@ -182,7 +189,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     private void doDeployVdb(String deploymentName, String vdbName, int vdbVersion, InputStream inStream) throws Exception {
-        admin.deploy(deploymentName, inStream);
+        adminSpec.deploy(admin, deploymentName, inStream);
         // Give a 0.5 sec pause for the VDB to finish loading metadata.
         try {
             Thread.sleep(500);
@@ -196,7 +203,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         VDB vdb = admin.getVDB(vdbName, vdbVersion);
 
         // If the VDB is still loading, refresh again and potentially start refresh job
-        if(vdb.getStatus().equals(VDB.Status.LOADING) && vdb.getValidityErrors().isEmpty()) {
+        if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
             // Give a 0.5 sec pause for the VDB to finish loading metadata.
             try {
                 Thread.sleep(500);
@@ -207,7 +214,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
             vdb = admin.getVDB(vdbName, vdbVersion);
             // Determine if still loading, if so start refresh job.  User will get dialog that the
             // vdb is still loading - and try again in a few seconds
-            if(vdb.getStatus().equals(VDB.Status.LOADING) && vdb.getValidityErrors().isEmpty()) {
+            if(vdb.getStatus().equals(adminSpec.getLoadingVDBStatus()) && vdb.getValidityErrors().isEmpty()) {
                 final Job refreshVDBsJob = new RefreshVDBsJob(vdbName);
                 refreshVDBsJob.schedule();
             }
@@ -218,6 +225,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
     
     @Override
     public String getSchema(String vdbName, int vdbVersion, String modelName) throws Exception {
+        if (isLessThanTeiidEight()) {
+            // Limited schema support in 77x, just return empty string here
+            return ""; //$NON-NLS-1$
+        }
+
         return admin.getSchema(vdbName, vdbVersion, modelName, null, null);
     }
         
@@ -400,7 +412,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                         continue;
                     }
                     try {
-                        admin.deploy(fileName, iStream);
+                        adminSpec.deploy(admin, fileName, iStream);
                     } catch (Exception ex) {
                         // Jar deployment failed
                         TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
@@ -430,7 +442,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     throw ex;
                 }
                 try {
-                    admin.deploy(fileName, iStream);
+                    adminSpec.deploy(admin, fileName, iStream);
                     refreshDataSourceTypes();
                 } catch (Exception ex) {
                     // Jar deployment failed
@@ -503,6 +515,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     @Override
     public Properties getDataSourceProperties(String name) throws Exception {
+        if (isLessThanTeiidEight()) {
+            // Teiid 7.7.x does not support
+            return null;
+        }
+
         return this.admin.getDataSource(name);
     }
 
@@ -620,11 +637,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.dataSourceByNameMap.clear();
         Collection<ITeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
         for (ITeiidDataSource ds : tdsList) {
-        	// Get Properties for the source
-        	Properties dsProps = this.admin.getDataSource(ds.getName());
-        	// Transfer properties to the ITeiidDataSource
-        	ds.getProperties().clear();
-        	ds.getProperties().putAll(dsProps);
+            if (!isLessThanTeiidEight()) {
+                /* Not done in Teiid 7.7 */
+                // Get Properties for the source
+                Properties dsProps = this.admin.getDataSource(ds.getName());
+                // Transfer properties to the ITeiidDataSource
+                ds.getProperties().clear();
+                ds.getProperties().putAll(dsProps);
+            }
+
         	// put ds into map
             this.dataSourceByNameMap.put(ds.getName(), ds);
         }
@@ -718,7 +739,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public void undeployVdb( String vdbName) throws Exception {
-        this.admin.undeploy(appendVdbExtension(vdbName));
+        adminSpec.undeploy(admin, appendVdbExtension(vdbName), getVdb(vdbName).getVersion());
         ITeiidVdb vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -732,7 +753,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     
     @Override
     public void undeployDynamicVdb( String vdbName) throws Exception {
-        this.admin.undeploy(appendDynamicVdbSuffix(vdbName));
+        adminSpec.undeploy(admin, appendDynamicVdbSuffix(vdbName), getVdb(vdbName).getVersion());
         ITeiidVdb vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -751,7 +772,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if undeploying vdb fails
      */
     public void undeployVdb( String vdbName, int vdbVersion ) throws Exception {
-        this.admin.undeploy(appendVdbExtension(vdbName));
+        adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdbVersion);
         ITeiidVdb vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -819,22 +840,28 @@ public class ExecutionAdmin implements IExecutionAdmin {
         String host = teiidServer.getHost();
         ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
         
+        String protocol = ITeiidConnectionInfo.MM;
+        if (teiidJdbcInfo.isSecure())
+            protocol = ITeiidConnectionInfo.MMS;
+
         Connection teiidJdbcConnection = null;
-        String url = "jdbc:teiid:ping@mm://" + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
+        String url = "jdbc:teiid:ping@" + protocol + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
         
         try {
 
-            admin.deploy("ping-vdb.xml", new ByteArrayInputStream(adminSpec.getTestVDB().getBytes())); //$NON-NLS-1$
+            admin.deploy(PING_VDB, new ByteArrayInputStream(adminSpec.getTestVDB().getBytes()));
             
             try{
                 String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
-                teiidJdbcConnection = TeiidDriver.getInstance().connect(urlAndCredentials, null);
+                TeiidDriver teiidDriver = TeiidDriver.getInstance();
+                teiidDriver.setTeiidVersion(teiidServer.getServerVersion());
+                teiidJdbcConnection = teiidDriver.connect(urlAndCredentials, null);
                //pass
             } catch(SQLException ex){
                 String msg = Messages.getString(Messages.ExecutionAdmin.serverDeployUndeployProblemPingingTeiidJdbc, url);
                 return new Status(IStatus.ERROR, PLUGIN_ID, msg, ex);
             } finally {
-                admin.undeploy("ping-vdb.xml"); //$NON-NLS-1$
+                adminSpec.undeploy(admin, PING_VDB, 1);
                 
                 if( teiidJdbcConnection != null ) {
                     teiidJdbcConnection.close();

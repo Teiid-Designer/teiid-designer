@@ -21,26 +21,104 @@
  */
 package org.teiid.adminapi.impl;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputStream.GetField;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import org.teiid.adminapi.AdminObject;
+import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 
 public abstract class AdminObjectImpl implements AdminObject, Serializable {
 
 	private static final long serialVersionUID = -6381303538713462682L;
-	
+
+	/**
+	 * This ONLY exists to ensure that the serialisation framework
+	 * has access to the anonymous class AdminObjectImpl$1.
+	 *
+	 * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
+	 */
+	@Removed("8.0.0")
+	private transient ListOverMap<PropertyMetadata> sevenProperties = new ListOverMap<PropertyMetadata>(new KeyBuilder<PropertyMetadata>() {
+        private static final long serialVersionUID = 3687928367250819142L;
+
+        @Override
+        public String getKey(PropertyMetadata entry) {
+            return entry.getName();
+        }
+    });
+
 	private String name;
+
+	@Since("8.0.0")
 	private String serverGroup;
+
+	@Since("8.0.0")
 	private String serverName;
+
+	@Since("8.0.0")
 	private String hostName;
-		
+
 	private Map<String, String> properties = Collections.synchronizedMap(new LinkedHashMap<String, String>(2));
+
 	protected transient Map<Class<?>, Object> attachments = Collections.synchronizedMap(new HashMap<Class<?>, Object>(2));
-		
+
+	protected boolean isListOverMap(Object obj) {
+        return obj instanceof ListOverMap;
+    }
+
+    protected boolean isLinkedHashMap(Object obj) {
+        return obj instanceof LinkedHashMap;
+    }
+
+    protected boolean isMap(Object obj) {
+        return obj instanceof Map;
+    }
+
+    private Map<String, String> convertProperties(ListOverMap<PropertyMetadata> overMap) {
+        Map<String, String> newMap = new LinkedHashMap<String, String>();
+        for (Entry<String, PropertyMetadata> entry : overMap.getMap().entrySet()) {
+            PropertyMetadata propertyMetadata = entry.getValue();
+            newMap.put(propertyMetadata.getName(), propertyMetadata.getValue());
+        }
+
+        return Collections.synchronizedMap(newMap);
+    }
+
+    /*
+     * Helper method for serialization to deal with differences between Teiid 7 and 8
+     */
+    @SuppressWarnings("nls")
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        GetField serFields = ois.readFields();
+        name = (String) serFields.get("name", null);
+
+        /* Version 8+ */
+        serverGroup = (String) serFields.get("serverGroup", null);
+        serverName = (String) serFields.get("serverName", null);
+        hostName = (String) serFields.get("hostName", null);
+
+        Object serProps = serFields.get("properties", null);
+        /* Teiid Version 8+ */
+        if (serProps instanceof Map) {
+            properties = (Map<String, String>)serProps;
+            return;
+        }
+
+        /* Teiid Version 7 */
+        if (serProps instanceof ListOverMap) {
+            ListOverMap<PropertyMetadata> overMap = (ListOverMap<PropertyMetadata>)serProps;
+            properties = convertProperties(overMap);
+        }
+    }
+
 	@Override
 	public String getName() {
 		return this.name;

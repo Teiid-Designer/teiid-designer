@@ -91,6 +91,7 @@ public class TeiidDriver implements Driver {
      */
     public void setTeiidVersion(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
+        ApplicationInfo.getInstance().setTeiidVersion(teiidVersion);
     }
     
     @Override
@@ -149,12 +150,12 @@ public class TeiidDriver implements Driver {
 
     @Override
     public int getMajorVersion() {
-        return ApplicationInfo.getInstance().getMajorReleaseVersion();
+        return Integer.parseInt(teiidVersion.getMajor());
     }
 
     @Override
     public int getMinorVersion() {
-        return ApplicationInfo.getInstance().getMinorReleaseVersion();
+        return Integer.parseInt(teiidVersion.getMinor());
     }
 
     public String getDriverName() {

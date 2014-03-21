@@ -407,10 +407,6 @@ public class Admin8Factory {
 
 		class AbstractMetadatMapper implements MetadataMapper<String>{
 			@Override
-			public ModelNode wrap(String obj, ModelNode node) {
-				return null;
-			}
-			@Override
 			public String unwrap(ModelNode node) {
 				return null;
 			}
@@ -1892,8 +1888,19 @@ public class Admin8Factory {
 
         @Override
         @Removed("8.0.0")
-        public void mergeVDBs(String sourceVDBName, int sourceVDBVersion, String targetVDBName, int targetVDBVersion)
-            throws AdminException {
+        public void mergeVDBs(String sourceVDBName, int sourceVDBVersion, String targetVDBName, int targetVDBVersion) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        @Removed("8.0.0")
+        public void deployVDB(String fileName, InputStream vdb) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        @Removed("8.0.0")
+        public void deleteVDB(String vdbName, int version) {
             throw new UnsupportedOperationException();
         }
     }

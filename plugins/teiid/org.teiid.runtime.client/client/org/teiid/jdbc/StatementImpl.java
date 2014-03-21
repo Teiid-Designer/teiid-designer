@@ -69,6 +69,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.jdbc.EnhancedTimer.Task;
 import org.teiid.net.TeiidURL;
 import org.teiid.runtime.client.Messages;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
 
 
 public class StatementImpl extends WrapperImpl implements TeiidStatement {
@@ -204,7 +205,7 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
     protected boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.isGreaterThan(TeiidServerVersion.TEIID_8_SERVER);
+        return minVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER);
     }
 
     protected boolean isGreaterThanTeiidSeven() {
@@ -213,8 +214,10 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
     }
 
     protected void checkSupportedVersion() {
-        if (isLessThanTeiidEight())
+        if (isLessThanTeiidEight()) {
+            TeiidRuntimePlugin.logError("StatementImpl.checkSupportedVersion", "Method being executed that is not supported in teiid version " + getTeiidVersion());  //$NON-NLS-1$//$NON-NLS-2$
             throw new UnsupportedOperationException();
+        }
     }
 
     protected DataTypeManagerService getDataTypeManager() {
@@ -351,6 +354,11 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
 	@Override
     public boolean execute(String sql) throws SQLException {
+	    if (isLessThanTeiidEight()) {
+	        executeSql(new String[] {sql}, false, ResultsMode.EITHER, true, null);
+            return hasResultSet();
+	    }
+
         return execute(sql, Statement.NO_GENERATED_KEYS);
     }
     

@@ -7,8 +7,12 @@
 */
 package org.teiid.runtime.client.admin.v7;
 
+import java.io.InputStream;
 import org.teiid.adminapi.Admin;
 import org.teiid.adminapi.AdminException;
+import org.teiid.adminapi.VDB;
+import org.teiid.adminapi.VDB.Status;
+import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -36,11 +40,6 @@ public class Admin7Spec extends AdminSpec {
     }
 
     @Override
-    public String getTestVDB() {
-        return TEST_VDB;
-    }
-
-    @Override
     public Admin createAdmin(ITeiidServer teiidServer) throws AdminException {
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         char[] passwordArray = null;
@@ -53,5 +52,30 @@ public class Admin7Spec extends AdminSpec {
                                                             teiidAdminInfo.getUrl());
 
         return admin;
+    }
+
+    @Override
+    public String getTestVDB() {
+        return TEST_VDB;
+    }
+
+    @Override
+    public Status getLoadingVDBStatus() {
+        return VDB.Status.ACTIVE;
+    }
+
+    @Override
+    public void deploy(Admin admin, String fileName, InputStream iStream) throws AdminException {
+        admin.deployVDB(fileName, iStream);
+    }
+
+    @Override
+    public void undeploy(Admin admin, String vdbName, int version) {
+        if (IExecutionAdmin.PING_VDB.equals(vdbName)) {
+            /* Teiid 7 uses the name attribute of the vdb */
+            vdbName = "ping"; //$NON-NLS-1$
+        }
+
+        admin.deleteVDB(vdbName, version);
     }
 }

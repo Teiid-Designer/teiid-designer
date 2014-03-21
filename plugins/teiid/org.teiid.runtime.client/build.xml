@@ -19,13 +19,27 @@
 	<import file="${GIT-HOME}/scripts/build-common.xml" />
 
 	<!-- Comma-separated list of required libraries -->
-	<property name="libs" value="jboss-as-cli.jar,
-		                         jboss-as-controller.jar,
-		                         jboss-as-controller-client.jar,
-		                         jboss-dmr.jar,
-		                         jboss-vfs.jar,
-		                         nux.jar,
-		                         xom.jar"/>
+	<property name="libs" value="connector-api.jar,
+                                 jboss-as-cli.jar,
+                                 jboss-as-controller-client.jar,
+                                 jboss-as-controller.jar,
+                                 jboss-as-protocol.jar,
+                                 jboss-dmr.jar,
+                                 jboss-logging.jar,
+                                 jboss-marshalling-river.jar,
+                                 jboss-marshalling.jar,
+                                 jboss-modules.jar,
+                                 jboss-remoting.jar,
+                                 jboss-sasl.jar,
+                                 jboss-threads.jar,
+                                 jboss-vfs.jar,
+                                 jgroups.jar,
+                                 json-simple.jar,
+                                 jta.jar,
+                                 nux.jar,
+                                 xnio-api.jar,
+                                 xnio-nio.jar,
+                                 xom.jar"/>
 
 	<!-- Location of the generated SQLParser class -->
 	<property name="parsers" value="v7/Teiid7Parser.java,

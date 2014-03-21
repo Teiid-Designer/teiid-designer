@@ -15,9 +15,22 @@
     <description>Teiid SQL runtime client</description>
     <properties>
         <jbossas-version>7.2.0.Final</jbossas-version>
-        <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
         <version.org.jboss.jboss-dmr>1.1.6.Final</version.org.jboss.jboss-dmr>
+        <version.org.jboss.modules.jboss-modules>1.2.0.CR1</version.org.jboss.modules.jboss-modules>
+        <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
+        <version.org.jboss.jboss-threads>2.0.0.GA</version.org.jboss.jboss-threads>
+        <version.org.jboss.logging.jboss-logging>3.1.2.GA</version.org.jboss.logging.jboss-logging>
+        <version.org.jboss.marshalling.jboss-marshalling>1.3.16.GA</version.org.jboss.marshalling.jboss-marshalling>
+        <version.org.jboss.marshalling.jboss-marshalling-river>1.3.16.GA</version.org.jboss.marshalling.jboss-marshalling-river>
+        <version.org.jboss.jboss-remoting>3.2.3.GA</version.org.jboss.jboss-remoting>
+        <version.org.jboss.jboss-sasl>1.0.0.Final</version.org.jboss.jboss-sasl>
+        <version.json-simple>1.1</version.json-simple>
+        <version.org.jgroups>3.2.7.Final</version.org.jgroups>
+        <version.connector-api>1.5</version.connector-api>
+        <version.jta>1.1</version.jta>
         <version.nux>1.6</version.nux>
+        <version.xnio.api>3.0.3.GA</version.xnio.api>
+        <version.xnio.nio>3.0.3.GA</version.xnio.nio>
         <version.xom>1.2</version.xom>
     </properties>
     <build>
@@ -50,8 +63,53 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
+                                    <groupId>javax.resource</groupId>
+                                    <artifactId>connector-api</artifactId>
+                                    <version>${version.connector-api}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jgroups</groupId>
+                                    <artifactId>jgroups</artifactId>
+                                    <version>${version.org.jgroups}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.googlecode.json-simple</groupId>
+                                    <artifactId>json-simple</artifactId>
+                                    <version>${version.json-simple}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>javax.transaction</groupId>
+                                    <artifactId>jta</artifactId>
+                                    <version>${version.jta}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>nux</groupId>
+                                    <artifactId>nux</artifactId>
+                                    <version>${version.nux}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.xnio</groupId>
+                                    <artifactId>xnio-api</artifactId>
+                                    <version>${version.xnio.api}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.xnio</groupId>
+                                    <artifactId>xnio-nio</artifactId>
+                                    <version>${version.xnio.nio}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>xom</groupId>
+                                    <artifactId>xom</artifactId>
+                                    <version>${version.xom}</version>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.jboss.as</groupId>
                                     <artifactId>jboss-as-cli</artifactId>
+                                    <version>${jbossas-version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.as</groupId>
+                                    <artifactId>jboss-as-controller-client</artifactId>
                                     <version>${jbossas-version}</version>
                                 </artifactItem>
                                 <artifactItem>
@@ -61,7 +119,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.jboss.as</groupId>
-                                    <artifactId>jboss-as-controller-client</artifactId>
+                                    <artifactId>jboss-as-protocol</artifactId>
                                     <version>${jbossas-version}</version>
                                 </artifactItem>
                                 <artifactItem>
@@ -70,19 +128,44 @@
                                     <version>${version.org.jboss.jboss-dmr}</version>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>org.jboss.logging</groupId>
+                                    <artifactId>jboss-logging</artifactId>
+                                    <version>${version.org.jboss.logging.jboss-logging}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.marshalling</groupId>
+                                    <artifactId>jboss-marshalling</artifactId>
+                                    <version>${version.org.jboss.marshalling.jboss-marshalling}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.marshalling</groupId>
+                                    <artifactId>jboss-marshalling-river</artifactId>
+                                    <version>${version.org.jboss.marshalling.jboss-marshalling-river}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.modules</groupId>
+                                    <artifactId>jboss-modules</artifactId>
+                                    <version>${version.org.jboss.modules.jboss-modules}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.remoting3</groupId>
+                                    <artifactId>jboss-remoting</artifactId>
+                                    <version>${version.org.jboss.jboss-remoting}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.sasl</groupId>
+                                    <artifactId>jboss-sasl</artifactId>
+                                    <version>${version.org.jboss.jboss-sasl}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.jboss.threads</groupId>
+                                    <artifactId>jboss-threads</artifactId>
+                                    <version>${version.org.jboss.jboss-threads}</version>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>org.jboss</groupId>
                                     <artifactId>jboss-vfs</artifactId>
                                     <version>${version.org.jboss.jboss-vfs}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>nux</groupId>
-                                    <artifactId>nux</artifactId>
-                                    <version>${version.nux}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>xom</groupId>
-                                    <artifactId>xom</artifactId>
-                                    <version>${version.xom}</version>
                                 </artifactItem>
                             </artifactItems>
                             <skip>false</skip>
@@ -286,8 +369,44 @@
     </repositories>
     <dependencies>
         <dependency>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgroups</groupId>
+            <artifactId>jgroups</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>nux</groupId>
+            <artifactId>nux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.xnio</groupId>
+            <artifactId>xnio-nio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xom</groupId>
+            <artifactId>xom</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-cli</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
@@ -295,30 +414,95 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
-            <artifactId>jboss-as-controller-client</artifactId>
+            <artifactId>jboss-as-protocol</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-dmr</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.marshalling</groupId>
+            <artifactId>jboss-marshalling</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.marshalling</groupId>
+            <artifactId>jboss-marshalling-river</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.modules</groupId>
+            <artifactId>jboss-modules</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.remoting3</groupId>
+            <artifactId>jboss-remoting</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.sasl</groupId>
+            <artifactId>jboss-sasl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.threads</groupId>
+            <artifactId>jboss-threads</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>nux</groupId>
-            <artifactId>nux</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xom</groupId>
-            <artifactId>xom</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement> 
         <dependencies>
             <dependency>
+                <groupId>javax.resource</groupId>
+                <artifactId>connector-api</artifactId>
+                <version>${version.connector-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${version.org.jgroups}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${version.json-simple}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.transaction</groupId>
+                <artifactId>jta</artifactId>
+                <version>${version.jta}</version>
+            </dependency>
+            <dependency>
+                <groupId>nux</groupId>
+                <artifactId>nux</artifactId>
+                <version>${version.nux}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.xnio</groupId>
+                <artifactId>xnio-api</artifactId>
+                <version>${version.xnio.api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.xnio</groupId>
+                <artifactId>xnio-nio</artifactId>
+                <version>${version.xnio.nio}</version>
+            </dependency>
+            <dependency>
+                <groupId>xom</groupId>
+                <artifactId>xom</artifactId>
+                <version>${version.xom}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.as</groupId>
                 <artifactId>jboss-as-cli</artifactId>
+                <version>${jbossas-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.as</groupId>
+                <artifactId>jboss-as-controller-client</artifactId>
                 <version>${jbossas-version}</version>
             </dependency>
             <dependency>
@@ -328,7 +512,7 @@
             </dependency>
             <dependency>
                 <groupId>org.jboss.as</groupId>
-                <artifactId>jboss-as-controller-client</artifactId>
+                <artifactId>jboss-as-protocol</artifactId>
                 <version>${jbossas-version}</version>
             </dependency>
             <dependency>
@@ -337,19 +521,44 @@
                 <version>${version.org.jboss.jboss-dmr}</version>
             </dependency>
             <dependency>
+                <groupId>org.jboss.logging</groupId>
+                <artifactId>jboss-logging</artifactId>
+                <version>${version.org.jboss.logging.jboss-logging}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.marshalling</groupId>
+                <artifactId>jboss-marshalling</artifactId>
+                <version>${version.org.jboss.marshalling.jboss-marshalling}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.marshalling</groupId>
+                <artifactId>jboss-marshalling-river</artifactId>
+                <version>${version.org.jboss.marshalling.jboss-marshalling-river}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.modules</groupId>
+                <artifactId>jboss-modules</artifactId>
+                <version>${version.org.jboss.modules.jboss-modules}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.remoting3</groupId>
+                <artifactId>jboss-remoting</artifactId>
+                <version>${version.org.jboss.jboss-remoting}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.sasl</groupId>
+                <artifactId>jboss-sasl</artifactId>
+                <version>${version.org.jboss.jboss-sasl}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.threads</groupId>
+                <artifactId>jboss-threads</artifactId>
+                <version>${version.org.jboss.jboss-threads}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>
                 <version>${version.org.jboss.jboss-vfs}</version>
-            </dependency>
-            <dependency>
-                <groupId>nux</groupId>
-                <artifactId>nux</artifactId>
-                <version>${version.nux}</version>
-            </dependency>
-            <dependency>
-                <groupId>xom</groupId>
-                <artifactId>xom</artifactId>
-                <version>${version.xom}</version>
             </dependency>                         
         </dependencies>
     </dependencyManagement>

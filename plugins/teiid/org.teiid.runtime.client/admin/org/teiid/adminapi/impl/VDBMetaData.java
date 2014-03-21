@@ -21,21 +21,24 @@
  */
 package org.teiid.adminapi.impl;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputStream.GetField;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.teiid.adminapi.DataPolicy;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.Translator;
 import org.teiid.adminapi.VDB;
-import org.teiid.adminapi.impl.ModelMetaData.Message;
-import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 
 
 public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
@@ -43,25 +46,168 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 	private static final String VERSION_DELIM = "."; //$NON-NLS-1$
 
 	private static final long serialVersionUID = -4723595252013356436L;
-	
+
+	/**
+     * This ONLY exists to ensure that the serialisation framework
+     * has access to the anonymous class VDBMetaData$1.
+     *
+     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
+     */
+    @Removed("8.0.0")
+	private transient ListOverMap<ModelMetaData> sevenModels = new ListOverMap<ModelMetaData>(new KeyBuilder<ModelMetaData>() {
+        private static final long serialVersionUID = 846247100420118961L;
+
+        @Override
+        public String getKey(ModelMetaData entry) {
+            return entry.getName();
+        }
+    });
+
+    /**
+     * This ONLY exists to ensure that the serialisation framework
+     * has access to the anonymous class VDBMetaData$2.
+     *
+     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
+     */
+    @Removed("8.0.0")
+    private transient ListOverMap<VDBTranslatorMetaData> sevenTranslators = new ListOverMap<VDBTranslatorMetaData>(new KeyBuilder<VDBTranslatorMetaData>() {
+        private static final long serialVersionUID = 3890502172003653563L;
+
+        @Override
+        public String getKey(VDBTranslatorMetaData entry) {
+            return entry.getName();
+        }
+    }); 
+    
+    /**
+     * This ONLY exists to ensure that the serialisation framework
+     * has access to the anonymous class VDBMetaData$3.
+     *
+     * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
+     */
+    @Removed("8.0.0")
+    private transient ListOverMap<DataPolicyMetadata> sevenDataPolicies = new ListOverMap<DataPolicyMetadata>(new KeyBuilder<DataPolicyMetadata>() {
+        private static final long serialVersionUID = 4954591545242715254L;
+
+        @Override
+        public String getKey(DataPolicyMetadata entry) {
+            return entry.getName();
+        }
+    }); 
+
 	private LinkedHashMap<String, ModelMetaData> models = new LinkedHashMap<String, ModelMetaData>();
+
 	private LinkedHashMap<String, VDBTranslatorMetaData> translators = new LinkedHashMap<String, VDBTranslatorMetaData>(); 
+
 	private LinkedHashMap<String, DataPolicyMetadata> dataPolicies = new LinkedHashMap<String, DataPolicyMetadata>(); 
+
+	@Since("8.0.0")
 	private List<VDBImportMetadata> imports = new ArrayList<VDBImportMetadata>(2);
+	@Since("8.0.0")
 	private List<EntryMetaData> entries = new ArrayList<EntryMetaData>(2);
 	
 	private int version = 1;
 	private String description;
-	private boolean xmlDeployment = false;
-	private volatile VDB.Status status = VDB.Status.ACTIVE;
-	private ConnectionType connectionType = VDB.ConnectionType.BY_VERSION;
-	private long queryTimeout = Long.MIN_VALUE;
-	private Set<String> importedModels = Collections.emptySet();
 
 	@Removed("8.0.0")
     private String fileUrl;
 
-	public String getFullName() {
+	@Since("8.0.0")
+	private boolean xmlDeployment = false;
+
+	private volatile VDB.Status status = VDB.Status.ACTIVE;
+	private ConnectionType connectionType = VDB.ConnectionType.BY_VERSION;
+	
+	@Removed("8.0.0")
+	private boolean removed;
+
+	private long queryTimeout = Long.MIN_VALUE;
+
+	@Since("8.0.0")
+	private Set<String> importedModels = Collections.emptySet();
+
+	private LinkedHashMap<String, ModelMetaData> convertModels(ListOverMap<ModelMetaData> overMap) {
+        LinkedHashMap<String, ModelMetaData> newMap = new LinkedHashMap<String, ModelMetaData>();
+        for (Entry<String, ModelMetaData> entry : overMap.getMap().entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return newMap;
+    }
+
+    private LinkedHashMap<String, DataPolicyMetadata> convertDataPolicies(ListOverMap<DataPolicyMetadata> overMap) {
+        LinkedHashMap<String, DataPolicyMetadata> newMap = new LinkedHashMap<String, DataPolicyMetadata>();
+        for (Entry<String, DataPolicyMetadata> entry : overMap.getMap().entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return newMap;
+    }
+
+    private LinkedHashMap<String, VDBTranslatorMetaData> convertTranslators(ListOverMap<VDBTranslatorMetaData> overMap) {
+        LinkedHashMap<String, VDBTranslatorMetaData> newMap = new LinkedHashMap<String, VDBTranslatorMetaData>();
+        for (Entry<String, VDBTranslatorMetaData> entry : overMap.getMap().entrySet()) {
+            newMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return newMap;
+    }
+
+    /*
+     * Helper method for serialization to deal with differences between Teiid 7 and 8
+     */
+	@SuppressWarnings("nls")
+    private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
+        GetField readFields = ois.readFields();
+
+        /* models */
+        Object serModels = readFields.get("models", null);
+        if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
+            models = (LinkedHashMap<String, ModelMetaData>) serModels;
+        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
+            ListOverMap<ModelMetaData> overMap = (ListOverMap<ModelMetaData>) serModels;
+            models = convertModels(overMap);
+        } else
+            throw new IllegalStateException();
+
+        /* translators */
+        Object serTranslators = readFields.get("translators", null);
+        if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
+            translators = (LinkedHashMap<String, VDBTranslatorMetaData>) serTranslators;
+        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
+            ListOverMap<VDBTranslatorMetaData> overMap = (ListOverMap<VDBTranslatorMetaData>) serTranslators;
+            translators = convertTranslators(overMap);
+        } else
+            throw new IllegalStateException();
+
+        /* data policies */
+        Object serDataPolicies = readFields.get("dataPolicies", null);
+        if (isLinkedHashMap(serModels)) { /* Teiid Version 8+ */
+            dataPolicies = (LinkedHashMap<String, DataPolicyMetadata>) serDataPolicies;
+        } else if (isListOverMap(serModels)) { /* Teiid Version 7 */
+            ListOverMap<DataPolicyMetadata> overMap = (ListOverMap<DataPolicyMetadata>) serDataPolicies;
+            dataPolicies = convertDataPolicies(overMap);
+        } else
+            throw new IllegalStateException();
+
+        version = readFields.get("version", 1);
+        description = (String) readFields.get("description", null);
+
+        /* Teiid 7 */
+        fileUrl = (String) readFields.get("fileUrl", null);
+        
+        /* Teiid 8+ */
+        imports = (List<VDBImportMetadata>) readFields.get("imports", null);
+        entries = (List<EntryMetaData>) readFields.get("entries", null);
+        xmlDeployment = readFields.get("xmlDeployment", false);
+        status = (Status) readFields.get("status", null);
+        connectionType = (ConnectionType) readFields.get("connectionType", null);
+        removed = readFields.get("removed", false);
+        queryTimeout = readFields.get("queryTimeout", Long.MIN_VALUE);
+        importedModels = (Set<String>) readFields.get("importedModels", null);
+    }
+
+    public String getFullName() {
 		return getName() + VERSION_DELIM + getVersion();
 	}
 	
@@ -190,10 +336,10 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 	public List<String> getValidityErrors(){
 		List<String> allErrors = new ArrayList<String>();
 		for (ModelMetaData model:this.models.values()) {
-			List<Message> errors = model.getMessages();
+			List<ModelMetaData.Message> errors = model.getMessages();
 			if (errors != null && !errors.isEmpty()) {
-				for (Message m:errors) {
-					if (m.getSeverity() == Severity.ERROR) {
+				for (ModelMetaData.Message m:errors) {
+					if (m.getSeverity() == ModelMetaData.Message.Severity.ERROR) {
 						allErrors.add(m.getValue());
 					}
 				}

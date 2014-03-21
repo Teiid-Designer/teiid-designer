@@ -41,6 +41,7 @@ import org.teiid.core.util.ExternalizeUtil;
 import org.teiid.core.util.MultiArrayOutputStream;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.jdbc.StatementImpl;
+import org.teiid.jdbc.TeiidDriver;
 import org.teiid.netty.handler.codec.serialization.CompactObjectInputStream;
 import org.teiid.netty.handler.codec.serialization.CompactObjectOutputStream;
 import org.teiid.runtime.client.TeiidClientException;
@@ -274,7 +275,7 @@ public class ResultsMessage implements Externalizable {
 
         ExceptionHolder holder = (ExceptionHolder)in.readObject();
         if (holder != null) {
-        	this.exception = (TeiidClientException)holder.getException();
+        	this.exception = new TeiidClientException(holder.getException());
         }
         
         //delayed deserialization
@@ -430,7 +431,7 @@ public class ResultsMessage implements Externalizable {
 
 	public ITeiidServerVersion getTeiidVersion() {
 	    if (teiidVersion == null)
-	        throw new IllegalStateException("The teiid version should be set on this result message prior to using it"); //$NON-NLS-1$
+	        teiidVersion = TeiidDriver.getInstance().getTeiidVersion();
 
 	    return teiidVersion;
 	}

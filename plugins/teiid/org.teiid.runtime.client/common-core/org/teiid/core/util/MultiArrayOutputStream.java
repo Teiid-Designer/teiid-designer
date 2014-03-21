@@ -42,7 +42,7 @@ public class MultiArrayOutputStream extends OutputStream {
 	}
 	
 	public void reset(int newIndex) {
-		if(newIndex < bufs[0].length)
+		if(newIndex > bufs[0].length)
 		    throw new IllegalArgumentException();
 
 		while (bufferIndex > 0) {

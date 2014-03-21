@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/connector-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-as-protocol.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-logging.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-marshalling-river.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-marshalling.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-modules.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-remoting.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-sasl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgroups.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/json-simple.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jta.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jboss-threads.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-as-controller.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-as-cli.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jboss-dmr.jar"/>

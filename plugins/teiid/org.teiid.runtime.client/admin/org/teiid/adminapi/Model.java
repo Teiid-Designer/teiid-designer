@@ -103,5 +103,10 @@ public interface Model extends AdminObject {
      * @return
      */
 	@Since("8.0.0")
-    MetadataStatus getMetadataStatus();    
+    MetadataStatus getMetadataStatus();
+
+	/**
+	 * @return schema text
+	 */
+	String getSchemaText();
 }
