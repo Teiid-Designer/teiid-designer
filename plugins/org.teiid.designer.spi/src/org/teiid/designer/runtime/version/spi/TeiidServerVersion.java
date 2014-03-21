@@ -278,63 +278,47 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        try {
-            int myMajor = Integer.parseInt(getMajor());
-            int otherMajor = Integer.parseInt(otherVersion.getMajor());
-            if (myMajor > otherMajor)
-                return true;
+        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        if (majCompResult > 0)
+            return true;
 
-            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-                return false;
+        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+            return false;
+        
+        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        if (majCompResult == 0 && minCompResult > 0)
+            return true;
 
-            int myMinor = Integer.parseInt(getMinor());
-            int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (((myMajor * 100) + (myMinor * 10)) > ((otherMajor * 100) + (otherMinor * 10)))
-                return true;
+        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+            return false;
 
-            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-                return false;
-
-            int myMicro = Integer.parseInt(getMicro());
-            int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (((myMajor * 100) + (myMinor * 10) + myMicro) > ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
-                return true;
-        }
-        catch (Exception ex) {
-            DesignerSPIPlugin.log(ex);
-        }
-
+        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
+            return true;
+            
         return false;
     }
 
     @Override
     public boolean isLessThan(ITeiidServerVersion otherVersion) {
-        try {
-            int myMajor = Integer.parseInt(getMajor());
-            int otherMajor = Integer.parseInt(otherVersion.getMajor());
-            if (myMajor < otherMajor)
-                return true;
+        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        if (majCompResult < 0)
+            return true;
 
-            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-                return false;
+        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+            return false;
+        
+        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        if (majCompResult == 0 && minCompResult < 0)
+            return true;
 
-            int myMinor = Integer.parseInt(getMinor());
-            int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (((myMajor * 100) + (myMinor * 10)) < ((otherMajor * 100) + (otherMinor * 10)))
-                return true;
+        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+            return false;
 
-            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-                return false;
-
-            int myMicro = Integer.parseInt(getMicro());
-            int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (((myMajor * 100) + (myMinor * 10) + myMicro) < ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
-                return true;
-        }
-        catch (Exception ex) {
-            DesignerSPIPlugin.log(ex);
-        }
-
+        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
+            return true;
+            
         return false;
     }
 
