@@ -47,6 +47,9 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
     private boolean isVdbSourceModel;
     private String vdbSourceModelName;
     private boolean reachedObjectsPage;
+	private String schemaFilter;
+	private String tableFilter;
+	private String storedProcFilter;
 
 	/**
      * @since 4.0
@@ -275,5 +278,49 @@ public final class JdbcImporter implements ModelerJdbcRelationalConstants {
 		this.reachedObjectsPage = reachedObjectsPage;
 	}
 	
+	/**
+	 * @param schemaFilter the schema filter text from the CP
+	 */
+    public void setSchemaFilter(String schemaFilter) {
+    	this.schemaFilter = schemaFilter;
+    }
+
+	/**
+	 * @param tableFilter the table filter text from the CP
+	 */
+    public void setTableFilter(String tableFilter) {
+    	this.tableFilter = tableFilter;
+    }
+    
+	/**
+	 * @param storedProcFilter the stored proc filter text from the CP
+	 */
+    public void setStoredProcFilter(String storedProcFilter) {
+    	this.storedProcFilter = storedProcFilter;
+    }
+
+	/**
+	 * Get the current schema filter text
+	 * @return filter text
+	 */
+    public String getSchemaFilter( ) {
+    	return this.schemaFilter;
+    }
+
+	/**
+	 * Get the current table filter text
+	 * @return filter text
+	 */
+    public String getTableFilter( ) {
+    	return this.tableFilter;
+    }
+    
+	/**
+	 * Get the current stored proc filter text
+	 * @return filter text
+	 */
+    public String getStoredProcFilter( ) {
+    	return this.storedProcFilter;
+    }
 	
 }
