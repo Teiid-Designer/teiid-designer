@@ -8,6 +8,7 @@
 package org.teiid.designer.jdbc.ui.wizards;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +71,9 @@ import org.teiid.designer.jdbc.data.ResultsMetadata.ColumnMetadata;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
 import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcSchema;
+import org.teiid.designer.jdbc.metadata.impl.ItemFilter;
 import org.teiid.designer.jdbc.relational.JdbcImporter;
+import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin;
 import org.teiid.designer.jdbc.ui.util.JdbcUiUtil;
@@ -103,7 +106,11 @@ public class JdbcImportObjectsPage extends WizardPage
 
     private static final String STATUS_LABEL_ID = "statusLabel"; //$NON-NLS-1$
 
+    private static final String SHOW_ALL_SCHEMAS_ID = "showAllSchemasValue"; //$NON-NLS-1$
+    
     private static final String SHOW_SELECTED_SCHEMAS_ID = "showSelectedSchemasValue"; //$NON-NLS-1$
+
+    private static final String SHOW_FILTERED_SCHEMAS_ID = "showFilteredSchemasValue"; //$NON-NLS-1$
 
     private static final String INVALID_PAGE_MESSAGE = getString("invalidPageMessage"); //$NON-NLS-1$
     
@@ -126,11 +133,22 @@ public class JdbcImportObjectsPage extends WizardPage
     private static final String CHECK_SELECTED = getString("checkSelected"); //$NON-NLS-1$
     
     private static final String UNCHECK_SELECTED = getString("uncheckSelected"); //$NON-NLS-1$
+    
+    private static final String RADIO_SHOW_ALL_SCHEMA_TXT = getInternalString("radioShowAllSchemaText"); //$NON-NLS-1$
+    private static final String RADIO_SHOW_SELECTED_SCHEMA_TXT = getInternalString("radioShowSelectedSchemaText"); //$NON-NLS-1$
+    private static final String RADIO_SHOW_FILTERED_SCHEMA_TXT = getInternalString("radioShowFilteredSchemaText"); //$NON-NLS-1$
+    private static final String RADIO_SHOW_ALL_SCHEMA_TIP = getInternalString("radioShowAllSchemaTooltip"); //$NON-NLS-1$
+    private static final String RADIO_SHOW_SELECTED_SCHEMA_TIP = getInternalString("radioShowSelectedSchemaTooltip"); //$NON-NLS-1$
+    private static final String RADIO_SHOW_FILTERED_SCHEMA_TIP = getInternalString("radioShowFilteredSchemaTooltip"); //$NON-NLS-1$
+    private static final String TYPE_NAME_SCHEMA = "schema";  //$NON-NLS-1$
+    private static final String TYPE_NAME_TABLE = "table";  //$NON-NLS-1$
+    private static final String TYPE_NAME_STORED_PROC = "storedproc";  //$NON-NLS-1$
+    
     /**
      * @since 4.0
      */
     private static String getString( final String id ) {
-        return Util.getString(I18N_PREFIX + id);
+        return UiConstants.Util.getString(I18N_PREFIX + id);
     }
 
     /**
@@ -138,9 +156,13 @@ public class JdbcImportObjectsPage extends WizardPage
      */
     private static String getString( final String id,
                                      final String parameter ) {
-        return Util.getString(I18N_PREFIX + id, parameter);
+        return UiConstants.Util.getString(I18N_PREFIX + id, parameter);
     }
-
+    
+    private static String getInternalString( final String id ) {
+    	return InternalModelerJdbcUiPluginConstants.Util.getString(I18N_PREFIX + id);
+    }
+    
     JdbcDatabase db;
     private SashForm splitter;
     private ViewForm objsView;
@@ -148,7 +170,9 @@ public class JdbcImportObjectsPage extends WizardPage
     private CTabFolder tabFolder;
     private SelectionAdapter tabListener;
     private CLabel dbLabel, statusLabel;
-    Button showSelectedSchemasButton;
+    Button showAllSchemaButton;
+    Button showSelectedSchemaButton;
+    Button showFilteredSchemaButton;
     private JdbcNode selectedNode;
     private Map counts;
     
@@ -307,23 +331,40 @@ public class JdbcImportObjectsPage extends WizardPage
         spGridData.horizontalSpan = 2;
         spacer.setLayoutData(spGridData);
 
-        // Control to prompt for generation of XML Documents
-        showSelectedSchemasButton = new Button(pg, SWT.CHECK);
-        GridData buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 1;
-        showSelectedSchemasButton.setLayoutData(buttonGridData);
-        showSelectedSchemasButton.setText("Show Only Selected Schemas"); //Util.getString("GenerateXsdWizard.genXml")); //$NON-NLS-1$
-        showSelectedSchemasButton.setSelection(false);
+        //=========================        
+        // Schema Display Options
+        //=========================        
+        this.showAllSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_ALL_SCHEMA_TXT);
+        this.showAllSchemaButton.setToolTipText(RADIO_SHOW_ALL_SCHEMA_TIP);
+        this.showAllSchemaButton.addSelectionListener(new SelectionAdapter() {
 
-        restoreWidgetValues();
-
-        showSelectedSchemasButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleShowSelectedSchemasButtonPressed();
+            public void widgetSelected(final SelectionEvent event) {
+                refresh();
                 saveWidgetValues();
             }
         });
+        this.showSelectedSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_SELECTED_SCHEMA_TXT);
+        this.showSelectedSchemaButton.setToolTipText(RADIO_SHOW_SELECTED_SCHEMA_TIP);
+        this.showSelectedSchemaButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                refresh();
+                saveWidgetValues();
+            }
+        });
+        this.showFilteredSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_FILTERED_SCHEMA_TXT);
+        this.showFilteredSchemaButton.setToolTipText(RADIO_SHOW_FILTERED_SCHEMA_TIP);
+        this.showFilteredSchemaButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                refresh();
+                saveWidgetValues();
+            }
+        });
+        restoreWidgetValues();
     }
     
     private MenuManager createContextMenu() {
@@ -415,11 +456,7 @@ public class JdbcImportObjectsPage extends WizardPage
      */
     void nodeExpanded( final TreeExpansionEvent event ) {
         // nodeExpandedOrCollapsed(event);
-        updateCheckBoxes(WidgetUtil.findTreeItem(event.getElement(), this.treeViewer).getItems());
-    }
-
-    void handleShowSelectedSchemasButtonPressed() {
-        refresh();
+    	updateCheckBoxes(WidgetUtil.findTreeItem(event.getElement(), this.treeViewer).getItems());
     }
 
     /**
@@ -470,15 +507,14 @@ public class JdbcImportObjectsPage extends WizardPage
         this.db.refresh();
         JdbcNode[] selectedNodes = getSelectedChildren();
         if (selectedNodes == null || selectedNodes.length == 0) {
-
-            if (showSelectedSchemasButton.getSelection()) {
+            if (showSelectedSchemaButton.getSelection()) {
                 // We need to show ALL schemas because user has to select at least one
-                showSelectedSchemasButton.setSelection(false);
-                handleShowSelectedSchemasButtonPressed();
-                showSelectedSchemasButton.setEnabled(false);
+            	showAllSchemaButton.setSelection(true);
+                refresh();
+                showSelectedSchemaButton.setEnabled(false);
             }
         } else {
-            showSelectedSchemasButton.setEnabled(true);
+            showSelectedSchemaButton.setEnabled(true);
         }
 
         final String name = this.db.getName();
@@ -644,6 +680,72 @@ public class JdbcImportObjectsPage extends WizardPage
         }
     }
 
+    protected JdbcNode[] getSelectedPlusFilteredChildren() {
+    	// Add selected children (if any) to list
+    	List<JdbcNode> filteredList = new ArrayList<JdbcNode>();
+    	JdbcNode[] selectedChildren = getSelectedChildren();
+    	if(selectedChildren!=null) {
+    		for (int i=0 ; i<selectedChildren.length; i++) {
+        		filteredList.add(selectedChildren[i]);
+    		}
+    	}
+
+    	// Apply CP filter, adding children that match
+        try {
+        	String schemaFilterStr = importer.getSchemaFilter();
+        	String tableFilterStr = importer.getTableFilter();
+        	String storedProcFilterStr = importer.getStoredProcFilter();
+        	ItemFilter schemaFilter = null;
+        	ItemFilter tableFilter = null;
+        	ItemFilter storedProcFilter = null;
+        	if(!CoreStringUtil.isEmpty(schemaFilterStr)) {
+            	schemaFilter = new ItemFilter(schemaFilterStr);
+        	}
+        	if(!CoreStringUtil.isEmpty(tableFilterStr)) {
+        		tableFilter = new ItemFilter(tableFilterStr);
+        	}
+        	if(!CoreStringUtil.isEmpty(storedProcFilterStr)) {
+        		storedProcFilter = new ItemFilter(storedProcFilterStr);
+        	}
+        	JdbcNode[] allChildren = getDatabase().getChildren();
+        	for(int i=0; i<allChildren.length; i++) {
+        		JdbcNode node = allChildren[i];
+        		String typeName = node.getTypeName();
+        		if(typeName.equals(TYPE_NAME_SCHEMA)) {
+        			if(schemaFilter!=null) {
+        				if(schemaFilter.isMatch(node.getName())) {
+        					filteredList.add(node);
+        				}
+        			} else {
+        				filteredList.add(node);
+        			}
+        		} else if(typeName.equals(TYPE_NAME_TABLE)) {
+        			if(tableFilter!=null) {
+        				if(tableFilter.isMatch(node.getName())) {
+        					filteredList.add(node);
+        				}
+        			} else {
+        				filteredList.add(node);
+        			}
+        		} else if (typeName.equals(TYPE_NAME_STORED_PROC)) {
+        			if(storedProcFilter!=null) {
+        				if(storedProcFilter.isMatch(node.getName())) {
+        					filteredList.add(node);
+        				}
+        			} else {
+        				filteredList.add(node);
+        			}
+        		}
+        	}
+        	JdbcNode[] resultArr = new JdbcNode[filteredList.size()];
+        	resultArr = filteredList.toArray(resultArr);
+        	return resultArr;
+        } catch (final JdbcException err) {
+            JdbcUiUtil.showAccessError(err);
+            return null;
+        }
+    }
+    
     /**
      * @since 4.0
      */
@@ -757,8 +859,8 @@ public class JdbcImportObjectsPage extends WizardPage
 
 		}
 
-        if (getSelectedChildren().length == 0) showSelectedSchemasButton.setEnabled(false);
-        else showSelectedSchemasButton.setEnabled(true);
+        if (getSelectedChildren().length == 0) showSelectedSchemaButton.setEnabled(false);
+        else showSelectedSchemaButton.setEnabled(true);
     }
 
     /**
@@ -775,7 +877,9 @@ public class JdbcImportObjectsPage extends WizardPage
      */
     protected void saveWidgetValues() {
         final IDialogSettings dlgSettings = getDialogSettings();
-        dlgSettings.put(SHOW_SELECTED_SCHEMAS_ID, showSelectedSchemasButton.getSelection());
+        dlgSettings.put(SHOW_ALL_SCHEMAS_ID, showAllSchemaButton.getSelection());
+        dlgSettings.put(SHOW_SELECTED_SCHEMAS_ID, showSelectedSchemaButton.getSelection());
+        dlgSettings.put(SHOW_FILTERED_SCHEMAS_ID, showFilteredSchemaButton.getSelection());
     }
 
     /**
@@ -783,8 +887,20 @@ public class JdbcImportObjectsPage extends WizardPage
      */
     protected void restoreWidgetValues() {
         final IDialogSettings dlgSettings = getDialogSettings();
+        boolean showAllSchemas = dlgSettings.getBoolean(SHOW_ALL_SCHEMAS_ID);
         boolean showSelectedSchemas = dlgSettings.getBoolean(SHOW_SELECTED_SCHEMAS_ID);
-        showSelectedSchemasButton.setSelection(showSelectedSchemas);
+        boolean showFilteredSchemas = dlgSettings.getBoolean(SHOW_FILTERED_SCHEMAS_ID);
+        // If all false, then default to showAllSchemas
+        if(!showAllSchemas && !showSelectedSchemas && !showFilteredSchemas) {
+        	showAllSchemas = true;
+        }
+        if(showAllSchemas) {
+            showAllSchemaButton.setSelection(showAllSchemas);
+        } else if(showSelectedSchemas) {
+            showSelectedSchemaButton.setSelection(showSelectedSchemas);
+        } else if(showFilteredSchemas) {
+            showFilteredSchemaButton.setSelection(showFilteredSchemas);
+        }
     }
 
 	/**
@@ -822,8 +938,10 @@ public class JdbcImportObjectsPage extends WizardPage
         @Override
 		public Object[] getChildren( final Object node ) {
             try {
-                if (showSelectedSchemasButton.getSelection()) {
+                if (showSelectedSchemaButton.getSelection()) {
                     if (node instanceof JdbcDatabase) return getSelectedChildren();
+                } else if(showFilteredSchemaButton.getSelection()) {
+                	if (node instanceof JdbcDatabase) return getSelectedPlusFilteredChildren();
                 }
                 return ((JdbcNode)node).getChildren();
             } catch (final JdbcException err) {
@@ -840,8 +958,10 @@ public class JdbcImportObjectsPage extends WizardPage
 		public Object[] getElements( final Object inputElement ) {
 
             try {
-                if (showSelectedSchemasButton.getSelection()) {
+                if (showSelectedSchemaButton.getSelection()) {
                     return getSelectedChildren();
+                } else if(showFilteredSchemaButton.getSelection()) {
+                	return getSelectedPlusFilteredChildren();
                 }
 
                 return JdbcImportObjectsPage.this.db.getChildren();

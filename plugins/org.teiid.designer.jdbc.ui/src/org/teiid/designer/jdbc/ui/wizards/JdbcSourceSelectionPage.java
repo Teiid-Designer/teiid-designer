@@ -69,6 +69,12 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     // ===========================================================================================================================
     // Constants
 
+	// Connection Profile Filters
+	private static final String CP_FILTER_SETTINGS = "org.eclipse.datatools.connectivity.sqm.filterSettings";  //$NON-NLS-1$
+	private static final String SCHEMA_FILTER = "DatatoolsSchemaFilterPredicate";  //$NON-NLS-1$
+	private static final String TABLE_FILTER = "DatatoolsTableFilterPredicate";  //$NON-NLS-1$
+	private static final String STORED_PROC_FILTER = "DatatoolsSPFilterPredicate";  //$NON-NLS-1$
+			
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(JdbcSourceSelectionPage.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
@@ -577,6 +583,23 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         		processorModified();
         	}
         	
+        	// Update the connection profile filters
+        	Properties props = this.connectionProfile.getProperties(CP_FILTER_SETTINGS);
+        	if(props!=null) {
+        		String schemaFilterStr = (String)props.get(SCHEMA_FILTER);
+        		String tableFilterStr = (String)props.get(TABLE_FILTER);
+        		String storedProcFilterStr = (String)props.get(STORED_PROC_FILTER);
+        		if(!CoreStringUtil.isEmpty(schemaFilterStr)) {
+        			this.importer.setSchemaFilter(schemaFilterStr);
+        		}
+        		if(!CoreStringUtil.isEmpty(tableFilterStr)) {
+        			this.importer.setTableFilter(tableFilterStr);
+        		}
+        		if(!CoreStringUtil.isEmpty(storedProcFilterStr)) {
+        			this.importer.setStoredProcFilter(storedProcFilterStr);
+        		}
+        	}
+
         }
         
         validatePage();
