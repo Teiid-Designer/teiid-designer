@@ -40,7 +40,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_WEBSERVICE_DRIVER_DISPLAYNAME = "WebService"; //$NON-NLS-1$
 
     public static final String TEIID_FILE_CLASS = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_GOOGLE_CLASS = "org.teiid.resource.adapter.google.GoogleManagedConnectionFactory"; //$NON-NLS-1$
+    public static final String TEIID_GOOGLE_CLASS = "org.teiid.resource.adapter.google.SpreadsheetManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_INFINISPAN_CLASS = "org.teiid.resource.adapter.infinispan.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_SALESORCE_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
