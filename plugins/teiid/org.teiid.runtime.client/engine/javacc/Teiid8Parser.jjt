@@ -123,6 +123,21 @@ public class Teiid8Parser extends AbstractTeiidParser {
         return sourceHint;
     }
 
+    private SourceHint getSourceHint(Teiid8Parser parser) {
+       int index = 1;
+       //scan for the first keyword
+       Token t = null;
+       do {
+           t = parser.getToken(index++);
+       } while (t != null && t.kind == LPAREN);
+       t = parser.getToken(index);
+       if (t == null) {
+           return null;
+       }
+
+       return getSourceHint(t);
+    }
+
     private SubqueryHint getSubqueryHint(Token t) {
         SubqueryHint hint = new SubqueryHint();
         String[] parts = getComment(t).split("\\s"); //$NON-NLS-1$
@@ -904,34 +919,31 @@ Command userCommand(ParseInfo info) :
 	SourceHint sourceHint = null;
 }
 {
-    {int index = 1; 
-     Token t = null;
-     do  
-       t = getToken(index++);
-     while (t != null && t.kind == LPAREN);
-     t = getToken(index);
-     if (t != null) 
-      sourceHint = getSourceHint(t); 
+    {
+      if (versionLessThan(Version.TEIID_8_4)) {
+        int index = 1;
+        Token t = null;
+        do
+          t = getToken(index++);
+        while (t != null && t.kind == LPAREN);
+        t = getToken(index);
+        if (t != null)
+          sourceHint = getSourceHint(t);
+      }
     }
 	(command = queryExpression(info) |
 	command = storedProcedure(info, 1) |
-	command = insert(info) |
-	command = update(info) |
-	command = delete(info) |
-	command = dropTable(info) |	
+    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = insert(info) |
+    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = update(info) |
+    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); } command = delete(info) |
+    command = dropTable(info) |
 	LOOKAHEAD(2) command = createTempTable(info) |
     LOOKAHEAD(2) command = createForeignTempTable(info) |
 	command = alter(info) |
 	command = createTrigger(info)
 	)
 	{
-	    if (sourceHint != null) {
-//	        if (command instanceof SetQuery) {
-//	        	((SetQuery)command).getProjectedQuery().setSourceHint(sourceHint);
-//	        } else {
-	    		command.setSourceHint(sourceHint);
-//	    	}
-	    }
+	    setSourceHint(sourceHint, command);
 		return command;
 	}
 }
@@ -1722,8 +1734,10 @@ StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 	Option option = null;
 	List<Expression> values = null;
 	StoredProcedure storedProcedure = newStoredProcedure();
+	SourceHint sourceHint = null;
 }
 {
+    { if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); }
 	(
 		(<EXEC> | <EXECUTE> | <CALL>)
 		procName = id(null)
@@ -1749,6 +1763,9 @@ StoredProcedure storedProcedure(ParseInfo info, int startIndex) :
 	 }
 	]
 	{
+	    if (versionAtLeast(Version.TEIID_8_4))
+	      storedProcedure.setSourceHint(sourceHint);
+
 		return storedProcedure;
 	}
 }
@@ -1958,6 +1975,7 @@ QueryCommand queryExpression(ParseInfo info) :
     QueryCommand queryCommand = null;
 	List<WithQueryCommand> withList = null;
 	WithQueryCommand withQueryCommand = null;
+	SourceHint sourceHint = null;
 }
 {
 	[<WITH> withQueryCommand = withListElement(info)
@@ -1972,9 +1990,14 @@ QueryCommand queryExpression(ParseInfo info) :
 	    }
 	  )*
 	]
+	{ if (versionAtLeast(Version.TEIID_8_4)) sourceHint = getSourceHint(this); }
 	queryCommand = queryExpressionBody(info)
 	{
 		queryCommand.setWith(withList);
+
+		if (versionAtLeast(Version.TEIID_8_4))
+		  setSourceHint(sourceHint, queryCommand);
+
 		return queryCommand;
 	}
 }
