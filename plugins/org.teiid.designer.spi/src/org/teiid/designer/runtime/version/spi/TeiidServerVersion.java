@@ -25,6 +25,50 @@ import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 public class TeiidServerVersion implements ITeiidServerVersion {
 
     /**
+     * Version enumerator
+     */
+    public static enum Version {
+
+        /**
+         * Teiid 7.7
+         */
+        TEIID_7_7(VersionID.TEIID_7_7),
+
+        /**
+         * Teiid 8.4
+         */
+        TEIID_8_4(VersionID.TEIID_8_4),
+
+        /**
+         * Teiid 8.5
+         */
+        TEIID_8_5(VersionID.TEIID_8_5),
+
+        /**
+         * Teiid 8.6
+         */
+        TEIID_8_6(VersionID.TEIID_8_6),
+
+        /**
+         * Teiid 8.7
+         */
+        TEIID_8_7(VersionID.TEIID_8_7);
+
+        private final ITeiidServerVersion version;
+
+        Version(VersionID id) {
+            version = new TeiidServerVersion(id.toString());
+        }
+
+        /**
+         * @return version model
+         */
+        public ITeiidServerVersion get() {
+            return version;
+        }
+    }
+
+    /**
      * Minimum 7 server version
      */
     public static final ITeiidServerVersion TEIID_7_SERVER = new TeiidServerVersion(SEVEN, SEVEN, ZERO);
@@ -53,6 +97,11 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * The teiid 8.6 server version - this version introduced an Admin API change
      */
     public static final ITeiidServerVersion TEIID_8_6_SERVER = new TeiidServerVersion(TEIID_8_6_SERVER_ID);
+
+    /**
+     * The teiid 8.7 server version - this version introduced changes to SQLStringVisitor
+     */
+    public static final ITeiidServerVersion TEIID_8_7_SERVER = new TeiidServerVersion(TEIID_8_7_SERVER_ID);
 
     /**
      * The default preferred server

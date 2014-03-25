@@ -34,6 +34,7 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn;
@@ -79,7 +80,36 @@ public abstract class AbstractTeiidParser implements TeiidParser {
      * @return teiid instance version
      */
     @Override
-    public abstract ITeiidServerVersion getVersion();
+    public ITeiidServerVersion getVersion() {
+        return version;
+    }
+
+    /**
+     * @param teiidVersion
+     */
+    public void setVersion(ITeiidServerVersion teiidVersion) {
+        this.version = teiidVersion;
+    }
+
+    /**
+     * The version of this parser must be greater than
+     * or equal to the given version.
+     *
+     * @param requiredVersionEnum
+     */
+    protected boolean versionLessThan(Version requiredVersionEnum) {
+        return getVersion().isLessThan(requiredVersionEnum.get());
+    }
+
+    /**
+     * The version of this parser must be  than
+     * or equal to the given version.
+     *
+     * @param requiredVersionEnum
+     */
+    protected boolean versionAtLeast(Version requiredVersionEnum) {
+        return ! versionLessThan(requiredVersionEnum);
+    }
 
     @Override
     public DataTypeManagerService getDataTypeService() {

@@ -27,6 +27,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ISetQuery;
@@ -163,6 +164,12 @@ public class Teiid8Parser extends AbstractTeiidParser {
             version = new TeiidServerVersion("8.x.x");
 
         return version;
+    }
+
+    private void requires(boolean condition) throws ParseException {
+      if (!condition)
+        throw new ParseException(Messages.getString(
+                Messages.Misc.TeiidVersionFailure, getVersion().toString()));
     }
 
 } // end class

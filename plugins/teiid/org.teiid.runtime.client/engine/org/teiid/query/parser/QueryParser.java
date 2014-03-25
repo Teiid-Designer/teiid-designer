@@ -72,9 +72,11 @@ public class QueryParser implements IQueryParser {
 	    switch (major) {
 	        case 7:
 	            teiidParser = new Teiid7Parser(sql);
+	            teiidParser.setVersion(teiidVersion);
 	            break;
 	        case 8:
 	            teiidParser = new Teiid8Parser(sql);
+	            teiidParser.setVersion(teiidVersion);
 	            break;
 	        default:
 	            throw new IllegalStateException(Messages.getString(Messages.TeiidParser.noParserForVersion, major));

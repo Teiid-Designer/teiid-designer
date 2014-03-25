@@ -30,6 +30,11 @@ public interface TeiidParser {
     ITeiidServerVersion getVersion();
 
     /**
+     * @param teiidVersion
+     */
+    void setVersion(ITeiidServerVersion teiidVersion);
+
+    /**
      * @return dataTypeManagerService
      */
     DataTypeManagerService getDataTypeService();
@@ -126,4 +131,5 @@ public interface TeiidParser {
      */
     @Since("8.0.0")
     void parseMetadata(MetadataFactory factory) throws Exception;
+
 }

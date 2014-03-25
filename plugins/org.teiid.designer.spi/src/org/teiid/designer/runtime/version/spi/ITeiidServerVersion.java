@@ -37,6 +37,32 @@ public interface ITeiidServerVersion {
     String NINE = "9"; //$NON-NLS-1$
 
     /**
+     * Teiid id versions
+     */
+    enum VersionID {
+        TEIID_7_7(SEVEN + DOT + SEVEN + DOT + ZERO),
+
+        TEIID_8_4(EIGHT + DOT + FOUR + DOT + ZERO),
+
+        TEIID_8_5(EIGHT + DOT + FIVE + DOT + ZERO),
+
+        TEIID_8_6(EIGHT + DOT + SIX + DOT + ZERO),
+
+        TEIID_8_7(EIGHT + DOT + SEVEN + DOT + ZERO);
+
+        private final String id;
+
+        VersionID(String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return id;
+        }
+    }
+
+    /**
      * Default teiid 8 server version
      */
     String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
@@ -55,6 +81,11 @@ public interface ITeiidServerVersion {
      * teiid 8.6 server version - required due to method added to Admin API
      */
     String TEIID_8_6_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
+
+    /**
+     * teiid 8.7 server version - required due to changes to SQLStringVisitor
+     */
+    String TEIID_8_7_SERVER_ID = EIGHT + DOT + SEVEN + DOT + ZERO;
 
     /**
      * Teiid version property constant
