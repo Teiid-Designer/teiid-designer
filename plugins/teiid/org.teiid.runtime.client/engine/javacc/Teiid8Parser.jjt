@@ -3683,12 +3683,25 @@ example={code:sql}GROUP BY col1, col2{code}
 GroupBy groupBy(ParseInfo info) #GroupBy :
 {
 	List<Expression> expressions = null;
+	boolean rollup = false;
 }
 {
 	<GROUP> <BY>
-    expressions = expressionList(info)	
+    (
+      <ROLLUP><LPAREN>
+      expressions = expressionList(info)
+      <RPAREN>
+      {
+        requires(versionAtLeast(Version.TEIID_8_5));
+        rollup = true;
+      }
+      |
+      expressions = expressionList(info)
+    )
+
 	{
 	    jjtThis.setSymbols(expressions);
+	    jjtThis.setRollup(rollup);
 		return jjtThis;
 	}
 }
