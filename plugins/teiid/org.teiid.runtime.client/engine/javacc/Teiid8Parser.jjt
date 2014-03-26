@@ -917,6 +917,7 @@ Command userCommand(ParseInfo info) :
 {
 	Command command = null;
 	SourceHint sourceHint = null;
+	Block block = null;
 }
 {
     {
@@ -940,7 +941,16 @@ Command userCommand(ParseInfo info) :
 	LOOKAHEAD(2) command = createTempTable(info) |
     LOOKAHEAD(2) command = createForeignTempTable(info) |
 	command = alter(info) |
-	command = createTrigger(info)
+	command = createTrigger(info) |
+	{
+      requires(versionAtLeast(Version.TEIID_8_5));
+    }
+    block = compoundStatement(info)
+    {
+      CreateProcedureCommand procCommand = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
+      procCommand.setBlock(block);
+      command = procCommand;
+    }
 	)
 	{
 	    setSourceHint(sourceHint, command);
@@ -1509,7 +1519,8 @@ CreateProcedureCommand createProcedure(ParseInfo info) # CreateProcedureCommand 
 /*
 name=procedure body definition
 description=Defines a procedure body on a Procedure metadata object.
-example={code:sql}CREATE VIRTUAL PROCEDURE BEGIN ... END{code}
+example={code:sql}BEGIN ... END{code} // Teiid 8.5+
+example={code:sql}CREATE VIRTUAL PROCEDURE BEGIN ... END{code} Teiid 8.4-
 index=true
 */
 CreateProcedureCommand procedureBodyCommand(ParseInfo info) :
