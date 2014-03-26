@@ -3796,15 +3796,17 @@ example={code:sql}?{code}
 */
 Expression intParam(ParseInfo info) :
 {
+   Expression ex = null;
    Integer val = null;
 }
 {
-   (val = intVal() | <QMARK>)
+   val = intVal()
    {
-     if (val == null) {
-       return reference(info.incrementReferenceCount());
-     } 
      return constant(val, DataTypeManagerService.DefaultDataTypes.INTEGER);
+   }
+   |
+   ex = unsignedValueExpressionPrimary(info)
+   {     return ex;
    }
 }
 
