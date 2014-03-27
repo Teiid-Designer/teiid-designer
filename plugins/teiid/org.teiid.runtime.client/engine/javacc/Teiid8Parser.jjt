@@ -4543,7 +4543,13 @@ Expression function(ParseInfo info) #Function :
 		literal = stringVal()
 		{
 			args.add(constant(literal));
-		} 
+		}
+		[<COMMA> expression = expression(info)
+		 {
+		   requires(versionAtLeast(Version.TEIID_8_6));
+		   args.add(expression);
+		 }
+		]
 		<RPAREN>				
 	)
 	|
