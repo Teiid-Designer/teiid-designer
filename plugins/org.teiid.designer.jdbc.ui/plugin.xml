@@ -32,11 +32,11 @@
    <extension
 		id="JdbcCostAnalysisAction"
 		name="%jdbcCostAnalysisAction.name"
-        point="org.teiid.designer.ui.modelResourceAction">
-      <resourceAction
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
          name="org.teiid.designer.jdbc.ui.actions.JdbcCostAnalysisAction"
          label="%jdbcCostAnalysisAction.label">
-      </resourceAction>
+      </specialAction>
    </extension>
    
       <extension

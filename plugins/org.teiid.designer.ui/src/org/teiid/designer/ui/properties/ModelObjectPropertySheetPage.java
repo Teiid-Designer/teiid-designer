@@ -137,7 +137,7 @@ public class ModelObjectPropertySheetPage
                     modelObject = event.getOldValue();
                 }
 
-                if (ExtensionPlugin.getInstance().isModelExtensionDefinitionRelated(modelObject)) {
+                if (modelObject!=null && ExtensionPlugin.getInstance().isModelExtensionDefinitionRelated(modelObject)) {
                     return true;
                 }
             }
@@ -176,7 +176,12 @@ public class ModelObjectPropertySheetPage
                     || isModelExtensionDefinitionRelated(notification)) {
                     handlingNotification = true;
                     try {
-                        this.refresh();
+                        Display.getDefault().asyncExec(new Runnable() {
+                            @Override
+                			public void run() {
+                                refresh();
+                            }
+                        });
                     } catch (SWTException e) {
                         // swallow - a Widget is disposed exception may occur due to deactivateCellEditor call
                         //   but this is not even important enough to log.
@@ -207,7 +212,12 @@ public class ModelObjectPropertySheetPage
                     this.handlingNotification = true;
 
                     try {
-                        refresh();
+                        Display.getDefault().asyncExec(new Runnable() {
+                            @Override
+                			public void run() {
+                                refresh();
+                            }
+                        });
                     } catch (SWTException e) {
                         // swallow - a Widget is disposed exception may occur due to deactivateCellEditor call
                         //   but this is not even important enough to log.

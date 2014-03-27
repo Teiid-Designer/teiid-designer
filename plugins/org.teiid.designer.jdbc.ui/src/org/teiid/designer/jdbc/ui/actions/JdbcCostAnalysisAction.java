@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.jdbc.ui.actions;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +27,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -42,10 +41,11 @@ import org.teiid.designer.jdbc.relational.impl.TableStatistics;
 import org.teiid.designer.jdbc.ui.InternalModelerJdbcUiPluginConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiConstants;
 import org.teiid.designer.jdbc.ui.ModelerJdbcUiPlugin;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
-import org.teiid.designer.ui.actions.ISelectionAction;
+import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -54,37 +54,111 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
-public class JdbcCostAnalysisAction extends Action implements ISelectionListener, Comparable, ISelectionAction {
-    private IFile selectedModel;
+public class JdbcCostAnalysisAction extends SortableSelectionAction {
 
+    private IFile selectedModel;
+    private List<Table> selectedTables;
+
+    /**
+     * Constructor
+     */
     public JdbcCostAnalysisAction() {
         super();
         setImageDescriptor(ModelerJdbcUiPlugin.getDefault().getImageDescriptor(ModelerJdbcUiConstants.Images.COST_ANALYSIS));
     }
 
+    /**
+     * 
+     */
     @Override
-    public void selectionChanged( IWorkbenchPart part,
-                                  ISelection selection ) {
-        boolean enable = false;
-        try {
-            if (!SelectionUtilities.isMultiSelection(selection)) {
-                Object obj = SelectionUtilities.getSelectedObject(selection);
-                if (obj instanceof IFile && ModelUtilities.isModelFile((IFile)obj)) {
-                    ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
-                    if (ModelUtilities.hasJdbcSource(modelResource)) {
-                        this.selectedModel = (IFile)obj;
-                        enable = true;
-                    }
-                }
-            }
-        } catch (ModelWorkspaceException err) {
-            UiConstants.Util.log(err);
-        } finally {
-            setEnabled(enable);
-        }
-
+    public boolean isApplicable( final ISelection selection ) {
+        return isValidSelection(selection);
     }
 
+    /**
+     * Valid selections include Relational Tables, Procedures or Relational Models. The roots instance variable will populated with
+     * all Tables and Procedures contained within the current selection.
+     * 
+     * @return
+     * @since 4.1
+     */
+    @Override
+    protected boolean isValidSelection( final ISelection selection ) {
+        boolean isValid = true;
+        this.selectedModel=null;
+        this.selectedTables=null;
+        if (SelectionUtilities.isEmptySelection(selection)) isValid = false;
+
+        if (isValid) {
+        	try {
+        		// Single Selection must be a Model or a Table
+        		if (SelectionUtilities.isSingleSelection(selection)) {
+        			Object obj = SelectionUtilities.getSelectedObject(selection);
+        			ModelResource modelResource = null;
+        			// Object must be a ModelResource or a Table
+        			if (obj instanceof IFile && ModelUtilities.isModelFile((IFile)obj)) {
+        				modelResource = ModelUtil.getModelResource((IFile)obj, false);
+        			} else if (obj instanceof Table) {
+        				modelResource = ModelUtil.getModel(obj);
+        			} else {
+        				isValid = false;
+        			}
+        			// Make sure the selection has a JdbcSource
+        			if(isValid) {
+        				if (ModelUtilities.hasJdbcSource(modelResource)) {
+        					this.selectedModel = (IFile)modelResource.getResource();
+        					if(obj instanceof Table) {
+        						this.selectedTables = new ArrayList<Table>();
+        						this.selectedTables.add((Table)obj);
+        					}
+        				} else {
+        					isValid = false;
+        				}
+        			}
+        		// Multi selection must be all Tables
+        		} else {
+        			ModelResource theModel = null;
+        			List<Object> objs = SelectionUtilities.getSelectedObjects(selection);
+        			List<Table> allTables = new ArrayList<Table>();
+        			for(Object aObj : objs) {
+        				if(aObj instanceof Table) {
+        					ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource((Table)aObj);
+        					if (modelResource!=null) {
+        						if(theModel==null) theModel = modelResource;
+        						if (!modelResource.equals(theModel)) {
+        							isValid=false;
+        							break;
+        						} else {
+        							allTables.add((Table)aObj);
+        						}
+        					} else {
+        						isValid=false;
+        						break;
+        					}
+        				} else {
+        					isValid = false;
+        					break;
+        				}
+        			}
+        			// Make sure theModel has a JdbcSource
+        			if(isValid) {
+        				if (ModelUtilities.hasJdbcSource(theModel)) {
+        					this.selectedModel = (IFile)theModel.getResource();
+        					this.selectedTables = allTables;
+        				} else {
+        					isValid = false;
+        				}
+        			}
+        		}
+        	} catch (ModelWorkspaceException e) {
+        		isValid = false;
+        	}
+
+        }
+        
+        return isValid;
+    }
+    
     /**
      * We will compute column-level statistics (min-value, max-value, # of null values, # of distinct values) for all columns in
      * tables in the model IFF the model is physical relational with a Jdbc source. We must first prompt the user for the
@@ -116,7 +190,7 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
                 	}
                 	final Resource resource = modelResource.getEmfResource();
                 	
-                    executeInTransaction(resource, shell);
+                    executeInTransaction(resource, selectedTables, shell);
                 }
             } catch (Exception e) {
                 InternalModelerJdbcUiPluginConstants.Util.log(e);
@@ -127,12 +201,12 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         }
     }
     
-    private void executeInTransaction(final Resource resource, final Shell shell) {
+    private void executeInTransaction(final Resource resource, final List<Table> tables, final Shell shell) {
         boolean requiredStart = ModelerCore.startTxn(true,true,"Update Cost Statistics",this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
-        	internalExecute(resource, shell);
-        	
+        	internalExecute(resource, tables, shell);
+        	            
             succeeded = true;
         } finally {
             //if we started the txn, commit it.
@@ -147,11 +221,11 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
          
     }
     
-    private void internalExecute(final Resource resource, final Shell shell) {
+    private void internalExecute(final Resource resource, final List<Table> tables, final Shell shell) {
     	if (resource != null) {
             final JdbcSource source = JdbcUtil.findJdbcSource(resource);
             if (source != null) {
-                final List emfTables = RelationalUtil.findTables(resource);
+            	final List emfTables = getTables(tables,resource);
                 final CostAnalyzerFactory analyzerFactory = CostAnalyzerFactory.getCostAnalyzerFactory();
                 final Map tblStats = analyzerFactory.createTableInfos(emfTables);
                 if (tblStats != null && tblStats.size() > 0) {
@@ -229,6 +303,24 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         }
         return numWorkInc;
     }
+    
+    /**
+     * Get the tables for the costing updates.  If tables have been selected, they're used.  Otherwise all tables from the resource are used.
+     * @param selectedTables the list of selected tables
+     * @param resource the resource
+     * @return the tables for costing update
+     */
+    private List<Table> getTables(List<Table> selectedTables, final Resource resource) {
+    	List<Table> resultTables = null;
+    	
+    	if(selectedTables!=null && !selectedTables.isEmpty()) {
+    		resultTables = selectedTables;
+    	} else {
+    		resultTables = RelationalUtil.findTables(resource);
+    	}
+    	
+    	return resultTables;
+    }
 
     class CostAnalysisDialog extends InputDialog {
 
@@ -262,28 +354,6 @@ public class JdbcCostAnalysisAction extends Action implements ISelectionListener
         return 0;
     }
 
-    @Override
-    public boolean isApplicable( ISelection selection ) {
-        boolean result = false;
-        try {
-            if (!SelectionUtilities.isMultiSelection(selection)) {
-                Object obj = SelectionUtilities.getSelectedObject(selection);
-                if (obj instanceof IFile && ModelUtilities.isModelFile((IFile)obj)) {
-                    ModelResource modelResource = ModelUtil.getModelResource((IFile)obj, false);
-                    if (ModelUtilities.hasJdbcSource(modelResource)) {
-                        this.selectedModel = (IFile)obj;
-                        result = true;
-                    }
-                }
-            }
-        } catch (ModelWorkspaceException err) {
-            UiConstants.Util.log(err);
-        }
-
-        return result;
-    }
-    
-    
     /**
      * Should only be called if current object and model are not <code>null</code>.
      * 
