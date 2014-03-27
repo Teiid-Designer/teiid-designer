@@ -44,6 +44,9 @@ public class Query extends QueryCommand
     /** xml projected symbols */
     private List<Expression> selectList;
 
+    /** currently set by parser, but can be derived */
+    private boolean isRowConstructor;
+    
     /**
      * @param p
      * @param id
@@ -205,6 +208,20 @@ public class Query extends QueryCommand
      */
     public void setIsXML(boolean isXML) {
         this.isXML = isXML;
+    }
+
+    /**
+     * @return row constructor flag
+     */
+    public boolean isRowConstructor() {
+        return isRowConstructor;
+    }
+    
+    /**
+     * @param isRowConstructor
+     */
+    public void setRowConstructor(boolean isRowConstructor) {
+        this.isRowConstructor = isRowConstructor;
     }
 
     /**

@@ -1853,20 +1853,10 @@ Insert insert(ParseInfo info) #Insert :
 	}]
 
 	(
-		( <VALUES> <LPAREN>
-		  values = expressionList(info)
-		  <RPAREN>
-		  {
-		    // Store each row of values
-		    jjtThis.setValues(values);
-		  }
-		)
-		|
-		( query = queryExpression(info)
-		  {
-		    jjtThis.setQueryExpression(query);
-		  }
-		)
+      query = queryExpression(info)
+      {
+        jjtThis.setQueryExpression(query);
+      }
 	)
 	
 	[ option = option(info)
@@ -2116,15 +2106,43 @@ example={code:sql}TABLE tbl{code}\n{code:sql}SELECT * FROM tbl1{code}
 QueryCommand queryPrimary(ParseInfo info) :
 {
     QueryCommand query = null;
+    Query q = null;
+    Select select = null;
     String name = null;
+    List<Expression> expr = null;
 }
 {
     (
-        query=query(info) | 
+        query=query(info) |
+        (<VALUES> <LPAREN> expr = expressionList(info) 
+         {
+           select = createASTNode(ASTNodes.SELECT);
+           select.setSymbols(expr);
+
+           q = createASTNode(ASTNodes.QUERY);
+           q.setSelect(select);
+           q.setRowConstructor(true);
+           query = q;           
+         }
+         <RPAREN> 
+          (<COMMA> <LPAREN> expr = expressionList(info) 
+           {
+             requires(versionAtLeast(Version.TEIID_8_6));
+
+             select = createASTNode(ASTNodes.SELECT);
+             select.setSymbols(expr);
+
+             q = createASTNode(ASTNodes.QUERY);
+             q.setSelect(select);
+             q.setRowConstructor(true);
+
+             query = setQuery(ISetQuery.Operation.UNION, true, query, q);
+           }
+          <RPAREN>)*) |
         (<TABLE> name=id(null) {
            MultipleElementSymbol multipleElementSymbol = createASTNode(ASTNodes.MULTIPLE_ELEMENT_SYMBOL);
 
-           Select select = createASTNode(ASTNodes.SELECT);
+           select = createASTNode(ASTNodes.SELECT);
            select.setSymbols(Arrays.asList(multipleElementSymbol));
 
            UnaryFromClause unaryFromClause = createASTNode(ASTNodes.UNARY_FROM_CLAUSE);
@@ -2133,7 +2151,7 @@ QueryCommand queryPrimary(ParseInfo info) :
            From from = createASTNode(ASTNodes.FROM);
            from.setClauses(Arrays.asList(unaryFromClause));
            
-           Query q = createASTNode(ASTNodes.QUERY);
+           q = createASTNode(ASTNodes.QUERY);
            q.setSelect(select);
            q.setFrom(from);
            query = q;

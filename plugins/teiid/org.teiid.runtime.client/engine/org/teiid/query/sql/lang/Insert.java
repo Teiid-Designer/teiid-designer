@@ -6,11 +6,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IInsert;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
+import org.teiid.query.sql.util.SymbolMap;
 
 /**
  *
@@ -141,6 +143,23 @@ public class Insert extends ProcedureContainer
      * @param query
      */
     public void setQueryExpression( QueryCommand query ) {
+        if (query instanceof Query) {
+            Query expr = (Query)query;
+            //a singl row constructor query is the same as values 
+            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get()) && expr.isRowConstructor()) {
+                this.values.clear();
+                this.queryExpression = null;
+                for (Expression ex : expr.getSelect().getSymbols()) {
+                    addValue(SymbolMap.getExpression(ex));
+                }
+                if (expr.getOption() != null && this.getOption() == null) {
+                    //this isn't ideal, parsing associates the option with values
+                    this.setOption(expr.getOption());
+                }
+                return;
+            }
+        }
+
         this.queryExpression = query;        
     }
 
