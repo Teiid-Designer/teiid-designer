@@ -2,6 +2,7 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=TeiidNodeFactory,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ITextColumn;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
@@ -18,6 +19,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
     private String selector;
 
     private Integer position;
+
+    private boolean ordinal;
 
     /**
      * @param p
@@ -83,6 +86,22 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         this.position = position;
     }
 
+    /**
+     * @return ordinal
+     */
+    @Since("8.7.0")
+    public boolean isOrdinal() {
+        return ordinal;
+    }
+
+    /**
+     * @param ordinal the ordinal to set
+     */
+    @Since("8.7.0")
+    public void setOrdinal(boolean ordinal) {
+        this.ordinal = ordinal;
+    }
+ 
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -91,6 +110,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         result = prime * result + ((this.position == null) ? 0 : this.position.hashCode());
         result = prime * result + ((this.selector == null) ? 0 : this.selector.hashCode());
         result = prime * result + ((this.width == null) ? 0 : this.width.hashCode());
+        result = prime * result + (this.ordinal ? 1231 : 1237);
         return result;
     }
 
@@ -110,6 +130,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         if (this.width == null) {
             if (other.width != null) return false;
         } else if (!this.width.equals(other.width)) return false;
+        if (this.ordinal != other.ordinal)
+            return false;
         return true;
     }
 
@@ -134,7 +156,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
             clone.setName(getName());
         if(getType() != null)
             clone.setType(getType());
-        
+        clone.setOrdinal(isOrdinal());
+
         return clone;
     }
 

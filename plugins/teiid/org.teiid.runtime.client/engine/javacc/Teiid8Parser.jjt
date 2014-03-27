@@ -2854,31 +2854,45 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 }
 {
 	name = id(Boolean.TRUE)
-	datatype = parseDataType()
-	[ 
-	  	<WIDTH>
-	  	width = intVal() 
-	  	[ LOOKAHEAD(2)
-		  	<NO> <TRIM>
-		  	{
-				noTrim = true;	  	
-		  	}
-		]
-	]
-	[ 
-	  	<SELECTOR>
-	    selector = stringVal()
-	  	position = intVal() 
-	]
-	{
-	    jjtThis.setName(name);
-	    jjtThis.setType(datatype.getType());
-	    jjtThis.setWidth(width);
-	    jjtThis.setNoTrim(noTrim);
-		jjtThis.setSelector(selector);
-		jjtThis.setPosition(position);
-		return jjtThis;
+	{	  jjtThis.setName(name);
 	}
+	(
+	  (
+        <FOR> <ORDINALITY> 
+        {
+          requires(versionAtLeast(Version.TEIID_8_7));
+          jjtThis.setOrdinal(true);
+          return jjtThis; 
+        }
+      )
+      |
+      (
+	    datatype = parseDataType()
+	    [
+	  	  <WIDTH>
+	  	  width = intVal() 
+	  	  [ LOOKAHEAD(2)
+		    <NO> <TRIM>
+		  	{
+			  noTrim = true;	  	
+		  	}
+		  ]
+	    ]
+	    [
+	  	  <SELECTOR>
+	      selector = stringVal()
+	  	  position = intVal() 
+	    ]
+	    {
+	      jjtThis.setType(datatype.getType());
+	      jjtThis.setWidth(width);
+	      jjtThis.setNoTrim(noTrim);
+		  jjtThis.setSelector(selector);
+		  jjtThis.setPosition(position);
+          return jjtThis;
+	    }
+	  )
+    )
 }
 
 /*
