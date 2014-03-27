@@ -49,6 +49,13 @@ public class ParsedDataType {
     }
 
     /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * @return the length
      */
     public Integer getLength() {

@@ -4097,6 +4097,8 @@ Expression valueExpressionPrimary(ParseInfo info) :
 {
 	String strVal = null;
 	Expression ex = null;
+	Expression indexExpr = null;
+	List<Expression> indexExprs = null;
 }
 {
 	// Literal
@@ -4104,20 +4106,120 @@ Expression valueExpressionPrimary(ParseInfo info) :
 	| [strVal = plusMinus()] 
 	  (ex = unsignedNumericLiteral(strVal)
 	   |
-	   ex = unsignedValueExpressionPrimary(info) {
-	     if (strVal != null && strVal.charAt(0) == '-') {
-	        Function function = createASTNode(ASTNodes.FUNCTION);
-	        function.setName("*"); //$NON-NLS-1$
-	        function.setArgs(new Expression[] { constant(-1), ex });
-	        ex = function;
-	     }
-	    }
-	   )
-	 )
-	 {
-		return ex;	 
-	 }  
+        (ex = unsignedValueExpressionPrimary(info)
+          //array element reference expressions
+          (<LSBRACE> indexExpr = plusExpression(info) <RSBRACE> {
+              indexExprs = arrayExpressions(indexExprs, indexExpr);
+            }
+          )*
+          {
+            if (indexExprs != null) {
+              for (Expression expr : indexExprs) {
+                Function function = createASTNode(ASTNodes.FUNCTION);
+                function.setName("array_get"); //$NON-NLS-1$
+                function.setArgs(new Expression[] {ex, expr});
+                ex = function;
+              }
+            }
+          }
+        )
+        {
+          if (strVal != null && strVal.charAt(0) == '-') {
+            Function function = createASTNode(ASTNodes.FUNCTION);
+            function.setName("*"); //$NON-NLS-1$
+            function.setArgs(new Expression[] { constant(-1), ex });
+            ex = function;
+          }
+        }
+	  )
+    )
+	{
+	  return ex;
+	}
 }
+
+/*
+name=parameter reference
+description=A parameter reference to be bound later.
+example={code:sql}?{code}
+*/
+Reference parameterReference(ParseInfo info) :
+{
+    Integer index = null;
+}
+{
+    <QMARK> {return reference(info.incrementReferenceCount());}
+    |
+    (<DOLLAR> index = intVal() {return reference(index -1); })
+}
+
+Expression unescapedFunction(ParseInfo info) :
+{
+    Expression expression = null;
+    Expression condition = null;
+    
+}
+{
+    // Aggregate function
+    (LOOKAHEAD(2) ((expression=textAgg(info) | expression=aggregateSymbol(info) | expression=orderedAgg(info)) [condition = filterClause(info)] [expression = windowSpecification(expression, info)])
+    |
+    LOOKAHEAD(2) (expression=analyticAggregateSymbol(info) [condition = filterClause(info)] expression = windowSpecification(expression, info))
+    |
+    // Function
+    LOOKAHEAD(2) (expression=function(info) [expression = windowSpecification(expression, info)]))
+    {
+        if (condition != null) {
+            if (expression instanceof WindowFunction) {
+                ((WindowFunction)expression).getFunction().setCondition(condition);
+            } else {
+                ((AggregateSymbol)expression).setCondition(condition);
+            }
+        }
+        return expression;
+    }
+}
+
+/*
+name=nested expression
+description=An expression nested in parens
+example={code:sql}(1){code}
+*/
+Expression nestedExpression(ParseInfo info) :
+{
+    Expression expression = null;
+    Expression arrayExpression = null;
+    List<Expression> arrayExpressions = null;
+}
+{
+    ( <LPAREN> 
+        [expression = expression(info)
+        (LOOKAHEAD(2) <COMMA>arrayExpression = expression(info) {
+          requires(versionAtLeast(Version.TEIID_8_5));
+          if (expression != null) {
+             arrayExpressions = arrayExpressions(arrayExpressions, expression);
+             expression = null;
+          } 
+          arrayExpressions = arrayExpressions(arrayExpressions, arrayExpression);})*]
+        [<COMMA>
+          {
+            requires(versionAtLeast(Version.TEIID_8_5));
+            arrayExpressions = arrayExpressions(arrayExpressions, expression);
+          } ]
+      <RPAREN>
+    )
+    {
+        if (arrayExpressions != null) {
+          Array array = array();
+          array.setExpressions(arrayExpressions);
+          expression = array;
+        } else if (expression == null) {
+          Array array = array();
+          array.setExpressions(new ArrayList<Expression>(0));
+          expression = array;
+        }
+        return expression;
+    }
+}    
 
 /*
 name=unsigned value expression primary
@@ -4129,33 +4231,19 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
 	Expression expression = null;
 	Token symbol = null;
 	QueryCommand subquery = null;
-	Integer index = null;
-	Expression condition = null;
-	Expression indexExpr = null;
-	List<Expression> indexExprs = null;
-	Expression arrayExpression = null;
-	List<Expression> arrayExpressions = null;
 }
 {
     (
 		// Reference
-		<QMARK> {return reference(info.incrementReferenceCount());}
-		|
-		(<DOLLAR> index = intVal() {return reference(index -1); })
+		expression = parameterReference(info)
 		|
 		// Escaped function
 		(	<ESCAPEDFUNCTION>
 			expression=function(info)
 			<RBRACE>
 		)
-		|		
-		// Aggregate function
-		LOOKAHEAD(2) ((expression=textAgg(info) | expression=aggregateSymbol(info) | expression=orderedAgg(info)) [condition = filterClause(info)] [expression = windowSpecification(expression, info)])
-		|
-		LOOKAHEAD(2) (expression=analyticAggregateSymbol(info) [condition = filterClause(info)] expression = windowSpecification(expression, info))
-		|
-		// Function
-		LOOKAHEAD(2) (expression=function(info) [expression = windowSpecification(expression, info)])
+        |
+		LOOKAHEAD(2) expression = unescapedFunction(info)
 		|
 		// ElementSymbol
 		((symbol=<ID> {
@@ -4163,27 +4251,12 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
 				if(isStringLiteral(symbolImage, info)) {
 				    return constant(normalizeStringLiteral(symbolImage));
 				}  
-			} | symbol=nonReserved())
+			} | symbol=nonReserved()) {expression = elementSymbol(normalizeId(symbol.image));}
 		)
 		|
-		LOOKAHEAD(subquery(info)) subquery = subquery(info)
+		LOOKAHEAD(subquery(info)) subquery = subquery(info) {expression = scalarSubquery(subquery);}
 		|
-		( <LPAREN>
-            [expression = expression(info)
-            (LOOKAHEAD(2) <COMMA> arrayExpression = expression(info) {
-              requires(versionAtLeast(Version.TEIID_8_5));
-              if (expression != null) {
-                arrayExpressions = arrayExpressions(arrayExpressions, expression);
-                expression = null;
-              }
-              arrayExpressions = arrayExpressions(arrayExpressions, arrayExpression);            })*]
-            [<COMMA>
-              {
-                requires(versionAtLeast(Version.TEIID_8_5));
-                arrayExpressions = arrayExpressions(arrayExpressions, expression);
-              } ]
-		  <RPAREN>
-		)
+		expression = nestedExpression(info)
 		|
 		// Searched CASE expressions
 		LOOKAHEAD(2) expression = searchedCaseExpression(info)
@@ -4192,43 +4265,7 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
 		expression = caseExpression(info)
 	)
 
-    //array element reference expressions
-    (<LSBRACE> indexExpr = plusExpression(info) <RSBRACE> {
-       indexExprs = arrayExpressions(indexExprs, indexExpr);
-     }
-    )*
-
 	{
-		if(symbol != null) {
-			expression = elementSymbol(normalizeId(symbol.image));
-		} else if (subquery != null){
-			expression = scalarSubquery(subquery);
-		}
-		if (condition != null) {
-			if (expression instanceof WindowFunction) {
-    	   		((WindowFunction)expression).getFunction().setCondition(condition);
-           	} else {
-                ((AggregateSymbol)expression).setCondition(condition);
-          	}
-		}
-
-		if (arrayExpressions != null) {
-		   Array array = array();
-		   array.setExpressions(arrayExpressions);
-           expression = array;
-        } else if (expression == null) {
-           Array array = array();
-           array.setExpressions(new ArrayList<Expression>(0));
-           expression = array;
-        }
-        if (indexExprs != null) {
-           for (Expression ex : indexExprs) {
-               Function function = createASTNode(ASTNodes.FUNCTION);
-               function.setName("array_get"); //$NON-NLS-1$
-               function.setArgs(new Expression[] {expression, ex});
-               expression = function;
-           }
-        }
 		return expression;
 	}
 }
@@ -4840,17 +4877,16 @@ NamespaceItem namespaceItem() :
 }
 
 /*
-name=data type
-description=A data type.
+name=simple data type
+description=A non-collection data type.
 example={code:sql}STRING{code}
 */
-ParsedDataType parseDataType() :
+ParsedDataType parseDataTypePrimary() :
 {
 	Token typeToken = null;
 	Integer length = null;
 	Integer scale = null; 
 	boolean precision = true;
-	int arraySuffixes = 0;
 }
 {
 	(
@@ -4881,13 +4917,8 @@ ParsedDataType parseDataType() :
 		typeToken = <XML>
 		
 	)
-
-    (<LSBRACE><RSBRACE> { requires(versionAtLeast(Version.TEIID_8_5)); arraySuffixes++;})*
 	{
 	    String typeName = typeToken.image;
-        if (arraySuffixes > 0) {
-           typeName += StringUtil.join(Collections.nCopies(arraySuffixes, "[]"), "");
-        }
 		if (scale != null){
 			return new ParsedDataType(typeName, length, scale, precision);
 		}
@@ -4896,6 +4927,27 @@ ParsedDataType parseDataType() :
 		}
 		return new ParsedDataType(typeName);
 	}
+}
+
+/*
+name=data type
+description=A data type.
+example={code:sql}STRING[]{code}
+*/
+ParsedDataType parseDataType() :
+{
+    int arraySuffixes = 0;
+    ParsedDataType type = null;
+}
+{
+    type = parseDataTypePrimary()
+    (<LSBRACE><RSBRACE> {requires(versionAtLeast(Version.TEIID_8_5)); arraySuffixes++;})*
+    {
+        if (arraySuffixes > 0) {
+           type.setType(type.getType() + StringUtil.join(Collections.nCopies(arraySuffixes, "[]"), ""));
+        }
+        return type;
+    }
 }
 
 /*
