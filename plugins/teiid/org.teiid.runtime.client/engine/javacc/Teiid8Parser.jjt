@@ -4292,10 +4292,19 @@ Expression windowSpecification(Expression agg, ParseInfo info) :
 	OrderBy orderBy = null;
 }
 {
-	<OVER> { 
-	if (!(agg instanceof AggregateSymbol)) {
-	   		throw new ParseException(Messages.getString(Messages.TeiidParser.invalid_window, agg));
-    	}
+	<OVER>
+	{
+	  if (!(agg instanceof AggregateSymbol)) {
+	    if (!(agg instanceof Function)) {
+          throw new ParseException(Messages.getString(Messages.TeiidParser.invalid_window, agg));
+        }
+        Function f = (Function)agg;
+        AggregateSymbol aggSymbol = createASTNode(ASTNodes.AGGREGATE_SYMBOL);
+        aggSymbol.setAggregateFunction(f.getName());
+        aggSymbol.setDistinct(false);
+        aggSymbol.setArgs(f.getArgs());
+        agg = aggSymbol;
+      }
     }
     <LPAREN> 
     [<PARTITION> <BY> partitionList = expressionList(info)]
