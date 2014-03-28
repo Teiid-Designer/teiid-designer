@@ -27,6 +27,7 @@ import org.teiid.datatools.connectivity.security.impl.EquinoxSecureStorageProvid
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 /**
  * 
@@ -38,18 +39,18 @@ public class ConnectivityUtil {
     public static final String TEIID_PROFILE_PROVIDER_ID = "org.teiid.datatools.connectivity.connectionProfile"; //$NON-NLS-1$
     public static final String DRIVER_DEFINITION_ID_KEY = "org.eclipse.datatools.connectivity.driverDefinitionID"; //$NON-NLS-1$
     public static final String DB_CATEGORY_TEIID_ID = "org.eclipse.datatools.connectivity.db.category.teiid"; //$NON-NLS-1$
-    public static final String TEIID_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Server JDBC Driver"; //$NON-NLS-1$
 
     public static final String TEIID_DRIVER_NAME = "org.teiid.jdbc.TeiidDriver"; //$NON-NLS-1$
     public static final String TEIID_DATABASE_VENDOR_NAME = "Teiid"; //$NON-NLS-1$
 
-    public static final String TEIID_PREVIEW_DRIVER_DEFINITION_ID = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate.Teiid Driver Default"; //$NON-NLS-1$
-    public static final String TEIID_PREVIEW_DRIVER_NAME = "Teiid Driver (default)"; //$NON-NLS-1$
-    public static final String TEIID_PREVIEW_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
-	
-	public static final String TEIID_DRIVER_DEFINITION_ID_BASE = "DriverDefn.org.teiid.datatools.connectivity.driver.serverDriverTemplate."; //$NON-NLS-1$
+    private static final String TEIID_DRIVER_ID_SKELETON = "DriverDefn.org.teiid.MAJOR.MINOR.driver.serverDriverTemplate.Teiid Server JDBC Driver MAJOR.MINOR Default"; //$NON-NLS-1$
 
-	/**
+    /* Property keys for the ad-hoc teiid drivers created if no other suitable teiid driver can be found */
+    public static final String TEIID_ADHOC_DRIVER_ID_SKELETON = "DriverDefn.org.teiid.MAJOR.MINOR.driver.serverDriverTemplate.Ad-hoc Teiid Server JDBC Driver MAJOR.MINOR Default"; //$NON-NLS-1$
+    public static final String TEIID_ADHOC_DRIVER_DEFAULT_NAME = "Ad-hoc Teiid Server JDBC Driver"; //$NON-NLS-1$
+    public static final String TEIID_ADHOC_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
+
+    /**
      * Base key for the secure storage node used for holding passwords
      */
     public static final String SECURE_STORAGE_BASEKEY = Activator.PLUGIN_ID.replace('.', IPath.SEPARATOR);
@@ -63,7 +64,54 @@ public class ConnectivityUtil {
      * Secure storage sub-node for the JDBC password property
      */
     public static final String JDBC_PASSWORD = "jdbc_password"; //$NON-NLS-1$
-    
+
+    /**
+     * Tries to find the most appropriate driver definition id for the given teiid version.
+     * <p>
+     * Since teiid driver definition's are version specific, it attempts to find the driver
+     * definition based upon the major and minor components of the version.
+     * <p>
+     * Failing that, it iterates through the existing driver definitions and attempts to
+     * determine the most appropriate driver based upon the actual version of the
+     * driver definition.
+     *
+     * @param serverVersion
+     * @return driver definition id or null
+     */
+    private static String getTeiidDriverDefinitionId(ITeiidServerVersion serverVersion) {
+        String driverDefnId = TEIID_DRIVER_ID_SKELETON
+                                                .replaceAll("MAJOR", serverVersion.getMajor()) //$NON-NLS-1$
+                                                .replaceAll("MINOR", serverVersion.getMinor()); //$NON-NLS-1$
+        DriverInstance driverInstance = DriverManager.getInstance().getDriverInstanceByID(driverDefnId);
+        if (driverInstance != null)
+            return driverDefnId; // exact match!!
+
+        /* Need to try harder since no teiid version directly matches a driver */
+        for (DriverInstance driver : DriverManager.getInstance().getAllDriverInstances()) {
+            String driverClass = driver.getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
+            if (! TEIID_DRIVER_NAME.equals(driverClass))
+                continue;
+
+            String version = driver.getProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID);
+            ITeiidServerVersion driverTeiidVersion = new TeiidServerVersion(version);
+            if (! driverTeiidVersion.getMajor().equals(serverVersion.getMajor()))
+                continue; // Major versions must match for the driver to be usable
+
+            if (! driverTeiidVersion.isLessThan(serverVersion))
+                continue; // eg. cannot use an 8.3 driver for an 8.4 teiid
+
+            /*
+             * TODO
+             * Can end up with the possibility of using an 8.4 driver for an 8.2 teiid
+             * when the 8.3 may be more appropriate but cross that bridge if it ever
+             * comes up.
+             */
+            return driver.getId();
+        }
+
+        return null;
+    }
+
     public static Properties createDriverProps(ITeiidServerVersion serverVersion, 
                                                 String jarList,
                                                 String driverURL,
@@ -82,7 +130,7 @@ public class ConnectivityUtil {
         baseProperties.setProperty(IJDBCConnectionProfileConstants.SAVE_PASSWORD_PROP_ID, String.valueOf(true));
         // baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST,
         // jarList);
-        baseProperties.setProperty(DRIVER_DEFINITION_ID_KEY, TEIID_PREVIEW_DRIVER_DEFINITION_ID);
+        baseProperties.setProperty(DRIVER_DEFINITION_ID_KEY, getTeiidDriverDefinitionId(serverVersion));
 
         return baseProperties;
     }
@@ -96,7 +144,7 @@ public class ConnectivityUtil {
         ProfileManager pm = ProfileManager.getInstance();
 
         try {
-            DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
+            DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(getTeiidDriverDefinitionId(serverVersion));
             if (mDriver == null) {
                 createTeiidPreviewDriverInstance(serverVersion, driverPath, connectionURL, username);
             } else {
@@ -124,7 +172,17 @@ public class ConnectivityUtil {
 
     private static void createTeiidPreviewDriverInstance( ITeiidServerVersion serverVersion, String jarList,
                                                           String driverURL, String username ) {
-        IPropertySet pset = new PropertySetImpl(TEIID_PREVIEW_DRIVER_NAME, TEIID_PREVIEW_DRIVER_DEFINITION_ID);
+        /* Create an ad-hoc version to avoid clashing ids with any built-in teiid runtime drivers */
+        String driverId = TEIID_ADHOC_DRIVER_ID_SKELETON
+                                                    .replaceAll("MAJOR", serverVersion.getMajor()) //$NON-NLS-1$
+                                                    .replaceAll("MINOR", serverVersion.getMinor()); //$NON-NLS-1$
+
+        // Have we already created an ad-hoc driver for this server version?
+        DriverInstance driverInstance = DriverManager.getInstance().getDriverInstanceByID(driverId);
+        if (driverInstance != null)
+            return;
+
+        IPropertySet pset = new PropertySetImpl(TEIID_ADHOC_DRIVER_DEFAULT_NAME, driverId);
         Properties baseProperties = new Properties();
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID, TEIID_DRIVER_NAME);
         if(null != driverURL) {
@@ -137,7 +195,7 @@ public class ConnectivityUtil {
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, serverVersion.toString());
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, jarList);
-        baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE, TEIID_PREVIEW_DRIVER_DEFN_TYPE);
+        baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_TYPE, TEIID_ADHOC_DRIVER_DEFN_TYPE);
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_CLASS, TEIID_DRIVER_NAME);
 
         pset.setBaseProperties(baseProperties);
@@ -197,7 +255,7 @@ public class ConnectivityUtil {
     		String vdbName,
     		String profileName ) throws CoreException {
 
-    	DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_DRIVER_DEFINITION_ID_BASE + vdbName);
+        DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(getTeiidDriverDefinitionId(serverVersion));
         if (mDriver == null) {
             createTeiidPreviewDriverInstance(serverVersion, driverPath, driverPath, username);
         } else {
@@ -212,7 +270,7 @@ public class ConnectivityUtil {
 
         return createDriverProps(serverVersion, driverPath, connectionURL, username, vdbName);
     }
-    
+
     public static IConnectionProfile createVDBTeiidProfile( ITeiidServerVersion serverVersion, 
             String driverPath,
     		String connectionURL,
@@ -222,7 +280,7 @@ public class ConnectivityUtil {
     		String profileName) throws CoreException {
     	ProfileManager pm = ProfileManager.getInstance();
     	try {
-    		DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(TEIID_PREVIEW_DRIVER_DEFINITION_ID);
+            DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(getTeiidDriverDefinitionId(serverVersion));
     		if (mDriver == null) {
     			createTeiidPreviewDriverInstance(serverVersion, driverPath, connectionURL, username);
     		} else {
