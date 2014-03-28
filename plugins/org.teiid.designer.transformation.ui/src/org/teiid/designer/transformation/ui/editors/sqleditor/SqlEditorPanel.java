@@ -20,6 +20,7 @@ import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -80,15 +81,18 @@ import org.teiid.designer.query.sql.lang.ILanguageObject;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.query.sql.lang.ISubqueryContainer;
+import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.transformation.ui.actions.CreateFunctionAction;
 import org.teiid.designer.transformation.ui.builder.CriteriaBuilder;
 import org.teiid.designer.transformation.ui.builder.ExpressionBuilder;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.DownFont;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ExpandSelect;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ExportToFile;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ImportFromFile;
+import org.teiid.designer.transformation.ui.editors.sqleditor.actions.LaunchCreateFunction;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.LaunchCriteriaBuilder;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.LaunchExpressionBuilder;
 import org.teiid.designer.transformation.ui.editors.sqleditor.actions.ToggleMessage;
@@ -109,6 +113,7 @@ import org.teiid.query.ui.sqleditor.component.DeleteDisplayNode;
 import org.teiid.query.ui.sqleditor.component.DisplayNode;
 import org.teiid.query.ui.sqleditor.component.DisplayNodeConstants;
 import org.teiid.query.ui.sqleditor.component.DisplayNodeUtils;
+import org.teiid.query.ui.sqleditor.component.FunctionDisplayNode;
 import org.teiid.query.ui.sqleditor.component.GroupSymbolFinder;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayComponent;
 import org.teiid.query.ui.sqleditor.component.QueryDisplayNode;
@@ -140,6 +145,7 @@ public class SqlEditorPanel extends SashForm
     public static final String ACTION_ID_VALIDATE = "Validate"; //$NON-NLS-1$   // Validate validateAction
     public static final String ACTION_ID_LAUNCH_CRITERIA_BUILDER = "LaunchCriteriaBuilder"; //$NON-NLS-1$   // LaunchCriteriaBuilder launchCriteriaBuilderAction;
     public static final String ACTION_ID_LAUNCH_EXPRESSION_BUILDER = "LaunchExpressionBuilder"; //$NON-NLS-1$   // LaunchExpressionBuilder launchExpressionBuilderAction;
+    public static final String ACTION_ID_LAUNCH_CREATE_FUNCTION = "LaunchCreateFunction"; //$NON-NLS-1$
     public static final String ACTION_ID_EXPAND_SELECT = "ExpandSelect"; //$NON-NLS-1$   // ExpandSelect expandSelectAction;
     public static final String ACTION_ID_TOGGLE_MESSAGE = "ToggleMessage"; //$NON-NLS-1$   // ToggleMessage toggleMessageAction;
     public static final String ACTION_ID_TOGGLE_OPTIMIZER = "ToggleOptimizer"; //$NON-NLS-1$   // ToggleOptimizer toggleOptimizerAction;
@@ -150,6 +156,8 @@ public class SqlEditorPanel extends SashForm
 
     public static final String APPLY_TEMPLATE_ACTION_TEXT = "SqlEditorPanel.applyTemplateActionText"; //$NON-NLS-1$
     public static final String APPLY_TEMPLATE_ACTION_TOOLTIP = "SqlEditorPanel.applyTemplateActionTooltip"; //$NON-NLS-1$
+    public static final String CREATE_FUNCTION_ACTION_TEXT = "SqlEditorPanel.createFunctionActionText"; //$NON-NLS-1$
+    public static final String CREATE_FUNCTION_ACTION_TOOLTIP = "SqlEditorPanel.createFunctionActionTooltip"; //$NON-NLS-1$
 
     public static final String[] DEFAULT_INCLUDED_ACTIONS = new String[] {ACTION_ID_VALIDATE, ACTION_ID_LAUNCH_CRITERIA_BUILDER,
         ACTION_ID_LAUNCH_EXPRESSION_BUILDER, ACTION_ID_EXPAND_SELECT, ACTION_ID_TOGGLE_MESSAGE, ACTION_ID_TOGGLE_OPTIMIZER,
@@ -194,6 +202,7 @@ public class SqlEditorPanel extends SashForm
     Validate validateAction;
     LaunchCriteriaBuilder launchCriteriaBuilderAction;
     LaunchExpressionBuilder launchExpressionBuilderAction;
+    LaunchCreateFunction launchCreateFunctionAction;
     ExpandSelect expandSelectAction;
     ToggleMessage toggleMessageAction;
     ToggleOptimizer toggleOptimizerAction;
@@ -202,6 +211,7 @@ public class SqlEditorPanel extends SashForm
     ImportFromFile importFromFileAction;
     ExportToFile exportToFileAction;
     private Action applyTemplateAction;
+    private Action createFunctionAction;
 
     List includedActionsList;
 
@@ -382,6 +392,18 @@ public class SqlEditorPanel extends SashForm
         this.applyTemplateAction.setEnabled(true);
 
         manager.add(this.applyTemplateAction);
+        
+        this.createFunctionAction = new Action(null) {
+            @Override
+            public void run() {
+                launchCreateFunction();
+            }
+        };
+        this.createFunctionAction.setToolTipText(Util.getString(CREATE_FUNCTION_ACTION_TOOLTIP));
+        this.createFunctionAction.setText(Util.getString(CREATE_FUNCTION_ACTION_TEXT));
+        this.createFunctionAction.setEnabled(true);
+
+        manager.add(this.createFunctionAction);
     }
 
     private void handleApplyTemplate() {
@@ -1077,6 +1099,25 @@ public class SqlEditorPanel extends SashForm
         }
         return false;
     }
+    
+    /**
+     * This method determines whether the Create Function Dialog can be launched at the current caret position.
+     * 
+     * @return 'true' if the ExpressionBuilder can be launched, 'false' if not.
+     */
+    public boolean canCreateFunction() {
+        // Cannot Use ExpressionBuilder under these conditions (may change)
+        if (!isEditable() || !isParsable()) {
+            return false;
+        }
+        // Can use ExpressionBuilder if currently in an expression or its valid to insert new
+        int caretIndex = getCorrectedCaretOffset();
+
+        if (isIndexWithin(caretIndex, EXPRESSION)) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * This method determines whether the Criteria Builder Dialog can be launched at the current caret position.
@@ -1346,6 +1387,40 @@ public class SqlEditorPanel extends SashForm
             // fireEditorEvent();
         }
     }
+    
+    /**
+     * This method launches the Expression Builder Dialog. If the current SQLTextPanel caret is currently within an Expression,
+     * the Expression Builder is launched with the supplied expression. The supplied expression is replaced with the modified
+     * expression when the function builder is dismissed. If the caret is not within an expression, the Function Builder is
+     * launched without an expression. The resulting expression is inserted into the editor panel.
+     */
+    public void launchCreateFunction() {
+        int index = getCorrectedCaretOffset();
+        
+        String functionName = null;
+        int numArgs = 0;
+        
+        DisplayNode commandNode = queryDisplayComponent.getCommandDisplayNodeAtIndex(index);
+        List nodeList = queryDisplayComponent.getDisplayNodesAtIndex(index);
+        if( nodeList.size() == 1 ) {
+        	Object node = nodeList.get(0);
+        	if( node instanceof FunctionDisplayNode ) {
+		        IExpression expression = (IExpression)((FunctionDisplayNode)node).getLanguageObject();
+		        
+		        if( expression instanceof IFunction ) {
+		
+		        	IFunction function = ((IFunction)expression);
+		        	functionName = function.getName();
+		        	//System.out.println(" SqlEditorPanel.launchCreateFunction()  Found function named:  " + functionName);
+		        	numArgs = function.getArgs().length;
+		        }
+        	}
+        	
+        	CreateFunctionAction action = new CreateFunctionAction();
+        	
+        	action.run(functionName, numArgs);
+        }
+    }
 
     /**
      * Get the Group symbols for the command that the current cursor is within. This method superscedes the original method
@@ -1515,7 +1590,7 @@ public class SqlEditorPanel extends SashForm
         if (!isParsable()) {
             return false;
         }
-        return queryDisplayComponent.isIndexWithin(index, nodeType);
+        return DisplayNodeUtils.isIndexWithin(queryDisplayComponent.getDisplayNodeList(),index,nodeType);
     }
 
     /**
@@ -1756,6 +1831,11 @@ public class SqlEditorPanel extends SashForm
                 exportToFileAction.setToolTipText(Util.getString("SqlEditorPanel.ExportToFile.tooltip")); //$NON-NLS-1$
                 actionList.add(exportToFileAction);
             }
+
+            launchCreateFunctionAction = new LaunchCreateFunction(this);
+            launchCreateFunctionAction.setToolTipText("Create Function"); //$NON-NLS-1$
+
+            
         }
 
         return actionList;

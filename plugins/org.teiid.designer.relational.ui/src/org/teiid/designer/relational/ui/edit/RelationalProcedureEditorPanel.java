@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -86,6 +87,8 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	private StyledTextEditor nativeQueryTextEditor;
 	private Text javaClassText, javaMethodText, functionCategoryText, udfJarPathText;
 	private Button udfJarPathBrowse;
+	
+	boolean validationPerformed = false;
 
 	/**
 	 * @param parent the parent panel
@@ -1039,7 +1042,17 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 			setStatus(currentStatus);
 
 		}
+		validationPerformed = true;
+	}
+	
+	@Override
+	public boolean canFinish() {
+		// check if procedure name is not-null
+		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
+			return true;
+		}
 		
+		return super.canFinish();
 	}
 	
 

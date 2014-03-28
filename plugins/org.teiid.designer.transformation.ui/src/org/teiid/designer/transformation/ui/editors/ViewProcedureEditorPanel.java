@@ -115,6 +115,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	private Combo restCharSetsCombo;
 	private String restHeadersValue;
 	private Text restHeadersText;
+	
+	boolean validationPerformed = false;
 
 	/**
 	 * @param parent the parent panel
@@ -1044,6 +1046,9 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	        }
         }
         
+        // set the existing Direction combo boxes
+        
+        
         this.parametersViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -1248,9 +1253,18 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		} else {
 			setStatus(currentStatus);
 		}
-		
+		validationPerformed = true;
 	}
 	
+	@Override
+	public boolean canFinish() {
+		// check if procedure name is not-null
+		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
+			return true;
+		}
+		
+		return super.canFinish();
+	}
 
 	class ParameterDataLabelProvider extends ColumnLabelProvider {
 

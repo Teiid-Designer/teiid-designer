@@ -63,7 +63,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
-public class CreateViewProcedureAction  extends Action implements INewChildAction, INewSiblingAction {
+public class CreateViewProcedureAction extends Action implements INewChildAction, INewSiblingAction {
 	private IFile selectedModel;
 	 
 	private Collection<String> datatypes;

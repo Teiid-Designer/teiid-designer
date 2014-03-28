@@ -190,7 +190,7 @@ public abstract class RelationalEditorPanel {
 	}
 
 	/**
-	 * Override this method to implement updates to specialised components
+	 * Override this method to implement updates to specialized components
 	 * only available in sub-classes.
 	 */
 	protected abstract void synchronizeExtendedUI();
@@ -278,7 +278,7 @@ public abstract class RelationalEditorPanel {
 	/**
 	 * @return if dialog can finish
 	 */
-	public final boolean canFinish() {
+	public boolean canFinish() {
 		return this.canFinish;
 	}
 }

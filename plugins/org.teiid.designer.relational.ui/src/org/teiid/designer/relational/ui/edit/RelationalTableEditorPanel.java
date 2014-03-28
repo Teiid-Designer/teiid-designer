@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -111,6 +112,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private TableViewer indexesViewer;
 
 	private boolean finishedStartup = false;
+	private boolean validationPerformed = false;
 
 	/**
 	 * @param parent the parent panel
@@ -1329,7 +1331,17 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		} else {
 			setStatus(currentStatus);
 		}
+		validationPerformed = true;
+	}
+	
+	@Override
+	public boolean canFinish() {
+		// check if procedure name is not-null
+		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
+			return true;
+		}
 		
+		return false;
 	}
 
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
