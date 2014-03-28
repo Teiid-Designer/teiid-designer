@@ -515,11 +515,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         if (compilerTool != null) {
             StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
 
-            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-core-asl-1.8.3.jar"; //$NON-NLS-1$
-            String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-jaxrs-1.8.3.jar"; //$NON-NLS-1$
-            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.8.3.jar"; //$NON-NLS-1$
+            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-core-asl-1.9.9.jar"; //$NON-NLS-1$
+            String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-jaxrs-1.9.9.jar"; //$NON-NLS-1$
+            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.9.9.jar"; //$NON-NLS-1$
             String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + "json-1.0.jar"; //$NON-NLS-1$
-            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
+            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.3.7.Final.jar"; //$NON-NLS-1$
 
             List<File> classPaths = new ArrayList<File>();
             classPaths.add(new File(pathToJar1));
@@ -564,7 +564,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Delete RESTEasy and dependent jars if the user elected not to include them
             if (!includeJars) {
 
+            	//Will delete all files and then add the json.jar back which is required.
+            	File jsonJar = FileUtils.copy(new File(pathToJar4), webInfClassesDirectory, true);
                 FileUtils.removeChildrenRecursively(webInfLibDirectory);
+                FileUtils.copy(jsonJar, webInfLibDirectory, true);
+                jsonJar.delete();
 
             }
 
