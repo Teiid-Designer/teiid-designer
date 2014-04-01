@@ -349,6 +349,20 @@ public class VdbUtil {
 					}
 				}
 				
+				// Check Security settings
+				String securityDomain = theVdb.getSecurityDomain();
+				if( securityDomain != null ) {
+					String gssPattern = theVdb.getGssPattern();
+					String passwordPattern = theVdb.getPasswordPattern();
+					String authenticationType = theVdb.getAuthenticationType();
+					if( authenticationType != null ) {
+						if( gssPattern != null || passwordPattern != null ) {
+							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
+									VdbPlugin.UTIL.getString("vdbValidationWarning_singleAuthenticationType_0_willBeIgnored", authenticationType)) ); //$NON-NLS-1$
+						}
+					}
+				}
+				
 				for (ModelElement model : manifest.getModels()) {
 					String modelName = model.getName();
 					

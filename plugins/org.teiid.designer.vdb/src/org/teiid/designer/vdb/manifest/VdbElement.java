@@ -108,6 +108,23 @@ public class VdbElement implements Serializable {
         	getProperties().add(new PropertyElement(Vdb.Xml.AUTO_GENERATE_REST_WAR, Boolean.TRUE.toString()));
         }
         
+        if (vdb.getSecurityDomain() != null && vdb.getSecurityDomain().trim().length() > 0){
+        	getProperties().add(new PropertyElement(Vdb.Xml.SECURITY_DOMAIN, vdb.getSecurityDomain()));
+        }
+        
+        if (vdb.getGssPattern() != null && vdb.getGssPattern().trim().length() > 0){
+        	getProperties().add(new PropertyElement(Vdb.Xml.GSS_PATTERN, vdb.getGssPattern()));
+        }
+        
+        if (vdb.getPasswordPattern() != null && vdb.getPasswordPattern().trim().length() > 0){
+        	getProperties().add(new PropertyElement(Vdb.Xml.PASSWORD_PATTERN, vdb.getPasswordPattern()));
+        }
+        
+        if (vdb.getAuthenticationType() != null && vdb.getAuthenticationType().trim().length() > 0){
+        	getProperties().add(new PropertyElement(Vdb.Xml.AUTHENTICATION_TYPE , vdb.getAuthenticationType()));
+        }
+        
+        
         if (vdb.getValidationDateTime() != null) {
         	String dateTimeString = vdb.getValidationDateTime().toString();
         	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_DATETIME, dateTimeString));

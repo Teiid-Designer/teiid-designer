@@ -121,6 +121,7 @@ import org.teiid.designer.vdb.ui.editor.panels.DataRolesPanel;
 import org.teiid.designer.vdb.ui.editor.panels.DescriptionPanel;
 import org.teiid.designer.vdb.ui.editor.panels.ModelDetailsPanel;
 import org.teiid.designer.vdb.ui.editor.panels.PropertiesPanel;
+import org.teiid.designer.vdb.ui.editor.panels.UserDefinedPropertiesPanel;
 import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 
 
@@ -192,6 +193,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     VdbDataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
     PropertiesPanel propertiesPanel;
+    UserDefinedPropertiesPanel userDefinedPropertiesPanel;
     DescriptionPanel descriptionPanel;
     
     boolean disposed = false;
@@ -532,6 +534,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             propertiesTab.setControl(pnlProperties);
             propertiesPanel = new PropertiesPanel(pnlProperties, this);
+        }
+        
+        { // properties tab
+            CTabItem tab = new CTabItem(tabFolder, SWT.NONE);
+            tab.setText(i18n("userDefinedPropertiesTab")); //$NON-NLS-1$
+            tab.setToolTipText(i18n("userDefinedPropertiesTabToolTip")); //$NON-NLS-1$
+            Composite pnlProperties = new Composite(tabFolder, SWT.NONE);
+            pnlProperties.setLayout(new GridLayout());
+            pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            tab.setControl(pnlProperties);
+            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(pnlProperties, this);
         }
         
         { // description tab

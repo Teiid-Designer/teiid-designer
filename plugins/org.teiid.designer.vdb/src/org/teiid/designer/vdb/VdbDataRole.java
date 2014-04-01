@@ -44,6 +44,8 @@ public class VdbDataRole {
     
     private final boolean allowCreateTempTables;
     
+    private final boolean grantAll;
+    
     final AtomicReference<String> description = new AtomicReference<String>();
     private List<Permission> permissions = new ArrayList<Permission>();
     
@@ -59,8 +61,9 @@ public class VdbDataRole {
     	 name = dataRole.getName();
     	 anyAuthenticated = dataRole.isAnyAuthenticated();
     	 allowCreateTempTables = dataRole.allowCreateTempTables();
-    	 permissions = new ArrayList(dataRole.getPermissions());
-    	 mappedRoleNames = new ArrayList(dataRole.getRoleNames());
+    	 grantAll = dataRole.doGrantAll();
+    	 permissions = new ArrayList<Permission>(dataRole.getPermissions());
+    	 mappedRoleNames = new ArrayList<String>(dataRole.getRoleNames());
          this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
 	}
     
@@ -71,6 +74,7 @@ public class VdbDataRole {
     	 this.name = element.getName();
     	 this.anyAuthenticated = element.isAnyAuthenticated();
     	 this.allowCreateTempTables = element.allowCreateTempTables();
+    	 this.grantAll = element.doGrantAll();
     	 
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 
@@ -107,7 +111,7 @@ public class VdbDataRole {
     		 permissions.add(permission);
     	 }
     	 
-    	 mappedRoleNames = new ArrayList(element.getMappedRoleNames());
+    	 mappedRoleNames = new ArrayList<String>(element.getMappedRoleNames());
 	}
     
     /**
@@ -143,6 +147,13 @@ public class VdbDataRole {
      */
     public boolean isAnyAuthenticated() {
     	return this.anyAuthenticated;
+    }
+    
+    /**
+     * @return the grant-all value
+     */
+    public boolean doGrantAll() {
+    	return this.grantAll;
     }
     
     /**

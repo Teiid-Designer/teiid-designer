@@ -34,11 +34,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWizard;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
-import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.roles.ui.wizard.panels.AllowedLanguagesPanel;
@@ -87,6 +88,7 @@ public class DataRoleWizard extends AbstractWizard {
     private Button executeSysCB;
     private Button anyAuthenticatedCheckBox;
     private Button allowCreateTempTablesCheckBox;
+    private Button grantAllCheckBox;
     private ListPanel mappedRolesPanel;
     
     private CTabItem crudTabItem;
@@ -109,6 +111,7 @@ public class DataRoleWizard extends AbstractWizard {
     
     private boolean anyAuthentication;
     private boolean allowCreateTempTables;
+    private boolean grantAll;
 
     String roleNameTextEntry;
     
@@ -129,12 +132,14 @@ public class DataRoleWizard extends AbstractWizard {
             this.allowSystemTables = true;
             this.anyAuthentication = false;
             this.allowCreateTempTables = false;
+            this.grantAll = false;
             this.mappedRoleNames = new HashSet<String>();
         } else {
             this.dataRoleName = existingDataRole.getName();
             this.description = existingDataRole.getDescription();
             this.allowCreateTempTables = existingDataRole.allowCreateTempTables();
             this.anyAuthentication = existingDataRole.isAnyAuthenticated();
+            this.grantAll = existingDataRole.doGrantAll();
             this.allowSystemTables = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET) != null;
             this.isEdit = true;
             this.setWindowTitle(EDIT_TITLE);
@@ -222,26 +227,38 @@ public class DataRoleWizard extends AbstractWizard {
             }
         });
 
-        allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(mainPanel,
-                                                                     getString("allowCreateTempTablesCheckBox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
-        allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
-            }
-        });
-
-        anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(mainPanel,
-                                                                getString("anyAuthenticatedCheckbox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
-        anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                anyAuthentication = anyAuthenticatedCheckBox.getSelection();
-                if (mappedRolesPanel != null) {
-                	mappedRolesPanel.setEnabled(!anyAuthentication);
-                }
-            }
-        });
+        {
+        	final Group miscOptionsGroup = WidgetFactory.createGroup(mainPanel, "Options", GridData.FILL_HORIZONTAL, 2, 3);
+	        allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(miscOptionsGroup,
+	                                                                     getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, anyAuthentication); //$NON-NLS-1$
+	        allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
+	            @Override
+	            public void widgetSelected( final SelectionEvent event ) {
+	                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
+	            }
+	        });
+	        
+	        grantAllCheckBox = WidgetFactory.createCheckBox( miscOptionsGroup, getString("grantAllCheckBox.label"), GridData.FILL_HORIZONTAL, 1, grantAll); //$NON-NLS-1$
+	        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent event) {
+					grantAll = grantAllCheckBox.getSelection();
+				}
+			});
+        }
+        
+        Composite tempPanel = WidgetFactory.createPanel(mainPanel, 0, GridData.FILL_HORIZONTAL, 2);
+		anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(tempPanel,
+						getString("anyAuthenticatedCheckbox.label"), 0, 1, anyAuthentication); //$NON-NLS-1$
+		anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				anyAuthentication = anyAuthenticatedCheckBox.getSelection();
+				if (mappedRolesPanel != null) {
+					mappedRolesPanel.setEnabled(!anyAuthentication);
+				}
+			}
+		});
 
         { // Role Names panel
 	        // ===========>>>> Create Roles List Panel Editor
@@ -304,8 +321,8 @@ public class DataRoleWizard extends AbstractWizard {
 	
 	        final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
 	        rolesGridData.horizontalSpan = 2;
-	        rolesGridData.heightHint = 120;
-	        rolesGridData.minimumHeight = 120;
+	        rolesGridData.heightHint = 80;
+	        rolesGridData.minimumHeight = 80;
 	        rolesGridData.grabExcessVerticalSpace = true;
 	        mappedRolesPanel.setLayoutData(rolesGridData);
 	        mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(false);
@@ -437,6 +454,7 @@ public class DataRoleWizard extends AbstractWizard {
         this.dataRoleName = this.existingDataRole.getName();
         this.anyAuthentication = this.existingDataRole.isAnyAuthenticated();
         this.allowCreateTempTables = this.existingDataRole.allowCreateTempTables();
+        this.grantAll = this.existingDataRole.doGrantAll();
         this.dataRoleNameText.setText(this.existingDataRole.getName());
         this.mappedRolesPanel.addItems(this.existingDataRole.getRoleNames().toArray());
         this.descriptionTextEditor.setText(this.existingDataRole.getDescription());
@@ -476,6 +494,7 @@ public class DataRoleWizard extends AbstractWizard {
         this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
         this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
         this.mappedRolesPanel.setEnabled(!anyAuthentication);
+        this.grantAllCheckBox.setEnabled(true);
 
         refreshAll();
 
@@ -526,6 +545,7 @@ public class DataRoleWizard extends AbstractWizard {
     	existingDataRole.setName(this.dataRoleName);
     	existingDataRole.setAnyAuthenticated(this.anyAuthentication);
     	existingDataRole.setAllowCreateTempTables(this.allowCreateTempTables);
+    	existingDataRole.setGrantAll(this.grantAll);
     	existingDataRole.setDescription(this.description);
     	existingDataRole.setPermissions(this.treeProvider.getPermissions());
     	

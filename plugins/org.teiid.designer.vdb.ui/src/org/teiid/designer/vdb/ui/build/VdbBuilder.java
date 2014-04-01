@@ -63,6 +63,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	public static final String MODEL_WITH_ERRORS = "modelWithErrors"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String DUPLICATE_FILE_NAMES = "duplicateModelNames"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String SINGLE_AUTHENTICATION_TYPE_IGNORED = "singleAuthenticationTypeIgnored"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -76,7 +78,8 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	MISSING_TRANSLATOR_TYPE,
     	MISSING_JNDI_NAME,
     	MODEL_WITH_ERRORS,
-    	DUPLICATE_MODEL_NAMES;
+    	DUPLICATE_MODEL_NAMES,
+    	SINGLE_AUTHENTICATION_TYPE_IGNORED;
     }
     
     /**
@@ -187,6 +190,10 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("no JNDI name defined") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_JNDI_NAME);
     				}
+    				if( iStatus.getMessage().indexOf("single authentication type") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.SINGLE_AUTHENTICATION_TYPE_IGNORED);
+    				}
+    				
     			} break;
     			case IStatus.ERROR: {
     				if( iStatus.getMessage().indexOf("no translator type defined") > 0 ) { //$NON-NLS-1$

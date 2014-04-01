@@ -170,6 +170,7 @@ public class DataRolesPanel {
 
                 DataRole dataPolicy = new DataRole(vdbDataRole.getName(), vdbDataRole.getDescription(),
                                                    vdbDataRole.isAnyAuthenticated(), vdbDataRole.allowCreateTempTables(),
+                                                   vdbDataRole.doGrantAll(),
                                                    vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
@@ -492,7 +493,7 @@ public class DataRolesPanel {
                     DataRole newDR = new DataRole(
                                                   selectedDataRole.getName() + i18n("cloneDataRoleAction.copySuffix"), //$NON-NLS-1$
                                                   selectedDataRole.getDescription(), selectedDataRole.isAnyAuthenticated(),
-                                                  selectedDataRole.allowCreateTempTables(),
+                                                  selectedDataRole.allowCreateTempTables(), selectedDataRole.doGrantAll(),
                                                   selectedDataRole.getMappedRoleNames(), selectedDataRole.getPermissions());
                     vdbEditor.getVdb().addDataPolicy(newDR, new NullProgressMonitor());
                     dataRolesGroup.getTable().getViewer().refresh();

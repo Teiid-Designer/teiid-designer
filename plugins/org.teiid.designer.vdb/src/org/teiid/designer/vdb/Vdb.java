@@ -153,6 +153,10 @@ public final class Vdb {
     private boolean autoGenerateRESTWAR;
     private Date validateDateTime;
     private String validationVersion;
+    private String securityDomain;
+    private String gssPattern;
+    private String passwordPattern;
+    private String authenticationType;
     
     private VdbModelBuilder builder;
     private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
@@ -183,6 +187,11 @@ public final class Vdb {
         final int[] queryTimeout = new int[1];
         final String[] valDateTime = new String[1];
         final String[] valVersion = new String[1];
+        final boolean[] autoGen = new boolean[1];
+        final String[] secDomain = new String[1];
+        final String[] gssPatt = new String[1];
+        final String[] pwdPatt = new String[1];
+        final String[] authType = new String[1];
 
         OperationUtil.perform(new Unreliable() {
 
@@ -240,6 +249,17 @@ public final class Vdb {
                             	valDateTime[0] = value;
                             } else if (Xml.VALIDATION_VERSION.equals(name)) { 
                                 valVersion[0] = value;
+                            } else if (Xml.SECURITY_DOMAIN.equals(name)) { 
+                                secDomain[0] = value;
+                            } else if (Xml.GSS_PATTERN.equals(name)) { 
+                                gssPatt[0] = value;
+                            } else if (Xml.PASSWORD_PATTERN.equals(name)) { 
+                                pwdPatt[0] = value;
+                            } else if (Xml.AUTHENTICATION_TYPE.equals(name)) { 
+                                authType[0] = value;
+                            } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
+                            	autoGen[0] = Boolean.parseBoolean(value);
+                                // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else {
                             	generalPropertiesMap.put(name, value);
                             }
@@ -278,6 +298,11 @@ public final class Vdb {
         this.preview = previewable[0];
         this.version = vdbVersion[0];
         this.queryTimeout = queryTimeout[0];
+        this.autoGenerateRESTWAR = autoGen[0];
+        this.securityDomain = secDomain[0];
+        this.gssPattern = gssPatt[0];
+        this.passwordPattern = pwdPatt[0];
+        this.authenticationType = authType[0];
         if( valDateTime[0] != null ) {
         	try {
                 SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); //$NON-NLS-1$
@@ -777,6 +802,34 @@ public final class Vdb {
     }
     
     /**
+     * @return the VDB validation security-domain
+     */
+    public String getSecurityDomain() {
+        return securityDomain;
+    }
+    
+    /**
+     * @return the VDB validation date-time
+     */
+    public String getGssPattern() {
+        return gssPattern;
+    }
+    
+    /**
+     * @return the VDB validation date-time
+     */
+    public String getPasswordPattern() {
+        return passwordPattern;
+    }
+    
+    /**
+     * @return the VDB validation date-time
+     */
+    public String getAuthenticationType() {
+        return authenticationType;
+    }
+    
+    /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
      *         associated model exists..
      */
@@ -918,7 +971,7 @@ public final class Vdb {
      * 
      */
     public final void removeAllImportVdbs() {
-    	Collection<VdbImportVdbEntry> entries = new ArrayList(this.importModelEntries);
+    	Collection<VdbImportVdbEntry> entries = new ArrayList<VdbImportVdbEntry>(this.importModelEntries);
     	for( VdbImportVdbEntry entry : entries ) {
 	    	if (this.importModelEntries.remove(entry)) {
 	    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
@@ -1069,6 +1122,62 @@ public final class Vdb {
     	if( oldDateTime != null && oldDateTime.equals(dateTime)) return;
     	this.validateDateTime = dateTime;
     	setModified(this, Event.GENERAL_PROPERTY, oldDateTime, dateTime);
+    }
+    
+    /**
+     * @param domain Sets security-domain to the specified value.
+     */
+    public final void setSecurityDomain( String newValue ) {
+    	final String old = this.securityDomain;
+    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
+    	if( newValue.length() == 0 ) {
+    		this.securityDomain = null;
+    	} else {
+    		this.securityDomain = newValue;
+    	}
+    	setModified(this, Event.SECURITY_DOMAIN, old, newValue);
+    }
+    
+    /**
+     * @param pattern Sets gss-pattern to the specified value.
+     */
+    public final void setGssPattern( String newValue ) {
+    	final String old = this.gssPattern;
+    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
+    	if( newValue.length() == 0 ) {
+    		this.gssPattern = null;
+    	} else {
+    		this.gssPattern = newValue;
+    	}
+    	setModified(this, Event.GSS_PATTERN, old, newValue);
+    }
+    
+    /**
+     * @param pattern Sets password-pattern to the specified value.
+     */
+    public final void setPasswordPattern( String newValue ) {
+    	final String old = this.passwordPattern;
+    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
+    	if( newValue.length() == 0 ) {
+    		this.passwordPattern = null;
+    	} else {
+    		this.passwordPattern = newValue;
+    	}
+    	setModified(this, Event.PASSWORD_PATTERN, old, newValue);
+    }
+    
+    /**
+     * @param pattern Sets query time-out to the specified value.
+     */
+    public final void setAuthenticationType( String newValue ) {
+    	final String old = this.authenticationType;
+    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
+    	if( newValue.length() == 0 ) {
+    		this.authenticationType = null;
+    	} else {
+    		this.authenticationType = newValue;
+    	}
+    	setModified(this, Event.AUTHENTICATION_TYPE, old, newValue);
     }
 
     private final void synchronize( final Collection<VdbEntry> entries,
@@ -1300,6 +1409,22 @@ public final class Vdb {
          * is changed.
          */
         public static final String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String SECURITY_DOMAIN = "securityDomain"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String GSS_PATTERN = "gssPattern"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String PASSWORD_PATTERN = "passwordPattern"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String AUTHENTICATION_TYPE = "authenticationType"; //$NON-NLS-1$
     }
 
     /**
@@ -1331,5 +1456,36 @@ public final class Vdb {
         /**
          */
         public static final String VALIDATION_VERSION = "validationVersion"; //$NON-NLS-1$
+        
+        /*
+        <property name="security-domain" value="teiid-spengo" />
+		<property name="gss-pattern" value="{regex}" />
+		<property name="password-pattern" value="{regex}" />
+		<property name="authentication-type" value="GSS or USERPASSWORD" />
+         */
+        
+        /**
+         */
+        public static final String SECURITY_DOMAIN = "security-domain"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String GSS_PATTERN = "gss-pattern"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String PASSWORD_PATTERN = "password-pattern"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String AUTHENTICATION_TYPE = "authentication-type"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String AUTHENTICATION_TYPE_GSS = "GSS"; //$NON-NLS-1$
+        
+        /**
+         */
+        public static final String AUTHENTICATION_TYPE_USERPASSWORD = "USERPASSWORD"; //$NON-NLS-1$
     }
 }

@@ -9,27 +9,13 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -43,11 +29,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
@@ -69,11 +54,11 @@ public class PropertiesPanel {
 	Button addLanguageButton;
 	Button removeLanguageButton;
 	
-    TableViewer propertiesViewer;
-	Button addPropertyButton;
-	Button removePropertyButton;
-
-	
+	Text securityDomainText;
+	Text gssPatternText;
+	Text passwordPatternText;
+	Text authenticationTypeText;
+		
     static String i18n( final String id ) {
         return VdbUiConstants.Util.getString(id);
     }
@@ -97,8 +82,8 @@ public class PropertiesPanel {
     	Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, 2);
     	panel.setLayout(new GridLayout(2, false));
 
-		Group propertiesGroup = WidgetFactory.createGroup(panel, prefixedI18n("teiid"), SWT.FILL, 1, 2);  //$NON-NLS-1$
-		GridData gd_1 = new GridData(GridData.FILL_VERTICAL);
+		Group propertiesGroup = WidgetFactory.createGroup(panel, prefixedI18n("general"), SWT.FILL, 1, 2);  //$NON-NLS-1$
+		GridData gd_1 = new GridData(GridData.FILL_BOTH);
 		gd_1.widthHint = 240;
 		propertiesGroup.setLayoutData(gd_1);
 
@@ -127,9 +112,79 @@ public class PropertiesPanel {
 			}
 		});
     	
-    	Label autGenRESTLabel = new Label(propertiesGroup, SWT.NONE);
-    	autGenRESTLabel.setText(i18n("autoGenerateRESTWAR")); //$NON-NLS-1$
-		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup); 
+    	{ // SECURITY PROPERTIES
+	    	label = new Label(propertiesGroup, SWT.NONE);
+			label.setText(prefixedI18n("securityDomain")); //$NON-NLS-1$
+			label.setToolTipText(prefixedI18n("securityDomainTooltip")); //$NON-NLS-1$
+	    	
+	    	securityDomainText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+	    	securityDomainText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	WidgetUtil.setText(securityDomainText, vdbEditor.getVdb().getSecurityDomain());
+	    	securityDomainText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					vdbEditor.getVdb().setSecurityDomain(securityDomainText.getText());
+					updateSecurityWidgets();
+				}
+			});
+	    	
+	    	label = new Label(propertiesGroup, SWT.NONE);
+			label.setText(prefixedI18n("gssPattern")); //$NON-NLS-1$
+			label.setToolTipText(prefixedI18n("passwordPatternTooltip")); //$NON-NLS-1$
+			
+	    	gssPatternText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+	    	gssPatternText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	WidgetUtil.setText(gssPatternText, vdbEditor.getVdb().getGssPattern());
+	    	gssPatternText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					vdbEditor.getVdb().setGssPattern(gssPatternText.getText());
+					updateSecurityWidgets();
+				}
+			});
+	    	
+	    	label = new Label(propertiesGroup, SWT.NONE);
+			label.setText(prefixedI18n("passwordPattern")); //$NON-NLS-1$
+			label.setToolTipText(prefixedI18n("passwordPatternTooltip")); //$NON-NLS-1$
+			
+	    	passwordPatternText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+	    	passwordPatternText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	WidgetUtil.setText(passwordPatternText, vdbEditor.getVdb().getPasswordPattern());
+	    	passwordPatternText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					vdbEditor.getVdb().setPasswordPattern(passwordPatternText.getText());
+					updateSecurityWidgets();
+				}
+			});
+	    	
+	    	label = new Label(propertiesGroup, SWT.NONE);
+			label.setText(prefixedI18n("authenticationType")); //$NON-NLS-1$
+			label.setToolTipText(prefixedI18n("authenticationTypeTooltip")); //$NON-NLS-1$
+			
+	    	authenticationTypeText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+	    	authenticationTypeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+	    	WidgetUtil.setText(authenticationTypeText, vdbEditor.getVdb().getAuthenticationType());
+	    	authenticationTypeText.addModifyListener(new ModifyListener() {
+				
+				@Override
+				public void modifyText(ModifyEvent e) {
+					vdbEditor.getVdb().setAuthenticationType(authenticationTypeText.getText());
+					updateSecurityWidgets();
+				}
+			});
+	    	
+	    	updateSecurityWidgets();
+
+    	}
+    	
+    	
+    	new Label(propertiesGroup, SWT.NONE);
+    	//autGenRESTLabel.setText(i18n("autoGenerateRESTWAR")); //$NON-NLS-1$
+		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup, i18n("autoGenerateRESTWAR"), vdbEditor.getVdb().isAutoGenerateRESTWAR());  //$NON-NLS-1$
 		autoGenRESTCheckbox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
@@ -143,10 +198,10 @@ public class PropertiesPanel {
         });
 		
     	{
-    		Group languageGroup = WidgetFactory.createGroup(propertiesGroup, prefixedI18n("allowedLanguages"), SWT.FILL, 2, 1);  //$NON-NLS-1$
-    		GridData gd_2 = new GridData(GridData.FILL_VERTICAL);
+    		Group languageGroup = WidgetFactory.createGroup(panel, prefixedI18n("allowedLanguages"), SWT.FILL, 1, 1);  //$NON-NLS-1$
+    		GridData gd_2 = new GridData(GridData.FILL_BOTH);
     		gd_2.widthHint = 220;
-    		gd_2.horizontalSpan = 2;
+//    		gd_2.horizontalSpan = 2;
     		languageGroup.setLayoutData(gd_2);
     		// Add a simple list box entry form with String contents
         	this.allowedLanguagesViewer = new ListViewer(languageGroup, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -205,155 +260,20 @@ public class PropertiesPanel {
             this.removeLanguageButton.setEnabled(false);
     	}
     	
-        Composite pnlUserProperties = WidgetFactory.createGroup(panel, prefixedI18n("userDefined"), SWT.FILL, 1, 1);  //$NON-NLS-1$
-        pnlUserProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        this.propertiesViewer = new TableViewer(pnlUserProperties, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
-        this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-             */
-            @Override
-            public void dispose() {
-                // nothing to do
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-             */
-            @Override
-            public Object[] getElements( Object inputElement ) {
-                Map<String, String> props =  vdbEditor.getVdb().getGeneralProperties();
-
-                if (props.isEmpty()) {
-                    return new Object[0];
-                }
-                
-                List<PropertiesPanel.Property> properties= new ArrayList<PropertiesPanel.Property>();
-                for( String key : props.keySet() ) {
-                	properties.add(new Property(key, props.get(key)));
-                }
-                return properties.toArray(new Property[0]);
-            }
-
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-             *      java.lang.Object)
-             */
-            @Override
-            public void inputChanged( Viewer viewer,
-                                      Object oldInput,
-                                      Object newInput ) {
-                // nothing to do
-            }
-        });
-
-        // sort the table rows by display name
-        this.propertiesViewer.setComparator(new ViewerComparator() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-             *      java.lang.Object)
-             */
-            @Override
-            public int compare( Viewer viewer,
-                                Object e1,
-                                Object e2 ) {
-                Property prop1 = (Property)e1;
-                Property prop2 = (Property)e2;
-
-                return super.compare(viewer, prop1.getName(), prop2.getName());
-            }
-        });
-
-        Table table = this.propertiesViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).horizontalSpan = 2;
-
-        // create columns
-        TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(prefixedI18n("name") + "                   ");  //$NON-NLS-1$//$NON-NLS-2$
-        column.setLabelProvider(new PropertyLabelProvider(0));
-        //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 0));
-        column.getColumn().pack();
-
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(prefixedI18n("value")); //$NON-NLS-1$
-        column.setLabelProvider(new PropertyLabelProvider(1));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
-        column.getColumn().pack();
-
-        this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-             */
-            @Override
-            public void selectionChanged( SelectionChangedEvent event ) {
-                handlePropertySelected();
-            }
-        });
-
-        //
-        // add toolbar below the table
-        //
-        
-        Composite toolbarPanel = WidgetFactory.createPanel(pnlUserProperties, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
-        
-        this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.addPropertyButton.setImage(VdbUiPlugin.singleton.getImage(ADD));
-        this.addPropertyButton.setToolTipText(prefixedI18n("addNewPropertyButton.tooltip")); //$NON-NLS-1$
-        this.addPropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleAddProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        
-        this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.removePropertyButton.setImage(VdbUiPlugin.singleton.getImage(REMOVE));
-        this.removePropertyButton.setToolTipText(prefixedI18n("removePropertyButton.tooltip")); //$NON-NLS-1$
-        this.removePropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleRemoveProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        this.removePropertyButton.setEnabled(false);
-        
-        this.propertiesViewer.setInput(this);
+	}
+	
+	void updateSecurityWidgets() {
+    	if( vdbEditor.getVdb().getSecurityDomain() == null ) {
+    		gssPatternText.setEnabled(false);
+    		passwordPatternText.setEnabled(false);
+    		authenticationTypeText.setEnabled(false);
+    	}
 	}
 	
 	void handleLanguageSelected() {
 		boolean hasSelection = !this.allowedLanguagesViewer.getSelection().isEmpty();
 		this.removeLanguageButton.setEnabled(hasSelection);
-	}
-
-	void handlePropertySelected() {
-		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
-		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
     private String getSelectedLanguage() {
@@ -366,66 +286,12 @@ public class PropertiesPanel {
         return (String)selection.getFirstElement();
     }
 	
-    private Property getSelectedProperty() {
-        IStructuredSelection selection = (IStructuredSelection)this.propertiesViewer.getSelection();
-
-        if (selection.isEmpty()) {
-            return null;
-        }
-
-        return (Property)selection.getFirstElement();
-    }
-	
-    void handleAddProperty() {
-        assert (!this.propertiesViewer.getSelection().isEmpty());
-
-        AddGeneralPropertyDialog dialog = 
-        		new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), 
-        				vdbEditor.getVdb().getGeneralProperties().keySet());
-
-        if (dialog.open() == Window.OK) {
-            // update model
-            String name = dialog.getName();
-            String value = dialog.getValue();
-            vdbEditor.getVdb().setGeneralProperty(name, value);
-
-            // update UI from model
-            this.propertiesViewer.refresh();
-
-            // select the new property
-            
-            
-            Property prop = null;
-            
-            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
-            	if( item.getData() instanceof Property && ((Property)item.getData()).getName().equals(name) ) {
-            		prop = (Property)item.getData();
-            		break;
-            	}
-            }
-
-            if( prop != null ) {
-                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
-            }
-        }
-    }
-    
-    void handleRemoveProperty() {
-        Property selectedProperty = getSelectedProperty();
-        assert (selectedProperty != null);
-
-        // update model
-        this.vdbEditor.getVdb().removeGeneralProperty(selectedProperty.getName(), selectedProperty.getValue());
-
-        // update UI
-        this.propertiesViewer.refresh();
-    }
     
     void handleAddLanguage() {
-        assert (!this.propertiesViewer.getSelection().isEmpty());
+        assert (!this.allowedLanguagesViewer.getSelection().isEmpty());
 
         AddLanguagePropertyDialog dialog = 
-        		new AddLanguagePropertyDialog(propertiesViewer.getControl().getShell(), 
+        		new AddLanguagePropertyDialog(allowedLanguagesViewer.getControl().getShell(), 
         				vdbEditor.getVdb().getAllowedLanguages());
 
 
@@ -438,22 +304,22 @@ public class PropertiesPanel {
             // update UI from model
             this.allowedLanguagesViewer.add(language);
             
-            this.propertiesViewer.refresh();
+            this.allowedLanguagesViewer.refresh();
 
             // select the new property
             
             
-            Property prop = null;
+            String lang = null;
             
-            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
-            	if( item.getData() instanceof Property && ((Property)item.getData()).getName().equals(language) ) {
-            		prop = (Property)item.getData();
+            for(String item : this.allowedLanguagesViewer.getList().getItems() ) {
+            	if( item.equals(language) ) {
+            		lang = item;
             		break;
             	}
             }
 
-            if( prop != null ) {
-                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+            if( lang != null ) {
+                this.allowedLanguagesViewer.setSelection(new StructuredSelection(lang), true);
             }
         }
     }
@@ -467,181 +333,7 @@ public class PropertiesPanel {
         
         this.allowedLanguagesViewer.remove(selectedLanguage);
         // update UI
-        this.propertiesViewer.refresh();
+        this.allowedLanguagesViewer.refresh();
     }
-	
-	
-	class Property {
-		private String name;
-		private String value;
-		
-		public Property(String name, String value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return this.name;
-		}
-
-		/**
-		 * @param name the name to set
-		 */
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		/**
-		 * @return the value
-		 */
-		public String getValue() {
-			return this.value;
-		}
-
-		/**
-		 * @param value the value to set
-		 */
-		public void setValue(String value) {
-			this.value = value;
-		}
-		
-	    /**
-	     * {@inheritDoc}
-	     * 
-	     * @see java.lang.Object#equals(java.lang.Object)
-	     */
-	    @Override
-	    public boolean equals( Object obj ) {
-	        if (this == obj) {
-	            return true;
-	        }
-
-	        if (obj == null) {
-	            return false;
-	        }
-
-	        if (!getClass().equals(obj.getClass())) {
-	            return false;
-	        }
-
-	        return this.getName().equals(((Property)obj).getName());
-	    }
-		
-	}
-	
-	class PropertyLabelProvider extends ColumnLabelProvider {
-
-        private final int columnID;
-
-        public PropertyLabelProvider( int columnID ) {
-            this.columnID = columnID;
-        }
-
-		/* (non-Javadoc)
-		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-		 */
-		@Override
-		public String getText(Object element) {
-			if( element instanceof Property ) {
-				if( columnID == 0 ) {
-					return ((Property)element).getName();
-				} else if( columnID == 1 ) {
-					return ((Property)element).getValue();
-				}
-			}
-			return super.getText(element);
-		}
-	}
-
-    class PropertyNameEditingSupport extends EditingSupport {
-    	int columnID;
-    	
-		private TextCellEditor editor;
-
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-         * @param viewer the viewer where the editing support is being provided (cannot be <code>null</code>)
-		 * @param columnID 
-		 */
-		public PropertyNameEditingSupport(ColumnViewer viewer, int columnID) {
-			super(viewer);
-			this.columnID = columnID;
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
-		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof Property ) {
-				if( columnID == 0 ) {
-					return ((Property)element).getName();
-				} else if( columnID == 1 ) {
-					return ((Property)element).getValue();
-				}
-			}
-			return 0;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
-		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof Property ) {
-				if( columnID == 0 ) {
-					String oldKey = ((Property)element).getName();
-					String oldValue = ((Property)element).getValue();
-					String newKey = (String)value;
-					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						vdbEditor.getVdb().removeGeneralProperty(oldKey, oldValue);
-						vdbEditor.getVdb().setGeneralProperty(newKey, oldValue);
-						propertiesViewer.refresh();
-					}
-				} else if( columnID == 1 ) {
-					String key = ((Property)element).getName();
-					String oldValue = ((Property)element).getValue();
-					String newValue = (String)value;
-					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						vdbEditor.getVdb().setGeneralProperty(key, newValue);
-						propertiesViewer.refresh();
-					}
-				}
-
-			}
-		}
-
-	}
 
 }

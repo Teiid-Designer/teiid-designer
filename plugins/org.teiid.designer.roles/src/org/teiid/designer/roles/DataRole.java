@@ -26,6 +26,9 @@ public class DataRole {
 	private String name;
 	private boolean anyAuthenticated;
 	private boolean allowCreateTempTables;
+	
+	// grant-all is an attribute associated with a data role in the vdb.xml definition
+	private boolean grantAll;
 	private String description;
 	private Set<String> roleNames;
 	private Map<String, Permission> permissionsMap;
@@ -35,19 +38,23 @@ public class DataRole {
 		this.name = name;
 		this.anyAuthenticated = false;
 		this.allowCreateTempTables = false;
+		this.grantAll = false;
 		this.roleNames = new HashSet<String>();
 		this.permissionsMap = new HashMap<String, Permission>();
 	}
 
-	public DataRole(String name, String description, boolean anyAuthenticated, boolean allowCreateTempTables, Collection<String> roleNames, Collection<Permission> permissions) {
+	public DataRole(String name, String description, boolean anyAuthenticated, 
+			boolean allowCreateTempTables, boolean grantAll, Collection<String> roleNames,
+			Collection<Permission> permissions) {
 		super();
 		this.name = name;
 		this.anyAuthenticated = anyAuthenticated;
 		this.allowCreateTempTables = allowCreateTempTables;
+		this.grantAll = grantAll;
 		this.description = description;
 		this.roleNames = new HashSet<String>(roleNames);
 		this.permissionsMap = new HashMap<String, Permission>();
-		
+
 		setPermissions(permissions);
 	}
 	
@@ -56,6 +63,7 @@ public class DataRole {
 		this.name = dataRole.getName();
 		this.anyAuthenticated = dataRole.isAnyAuthenticated();
 		this.allowCreateTempTables = dataRole.allowCreateTempTables();
+		this.grantAll = dataRole.doGrantAll();
 		this.description = dataRole.getDescription();
 		this.roleNames = new HashSet<String>(dataRole.getRoleNames());
 		this.permissionsMap = new HashMap<String, Permission>();
@@ -138,6 +146,14 @@ public class DataRole {
 	
 	public void setAnyAuthenticated(boolean value) {
 		this.anyAuthenticated = value;
+	}
+	
+	public boolean doGrantAll() {
+		return this.grantAll;
+	}
+	
+	public void setGrantAll(boolean value) {
+		this.grantAll = value;
 	}
 	
 	public List<String> getAllowedLanguages() {
