@@ -61,7 +61,9 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
     private List<PropertyItem> propertyItemList = new ArrayList<PropertyItem>();
     private boolean isCreateNew = false;
     private boolean isReadOnly = false;
-
+    private PropertyLabelProvider namePropLabelProvider;
+    private PropertyLabelProvider valuePropLabelProvider;
+    
     private List<DataSourcePropertiesPanelListener> listeners = new ArrayList<DataSourcePropertiesPanelListener>();
     private Button resetButton;
     
@@ -184,12 +186,14 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
         column.getColumn().setText(Messages.dataSourcePropertiesPanel_nameColText);
-        column.setLabelProvider(new PropertyLabelProvider(true));
+        namePropLabelProvider = new PropertyLabelProvider(true,this.propertyItemList);
+        column.setLabelProvider(namePropLabelProvider);
         column.getColumn().pack();
 
         column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
         column.getColumn().setText(Messages.dataSourcePropertiesPanel_valueColText);
-        column.setLabelProvider(new PropertyLabelProvider(false));
+        valuePropLabelProvider = new PropertyLabelProvider(false,this.propertyItemList);
+        column.setLabelProvider(valuePropLabelProvider);
         // Add editing support if its not readonly
         if(!isReadOnly) {
             column.setEditingSupport(new DataSourcePropertyEditingSupport(this.propertiesViewer,this));
@@ -250,7 +254,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         assert (!this.propertiesViewer.getSelection().isEmpty());
         PropertyItem prop = getSelectedProperty();
         prop.reset();
-        this.propertiesViewer.refresh(prop);
+        this.propertiesViewer.refresh();
         this.resetButton.setEnabled(false);
     }
     
@@ -297,12 +301,48 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             String propValue = propObj.getValue();
             String defaultValue = propObj.getDefaultValue();
             boolean isModifiable = propObj.isModifiable();
-            boolean isRequired = propObj.isRequired();
+            boolean isRequired = isPropertyRequired(propObj,this.propertyItemList);
             if(isRequired || (isModifiable && !valuesSame(propValue,defaultValue))) {
                 resultProperties.setProperty(propName,propValue);
             }
         }
         return resultProperties;
+    }
+    
+    /*
+     * Do extra source-specific checks for inter-dependent properties (e.g. Google)
+     * @param propItem the property item
+     * @param propItems the list of items
+     * @return 'true' if really required, 'false' if not
+     */
+    private boolean isPropertyRequired(PropertyItem propItem, List<PropertyItem> propItems) {
+    	boolean isRequired = propItem.isRequired();
+    	
+    	// Further checking for inter-dependent props
+    	if(isRequired) {
+    		// Special handling for Google.  Some properties are required 'conditionally'
+    		if(isGoogleSource(propItems)) {
+    			String propName = propItem.getName();
+    			if(propName!=null) {
+    				// RefreshToken is not required if AuthMethod = 'ClientLogin'
+    				if(propName.equalsIgnoreCase(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_KEY_REFRESH_TOKEN)) {
+    					String authValue = getPropertyValue(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_KEY_AUTH_METHOD,this.propertyItemList);
+    					if(authValue!=null && authValue.equalsIgnoreCase(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_VALUE_AUTH_CLIENT_LOGIN)) {
+    						isRequired = false;
+    					}
+    			    // Username and Password are not required if AuthMethod = "OAuth2"
+    				} else if(propName.equalsIgnoreCase(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_KEY_USERNAME) ||
+    						propName.equalsIgnoreCase(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_KEY_PASSWORD)) {
+    					String authValue = getPropertyValue(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_KEY_AUTH_METHOD,this.propertyItemList);
+    					if(authValue!=null && authValue.equalsIgnoreCase(TranslatorHelper.GOOGLE_SOURCE_PROPERTY_VALUE_AUTH_OAUTH2)) {
+    						isRequired = false;
+    					}
+    				} 
+    			}
+    		}
+    	}
+    	
+    	return isRequired;
     }
     
     private boolean valuesSame(String value1, String value2) {
@@ -346,6 +386,8 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             } else {
                 this.propertyItemList =  sortPropertyItems(this.dataSourceMgr.getDataSourcePropertyItems(this.dataSourceOrDriverName));
             }
+            this.namePropLabelProvider.setPropertyItems(this.propertyItemList);
+            this.valuePropLabelProvider.setPropertyItems(this.propertyItemList);
         }
     }
     
@@ -478,7 +520,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
 
         PropertyItem prop = getSelectedProperty();
         prop.setValue(null);
-        this.propertiesViewer.refresh(prop);
+        this.propertiesViewer.refresh();
         this.resetButton.setEnabled(false);
     }
     
@@ -487,13 +529,44 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
      * @return the current Status
      */
     public IStatus getStatus() {
+    	IStatus resultStatus = new Status(IStatus.OK, PLUGIN_ID, Messages.dataSourcePropertiesPanelOk);
+
         for(PropertyItem propObj : this.propertyItemList) {
-            if(!propObj.hasValidValue()) {
-                return new Status(IStatus.ERROR, PLUGIN_ID, Messages.dataSourcePropertiesPanel_invalidPropertyMsg);        
+            if(isPropertyRequired(propObj,this.propertyItemList) && !propObj.hasValidValue()) {
+        		resultStatus = new Status(IStatus.ERROR, PLUGIN_ID, Messages.dataSourcePropertiesPanel_invalidPropertyMsg);
+            	break;
             }
         }
-
-        return new Status(IStatus.OK, PLUGIN_ID, Messages.dataSourcePropertiesPanelOk);        
+        
+        return resultStatus;        
+    }
+    
+    private boolean isGoogleSource(List<PropertyItem> propertyItems) {
+    	boolean isGoogle = false;
+    	String classNameValue = getPropertyValue("class-name", propertyItems);  //$NON-NLS-1$
+    	if(classNameValue!=null && classNameValue.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
+    		isGoogle = true;
+    	}
+    	return isGoogle;
+    }
+    
+    /**
+     * Gets the property value from the propertyItems for the supplied key.  If a property matching the supplied key is not found,
+     * returns null
+     * @param propKey the property key
+     * @param propertyItems the list of property items
+     * @return the property value for the supplied key
+     */
+    private String getPropertyValue(String propKey, List<PropertyItem> propertyItems) {
+    	String propValue = null;
+    	for(PropertyItem propItem : propertyItems) {
+    		String propName = propItem.getName();
+    		if(propName!=null && propName.equalsIgnoreCase(propKey)) {
+    			propValue = propItem.getValue();
+    			break;
+    		}
+    	}
+    	return propValue;
     }
     
     /**
@@ -511,9 +584,15 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
     class PropertyLabelProvider extends ColumnLabelProvider {
 
         private final boolean nameColumn;
+        private List<PropertyItem> propertyItems;
 
-        public PropertyLabelProvider( boolean nameColumn ) {
+        public PropertyLabelProvider( boolean nameColumn, List<PropertyItem> propertyItems ) {
             this.nameColumn = nameColumn;
+            this.propertyItems = propertyItems;
+        }
+        
+        public void setPropertyItems(List<PropertyItem> propItems) {
+            this.propertyItems = propItems;
         }
 
         /**
@@ -538,8 +617,8 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
                 
                 // determine if valid property
                 boolean hasValidValue = property.hasValidValue();
-                
-                if (!hasValidValue) {
+                boolean isPropRqd = isPropertyRequired(property,this.propertyItems);
+                if (isPropRqd && !hasValidValue) {
                     image = errorImage;
                 } 
             }
@@ -557,7 +636,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             PropertyItem property = (PropertyItem)element;
 
             if (this.nameColumn) {
-                if(property.isRequired()) {
+                if(isPropertyRequired(property,this.propertyItems)) {
                     return "* "+property.getDisplayName();  //$NON-NLS-1$
                 }
                 return property.getDisplayName();

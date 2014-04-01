@@ -243,7 +243,7 @@ public class DataSourcePropertyEditingSupport extends EditingSupport {
         }
 
         setElementValue(element, newValue);
-        getViewer().refresh(element);
+        getViewer().refresh();
     }
 
     /**
