@@ -18,7 +18,13 @@ public class TranslatorHelper implements UiConstants {
 	public static final String VENDOR_KEY = "org.eclipse.datatools.connectivity.db.vendor";  //$NON-NLS-1$
 	public static final String VERSION_KEY = "org.eclipse.datatools.connectivity.db.version";  //$NON-NLS-1$
 
-
+	public static final String GOOGLE_SOURCE_PROPERTY_KEY_AUTH_METHOD = "AuthMethod"; //$NON-NLS-1$
+	public static final String GOOGLE_SOURCE_PROPERTY_VALUE_AUTH_CLIENT_LOGIN = "ClientLogin"; //$NON-NLS-1$
+	public static final String GOOGLE_SOURCE_PROPERTY_VALUE_AUTH_OAUTH2 = "OAuth2"; //$NON-NLS-1$
+	public static final String GOOGLE_SOURCE_PROPERTY_KEY_REFRESH_TOKEN = "RefreshToken"; //$NON-NLS-1$
+	public static final String GOOGLE_SOURCE_PROPERTY_KEY_USERNAME = "Username"; //$NON-NLS-1$
+	public static final String GOOGLE_SOURCE_PROPERTY_KEY_PASSWORD = "Password"; //$NON-NLS-1$
+	
     public static final String TEIID_FILE_DRIVER = "teiid-connector-file.rar"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_DRIVER = "teiid-connector-google.rar"; //$NON-NLS-1$
     public static final String TEIID_INFINISPAN_DRIVER = "teiid-connector-infinispan.rar"; //$NON-NLS-1$

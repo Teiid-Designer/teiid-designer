@@ -162,7 +162,7 @@ public class PropertyItem extends Object implements Serializable {
 	    boolean isValid = true;
 	    
 	    // If its required, must have a value
-	    if(this.isRequired && CoreStringUtil.isEmpty(this.value)) {
+	    if(CoreStringUtil.isEmpty(this.value)) {
 	        isValid = false;
 	    }
 	    
