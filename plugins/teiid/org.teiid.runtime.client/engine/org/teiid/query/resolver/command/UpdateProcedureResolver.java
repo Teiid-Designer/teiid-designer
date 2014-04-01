@@ -262,15 +262,15 @@ public class UpdateProcedureResolver extends CommandResolver {
      * @param command
      * @param block
      * @param originalExternalGroups
-     * @param original
+     * @param metadata
      * @throws Exception
      */
-    public void resolveBlock(ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> command, Block block, GroupContext originalExternalGroups, TempMetadataAdapter original)
+    public void resolveBlock(ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> command, Block block, GroupContext originalExternalGroups, TempMetadataAdapter metadata)
         throws Exception {
 
         //create a new variable and metadata context for this block so that discovered metadata is not visible else where
-        TempMetadataStore store = original.getMetadataStore().clone();
-        TempMetadataAdapter metadata = new TempMetadataAdapter(original.getMetadata(), store);
+        TempMetadataStore store = metadata.getMetadataStore().clone();
+        metadata = new TempMetadataAdapter(metadata.getMetadata(), store);
         GroupContext externalGroups = new GroupContext(originalExternalGroups, null);
 
         //create a new variables group for this block
@@ -286,8 +286,8 @@ public class UpdateProcedureResolver extends CommandResolver {
 
         if (block.getExceptionGroup() != null) {
             //create a new variable and metadata context for this block so that discovered metadata is not visible else where
-            store = original.getMetadataStore().clone();
-            metadata = new TempMetadataAdapter(original.getMetadata(), store);
+            store = metadata.getMetadataStore().clone();
+            metadata = new TempMetadataAdapter(metadata.getMetadata(), store);
             externalGroups = new GroupContext(originalExternalGroups, null);
 
             //create a new variables group for this block
@@ -523,7 +523,7 @@ public class UpdateProcedureResolver extends CommandResolver {
 
                     if (dynCommand.getIntoGroup() == null && !dynCommand.isAsClauseSet()) {
                         if ((command.getResultSetColumns() != null && command.getResultSetColumns().isEmpty())
-                            || !cmdStmt.isReturnable()) {
+                            || !cmdStmt.isReturnable() || command.getResultSetColumns() == null) {
                             //we're not interested in the resultset
                             dynCommand.setAsColumns(Collections.EMPTY_LIST);
                         } else {
@@ -534,7 +534,7 @@ public class UpdateProcedureResolver extends CommandResolver {
                 }
 
                 if (command.getResultSetColumns() == null && cmdStmt.isReturnable() && subCommand.returnsResultSet()
-                    && !subCommand.getResultSetColumns().isEmpty()) {
+                    && subCommand.getResultSetColumns() != null && !subCommand.getResultSetColumns().isEmpty()) {
                     command.setResultSetColumns(subCommand.getResultSetColumns());
                 	if (command.getProjectedSymbols().isEmpty()) {
                 		command.setProjectedSymbols(subCommand.getResultSetColumns());

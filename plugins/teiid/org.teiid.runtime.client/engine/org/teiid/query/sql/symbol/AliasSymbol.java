@@ -91,8 +91,8 @@ public class AliasSymbol extends Symbol
             clone.setSymbol(getSymbol().clone());
         if(getShortCanonicalName() != null)
             clone.setShortCanonicalName(getShortCanonicalName());
-        if(getOutputName() != null)
-            clone.setOutputName(getOutputName());
+        if(outputName != null)
+            clone.outputName = outputName;
         if(getShortName() != null)
             clone.setShortName(getShortName());
         if(getName() != null)

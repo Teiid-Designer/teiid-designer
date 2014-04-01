@@ -70,6 +70,7 @@ class WarningUtil {
         if(exceptions == null || exceptions.size() == 0) {
             return null;    
         }
+
         SQLWarning root = createWarning(exceptions.get(0));
         SQLWarning current = root;
         for (int i = 1; i < exceptions.size(); i++) {
@@ -77,6 +78,6 @@ class WarningUtil {
             current.setNextWarning(newWarning);
             current = newWarning;
         }
-        return root;   
+        return root; 
     }
 }

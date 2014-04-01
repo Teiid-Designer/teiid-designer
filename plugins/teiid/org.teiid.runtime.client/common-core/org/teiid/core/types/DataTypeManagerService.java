@@ -48,6 +48,7 @@ import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.runtime.client.Messages;
@@ -443,13 +444,15 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform(this));
 
-        for (Class<?> type : getAllDataTypeClasses()) {
-            if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
-                addTransform(new AnyToObjectTransform(this, type));
-                addTransform(new ObjectToAnyTransform(this, type));
-            }
-            if (type != DefaultDataTypes.NULL.getTypeClass()) {
-                addTransform(new NullToAnyTransform(this, type));
+        if (teiidVersion.isLessThan(Version.TEIID_8_5.get())) {
+            for (Class<?> type : getAllDataTypeClasses()) {
+                if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
+                    addTransform(new AnyToObjectTransform(this, type));
+                    addTransform(new ObjectToAnyTransform(this, type));
+                }
+                if (type != DefaultDataTypes.NULL.getTypeClass()) {
+                    addTransform(new NullToAnyTransform(this, type));
+                }
             }
         }
 
@@ -468,9 +471,32 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     /** Utility to get Transform given srcType and targetType */
     private Transform getTransformFromMaps(DefaultDataTypes srcType, DefaultDataTypes targetType) {
         Map<DefaultDataTypes, Transform> innerMap = transforms.get(srcType);
+        boolean found = false;
         if (innerMap != null) {
-            return innerMap.get(targetType);
+            Transform result = innerMap.get(targetType);
+            if (result != null) {
+                return result;
+            }
+            found = true;
         }
+        if (srcType.equals(targetType)) {
+            return null;
+        }
+        if (DefaultDataTypes.OBJECT.equals(targetType)) {
+            return new AnyToObjectTransform(this, srcType.getTypeClass());
+        }
+        if (srcType.equals(DefaultDataTypes.NULL)) {
+            return new NullToAnyTransform(this, targetType.getTypeClass());
+        }
+        if (srcType.equals(DefaultDataTypes.OBJECT)) {
+            return new ObjectToAnyTransform(this, targetType.getTypeClass());
+        }
+        if (found) {
+            //built-in type
+            return null;
+        }
+
+        //TODO: will eventually allow integer[] to long[], etc.
         return null;
     }
 
@@ -808,11 +834,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
                         result.add(entry.getKey().getId());
                     }
                 }
+                result.add(DefaultDataTypes.OBJECT.getId());
                 return;
             }
         }
 
         String previous = DefaultDataTypes.OBJECT.getId();
+        result.add(previous);
         while (isArrayType(sourceTypeName)) {
             previous += ARRAY_SUFFIX;
             result.add(previous);
@@ -929,6 +957,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
             if (java.util.Date.class.isAssignableFrom(c)) {
                 return new Timestamp(((java.util.Date)value).getTime());                
             }
+            if (Object[].class.isAssignableFrom(c)) {
+                return new ArrayImpl(teiidVersion, (Object[])value);
+            }
         }
         if (Clob.class.isAssignableFrom(c)) {
             return new ClobType((Clob)value);
@@ -938,7 +969,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         } 
         if (SQLXML.class.isAssignableFrom(c)) {
             return new XMLType((SQLXML)value);
-        } 
+        }
+        if (c == ArrayImpl.class) {
+            return DefaultDataTypes.OBJECT.getTypeArrayClass();
+        }
+        if (c.isArray()) {
+            return getDataTypeClass(getDataTypeName(c));
+        }
         return value; // "object type"
     }
 }

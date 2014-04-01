@@ -190,13 +190,17 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
     public Collection getGroupsForPartialName(String partialGroupName)
     		throws Exception {
     	Collection groups = super.getGroupsForPartialName(partialGroupName);
-    	ArrayList<String> allGroups = new ArrayList<String>(groups);
-    	for (String name : tempStore.getData().keySet()) {
-    		if (StringUtil.endsWithIgnoreCase(name, partialGroupName) 
-    				&& (name.length() == partialGroupName.length() || (name.length() > partialGroupName.length() && name.charAt(name.length() - partialGroupName.length() - 1) == '.'))) {
-    			allGroups.add(name);
-    		}
-    	}
+    	List<String> allGroups = new ArrayList<String>(groups);
+    	for (Map.Entry<String, TempMetadataID> entry : tempStore.getData().entrySet()) {
+            String name = entry.getKey();
+            if (StringUtil.endsWithIgnoreCase(name, partialGroupName)
+                    //don't want to match tables by anything less than the full name,
+                    //since this should be a temp or a global temp and in the latter case there's a real metadata entry
+                    //alternatively we could check to see if the name is already in the result list
+                    && (name.length() == partialGroupName.length() || (entry.getValue().getMetadataType() != Type.TEMP && name.length() > partialGroupName.length() && name.charAt(name.length() - partialGroupName.length() - 1) == '.'))) {
+                allGroups.add(name);
+            }
+        }
     	return allGroups;
     }
 

@@ -39,6 +39,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeAliases;
@@ -46,6 +47,7 @@ import org.teiid.metadata.Datatype;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Table;
+import org.teiid.query.function.SystemFunctionManager;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.validator.ValidatorReport;
 import org.teiid.runtime.client.Messages;
@@ -144,6 +146,8 @@ public class SystemMetadata {
 		systemStore = loadSchema(vdb, p, resourceLocation, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
 		systemStore.addDataTypes(dataTypes);
 		loadSchema(vdb, p, resourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
+		TransformationMetadata tm = new TransformationMetadata(parser.getTeiidParser(), vdb, new CompositeMetadataStore(systemStore), null, new SystemFunctionManager(teiidVersion).getSystemFunctions(), null);
+        vdb.addAttchment(IQueryMetadataInterface.class, tm);
 		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);
 		ValidatorReport report = validator.validate(vdb, systemStore);
 		if (report.hasItems()) {

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IQuery;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
@@ -44,6 +46,7 @@ public class Query extends QueryCommand
     /** xml projected symbols */
     private List<Expression> selectList;
 
+    @Since("8.6.0")
     /** currently set by parser, but can be derived */
     private boolean isRowConstructor;
     
@@ -214,14 +217,18 @@ public class Query extends QueryCommand
      * @return row constructor flag
      */
     public boolean isRowConstructor() {
-        return isRowConstructor;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_6))
+            return isRowConstructor;
+
+        return false;
     }
     
     /**
      * @param isRowConstructor
      */
     public void setRowConstructor(boolean isRowConstructor) {
-        this.isRowConstructor = isRowConstructor;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_6))
+            this.isRowConstructor = isRowConstructor;
     }
 
     /**
@@ -344,6 +351,8 @@ public class Query extends QueryCommand
             clone.setSourceHint(getSourceHint());
         if(getOption() != null)
             clone.setOption(getOption().clone());
+
+        clone.setRowConstructor(isRowConstructor());
 
         copyMetadataState(clone);
 

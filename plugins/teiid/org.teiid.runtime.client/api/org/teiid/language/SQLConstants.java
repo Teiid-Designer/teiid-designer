@@ -136,6 +136,8 @@ public abstract class SQLConstants {
         String CHAIN = "CHAIN"; //$NON-NLS-1$
         @Since ("8.0.0")
         String JSONOBJECT = "JSONOBJECT"; //$NON-NLS-1$
+        @Since ("8.7.0")
+        String AUTO_INCREMENT = "AUTO_INCREMENT"; //$NON-NLS-1$
     }
     
     public interface Reserved {

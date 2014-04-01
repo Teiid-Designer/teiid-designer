@@ -27,6 +27,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +66,7 @@ public class FunctionTree {
     // Constant used to look up the special descriptor key in a node map
     private static final Integer DESCRIPTOR_KEY = -1;
 
-    private Map<String, Set<String>> categories = new HashMap<String, Set<String>>();
+    private Map<String, Set<FunctionMethod>> categories = new TreeMap<String, Set<FunctionMethod>>();
 
     private Map<String, List<FunctionMethod>> functionsByName = new TreeMap<String, List<FunctionMethod>>(String.CASE_INSENSITIVE_ORDER);
     
@@ -140,38 +141,12 @@ public class FunctionTree {
         return categories.keySet();
     }
 
-    /**
-     * Get collection of function forms in a category
-     * @param category Category to get (case-insensitive)
-     * @return Collection of {@link FunctionForm}s
-     */
-    Collection<FunctionForm> getFunctionForms(String category) {
-        Set<FunctionForm> functionForms = new HashSet<FunctionForm>();
-
-        Set<String> functions = categories.get(category.toUpperCase());
-        if(functions != null) {
-        	for (String functionName : functions) {
-        		for (FunctionMethod functionMethod : this.functionsByName.get(functionName)) {
-                    functionForms.add(new FunctionForm(functionMethod));
-                }
-            }
+    Set<FunctionMethod> getFunctionsInCategory(String name) {
+        Set<FunctionMethod> names = categories.get(name);
+        if (names == null) {
+            return Collections.emptySet();
         }
-
-        return functionForms;
-    }
-
-    /**
-     * Find function form based on function name and # of arguments.
-     * @param name Function name, case insensitive
-     * @param args Number of arguments
-     * @return Corresponding form or null if not found
-     */
-    FunctionForm findFunctionForm(String name, int args) {
-    	List<FunctionMethod> results = findFunctionMethods(name, args);
-    	if (results.size() > 0) {
-    		return new FunctionForm(results.get(0));
-    	}
-    	return null;
+        return names;
     }
     
     /**
@@ -209,12 +184,11 @@ public class FunctionTree {
     		method.setCategory(FunctionCategoryConstants.MISCELLANEOUS);
     		categoryKey = FunctionCategoryConstants.MISCELLANEOUS;
     	}
-    	categoryKey = categoryKey.toUpperCase();
-        
-        // Look up function map (create if necessary)
-        Set<String> functions = categories.get(categoryKey);
+
+    	// Look up function map (create if necessary)
+    	Set<FunctionMethod> functions = categories.get(categoryKey);
         if (functions == null) {
-            functions = new HashSet<String>();
+            functions = new HashSet<FunctionMethod>();
             categories.put(categoryKey, functions);
         }
         
@@ -238,20 +212,17 @@ public class FunctionTree {
         FunctionDescriptor descriptor = createFunctionDescriptor(source, method, types, system);
         descriptor.setSchema(schema);
         // Store this path in the function tree
-        
+        // Look up function in function map
+        functions.add(method);
+
         int index = -1;
         while(true) {
-            String nameKey = methodName.toUpperCase();
-
-	        // Look up function in function map
-	        functions.add(nameKey);
-	
 	        // Add method to list by function name
-	        List<FunctionMethod> knownMethods = functionsByName.get(nameKey);
-	        if(knownMethods == null) {
-	            knownMethods = new ArrayList<FunctionMethod>();
-	            functionsByName.put(nameKey, knownMethods);
-	        }
+            List<FunctionMethod> knownMethods = functionsByName.get(methodName);
+            if(knownMethods == null) {
+                knownMethods = new ArrayList<FunctionMethod>();
+                functionsByName.put(methodName, knownMethods);
+            }
 	        knownMethods.add(method);
 
         	Map<Object, Object> node = treeRoot.get(methodName);

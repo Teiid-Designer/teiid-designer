@@ -3,7 +3,9 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.Arrays;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IFunction;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -24,6 +26,9 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
     private boolean implicit;
 
     private FunctionDescriptor descriptor;
+
+    @Since("8.5.0")
+    private boolean eval = true;
 
     /**
      * @param p
@@ -167,6 +172,18 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
         return getFunctionDescriptor().getMethod().getAggregateAttributes() != null;
     }
 
+    public boolean isEval() {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            return eval;
+
+        return false;
+    }
+    
+    public void setEval(boolean eval) {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            this.eval = eval;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -224,6 +241,8 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
             clone.setType(getType());
         if(getName() != null)
             clone.setName(getName());
+
+        clone.eval = this.eval;
 
         return clone;
     }

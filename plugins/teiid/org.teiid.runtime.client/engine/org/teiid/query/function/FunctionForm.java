@@ -40,6 +40,7 @@ import org.teiid.metadata.FunctionParameter;
  * information and instead differentiates function signatures based on their
  * function name and the names of the arguments.
  */
+@Deprecated
 public class FunctionForm implements Serializable, Comparable<FunctionForm>, IFunctionForm {
 	private static final long serialVersionUID = 2411783099304320334L;
 	

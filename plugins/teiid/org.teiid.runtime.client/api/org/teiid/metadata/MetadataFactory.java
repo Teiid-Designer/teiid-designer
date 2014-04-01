@@ -36,6 +36,7 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.MetadataStore.Grant;
@@ -57,6 +58,8 @@ public class MetadataFactory implements Serializable {
 	private static final String TEIID_WS = "teiid_ws"; //$NON-NLS-1$
 	private static final String TEIID_MONGO = "teiid_mongo"; //$NON-NLS-1$
 	private static final String TEIID_ODATA = "teiid_odata"; //$NON-NLS-1$
+    @Since("8.7.0")
+	private static final String TEIID_ACCUMULO = "teiid_accumulo"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 8590341087771685630L;
 
@@ -82,6 +85,8 @@ public class MetadataFactory implements Serializable {
 	public static final String WS_URI = "{http://www.teiid.org/translator/ws/2012}"; //$NON-NLS-1$
 	public static final String MONGO_URI = "{http://www.teiid.org/translator/mongodb/2013}"; //$NON-NLS-1$
 	public static final String ODATA_URI = "{http://www.jboss.org/teiiddesigner/ext/odata/2012}"; //$NON-NLS-1$
+    @Since("8.7.0")
+    public static final String ACCUMULO_URI = "{http://www.teiid.org/translator/accumulo/2013}"; //$NON-NLS-1$
 
 	public static final Map<String, String> BUILTIN_NAMESPACES;
 
@@ -92,6 +97,7 @@ public class MetadataFactory implements Serializable {
 		map.put(TEIID_WS, WS_URI.substring(1, WS_URI.length()-1));
 		map.put(TEIID_MONGO, MONGO_URI.substring(1, MONGO_URI.length()-1));
 		map.put(TEIID_ODATA, ODATA_URI.substring(1, ODATA_URI.length()-1));
+		map.put(TEIID_ACCUMULO, ACCUMULO_URI.substring(1, ACCUMULO_URI.length()-1));
 		BUILTIN_NAMESPACES = Collections.unmodifiableMap(map);
 	}
 
@@ -215,6 +221,11 @@ public class MetadataFactory implements Serializable {
 
     private Datatype setColumnType(String type,
             BaseColumn column) {
+		int arrayDimensions = 0;
+		while (DataTypeManagerService.isArrayType(type)) {
+			arrayDimensions++;
+			type = type.substring(0, type.length()-2);
+		}
         Datatype datatype = this.dataTypes.get(type);
         if (datatype == null) {
             //TODO: potentially we want to check the enterprise types, but at
@@ -224,7 +235,7 @@ public class MetadataFactory implements Serializable {
             //generalization would be needed to support injecting new runtime types
              throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60009, type));
         }
-        column.setDatatype(datatype, true);
+		column.setDatatype(datatype, true, arrayDimensions);
         return datatype;
     }
 
@@ -461,6 +472,20 @@ public class MetadataFactory implements Serializable {
     }
 
     /**
+	 * Add a function with the given name to the model.  
+	 * @param name
+	 * @return
+	 * @throws MetadataException 
+	 */
+	public FunctionMethod addFunction(String name, String returnType, String... paramTypes) {
+		FunctionMethod function = FunctionMethod.createFunctionMethod(name, null, null, returnType, paramTypes);
+		function.setPushdown(PushDown.MUST_PUSHDOWN);
+		setUUID(function);
+		schema.addFunction(function);
+		return function;
+	}
+
+    /**
      * Adds a non-pushdown function based upon the given {@link Method}.
      * @param name
      * @param method
@@ -476,6 +501,9 @@ public class MetadataFactory implements Serializable {
 
     /**
      * Convert a primitive class to the corresponding object class
+     *
+     * Taken from TypeFacility
+     *
      * @param clazz
      * @return
      */
@@ -811,4 +839,10 @@ public class MetadataFactory implements Serializable {
         }
         this.grants.add(new Grant(role, pmd));
     }
+
+	public void addFunction(FunctionMethod functionMethod) {
+		functionMethod.setParent(this.schema);
+		setUUID(functionMethod);
+		this.schema.addFunction(functionMethod);
+	}
 }

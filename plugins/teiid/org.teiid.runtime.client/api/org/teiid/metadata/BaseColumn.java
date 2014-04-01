@@ -22,7 +22,10 @@
 
 package org.teiid.metadata;
 
+import java.util.Collections;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
@@ -53,6 +56,10 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
     private NullType nullType;
     private int position;
     private Datatype datatype;
+    @Since("8.7.0")
+    private int arrayDimensions;
+    @Since("8.7.0")
+    private String nativeType;
 
     public BaseColumn(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
@@ -146,14 +153,22 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 	}
     
     public void setDatatype(Datatype datatype) {
-    	setDatatype(datatype, false);
+    	setDatatype(datatype, false, 0);
     }
     
     public void setDatatype(Datatype datatype, boolean copyAttributes) {
+    	setDatatype(datatype, copyAttributes, 0);
+    }
+    
+    public void setDatatype(Datatype datatype, boolean copyAttributes, int arrayDimensions) {
 		this.datatype = datatype;
+		this.arrayDimensions = arrayDimensions;
 		if (datatype != null) {
 			this.datatypeUUID = this.datatype.getUUID();
 			this.runtimeType = this.datatype.getRuntimeTypeName();
+			if (arrayDimensions > 0) {
+				this.runtimeType += StringUtil.join(Collections.nCopies(arrayDimensions, "[]"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			if (copyAttributes) {
 				this.radix = this.datatype.getRadix();
 				this.length = this.datatype.getLength();
@@ -162,6 +177,27 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 				this.nullType = this.datatype.getNullType();
 			}
 		}
+    }
+
+    /**
+     * Get the array dimensions.
+     * @return
+     */
+    public int getArrayDimensions() {
+		return arrayDimensions;
 	}
-    
+
+	@Since("8.7.0")
+    public String getNativeType() {
+        return nativeType;
+    }
+
+    /**
+     * @param nativeType The nativeType to set.
+     * @since 4.2
+     */
+	@Since("8.7.0")
+    public void setNativeType(String nativeType) {
+        this.nativeType = nativeType;
+    }
 }

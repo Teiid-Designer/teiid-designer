@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
@@ -76,7 +77,6 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
     private ObjectChannel socketChannel;
     private Cryptor cryptor;
     private String serverVersion;
-    private AuthenticationType authType = AuthenticationType.CLEARTEXT;
     private HashMap<Class<?>, Object> serviceMap = new HashMap<Class<?>, Object>();
     
     private boolean hasReader;
@@ -106,7 +106,15 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
     public HostInfo getHostInfo() {
     	return info;
     }
-    
+
+    @Override
+	public InetAddress getLocalAddress() {
+		if (socketChannel != null) {
+			return socketChannel.getLocalAddress();
+		}
+		return null;
+	}
+
     private void doHandshake() throws IOException, CommunicationException {
     	Handshake handshake = null;
     	boolean sentInit = false;
@@ -144,7 +152,6 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
                  throw new CommunicationException(Messages.TEIID.TEIID20011, NetPlugin.Util.getString(Messages.TEIID.TEIID20011, getVersionInfo(), handshake.getVersion()));
             }*/
             serverVersion = handshake.getVersion();
-            authType = handshake.getAuthType();
             handshake.setVersion();
             
             byte[] serverPublicKey = handshake.getPublicKey();
@@ -414,10 +421,4 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
 		protected abstract SocketServerInstance getInstance() throws CommunicationException;
 
 	}
-
-	@Override
-	public AuthenticationType getAuthenticationType() {
-		return authType;
-	}
-
 }

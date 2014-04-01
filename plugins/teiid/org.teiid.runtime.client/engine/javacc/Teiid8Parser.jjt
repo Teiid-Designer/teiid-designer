@@ -11,7 +11,6 @@ options {
     NODE_USES_PARSER = true;
     NODE_PACKAGE = "org.teiid.query.sql.lang";
     VISITOR = false;
-    VISITOR_RETURN_TYPE = "void";
     GRAMMAR_ENCODING="UTF-8";
     KEEP_LINE_COLUMN = true;
     NODE_FACTORY = "TeiidNodeFactory";

@@ -426,6 +426,7 @@ public class Messages {
     public enum Misc {
         ReflectionHelper_errorConstructing,
         TeiidVersionTooLow,
+        TeiidVersionFailure,
         Evaluator_noValue,
         ExceptionHolder_convertedException;
 
@@ -1106,6 +1107,7 @@ public class Messages {
         TEIID20030,
         TEIID20031,
         TEIID20032,
+        TEIID20034,
         TEIID30001,
         TEIID30002,
         TEIID30003,
@@ -1459,6 +1461,7 @@ public class Messages {
         TEIID31146,
         TEIID31147,
         TEIID31149,
+        TEIID31150,
         TEIID60001,
         TEIID60004,
         TEIID60008,

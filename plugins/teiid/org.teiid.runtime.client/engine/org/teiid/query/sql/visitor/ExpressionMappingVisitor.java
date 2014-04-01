@@ -57,7 +57,6 @@ import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.XMLColumn;
 import org.teiid.query.sql.lang.XMLTable;
 import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
-import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.ExceptionExpression;
 import org.teiid.query.sql.proc.ReturnStatement;
@@ -430,6 +429,15 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
      * @param exprMap Expression map, Expression to Expression
      */
     public static void mapExpressions(LanguageObject obj, Map<? extends Expression, ? extends Expression> exprMap) {
+        mapExpressions(obj, exprMap, false);
+    }
+    
+    /**
+     * The object is modified in place, so is not returned.
+     * @param obj Language object
+     * @param exprMap Expression map, Expression to Expression
+     */
+    public static void mapExpressions(LanguageObject obj, Map<? extends Expression, ? extends Expression> exprMap, boolean deep) {
         if(obj == null || exprMap == null || exprMap.isEmpty()) { 
             return;
         }
@@ -459,7 +467,7 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
         
         if (useReverseMapping) {
 	        final Set<Expression> reverseSet = new HashSet<Expression>(exprMap.values());
-	        PreOrderNavigator pon = new PreOrderNavigator(visitor) {
+	        PreOrPostOrderNavigator pon = new PreOrPostOrderNavigator(visitor, PreOrPostOrderNavigator.PRE_ORDER, deep) {
 	        	@Override
 	        	protected void visitNode(LanguageObject obj) {
 	        		if (!(obj instanceof Expression) || !reverseSet.contains(obj)) {
@@ -469,7 +477,7 @@ public class ExpressionMappingVisitor extends LanguageVisitor {
 	        };
 	        obj.acceptVisitor(pon);
         } else {
-        	PreOrPostOrderNavigator.doVisit(obj, visitor, preOrder, false);
+        	PreOrPostOrderNavigator.doVisit(obj, visitor, preOrder, deep);
         }
     }
     

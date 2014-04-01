@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
@@ -36,7 +37,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ISQLStringVisitor;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.language.SQLConstants.Tokens;
@@ -84,6 +85,7 @@ import org.teiid.query.sql.lang.NotCriteria;
 import org.teiid.query.sql.lang.ObjectColumn;
 import org.teiid.query.sql.lang.ObjectTable;
 import org.teiid.query.sql.lang.Option;
+import org.teiid.query.sql.lang.Option.MakeDep;
 import org.teiid.query.sql.lang.OrderBy;
 import org.teiid.query.sql.lang.OrderByItem;
 import org.teiid.query.sql.lang.PredicateCriteria;
@@ -194,8 +196,6 @@ public class SQLStringVisitor extends LanguageVisitor
      */
     public static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
 
-    private static final TeiidServerVersion TEIID_VERSION_8 = new TeiidServerVersion("8.0.0"); //$NON-NLS-1$
-
     private static final String BEGIN_HINT = "/*+"; //$NON-NLS-1$
 
     private static final String END_HINT = "*/"; //$NON-NLS-1$
@@ -247,11 +247,6 @@ public class SQLStringVisitor extends LanguageVisitor
      */
     public String getSQLString() {
         return this.parts.toString();
-    }
-
-    protected boolean isTeiid8OrGreater() {
-        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.equals(TEIID_VERSION_8) || minVersion.isGreaterThan(TEIID_VERSION_8);
     }
 
     /**
@@ -433,7 +428,14 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         append(BY);
         append(SPACE);
+        if (isTeiid87OrGreater() && obj.isRollup()) {
+        	append(ROLLUP);
+        	append(Tokens.LPAREN);
+        }
         registerNodes(obj.getSymbols(), 0);
+        if (isTeiid87OrGreater() && obj.isRollup()) {
+        	append(Tokens.RPAREN);
+        }
     }
 
     @Override
@@ -675,7 +677,7 @@ public class SQLStringVisitor extends LanguageVisitor
         
         if (column.isAutoIncremented()) {
             append(SPACE);
-            append(AUTO_INCREMENT);
+            append(DDLConstants.AUTO_INCREMENT);
         }
         
         appendDefault(column);
@@ -1062,6 +1064,8 @@ public class SQLStringVisitor extends LanguageVisitor
         if (obj.hasHint()) {
             append(")"); //$NON-NLS-1$
         }
+
+        addMakeDep(obj);
     }
 
     private void addHintComment(FromClause obj) {
@@ -1072,7 +1076,7 @@ public class SQLStringVisitor extends LanguageVisitor
                 append(Option.OPTIONAL);
                 append(SPACE);
             }
-            if (obj.isMakeDep()) {
+            if (obj.getMakeDep() != null && obj.getMakeDep().isSimple()) {
                 append(Option.MAKEDEP);
                 append(SPACE);
             }
@@ -1194,9 +1198,12 @@ public class SQLStringVisitor extends LanguageVisitor
             append(" "); //$NON-NLS-1$
 
             Iterator<String> iter = groups.iterator();
+            Iterator<MakeDep> iter1 = obj.getMakeDepOptions().iterator();
 
             while (iter.hasNext()) {
                 outputDisplayName(iter.next());
+                
+                appendMakeDepOptions(iter1.next());
 
                 if (iter.hasNext()) {
                     append(", ");//$NON-NLS-1$
@@ -1241,6 +1248,44 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NOCACHE);
         }
 
+    }
+
+    /**
+     * @param makedep
+     * @return this visitor
+     */
+    public SQLStringVisitor appendMakeDepOptions(MakeDep makedep) {
+        if (isLessThanTeiidVersion(Version.TEIID_8_5))
+            return this;
+
+        boolean parens = false;
+        if (makedep.getMax() != null || makedep.isJoin()) {
+            append(Tokens.LPAREN);
+            parens = true;
+        }
+        boolean space = false;
+        if (makedep.getMax() != null) {
+            if (space) {
+                append(SPACE);
+            } else {
+                space = true;
+            }
+            append(NonReserved.MAX);
+            append(Tokens.COLON);
+            append(makedep.getMax());
+        }
+        if (makedep.isJoin()) {
+            if (space) {
+                append(SPACE);
+            } else {
+                space = true;
+            }
+            append(JOIN);
+        }
+        if (parens) {
+            append(Tokens.RPAREN);
+        }
+        return this;
     }
 
     @Override
@@ -1356,7 +1401,11 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         append(Tokens.LPAREN);
-        visitNode(obj.getQueryExpression());
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.getCommand() == null) {
+            append("<dependent values>"); //$NON-NLS-1$
+        } else {
+            visitNode(obj.getCommand());
+        }
         append(Tokens.RPAREN);
     }
 
@@ -1430,6 +1479,8 @@ public class SQLStringVisitor extends LanguageVisitor
 
             if (sh.getGeneralHint() != null) {
                 appendSourceHintValue(sh.getGeneralHint());
+        	} else {
+        		append(SPACE);
             }
             if (sh.getSpecificHints() != null) {
                 for (Map.Entry<String, SpecificHint> entry : sh.getSpecificHints().entrySet()) {
@@ -1680,6 +1731,8 @@ public class SQLStringVisitor extends LanguageVisitor
             append(escapeSinglePart(groupSymbol.getOutputName()));
         else
             append(groupSymbol.getOutputName());
+
+        addMakeDep(obj);
     }
 
     @Override
@@ -1704,6 +1757,7 @@ public class SQLStringVisitor extends LanguageVisitor
     public void visit(UnaryFromClause obj) {
         addHintComment(obj);
         visitNode(obj.getGroup());
+        addMakeDep(obj);
     }
 
     @Override
@@ -1851,6 +1905,20 @@ public class SQLStringVisitor extends LanguageVisitor
                 constantParts = new String[] {"null"}; //$NON-NLS-1$
             }
         } else {
+			if (isTeiid87OrGreater() && value.getClass() == ArrayImpl.class) {
+				ArrayImpl av = (ArrayImpl)value;
+				append(Tokens.LPAREN);
+				for (int i = 0; i < av.getValues().length; i++) {
+					if (i > 0) {
+						append(Tokens.COMMA);
+						append(SPACE);
+					}
+					Object value2 = av.getValues()[i];
+					outputLiteral(value2!=null?value2.getClass():av.getValues().getClass().getComponentType(), multiValued, value2);
+				}
+				append(Tokens.RPAREN);
+				return;
+			}
             if (Number.class.isAssignableFrom(type)) {
                 constantParts = new String[] {value.toString()};
             } else if (type.equals(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass())) {
@@ -2171,8 +2239,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(CreateProcedureCommand obj) {
-        ITeiidServerVersion version = getTeiidVersion().getMinimumVersion();
-        if (version.isLessThan(TeiidServerVersion.TEIID_8_4_SERVER)) {
+        if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
             append(CREATE);
             append(SPACE);
             append(VIRTUAL);
@@ -2644,26 +2711,33 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             outputDisplayName(col.getName());
             append(SPACE);
-            append(col.getType());
-            if (col.getWidth() != null) {
+            if (col.isOrdinal()) {
+                // Will only ever come in here is Teiid 8.7 or greater
+                append(FOR);
                 append(SPACE);
-                append(NonReserved.WIDTH);
-                append(SPACE);
-                append(col.getWidth());
-            }
-            if (col.isNoTrim()) {
-                append(SPACE);
-                append(NO);
-                append(SPACE);
-                append(NonReserved.TRIM);
-            }
-            if (isTeiid8OrGreater() && col.getSelector() != null) {
-                append(SPACE);
-                append(NonReserved.SELECTOR);
-                append(SPACE);
-                append(escapeSinglePart(col.getSelector()));
-                append(SPACE);
-                append(col.getPosition());
+                append(NonReserved.ORDINALITY);
+            } else {
+                append(col.getType());
+                if (col.getWidth() != null) {
+                    append(SPACE);
+                    append(NonReserved.WIDTH);
+                    append(SPACE);
+                    append(col.getWidth());
+                }
+                if (col.isNoTrim()) {
+                    append(SPACE);
+                    append(NO);
+                    append(SPACE);
+                    append(NonReserved.TRIM);
+                }
+                if (isTeiid8OrGreater() && col.getSelector() != null) {
+                    append(SPACE);
+                    append(NonReserved.SELECTOR);
+                    append(SPACE);
+                    append(escapeSinglePart(col.getSelector()));
+                    append(SPACE);
+                    append(col.getPosition());
+                }
             }
             if (cols.hasNext()) {
                 append(","); //$NON-NLS-1$
@@ -2712,6 +2786,7 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
+        addMakeDep(obj);
     }
 
     @Override
@@ -2769,6 +2844,7 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
+        addMakeDep(obj);
     }
 
     @Override
@@ -2813,6 +2889,7 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
+        addMakeDep(obj);
     }
 
     @Override
@@ -2974,6 +3051,19 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AS);
         append(SPACE);
         outputDisplayName(obj.getName());
+        addMakeDep(obj);
+    }
+
+    private void addMakeDep(FromClause obj) {
+        if (isLessThanTeiidVersion(Version.TEIID_8_5))
+            return;
+
+        MakeDep makeDep = obj.getMakeDep();
+        if (makeDep != null && !makeDep.isSimple()) {
+            append(SPACE);
+            append(MAKEDEP);
+            appendMakeDepOptions(makeDep);
+        }
     }
 
     private void visit7(AlterProcedure<CreateUpdateProcedureCommand> obj) {
@@ -3088,6 +3178,9 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         registerNodes(array.getExpressions(), 0);
         if (!array.isImplicit()) {
+    		if (array.getExpressions().size() == 1) {
+    			append(Tokens.COMMA);
+    		}
             append(Tokens.RPAREN);
         }
     }

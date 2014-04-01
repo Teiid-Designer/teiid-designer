@@ -3,7 +3,9 @@
 package org.teiid.query.sql.symbol;
 
 import java.util.List;
+import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.symbol.ITextLine;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
@@ -115,7 +117,10 @@ public class TextLine extends SimpleNode implements Expression, ITextLine<Langua
 
     @Override
     public Class<?> getType() {
-        return String[].class;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            return String[].class;
+
+        return DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass();
     }
 
     @Override

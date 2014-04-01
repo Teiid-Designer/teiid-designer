@@ -32,6 +32,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.teiid.adminapi.DataPolicy;
+import org.teiid.designer.annotation.Since;
 import org.teiid.runtime.client.Messages;
 
 
@@ -49,6 +50,9 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
     protected List<String> mappedRoleNames = new CopyOnWriteArrayList<String>();
     
     private Set<String> hasRowPermissions = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+
+    @Since("8.7.0")
+	private boolean grantAll;
 
 	@Override
     public String getName() {
@@ -471,6 +475,17 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
 		this.anyAuthenticated = anyAuthenticated;
 	}
     
+    @Override
+    @Since("8.7.0")
+    public boolean isGrantAll() {
+    	return this.grantAll;
+    }
+
+    @Since("8.7.0")
+    public void setGrantAll(boolean grantAll) {
+		this.grantAll = grantAll;
+	}
+
     public DataPolicyMetadata clone() {
     	DataPolicyMetadata clone = new DataPolicyMetadata();
     	clone.allowCreateTemporaryTables = this.allowCreateTemporaryTables;
@@ -481,6 +496,7 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
     	clone.languagePermissions = new HashMap<String, DataPolicyMetadata.PermissionMetaData>(this.languagePermissions);
     	clone.mappedRoleNames = this.mappedRoleNames; //direct reference to preserve updates
     	clone.name = this.name;
+    	clone.grantAll = this.grantAll;
     	clone.permissions = new TreeMap<String, PermissionMetaData>(String.CASE_INSENSITIVE_ORDER);
     	clone.permissions.putAll(this.permissions);
     	return clone;

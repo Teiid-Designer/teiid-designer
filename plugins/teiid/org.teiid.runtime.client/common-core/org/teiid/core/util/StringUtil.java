@@ -16,8 +16,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -94,6 +96,34 @@ public final class StringUtil {
         }
 	    return source;    
 	}
+
+	/**
+     * Join string pieces and separate with a delimiter.  Similar to the perl function of
+     * the same name.  If strings or delimiter are null, null is returned.  Otherwise, at
+     * least an empty string will be returned.   
+     * @see #split
+     *
+     * @param strings String pieces to join
+     * @param delimiter Delimiter to put between string pieces
+     * @return One merged string
+     */
+    public static String join(Collection<String> strings, String delimiter) {
+        if(strings == null || delimiter == null) {
+            return null;
+        }
+
+        StringBuffer str = new StringBuffer();
+
+        Iterator<String> iter = strings.iterator();
+        while (iter.hasNext()) {            
+            str.append(iter.next());
+            if (iter.hasNext()) {
+                str.append(delimiter);
+            }
+        }
+        
+        return str.toString();
+    }
 
     /**
      * Return a stringified version of the array.

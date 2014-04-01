@@ -20,6 +20,7 @@ import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
+import org.teiid.runtime.client.Messages;
 
 /**
  *
@@ -140,10 +141,14 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
     }
     
     /**
-     * TODO: remove me when a null type is supported
      * @param type
      */
     public void setType(Class<?> type) {
+        // Check that type is valid, then set it
+        if(type == null) {
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0014));
+        }
+        
         this.type = type;
     }
 

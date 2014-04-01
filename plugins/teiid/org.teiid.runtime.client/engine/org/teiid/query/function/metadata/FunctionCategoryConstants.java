@@ -78,4 +78,7 @@ public interface FunctionCategoryConstants {
      */
     public static final String SECURITY = "Security"; //$NON-NLS-1$ 
 
+    @Since("8.7.0")
+    public static final String AGGREGATE = "Aggregatee"; //$NON-NLS-1$
+
 }

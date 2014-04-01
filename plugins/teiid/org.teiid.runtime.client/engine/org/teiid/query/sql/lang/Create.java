@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ICreate;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.Table;
@@ -125,7 +126,12 @@ public class Create extends Command
     	this.columns.clear();
     	for (ElementSymbol elementSymbol : columns) {
     		Column c = new Column(getTeiidVersion());
-    		c.setName(elementSymbol.getName());
+
+    		if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+    		    c.setName(elementSymbol.getShortName());
+    		else
+    		    c.setName(elementSymbol.getName());
+
     		c.setRuntimeType(getTeiidParser().getDataTypeService().getDataTypeName(elementSymbol.getType()));
     		c.setNullType(NullType.Nullable);
     		this.columns.add(c);

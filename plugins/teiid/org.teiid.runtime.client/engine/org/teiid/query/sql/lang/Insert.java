@@ -143,10 +143,10 @@ public class Insert extends ProcedureContainer
      * @param query
      */
     public void setQueryExpression( QueryCommand query ) {
-        if (query instanceof Query) {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_6) && query instanceof Query) {
             Query expr = (Query)query;
             //a singl row constructor query is the same as values 
-            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get()) && expr.isRowConstructor()) {
+            if (expr.isRowConstructor()) {
                 this.values.clear();
                 this.queryExpression = null;
                 for (Expression ex : expr.getSelect().getSymbols()) {

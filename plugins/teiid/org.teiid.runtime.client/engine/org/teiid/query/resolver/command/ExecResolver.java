@@ -342,7 +342,6 @@ public class ExecResolver extends ProcedureContainerResolver {
                     Array array = create(ASTNodes.ARRAY); 
                     array.setExpressions(exprs);
                     array.setImplicit(true);
-                    array.setType(param.getClassType());
                     expr = array;
                 }
                 param.setExpression(expr);

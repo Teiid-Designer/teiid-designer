@@ -8,6 +8,7 @@ import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.runtime.client.Messages;
 
 /**
  *
@@ -143,6 +144,12 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
 
     @Override
     public void setMetadataID(Object metadataID) {
+        if(metadataID == null) {
+            throw new IllegalArgumentException(Messages.getString(Messages.ERR.ERR_015_010_0016));
+        }
+        if (this.isImplicitTempGroupSymbol()) {
+            this.isTempTable = true;
+        }
         this.metadataID = metadataID;
     }
 
@@ -184,7 +191,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
      * @return is temp group symbol
      */
     public boolean isTempGroupSymbol() {
-        return isTempTable || isImplicitTempGroupSymbol();
+        return isTempTable || (metadataID == null && isImplicitTempGroupSymbol());
     }
     
     /**

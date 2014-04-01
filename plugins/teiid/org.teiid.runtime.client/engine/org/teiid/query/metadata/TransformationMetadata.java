@@ -53,6 +53,7 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.LRUCache;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -160,6 +161,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Set<String> importedModels;
     private Set<String> allowedLanguages;
     private Map<String, DataPolicyMetadata> policies = new TreeMap<String, DataPolicyMetadata>(String.CASE_INSENSITIVE_ORDER);
+    @Since("8.5.0")
     private boolean useOutputNames = true;
     
     /*

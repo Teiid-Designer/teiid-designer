@@ -179,7 +179,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 
 		@Override
         public void validate(Object value) throws Exception {
-			if (((Integer)value).intValue() < 0) {
+			if (value == null || ((Integer)value).intValue() < 0) {
 				 throw new TeiidClientException(Messages.getString(msgKey));
 			}
 		}
@@ -1730,6 +1730,9 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	Character quote = null;
     	boolean usingSelector = false;
     	for (TextColumn column : obj.getColumns()) {
+    	    if (column.isOrdinal())
+                continue;
+
 			if (column.getWidth() != null) {
 				widthSet = true;
 				if (column.getWidth() < 0) {

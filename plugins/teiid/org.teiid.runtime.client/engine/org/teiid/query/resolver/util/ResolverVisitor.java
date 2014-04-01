@@ -25,6 +25,7 @@ package org.teiid.query.resolver.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -38,14 +39,14 @@ import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol.DisplayMode;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.query.function.FunctionDescriptor;
-import org.teiid.query.function.FunctionForm;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.query.metadata.GroupInfo;
 import org.teiid.query.metadata.TempMetadataID;
@@ -112,7 +113,8 @@ public class ResolverVisitor extends LanguageVisitor
     private boolean findShortName;
     private List<ElementSymbol> matches = new ArrayList<ElementSymbol>(2);
     private List<GroupSymbol> groupMatches = new ArrayList<GroupSymbol>(2);
-	private boolean hasUserDefinedAggregate;
+	@Since("8.6.0")
+    private boolean hasUserDefinedAggregate;
     
     /**
      * Constructor for ResolverVisitor.
@@ -122,7 +124,6 @@ public class ResolverVisitor extends LanguageVisitor
      */
     public ResolverVisitor(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
-        this.findShortName = determinePartialName.get();
     }
 
     /**
@@ -138,9 +139,16 @@ public class ResolverVisitor extends LanguageVisitor
 		this.groups = internalGroups;
         this.externalContext = externalContext;
         this.metadata = metadata;
-        this.findShortName = metadata.findShortName();
+        setFindShortName(metadata);
     }
 
+    private void setFindShortName(IQueryMetadataInterface metadata) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5.get()))
+            this.findShortName = metadata.findShortName();
+        else
+            this.findShortName = determinePartialName.get();
+    }
+    
 	/**
 	 * @param groups
 	 */
@@ -355,7 +363,7 @@ public class ResolverVisitor extends LanguageVisitor
     public void visit(Function obj) {
         try {
             resolveFunction(obj, (FunctionLibrary) this.metadata.getFunctionLibrary());
-			if (obj.isAggregate()) {
+			if (obj.isAggregate() && isTeiidVersionOrGreater(Version.TEIID_8_6)) {
             	hasUserDefinedAggregate = true;
             }
         } catch(Exception e) {
@@ -652,12 +660,11 @@ public class ResolverVisitor extends LanguageVisitor
 	    }
 	
 	    // Attempt to get exact match of function for this signature
-	    FunctionDescriptor fd = findWithImplicitConversions(library, function, args, types, hasArgWithoutType);
+	    List<FunctionDescriptor> fds = findWithImplicitConversions(library, function, args, types, hasArgWithoutType);
 	    
 	    // Function did not resolve - determine reason and throw exception
-	    if(fd == null) {
-	        FunctionForm form = library.findFunctionForm(function.getName(), args.length);
-	        if(form == null) {
+	    if(fds.isEmpty()) {
+	        if(!library.hasFunctionMethod(function.getName(), args.length)) {
 	            // Unknown function form
 	             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30068, function));
 	        }
@@ -668,7 +675,10 @@ public class ResolverVisitor extends LanguageVisitor
 	        // Known function form - unable to find implicit conversions
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30070, function));
 	    }
-	    
+	    if (fds.size() > 1) {
+            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31150, function));
+        }
+        FunctionDescriptor fd = fds.get(0);
 	    if (fd.getMethod().isVarArgs() 
 	    		&& fd.getTypes().length == types.length 
 	    		&& library.isVarArgArrayParam(fd.getMethod(), types, types.length - 1, fd.getTypes()[types.length - 1])) {
@@ -727,14 +737,14 @@ public class ResolverVisitor extends LanguageVisitor
 	 * @throws Exception 
 	 * @since 4.3
 	 */
-	private FunctionDescriptor findWithImplicitConversions(FunctionLibrary library, Function function, Expression[] args, Class<?>[] types, boolean hasArgWithoutType) throws Exception {
+	private List<FunctionDescriptor> findWithImplicitConversions(FunctionLibrary library, Function function, Expression[] args, Class<?>[] types, boolean hasArgWithoutType) throws Exception {
 	    
 	    // Try to find implicit conversion path to still perform this function
 	    FunctionDescriptor[] conversions;
 		try {
 			conversions = library.determineNecessaryConversions(function.getName(), function.getType(), args, types, hasArgWithoutType);
 		} catch (Exception e) {
-			return null;
+			return Collections.emptyList();
 		}
 		Class<?>[] newSignature = types;
 	    
@@ -761,7 +771,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    }
 	
 	    // Now resolve using the new signature to get the function's descriptor
-	    return library.findFunction(function.getName(), newSignature);
+	    return library.findAllFunctions(function.getName(), newSignature);
 	}
 
 	/**
@@ -1181,12 +1191,14 @@ public class ResolverVisitor extends LanguageVisitor
 	    setGroups(groups);
         this.externalContext = externalContext;
         this.metadata = metadata;
+        setFindShortName(metadata);
 
 	    // Resolve elements, deal with errors
 	    PostOrderNavigator.doVisit(obj, this);
 	    this.throwException(true);
 	}
 
+	@Since("8.6.0")
 	public boolean hasUserDefinedAggregate() {
 		return hasUserDefinedAggregate;
 	}
@@ -1194,10 +1206,8 @@ public class ResolverVisitor extends LanguageVisitor
 	@Override
     public void setProperty(String propertyName, Object value) {
         if (SHORT_NAME.equals(propertyName) && value instanceof Boolean) {
-            if (getTeiidVersion().isLessThan(new TeiidServerVersion(
-                                                                    ITeiidServerVersion.EIGHT,
-                                                                    ITeiidServerVersion.FIVE,
-                                                                    ITeiidServerVersion.ZERO)))
+            if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+                // Not applicable for Teiid 8.5
                 return;
 
             ResolverVisitor.setFindShortName((Boolean) value);

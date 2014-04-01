@@ -183,8 +183,8 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
 
         if(getShortCanonicalName() != null)
             clone.setShortCanonicalName(getShortCanonicalName());
-        if(getOutputName() != null)
-            clone.setOutputName(getOutputName());
+        if(outputName != null)
+            clone.outputName = outputName;
         if(getShortName() != null)
             clone.setShortName(getShortName());
         if(getName() != null)

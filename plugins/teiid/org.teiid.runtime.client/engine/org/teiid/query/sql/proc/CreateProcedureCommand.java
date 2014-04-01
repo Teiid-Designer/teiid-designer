@@ -7,6 +7,7 @@ import java.util.List;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
@@ -68,8 +69,12 @@ public class CreateProcedureCommand extends Command
     }
 
     @Override
+    @Since("8.5.0")
     public boolean returnsResultSet() {
-        return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();
+
+        return super.returnsResultSet();
     }
 
     @Override
@@ -145,8 +150,12 @@ public class CreateProcedureCommand extends Command
      * @param type
      */
     public void setUpdateType(int type) {
-        //we select the count as the last operation
-        this.resultSetColumns = getUpdateCommandSymbol();
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            //we select the count as the last operation
+            this.resultSetColumns = getUpdateCommandSymbol();
+        else
+            this.resultSetColumns = Collections.emptyList();
+
         this.updateType = type;
     }
 

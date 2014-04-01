@@ -31,9 +31,11 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import org.teiid.adminapi.Model;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 
@@ -61,7 +63,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
         }
     });
 
-	protected LinkedHashMap<String, SourceMappingMetadata> sources = new LinkedHashMap<String, SourceMappingMetadata>();	
+	protected Map<String, SourceMappingMetadata> sources = new CopyOnWriteLinkedHashMap<String, SourceMappingMetadata>();	
 	protected String modelType = Type.PHYSICAL.name();
 	protected String description;	
 	protected String path; 
@@ -81,8 +83,8 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
     @Since("8.0.0")
 	protected MetadataStatus metadataStatus = MetadataStatus.LOADING;
 
-	private LinkedHashMap<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {
-        LinkedHashMap<String, SourceMappingMetadata> newMap = new LinkedHashMap<String, SourceMappingMetadata>();
+	private Map<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {
+        Map<String, SourceMappingMetadata> newMap = new CopyOnWriteLinkedHashMap<String, SourceMappingMetadata>();
         for (Entry<String, SourceMappingMetadata> entry : overMap.getMap().entrySet()) {
             newMap.put(entry.getKey(), entry.getValue());
         }
@@ -99,7 +101,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 
         Object serSources = serFields.get("sources", null);
         if (isLinkedHashMap(serSources)) { /* Teiid Version 8+ */
-            sources = (LinkedHashMap<String, SourceMappingMetadata>)serSources;
+            sources = newCopyOnWriteLinkedHashMap((LinkedHashMap<String, SourceMappingMetadata>) serSources);
         } else if (isListOverMap(serSources)) { /* Teiid Version 7 */
             ListOverMap<SourceMappingMetadata> overMap = (ListOverMap<SourceMappingMetadata>)serSources;
             sources = convertSources(overMap);
@@ -202,7 +204,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 		return new ArrayList<SourceMappingMetadata>(this.sources.values());
 	}
 	
-	public LinkedHashMap<String, SourceMappingMetadata> getSources() {
+	public Map<String, SourceMappingMetadata> getSources() {
 		return sources;
 	}
 	

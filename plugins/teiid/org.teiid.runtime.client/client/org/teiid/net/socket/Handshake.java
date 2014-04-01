@@ -28,9 +28,11 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.List;
-
 import org.teiid.core.util.ApplicationInfo;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 /**
@@ -42,7 +44,7 @@ public class Handshake implements Externalizable {
     
     private String version = ApplicationInfo.getInstance().getReleaseNumber();
     private byte[] publicKey;
-    private AuthenticationType authType = AuthenticationType.CLEARTEXT;
+    private AuthenticationType authType = null;
     
     public Handshake() {
     	
@@ -51,7 +53,24 @@ public class Handshake implements Externalizable {
     Handshake(String version) {
     	this.version = version;
     }
-    
+
+    private ITeiidServerVersion getTeiidVersion() {
+        ITeiidServerVersion version = new TeiidServerVersion(getVersion());
+        return version;
+    }
+
+    private AuthenticationType getAuthenticationType() {
+        if (authType == null) {
+            ITeiidServerVersion version = getTeiidVersion();
+            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_7.get()))
+                authType = AuthenticationType.USERPASSWORD;
+
+            authType = AuthenticationType.CLEARTEXT;
+        }
+
+        return authType;
+    }
+
     /** 
      * @return Returns the version.
      */
@@ -76,7 +95,7 @@ public class Handshake implements Externalizable {
     }
     
     /** 
-     * @param version The version to set.
+     *
      */
     public void setVersion() {
         this.version = ApplicationInfo.getInstance().getReleaseNumber();
@@ -97,20 +116,16 @@ public class Handshake implements Externalizable {
     }
     
     public AuthenticationType getAuthType() {
-		return authType;
+		return getAuthenticationType();
 	}
-    
-    public void setAuthType(AuthenticationType authType) {
-		this.authType = authType;
-	}
-    
+
     @Override
     public void readExternal(ObjectInput in) throws IOException,
     		ClassNotFoundException {
     	version = (String)in.readObject();
     	publicKey = (byte[])in.readObject();
     	try {
-    		authType = AuthenticationType.values()[in.readByte()];
+    		authType = AuthenticationType.value(getTeiidVersion(), in.readByte());
     	} catch (EOFException e) {
     		
     	}
@@ -120,7 +135,7 @@ public class Handshake implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
     	out.writeObject(version);
     	out.writeObject(publicKey);
-    	out.writeByte(authType.ordinal());
+    	out.writeByte(authType.index(getTeiidVersion()));
     }
     
 }

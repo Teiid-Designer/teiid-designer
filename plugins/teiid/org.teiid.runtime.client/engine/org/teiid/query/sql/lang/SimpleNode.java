@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
@@ -39,6 +40,19 @@ public class SimpleNode implements Node, LanguageObject {
     @Override
     public ITeiidServerVersion getTeiidVersion() {
         return parser.getVersion();
+    }
+
+    protected boolean isTeiidVersionOrGreater(Version teiidVersion) {
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
+    }
+
+    protected boolean isTeiid8OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_0);
+    }
+
+    protected boolean isTeiid87OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_7);
     }
 
     @Override

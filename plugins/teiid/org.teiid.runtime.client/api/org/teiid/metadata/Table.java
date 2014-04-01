@@ -32,6 +32,7 @@ import org.teiid.metadata.AbstractMetadataRecord.Modifiable;
 
 public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiable {
 
+	public static final int UNKNOWN_CARDINALITY = -1;
 	private static final long serialVersionUID = 4891356771125218672L;
 
 	public enum Type {
@@ -42,7 +43,12 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 		XmlStagingTable,
 		MaterializedTable,
 		/** Temporary from a Teiid Perspective - will not have a parent set */
-		TemporaryTable 
+		TemporaryTable {
+			@Override
+			public String toString() {
+				return "TEMPORARY TABLE"; //$NON-NLS-1$
+            }
+        }
 	}
 	
     /**
@@ -65,7 +71,24 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
         DELETE
     }
 
-	private volatile int cardinality = -1;
+    static final int asInt(long f) {
+		if (f == UNKNOWN_CARDINALITY || f < 0) {
+    		return UNKNOWN_CARDINALITY;
+    	} else if (f <= Integer.MAX_VALUE) {
+    		return (int)f;
+    	}
+		//NaN 0x7ffffffff will map to -1 (unknown)
+		return Float.floatToRawIntBits(f) | 0x80000000;
+	}
+
+    static final float asFloat(int i) {
+		if (i >= UNKNOWN_CARDINALITY) {
+    		return i;
+    	}
+    	return Float.intBitsToFloat(i & 0x7fffffff);
+	}
+
+	private volatile int cardinality = UNKNOWN_CARDINALITY;
     private Type tableType;
     private boolean isVirtual;
     private boolean isSystem;
@@ -97,13 +120,6 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 	private volatile transient long lastModified;
 	private volatile transient long lastDataModification;
 
-	static final float asFloat(int i) {
-        if (i >= -1) {
-            return i;
-        }
-        return Float.intBitsToFloat(i & 0x7fffffff);
-    }
-
     public List<String> getBindings() {
 		return bindings;
 	}
@@ -121,7 +137,10 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 	}
 
     public int getCardinality() {
-        return cardinality;
+    	if (cardinality >= UNKNOWN_CARDINALITY) {
+            return cardinality;
+        }
+    	return Integer.MAX_VALUE;
     }
 
     public float getCardinalityAsFloat() {
@@ -159,7 +178,11 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
      * @param i
      */
     public void setCardinality(int i) {
-        cardinality = i;
+    	cardinality = asInt(i);
+    }
+    
+    public void setCardinality(long f) {
+    	cardinality = asInt(f);
     }
 
     /**
@@ -341,7 +364,7 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
 	
 	public void setTableStats(TableStats stats) {
 		if (stats.getCardinality() != null) {
-			setCardinality(stats.getCardinality().intValue());
+			setCardinality(stats.getCardinality().longValue());
 		}
 	}
 	
@@ -379,7 +402,7 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
     
     @Override
     public String getFullName() {
-    	if (this.tableType == Type.TemporaryTable) {
+    	if (this.tableType == Type.TemporaryTable && !this.isVirtual) {
     		return this.getName();
     	}
     	return super.getFullName();

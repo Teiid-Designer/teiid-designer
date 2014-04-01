@@ -25,7 +25,10 @@ package org.teiid.net.socket;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,6 +47,7 @@ import org.teiid.client.security.LogonResult;
 import org.teiid.client.util.ExceptionUtil;
 import org.teiid.client.util.ResultsFuture;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.gss.MakeGSS;
 import org.teiid.net.CommunicationException;
 import org.teiid.net.ConnectionException;
@@ -160,18 +164,28 @@ public class SocketServerConnection implements ServerConnection {
 		 throw new CommunicationException(Messages.gs(Messages.TEIID.TEIID20021, hostCopy.toString()));
 	}
 
-	private void logon(ILogon newLogon, boolean logoff) throws LogonException,
-			TeiidClientException, CommunicationException {
-
+	private void logon(ILogon newLogon, boolean logoff) throws LogonException, TeiidClientException, CommunicationException {
 		SocketServerInstance instance = this.serverInstance;
+
+		updateConnectionProperties(connProps, instance.getLocalAddress(), true);
+
 		LogonResult newResult = null;
 
-		AuthenticationType authType  = instance.getAuthenticationType();
-		if (AuthenticationType.CLEARTEXT.equals(authType)) {
+		// - if gss
+		if (connProps.contains(TeiidURL.CONNECTION.JAAS_NAME)) {
+			newResult = MakeGSS.authenticate(newLogon, connProps);
+		} else {
 			newResult = newLogon.logon(connProps);
 		}
-		else if (AuthenticationType.GSS.equals(authType)) {
+		AuthenticationType type = (AuthenticationType) newResult.getProperty(ILogon.AUTH_TYPE);
+		
+		if (type != null) {
+			//server has issued an additional challange
+			if (type == AuthenticationType.GSS) {
 			newResult = MakeGSS.authenticate(newLogon, connProps);
+			} else {
+				throw new LogonException(Messages.gs(Messages.TEIID.TEIID20034, type));
+			}
 		}
 		
 		if (logoff) {
@@ -188,7 +202,36 @@ public class SocketServerConnection implements ServerConnection {
 		this.logonResults.put(instance.getHostInfo(), this.logonResult);
 		this.connectionFactory.connected(instance, this.logonResult.getSessionToken());
 	}
-	
+
+    @Since("8.7.0")
+	public static void updateConnectionProperties(Properties connectionProperties, InetAddress addr, boolean setMac) {
+		if (addr == null) {
+			return;
+		}
+		String address = addr.getHostAddress();
+		Object old = connectionProperties.put(TeiidURL.CONNECTION.CLIENT_IP_ADDRESS, address);
+		if (old == null || !address.equals(old)) {
+			connectionProperties.put(TeiidURL.CONNECTION.CLIENT_HOSTNAME, addr.getCanonicalHostName());
+			if (setMac) {
+				try {
+					NetworkInterface ni = NetworkInterface.getByInetAddress(addr);
+					if (ni != null && ni.getHardwareAddress() != null) {
+						StringBuilder sb = new StringBuilder();
+						for (byte b : ni.getHardwareAddress()) {
+							sb.append(PropertiesUtils.toHex(b >> 4));
+							sb.append(PropertiesUtils.toHex(b));
+						}
+						connectionProperties.put(TeiidURL.CONNECTION.CLIENT_MAC, sb.toString());
+					}
+		        } catch (SocketException e) {
+					connectionProperties.remove(TeiidURL.CONNECTION.CLIENT_MAC);
+		        }
+			} else {
+				connectionProperties.remove(TeiidURL.CONNECTION.CLIENT_MAC);
+			}
+		}
+	}
+
 	private ILogon connect(HostInfo hostInfo) throws CommunicationException,
 			IOException {
 		hostInfo.setSsl(secure);

@@ -42,5 +42,4 @@ public class WrapperImpl implements Wrapper {
 		
 		return iface.cast(this);
 	}
-
 }

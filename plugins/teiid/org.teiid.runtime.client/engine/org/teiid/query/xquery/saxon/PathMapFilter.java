@@ -2,7 +2,6 @@ package org.teiid.query.xquery.saxon;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import net.sf.saxon.event.ProxyReceiver;
 import net.sf.saxon.expr.AxisExpression;
 import net.sf.saxon.expr.PathMap.PathMapArc;
@@ -128,11 +127,11 @@ class PathMapFilter extends ProxyReceiver {
 			throws XPathException {
 		MatchContext mc = matchContext.getLast();
 		if (!mc.matchedElement) {
-			return;
-		}
-		int fp = nameCode & NamePool.FP_MASK;
-		if (fp == StandardNames.XSI_NIL || fp == StandardNames.XSI_TYPE) {
-			super.attribute(nameCode, typeCode, value, locationId, properties);
+		    return;
+        }
+        int fp = nameCode & NamePool.FP_MASK;
+        if (fp == StandardNames.XSI_NIL || fp == StandardNames.XSI_TYPE) {
+            super.attribute(nameCode, typeCode, value, locationId, properties);            
 			return;
 		}
 		if (mc.attributeArcs != null) {

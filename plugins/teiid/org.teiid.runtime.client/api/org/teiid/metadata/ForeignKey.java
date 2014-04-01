@@ -104,10 +104,12 @@ public class ForeignKey extends KeyRecord {
         this.setReferenceKey(primaryKey);
     }
 
+    /**
+     * WARNING prior to validation this method will return a potentially fully-qualified name
+     * after resolving it will return an unqualified name
+     * @return
+     */
 	public String getReferenceTableName() {
-		if (referenceTableName == null && primaryKey != null) {
-			referenceTableName = primaryKey.getParent().getName();
-		}
 		return referenceTableName;
 	}
 

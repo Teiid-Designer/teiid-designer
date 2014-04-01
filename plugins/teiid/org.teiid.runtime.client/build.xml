@@ -100,25 +100,26 @@
 	</target>
 
 	<target name="dependencies" if="should-generate">
-		<!-- Build the target platform and install it -->
+		<!-- Build the target platform and install it
 		<echo message="=== Installing target platform ===" />
 		<mvn dir="${GIT-HOME}/target-platform" args="install" />
 
-		<!-- Build the spi dependency and install it -->
+		 Build the spi dependency and install it
 		<echo message="=== Installing the spi plugin dependency ===" />
 		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
 
-		<!-- Build the datatools connectivity model dependency and install it -->
+		 Build the datatools connectivity model dependency and install it
 		<echo message="=== Installing the datatools connectivity model plugin dependency ===" />
 		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.model" args="install" />
 
-		<!-- Build the datatools connectivity dependency and install it -->
+		 Build the datatools connectivity dependency and install it
 		<echo message="=== Installing the datatools connectivity plugin dependency ===" />
 		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity" args="install" />
 
-		<!-- Build the datatools connectivity ui dependency and install it -->
+		 Build the datatools connectivity ui dependency and install it
 		<echo message="=== Installing the datatools connectivity ui plugin dependency ===" />
 		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.ui" args="install" />
+		-->
 	</target>
 
 	<target name="clean" depends="dependencies" if="should-generate">

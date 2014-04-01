@@ -7,6 +7,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IFromClause;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.lang.Option.MakeDep;
 import org.teiid.query.sql.symbol.GroupSymbol;
 
 /**
@@ -31,7 +32,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
 
     private boolean optional;
 
-    private boolean makeDep;
+    private MakeDep makeDep;
 
     private boolean makeNotDep;
 
@@ -53,7 +54,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
      * @return whether has any hints set
      */
     public boolean hasHint() {
-        return optional || makeDep || makeNotDep || makeInd || noUnnest || preserve;
+        return optional || (makeDep != null && makeDep.isSimple()) || makeNotDep || makeInd || noUnnest || preserve;
     }
 
     @Override
@@ -96,12 +97,26 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
 
     @Override
     public boolean isMakeDep() {
-        return this.makeDep;
+        return this.makeDep != null;
+    }
+
+    public MakeDep getMakeDep() {
+        return makeDep;
+    }
+
+    public void setMakeDep(MakeDep makedep) {
+        this.makeDep = makedep;
     }
 
     @Override
     public void setMakeDep(boolean makeDep) {
-        this.makeDep = makeDep;
+        if (makeDep) {
+            if (this.makeDep == null) {
+                setMakeDep(new MakeDep(getTeiidVersion()));
+            }
+        } else {
+            this.makeDep = null;
+        }
     }
 
     @Override
@@ -137,7 +152,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + (this.makeDep ? 1231 : 1237);
+        result = prime * result + (this.makeDep == null ? 0 : this.makeDep.hashCode());
         result = prime * result + (this.makeInd ? 1231 : 1237);
         result = prime * result + (this.makeNotDep ? 1231 : 1237);
         result = prime * result + (this.noUnnest ? 1231 : 1237);
@@ -152,7 +167,13 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
         if (!super.equals(obj)) return false;
         if (getClass() != obj.getClass()) return false;
         FromClause other = (FromClause)obj;
-        if (this.makeDep != other.makeDep) return false;
+        
+        if (this.makeDep == null) {
+            if (other.makeDep != null)
+                return false;
+        } else if (!this.makeDep.equals(other.makeDep))
+            return false;
+
         if (this.makeInd != other.makeInd) return false;
         if (this.makeNotDep != other.makeNotDep) return false;
         if (this.noUnnest != other.noUnnest) return false;

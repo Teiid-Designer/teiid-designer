@@ -22,6 +22,7 @@
 
 package org.teiid.metadata;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
@@ -59,6 +60,7 @@ public class Column extends BaseColumn implements Comparable<Column> {
     private SearchType searchType;
     private volatile String minimumValue;
     private volatile String maximumValue;
+    //TODO: nativeType is now on the base class, but left here for serialization compatibility
     private String nativeType;
     private String format;
     private int charOctetLength;
@@ -74,8 +76,8 @@ public class Column extends BaseColumn implements Comparable<Column> {
     }
 
     @Override
-    public void setDatatype(Datatype datatype, boolean copyAttributes) {
-    	super.setDatatype(datatype, copyAttributes);
+    public void setDatatype(Datatype datatype, boolean copyAttributes, int arrayDimensions) {
+    	super.setDatatype(datatype, copyAttributes, arrayDimensions);
     	if (datatype != null && copyAttributes) {
     		//if (DefaultDataTypes.STRING.equals(datatype.getRuntimeTypeName())) { 
     		    //TODO - this is not quite valid since we are dealing with length representing chars in UTF-16, then there should be twice the bytes
@@ -161,20 +163,26 @@ public class Column extends BaseColumn implements Comparable<Column> {
         return nativeType;
     }
 
-    public int getDistinctValues() {
-        return this.distinctValues;
-    }
-
-    public float getDistinctValuesAsFloat() {
-        return Table.asFloat(distinctValues);
-    }
-
     public int getNullValues() {
-        return this.nullValues;
+    	if (nullValues >= -1) {
+    		return nullValues;
+    	}
+    	return Integer.MAX_VALUE;
     }
 
     public float getNullValuesAsFloat() {
         return Table.asFloat(nullValues);
+    }
+
+    public int getDistinctValues() {
+    	if (distinctValues >= -1) {
+    		return distinctValues;
+    	}
+    	return Integer.MAX_VALUE;
+    }
+
+    public float getDistinctValuesAsFloat() {
+        return Table.asFloat(distinctValues);
     }
 
     /**
@@ -266,7 +274,12 @@ public class Column extends BaseColumn implements Comparable<Column> {
      * @since 4.3
      */
     public void setDistinctValues(int distinctValues) {
-        this.distinctValues = distinctValues;
+        this.distinctValues = Table.asInt(distinctValues);
+    }
+
+    @Since("8.7.0")
+    public void setDistinctValues(long distinctValues) {
+    	this.distinctValues = Table.asInt(distinctValues);
     }
 
     /**
@@ -274,7 +287,12 @@ public class Column extends BaseColumn implements Comparable<Column> {
      * @since 4.3
      */
     public void setNullValues(int nullValues) {
-        this.nullValues = nullValues;
+        this.nullValues = Table.asInt(nullValues);
+    }
+
+    @Since("8.7.0")    
+    public void setNullValues(long nullValues) {
+    	this.nullValues = Table.asInt(nullValues);
     }
 
     /**
@@ -287,10 +305,10 @@ public class Column extends BaseColumn implements Comparable<Column> {
     
     public void setColumnStats(ColumnStats stats) {
     	if (stats.getDistinctValues() != null) {
-			setDistinctValues(stats.getDistinctValues().intValue());
+			setDistinctValues(stats.getDistinctValues().longValue());
 		}
 		if (stats.getNullValues() != null) {
-			setNullValues(stats.getNullValues().intValue());
+			setNullValues(stats.getNullValues().longValue());
 		}
 		if (stats.getMaximumValue() != null) {
 			setMaximumValue(stats.getMaximumValue());

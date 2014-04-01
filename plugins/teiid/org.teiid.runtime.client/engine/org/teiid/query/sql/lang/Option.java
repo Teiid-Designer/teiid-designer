@@ -4,10 +4,13 @@ package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IOption;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.language.SQLConstants.Reserved;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 
 /**
  *
@@ -29,7 +32,73 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
      */
     public final static String OPTIONAL = "optional"; //$NON-NLS-1$
 
+    public static class MakeDep {
+        private Integer max;
+        private boolean join;
+        private ITeiidServerVersion teiidVersion;
+        
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + (this.join ? 1231 : 1237);
+            result = prime * result + ((this.max == null) ? 0 : this.max.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            MakeDep other = (MakeDep)obj;
+            if (this.join != other.join)
+                return false;
+            if (this.max == null) {
+                if (other.max != null)
+                    return false;
+            } else if (!this.max.equals(other.max))
+                return false;
+            return true;
+        }
+
+        public MakeDep(ITeiidServerVersion teiidVersion) {
+            this.teiidVersion = teiidVersion;
+        }
+        
+        @Override
+        public String toString() {
+            return new SQLStringVisitor(teiidVersion).appendMakeDepOptions(this).getSQLString();
+        }
+
+        public Integer getMax() {
+            return max;
+        }
+
+        public void setMax(Integer max) {
+            this.max = max;
+        }
+        
+        public boolean isJoin() {
+            return join;
+        }
+        
+        public void setJoin(boolean join) {
+            this.join = join;
+        }
+        
+        public boolean isSimple() {
+            return max == null && !join;
+        }
+    }
+
     private List<String> makeDependentGroups;
+
+    @Since("8.5.0")
+    private List<MakeDep> makeDependentOptions;
 
     private List<String> makeNotDependentGroups;
 
@@ -50,10 +119,18 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
      * @param group Group to make dependent
      */
     public void addDependentGroup(String group) {
+        addDependentGroup(group, new MakeDep(getTeiidVersion()));
+    }
+    
+    public void addDependentGroup(String group, MakeDep makedep) {
+        if (makedep == null) {
+            return;
+        }
         if(this.makeDependentGroups == null) {
             this.makeDependentGroups = new ArrayList<String>();
         }
-        this.makeDependentGroups.add(group);    
+        this.makeDependentGroups.add(group);
+        this.makeDependentOptions.add(makedep);
     }
     
     /** 
@@ -64,7 +141,11 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
     public List<String> getDependentGroups() {
         return this.makeDependentGroups;
     }
-    
+
+    public List<MakeDep> getMakeDepOptions() {
+        return this.makeDependentOptions;
+    }
+
     /**
      * Add group to make dependent
      * @param group Group to make dependent
@@ -163,6 +244,19 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         Option clone = new Option(this.parser, this.id);
 
         clone.setNoCache(isNoCache());
+
+        if(this.makeDependentGroups != null) {
+            clone.makeDependentGroups = new ArrayList<String>(this.makeDependentGroups);
+            clone.makeDependentOptions = new ArrayList<MakeDep>(this.makeDependentOptions);
+        }
+            
+        if(getNotDependentGroups() != null) {
+            clone.makeNotDependentGroups = new ArrayList<String>(getNotDependentGroups());
+        }
+            
+        if(getNoCacheGroups() != null) {
+            clone.noCacheGroups = new ArrayList<String>(getNoCacheGroups());
+        }
 
         return clone;
     }

@@ -205,7 +205,6 @@
                     <nodeUsesParser>true</nodeUsesParser>
                     <nodePackage>org.teiid.query.sql.lang</nodePackage>
                     <visitor>false</visitor>
-                    <visitorReturnType>void</visitorReturnType>
                     <grammarEncoding>UTF-8</grammarEncoding>
                     <keepLineColumn>true</keepLineColumn>
                     <nodeDefaultVoid>true</nodeDefaultVoid>

@@ -37,6 +37,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
@@ -161,6 +162,19 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
      */
     public ITeiidServerVersion getTeiidVersion() {
         return getTeiidParser().getVersion();
+    }
+
+    protected boolean isTeiidVersionOrGreater(Version teiidVersion) {
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
+    }
+
+    protected boolean isTeiid8OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_0);
+    }
+
+    protected boolean isTeiid87OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_7);
     }
 
     public Command expandCommand(ProcedureContainer proc, IQueryMetadataInterface metadata) throws Exception {
@@ -290,6 +304,12 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		    	visitor.resolveLanguageObject(elementSymbol, metadata);
 		    	elementSymbol.setIsExternalReference(true);
 		    	if (!positional) {
+		    	    if (isTeiid87OrGreater()) {
+		    	        ElementSymbol inputSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
+		    	        inputSymbol.setName("INPUT" + Symbol.SEPARATOR + name); //$NON-NLS-1$
+		    	        symbolMap.put(inputSymbol, elementSymbol.clone());
+		    	    }
+		    	    
 		    	    ElementSymbol keySymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
 		    	    keySymbol.setName(BINDING_GROUP + Symbol.SEPARATOR + name);
 		    		symbolMap.put(keySymbol, elementSymbol.clone());

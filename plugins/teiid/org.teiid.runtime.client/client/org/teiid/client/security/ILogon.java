@@ -34,6 +34,7 @@ import org.teiid.runtime.client.TeiidClientException;
 public interface ILogon {
 	static final String KRB5TOKEN = "KRB5TOKEN"; //$NON-NLS-1$
 	static final String KRB5_ESTABLISHED = "KRB5_CONTEXT_ESTABLISHED"; //$NON-NLS-1$
+	public static final String AUTH_TYPE = "authType"; //$NON-NLS-1$
 	
 	@Secure
     LogonResult logon(Properties connectionProperties)

@@ -84,6 +84,13 @@ public interface DataPolicy {
 	boolean isAnyAuthenticated();
 	
 	/**
+	 * If the policy grants all permissions
+	 * @return
+	 */
+	@Since("8.7.0")
+	boolean isGrantAll();
+
+	/**
 	 * If the policy allows for temporary table usage
 	 * @return
 	 */

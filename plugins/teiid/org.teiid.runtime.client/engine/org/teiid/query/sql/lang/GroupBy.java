@@ -4,7 +4,9 @@ package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IGroupBy;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -17,6 +19,9 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
 
     /** The set of expressions for the data elements to be group. */
     private List<Expression> symbols = new ArrayList<Expression>();
+
+    @Since("8.5.0")
+    private boolean rollup;
 
     /**
      * @param p
@@ -63,6 +68,7 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((this.symbols == null) ? 0 : this.symbols.hashCode());
+        result = prime * result + (this.rollup ? 1231 : 1237);
         return result;
     }
 
@@ -75,6 +81,10 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
         if (this.symbols == null) {
             if (other.symbols != null) return false;
         } else if (!this.symbols.equals(other.symbols)) return false;
+
+        if (this.rollup != other.rollup)
+            return false;
+
         return true;
     }
 
@@ -91,7 +101,27 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
         if(getSymbols() != null)
             clone.setSymbols(cloneList(getSymbols()));
 
+        clone.setRollup(isRollup());
+
         return clone;
+    }
+    
+    /**
+     * @return rollup
+     */
+    public boolean isRollup() {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            return rollup;
+
+        return false;
+    }
+
+    /**
+     * @param rollup
+     */
+    public void setRollup(boolean rollup) {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5))
+            this.rollup = rollup;
     }
 
 }

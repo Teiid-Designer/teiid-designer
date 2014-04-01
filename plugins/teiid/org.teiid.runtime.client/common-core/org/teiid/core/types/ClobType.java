@@ -289,7 +289,7 @@ public final class ClobType extends Streamable<Clob> implements NClob, Sequencab
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof BlobType)) {
+		if (!(obj instanceof ClobType)) {
             return false;
         }
         ClobType other = (ClobType)obj;

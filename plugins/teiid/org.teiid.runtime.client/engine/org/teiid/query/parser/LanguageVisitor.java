@@ -101,6 +101,7 @@ import org.teiid.designer.query.sql.symbol.IXMLParse;
 import org.teiid.designer.query.sql.symbol.IXMLQuery;
 import org.teiid.designer.query.sql.symbol.IXMLSerialize;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -255,6 +256,26 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     public ITeiidServerVersion getTeiidVersion() {
         return this.teiidVersion;
     }
+
+    protected boolean isTeiidVersionOrGreater(Version teiidVersion) {
+        ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
+        return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
+    }
+
+    protected boolean isLessThanTeiidVersion(Version teiidVersion) {
+        ITeiidServerVersion maxVersion = getTeiidVersion().getMaximumVersion();
+        return maxVersion.isLessThan(teiidVersion.get());
+    }
+
+    protected boolean isTeiid8OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_0);
+    }
+
+    protected boolean isTeiid87OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_7);
+    }
+
+    
 
     /**
      * @return the parser

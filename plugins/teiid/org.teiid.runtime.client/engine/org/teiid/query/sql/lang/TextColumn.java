@@ -20,6 +20,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
 
     private Integer position;
 
+    @Since("8.7.0")
     private boolean ordinal;
 
     /**
@@ -91,7 +92,10 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
      */
     @Since("8.7.0")
     public boolean isOrdinal() {
-        return ordinal;
+        if (isTeiid87OrGreater())
+            return ordinal;
+
+        return false;
     }
 
     /**
@@ -99,7 +103,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
      */
     @Since("8.7.0")
     public void setOrdinal(boolean ordinal) {
-        this.ordinal = ordinal;
+        if (isTeiid87OrGreater())
+            this.ordinal = ordinal;
     }
  
     @Override

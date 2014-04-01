@@ -62,6 +62,7 @@ import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.TimestampWithTimezone;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -663,7 +664,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 
 	@Override
     public void setArray(int parameterIndex, Array x) throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		if (x instanceof ArrayImpl) {
 			setObject(parameterIndex, x);
 		} else {
@@ -774,40 +775,40 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 	@Override
     public void setNCharacterStream(int parameterIndex, Reader value)
 			throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, value);
 	}
 
 	@Override
     public void setNCharacterStream(int parameterIndex, Reader value,
 			long length) throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setCharacterStream(parameterIndex, value);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, NClob value) throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterIndex, value);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, reader);
 	}
 
 	@Override
     public void setNClob(int parameterIndex, Reader reader, long length)
 			throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setClob(parameterIndex, reader);
 	}
 
 	@Override
     public void setNString(int parameterIndex, String value)
 			throws SQLException {
-		checkSupportedVersion();
+		checkSupportedVersion(Version.TEIID_7_7);
 		setObject(parameterIndex, value);
 	}
 

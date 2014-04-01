@@ -42,6 +42,14 @@ public interface ITeiidServerVersion {
     enum VersionID {
         TEIID_7_7(SEVEN + DOT + SEVEN + DOT + ZERO),
 
+        TEIID_8_0(EIGHT + DOT + ZERO + DOT + ZERO),
+
+        TEIID_8_1(EIGHT + DOT + ONE + DOT + ZERO),
+
+        TEIID_8_2(EIGHT + DOT + TWO + DOT + ZERO),
+
+        TEIID_8_3(EIGHT + DOT + THREE + DOT + ZERO),
+
         TEIID_8_4(EIGHT + DOT + FOUR + DOT + ZERO),
 
         TEIID_8_5(EIGHT + DOT + FIVE + DOT + ZERO),

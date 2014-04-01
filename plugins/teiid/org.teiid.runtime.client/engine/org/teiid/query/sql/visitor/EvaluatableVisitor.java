@@ -27,6 +27,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.metadata.FunctionMethod.PushDown;
+import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.ExistsCriteria;
@@ -70,14 +71,15 @@ public class EvaluatableVisitor extends LanguageVisitor {
 	private EvaluationLevel targetLevel;
 	private Determinism determinismLevel = Determinism.DETERMINISTIC;
 	private boolean hasCorrelatedReferences;
-	    
+
     public void visit(Function obj) {
-        this.setDeterminismLevel(obj.getFunctionDescriptor().getDeterministic());
-        if (obj.getFunctionDescriptor().getPushdown() == PushDown.MUST_PUSHDOWN || obj.getFunctionDescriptor().getDeterministic() == Determinism.NONDETERMINISTIC) {
+        FunctionDescriptor fd = obj.getFunctionDescriptor();
+        this.setDeterminismLevel(fd.getDeterministic());
+        if (fd.getPushdown() == PushDown.MUST_PUSHDOWN || fd.getDeterministic() == Determinism.NONDETERMINISTIC) {
             evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
         } else if (IFunctionLibrary.FunctionName.LOOKUP.equalsIgnoreCase(obj.getName())
         		//TODO: if we had the context here we could plan better for non-prepared requests
-        		|| obj.getFunctionDescriptor().getDeterministic().compareTo(Determinism.COMMAND_DETERMINISTIC) <= 0) {
+        		|| fd.getDeterministic().compareTo(Determinism.COMMAND_DETERMINISTIC) <= 0) {
             evaluationNotPossible(EvaluationLevel.PROCESSING);
         }
     }
@@ -104,6 +106,10 @@ public class EvaluatableVisitor extends LanguageVisitor {
     }
         
     public void visit(ElementSymbol obj) {
+        if (obj.getGroupSymbol() == null) {
+            evaluationNotPossible(EvaluationLevel.PROCESSING);
+            return;
+        }
     	//if the element is a variable, or an element that will have a value, it will be evaluatable at runtime
 		//begin hack for not having the metadata passed in
 		if (obj.getGroupSymbol().getMetadataID() instanceof TempMetadataID) {
@@ -243,10 +249,4 @@ public class EvaluatableVisitor extends LanguageVisitor {
     public boolean hasCorrelatedReferences() {
 		return hasCorrelatedReferences;
 	}
-    
-    public static final EvaluatableVisitor needsEvaluation(LanguageObject obj) {
-        EvaluatableVisitor visitor = new EvaluatableVisitor(obj.getTeiidVersion());
-        DeepPreOrderNavigator.doVisit(obj, visitor);
-        return visitor;
-    }
 }
