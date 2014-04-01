@@ -56,6 +56,8 @@ public class Messages extends NLS {
 
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;
+    public static String viewMedActionText;
+    public static String viewMedActionToolTip;
     public static String findMedReferencesActionText;
     public static String findMedReferencesActionToolTip;
     public static String registerMedActionText;

@@ -146,13 +146,19 @@ public final class ModelExtensionDefinitionValidator {
                                         final Collection<String> existingNamespaceUris,
                                         final Collection<String> extendableMetamodelUris,
                                         final Set<String> validModelTypes) {
-        MedStatus status = validateMedHeader(med.getHeader(),
-                                             existingNamespacePrefixes,
-                                             existingNamespaceUris,
-                                             extendableMetamodelUris,
-                                             validModelTypes);
-        status = addStatus(status, validateMetaclassNames(med.getExtendedMetaclasses(), true));
-        return addStatus(status, validatePropertyDefinitions(med.getPropertyDefinitions()));
+
+    	boolean builtIn = med.isBuiltIn();
+    	if(!builtIn) {
+    		MedStatus status = validateMedHeader(med.getHeader(),
+    				existingNamespacePrefixes,
+    				existingNamespaceUris,
+    				extendableMetamodelUris,
+    				validModelTypes);
+    		status = addStatus(status, validateMetaclassNames(med.getExtendedMetaclasses(), true));
+    		return addStatus(status, validatePropertyDefinitions(med.getPropertyDefinitions()));
+    	} else {
+    		return ValidationStatus.OK_STATUS;
+    	}
     }
 
     /**

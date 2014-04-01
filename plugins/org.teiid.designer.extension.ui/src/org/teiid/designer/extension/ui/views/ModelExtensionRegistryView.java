@@ -14,18 +14,23 @@ import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -60,14 +65,20 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.part.ViewPart;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
+import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.registry.RegistryEvent;
 import org.teiid.designer.extension.registry.RegistryListener;
@@ -80,16 +91,17 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
 /**
- * 
+ * The ModelExtension Registry View
  */
 public final class ModelExtensionRegistryView extends ViewPart {
 
     private IAction cloneMedAction;
+
+    private IAction viewMedAction;
 
     private IAction findMedReferencesAction;
 
@@ -101,6 +113,9 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     private TableViewer viewer;
 
+    /**
+     * Constructor
+     */
     public ModelExtensionRegistryView() {
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
         if(this.registry!=null) this.registry.addListener(new RegistryListener() {
@@ -139,6 +154,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         toolBarMgr.add(this.registerMedAction);
         toolBarMgr.add(this.unregisterMedAction);
         toolBarMgr.add(this.cloneMedAction);
+        toolBarMgr.add(this.viewMedAction);
         toolBarMgr.update(true);
     }
 
@@ -154,12 +170,27 @@ public final class ModelExtensionRegistryView extends ViewPart {
                 handleCloneMed();
             }
         };
-        this.cloneMedAction.setToolTipText(Messages.cloneMedActionToolTip);
+        this.cloneMedAction.setToolTipText(Messages.viewMedActionToolTip);
         this.cloneMedAction.setEnabled(false);
         this.cloneMedAction.setImageDescriptor(PlatformUI.getWorkbench()
                                                          .getSharedImages()
                                                          .getImageDescriptor(ISharedImages.IMG_TOOL_COPY));
 
+        this.viewMedAction = new Action(Messages.viewMedActionText, SWT.BORDER) {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            @Override
+            public void run() {
+                handleViewMed();
+            }
+        };
+        this.viewMedAction.setToolTipText(Messages.viewMedActionToolTip);
+        this.viewMedAction.setEnabled(false);
+        this.viewMedAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(org.teiid.designer.extension.ui.UiConstants.ImageIds.VIEW_MED_ACTION));
+        
         this.findMedReferencesAction = new Action(Messages.findMedReferencesActionText, SWT.BORDER) {
             /**
              * {@inheritDoc}
@@ -243,6 +274,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         mgr.add(this.registerMedAction);
         mgr.add(this.unregisterMedAction);
         mgr.add(this.cloneMedAction);
+        mgr.add(this.viewMedAction);
 
         return mgr;
     }
@@ -409,6 +441,169 @@ public final class ModelExtensionRegistryView extends ViewPart {
         wizardDialog.setBlockOnOpen(true);
         wizardDialog.open();
     }
+    
+    /*
+     * Handler for View Built-In MEDS
+     */
+    void handleViewMed() {
+        ModelExtensionDefinition selectedMed = getSelectedMed();
+        assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
+
+        IFile medFile = null;
+        
+        // If the selected MED is built in, look in hidden BuiltIn MEDs folder first.  If not in the hidden folder,
+        // then copy it there
+        if(selectedMed.isBuiltIn()) {
+        	String medName = selectedMed.getNamespacePrefix().toLowerCase();
+        	
+            final IProject hiddenProject = ModelerCore.getWorkspace().getRoot().getProject(org.teiid.designer.ui.PluginConstants.BUILTIN_MEDS_PROJECT_NAME);
+            if(hiddenProject==null) return;
+                        
+            medFile = hiddenProject.getFile(new Path(medName));
+            // If not found, copy the med into the hidden folder
+            if(!medFile.exists()) {
+            	IProgressMonitor monitor = new NullProgressMonitor();
+            	medFile = copyMedToBuiltInProj(selectedMed,hiddenProject,medName+".mxd",monitor); //$NON-NLS-1$
+            }
+        // Lookup User-defined MEDs in the workspace
+        } else {
+        	medFile = findWorkspaceMedMatch(selectedMed.getNamespacePrefix());
+        }
+
+        // Open the MED file in the editor
+        if(medFile!=null) {
+        	IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
+        	try {
+				IDE.openEditor(page, medFile);
+			} catch (PartInitException ex) {
+				UTIL.log(ex);
+			}
+        }
+
+    }
+    
+    /*
+     * Try to find MED in the workspace.  It is returned if found, otherwise returns null
+     * @param nsPrefix the namespace prefix of the med
+     * @return the medFile if found
+     */
+    private IFile findWorkspaceMedMatch(String nsPrefix) {
+    	IFile medFileMatch = null;
+
+        Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
+        for(IProject project : projects) {
+        	Collection<IFile> projFiles = DotProjectUtils.getAllProjectResources(project);    
+        	for(IFile projFile : projFiles) {
+				String fileExt = projFile.getFileExtension();
+				if(fileExt!=null && fileExt.equalsIgnoreCase("mxd")) {  //$NON-NLS-1$
+					if(medFileMatches( projFile , nsPrefix )) {
+						medFileMatch = projFile;
+						break;
+					}
+				}
+        	}
+        	if(medFileMatch!=null) break;
+        }
+        
+    	return medFileMatch;
+    }
+    
+    /*
+     * Determine if the supplied medFile has the same Namespace Prefix as the supplied namespace
+     * @param medFile the med IFile
+     * @param nsPrefix the namespace prefix to match
+     * @return 'true' if matches, 'false' if not.
+     */
+    private boolean medFileMatches(IFile medFile, String nsPrefix) {
+    	boolean matchFound = false;
+    	
+    	InputStream fileContents = null;
+        try {
+            fileContents = medFile.getContents();
+        } catch (CoreException e) {
+            UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
+        }
+
+        if (fileContents != null) {
+            // Parse file contents to get the MED. Show info dialog if parse errors.
+            ModelExtensionDefinition med = null;
+
+            try {
+                ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance()
+                                                                                                          .getMedSchema());
+                med = parser.parse(fileContents, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+
+                if (!parser.getErrors().isEmpty()) {
+                    MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle,
+                                            NLS.bind(Messages.medFileParseErrorMsg, medFile.getName()));
+                    return false;
+                }
+            } catch (Exception e) {
+                UTIL.log(e);
+                MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle, Messages.registerMedActionFailedMsg);
+                return false;
+            }
+
+            // Continue checks on parsable MED
+            if (med != null) {
+            	String medFileNsPrefix = med.getNamespacePrefix();
+            	if(medFileNsPrefix!=null && medFileNsPrefix.equals(nsPrefix)) {
+            		matchFound = true;
+            	}
+            }
+        }
+    	return matchFound;
+    }
+    
+    /**
+     * Copy the supplied MED to the supplied project.
+     * @param med the ModelExtensionDefinition
+     * @param project the project
+     * @param medFileName the name for the MED file
+     * @param monitor progress monitor
+     * @return the file resource
+     */
+    private IFile copyMedToBuiltInProj(ModelExtensionDefinition med, IProject project, String medFileName, IProgressMonitor monitor) {
+        InputStream medInputStream = null;
+        IFile createdMedFile = null;
+        		
+        try {
+        	// If project does not exist, create it.
+            if(!project.exists()) project.create(monitor);
+            // Open the project
+            project.open(monitor);
+            
+            // Get the Med file
+            createdMedFile = project.getFile(new Path(medFileName));
+            
+            // Create the file if it does not exist
+            if(createdMedFile!=null && !createdMedFile.exists()) {
+            	// Write the MED
+            	final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+            	medInputStream = medWriter.writeAsStream(med);
+
+            	// Create the resource and set it to read-only
+            	createdMedFile.create(medInputStream, false, monitor);
+            	ResourceAttributes attributes = createdMedFile.getResourceAttributes();
+            	attributes.setReadOnly(true);
+            	createdMedFile.setResourceAttributes(attributes);
+
+            	// Refresh project
+            	project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+            }
+        } catch (CoreException e) {
+            UTIL.log(e);
+        } finally {
+        	if (medInputStream != null) {
+        		try {
+        			medInputStream.close();
+        		} catch (IOException e) {
+        			e.printStackTrace();
+        		}
+        	}
+        }
+        return createdMedFile;
+    }
 
     void handleFindMedReferences() {
         // TODO implement handleFindMedReferences
@@ -421,11 +616,13 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
         // No Selection, disable
         if (selectedMed == null) {
+            this.viewMedAction.setEnabled(false);
             this.cloneMedAction.setEnabled(false);
             this.findMedReferencesAction.setEnabled(false);
             this.unregisterMedAction.setEnabled(false);
             // MED Selected, enabled depending on builtIn for some
         } else {
+       		this.viewMedAction.setEnabled(true);
             this.cloneMedAction.setEnabled(true);
             // this.findMedReferencesAction.setEnabled(true); // TODO uncomment this when action is implemented
             if (selectedMed.isBuiltIn()) {

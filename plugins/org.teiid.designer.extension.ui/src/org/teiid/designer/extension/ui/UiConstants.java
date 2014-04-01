@@ -61,6 +61,7 @@ public interface UiConstants {
         String REMOVE_VALUE = FOLDER + "remove-metaclass.png"; //$NON-NLS-1$
         String SHOW_REGISTRY_VIEW_ACTION = REGISTRY_VIEW;
         String UNREGISTER_MED = FOLDER + "unregister-med.png";  //$NON-NLS-1$
+        String VIEW_MED_ACTION = FOLDER + "viewMed.gif"; //$NON-NLS-1$
     }
 
     interface Form {

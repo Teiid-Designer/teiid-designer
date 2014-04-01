@@ -84,6 +84,7 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
     private final static String SELECTED_RESOURCE_NOT_RELATIONAL_MODEL = getString("selResrcNotRelational.message"); //$NON-NLS-1$
     private static final String DESCR_LABEL_TEXT = getString("descriptionLabel.text"); //$NON-NLS-1$
     private static final String XML_EXTENSION_PROJECT = "XMLExtensionsProject"; //$NON-NLS-1$
+    private static final String BUILTIN_MEDS_PROJECT = "BuiltInMedsProject"; //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + SEPARATOR + id);
@@ -499,7 +500,7 @@ public class RelationalModelSelectorDialog extends ModelWorkspaceDialog implemen
                                 result = false;
                             } else {
                                 String name = project.getName();
-                                if (name != null && name.equals(XML_EXTENSION_PROJECT)) {
+                                if (name != null && (org.teiid.designer.ui.PluginConstants.HIDDEN_PROJECTS.contains(name)) ) {
                                     return false;
                                 }
                             }

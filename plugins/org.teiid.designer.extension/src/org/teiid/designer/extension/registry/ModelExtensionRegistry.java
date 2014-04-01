@@ -112,14 +112,14 @@ public final class ModelExtensionRegistry {
         String namespacePrefix = definition.getNamespacePrefix();
 
         // don't allow a namespace prefix that has already been registered
-        if (this.definitions.containsKey(namespacePrefix)) {
+        if (!definition.isBuiltIn() && this.definitions.containsKey(namespacePrefix)) {
             throw new Exception(NLS.bind(Messages.namespacePrefixAlreadyRegistered, namespacePrefix));
         }
 
         String namespaceUri = definition.getNamespaceUri();
 
         // don't allow a namespace URI that has already been registered
-        if (this.namespaces.containsKey(namespaceUri)) {
+        if (!definition.isBuiltIn() && this.namespaces.containsKey(namespaceUri)) {
             throw new Exception(NLS.bind(Messages.namespaceUriAlreadyRegistered, namespaceUri));
         }
 

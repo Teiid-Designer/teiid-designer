@@ -73,7 +73,7 @@ import org.teiid.designer.ui.forms.MessageFormDialog;
 
 
 /**
- * 
+ * Provides Properties editing tab of the ModelExtensionDefinitionEditor
  */
 public class PropertiesEditorPage extends MedEditorPage {
 
@@ -94,6 +94,7 @@ public class PropertiesEditorPage extends MedEditorPage {
     private final ErrorMessage propertyError;
 
     /**
+     * Constructor
      * @param medEditor the MED editor this page belongs to (cannot be <code>null</code>)
      */
     public PropertiesEditorPage( ModelExtensionDefinitionEditor medEditor ) {
@@ -720,7 +721,7 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     void handleMetaclassSelected() {
-        boolean enable = (getSelectedMetaclass() != null);
+        boolean enable = (getSelectedMetaclass()!=null && !getMedEditor().isReadOnly());
 
         if (this.btnRemoveMetaclass.getEnabled() != enable) {
             this.btnRemoveMetaclass.setEnabled(enable);
@@ -772,7 +773,7 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     void handlePropertySelected() {
-        boolean enable = (getSelectedProperty() != null);
+        boolean enable = (getSelectedProperty()!=null && !getMedEditor().isReadOnly());
 
         if (this.btnRemoveProperty.getEnabled() != enable) {
             this.btnRemoveProperty.setEnabled(enable);
@@ -881,10 +882,6 @@ public class PropertiesEditorPage extends MedEditorPage {
             this.btnRemoveProperty.setEnabled(enable);
         }
 
-        if (this.metaclassViewer.getTable().getEnabled() != enable) {
-            this.metaclassViewer.getTable().setEnabled(enable);
-        }
-
         if (this.propertyViewer.getTable().getEnabled() != enable) {
             this.propertyViewer.getTable().setEnabled(enable);
         }
@@ -894,7 +891,15 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     private void validateMetaclasses() {
-        final String[] metaclasses = getMed().getExtendedMetaclasses();
+    	// Suppress errors on BuiltIns - original built-ins dont fully conform
+    	if(getMed().isBuiltIn()) {
+    		this.metaclassError.setStatus(ValidationStatus.OK_STATUS);
+            updateMessage(this.metaclassError);
+            validatePropertyDefinitions(); // need to do this to catch when a new metaclass is added
+            return;
+    	}
+
+    	final String[] metaclasses = getMed().getExtendedMetaclasses();
 
         // validate with MED validator
         MedStatus status = ModelExtensionDefinitionValidator.validateMetaclassNames(metaclasses, true);
@@ -931,7 +936,12 @@ public class PropertiesEditorPage extends MedEditorPage {
     }
 
     private void validatePropertyDefinitions() {
-        this.propertyError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefinitions(getMed().getPropertyDefinitions()));
+    	// Suppress errors on BuiltIns - original built-ins dont fully conform
+    	if(getMed().isBuiltIn()) {
+    		this.propertyError.setStatus(ValidationStatus.OK_STATUS);
+    	} else {
+    		this.propertyError.setStatus(ModelExtensionDefinitionValidator.validatePropertyDefinitions(getMed().getPropertyDefinitions()));
+    	}
         updateMessage(this.propertyError);
     }
 

@@ -184,7 +184,9 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
 
     private static final String XML_EXTENSIONS_PROJECT_NAME = "XMLExtensionsProject"; //$NON-NLS-1$
 
-    private static final String[] RESERVED_PROJECT_NAMES = {USERFILES_FOLDERNAME, UDF_PROJECT_NAME, XML_EXTENSIONS_PROJECT_NAME,};
+    private static final String BUILTIN_MEDS_PROJECT_NAME = "BuiltInMedsProject"; //$NON-NLS-1$
+
+    private static final String[] RESERVED_PROJECT_NAMES = {USERFILES_FOLDERNAME, UDF_PROJECT_NAME, XML_EXTENSIONS_PROJECT_NAME, BUILTIN_MEDS_PROJECT_NAME};
     /**
      * <p>
      * The file extension of Teiid Designer model files.
