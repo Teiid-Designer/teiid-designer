@@ -298,6 +298,13 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
                 this.medBeingEdited.addPropertyDefinition(metaclassName, copy);
             }
         }
+        
+        // If file is in the BuiltInMedsProject, mark as built-in
+        IFile medFile = getFile();
+        String projName = medFile.getProject().getName();
+        if(projName!=null && projName.equals(org.teiid.designer.ui.PluginConstants.BUILTIN_MEDS_PROJECT_NAME)) {
+        	this.medBeingEdited.markAsBuiltIn();
+        }
 
         // hook selection synchronizer
         if (this.selectionSynchronizer == null) {
@@ -715,7 +722,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
             for (MedEditorPage page : this.medEditorPages.keySet()) {
                 page.setResourceReadOnly(this.readOnly);
-                page.getManagedForm().refresh();
+                IManagedForm mf = page.getManagedForm();
+                if(mf!=null) mf.refresh();
             }
         }
     }

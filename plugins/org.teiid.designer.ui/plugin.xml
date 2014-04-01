@@ -708,6 +708,10 @@
             selected="true"
             pattern="XMLExtensionsProject">
       </filter>
+      <filter
+            selected="true"
+            pattern="BuiltInMedsProject">
+      </filter>
    </extension>
 <!-- Modeler view category -->
    <extension

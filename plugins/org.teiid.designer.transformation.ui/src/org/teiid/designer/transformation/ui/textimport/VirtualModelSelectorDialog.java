@@ -84,7 +84,6 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
     private final static String VIRTUAL_LABEL = getString("virtualModelName.text"); //$NON-NLS-1$
     private final static String SELECTED_MODEL_NOT_VIRTUAL_MODEL = getString("selModelNotVirtual.message"); //$NON-NLS-1$
     private final static String SELECTED_RESOURCE_NOT_VIRTUAL_MODEL = getString("selResrcNotVirtual.message"); //$NON-NLS-1$
-    private static final String XML_EXTENSION_PROJECT = "XMLExtensionsProject"; //$NON-NLS-1$
 
     private static String getString( final String id ) {
         return Util.getString(I18N_PREFIX + SEPARATOR + id);
@@ -500,7 +499,7 @@ public class VirtualModelSelectorDialog extends ModelWorkspaceDialog implements 
                                 result = false;
                             } else {
                                 String name = project.getName();
-                                if (name != null && name.equals(XML_EXTENSION_PROJECT)) {
+                                if (name != null && (org.teiid.designer.ui.PluginConstants.HIDDEN_PROJECTS.contains(name)) ) {
                                     return false;
                                 }
                             }

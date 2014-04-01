@@ -53,6 +53,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition.PropertyName;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionValidator;
+import org.teiid.designer.extension.definition.ValidationStatus;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.model.MedModelNode;
@@ -60,6 +61,9 @@ import org.teiid.designer.extension.ui.model.MedModelNode.ModelType;
 import org.teiid.designer.ui.forms.MessageFormDialog;
 
 
+/**
+ * Provides general overview editing tab of the ModelExtensionDefinitionEditor
+ */
 public final class OverviewEditorPage extends MedEditorPage {
 
     private Text txtNamespacePrefix;
@@ -75,6 +79,10 @@ public final class OverviewEditorPage extends MedEditorPage {
     private final ErrorMessage namespacePrefixError;
     private final ErrorMessage namespaceUriError;
 
+    /**
+     * Constructor
+     * @param medEditor the MED editor this page belongs to (cannot be <code>null</code>)
+     */
     public OverviewEditorPage( ModelExtensionDefinitionEditor medEditor ) {
         super(medEditor, MED_OVERVIEW_PAGE, Messages.medEditorOverviewPageTitle);
 
@@ -581,6 +589,8 @@ public final class OverviewEditorPage extends MedEditorPage {
         this.txtDescription.setEnabled(!readOnly);
         this.txtNamespacePrefix.setEnabled(!readOnly);
         this.txtNamespaceUri.setEnabled(!readOnly);
+        this.txtVersion.setEnabled(!readOnly);
+        this.modelTypesViewer.getTable().setEnabled(!readOnly);
     }
 
     /**
@@ -623,14 +633,22 @@ public final class OverviewEditorPage extends MedEditorPage {
     }
 
     private void validateNamespacePrefix() {
-        this.namespacePrefixError.setStatus(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
-                                                                                                      getRegistry().getAllNamespacePrefixes()));
+    	if(getMed().isBuiltIn()) {
+    		this.namespacePrefixError.setStatus(ValidationStatus.OK_STATUS);
+    	} else {
+    		this.namespacePrefixError.setStatus(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
+    				getRegistry().getAllNamespacePrefixes()));
+    	}
         updateMessage(this.namespacePrefixError);
     }
 
     private void validateNamespaceUri() {
-        this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
-                                                                                                getRegistry().getAllNamespaceUris()));
+    	if(getMed().isBuiltIn()) {
+    		this.namespaceUriError.setStatus(ValidationStatus.OK_STATUS);
+    	} else {
+    		this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
+    				getRegistry().getAllNamespaceUris()));
+    	}
         updateMessage(this.namespaceUriError);
     }
 
