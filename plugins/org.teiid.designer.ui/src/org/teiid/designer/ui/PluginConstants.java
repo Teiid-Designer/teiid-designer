@@ -124,6 +124,14 @@ public interface PluginConstants {
 
         String TEIID_SERVER_DEFAULT_ICON = CVIEW16 + "teiid-server-default.png"; //$NON-NLS-1$
         String TEIID_SERVER_DISCONNECTED_ICON = CVIEW16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
+        
+        String NEW_WIZARD_ICON = OBJ16 + "new-wizard.png"; //$NON-NLS-1$
+        String NEW_MODEL_PROJECT_ICON = OBJ16 + "new-model-project.png"; //$NON-NLS-1$
+        String NEW_SOURCE_MODEL_ICON = OBJ16 + "new-source-model.png"; //$NON-NLS-1$
+        String NEW_VIEW_MODEL_ICON = OBJ16 + "new-view-model.png"; //$NON-NLS-1$
+        String NEW_WEB_SERVICE_MODEL_ICON = OBJ16 + "new-web-service-model.png"; //$NON-NLS-1$
+        String NEW_XML_DOCUMENT_MODEL_ICON = OBJ16 + "new-xml-document-model.png"; //$NON-NLS-1$
+        String NEW_VDB_ICON = OBJ16 + "newvdb_wiz.gif"; //$NON-NLS-1$
     }
 
     // ======================================================================================================

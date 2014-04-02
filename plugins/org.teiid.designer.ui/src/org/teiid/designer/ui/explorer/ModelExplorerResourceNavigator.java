@@ -8,11 +8,13 @@
 package org.teiid.designer.ui.explorer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -35,6 +37,7 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -65,6 +68,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -100,6 +104,9 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.eclipse.ui.part.ShowInContext;
+import org.eclipse.ui.views.framelist.BackAction;
+import org.eclipse.ui.views.framelist.ForwardAction;
+import org.eclipse.ui.views.framelist.GoIntoAction;
 import org.eclipse.ui.views.navigator.NavigatorDropAdapter;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
@@ -519,6 +526,25 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         UndoActionHandler undoAction = new UndoActionHandler(getSite(), undoContext);
         undoAction.setActionDefinitionId(IWorkbenchCommandConstants.EDIT_UNDO);
         getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), undoAction);
+        
+        IContributionItem[] items = bars.getToolBarManager().getItems();
+        Collection<IContributionItem> itemsToRemove = new ArrayList<IContributionItem>();
+        for( IContributionItem item : items ) {
+        	if( item instanceof ActionContributionItem ) {
+        		if( ((ActionContributionItem)item).getAction() instanceof BackAction) {
+        			itemsToRemove.add(item);
+        		}
+        		if( ((ActionContributionItem)item).getAction() instanceof ForwardAction) {
+        			itemsToRemove.add(item);
+        		}
+        		if( ((ActionContributionItem)item).getAction() instanceof GoIntoAction) {
+        			itemsToRemove.add(item);
+        		}
+        	}
+        }
+        for( IContributionItem item : itemsToRemove ) {
+        	bars.getToolBarManager().remove(item);
+        }
     }
 
     /**
@@ -774,9 +800,12 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         getViewSite().getActionBars().getMenuManager().add(new GroupMarker(MENU_START_ID));
         getViewSite().getActionBars().getMenuManager().add(new ShowImportsAction());
 
+        getViewSite().getActionBars().getToolBarManager().add(new ModelExplorerNewAction());
+        
         // Preview Data Action from DQP Ui. If Exists, place in toolbar
         IAction previewAction = getPreviewDataAction();
         if (previewAction != null) {
+        	getViewSite().getActionBars().getToolBarManager().add(new Separator());
             getViewSite().getActionBars().getToolBarManager().add(previewAction);
             getViewSite().getActionBars().getToolBarManager().add(new Separator());
         }
