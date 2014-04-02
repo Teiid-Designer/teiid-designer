@@ -47,6 +47,11 @@ public class SimpleNode implements Node, LanguageObject {
         return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
     }
 
+    protected boolean isLessThanTeiidVersion(Version teiidVersion) {
+        ITeiidServerVersion maxVersion = getTeiidVersion().getMaximumVersion();
+        return maxVersion.isLessThan(teiidVersion.get());
+    }
+
     protected boolean isTeiid8OrGreater() {
         return isTeiidVersionOrGreater(Version.TEIID_8_0);
     }

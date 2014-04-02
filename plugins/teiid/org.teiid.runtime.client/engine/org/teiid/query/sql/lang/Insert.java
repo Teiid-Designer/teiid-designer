@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.IInsert;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -143,7 +142,14 @@ public class Insert extends ProcedureContainer
      * @param query
      */
     public void setQueryExpression( QueryCommand query ) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_6) && query instanceof Query) {
+        if (isTeiid8OrGreater() && query instanceof Query) {
+            /*
+             * Modified in Teiid 8.6 due to TEIID-2698.
+             * This moves the addition of values from the parser to here
+             * and is backward compatible with all previous version 8+ parsers.
+             * However, the Teiid 7 parser will continue to do its own thing
+             * so should not come through here.
+             */
             Query expr = (Query)query;
             //a singl row constructor query is the same as values 
             if (expr.isRowConstructor()) {

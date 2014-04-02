@@ -121,7 +121,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         @Since("8.0.0")
         VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class); //$NON-NLS-1$
-        
+
+        private static Map<ITeiidServerVersion, List<DefaultDataTypes>> valueCache = new HashMap<ITeiidServerVersion, List<DefaultDataTypes>>();
+
         private String id;
 
         private DataTypeName dataTypeName;
@@ -228,17 +230,27 @@ public class DataTypeManagerService implements IDataTypeManagerService {
          * Use instead of values() since it will only return the enumerated values
          * that conform to the given teiid version.
          *
+         * This is going to be used an awful lot so reduce the need to call on
+         * {@link AnnotationUtils} which contains reflection code which is slow
+         * by caching the results.
+         *
          * @param teiidVersion
          *
          * @return set of values for teiid version
          */
         public static List<DefaultDataTypes> getValues(ITeiidServerVersion teiidVersion) {
-            List<DefaultDataTypes> appDataTypes = new ArrayList<DefaultDataTypes>();
-            for (DefaultDataTypes dataType : DefaultDataTypes.values()) {
-                if (! AnnotationUtils.isApplicable(dataType, teiidVersion))
-                    continue;
+            List<DefaultDataTypes> appDataTypes = valueCache.get(teiidVersion);
 
-                appDataTypes.add(dataType);
+            if (appDataTypes == null) {
+                appDataTypes = new ArrayList<DefaultDataTypes>();
+                for (DefaultDataTypes dataType : DefaultDataTypes.values()) {
+                    if (! AnnotationUtils.isApplicable(dataType, teiidVersion))
+                        continue;
+
+                    appDataTypes.add(dataType);
+                }
+
+                valueCache.put(teiidVersion, appDataTypes);
             }
 
             return appDataTypes;

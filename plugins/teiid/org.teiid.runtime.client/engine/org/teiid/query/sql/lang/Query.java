@@ -46,8 +46,11 @@ public class Query extends QueryCommand
     /** xml projected symbols */
     private List<Expression> selectList;
 
+    /*
+     * Added in Teiid 8.6 but backward-compatible with all
+     * Teiid 8+ parsers.
+     */
     @Since("8.6.0")
-    /** currently set by parser, but can be derived */
     private boolean isRowConstructor;
     
     /**
@@ -217,18 +220,20 @@ public class Query extends QueryCommand
      * @return row constructor flag
      */
     public boolean isRowConstructor() {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_6))
-            return isRowConstructor;
+        if (isLessThanTeiidVersion(Version.TEIID_8_0))
+            return false;
 
-        return false;
+        return isRowConstructor;
     }
     
     /**
      * @param isRowConstructor
      */
     public void setRowConstructor(boolean isRowConstructor) {
-        if (isTeiidVersionOrGreater(Version.TEIID_8_6))
-            this.isRowConstructor = isRowConstructor;
+        if (isLessThanTeiidVersion(Version.TEIID_8_0))
+            return;
+
+        this.isRowConstructor = isRowConstructor;
     }
 
     /**

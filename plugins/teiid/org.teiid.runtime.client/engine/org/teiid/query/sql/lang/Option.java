@@ -128,6 +128,7 @@ public class Option extends SimpleNode implements IOption<LanguageVisitor> {
         }
         if(this.makeDependentGroups == null) {
             this.makeDependentGroups = new ArrayList<String>();
+            this.makeDependentOptions = new ArrayList<MakeDep>();
         }
         this.makeDependentGroups.add(group);
         this.makeDependentOptions.add(makedep);
