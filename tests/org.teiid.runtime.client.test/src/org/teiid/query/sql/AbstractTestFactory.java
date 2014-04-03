@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.query.sql.lang.IJoinType.Types;
+import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -71,10 +73,12 @@ import org.teiid.query.sql.proc.DeclareStatement;
 import org.teiid.query.sql.proc.ExceptionExpression;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
+import org.teiid.query.sql.proc.Statement;
 import org.teiid.query.sql.proc.WhileStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.AliasSymbol;
 import org.teiid.query.sql.symbol.Array;
+import org.teiid.query.sql.symbol.CaseExpression;
 import org.teiid.query.sql.symbol.Constant;
 import org.teiid.query.sql.symbol.DerivedColumn;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -382,6 +386,12 @@ public abstract class AbstractTestFactory {
         return block;
     }
 
+    public Block newBlock(CommandStatement cmdStmt) {
+        Block block = newBlock();
+        block.addStatement(cmdStmt);
+        return block;
+    }
+
     public AssignmentStatement newAssignmentStatement(ElementSymbol var1, Command command) {
         AssignmentStatement as = newNode(ASTNodes.ASSIGNMENT_STATEMENT);
         as.setVariable(var1);
@@ -452,6 +462,12 @@ public abstract class AbstractTestFactory {
         return cpc;
     }
 
+    public CreateProcedureCommand newCreateProcedureCommand(Block block) {
+        CreateProcedureCommand cpc = newCreateProcedureCommand();
+        cpc.setBlock(block);
+        return cpc;
+    }
+
     public IfStatement newIfStatement(Criteria criteria, Block ifBlock) {
         IfStatement ifStmt = newNode(ASTNodes.IF_STATEMENT);
         ifStmt.setIfBlock(ifBlock);
@@ -487,6 +503,11 @@ public abstract class AbstractTestFactory {
 
     public SPParameter newSPParameter(int index, Expression expression) {
         SPParameter parameter = new SPParameter(parser.getTeiidParser(), index, expression);
+        return parameter;
+    }
+
+    public SPParameter newSPParameter(int index, ISPParameter.ParameterInfo paramType, String name) {
+        SPParameter parameter = new SPParameter(parser.getTeiidParser(), index, paramType.index(), name);
         return parameter;
     }
 
@@ -679,9 +700,24 @@ public abstract class AbstractTestFactory {
         return array;
     }
 
+    public JoinType newJoinType(Types joinKind) {
+        JoinType joinType = newNode(ASTNodes.JOIN_TYPE);
+        joinType.setKind(joinKind);
+        return joinType;
+    }
+
+    public CaseExpression newCaseExpression(ElementSymbol es, List<Expression> whenExpressions, List<Expression> thenExpressions) {
+        CaseExpression caseExpression = newNode(ASTNodes.CASE_EXPRESSION);
+        caseExpression.setExpression(es);
+        caseExpression.setWhen(whenExpressions, thenExpressions);
+        return caseExpression;
+    }
+
     public abstract AggregateSymbol newAggregateSymbol(String name, boolean isDistinct, Expression expression);
 
     public abstract WindowFunction newWindowFunction(String name);
 
     public abstract Expression wrapExpression(Expression expr, String... exprName);
+
+    public abstract Statement newRaiseStatement(Expression expr);
 }

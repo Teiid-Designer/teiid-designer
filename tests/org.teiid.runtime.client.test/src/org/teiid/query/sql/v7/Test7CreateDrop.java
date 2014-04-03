@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Drop;
@@ -41,7 +41,7 @@ public class Test7CreateDrop extends AbstractTestQueryParser {
      *
      */
     public Test7CreateDrop() {
-        super(new TeiidServerVersion("7.7.0"));
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

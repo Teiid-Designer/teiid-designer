@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.ParseInfo;
-import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
@@ -21,7 +20,7 @@ import org.teiid.query.sql.symbol.Expression;
 /**
  *
  */
-@SuppressWarnings( {"javadoc", "nls"} )
+@SuppressWarnings( {"nls"} )
 public abstract class AbstractTestCloning extends AbstractTest<LanguageObject> {
 
     /**
@@ -35,12 +34,10 @@ public abstract class AbstractTestCloning extends AbstractTest<LanguageObject> {
         helpTest(sql, sql, expectedNode);
     }
 
-    @Override
     protected void helpTest(String sql, String expectedSql, LanguageObject expectedNode) {
         helpTest(sql, expectedSql, expectedNode, new ParseInfo());
     }
 
-    @Override
     protected void helpTest(String sql, String expectedSql, LanguageObject expectedNode, ParseInfo info) {
         LanguageObject clonedNode = null;
         try {
@@ -52,7 +49,6 @@ public abstract class AbstractTestCloning extends AbstractTest<LanguageObject> {
         assertEquals("Cloned object does not match: ", expectedNode, clonedNode);
     }
 
-    @Override
     protected void helpTestLiteral(Boolean expected, Class<?> expectedType, String sql, String expectedSql) {
         Select select = getFactory().newSelect();
         select.addSymbol(getFactory().wrapExpression(getFactory().newConstant(expected, expectedType)));
@@ -63,16 +59,10 @@ public abstract class AbstractTestCloning extends AbstractTest<LanguageObject> {
         helpTest(sql, expectedSql, query);
     }
 
-    protected void helpCriteriaTest(String crit, String expectedString, Criteria expectedCrit) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     protected void helpTestExpression(String sql, String expectedString, Expression expected) throws Exception {
         helpTest(sql, expectedString, expected);
     }
 
-    @Override
     protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
         helpTest(stmt, expectedString, expectedStmt);
     }

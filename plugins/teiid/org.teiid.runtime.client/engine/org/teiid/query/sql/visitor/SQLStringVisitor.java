@@ -221,6 +221,10 @@ public class SQLStringVisitor extends LanguageVisitor
      * @return String SQL String for obj
      */
     public static final String getSQLString(LanguageObject obj) {
+        if (obj == null) {
+            return UNDEFINED;
+        }
+
         SQLStringVisitor visitor = new SQLStringVisitor(obj.getTeiidVersion());
         return visitor.returnSQLString(obj);
     }
@@ -428,12 +432,12 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         append(BY);
         append(SPACE);
-        if (isTeiid87OrGreater() && obj.isRollup()) {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.isRollup()) {
         	append(ROLLUP);
         	append(Tokens.LPAREN);
         }
         registerNodes(obj.getSymbols(), 0);
-        if (isTeiid87OrGreater() && obj.isRollup()) {
+        if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.isRollup()) {
         	append(Tokens.RPAREN);
         }
     }

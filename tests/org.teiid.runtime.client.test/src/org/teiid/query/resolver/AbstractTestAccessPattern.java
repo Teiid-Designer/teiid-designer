@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.resolver.util.AccessPattern;
 
+@SuppressWarnings( "javadoc" )
 public abstract class AbstractTestAccessPattern extends AbstractTest {
 
     /**

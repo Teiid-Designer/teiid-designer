@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.resolver.AbstractTestProcedureResolving;
 import org.teiid.query.resolver.QueryResolver;
@@ -54,7 +54,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
      *
      */
     public Test7ProcedureResolving() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

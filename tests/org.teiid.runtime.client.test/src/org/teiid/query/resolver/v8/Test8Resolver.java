@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestResolver;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -36,11 +37,12 @@ public class Test8Resolver extends AbstractTestResolver {
 
     private Test8Factory factory;
 
-    /**
-    *
-    */
+    protected Test8Resolver(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+   
     public Test8Resolver() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        this(Version.TEIID_8_0.get());
     }
 
     @Override

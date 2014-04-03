@@ -7,7 +7,8 @@
 */
 package org.teiid.query.resolver.v8;
 
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestAccessPattern;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v8.Test8Factory;
@@ -15,15 +16,17 @@ import org.teiid.query.sql.v8.Test8Factory;
 /**
  *
  */
+@SuppressWarnings( "javadoc" )
 public class Test8AccessPattern extends AbstractTestAccessPattern {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8AccessPattern(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+   
     public Test8AccessPattern() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        super(Version.TEIID_8_0.get());
     }
 
     @Override

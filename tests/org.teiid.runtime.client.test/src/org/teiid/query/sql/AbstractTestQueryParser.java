@@ -110,25 +110,25 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         super(teiidVersion);
     }
 
-    @Override
     protected void helpTest(String sql, String expectedString, Command expectedCommand) {
         helpTest(sql, expectedString, expectedCommand, new ParseInfo());
     }
 
-    @Override
     protected void helpTest(String sql, String expectedString, Command expectedCommand, ParseInfo info) {
         Command actualCommand = null;
+        String actualString = null;
 
         try {
             actualCommand = parser.parseCommand(sql, info);
+            actualString = actualCommand.toString();
         } catch (Throwable e) {
             fail(e.getMessage());
         }
 
         assertEquals("Command objects do not match: ", expectedCommand, actualCommand);
+        assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
-    @Override
     protected void helpTestLiteral(Boolean expected, Class<?> expectedType, String sql, String expectedSql) {
         Select select = getFactory().newSelect();
         select.addSymbol(getFactory().wrapExpression(getFactory().newConstant(expected, expectedType)));
@@ -141,14 +141,17 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
 
     protected void helpCriteriaTest(String crit, String expectedString, Criteria expectedCrit) {
         Criteria actualCriteria;
+        String actualString;
 
         try {
             actualCriteria = parser.parseCriteria(crit);
+            actualString = actualCriteria.toString();
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
 
         assertEquals("Criteria does not match: ", expectedCrit, actualCriteria);
+        assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
     protected void helpException(String sql) {
@@ -163,6 +166,8 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
             if (expected != null) {
                 assertEquals(expected, e.getMessage());
             }
+        } catch (AssertionError e) {
+            throw e;
         } catch (Error e) {
             if (expected != null) {
                 assertEquals(expected, e.getMessage());
@@ -170,16 +175,18 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         }
     }
 
-    @Override
     protected void helpTestExpression(String sql, String expectedString, Expression expected) throws Exception {
         Expression actual = parser.parseExpression(sql);
+        String actualString = actual.toString();
         assertEquals("Command objects do not match: ", expected, actual);
+        assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
-    @Override
     protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
         Statement actualStmt = parser.getTeiidParser(stmt).statement(new ParseInfo());
+        String actualString = actualStmt.toString();
         assertEquals("Language objects do not match: ", expectedStmt, actualStmt);
+        assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
  // ======================== Joins ===============================================
@@ -4646,11 +4653,6 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
     @Test
     public void testOrderByWithNumbers_AsNegitiveInt() {
         helpException("SELECT x, y FROM z order by -1");
-    }
-
-    @Test
-    public void testEmptyOuterJoinCriteria() {
-        helpException("select a from b left outer join c on ()");
     }
 
     @Test

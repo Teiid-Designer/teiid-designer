@@ -22,7 +22,7 @@
 
 package org.teiid.query.resolver.v7;
 
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestXMLResolver;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v7.Test7Factory;
@@ -37,7 +37,7 @@ public class Test7XMLResolver extends AbstractTestXMLResolver {
      *
      */
     public Test7XMLResolver() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

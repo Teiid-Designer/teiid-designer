@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.AbstractTestQueryParser;
@@ -39,11 +40,12 @@ public class Test8CreateDrop extends AbstractTestQueryParser {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8CreateDrop(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test8CreateDrop() {
-        super(new TeiidServerVersion("8.0.0"));
+        this(Version.TEIID_8_0.get());
     }
 
     @Override

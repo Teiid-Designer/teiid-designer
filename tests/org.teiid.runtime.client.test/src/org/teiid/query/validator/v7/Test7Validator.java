@@ -9,7 +9,7 @@ package org.teiid.query.validator.v7;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v7.Test7Factory;
@@ -27,7 +27,7 @@ public class Test7Validator extends AbstractTestValidator {
      *
      */
     public Test7Validator() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

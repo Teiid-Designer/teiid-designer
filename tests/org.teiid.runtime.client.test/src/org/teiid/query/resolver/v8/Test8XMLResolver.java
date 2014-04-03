@@ -22,7 +22,8 @@
 
 package org.teiid.query.resolver.v8;
 
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestXMLResolver;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v8.Test8Factory;
@@ -33,11 +34,12 @@ public class Test8XMLResolver extends AbstractTestXMLResolver {
     
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8XMLResolver(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+   
     public Test8XMLResolver() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        this(Version.TEIID_8_0.get());
     }
 
     @Override

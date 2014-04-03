@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Set;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.ProcedureReservedWords;
 
 /**
@@ -22,11 +22,11 @@ import org.teiid.query.sql.ProcedureReservedWords;
 @SuppressWarnings( {"javadoc", "nls"} )
 public class TestReservedWords {
 
-    ITeiidServerVersion TEIID_VERSION_7 = new TeiidServerVersion("7.7.0");
+    ITeiidServerVersion TEIID_VERSION_7 = Version.TEIID_7_7.get();
 
-    ITeiidServerVersion TEIID_VERSION_8 = new TeiidServerVersion("8.0.0");
+    ITeiidServerVersion TEIID_VERSION_8 = Version.TEIID_8_5.get();
 
-    ITeiidServerVersion TEIID_VERSION_9 = new TeiidServerVersion("9.1.0");
+    ITeiidServerVersion TEIID_VERSION_87 = Version.TEIID_8_7.get();
 
     @Test
     public void testGetNonReservedWords() {
@@ -34,20 +34,25 @@ public class TestReservedWords {
         assertFalse(sevenWords.isEmpty());
         assertFalse(sevenWords.contains(SQLConstants.NonReserved.SELECTOR));
         assertFalse(sevenWords.contains(SQLConstants.NonReserved.SKIP));
+        assertFalse(sevenWords.contains(SQLConstants.NonReserved.AUTO_INCREMENT));
         
         Set<String> eightWords = SQLConstants.getNonReservedWords(TEIID_VERSION_8);
         assertFalse(eightWords.isEmpty());
         assertTrue(eightWords.contains(SQLConstants.NonReserved.SELECTOR));
         assertTrue(eightWords.contains(SQLConstants.NonReserved.SKIP));
+        assertFalse(eightWords.contains(SQLConstants.NonReserved.AUTO_INCREMENT));
 
         // Retest to ensure that the cached teiid version is updated and the sets re-initialised
         sevenWords = SQLConstants.getNonReservedWords(TEIID_VERSION_7);
         assertFalse(sevenWords.isEmpty());
         assertFalse(sevenWords.contains(SQLConstants.NonReserved.SELECTOR));
         assertFalse(sevenWords.contains(SQLConstants.NonReserved.SKIP));
+        assertFalse(sevenWords.contains(SQLConstants.NonReserved.AUTO_INCREMENT));
 
-        Set<String> nineWords = SQLConstants.getNonReservedWords(TEIID_VERSION_9);
-        assertEquals(eightWords, nineWords);
+        Set<String> eightSevenWords = SQLConstants.getNonReservedWords(TEIID_VERSION_87);
+        assertTrue(eightSevenWords.contains(SQLConstants.NonReserved.SELECTOR));
+        assertTrue(eightSevenWords.contains(SQLConstants.NonReserved.SKIP));
+        assertTrue(eightSevenWords.contains(SQLConstants.NonReserved.AUTO_INCREMENT));
     }
 
     @Test
@@ -65,8 +70,8 @@ public class TestReservedWords {
         assertFalse(sevenWords.isEmpty());
         assertFalse(sevenWords.contains(SQLConstants.Reserved.OPTIONS));
 
-        Set<String> nineWords = SQLConstants.getReservedWords(TEIID_VERSION_9);
-        assertEquals(eightWords, nineWords);
+        Set<String> eightSevenWords = SQLConstants.getReservedWords(TEIID_VERSION_87);
+        assertEquals(eightWords, eightSevenWords);
     }
 
     @Test
@@ -79,9 +84,9 @@ public class TestReservedWords {
         assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_8, "LOOP"));
         assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_8, "Options"));
 
-        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_9, "limit"));
-        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_9, "LOOP"));
-        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_9, "Options"));
+        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_87, "limit"));
+        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_87, "LOOP"));
+        assertTrue(SQLConstants.isReservedWord(TEIID_VERSION_87, "Options"));
     }
 
     @Test
@@ -94,8 +99,8 @@ public class TestReservedWords {
         assertFalse(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_8, "inputs"));
         assertTrue(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_8, "rowcount"));
 
-        assertFalse(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_9, "input"));
-        assertFalse(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_9, "inputs"));
-        assertTrue(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_9, "rowcount"));
+        assertFalse(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_87, "input"));
+        assertFalse(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_87, "inputs"));
+        assertTrue(ProcedureReservedWords.isProcedureReservedWord(TEIID_VERSION_87, "rowcount"));
     }
 }

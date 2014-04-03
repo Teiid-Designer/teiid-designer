@@ -9,18 +9,22 @@ package org.teiid.query.sql.v8;
 
 import java.util.Arrays;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
-import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.AbstractTestQueryParser;
+import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CriteriaOperator;
+import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.proc.ExceptionExpression;
@@ -28,7 +32,6 @@ import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.RaiseStatement;
 import org.teiid.query.sql.proc.Statement;
-import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
@@ -44,15 +47,16 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected TestQuery8Parser(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public TestQuery8Parser() {
-        super(new TeiidServerVersion("8.0.0"));
+        this(Version.TEIID_8_0.get());
     }
 
     @Override
-    protected AbstractTestFactory getFactory() {
+    protected Test8Factory getFactory() {
         if (factory == null)
             factory = new Test8Factory(parser);
 
@@ -206,7 +210,8 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         helpTestExpression("jsonObject(a as \"table\")", "JSONOBJECT(a AS \"table\")", f);
     }
 
-    @Test public void testVirtualProcedure(){        
+    @Test
+    public void testVirtualProcedure(){        
         ElementSymbol x = getFactory().newElementSymbol("x");
         String intType = new String("integer");
         Statement dStmt = getFactory().newDeclareStatement(x, intType);
@@ -253,5 +258,57 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         + "x = mycursor.c1;\nIF(x > 5)\nBEGIN\nCONTINUE;\nEND\nEND\n"
         + "SELECT c1, c2 FROM m.g;\nEND", virtualProcedureCommand);
 
+    }
+
+    @Test
+    public void testIfElseWithoutBeginEnd() {
+        String sql = "CREATE VIRTUAL PROCEDURE BEGIN IF (x > 1) select 1; IF (x > 1) select 1; ELSE select 1; END"; //$NON-NLS-1$
+        String expected = "CREATE VIRTUAL PROCEDURE\nBEGIN\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nELSE\nBEGIN\nSELECT 1;\nEND\nEND"; //$NON-NLS-1$
+
+        Query query = getFactory().newQuery();
+        Expression expr = getFactory().wrapExpression(getFactory().newConstant(1));
+        query.setSelect(getFactory().newSelect(Arrays.asList(expr))); //$NON-NLS-1$
+
+        CommandStatement commandStmt = getFactory().newCommandStatement(query);
+        CompareCriteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("x"), CriteriaOperator.Operator.GT, getFactory().newConstant(1)); //$NON-NLS-1$
+        Block block = getFactory().newBlock();
+        block.addStatement(commandStmt);
+        
+        IfStatement ifStmt = getFactory().newIfStatement(criteria, block);
+        IfStatement ifStmt1 = ifStmt.clone();
+        
+        Block block2 = getFactory().newBlock();
+        block2.addStatement(commandStmt);
+        ifStmt1.setElseBlock(block2);
+        Block block3 = getFactory().newBlock();
+        block3.addStatement(ifStmt);
+        block3.addStatement(ifStmt1);
+        
+        CreateProcedureCommand command = getFactory().newCreateProcedureCommand();
+        command.setBlock(block3);
+        helpTest(sql, expected, command);
+    }
+
+    @Test
+    public void testIfElseWithoutBeginAndWithoutCreateVirtualProcedurePrefix() {
+        String sql = "BEGIN IF (x > 1) select 1; IF (x > 1) select 1; ELSE select 1; END"; //$NON-NLS-1$
+        /* CREATE VIRTUAL PROCEDURE is a required prefix for version 8.0 - 8.4 */
+        helpException(sql);
+
+        this.teiidVersion = Version.TEIID_8_1.get();
+        this.parser = new QueryParser(teiidVersion);
+        helpException(sql);
+
+        this.teiidVersion = Version.TEIID_8_2.get();
+        this.parser = new QueryParser(teiidVersion);
+        helpException(sql);
+
+        this.teiidVersion = Version.TEIID_8_3.get();
+        this.parser = new QueryParser(teiidVersion);
+        helpException(sql);
+
+        this.teiidVersion = Version.TEIID_8_4.get();
+        this.parser = new QueryParser(teiidVersion);
+        helpException(sql);
     }
 }

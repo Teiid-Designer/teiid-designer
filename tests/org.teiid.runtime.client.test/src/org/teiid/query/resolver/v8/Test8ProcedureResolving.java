@@ -8,11 +8,13 @@
 package org.teiid.query.resolver.v8;
 
 import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.resolver.AbstractTestProcedureResolving;
@@ -32,11 +34,12 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8ProcedureResolving(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test8ProcedureResolving() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        this(Version.TEIID_8_0.get());
     }
 
     @Override
@@ -277,15 +280,17 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
 
         String sql = "call proc (1)"; //$NON-NLS-1$
 
-        StoredProcedure sp = (StoredProcedure) helpResolve(sql, tm);
+        StoredProcedure sp = (StoredProcedure)helpResolve(sql, tm);
 
-        assertEquals(getFactory().newConstant(null, DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()), sp.getParameter(2).getExpression());
+        assertEquals(getFactory().newConstant(null, DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()),
+                     sp.getParameter(2).getExpression());
 
         sql = "call proc (1, 'a')"; //$NON-NLS-1$
 
-        sp = (StoredProcedure) helpResolve(sql, tm);
+        sp = (StoredProcedure)helpResolve(sql, tm);
 
-        assertEquals(getFactory().newConstant("a", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()), sp.getParameter(2).getExpression());
+        assertEquals(getFactory().newConstant("a", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()),
+                     sp.getParameter(2).getExpression());
     }
 
     public TransformationMetadata createMetadata(String ddl) throws Exception {
@@ -299,9 +304,10 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
 
         String sql = "call proc (1, 'a')"; //$NON-NLS-1$
 
-        StoredProcedure sp = (StoredProcedure) helpResolve(sql, tm);
+        StoredProcedure sp = (StoredProcedure)helpResolve(sql, tm);
 
-        assertEquals(getFactory().newConstant("a", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()), sp.getParameter(2).getExpression());
+        assertEquals(getFactory().newConstant("a", DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()),
+                     sp.getParameter(2).getExpression());
     }
 
     @Test
@@ -310,21 +316,34 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
         TransformationMetadata tm = createMetadata(ddl);
         String sql = "call proc (1, 2, 3)"; //$NON-NLS-1$
 
-        StoredProcedure sp = (StoredProcedure) helpResolve(sql, tm);
+        StoredProcedure sp = (StoredProcedure)helpResolve(sql, tm);
         assertEquals("EXEC proc(1, 2, 3)", sp.toString());
         assertEquals(getFactory().newConstant(1), sp.getParameter(1).getExpression());
-        Array expectedArray = getFactory().newArray(
-                                           DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
-                                           Arrays.asList((Expression) getFactory().newConstant(2),
-                                                                                         getFactory().newConstant(3)));
+        Array expectedArray = getFactory().newArray(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
+                                                    Arrays.asList((Expression)getFactory().newConstant(2),
+                                                                  getFactory().newConstant(3)));
         expectedArray.setImplicit(true);
-        assertEquals(expectedArray,
-                                           sp.getParameter(2).getExpression());
+        assertEquals(expectedArray, sp.getParameter(2).getExpression());
         assertEquals(SPParameter.RESULT_SET, sp.getParameter(3).getParameterType());
     }
 
     @Test
     public void testLoopRedefinition2() throws Exception {
         helpResolveException("EXEC pm1.vsp11()", getMetadataFactory().example1Cached(), "TEIID30124 Loop cursor or exception group name mycursor already exists."); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    @Test
+    public void testVarArgs1() throws Exception {
+        String ddl = "create foreign procedure proc (VARIADIC z integer) returns (x string);\n";
+        TransformationMetadata tm = createMetadata(ddl);
+
+        String sql = "call proc ()"; //$NON-NLS-1$
+        StoredProcedure sp = (StoredProcedure)helpResolve(sql, tm);
+        assertEquals("EXEC proc()", sp.toString());
+        Array expected = getFactory().newArray(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass(),
+                                           new ArrayList<Expression>(0));
+        expected.setImplicit(true);
+        assertEquals(expected,
+                     sp.getParameter(1).getExpression());
     }
 }

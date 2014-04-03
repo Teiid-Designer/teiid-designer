@@ -7,7 +7,7 @@
 */
 package org.teiid.query.validator.v7;
 
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v7.Test7Factory;
 import org.teiid.query.validator.AbstractTestUpdateValidator;
@@ -23,7 +23,7 @@ public class Test7UpdateValidator extends AbstractTestUpdateValidator {
      *
      */
     public Test7UpdateValidator() {
-        super(new TeiidServerVersion("7.7.0")); //$NON-NLS-1$
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

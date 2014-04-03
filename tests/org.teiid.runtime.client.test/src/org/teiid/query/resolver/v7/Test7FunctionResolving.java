@@ -27,7 +27,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestFunctionResolving;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.AbstractTestFactory;
@@ -44,7 +44,7 @@ public class Test7FunctionResolving extends AbstractTestFunctionResolving {
      *
      */
     public Test7FunctionResolving() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

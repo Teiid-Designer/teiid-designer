@@ -10,13 +10,16 @@ package org.teiid.query.sql.v7;
 import static org.junit.Assert.assertEquals;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.sql.AbstractTestQueryParser;
+import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CriteriaOperator;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Drop;
@@ -51,7 +54,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
      *
      */
     public TestQuery7Parser() {
-        super(new TeiidServerVersion("7.7.0"));
+        super(Version.TEIID_7_7.get());
     }
 
     @Override
@@ -1703,5 +1706,34 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
     @Test
     public void testBadCreate() {
         helpException("create insert");
+    }
+
+    @Test
+    public void testIfElseWithoutBeginEnd() {
+        String sql = "CREATE PROCEDURE BEGIN IF (x > 1) select 1; IF (x > 1) select 1; ELSE select 1; END"; //$NON-NLS-1$
+        String expected = "CREATE PROCEDURE\nBEGIN\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nIF(x > 1)\nBEGIN\nSELECT 1;\nEND\nELSE\nBEGIN\nSELECT 1;\nEND\nEND"; //$NON-NLS-1$
+
+        Query query = getFactory().newQuery();
+        Expression expr = getFactory().wrapExpression(getFactory().newConstant(1));
+        query.setSelect(getFactory().newSelect(Arrays.asList(expr))); //$NON-NLS-1$
+
+        CommandStatement commandStmt = getFactory().newCommandStatement(query);
+        CompareCriteria criteria = getFactory().newCompareCriteria(getFactory().newElementSymbol("x"), CriteriaOperator.Operator.GT, getFactory().newConstant(1)); //$NON-NLS-1$
+        Block block = getFactory().newBlock();
+        block.addStatement(commandStmt);
+        
+        IfStatement ifStmt = getFactory().newIfStatement(criteria, block);
+        IfStatement ifStmt1 = ifStmt.clone();
+        
+        Block block2 = getFactory().newBlock();
+        block2.addStatement(commandStmt);
+        ifStmt1.setElseBlock(block2);
+        Block block3 = getFactory().newBlock();
+        block3.addStatement(ifStmt);
+        block3.addStatement(ifStmt1);
+        
+        CreateUpdateProcedureCommand command = getFactory().newCreateUpdateProcedureCommand();
+        command.setBlock(block3);
+        helpTest(sql, expected, command);
     }
 }

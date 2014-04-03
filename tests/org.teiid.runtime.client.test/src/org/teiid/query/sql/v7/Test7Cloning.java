@@ -10,10 +10,11 @@ package org.teiid.query.sql.v7;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.AbstractTestCloning;
 import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.lang.From;
@@ -21,16 +22,15 @@ import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.lang.TranslateCriteria;
-import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
+import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.proc.CommandStatement;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.IfStatement;
 import org.teiid.query.sql.proc.LoopStatement;
 import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.proc.Statement;
-import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
@@ -48,7 +48,7 @@ public class Test7Cloning extends AbstractTestCloning {
      *
      */
     public Test7Cloning() {
-        super(new TeiidServerVersion("7.7.0"));
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

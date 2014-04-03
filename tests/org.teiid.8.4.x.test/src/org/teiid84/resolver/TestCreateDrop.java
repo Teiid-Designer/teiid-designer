@@ -22,16 +22,18 @@
 
 package org.teiid84.resolver;
 
+import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.teiid.api.exception.query.QueryParserException;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.SystemMetadata;
+import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.lang.Create;
 import org.teiid.query.sql.lang.Drop;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -70,8 +72,9 @@ public class TestCreateDrop {
         TestParser.helpTest("Create local TEMPORARY table tempTable(c1 boolean not null, c2 byte)", "CREATE LOCAL TEMPORARY TABLE tempTable (c1 boolean NOT NULL, c2 byte)", create); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
-    @Test @Ignore public void testCreateTempTable3() {
-        TestParser.helpException("Create TEMPORARY table tempTable (c1 boolean, c2 byte)"); //$NON-NLS-1$ 
+    @Test public void testCreateTempTable3() throws QueryParserException {
+        String sql = "Create TEMPORARY table tempTable (c1 boolean, c2 byte)"; 
+        assertEquals("CREATE LOCAL TEMPORARY TABLE tempTable (c1 boolean, c2 byte)", QueryParser.getQueryParser().parseCommand(sql).toString()); //$NON-NLS-1$  
     }
     
     @Test public void testCreateTempTable4() {

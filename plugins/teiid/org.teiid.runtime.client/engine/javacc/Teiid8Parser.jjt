@@ -986,9 +986,22 @@ Command createTempTable(ParseInfo info) #Create :
     String pkId = null;
     Column col = null;
     List<ElementSymbol> pk = null;
+    boolean localToken = false;
 }
 {
-    <CREATE> [<LOCAL>] <TEMPORARY> <TABLE> 
+    <CREATE>
+    [<LOCAL>
+     {
+        localToken = true;
+     }
+    ]
+
+    <TEMPORARY>
+    {
+      if(! localToken)
+        // LOCAL is only optional for Teiid 8.5+        requires(versionAtLeast(Version.TEIID_8_5));
+    }
+    <TABLE>
     table = id(null)
     <LPAREN>
     {

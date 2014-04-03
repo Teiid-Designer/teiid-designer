@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestResolver;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.ProcedureReservedWords;
@@ -44,7 +44,7 @@ public class Test7Resolver extends AbstractTestResolver {
      *
      */
     public Test7Resolver() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

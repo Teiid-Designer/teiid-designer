@@ -8,7 +8,8 @@
 package org.teiid.query.validator.v8;
 
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v8.Test8Factory;
 import org.teiid.query.validator.AbstractTestAlterValidation;
@@ -16,15 +17,17 @@ import org.teiid.query.validator.AbstractTestAlterValidation;
 /**
  *
  */
+@SuppressWarnings( {"nls" , "javadoc"} )
 public class Test8AlterValidation extends AbstractTestAlterValidation {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8AlterValidation(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test8AlterValidation() {
-        super(new TeiidServerVersion("8.0.0")); //$NON-NLS-1$
+        this(Version.TEIID_8_0.get());
     }
 
     @Override

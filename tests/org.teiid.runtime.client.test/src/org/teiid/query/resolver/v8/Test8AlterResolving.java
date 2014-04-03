@@ -10,7 +10,8 @@ package org.teiid.query.resolver.v8;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestAlterResolving;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -28,11 +29,12 @@ public class Test8AlterResolving extends AbstractTestAlterResolving {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8AlterResolving(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+   
     public Test8AlterResolving() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        super(Version.TEIID_8_0.get());
     }
 
     @Override

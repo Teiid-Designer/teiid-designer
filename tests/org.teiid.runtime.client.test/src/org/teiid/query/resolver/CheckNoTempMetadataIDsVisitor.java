@@ -46,6 +46,7 @@ public class CheckNoTempMetadataIDsVisitor extends LanguageVisitor {
     /**
      * By default, this visitor deeply traverses all commands, and there are
      * no symbols to ignore
+     * @param teiidVersion
      */
 	public CheckNoTempMetadataIDsVisitor(ITeiidServerVersion teiidVersion) {
 	    super(teiidVersion);
@@ -64,6 +65,8 @@ public class CheckNoTempMetadataIDsVisitor extends LanguageVisitor {
     /**
      * By default, this visitor deeply traverses all commands, and there are
      * no symbols to ignore
+     * @param obj
+     * @return symbols
      */
     public static final Collection<Symbol> checkSymbols(LanguageObject obj){
         CheckNoTempMetadataIDsVisitor visitor = new CheckNoTempMetadataIDsVisitor(obj.getTeiidVersion());
@@ -73,12 +76,14 @@ public class CheckNoTempMetadataIDsVisitor extends LanguageVisitor {
 
     // visitor methods
     
+    @Override
     public void visit(ElementSymbol obj) {
         if (obj.getMetadataID() instanceof TempMetadataID){
             this.symbolsWithTempMetadataIDs.add(obj);
         }
     }
 
+    @Override
     public void visit(GroupSymbol obj) {
         if (obj.getMetadataID() instanceof TempMetadataID){
             this.symbolsWithTempMetadataIDs.add(obj);

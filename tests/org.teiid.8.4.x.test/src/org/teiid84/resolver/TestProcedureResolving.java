@@ -1169,4 +1169,39 @@ public class TestProcedureResolving {
         assertEquals("EXEC proc(1)", call.toString());
     }
 
+    @Test
+    public void testVarArgs1() throws Exception {
+        String ddl = "create foreign procedure proc (VARIADIC z integer) returns (x string);\n";
+        TransformationMetadata tm = createMetadata(ddl);
+
+        String sql = "call proc ()"; //$NON-NLS-1$
+        StoredProcedure sp = (StoredProcedure)TestResolver.helpResolve(sql, tm);
+        assertEquals("EXEC proc()", sp.toString());
+        assertEquals(new Array(DataTypeManager.DefaultDataClasses.INTEGER,
+                                           new ArrayList<Expression>(0)),
+                     sp.getParameter(1).getExpression());
+    }
+
+    @Test
+    public void testVarArgs2() throws Exception {
+        String ddl = "create foreign procedure proc (VARIADIC z object) returns (x string);\n";
+        TransformationMetadata tm = createMetadata(ddl);
+
+        String sql = "call proc ()"; //$NON-NLS-1$
+        StoredProcedure sp = (StoredProcedure)TestResolver.helpResolve(sql, tm);
+        assertEquals("EXEC proc()", sp.toString());
+        assertEquals(new Array(DataTypeManager.DefaultDataClasses.OBJECT,
+                                           new ArrayList<Expression>(0)),
+                     sp.getParameter(1).getExpression());
+
+        sql = "call proc (1, (2, 3))"; //$NON-NLS-1$
+        sp = (StoredProcedure)helpResolve(sql, tm);
+        assertEquals("EXEC proc(1, (2, 3))", sp.toString());
+        ArrayList<Expression> expressions = new ArrayList<Expression>();
+        expressions.add(new Constant(1));
+        expressions.add(new Array(DataTypeManager.DefaultDataClasses.INTEGER,
+                                              Arrays.asList((Expression) new Constant(2), new Constant(3))));
+        assertEquals(new Array(DataTypeManager.DefaultDataClasses.OBJECT, expressions),
+                     sp.getParameter(1).getExpression());
+    }
 }

@@ -10,7 +10,7 @@ package org.teiid.query.resolver.v7;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestAlterResolving;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -31,7 +31,7 @@ public class Test7AlterResolving extends AbstractTestAlterResolving {
      *
      */
     public Test7AlterResolving() {
-        super(TeiidServerVersion.TEIID_7_SERVER);
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

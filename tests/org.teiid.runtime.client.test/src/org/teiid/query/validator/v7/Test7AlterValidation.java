@@ -8,7 +8,7 @@
 package org.teiid.query.validator.v7;
 
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.v7.Test7Factory;
 import org.teiid.query.validator.AbstractTestAlterValidation;
@@ -16,6 +16,7 @@ import org.teiid.query.validator.AbstractTestAlterValidation;
 /**
  *
  */
+@SuppressWarnings( {"nls", "javadoc"} )
 public class Test7AlterValidation extends AbstractTestAlterValidation {
 
     private Test7Factory factory;
@@ -24,7 +25,7 @@ public class Test7AlterValidation extends AbstractTestAlterValidation {
      *
      */
     public Test7AlterValidation() {
-        super(new TeiidServerVersion("7.7.0")); //$NON-NLS-1$
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

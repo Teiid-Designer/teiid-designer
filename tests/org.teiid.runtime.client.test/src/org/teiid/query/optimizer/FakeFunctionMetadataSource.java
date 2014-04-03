@@ -33,9 +33,10 @@ import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
 import org.teiid.query.function.FunctionMetadataSource;
 
-@SuppressWarnings("nls")
+@SuppressWarnings({"nls", "javadoc"})
 public class FakeFunctionMetadataSource implements FunctionMetadataSource {
 
+    @Override
     public Collection<org.teiid.metadata.FunctionMethod> getFunctionMethods() {
         List<org.teiid.metadata.FunctionMethod> methods = new ArrayList<org.teiid.metadata.FunctionMethod>();
         methods.add(new FunctionMethod("xyz", "", "misc", PushDown.MUST_PUSHDOWN,  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -66,6 +67,7 @@ public class FakeFunctionMetadataSource implements FunctionMetadataSource {
         return methods;
     }
     
+    @Override
     public Class<?> getInvocationClass(String className) throws ClassNotFoundException { 
         return Class.forName(className, true, this.getClass().getClassLoader()); 
     }

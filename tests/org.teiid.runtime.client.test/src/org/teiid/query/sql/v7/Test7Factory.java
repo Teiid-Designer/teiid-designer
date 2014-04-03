@@ -18,6 +18,7 @@ import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.CreateUpdateProcedureCommand;
 import org.teiid.query.sql.proc.IfStatement;
+import org.teiid.query.sql.proc.RaiseErrorStatement;
 import org.teiid.query.sql.symbol.AggregateSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.ExpressionSymbol;
@@ -58,6 +59,15 @@ public class Test7Factory extends AbstractTestFactory {
         return as;
     }
 
+    public AggregateSymbol newAggregateSymbol(String name, String functionName, boolean isDistinct, Expression expression) {
+        AggregateSymbol as = newNode(ASTNodes.AGGREGATE_SYMBOL);
+        as.setName(name);
+        as.setAggregateFunction(functionName);
+        as.setDistinct(isDistinct);
+        as.setExpression(expression);
+        return as;
+    }
+
     @Override
     public WindowFunction newWindowFunction(String name) {
         WindowFunction windowFunction = newNode(ASTNodes.WINDOW_FUNCTION);
@@ -73,6 +83,12 @@ public class Test7Factory extends AbstractTestFactory {
     public CreateUpdateProcedureCommand newCreateUpdateProcedureCommand() {
         CreateUpdateProcedureCommand cupc = newNode(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
         return cupc;
+    }
+
+    public CreateUpdateProcedureCommand newCreateUpdateProcedureCommand(Block b) {
+        CreateUpdateProcedureCommand command = newCreateUpdateProcedureCommand();
+        command.setBlock(b);
+        return command;
     }
 
     public HasCriteria newHasCriteria(CriteriaSelector critSelector) {
@@ -101,4 +117,10 @@ public class Test7Factory extends AbstractTestFactory {
         return ifStmt;
     }
 
+    @Override
+    public RaiseErrorStatement newRaiseStatement(Expression expr) {
+        RaiseErrorStatement raiseStatement = newNode(ASTNodes.RAISE_ERROR_STATEMENT);
+        raiseStatement.setExpression(expr);
+        return raiseStatement;
+    }
 }

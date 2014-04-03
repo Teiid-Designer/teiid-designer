@@ -27,11 +27,11 @@ import static org.junit.Assert.assertNotEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.AbstractTestQueryParser;
 import org.teiid.query.sql.lang.Create;
 
-@SuppressWarnings( {"nls", "javadoc"} )
+@SuppressWarnings( {"javadoc"} )
 public class Test7Create extends AbstractTestQueryParser {
 
     // ################################## FRAMEWORK ################################
@@ -42,7 +42,7 @@ public class Test7Create extends AbstractTestQueryParser {
      *
      */
     public Test7Create() {
-        super(new TeiidServerVersion("7.7.0"));
+        super(Version.TEIID_7_7.get());
     }
 
     @Override

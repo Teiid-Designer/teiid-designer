@@ -11,7 +11,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.AbstractTestFactory;
@@ -28,11 +29,12 @@ public class Test8Validator extends AbstractTestValidator {
 
     private Test8Factory factory;
 
-    /**
-     *
-     */
+    protected Test8Validator(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test8Validator() {
-        super(TeiidServerVersion.TEIID_8_SERVER);
+        this(Version.TEIID_8_0.get());
     }
 
     @Override

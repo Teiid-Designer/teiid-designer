@@ -36,7 +36,7 @@ import org.teiid.query.sql.lang.AlterView;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
 
-@SuppressWarnings( "nls" )
+@SuppressWarnings( {"nls", "javadoc"} )
 public abstract class AbstractTestAlterResolving extends AbstractTest {
 
     /**
