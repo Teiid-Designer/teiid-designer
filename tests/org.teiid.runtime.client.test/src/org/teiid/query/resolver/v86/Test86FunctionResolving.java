@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.resolver.v85;
+package org.teiid.query.resolver.v86;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -14,18 +14,18 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.eval.Evaluator;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.resolver.util.ResolverVisitor;
-import org.teiid.query.resolver.v8.Test8FunctionResolving;
+import org.teiid.query.resolver.v85.Test85FunctionResolving;
 import org.teiid.query.sql.symbol.Function;
 
 @SuppressWarnings( {"nls", "javadoc"} )
-public class Test85FunctionResolving extends Test8FunctionResolving {
+public class Test86FunctionResolving extends Test85FunctionResolving {
 
-    protected Test85FunctionResolving(ITeiidServerVersion teiidVersion) {
+    protected Test86FunctionResolving(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
     }
 
-    public Test85FunctionResolving() {
-        this(Version.TEIID_8_5.get());
+    public Test86FunctionResolving() {
+        this(Version.TEIID_8_6.get());
     }
 
     /*
@@ -35,6 +35,7 @@ public class Test85FunctionResolving extends Test8FunctionResolving {
         return String.valueOf(vals.length);
     }
 
+    @Override
     @Test
     public void testVarArgsFunction() throws Exception {
         String ddl = "create foreign function func (VARIADIC z object) returns string options (JAVA_CLASS '"

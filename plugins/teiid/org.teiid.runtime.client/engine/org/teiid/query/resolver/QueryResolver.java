@@ -307,6 +307,7 @@ public class QueryResolver implements IQueryResolver<Command, GroupSymbol, Expre
 		    	    if (isTeiid87OrGreater()) {
 		    	        ElementSymbol inputSymbol = teiidParser.createASTNode(ASTNodes.ELEMENT_SYMBOL);
 		    	        inputSymbol.setName("INPUT" + Symbol.SEPARATOR + name); //$NON-NLS-1$
+		    	        inputSymbol.setType(elementSymbol.getType());
 		    	        symbolMap.put(inputSymbol, elementSymbol.clone());
 		    	    }
 		    	    

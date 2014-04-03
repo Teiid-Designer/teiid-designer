@@ -8,6 +8,7 @@
 package org.teiid.query.sql.v85;
 
 import org.junit.Test;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.Delete;
@@ -25,8 +26,12 @@ import org.teiid.query.sql.v8.Test8SQLStringVisitor;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test85SQLStringVisitor extends Test8SQLStringVisitor {
 
+    protected Test85SQLStringVisitor(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test85SQLStringVisitor() {
-        super(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5.get());
     }
 
     @Override

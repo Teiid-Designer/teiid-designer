@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.resolver.v85;
+package org.teiid.query.resolver.v87;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,7 +17,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TransformationMetadata;
-import org.teiid.query.resolver.v8.Test8ProcedureResolving;
+import org.teiid.query.resolver.v86.Test86ProcedureResolving;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.proc.CreateProcedureCommand;
 import org.teiid.query.sql.symbol.Array;
@@ -25,16 +25,17 @@ import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Symbol;
 
 @SuppressWarnings( {"javadoc", "nls"} )
-public class Test85ProcedureResolving extends Test8ProcedureResolving {
+public class Test87ProcedureResolving extends Test86ProcedureResolving {
 
-    protected Test85ProcedureResolving(ITeiidServerVersion teiidVersion) {
+    protected Test87ProcedureResolving(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
     }
 
-    public Test85ProcedureResolving() {
-        this(Version.TEIID_8_5.get());
+    public Test87ProcedureResolving() {
+        this(Version.TEIID_8_7.get());
     }
 
+    @Override
     @Test
     public void testVarArgs2() throws Exception {
         String ddl = "create foreign procedure proc (VARIADIC z object) returns (x string);\n";
@@ -62,6 +63,7 @@ public class Test85ProcedureResolving extends Test8ProcedureResolving {
                      sp.getParameter(1).getExpression());
     }
 
+    @Override
     @Test
     public void testAnonBlock() throws Exception {
         String sql = "begin select 1 as something; end"; //$NON-NLS-1$
@@ -74,6 +76,7 @@ public class Test85ProcedureResolving extends Test8ProcedureResolving {
         assertTrue(sp.returnsResultSet());
     }
 
+    @Override
     @Test
     public void testAnonBlockNoResult() throws Exception {
         String sql = "begin select 1 as something without return; end"; //$NON-NLS-1$

@@ -213,16 +213,13 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             return super.equals(obj);
         }
 
-        if (this.isAggregate != other.isAggregate)
-            return false;
-        if (this.isExternalReference != other.isExternalReference)
-            return false;
         if (this.type == null) {
             if (other.type != null)
                 return false;
         } else if (!this.type.equals(other.type))
             return false;
-        return true;
+
+        return this.groupSymbol.equals(other.groupSymbol) && this.getShortName().equals(other.getShortName());
     }
 
     /** Accept the visitor. **/
@@ -245,10 +242,10 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             clone.setDisplayMode(getDisplayMode());
         if(getShortCanonicalName() != null)
             clone.setShortCanonicalName(getShortCanonicalName());
-        if(getOutputName() != null)
-            clone.setOutputName(getOutputName());
         if(getShortName() != null)
             clone.setShortName(getShortName());
+        if(getOutputName() != null)
+            clone.setOutputName(getOutputName());
 
         clone.isExternalReference = isExternalReference;
         clone.isAggregate = isAggregate;

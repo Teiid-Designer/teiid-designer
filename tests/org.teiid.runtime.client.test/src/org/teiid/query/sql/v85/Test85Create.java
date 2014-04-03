@@ -7,18 +7,21 @@
 */
 package org.teiid.query.sql.v85;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.v8.Test8Create;
 
 /**
  *
  */
+@SuppressWarnings( {"javadoc"} )
 public class Test85Create extends Test8Create {
 
-    /**
-     * 
-     */
+    protected Test85Create(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
+    }
+
     public Test85Create() {
-        super(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5.get());
     }
 }

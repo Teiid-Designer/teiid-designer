@@ -5,24 +5,24 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.resolver.v85;
+package org.teiid.query.resolver.v86;
 
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.resolver.v8.Test8Resolver;
+import org.teiid.query.resolver.v85.Test85Resolver;
 import org.teiid.query.sql.lang.Command;
 
 @SuppressWarnings( {"javadoc"} )
-public class Test85Resolver extends Test8Resolver {
+public class Test86Resolver extends Test85Resolver {
 
-    protected Test85Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test86Resolver(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
     }
 
-    public Test85Resolver() {
-        this(Version.TEIID_8_5.get());
+    public Test86Resolver() {
+        this(Version.TEIID_8_6.get());
     }
 
     @Override

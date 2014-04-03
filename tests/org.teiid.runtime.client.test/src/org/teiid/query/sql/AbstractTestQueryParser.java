@@ -2636,6 +2636,9 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         SubqueryFromClause sfc = getFactory().newSubqueryFromClause("x", storedQuery);
         from.addClause(sfc);
 
+        Select select = getFactory().newSelect();
+        select.addSymbol(getFactory().newElementSymbol("x.a"));
+
         helpTest("exec proc1('param1')", "EXEC proc1('param1')", storedQuery);
     }
 

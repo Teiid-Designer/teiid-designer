@@ -50,7 +50,7 @@ public class QueryParser implements IQueryParser {
 
 	private TeiidParser teiidParser;
 
-    private ITeiidServerVersion teiidVersion;
+    private final ITeiidServerVersion teiidVersion;
     
 	/**
 	 * Construct a QueryParser - this may be reused.

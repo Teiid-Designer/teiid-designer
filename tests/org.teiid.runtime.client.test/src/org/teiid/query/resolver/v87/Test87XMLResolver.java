@@ -5,24 +5,24 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.resolver.v85;
+package org.teiid.query.resolver.v87;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.resolver.v8.Test8XMLResolver;
+import org.teiid.query.resolver.v86.Test86XMLResolver;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test85XMLResolver extends Test8XMLResolver {
+public class Test87XMLResolver extends Test86XMLResolver {
 
-    protected Test85XMLResolver(ITeiidServerVersion teiidVersion) {
+    protected Test87XMLResolver(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
     }
 
-    public Test85XMLResolver() {
-        this(Version.TEIID_8_5.get());
+    public Test87XMLResolver() {
+        this(Version.TEIID_8_7.get());
     }
 
 }

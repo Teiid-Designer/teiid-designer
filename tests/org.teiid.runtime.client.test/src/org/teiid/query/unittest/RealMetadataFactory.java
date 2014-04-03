@@ -392,11 +392,16 @@ public class RealMetadataFactory {
 	}
     
 	public TransformationMetadata createTransformationMetadata(MetadataStore metadataStore, String vdbName, FunctionTree... functionModels) {
-		return createTransformationMetadata(metadataStore, vdbName, null, functionModels);
+	    CompositeMetadataStore cms = null;
+        if (metadataStore instanceof CompositeMetadataStore) {
+            cms = (CompositeMetadataStore)metadataStore;
+        } else {
+            cms = new CompositeMetadataStore(metadataStore);
+        }
+        return createTransformationMetadata(cms, vdbName, null, functionModels);
 	}
 	
-	public TransformationMetadata createTransformationMetadata(MetadataStore metadataStore, String vdbName, Properties vdbProperties, FunctionTree... functionModels) {
-		CompositeMetadataStore store = new CompositeMetadataStore(metadataStore);
+	public TransformationMetadata createTransformationMetadata(CompositeMetadataStore store, String vdbName, Properties vdbProperties, FunctionTree... functionModels) {
     	VDBMetaData vdbMetaData = new VDBMetaData();
     	vdbMetaData.setName(vdbName); //$NON-NLS-1$
     	vdbMetaData.setVersion(1);
@@ -405,7 +410,7 @@ public class RealMetadataFactory {
     	}
     	List<FunctionTree> udfs = new ArrayList<FunctionTree>();
     	udfs.addAll(Arrays.asList(functionModels));
-    	for (Schema schema : metadataStore.getSchemas().values()) {
+    	for (Schema schema : store.getSchemas().values()) {
             vdbMetaData.addModel(createModel(schema.getName(), schema.isPhysical()));
             if (!schema.getFunctions().isEmpty()) {
                 UDFSource source = new UDFSource(schema.getFunctions().values());
@@ -1829,6 +1834,10 @@ public class RealMetadataFactory {
         column.setUpdatable(true);
         column.setLength(100);
         column.setNameInSource(name);
+
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+            column.setDatatype(SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap().get(type));
+
         return column; 
     }
     
@@ -2837,8 +2846,26 @@ public class RealMetadataFactory {
     }
 
 	public TransformationMetadata fromDDL(String ddl, String vdbName, String modelName) throws Exception {
-        MetadataFactory mf = helpParse(ddl, modelName);
-        TransformationMetadata tm = createTransformationMetadata(mf.asMetadataStore(), vdbName);
+	    return fromDDL(vdbName, new DDLHolder(modelName, ddl));
+    }   
+    
+    public static class DDLHolder {
+        String name;
+        String ddl;
+        public DDLHolder(String name, String ddl) {
+            this.name = name;
+            this.ddl = ddl;
+        }
+    }
+    
+    public TransformationMetadata fromDDL(String vdbName, DDLHolder... schemas) throws Exception {
+        CompositeMetadataStore cms = new CompositeMetadataStore(Collections.EMPTY_LIST);
+        for (DDLHolder schema : schemas) {
+            MetadataFactory mf = helpParse(schema.ddl, schema.name);
+            cms.merge(mf.asMetadataStore());
+        }
+
+        TransformationMetadata tm = createTransformationMetadata(cms, vdbName);
         ValidatorReport report = new MetadataValidator(teiidVersion).validate(tm.getVdbMetaData(), tm.getMetadataStore());
         if (report.hasItems()) {
             throw new RuntimeException(report.getFailureMessage());

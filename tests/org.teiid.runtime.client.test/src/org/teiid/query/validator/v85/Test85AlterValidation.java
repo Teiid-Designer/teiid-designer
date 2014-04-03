@@ -7,6 +7,7 @@
 */
 package org.teiid.query.validator.v85;
 
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.validator.v8.Test8AlterValidation;
 
@@ -16,7 +17,12 @@ import org.teiid.query.validator.v8.Test8AlterValidation;
 @SuppressWarnings( "javadoc" )
 public class Test85AlterValidation extends Test8AlterValidation {
 
-    public Test85AlterValidation() {
-        super(Version.TEIID_8_5.get());
+    protected Test85AlterValidation(ITeiidServerVersion teiidVersion) {
+        super(teiidVersion);
     }
+
+    public Test85AlterValidation() {
+        this(Version.TEIID_8_5.get());
+    }
+
 }
