@@ -839,6 +839,7 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
                 IQueryService queryService = ModelerCore.getTeiidQueryService();
                 IMappingDocumentFactory factory = queryService.getMappingDocumentFactory();
                 mappingDoc = factory.loadMappingDocument(inputStream, groupName);
+                return mappingDoc;
             } catch (Exception e) {
                 throw new TeiidDesignerException(
                                                       e,
