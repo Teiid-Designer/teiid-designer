@@ -35,14 +35,16 @@ public class SystemFunctionManager {
 
 	private FunctionTree systemFunctionTree;
 	private boolean allowEnvFunction = true;
-	private ClassLoader classLoader;
+	private final ClassLoader classLoader;
     private final ITeiidServerVersion teiidVersion;
 
 	/**
 	 * @param teiidVersion
+	 * @param classLoader 
      */
-    public SystemFunctionManager(ITeiidServerVersion teiidVersion) {
+    public SystemFunctionManager(ITeiidServerVersion teiidVersion, ClassLoader classLoader) {
         this.teiidVersion = teiidVersion;
+        this.classLoader = classLoader;
     }
 
     /**
@@ -55,8 +57,7 @@ public class SystemFunctionManager {
 	public FunctionTree getSystemFunctions() {
     	if(systemFunctionTree == null) { 
 	    	// Create the system source and add it to the source list
-	    	SystemSource systemSource = new SystemSource(getTeiidVersion(), this.allowEnvFunction);
-	    	systemSource.setClassLoader(classLoader);
+	    	SystemSource systemSource = new SystemSource(getTeiidVersion(), this.allowEnvFunction, classLoader);
 			// Validate the system source - should never fail
 	    	ValidatorReport report = new ValidatorReport("Function Validation"); //$NON-NLS-1$
 	        Collection<FunctionMethod> functionMethods = systemSource.getFunctionMethods();
@@ -85,8 +86,4 @@ public class SystemFunctionManager {
     public ClassLoader getClassLoader() {
     	return this.classLoader;
     }
-    
-    public void setClassloader(ClassLoader classloader) {
-    	this.classLoader = classloader;
-    }	
 }

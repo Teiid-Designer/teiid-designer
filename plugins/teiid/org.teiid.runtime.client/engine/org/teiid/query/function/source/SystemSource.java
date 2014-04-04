@@ -69,9 +69,10 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
      *
      * @param teiidVersion
      * @param allowEnvFunction
+     * @param classLoader 
      */
-    public SystemSource(ITeiidServerVersion teiidVersion, boolean allowEnvFunction) {
-    	super(new ArrayList<FunctionMethod>());
+    public SystemSource(ITeiidServerVersion teiidVersion, boolean allowEnvFunction, ClassLoader classLoader) {
+    	super(new ArrayList<FunctionMethod>(), classLoader);
         this.teiidVersion = teiidVersion;
         this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 

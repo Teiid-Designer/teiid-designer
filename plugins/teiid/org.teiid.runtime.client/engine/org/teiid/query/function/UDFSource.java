@@ -23,16 +23,16 @@
 package org.teiid.query.function;
 
 import java.util.Collection;
-
 import org.teiid.metadata.FunctionMethod;
 
 public class UDFSource implements FunctionMetadataSource {
 	
     protected Collection <FunctionMethod> functions;
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
     
-    public UDFSource(Collection <FunctionMethod> methods) {
+    public UDFSource(Collection <FunctionMethod> methods, ClassLoader classLoader) {
     	this.functions = methods;
+        this.classLoader = classLoader;
     }    
     
     public Collection<FunctionMethod> getFunctionMethods() {
@@ -42,10 +42,6 @@ public class UDFSource implements FunctionMetadataSource {
     public Class<?> getInvocationClass(String className) throws ClassNotFoundException {
         return Class.forName(className, true, classLoader==null?Thread.currentThread().getContextClassLoader():classLoader);
     }
-    
-    public void setClassLoader(ClassLoader classLoader) {
-		this.classLoader = classLoader;
-	}
     
     public ClassLoader getClassLoader() {
 		return classLoader;

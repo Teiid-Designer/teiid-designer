@@ -100,8 +100,7 @@ public class RealMetadataFactory {
         
 	public RealMetadataFactory(ITeiidServerVersion teiidVersion) {
         this.teiidVersion = teiidVersion;
-        SFM = new SystemFunctionManager(teiidVersion);
-        SFM.setClassloader(getClass().getClassLoader());
+        SFM = new SystemFunctionManager(teiidVersion, getClass().getClassLoader());
         parser = new QueryParser(teiidVersion);
 	}
 
@@ -413,8 +412,7 @@ public class RealMetadataFactory {
     	for (Schema schema : store.getSchemas().values()) {
             vdbMetaData.addModel(createModel(schema.getName(), schema.isPhysical()));
             if (!schema.getFunctions().isEmpty()) {
-                UDFSource source = new UDFSource(schema.getFunctions().values());
-                source.setClassLoader(getClass().getClassLoader());
+                UDFSource source = new UDFSource(schema.getFunctions().values(), getClass().getClassLoader());
                 udfs.add(new FunctionTree(getTeiidVersion(), schema.getName(), source, true));
             }
 		}

@@ -70,10 +70,7 @@ import org.teiid772.resolver.FakeFunctionMetadataSource;
 @SuppressWarnings("nls")
 public class RealMetadataFactory {
 
-	public static final SystemFunctionManager SFM = new SystemFunctionManager();
-	static {
-        SFM.setClassloader(RealMetadataFactory.class.getClassLoader());
-    }
+	public static final SystemFunctionManager SFM = new SystemFunctionManager(RealMetadataFactory.class.getClassLoader());
 
     private static TransformationMetadata CACHED_EXAMPLE1 = example1();
 	private static TransformationMetadata CACHED_BQT = exampleBQT();
@@ -331,7 +328,7 @@ public class RealMetadataFactory {
     	for (Schema schema : metadataStore.getSchemas().values()) {
 			vdbMetaData.addModel(RealMetadataFactory.createModel(schema.getName(), schema.isPhysical()));
 			if (!schema.getFunctions().isEmpty()) {
-				udfs.add(new FunctionTree(schema.getName(), new UDFSource(schema.getFunctions().values()), true));
+				udfs.add(new FunctionTree(schema.getName(), new UDFSource(schema.getFunctions().values(), RealMetadataFactory.class.getClassLoader()), true));
 			}
 		}
     	return new TransformationMetadata(vdbMetaData, store, null, SFM.getSystemFunctions(), udfs);

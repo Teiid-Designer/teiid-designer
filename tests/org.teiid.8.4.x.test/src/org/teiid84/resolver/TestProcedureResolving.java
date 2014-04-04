@@ -1195,7 +1195,7 @@ public class TestProcedureResolving {
                      sp.getParameter(1).getExpression());
 
         sql = "call proc (1, (2, 3))"; //$NON-NLS-1$
-        sp = (StoredProcedure)helpResolve(sql, tm);
+        sp = (StoredProcedure)TestResolver.helpResolve(sql, tm);
         assertEquals("EXEC proc(1, (2, 3))", sp.toString());
         ArrayList<Expression> expressions = new ArrayList<Expression>();
         expressions.add(new Constant(1));
