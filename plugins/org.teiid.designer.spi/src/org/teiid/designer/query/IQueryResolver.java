@@ -10,13 +10,13 @@ package org.teiid.designer.query;
 import java.util.List;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.lang.IExpression;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 /**
  *
  */
-public interface IQueryResolver<C extends ICommand, GS extends IGroupSymbol> {
+public interface IQueryResolver<C extends ICommand, GS extends IGroupSymbol, E extends IExpression> {
 
     /**
      * @param command
@@ -35,6 +35,6 @@ public interface IQueryResolver<C extends ICommand, GS extends IGroupSymbol> {
      * @param projectedSymbols
      */
     void postResolveCommand(C command, GS gSymbol, int teiidCommandType, IQueryMetadataInterface metadata,
-                                               List<IElementSymbol> projectedSymbols);
+                                               List<E> projectedSymbols);
 
 }

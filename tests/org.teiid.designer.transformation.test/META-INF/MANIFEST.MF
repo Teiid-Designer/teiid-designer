@@ -14,6 +14,4 @@ Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
  org.teiid.core.designer.test.framework;bundle-version="[8.1.0,9.0.0)",
  org.teiid.designer.core.test.framework;bundle-version="[8.1.0,9.0.0)",
  org.jboss.tools.locus.mockito;bundle-version="[1.9.5,2.0.0)",
- org.teiid.7.7.x;bundle-version="[8.1.0,9.0.0)",
- org.teiid.8.3.x;bundle-version="[8.1.0,9.0.0)",
- org.teiid.8.4.x;bundle-version="[8.2.0,9.0.0)"
+ org.teiid.runtime.client;bundle-version="[8.4.0,9.0.0)"

@@ -7,16 +7,19 @@
 */
 package org.teiid.designer.query.sql.proc;
 
-import java.util.List;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IExpression;
-import org.teiid.designer.query.sql.symbol.IElementSymbol;
+import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 
 /**
+ * @param <B> 
+ * @param <GS> 
+ * @param <E> 
+ * @param <LV> 
  *
  */
-public interface ICreateProcedureCommand<B extends IBlock, E extends IExpression, LV extends ILanguageVisitor>
+public interface ICreateProcedureCommand<B extends IBlock, GS extends IGroupSymbol, E extends IExpression, LV extends ILanguageVisitor>
     extends ICommand<E, LV> {
 
     /**
@@ -32,11 +35,17 @@ public interface ICreateProcedureCommand<B extends IBlock, E extends IExpression
      * @param block The <code>Block</code> on this command
      */
     void setBlock(B block);
-    
+
     /**
-     * Set the projected symbols
-     * 
-     * @param projectedSymbols
+     * @return virtual group on this command
      */
-    void setProjectedSymbols(List<IElementSymbol> projectedSymbols);
+    GS getVirtualGroup();
+
+    /**
+     * Set the virtual group on this command
+     *
+     * @param view
+     */
+    void setVirtualGroup(GS view);
+
 }

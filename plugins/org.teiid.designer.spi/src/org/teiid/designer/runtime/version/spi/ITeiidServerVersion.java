@@ -37,6 +37,40 @@ public interface ITeiidServerVersion {
     String NINE = "9"; //$NON-NLS-1$
 
     /**
+     * Teiid id versions
+     */
+    enum VersionID {
+        TEIID_7_7(SEVEN + DOT + SEVEN + DOT + ZERO),
+
+        TEIID_8_0(EIGHT + DOT + ZERO + DOT + ZERO),
+
+        TEIID_8_1(EIGHT + DOT + ONE + DOT + ZERO),
+
+        TEIID_8_2(EIGHT + DOT + TWO + DOT + ZERO),
+
+        TEIID_8_3(EIGHT + DOT + THREE + DOT + ZERO),
+
+        TEIID_8_4(EIGHT + DOT + FOUR + DOT + ZERO),
+
+        TEIID_8_5(EIGHT + DOT + FIVE + DOT + ZERO),
+
+        TEIID_8_6(EIGHT + DOT + SIX + DOT + ZERO),
+
+        TEIID_8_7(EIGHT + DOT + SEVEN + DOT + ZERO);
+
+        private final String id;
+
+        VersionID(String id) {
+            this.id = id;
+        }
+
+        @Override
+        public String toString() {
+            return id;
+        }
+    }
+
+    /**
      * Default teiid 8 server version
      */
     String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
@@ -45,14 +79,27 @@ public interface ITeiidServerVersion {
      * Default teiid 7 server version
      */
     String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
-    
-    
+
+    /**
+     * teiid 8.4 server version - made the CREATE VIRTUAL PROCEDURE keywords optional
+     */
+    String TEIID_8_4_SERVER_ID = EIGHT + DOT + FOUR + DOT + ZERO;
+
     /**
      * teiid 8.6 server version - required due to method added to Admin API
      */
     String TEIID_8_6_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
-    
-    
+
+    /**
+     * teiid 8.7 server version - required due to changes to SQLStringVisitor
+     */
+    String TEIID_8_7_SERVER_ID = EIGHT + DOT + SEVEN + DOT + ZERO;
+
+    /**
+     * Teiid version property constant
+     */
+    String TEIID_VERSION_PROPERTY = "org.teiid.version"; //$NON-NLS-1$
+
     /**
      * @return the major version segment
      */
@@ -90,6 +137,20 @@ public interface ITeiidServerVersion {
     boolean isSevenServer();
 
     /**
+     * @return the minimum version that this version could be,
+     *                 eg. 8.x.x will be 8.0.0 while 8.1.x will be 8.1.0 and
+     *                       8.2.1 will always be 8.2.1
+     */
+    ITeiidServerVersion getMinimumVersion();
+
+    /**
+     * @return the maximum version that this version could be,
+     *                 eg. 8.x.x will be 8.9.9 while 8.1.x will be 8.1.9 and
+     *                       8.2.1 will always be 8.2.1
+     */
+    ITeiidServerVersion getMaximumVersion();
+
+    /**
      * Is this version greater than the given version
      *
      * Wildcards will cause the result to return false since either
@@ -114,4 +175,24 @@ public interface ITeiidServerVersion {
      * @return true if this version is less. False otherwise.
      */
     boolean isLessThan(ITeiidServerVersion otherVersion);
+
+    /**
+     * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
+     * and {@link #isGreaterThan(ITeiidServerVersion)}.
+     *
+     * @param otherVersion
+     *
+     * @return this is greater than or equal to otherVersion
+     */
+    boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion);
+
+    /**
+     * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
+     * and {@link #isLessThan(ITeiidServerVersion)}.
+     *
+     * @param otherVersion
+     *
+     * @return this is less than or equal to otherVersion
+     */
+    boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion);
 }

@@ -14,42 +14,42 @@ import org.teiid.designer.query.sql.ILanguageVisitor;
  */
 public interface IJoinType <LV extends ILanguageVisitor> extends ILanguageObject<LV> {
 
+    /**
+     * Delineation of the category of join type
+     */
     enum Types {
         /** Represents an inner join:  a INNER JOIN b */
-        JOIN_INNER(0, false),
+        JOIN_INNER(false),
 
         /** Represents a right outer join:  a RIGHT OUTER JOIN b */
-        JOIN_RIGHT_OUTER(1, true),
+        JOIN_RIGHT_OUTER(true),
 
         /** Represents a left outer join:  a LEFT OUTER JOIN b */
-        JOIN_LEFT_OUTER(2, true),
+        JOIN_LEFT_OUTER(true),
 
         /** Represents a full outer join:  a FULL OUTER JOIN b */
-        JOIN_FULL_OUTER(3, true),
+        JOIN_FULL_OUTER(true),
 
         /** Represents a cross join:  a CROSS JOIN b */
-        JOIN_CROSS(4, false),
+        JOIN_CROSS(false),
 
         /** Represents a union join:  a UNION JOIN b - not used after rewrite */
-        JOIN_UNION(5, true),
+        JOIN_UNION(true),
 
         /** internal SEMI Join type */
-        JOIN_SEMI(6, false),
+        JOIN_SEMI(false),
 
         /** internal ANTI SEMI Join type */
-        JOIN_ANTI_SEMI(7, true);
-
-        private final int typeCode;
+        JOIN_ANTI_SEMI(true);
 
         private final boolean outer;
 
-        private Types(int typeCode, boolean outer) {
-            this.typeCode = typeCode;
+        private Types(boolean outer) {
             this.outer = outer;
         }
 
         public int getTypeCode() {
-            return typeCode;
+            return this.ordinal();
         }
         
         public boolean isOuter() {

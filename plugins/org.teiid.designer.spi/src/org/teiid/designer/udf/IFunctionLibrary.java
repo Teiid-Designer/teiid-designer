@@ -111,6 +111,7 @@ public interface IFunctionLibrary<F extends IFunctionForm, FD extends IFunctionD
      * 
      * @return those functions in the given category
      */
+    @Deprecated
     List<F> getFunctionForms(String category);
 
     /**
@@ -122,7 +123,19 @@ public interface IFunctionLibrary<F extends IFunctionForm, FD extends IFunctionD
      * 
      * @return function or null
      */
+    @Deprecated
     F findFunctionForm(String name, int length);
+
+    /**
+     * Find whether library contains function with the
+     * given name and number of arguments
+     * 
+     * @param name
+     * @param length number of arguments
+     * 
+     * @return true if library has function
+     */
+    boolean hasFunctionMethod(String name, int length);
 
     /**
      * Find a function descriptor given a name and the types of the arguments.

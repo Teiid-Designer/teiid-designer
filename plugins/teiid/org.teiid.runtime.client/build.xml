@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+== and generate the SQLParser sources using javacc
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-libs" default="generate">
+
+	<property name="GIT-HOME" location="../../.." />
+
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
+	<!-- Comma-separated list of required libraries -->
+	<property name="libs" value="connector-api.jar,
+                                 jboss-as-cli.jar,
+                                 jboss-as-controller-client.jar,
+                                 jboss-as-controller.jar,
+                                 jboss-as-protocol.jar,
+                                 jboss-dmr.jar,
+                                 jboss-logging.jar,
+                                 jboss-marshalling-river.jar,
+                                 jboss-marshalling.jar,
+                                 jboss-modules.jar,
+                                 jboss-remoting.jar,
+                                 jboss-sasl.jar,
+                                 jboss-threads.jar,
+                                 jboss-vfs.jar,
+                                 jgroups.jar,
+                                 json-simple.jar,
+                                 jta.jar,
+                                 nux.jar,
+                                 xnio-api.jar,
+                                 xnio-nio.jar,
+                                 xom.jar"/>
+
+	<!-- Location of the generated SQLParser class -->
+	<property name="parsers" value="v7/Teiid7Parser.java,
+                                    v8/Teiid8Parser.java" />
+
+	<!--
+	   Test whether all the required libraries are present
+	-->
+	<target name="check-libs">
+		<filelist id="my.libs" dir="lib" files="${libs}" />
+		<restrict id="missing.libs">
+			<filelist refid="my.libs" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.libs" refid="missing.libs" />
+		<condition property="libs-present" value="true">
+			<length string="${missing.libs}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Test for existence of the generated sql parser class
+	-->
+	<target name="check-parsers">
+		<filelist id="my.parsers" dir="engine/org/teiid/query/parser" files="${parsers}" />
+		<restrict id="missing.parsers">
+			<filelist refid="my.parsers" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.parsers" refid="missing.parsers" />
+		<condition property="parsers-present" value="true">
+			<length string="${missing.parsers}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Check whether the libraries have already been downloaded and whether the
+	   parser classes have beeen generated. If either is not present then the
+	   'should-generate' property be set to the 'true'
+	-->
+	<target name="check-work" depends="check-libs, check-parsers">
+		<condition property="should-generate" value="true">
+			<or>
+				<isfalse value="${libs-present}" />
+				<isfalse value="${parsers-present}" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="nothing-todo" unless="should-generate">
+		<echo message="Project source generation is up-to-date" />
+	</target>
+
+	<target name="dependencies" if="should-generate">
+		<!-- Build the target platform and install it
+		<echo message="=== Installing target platform ===" />
+		<mvn dir="${GIT-HOME}/target-platform" args="install" />
+
+		 Build the spi dependency and install it
+		<echo message="=== Installing the spi plugin dependency ===" />
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
+
+		 Build the datatools connectivity model dependency and install it
+		<echo message="=== Installing the datatools connectivity model plugin dependency ===" />
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.model" args="install" />
+
+		 Build the datatools connectivity dependency and install it
+		<echo message="=== Installing the datatools connectivity plugin dependency ===" />
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity" args="install" />
+
+		 Build the datatools connectivity ui dependency and install it
+		<echo message="=== Installing the datatools connectivity ui plugin dependency ===" />
+		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.ui" args="install" />
+		-->
+	</target>
+
+	<target name="clean" depends="dependencies" if="should-generate">
+
+		<echo message="Removing generated files ..." />
+		<mvn dir="." args="clean" />
+
+	</target>
+
+	<target name="generate" depends="check-work, nothing-todo, clean" if="should-generate">
+
+		<echo message="Generating from maven ..." />
+
+		<!-- Call the process sources goal and generate using javacc -->
+		<echo message="=== Generating parser ===" />
+		<mvn dir="." args="process-sources" />
+
+	</target>
+</project>

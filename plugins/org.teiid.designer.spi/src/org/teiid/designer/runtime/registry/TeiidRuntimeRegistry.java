@@ -115,7 +115,7 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
         if (factory == null)
             throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
         
-        return factory.getDataTypeManagerService();
+        return factory.getDataTypeManagerService(teiidServerVersion);
     }
 
     /**
@@ -131,7 +131,7 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
         if (factory == null)
             throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
 
-        return factory.getTeiidDriver();
+        return factory.getTeiidDriver(teiidServerVersion);
     }
 
     /**
@@ -147,7 +147,7 @@ public class TeiidRuntimeRegistry extends AbstractExtensionRegistry<ITeiidServer
         if (factory == null)
             throw new Exception(NLS.bind(Messages.NoExecutionAdminFactory, teiidServerVersion));
         
-        return factory.getQueryService();
+        return factory.getQueryService(teiidServerVersion);
     }
     
     /**

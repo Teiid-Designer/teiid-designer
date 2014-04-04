@@ -1050,9 +1050,9 @@ public class XmlDocumentValidationRule implements ObjectValidationRule {
      */
     private Collection createValidationProblems( final IValidatorReport report ) {
         if (report != null && report.hasItems()) {
-            Collection<IValidatorFailure> items = report.getItems();
+            Collection<? extends IValidatorFailure> items = report.getItems();
             Collection problemList = new ArrayList(items.size());
-            for (Iterator<IValidatorFailure> itemIter = items.iterator(); itemIter.hasNext();) {
+            for (Iterator<? extends IValidatorFailure> itemIter = items.iterator(); itemIter.hasNext();) {
                 IValidatorFailure item = itemIter.next();
                 ValidationProblem problem = new ValidationProblemImpl(0, IStatus.ERROR, item.toString());
                 problemList.add(problem);

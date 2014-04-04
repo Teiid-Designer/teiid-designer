@@ -15,9 +15,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import javax.script.ScriptEngine;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.LRUCache;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.ColumnSetRecord.ColumnSetRecordProperties;
@@ -30,6 +33,7 @@ import org.teiid.designer.metadata.runtime.TableRecord.TableRecordProperties;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
 
@@ -80,6 +84,11 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     // ==================================================================================
     // I N T E R F A C E M E T H O D S
     // ==================================================================================
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return ModelerCore.getTeiidServerVersion();
+    }
 
     @Override
 	public Object getElementID( final String elementName ) throws Exception {
@@ -779,12 +788,12 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getDistinctValues(Object elementID) throws Exception {
+    public float getDistinctValues(Object elementID) throws Exception {
         return 0;
     }
 
     @Override
-    public int getNullValues(Object elementID) throws Exception {
+    public float getNullValues(Object elementID) throws Exception {
         return 0;
     }
 
@@ -832,7 +841,7 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     }
 
     @Override
-    public int getCardinality(Object groupID) throws Exception {
+    public float getCardinality(Object groupID) throws Exception {
         return 0;
     }
 
@@ -916,4 +925,88 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
         return null;
     }
 
+    @Override
+    public boolean isTemporaryTable(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public Object addToMetadataCache(Object metadataID, String key, Object value) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object getFromMetadataCache(Object metadataID, String key) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isScalarGroup(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSource(Object modelId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSourceElement(Object elementId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public IQueryMetadataInterface getDesignTimeMetadata() {
+        return null;
+    }
+
+    @Override
+    public IQueryMetadataInterface getSessionMetadata() {
+        return null;
+    }
+
+    @Override
+    public Set getImportedModels() {
+        return null;
+    }
+
+    @Override
+    public ScriptEngine getScriptEngine(String langauge) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isVariadic(Object metadataID) {
+        return false;
+    }
+
+    @Override
+    public Map getFunctionBasedExpressions(Object metadataID) {
+        return null;
+    }
+
+    @Override
+    public boolean isPseudo(Object elementId) {
+        return false;
+    }
+
+    @Override
+    public Object getModelID(String modelName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified) {
+        return null;
+    }
+
+    @Override
+    public boolean findShortName() {
+        return false;
+    }
+
+    @Override
+    public boolean useOutputName() {
+        return false;
+    }
 }

@@ -7,8 +7,10 @@
 */
 package org.teiid.designer.query.sql.symbol;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 
@@ -18,7 +20,7 @@ import org.teiid.designer.query.sql.lang.IExpression;
 public interface IAggregateSymbol<LV extends ILanguageVisitor>
     extends IExpression<LV> {
 
-    public enum Type {
+    public enum Type {        
         COUNT,
         SUM,
         AVG,
@@ -27,7 +29,6 @@ public interface IAggregateSymbol<LV extends ILanguageVisitor>
         XMLAGG,
         TEXTAGG,
         ARRAY_AGG,
-        JSONARRAY_AGG,
         ANY,
         SOME,
         EVERY,
@@ -38,7 +39,14 @@ public interface IAggregateSymbol<LV extends ILanguageVisitor>
         RANK,
         DENSE_RANK,
         ROW_NUMBER,
+
+        @Since(Version.TEIID_8_0)
+        JSONARRAY_AGG,
+
+        @Since(Version.TEIID_8_0)
         STRING_AGG,
+
+        @Since(Version.TEIID_8_0)
         USER_DEFINED;
     }
 

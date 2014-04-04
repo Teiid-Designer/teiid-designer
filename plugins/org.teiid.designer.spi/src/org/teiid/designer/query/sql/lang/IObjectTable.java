@@ -7,11 +7,14 @@
  */
 package org.teiid.designer.query.sql.lang;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
  */
+@Since(Version.TEIID_8_0)
 public interface IObjectTable<LV extends ILanguageVisitor> extends ITableFunctionReference<LV>{
 
 }

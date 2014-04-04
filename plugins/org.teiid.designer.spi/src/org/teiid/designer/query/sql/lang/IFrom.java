@@ -31,7 +31,7 @@ public interface IFrom<F extends IFromClause,
      * 
      * @param clauses List of {@link IFromClause}
      */
-    void setClauses(List<F> clauses);
+    void setClauses(List<? extends F> clauses);
 
     /**
      * Add a clause to the FROM

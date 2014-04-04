@@ -25,6 +25,80 @@ import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 public class TeiidServerVersion implements ITeiidServerVersion {
 
     /**
+     * Version enumerator
+     */
+    public static enum Version {
+
+        /**
+         * Teiid 7.7
+         */
+        TEIID_7_7(VersionID.TEIID_7_7),
+
+        /**
+         * Teiid 8.0
+         */
+        TEIID_8_0(VersionID.TEIID_8_0),
+
+        /**
+         * Teiid 8.1
+         */
+        TEIID_8_1(VersionID.TEIID_8_1),
+
+        /**
+         * Teiid 8.2
+         */
+        TEIID_8_2(VersionID.TEIID_8_2),
+
+        /**
+         * Teiid 8.3
+         */
+        TEIID_8_3(VersionID.TEIID_8_3),
+
+        /**
+         * Teiid 8.4
+         */
+        TEIID_8_4(VersionID.TEIID_8_4),
+
+        /**
+         * Teiid 8.5
+         */
+        TEIID_8_5(VersionID.TEIID_8_5),
+
+        /**
+         * Teiid 8.6
+         */
+        TEIID_8_6(VersionID.TEIID_8_6),
+
+        /**
+         * Teiid 8.7
+         */
+        TEIID_8_7(VersionID.TEIID_8_7);
+
+        private final ITeiidServerVersion version;
+
+        Version(VersionID id) {
+            version = new TeiidServerVersion(id.toString());
+        }
+
+        /**
+         * @return version model
+         */
+        public ITeiidServerVersion get() {
+            return version;
+        }
+    }
+
+    /**
+     * Minimum 7 server version
+     */
+    public static final ITeiidServerVersion TEIID_7_SERVER = new TeiidServerVersion(SEVEN, SEVEN, ZERO);
+
+    /**
+     * Minimum 8 server version
+     */
+    public static final ITeiidServerVersion TEIID_8_SERVER = new TeiidServerVersion(EIGHT, ZERO, ZERO);
+
+    /**
      * The default teiid 8 server version
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_8_SERVER = new TeiidServerVersion(DEFAULT_TEIID_8_SERVER_ID);
@@ -33,11 +107,21 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * The default teiid 7 server version
      */
     public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
-    
+
+    /**
+     * The teiid 8.4 server version - this version made the CREATE VIRTUAL PROCEDURE keywords optional
+     */
+    public static final ITeiidServerVersion TEIID_8_4_SERVER = new TeiidServerVersion(TEIID_8_4_SERVER_ID);
+
     /**
      * The teiid 8.6 server version - this version introduced an Admin API change
      */
     public static final ITeiidServerVersion TEIID_8_6_SERVER = new TeiidServerVersion(TEIID_8_6_SERVER_ID);
+
+    /**
+     * The teiid 8.7 server version - this version introduced changes to SQLStringVisitor
+     */
+    public static final ITeiidServerVersion TEIID_8_7_SERVER = new TeiidServerVersion(TEIID_8_7_SERVER_ID);
 
     /**
      * The default preferred server
@@ -238,64 +322,82 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     }
 
     @Override
+    public ITeiidServerVersion getMinimumVersion() {
+        if (! this.hasWildCards())
+            return this;
+
+        String major = getMajor();
+        String minor = getMinor().equals(WILDCARD) ? ZERO : getMinor();
+        String micro = getMicro().equals(WILDCARD) ? ZERO : getMicro();
+
+        return new TeiidServerVersion(major, minor, micro);
+    }
+
+    @Override
+    public ITeiidServerVersion getMaximumVersion() {
+        if (! this.hasWildCards())
+            return this;
+
+        String major = getMajor();
+        String minor = getMinor().equals(WILDCARD) ? NINE : getMinor();
+        String micro = getMicro().equals(WILDCARD) ? NINE : getMicro();
+
+        return new TeiidServerVersion(major, minor, micro);
+    }
+
+    @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        try {
-            int myMajor = Integer.parseInt(getMajor());
-            int otherMajor = Integer.parseInt(otherVersion.getMajor());
-            if (myMajor > otherMajor)
-                return true;
+        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        if (majCompResult > 0)
+            return true;
 
-            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-                return false;
+        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+            return false;
+        
+        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        if (majCompResult == 0 && minCompResult > 0)
+            return true;
 
-            int myMinor = Integer.parseInt(getMinor());
-            int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (((myMajor * 100) + (myMinor * 10)) > ((otherMajor * 100) + (otherMinor * 10)))
-                return true;
+        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+            return false;
 
-            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-                return false;
-
-            int myMicro = Integer.parseInt(getMicro());
-            int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (((myMajor * 100) + (myMinor * 10) + myMicro) > ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
-                return true;
-        }
-        catch (Exception ex) {
-            DesignerSPIPlugin.log(ex);
-        }
-
+        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
+            return true;
+            
         return false;
     }
 
     @Override
     public boolean isLessThan(ITeiidServerVersion otherVersion) {
-        try {
-            int myMajor = Integer.parseInt(getMajor());
-            int otherMajor = Integer.parseInt(otherVersion.getMajor());
-            if (myMajor < otherMajor)
-                return true;
+        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        if (majCompResult < 0)
+            return true;
 
-            if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-                return false;
+        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
+            return false;
+        
+        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        if (majCompResult == 0 && minCompResult < 0)
+            return true;
 
-            int myMinor = Integer.parseInt(getMinor());
-            int otherMinor = Integer.parseInt(otherVersion.getMinor());
-            if (((myMajor * 100) + (myMinor * 10)) < ((otherMajor * 100) + (otherMinor * 10)))
-                return true;
+        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
+            return false;
 
-            if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-                return false;
-
-            int myMicro = Integer.parseInt(getMicro());
-            int otherMicro = Integer.parseInt(otherVersion.getMicro());
-            if (((myMajor * 100) + (myMinor * 10) + myMicro) < ((otherMajor * 100) + (otherMinor * 10) + otherMicro))
-                return true;
-        }
-        catch (Exception ex) {
-            DesignerSPIPlugin.log(ex);
-        }
-
+        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
+            return true;
+            
         return false;
+    }
+
+    @Override
+    public boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion) {
+        return this.compareTo(otherVersion) || this.isGreaterThan(otherVersion);
+    }
+
+    @Override
+    public boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion) {
+        return this.compareTo(otherVersion) || this.isLessThan(otherVersion);
     }
 }

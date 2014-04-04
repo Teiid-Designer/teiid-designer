@@ -18,7 +18,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import javax.script.ScriptEngine;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.id.UUID;
@@ -54,6 +57,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -67,35 +71,8 @@ import org.teiid.designer.xml.IMappingNode;
  *
  * @since 8.0
  */
-public abstract class TransformationMetadata implements IQueryMetadataInterface {
+public class TransformationMetadata implements IQueryMetadataInterface {
 
-    private static class SupportConstants {
-
-        private SupportConstants() {}
-
-        static class Group {
-            private Group() {}
-
-            public static final int UPDATE = 0;                 
-        }
-
-        static class Element {
-            private Element() {}
-            
-            public static final int SELECT = 0;
-            public static final int SEARCHABLE_LIKE = 1;
-            public static final int SEARCHABLE_COMPARE = 2;
-            public static final int NULL = 4;
-            public static final int UPDATE = 5;
-            public static final int DEFAULT_VALUE = 7;
-            public static final int AUTO_INCREMENT = 8;
-            public static final int CASE_SENSITIVE = 9;
-            public static final int NULL_UNKNOWN = 10;
-            public static final int SIGNED = 11;
-        }
-
-    }
-    
     // Fix Me: The following constants come from org.teiid.designer.metamodels.relational.NullableType
     private static int NULLABLE = 1;
     private static int NULLABLE_UNKNOWN = 2;
@@ -134,6 +111,11 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
     // ==================================================================================
     // I N T E R F A C E M E T H O D S
     // ==================================================================================
+
+    @Override
+    public ITeiidServerVersion getTeiidVersion() {
+        return ModelerCore.getTeiidServerVersion();
+    }
 
     @Override
     public Object getElementID(final String elementName) throws Exception {
@@ -890,7 +872,7 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
     }
 
     @Override
-    public int getCardinality(final Object groupID) {
+    public float getCardinality(final Object groupID) {
         CoreArgCheck.isInstanceOf(TableRecord.class, groupID);
         return ((TableRecord)groupID).getCardinality();
     }
@@ -1018,7 +1000,7 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
     }
 
     @Override
-    public int getDistinctValues(final Object elementID) {
+    public float getDistinctValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getDistinctValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1029,7 +1011,7 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
     }
 
     @Override
-    public int getNullValues(final Object elementID) {
+    public float getNullValues(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getNullValues();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1867,5 +1849,94 @@ public abstract class TransformationMetadata implements IQueryMetadataInterface 
         procInfo.setUpdateCount(procRecord.getUpdateCount() - 1);
 
         return procInfo;
+    }
+
+    /***
+     * Methods added below to support implementation in teiid runtime client
+     */
+
+    @Override
+    public boolean isTemporaryTable(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public Object addToMetadataCache(Object metadataID, String key, Object value) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Object getFromMetadataCache(Object metadataID, String key) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isScalarGroup(Object groupID) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSource(Object modelId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public boolean isMultiSourceElement(Object elementId) throws Exception {
+        return false;
+    }
+
+    @Override
+    public IQueryMetadataInterface getDesignTimeMetadata() {
+        return this;
+    }
+
+    @Override
+    public IQueryMetadataInterface getSessionMetadata() {
+        return null;
+    }
+
+    @Override
+    public Set getImportedModels() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public ScriptEngine getScriptEngine(String langauge) throws Exception {
+        return null;
+    }
+
+    @Override
+    public boolean isVariadic(Object metadataID) {
+        return false;
+    }
+
+    @Override
+    public Map getFunctionBasedExpressions(Object metadataID) {
+        return null;
+    }
+
+    @Override
+    public boolean isPseudo(Object elementId) {
+        return false;
+    }
+
+    @Override
+    public Object getModelID(String modelName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public String getExtensionProperty(Object metadataID, String key, boolean checkUnqualified) {
+        return null;
+    }
+
+    @Override
+    public boolean findShortName() {
+        return false;
+    }
+
+    @Override
+    public boolean useOutputName() {
+        return false;
     }
 }

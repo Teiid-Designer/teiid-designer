@@ -7,12 +7,15 @@
  */
 package org.teiid.designer.query.sql.proc;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
  */
+@Since(Version.TEIID_8_0)
 public interface IExceptionExpression<LV extends ILanguageVisitor> extends IExpression<LV> {
 
 }

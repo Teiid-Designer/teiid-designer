@@ -11,11 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -749,10 +746,19 @@ public class TransformationValidator implements QueryValidator {
      */
     private List<IStatus> createStatusList( final IValidatorReport report ) {
         if (report != null && report.hasItems()) {
-        	Collection<IValidatorFailure> items = report.getItems();
+        	Collection<? extends IValidatorFailure> items = report.getItems();
             List<IStatus> statusList = new ArrayList<IStatus>(items.size());
             for (IValidatorFailure item : items) {
-                statusList.add(item.getStatus());
+                int statusVal = IStatus.OK;
+                switch (item.getStatus()) {
+                    case ERROR:
+                        statusVal = IStatus.ERROR;
+                        break;
+                    case WARNING:
+                        statusVal = IStatus.WARNING;
+                }
+                IStatus status = new Status(statusVal, TransformationPlugin.PLUGIN_ID, item.getStatus().toString(), null);
+                statusList.add(status);
             }
             return statusList;
         }
@@ -810,11 +816,19 @@ public class TransformationValidator implements QueryValidator {
     }
     
     private List<IStatus> getReportStatusList(IValidatorReport report, int errorCode) {
-    	Collection<IValidatorFailure> items = report.getItems();
+    	Collection<? extends IValidatorFailure> items = report.getItems();
     	
     	List<IStatus> statusList = new ArrayList<IStatus>(items.size());
     	for( IValidatorFailure item : items ) {
-    		IStatus status = new Status(item.getStatus().getSeverity(), TransformationPlugin.PLUGIN_ID, errorCode, item.getStatus().getMessage(), null);
+    	    int statusVal = IStatus.OK;
+    	    switch (item.getStatus()) {
+    	        case ERROR:
+    	            statusVal = IStatus.ERROR;
+    	            break;
+    	        case WARNING:
+    	            statusVal = IStatus.WARNING;
+    	    }
+    		IStatus status = new Status(statusVal, TransformationPlugin.PLUGIN_ID, errorCode, item.getStatus().toString(), null);
     		statusList.add(status);
     	}
     	

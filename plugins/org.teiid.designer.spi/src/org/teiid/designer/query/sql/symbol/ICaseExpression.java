@@ -15,4 +15,13 @@ import org.teiid.designer.query.sql.lang.IExpression;
  */
 public interface ICaseExpression<LV extends ILanguageVisitor> extends IExpression<LV> {
 
+    IExpression getExpression();
+
+    int getWhenCount();
+
+    IExpression getWhenExpression(int index);
+
+    IExpression getThenExpression(int index);
+
+    IExpression getElseExpression();
 }

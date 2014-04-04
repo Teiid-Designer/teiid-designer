@@ -13,6 +13,6 @@ import org.teiid.designer.query.sql.ILanguageVisitor;
  *
  */
 public interface ITranslatableProcedureContainer<E extends IExpression, LV extends ILanguageVisitor>
-    extends IProcedureContainer<E, LV> {
+    extends ILanguageObject<LV> {
 
 }

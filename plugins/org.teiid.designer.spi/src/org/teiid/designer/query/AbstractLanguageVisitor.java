@@ -12,13 +12,11 @@ import org.teiid.designer.query.sql.lang.IAlterProcedure;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.designer.query.sql.lang.IAlterView;
 import org.teiid.designer.query.sql.lang.IArrayTable;
-import org.teiid.designer.query.sql.lang.IBatchedUpdateCommand;
 import org.teiid.designer.query.sql.lang.IBetweenCriteria;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.ICompoundCriteria;
 import org.teiid.designer.query.sql.lang.ICreate;
 import org.teiid.designer.query.sql.lang.IDelete;
-import org.teiid.designer.query.sql.lang.IDependentSetCriteria;
 import org.teiid.designer.query.sql.lang.IDrop;
 import org.teiid.designer.query.sql.lang.IDynamicCommand;
 import org.teiid.designer.query.sql.lang.IExistsCriteria;
@@ -86,6 +84,7 @@ import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 import org.teiid.designer.query.sql.symbol.ISearchedCaseExpression;
 import org.teiid.designer.query.sql.symbol.ITextLine;
 import org.teiid.designer.query.sql.symbol.IWindowFunction;
+import org.teiid.designer.query.sql.symbol.IWindowSpecification;
 import org.teiid.designer.query.sql.symbol.IXMLAttributes;
 import org.teiid.designer.query.sql.symbol.IXMLElement;
 import org.teiid.designer.query.sql.symbol.IXMLForest;
@@ -98,10 +97,6 @@ import org.teiid.designer.query.sql.symbol.IXMLSerialize;
  *
  */
 public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
-
-    @Override
-    public void visit(IBatchedUpdateCommand obj) {
-    }
 
     @Override
     public void visit(IBetweenCriteria obj) {
@@ -117,6 +112,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
 
     @Override
     public void visit(ICompoundCriteria obj) {
+    }
+
+    @Override
+    public void visit(ICreate obj) {
     }
 
     @Override
@@ -217,14 +216,6 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
 
     @Override
     public void visit(IInto obj) {
-    }
-
-    @Override
-    public void visit(IDependentSetCriteria obj) {
-    }
-
-    @Override
-    public void visit(ICreate obj) {
     }
 
     @Override
@@ -408,6 +399,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     }
 
     @Override
+    public void visit(IObjectTable objectTable) {
+    }
+
+    @Override
     public void visit(IAlterView obj) {
     }
 
@@ -428,14 +423,14 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
     }
 
     @Override
-    public void visit(IObjectTable objectTable) {
+    public void visit(IExceptionExpression exceptionExpression) {
     }
 
     @Override
-    public void visit(IExceptionExpression obj) {
+    public void visit(IReturnStatement returnStatement) {
     }
 
     @Override
-    public void visit(IReturnStatement obj) {
+    public void visit(IWindowSpecification windowSpecification) {
     }
 }

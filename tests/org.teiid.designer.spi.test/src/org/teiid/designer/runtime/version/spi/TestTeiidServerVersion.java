@@ -44,6 +44,26 @@ public class TestTeiidServerVersion extends TestCase {
     }
 
     /**
+     * Test {@link TeiidServerVersion#getMaximumVersion()}
+     */
+    public void testGetMaximum() {
+        assertEquals(version("8.0.0"), version("8.0.0").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.9.0"), version("8.x.0").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.9"), version("8.0.x").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.9.9"), version("8.x.x").getMaximumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * Test {@link TeiidServerVersion#getMinimumVersion()}
+     */
+    public void testGetMinimum() {
+        assertEquals(version("8.0.0"), version("8.0.0").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.x.0").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.0.x").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals(version("8.0.0"), version("8.x.x").getMinimumVersion()); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
      * Test {@link TeiidServerVersion#isGreaterThan(ITeiidServerVersion)}
      */
     public void testIsGreaterThan() {
@@ -87,6 +107,19 @@ public class TestTeiidServerVersion extends TestCase {
 
         assertFalse(version("8.x.0").isGreaterThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("8.0.0").isGreaterThan(version("8.x.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // silly micro version should be ignored since minor versions should be enough for the comparison
+        assertTrue(version("8.1.extendedmicroversionid").isGreaterThan(version("8.0.0")));  //$NON-NLS-1$//$NON-NLS-2$
+        
+        // same minor versions up until 1 and 2
+        assertTrue(version("8.designer-2.0").isGreaterThan(version("8.designer-1.0")));  //$NON-NLS-1$//$NON-NLS-2$
+
+        // Comparing 1 and 10
+        assertTrue(version("8.designer-10.0").isGreaterThan(version("8.designer-1.0")));  //$NON-NLS-1$//$NON-NLS-2$
+
+        // 20 < 18 but designer > teiidteiid
+        assertTrue(version("8.teiidteiid-18.0").isGreaterThan(version("8.designer-20.0")));  //$NON-NLS-1$//$NON-NLS-2$
+        assertFalse(version("8.designer-20.0").isGreaterThan(version("8.teiidteiid-18.0")));  //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -133,5 +166,18 @@ public class TestTeiidServerVersion extends TestCase {
 
         assertFalse(version("8.0.0").isLessThan(version("8.x.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("8.x.0").isLessThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        // silly micro version should be ignored since minor versions should be enough for the comparison
+        assertTrue(version("8.0.0").isLessThan(version("8.1.extendedmicroversionid")));  //$NON-NLS-1$//$NON-NLS-2$
+        
+        // same minor versions up until 1 and 2
+        assertTrue(version("8.designer-1.0").isLessThan(version("8.designer-2.0")));  //$NON-NLS-1$//$NON-NLS-2$
+
+        // Comparing 1 and 10
+        assertTrue(version("8.designer-1.0").isLessThan(version("8.designer-10.0")));  //$NON-NLS-1$//$NON-NLS-2$
+
+        // 20 > 18 but designer < teiidteiid
+        assertTrue(version("8.designer-20.0").isLessThan(version("8.teiidteiid-18.0")));  //$NON-NLS-1$//$NON-NLS-2$
+        assertFalse(version("8.teiidteiid-18.0").isLessThan(version("8.designer-20.0")));  //$NON-NLS-1$//$NON-NLS-2$
     }
 }
