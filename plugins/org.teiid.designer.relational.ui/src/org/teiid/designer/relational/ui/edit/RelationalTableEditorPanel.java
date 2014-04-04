@@ -1339,6 +1339,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		// check if procedure name is not-null
 		if( !validationPerformed && this.getRelationalReference().getName() != null ) {
 			return true;
+		} else if( validationPerformed) {
+			return true;
 		}
 		
 		return false;
