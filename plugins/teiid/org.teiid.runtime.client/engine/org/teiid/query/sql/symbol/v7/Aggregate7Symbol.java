@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.v7.Teiid7Parser;
@@ -282,37 +283,37 @@ public class Aggregate7Symbol extends ExpressionSymbol implements AggregateSymbo
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public Expression[] getArgs() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public Expression getArg(int index) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public void setArgs(Expression[] arguments) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public void setType(Class<?> type) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public FunctionDescriptor getFunctionDescriptor() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public void setFunctionDescriptor(FunctionDescriptor functionDescriptor) {
         throw new UnsupportedOperationException();
     }

@@ -33,6 +33,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -743,7 +744,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
                 new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Replace_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
     private void addEndsWithFunction() {
 	    if (teiidVersion.getMinimumVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
             return;
@@ -784,7 +785,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.Insert_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private void addToCharsFunction() {
 	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
 	        return;
@@ -797,7 +798,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 				new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.CLOB, Messages.getString(Messages.SystemSource.encode_result)) ) );                 //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private void addToBytesFunction() {
 	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
             return;

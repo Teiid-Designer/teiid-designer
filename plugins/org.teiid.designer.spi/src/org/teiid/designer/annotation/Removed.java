@@ -10,7 +10,7 @@ package org.teiid.designer.annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Used for decorating classes, fields and methods defining their
@@ -23,11 +23,10 @@ public @interface Removed {
     /**
      * The version of the Teiid Server that the class,
      * field or method is no longer applicable for, ie. has been removed.
-     * the version string should comply with {@link ITeiidServerVersion}
-     * formatting.
+     * The value is one of the values of the enum {@link Version}.
      *
-     * The default version is considered 
-     * {@link ITeiidServerVersion#DEFAULT_TEIID_8_SERVER_ID}.
+     * The default minimum version is considered
+     * {@link Version#TEIID_8_0}.
      */
-    String value() default ITeiidServerVersion.DEFAULT_TEIID_8_SERVER_ID;
+    Version value() default Version.TEIID_8_0;
 }

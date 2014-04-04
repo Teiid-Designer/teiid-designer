@@ -11,6 +11,7 @@ import java.io.Reader;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.Command;
@@ -122,14 +123,14 @@ public interface TeiidParser {
      * @return command
      * @throws Exception 
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     Command procedureBodyCommand(ParseInfo parseInfo) throws Exception;
 
     /**
      * @param factory
      * @throws Exception 
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void parseMetadata(MetadataFactory factory) throws Exception;
 
 }

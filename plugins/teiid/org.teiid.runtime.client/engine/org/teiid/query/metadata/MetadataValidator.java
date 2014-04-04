@@ -63,6 +63,7 @@ import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.QueryCommand;
+import org.teiid.query.sql.navigator.PostOrderNavigator;
 import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -322,7 +323,7 @@ public class MetadataValidator {
 										log(report, model, Messages.gs(Messages.TEIID.TEIID31114, exprString, fbi.getFullName()));
 									} 
 									EvaluatableVisitor ev = new EvaluatableVisitor(teiidVersion);
-									PreOrPostOrderNavigator.doVisit(ex, ev, PreOrPostOrderNavigator.PRE_ORDER);
+									PreOrPostOrderNavigator.doVisit(ex, ev, PostOrderNavigator.PRE_ORDER);
 									if (ev.getDeterminismLevel().compareTo(Determinism.VDB_DETERMINISTIC) < 0) {
 										log(report, model, Messages.gs(Messages.TEIID.TEIID31115, exprString, fbi.getFullName()));
 									}

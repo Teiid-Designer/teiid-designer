@@ -4,13 +4,14 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.IHasCriteria;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
 /**
  *
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class HasCriteria extends Criteria implements PredicateCriteria, IHasCriteria<LanguageVisitor> {
 
     // the selector object used to determine if a type of criteria is specified 

@@ -24,6 +24,7 @@ package org.teiid.query.mapping.xml;
 
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingAttribute;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -110,7 +111,7 @@ public class MappingAttribute extends MappingNode implements IMappingAttribute {
         return "@" + super.getPathName(); //$NON-NLS-1$
     }
     
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     public String getCanonicalName() {
         return getFullyQualifiedName().toUpperCase();
     }
@@ -192,12 +193,12 @@ public class MappingAttribute extends MappingNode implements IMappingAttribute {
         return super.getSourceNode();
     }
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public String getType() {
         return (String)getProperty(MappingNodeConstants.Properties.BUILT_IN_TYPE);
     }
 
-    @Since("8.0.0")    
+    @Since(Version.TEIID_8_0)    
     public MappingAttribute setType(String type) {
         if (type != null) {
             setProperty(MappingNodeConstants.Properties.BUILT_IN_TYPE, type);

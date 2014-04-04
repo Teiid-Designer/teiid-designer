@@ -5,6 +5,7 @@ package org.teiid.query.sql.lang;
 import java.util.Collection;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IFromClause;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Option.MakeDep;
@@ -27,7 +28,7 @@ public abstract class FromClause extends SimpleNode implements IFromClause<Langu
     /**
      * 
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public static final String PRESERVE = "PRESERVE"; //$NON-NLS-1$
 
     private boolean optional;

@@ -8,12 +8,13 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.symbol.Expression;
 
 /**
  * Interface only applicable to the Teiid 7 parser
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public interface SingleElementSymbol extends Expression {
 
 }

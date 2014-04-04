@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.Insert;
@@ -65,7 +66,7 @@ public class ResultSetInfo {
     
     private ElementSymbol mappingClassSymbol;
 	private boolean inputSet;
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private boolean isCritNullDependent;
 
 	//auto-staging related info
@@ -184,12 +185,12 @@ public class ResultSetInfo {
 		this.inputSet = inputSet;
 	}
 	
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	public void setCritNullDependent(boolean isCritNullDependent) {
 		this.isCritNullDependent = isCritNullDependent;
 	}
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	public boolean isCritNullDependent(){
 		return this.isCritNullDependent;
 	}

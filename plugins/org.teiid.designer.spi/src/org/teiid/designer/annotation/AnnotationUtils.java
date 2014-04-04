@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import org.eclipse.core.runtime.Assert;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
@@ -137,7 +137,7 @@ public class AnnotationUtils {
         if (removed == null || currentVersion == null)
             return false;
 
-        return isGreaterOrEqualThan(new TeiidServerVersion(removed.value()), currentVersion);
+        return isGreaterOrEqualThan(removed.value().get(), currentVersion);
     }
 
     /**
@@ -165,7 +165,7 @@ public class AnnotationUtils {
         if (since == null || currentVersion == null)
             return true;
 
-        return isGreaterOrEqualThan(new TeiidServerVersion(since.value()), currentVersion);
+        return isGreaterOrEqualThan(since.value().get(), currentVersion);
     }
 
     /**
@@ -302,17 +302,17 @@ public class AnnotationUtils {
             return updatedName;
 
         Updated updated = getAnnotation(enumValue, Updated.class);
-        String[] versions = updated.version();
+        Version[] versions = updated.version();
         String[] replacements = updated.replaces();
 
         List<UpdateVersionPair> pairs = new ArrayList<UpdateVersionPair>();
         for (int i = 0; i < versions.length; ++i) {
-            String version = versions[i];
+            Version version = versions[i];
             if (i >= replacements.length)
                 break;
 
             String replaced = replacements[i];
-            pairs.add(new UpdateVersionPair(new TeiidServerVersion(version), replaced));
+            pairs.add(new UpdateVersionPair(version.get(), replaced));
         }
 
         Collections.sort(pairs);

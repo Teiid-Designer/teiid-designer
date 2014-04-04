@@ -28,6 +28,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
@@ -257,7 +258,7 @@ public class FunctionMetadataValidator {
      * @param strName String to use in exception message
      * @throws FunctionMetadataException Thrown when string uses characters not in allowed character sets
      */
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     private static final void validateNameCharacters(String name, String strName) throws Exception {
         if (name.indexOf('.') > 0) {
             throw new Exception(Messages.getString(Messages.ERR.ERR_015_001_0057,strName, '.'));

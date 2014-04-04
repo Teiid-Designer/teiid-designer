@@ -22,6 +22,7 @@
 package org.teiid.query.metadata;
 
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface DDLConstants {
 	public static final String JAVA_METHOD = "JAVA_METHOD";//$NON-NLS-1$
@@ -42,7 +43,7 @@ public interface DDLConstants {
 	public static final String SIGNED = "SIGNED";//$NON-NLS-1$
 	public static final String SELECTABLE = "SELECTABLE";//$NON-NLS-1$
 	public static final String CASE_SENSITIVE = "CASE_SENSITIVE";//$NON-NLS-1$
-	@Since("8.5.0")
+	@Since(Version.TEIID_8_5)
 	public static final String AUTO_INCREMENT = "AUTO_INCREMENT";//$NON-NLS-1$
 	public static final String NOT_NULL = "NOT NULL";//$NON-NLS-1$
 	public static final String FOREIGN_KEY = "FOREIGN KEY";//$NON-NLS-1$

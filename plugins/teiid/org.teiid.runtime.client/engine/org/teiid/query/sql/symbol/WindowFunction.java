@@ -8,6 +8,7 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Node;
 import org.teiid.query.sql.lang.SingleElementSymbol;
@@ -41,13 +42,13 @@ public interface WindowFunction extends Node, SingleElementSymbol, Expression {
     /**
      * @return name
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     String getName();
 
     /**
      * @param name
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     void setName(String name);
 
     @Override

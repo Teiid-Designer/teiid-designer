@@ -5,6 +5,7 @@ package org.teiid.query.sql.proc;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.proc.IRaiseStatement;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.Expression;
@@ -12,7 +13,7 @@ import org.teiid.query.sql.symbol.Expression;
 /**
  *
  */
-@Since("8.0.0")
+@Since(Version.TEIID_8_0)
 public class RaiseStatement extends Statement
     implements ExpressionStatement, IRaiseStatement<LanguageVisitor, Expression> {
 

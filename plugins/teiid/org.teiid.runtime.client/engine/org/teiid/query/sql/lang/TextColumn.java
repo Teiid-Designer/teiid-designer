@@ -4,6 +4,7 @@ package org.teiid.query.sql.lang;
 
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ITextColumn;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
@@ -20,7 +21,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
 
     private Integer position;
 
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     private boolean ordinal;
 
     /**
@@ -90,7 +91,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
     /**
      * @return ordinal
      */
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     public boolean isOrdinal() {
         if (isTeiid87OrGreater())
             return ordinal;
@@ -101,7 +102,7 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
     /**
      * @param ordinal the ordinal to set
      */
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     public void setOrdinal(boolean ordinal) {
         if (isTeiid87OrGreater())
             this.ordinal = ordinal;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ICriteriaSelector;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -13,7 +14,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 /**
  *
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class CriteriaSelector extends SimpleNode implements CriteriaOperator, ICriteriaSelector<LanguageVisitor> {
 
     // type of criteria

@@ -54,6 +54,7 @@ import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
@@ -892,7 +893,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     @Deprecated
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
         if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs"), getServer().getServerVersion()))

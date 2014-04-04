@@ -40,6 +40,7 @@ import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
@@ -54,7 +55,7 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
      *
      * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
 	private transient ListOverMap<ModelMetaData> sevenModels = new ListOverMap<ModelMetaData>(new KeyBuilder<ModelMetaData>() {
         private static final long serialVersionUID = 846247100420118961L;
 
@@ -70,7 +71,7 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
      *
      * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     private transient ListOverMap<VDBTranslatorMetaData> sevenTranslators = new ListOverMap<VDBTranslatorMetaData>(new KeyBuilder<VDBTranslatorMetaData>() {
         private static final long serialVersionUID = 3890502172003653563L;
 
@@ -86,7 +87,7 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
      *
      * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     private transient ListOverMap<DataPolicyMetadata> sevenDataPolicies = new ListOverMap<DataPolicyMetadata>(new KeyBuilder<DataPolicyMetadata>() {
         private static final long serialVersionUID = 4954591545242715254L;
 
@@ -102,29 +103,29 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 
 	private LinkedHashMap<String, DataPolicyMetadata> dataPolicies = new LinkedHashMap<String, DataPolicyMetadata>(); 
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private List<VDBImportMetadata> imports = new ArrayList<VDBImportMetadata>(2);
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private List<EntryMetaData> entries = new ArrayList<EntryMetaData>(2);
 	
 	private int version = 1;
 	private String description;
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     private String fileUrl;
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private boolean xmlDeployment = false;
 
 	private volatile VDB.Status status = VDB.Status.ACTIVE;
 	private ConnectionType connectionType = VDB.ConnectionType.BY_VERSION;
 	
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private boolean removed;
 
 	private long queryTimeout = Long.MIN_VALUE;
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private Set<String> importedModels = Collections.emptySet();
 
 	private LinkedHashMap<String, ModelMetaData> convertModels(ListOverMap<ModelMetaData> overMap) {
@@ -249,17 +250,17 @@ public class VDBMetaData extends AdminObjectImpl implements VDB, Cloneable {
 	}	
 		
 	@Override
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	public String getUrl() {
 		return this.fileUrl;
 	}
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	public void setUrl(String url) {
 		this.fileUrl = url;
 	}
 
-	@Removed("8.0.0")	
+	@Removed(Version.TEIID_8_0)	
 	public void setUrl(URL url) {
 		this.setUrl(url.toExternalForm());
 		String path = url.getPath();

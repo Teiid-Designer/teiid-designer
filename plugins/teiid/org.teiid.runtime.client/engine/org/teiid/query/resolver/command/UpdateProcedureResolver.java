@@ -38,6 +38,7 @@ import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.query.metadata.TempMetadataAdapter;
@@ -145,7 +146,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         resolveBlock(cmd, ta.getBlock(), ta.getExternalGroupContexts(), metadata);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     @Deprecated
     private void resolveVirtualGroupElements(CreateUpdateProcedureCommand procCommand, IQueryMetadataInterface metadata)
         throws Exception {
@@ -183,7 +184,7 @@ public class UpdateProcedureResolver extends CommandResolver {
         procCommand.setSymbolMap(symbolMap);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     @Deprecated
     private void resolveCommand(CreateUpdateProcedureCommand procCommand, TempMetadataAdapter metadata, boolean resolveNullLiterals)
         throws Exception {
@@ -313,7 +314,7 @@ public class UpdateProcedureResolver extends CommandResolver {
     }
 
     @SuppressWarnings( "incomplete-switch" )
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     @Deprecated
     private void resolveStatement(CreateUpdateProcedureCommand command, Statement statement, GroupContext externalGroups, GroupSymbol variables, TempMetadataAdapter metadata)
         throws Exception {

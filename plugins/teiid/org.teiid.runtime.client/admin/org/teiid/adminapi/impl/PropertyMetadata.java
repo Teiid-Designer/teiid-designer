@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * <pre>
@@ -45,7 +46,7 @@ import org.teiid.designer.annotation.Removed;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "property")
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class PropertyMetadata implements Serializable{
 	private static final long serialVersionUID = -5040224539939758816L;
 	

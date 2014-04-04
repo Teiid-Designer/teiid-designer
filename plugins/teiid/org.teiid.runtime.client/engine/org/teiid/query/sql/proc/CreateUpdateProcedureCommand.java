@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.Command;
@@ -18,7 +19,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  *
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class CreateUpdateProcedureCommand extends Command
     implements ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> {
 

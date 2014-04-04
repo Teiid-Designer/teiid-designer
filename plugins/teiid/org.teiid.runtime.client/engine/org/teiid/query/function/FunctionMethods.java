@@ -59,6 +59,7 @@ import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.StringUtil;
 import org.teiid.core.util.TimestampWithTimezone;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -70,7 +71,7 @@ import org.teiid.runtime.client.TeiidClientException;
 /**
  * Static method hooks for most of the function library.
  */
-@Since("8.0.0")
+@Since(Version.TEIID_8_0)
 public final class FunctionMethods {
 	
 	private static final boolean CALENDAR_TIMESTAMPDIFF = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.calendarTimestampDiff", true); //$NON-NLS-1$
@@ -1474,7 +1475,7 @@ public final class FunctionMethods {
 
 	private enum ErrorAction {THROW_EXCEPTION, IGNORE, WAIT}
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism=Determinism.NONDETERMINISTIC)
-	@Since("8.6.0")	
+	@Since(Version.TEIID_8_6)	
 	public static int mvstatus(CommandContext context, String schemaName, String viewName, Boolean validity, String status, String action) throws Exception {
 		if (!validity) {
 			if (ErrorAction.THROW_EXCEPTION.name().equalsIgnoreCase(action)) {
@@ -1488,7 +1489,7 @@ public final class FunctionMethods {
 	}	
 	
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM)
-	@Since("8.6.0")
+	@Since(Version.TEIID_8_6)
 	public static String[] tokenize(String str, char delimiter) {
 		List<String> tokens = StringUtil.tokenize(str, delimiter);
 		return tokens.toArray(new String[tokens.size()]);

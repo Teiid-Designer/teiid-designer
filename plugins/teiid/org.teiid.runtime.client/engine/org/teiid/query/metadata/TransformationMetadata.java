@@ -57,6 +57,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
@@ -161,7 +162,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     private Set<String> importedModels;
     private Set<String> allowedLanguages;
     private Map<String, DataPolicyMetadata> policies = new TreeMap<String, DataPolicyMetadata>(String.CASE_INSENSITIVE_ORDER);
-    @Since("8.5.0")
+    @Since(Version.TEIID_8_5)
     private boolean useOutputNames = true;
     
     /*

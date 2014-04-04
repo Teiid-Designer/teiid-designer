@@ -41,6 +41,7 @@ import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
@@ -50,7 +51,7 @@ import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.TeiidClientException;
 
-@Since("8.0.0")
+@Since(Version.TEIID_8_0)
 public class JSONFunctionMethods {
 	
 	/**

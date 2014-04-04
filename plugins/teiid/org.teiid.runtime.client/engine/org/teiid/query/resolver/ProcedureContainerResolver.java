@@ -35,6 +35,7 @@ import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
@@ -349,7 +350,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 	    queryResolver.setChildMetadata(currentCommand, childMetadata, externalGroups);
 	}
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     private static void createInputChangingMetadata(TeiidParser teiidParser, TempMetadataStore discoveredMetadata, IQueryMetadataInterface metadata, GroupSymbol group, GroupContext externalGroups)
         throws Exception {
         //Look up elements for the virtual group

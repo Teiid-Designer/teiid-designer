@@ -6,6 +6,7 @@ import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
@@ -166,7 +167,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
     /**
      * @return canonical name
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public String getCanonicalName() {
         if (this.schema != null) {
             return this.schema + ISymbol.SEPARATOR + this.getShortCanonicalName();

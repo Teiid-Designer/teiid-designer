@@ -20,7 +20,7 @@ public class GroupBy extends SimpleNode implements IGroupBy<Expression, Language
     /** The set of expressions for the data elements to be group. */
     private List<Expression> symbols = new ArrayList<Expression>();
 
-    @Since("8.5.0")
+    @Since(Version.TEIID_8_5)
     private boolean rollup;
 
     /**

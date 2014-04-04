@@ -22,8 +22,9 @@
 package org.teiid.adminapi.impl;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class TranslatorMetaData extends VDBTranslatorMetaData {
     private static final long serialVersionUID = 116875548438603151L;
 

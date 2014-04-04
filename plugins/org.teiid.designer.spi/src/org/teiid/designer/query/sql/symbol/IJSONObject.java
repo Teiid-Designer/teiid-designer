@@ -10,11 +10,12 @@ package org.teiid.designer.query.sql.symbol;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IExpression;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
  */
-@Since("8.0.0")
+@Since(Version.TEIID_8_0)
 public interface IJSONObject <LV extends ILanguageVisitor> extends IExpression<LV> {
 
 }

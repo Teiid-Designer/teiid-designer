@@ -18,7 +18,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 /**
  *
  */
-@Since("8.0.0")
+@Since(Version.TEIID_8_0)
 public class CreateProcedureCommand extends Command
     implements ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> {
 
@@ -69,7 +69,7 @@ public class CreateProcedureCommand extends Command
     }
 
     @Override
-    @Since("8.5.0")
+    @Since(Version.TEIID_8_5)
     public boolean returnsResultSet() {
         if (isTeiidVersionOrGreater(Version.TEIID_8_5))
             return this.resultSetColumns != null && !this.resultSetColumns.isEmpty();

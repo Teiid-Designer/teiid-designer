@@ -10,11 +10,12 @@ package org.teiid.designer.query.sql.proc;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.ILanguageVisitor;
 import org.teiid.designer.query.sql.lang.IPredicateCriteria;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public interface ITranslateCriteria<LV extends ILanguageVisitor> extends IPredicateCriteria<LV> {
 
 }

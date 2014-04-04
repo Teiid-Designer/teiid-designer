@@ -23,6 +23,7 @@
 package org.teiid.query.function.metadata;
 
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * This interface defines the default set of function category constants.
@@ -70,7 +71,7 @@ public interface FunctionCategoryConstants {
     /**
      * "JSON" functions are for manipulating JSON documents.
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public static final String JSON = "JSON"; //$NON-NLS-1$
 
     /**
@@ -78,7 +79,7 @@ public interface FunctionCategoryConstants {
      */
     public static final String SECURITY = "Security"; //$NON-NLS-1$ 
 
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     public static final String AGGREGATE = "Aggregatee"; //$NON-NLS-1$
 
 }

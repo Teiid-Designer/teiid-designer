@@ -29,6 +29,7 @@ import java.util.Set;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants.Reserved;
 
 /**
@@ -36,13 +37,13 @@ import org.teiid.language.SQLConstants.Reserved;
  */
 public class ProcedureReservedWords {
 
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public static final String INPUT = Reserved.INPUT;
 
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public static final String INPUTS = "INPUTS"; //$NON-NLS-1$
 
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public static final String ROWS_UPDATED = "ROWS_UPDATED"; //$NON-NLS-1$
 
     public static final String ROWCOUNT = "ROWCOUNT"; //$NON-NLS-1$

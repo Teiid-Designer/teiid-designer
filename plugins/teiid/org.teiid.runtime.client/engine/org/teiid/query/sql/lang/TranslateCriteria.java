@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.proc.ITranslateCriteria;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
 /**
  *
  */
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 public class TranslateCriteria extends Criteria implements PredicateCriteria, ITranslateCriteria<LanguageVisitor> {
 
     // the selector object used to determine if a type of criteria is specified 

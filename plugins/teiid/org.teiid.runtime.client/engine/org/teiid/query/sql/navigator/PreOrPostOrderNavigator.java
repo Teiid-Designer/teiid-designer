@@ -26,6 +26,7 @@ import java.util.Collection;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -267,7 +268,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
         preVisitVisitor(obj);
         visitNode(obj.getBlock());
@@ -282,7 +283,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(CriteriaSelector obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getElements());
@@ -361,7 +362,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void visit(HasCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getSelector());
@@ -513,7 +514,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void visit(RaiseErrorStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
@@ -619,7 +620,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(TranslateCriteria obj) {
         preVisitVisitor(obj);
         visitNode(obj.getSelector());
@@ -702,7 +703,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(JSONObject obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getArgs());
@@ -752,7 +753,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ObjectTable obj) {
         preVisitVisitor(obj);
         visitNodes(obj.getPassing());
@@ -879,7 +880,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(Array array) {
         preVisitVisitor(array);
         visitNodes(array.getExpressions());
@@ -887,7 +888,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ExceptionExpression exceptionExpression) {
         preVisitVisitor(exceptionExpression);
         visitNode(exceptionExpression.getMessage());
@@ -898,7 +899,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     }
 
     @Override
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ReturnStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());

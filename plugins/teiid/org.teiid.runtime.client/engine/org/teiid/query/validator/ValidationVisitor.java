@@ -53,6 +53,7 @@ import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AggregateAttributes;
@@ -561,7 +562,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
      * @param obj
      * @since 4.2
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     protected void validateContainsRowsUpdatedVariable(CreateUpdateProcedureCommand obj) {
         final Collection<ElementSymbol> assignVars = new ArrayList<ElementSymbol>();
        // Use visitor to find assignment statements
@@ -585,7 +586,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     @Override
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
         if(!obj.isUpdateProcedure()){
             
@@ -627,7 +628,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
 
     @Override
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void visit(HasCriteria obj) {
         if (! isUpdateProcedure()) {
             handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
@@ -635,7 +636,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void visit(TranslateCriteria obj) {
         if (! isUpdateProcedure()) {
             handleValidationError(Messages.getString(Messages.ERR.ERR_015_012_0019), obj);
@@ -706,7 +707,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
      * does not include elements not present on the groups of the command using
      * the translated criteria.
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     protected void validateTranslateCriteria(TranslateCriteria obj) {
         if(this.currentCommand == null) {
             return;
@@ -1392,7 +1393,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
     public void visit(JSONObject obj) {
     	for (DerivedColumn dc : obj.getArgs()) {
     		validateJSONValue(obj, dc.getExpression());
@@ -1517,7 +1518,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
     }
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private void validateJSONValue(LanguageObject obj, Expression expr) {
 		if (expr.getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass()
 		    && !dataTypeManager.isTransformable(
@@ -1630,7 +1631,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     }
     
     @Override
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
     public void visit(ObjectTable obj) {
     	List<DerivedColumn> passing = obj.getPassing();
     	TreeSet<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);

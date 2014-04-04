@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingDocument;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
@@ -73,7 +74,7 @@ public class MappingDocument extends MappingBaseNode implements IMappingDocument
         return name;
     }
 
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     public String getCanonicalName() {
         return name.toUpperCase();
     }

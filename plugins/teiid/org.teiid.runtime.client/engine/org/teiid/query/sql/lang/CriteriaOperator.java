@@ -13,6 +13,7 @@ import java.util.Collection;
 import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
@@ -43,23 +44,23 @@ public interface CriteriaOperator {
         GE(">="), //$NON-NLS-1$
 
         /** Constant indicating the operand is like the other */
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         LIKE("like"), //$NON-NLS-1$
 
         /** Constant indicating the operand is in the other */
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         IN("in"), //$NON-NLS-1$
 
         /** Constant indicating the operand is null */
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         IS_NULL("is null", "is"), //$NON-NLS-1$ //$NON-NLS-2$
 
         /** Constant indicating the operand is between the others */
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         BETWEEN("between"), //$NON-NLS-1$
 
         /** Constant indicating the operand is null */
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         NO_TYPE(""); //$NON-NLS-1$
 
         private Collection<String> symbols = new ArrayList<String>();

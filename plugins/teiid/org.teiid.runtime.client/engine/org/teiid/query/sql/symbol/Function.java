@@ -27,7 +27,7 @@ public class Function extends SimpleNode implements Expression, IFunction<Functi
 
     private FunctionDescriptor descriptor;
 
-    @Since("8.5.0")
+    @Since(Version.TEIID_8_5)
     private boolean eval = true;
 
     /**

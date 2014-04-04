@@ -10,6 +10,7 @@ package org.teiid.query.sql.symbol;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Node;
@@ -57,7 +58,7 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      *
      * @return Get function arguments
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     Expression[] getArgs();
 
     /**
@@ -65,13 +66,13 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      * @param index Index of argument
      * @return expression
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     Expression getArg(int index);
 
     /**
      * @param arguments
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void setArgs(Expression[] arguments);
 
     /**
@@ -79,7 +80,7 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      *
      * @param type New type
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void setType(Class<?> type);
 
     /**
@@ -115,13 +116,13 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
     /**
      * @return canonicalName
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     String getCanonicalName();
 
     /**
      * @param canonicalName
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     void setCanonicalName(String canonicalName);
 
     /**
@@ -154,27 +155,27 @@ public interface AggregateSymbol extends Node, SingleElementSymbol, Expression, 
      * Get the expression for this symbol
      * @return Expression for this symbol
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     Expression getExpression();
 
     /**
      * Set the expression represented by this symbol.
      * @param expression Expression for this expression symbol
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     void setExpression(Expression expression);
 
     /**
      * Get the function descriptor that this function resolves to.
      * @return Descriptor or null if resolution has not yet occurred
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     FunctionDescriptor getFunctionDescriptor();
 
     /**
      * @param functionDescriptor
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void setFunctionDescriptor(FunctionDescriptor functionDescriptor);
 
     /**

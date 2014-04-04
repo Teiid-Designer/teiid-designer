@@ -1929,19 +1929,19 @@ public class Admin8Factory {
 		}
 
         @Override
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         public void mergeVDBs(String sourceVDBName, int sourceVDBVersion, String targetVDBName, int targetVDBVersion) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         public void deployVDB(String fileName, InputStream vdb) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        @Removed("8.0.0")
+        @Removed(Version.TEIID_8_0)
         public void deleteVDB(String vdbName, int version) {
             throw new UnsupportedOperationException();
         }

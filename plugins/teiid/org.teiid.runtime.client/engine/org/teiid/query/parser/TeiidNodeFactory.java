@@ -18,6 +18,7 @@ import java.util.Set;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -533,7 +534,7 @@ public class TeiidNodeFactory {
         * RaiseErrorStatement
         * @generated
         */
-       @Removed("8.0.0")
+       @Removed(Version.TEIID_8_0)
        RAISE_ERROR_STATEMENT("RaiseErrorStatement"), //$NON-NLS-1$
 
        /**
@@ -564,14 +565,14 @@ public class TeiidNodeFactory {
         * CriteriaSelector
         * @generated
         */
-       @Removed("8.0.0")
+       @Removed(Version.TEIID_8_0)
        CRITERIA_SELECTOR("CriteriaSelector"), //$NON-NLS-1$
 
        /**
         * HasCriteria
         * @generated
         */
-       @Removed("8.0.0")
+       @Removed(Version.TEIID_8_0)
        HAS_CRITERIA("HasCriteria"), //$NON-NLS-1$
 
        /**
@@ -590,14 +591,14 @@ public class TeiidNodeFactory {
         * TranslateCriteria
         * @generated
         */
-       @Removed("8.0.0")
+       @Removed(Version.TEIID_8_0)
        TRANSLATE_CRITERIA("TranslateCriteria"), //$NON-NLS-1$
 
        /**
         * CreateUpdateProcedureCommand
         * @generated
         */
-       @Removed("8.0.0")
+       @Removed(Version.TEIID_8_0)
        CREATE_UPDATE_PROCEDURE_COMMAND("CreateUpdateProcedureCommand"), //$NON-NLS-1$
 
        /**
@@ -1018,35 +1019,35 @@ public class TeiidNodeFactory {
         * RaiseStatement
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        RAISE_STATEMENT("RaiseStatement"), //$NON-NLS-1$
 
        /**
         * ExceptionExpression
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        EXCEPTION_EXPRESSION("ExceptionExpression"), //$NON-NLS-1$
 
        /**
         * ReturnStatement
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        RETURN_STATEMENT("ReturnStatement"), //$NON-NLS-1$
 
        /**
         * CreateProcedureCommand
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        CREATE_PROCEDURE_COMMAND("CreateProcedureCommand"), //$NON-NLS-1$
 
        /**
         * ObjectTable
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        OBJECT_TABLE("ObjectTable"), //$NON-NLS-1$
 
        /**
@@ -1059,14 +1060,14 @@ public class TeiidNodeFactory {
         * JSONObject
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        JSON_OBJECT("JSONObject"), //$NON-NLS-1$
 
        /**
         * Array
         * @generated
         */
-       @Since("8.0.0")
+       @Since(Version.TEIID_8_0)
        ARRAY("Array"); //$NON-NLS-1$
 
        private String name;

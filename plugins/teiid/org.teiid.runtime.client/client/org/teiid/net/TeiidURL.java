@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -113,7 +114,7 @@ public class TeiidURL {
 		/**
 		 * Constant for admin property
 		 */
-		@Removed("8.0.0")
+		@Removed(Version.TEIID_8_0)
 		String ADMIN = "admin"; //$NON-NLS-1$
 		/**
 		 * Constant for passthrough authentication

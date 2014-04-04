@@ -23,6 +23,7 @@
 package org.teiid.translator;
 
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Constants for all the possible standard system push down functions.
@@ -46,7 +47,7 @@ public class SourceSystemFunctions {
 	public static final String ASCII = "ascii"; //$NON-NLS-1$
 	public static final String CHAR = "char"; //$NON-NLS-1$
 	public static final String CONCAT = "concat"; //$NON-NLS-1$
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	public static final String CONCAT2 = "concat2"; //$NON-NLS-1$
 	//public static final String DIFFERENCE = "difference";
 	public static final String INITCAP = "initcap"; //$NON-NLS-1$
@@ -66,7 +67,7 @@ public class SourceSystemFunctions {
 	public static final String SUBSTRING = "substring"; //$NON-NLS-1$
 	public static final String TO_BYTES = "to_bytes"; //$NON-NLS-1$
 	public static final String TO_CHARS = "to_chars"; //$NON-NLS-1$
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	public static final String ENDSWITH = "endswith"; //$NON-NLS-1$
 	/**
 	 * The trim function is only used for a non-space trim character

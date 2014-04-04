@@ -10,6 +10,7 @@ import org.teiid.designer.annotation.Since;
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
 import org.teiid.designer.annotation.Updated;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
@@ -47,7 +48,7 @@ public interface IDataTypeManagerService {
         REAL,
         DECIMAL,
         
-        @Since("8.0.0")
+        @Since(Version.TEIID_8_0)
         VARBINARY
     }
 
@@ -87,18 +88,18 @@ public interface IDataTypeManagerService {
     enum DataSourceTypes {
         JDBC("connector-jdbc"), //$NON-NLS-1$
 
-        @Updated(version="8.0.0", replaces="connector-salesforce")
+        @Updated(version=Version.TEIID_8_0, replaces="connector-salesforce")
         SALESFORCE("salesforce"), //$NON-NLS-1$
 
-        @Updated(version="8.0.0", replaces="connector-ldap")
+        @Updated(version=Version.TEIID_8_0, replaces="connector-ldap")
         LDAP("ldap"), //$NON-NLS-1$ 
 
-        @Updated(version="8.0.0", replaces="connector-file")
+        @Updated(version=Version.TEIID_8_0, replaces="connector-file")
         FILE("file"), //$NON-NLS-1$ 
 
         JDBC_XA("connector-jdbc-xa"), //$NON-NLS-1$
 
-        @Updated(version="8.0.0", replaces="connector-ws")
+        @Updated(version=Version.TEIID_8_0, replaces="connector-ws")
         WS("webservice"), //$NON-NLS-1$
 
         UNKNOWN("connector-unknown"); //$NON-NLS-1$

@@ -33,6 +33,7 @@ import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.teiid.adminapi.DataPolicy;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -51,7 +52,7 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
     
     private Set<String> hasRowPermissions = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
 	private boolean grantAll;
 
 	@Override
@@ -476,12 +477,12 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
 	}
     
     @Override
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     public boolean isGrantAll() {
     	return this.grantAll;
     }
 
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     public void setGrantAll(boolean grantAll) {
 		this.grantAll = grantAll;
 	}

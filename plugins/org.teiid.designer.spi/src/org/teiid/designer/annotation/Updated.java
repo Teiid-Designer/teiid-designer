@@ -10,6 +10,7 @@ package org.teiid.designer.annotation;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Used for decorating classes, fields and methods defining
@@ -26,7 +27,7 @@ public @interface Updated {
     /**
      * @return list of versions where item was updated
      */
-    String[] version();
+    Version[] version();
 
     /**
      * @return list of values replaced when item was updated

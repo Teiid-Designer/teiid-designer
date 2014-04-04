@@ -50,7 +50,7 @@ public class Query extends QueryCommand
      * Added in Teiid 8.6 but backward-compatible with all
      * Teiid 8+ parsers.
      */
-    @Since("8.6.0")
+    @Since(Version.TEIID_8_6)
     private boolean isRowConstructor;
     
     /**

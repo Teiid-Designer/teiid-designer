@@ -30,6 +30,7 @@ import java.util.Set;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public interface Admin {
 
@@ -110,7 +111,7 @@ public interface Admin {
      * @param content
      * @throws AdminException
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void deploy(String deployName, InputStream content) throws AdminException;
 
     /**
@@ -121,7 +122,7 @@ public interface Admin {
      *
      * @return the {@link VDB} representing the current property values and runtime state.
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     void deployVDB(String fileName, InputStream vdb) throws AdminException;
 
     /**
@@ -129,7 +130,7 @@ public interface Admin {
      * @param deployedName
      * @throws AdminException
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     void undeploy(String deployedName) throws AdminException;
 
     /**
@@ -137,7 +138,7 @@ public interface Admin {
      * @param vdbName
      * @param version
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     void deleteVDB(String vdbName, int version);
 
     /**
@@ -349,7 +350,7 @@ public interface Admin {
      * @param targetVDBName
      * @param targetVDBVersion
      */
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     void mergeVDBs(String sourceVDBName, int sourceVDBVersion, String targetVDBName, int targetVDBVersion) throws AdminException;
 
     

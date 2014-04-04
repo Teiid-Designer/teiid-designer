@@ -34,6 +34,7 @@ import org.teiid.adminapi.AdminObject;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public abstract class AdminObjectImpl implements AdminObject, Serializable {
 
@@ -45,7 +46,7 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 	 *
 	 * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
 	 */
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private transient ListOverMap<PropertyMetadata> sevenProperties = new ListOverMap<PropertyMetadata>(new KeyBuilder<PropertyMetadata>() {
         private static final long serialVersionUID = 3687928367250819142L;
 
@@ -57,13 +58,13 @@ public abstract class AdminObjectImpl implements AdminObject, Serializable {
 
 	private String name;
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private String serverGroup;
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private String serverName;
 
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	private String hostName;
 
 	private Map<String, String> properties = new CopyOnWriteLinkedHashMap<String, String>();

@@ -38,6 +38,7 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.CopyOnWriteLinkedHashMap;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 public class ModelMetaData extends AdminObjectImpl implements Model, Serializable {
@@ -53,7 +54,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
      *
      * IT SHOULD NEVER BE USED FOR ANYTHING ELSE!!!
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
 	private transient ListOverMap<SourceMappingMetadata> sevenSources = new ListOverMap<SourceMappingMetadata>(new KeyBuilder<SourceMappingMetadata>() {
         private static final long serialVersionUID = 2273673984691112369L;
 
@@ -69,18 +70,18 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 	protected String path; 
     protected Boolean visible = true;
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     protected List<Message> messages;
 
     protected transient List<Message> runtimeMessages;
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     protected String schemaSourceType;
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
 	protected String schemaText;
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
 	protected MetadataStatus metadataStatus = MetadataStatus.LOADING;
 
 	private Map<String, SourceMappingMetadata> convertSources(ListOverMap<SourceMappingMetadata> overMap) {

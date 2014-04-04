@@ -91,7 +91,7 @@ public class ResolverVisitor extends LanguageVisitor
 
 	private static final String SYS_PREFIX = CoreConstants.SYSTEM_MODEL + '.';
 
-	@Removed("8.5.0")
+	@Removed(Version.TEIID_8_5)
     private static ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
     	@Override
         protected Boolean initialValue() {
@@ -99,7 +99,7 @@ public class ResolverVisitor extends LanguageVisitor
     	}
     };
 
-    @Removed("8.5.0")
+    @Removed(Version.TEIID_8_5)
     public static void setFindShortName(boolean enabled) {
     	determinePartialName.set(enabled);
     }
@@ -113,7 +113,7 @@ public class ResolverVisitor extends LanguageVisitor
     private boolean findShortName;
     private List<ElementSymbol> matches = new ArrayList<ElementSymbol>(2);
     private List<GroupSymbol> groupMatches = new ArrayList<GroupSymbol>(2);
-	@Since("8.6.0")
+	@Since(Version.TEIID_8_6)
     private boolean hasUserDefinedAggregate;
     
     /**
@@ -1198,7 +1198,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    this.throwException(true);
 	}
 
-	@Since("8.6.0")
+	@Since(Version.TEIID_8_6)
 	public boolean hasUserDefinedAggregate() {
 		return hasUserDefinedAggregate;
 	}

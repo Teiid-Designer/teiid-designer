@@ -10,6 +10,7 @@ package org.teiid.query.sql.symbol;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.query.sql.symbol.ISymbol;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
@@ -39,7 +40,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     /** 
      * upper case of name
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     private String canonicalShortName;
 
     /**
@@ -118,7 +119,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     /**
      * @return the canonicalShortName
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public String getShortCanonicalName() {
         if (canonicalShortName == null && shortName != null) {
             canonicalShortName = shortName.toUpperCase();
@@ -129,7 +130,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     /**
      * @param canonicalShortName the canonicalShortName to set
      */
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public void setShortCanonicalName(String canonicalShortName) {
         this.canonicalShortName = canonicalShortName;
     }

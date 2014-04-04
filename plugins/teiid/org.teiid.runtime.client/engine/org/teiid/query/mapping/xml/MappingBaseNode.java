@@ -27,6 +27,7 @@ import java.util.List;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.xml.IMappingBaseNode;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.runtime.client.Messages;
@@ -158,7 +159,7 @@ public abstract class MappingBaseNode extends MappingNode implements IMappingBas
         return null;
     }
     
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
     public String getCanonicalName() {
         return getFullyQualifiedName().toUpperCase();
     }

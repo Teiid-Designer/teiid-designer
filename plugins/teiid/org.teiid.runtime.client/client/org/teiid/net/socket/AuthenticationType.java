@@ -28,12 +28,12 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 public enum AuthenticationType {
-    @Since("8.7.0")
+    @Since(Version.TEIID_8_7)
     USERPASSWORD,
 
     GSS,
 
-    @Removed("8.7.0")
+    @Removed(Version.TEIID_8_7)
     CLEARTEXT;
 
     private static boolean lessThan87(ITeiidServerVersion teiidVersion) {

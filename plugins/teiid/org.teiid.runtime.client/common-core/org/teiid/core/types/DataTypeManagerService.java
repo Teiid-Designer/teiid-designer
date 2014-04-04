@@ -119,7 +119,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         XML ("xml", DataTypeName.XML, XMLType.class), //$NON-NLS-1$
 
-        @Since("8.0.0")
+        @Since(Version.TEIID_8_0)
         VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class); //$NON-NLS-1$
 
         private static Map<ITeiidServerVersion, List<DefaultDataTypes>> valueCache = new HashMap<ITeiidServerVersion, List<DefaultDataTypes>>();
@@ -640,7 +640,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
      * @param alias
      * @return the data type that is aliased by the given alias
      */
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     public DefaultDataTypes getDataType(DataTypeAliases alias) {
         ArgCheck.isNotNull(alias);
 

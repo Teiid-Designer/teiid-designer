@@ -27,8 +27,9 @@ import java.util.AbstractList;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
-@Removed("8.0.0")
+@Removed(Version.TEIID_8_0)
 class ListOverMap<E> extends AbstractList<E> implements Serializable {
 	
 	private static final long serialVersionUID = 5171741731121210240L;

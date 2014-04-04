@@ -30,6 +30,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.v7.Teiid7Parser;
@@ -110,7 +111,7 @@ public class QueryParser implements IQueryParser {
 	}
 
 	@Deprecated
-	@Removed("8.0.0")
+	@Removed(Version.TEIID_8_0)
 	private Command parseUpdateProcedure(String sql) throws Exception {
         try{
             TeiidParser teiidParser = getTeiidParser(sql);
@@ -133,7 +134,7 @@ public class QueryParser implements IQueryParser {
 	 * @return command of sql
 	 * @throws Exception
 	 */
-	@Since("8.0.0")
+	@Since(Version.TEIID_8_0)
 	public Command parseProcedure(String sql, boolean update) throws Exception {
         try{
             if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))

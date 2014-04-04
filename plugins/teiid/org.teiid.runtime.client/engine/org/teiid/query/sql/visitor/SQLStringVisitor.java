@@ -167,7 +167,7 @@ import org.teiid.translator.SourceSystemFunctions;
 public class SQLStringVisitor extends LanguageVisitor
     implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, DDLConstants, ISQLStringVisitor<LanguageObject> {
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     private final static Map<String, String> BUILTIN_PREFIXES = new HashMap<String, String>();
     static {
         for (Map.Entry<String, String> entry : MetadataFactory.BUILTIN_NAMESPACES.entrySet()) {
@@ -175,7 +175,7 @@ public class SQLStringVisitor extends LanguageVisitor
         }
     }
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     private static final HashSet<String> LENGTH_DATATYPES = new HashSet<String>(
         Arrays.asList(
             DataTypeManagerService.DefaultDataTypes.CHAR.getId(),
@@ -187,7 +187,7 @@ public class SQLStringVisitor extends LanguageVisitor
             DataTypeManagerService.DefaultDataTypes.VARBINARY.getId(),
             DataTypeManagerService.DefaultDataTypes.BIG_INTEGER.getId()));
 
-    @Since("8.0.0")
+    @Since(Version.TEIID_8_0)
     private static final HashSet<String> PRECISION_DATATYPES = new HashSet<String>(
         Arrays.asList(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getId()));
 
@@ -1607,7 +1607,7 @@ public class SQLStringVisitor extends LanguageVisitor
      * Condition operators have lower precedence than LIKE/SIMILAR/IS
      * @param ex
      */
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     private void appendNested(Expression ex) {
         boolean useParens = ex instanceof Criteria;
         if (useParens) {
@@ -2227,7 +2227,7 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     @Override
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
         append(CREATE);
         append(SPACE);

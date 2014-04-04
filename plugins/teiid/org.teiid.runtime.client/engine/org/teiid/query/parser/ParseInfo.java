@@ -26,6 +26,7 @@ import java.io.Serializable;
 import java.util.Map;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * Info object to pass into the Teiid SQL Parser
@@ -36,7 +37,7 @@ public class ParseInfo implements Serializable {
     private static final boolean ANSI_QUOTED_DEFAULT = PropertiesUtils.getBooleanProperty(System.getProperties(),
                                                                                           "org.teiid.ansiQuotedIdentifiers", true); //$NON-NLS-1$
 
-    @Removed("8.0.0")
+    @Removed(Version.TEIID_8_0)
     public Map<String, Integer> nameCounts = null;
 
     private int referenceCount = 0;

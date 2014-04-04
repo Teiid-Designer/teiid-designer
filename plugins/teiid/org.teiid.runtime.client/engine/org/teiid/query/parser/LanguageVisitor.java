@@ -394,17 +394,17 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(RaiseErrorStatement node) {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(RaiseStatement node) {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ExceptionExpression node) {
         isApplicable(node);
     }
@@ -417,7 +417,7 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ReturnStatement node) {
         isApplicable(node);
     }
@@ -442,12 +442,12 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(CreateProcedureCommand node) {
         isApplicable(node);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand node) {
         isApplicable(node);
     }
@@ -556,7 +556,7 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(ObjectTable node) {
         isApplicable(node);
     }
@@ -677,7 +677,7 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(JSONObject node) {
         isApplicable(node);
     }
@@ -738,22 +738,22 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(CriteriaSelector node) {
         isApplicable(node);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(HasCriteria node) {
         isApplicable(node);
     }
 
-    @Removed( "8.0.0" )
+    @Removed(Version.TEIID_8_0)
     public void visit(TranslateCriteria node) {
         isApplicable(node);
     }
 
-    @Since( "8.0.0" )
+    @Since(Version.TEIID_8_0)
     public void visit(Array node) {
         isApplicable(node);
     }
