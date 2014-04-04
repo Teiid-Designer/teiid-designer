@@ -384,4 +384,11 @@ public class Test8Validator extends AbstractTestValidator {
                      new String[] {"OBJECTTABLE('this. is not valid' COLUMNS c integer 'row') AS x"},
                      getMetadataFactory().example1Cached());
     }
+
+    @Test
+    public void testTextTableFixedSelector() {
+        helpValidate("SELECT * from texttable(null SELECTOR 'a' columns x string width 1) as x",
+                     new String[] {},
+                     getMetadataFactory().exampleBQTCached());
+    }
 }

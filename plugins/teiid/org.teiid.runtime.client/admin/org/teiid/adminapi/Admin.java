@@ -37,6 +37,8 @@ public interface Admin {
 
 	public enum SchemaObjectType {TABLES, PROCEDURES, FUNCTIONS};
 
+	public enum TranlatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA};
+
     /**
      * Assign a {@link Translator} and Data source to a {@link VDB}'s Model
      *
@@ -233,6 +235,7 @@ public interface Admin {
      * @return
      * @throws AdminException
      */
+    @Deprecated
     Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName) throws AdminException;
     
 

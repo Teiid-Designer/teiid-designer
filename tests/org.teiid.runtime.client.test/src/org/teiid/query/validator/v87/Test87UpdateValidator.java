@@ -9,13 +9,13 @@ package org.teiid.query.validator.v87;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.validator.v8.Test8UpdateValidator;
+import org.teiid.query.validator.v86.Test86UpdateValidator;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test87UpdateValidator extends Test8UpdateValidator {
+public class Test87UpdateValidator extends Test86UpdateValidator {
 
     protected Test87UpdateValidator(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

@@ -44,7 +44,7 @@ public class Admin8Spec extends AdminSpec {
             passwordArray = teiidAdminInfo.getPassword().toCharArray();
         }
         
-        Admin admin = Admin8Factory.getInstance().createAdmin( teiidServer.getHost(), 
+        Admin admin = Admin8Factory.getInstance(teiidServer.getServerVersion()).createAdmin( teiidServer.getHost(), 
                                                                                               teiidAdminInfo.getPortNumber(), 
                                                                                               teiidAdminInfo.getUsername(),
                                                                                               passwordArray);

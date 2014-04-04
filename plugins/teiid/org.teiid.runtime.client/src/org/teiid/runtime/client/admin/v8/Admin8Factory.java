@@ -86,6 +86,8 @@ import org.teiid.adminapi.impl.VDBMetadataMapper.TransactionMetadataMapper;
 import org.teiid.adminapi.impl.VDBTranslatorMetaData;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -95,13 +97,35 @@ import org.teiid.runtime.client.Messages;
 @SuppressWarnings("nls")
 public class Admin8Factory {
 	private static final Logger LOGGER = Logger.getLogger(Admin8Factory.class.getName());
-	private static Admin8Factory INSTANCE = new Admin8Factory();
+	private static Map<ITeiidServerVersion, Admin8Factory> factoryCache = new HashMap<ITeiidServerVersion, Admin8Factory>();
 
-	public static Admin8Factory getInstance() {
-		return INSTANCE;
+	private final ITeiidServerVersion teiidVersion;
+
+	/**
+     * @param teiidVersion
+     */
+    public Admin8Factory(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
+
+    public static Admin8Factory getInstance(ITeiidServerVersion teiidVersion) {
+		Admin8Factory factory = factoryCache.get(teiidVersion);
+		if (factory == null) {
+		    factory = new Admin8Factory(teiidVersion);
+		    factoryCache.put(teiidVersion, factory);;
+		}
+
+		return factory;
 	}
 
     /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
+     /**
      * Creates a ServerAdmin with the specified connection properties.
      * @param userName
      * @param password
@@ -743,7 +767,7 @@ public class Admin8Factory {
 	        try {
 	        	addProfileNode(builder);
 
-	            builder.addNode("subsystem", subsystem[0]); //$NON-NLS-1$ //$NON-NLS-2$
+	            builder.addNode("subsystem", subsystem[0]); //$NON-NLS-1$
 	            builder.addNode(subsystem[1], deployedName);
 	            builder.setOperationName("remove");
 	            request = builder.buildRequest();
@@ -1195,13 +1219,27 @@ public class Admin8Factory {
 	        return props;
 		}
 		
-		@Override
+		@Deprecated
+        @Override
 	    public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName) throws AdminException{
 			BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
 			Collection<? extends Translator> translators = getTranslators();
 			for (Translator t:translators) {
 				if (t.getName().equalsIgnoreCase(translatorName)) {
-	        		cliCall("read-translator-properties", new String[] {"subsystem", "teiid"}, new String[] {"translator-name", translatorName}, builder);
+				    
+				    List<String> translatorProperties = new ArrayList<String>();
+				    translatorProperties.add("translator-name");
+				    translatorProperties.add(translatorName);
+				    
+				    if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_7.get())) {
+				        translatorProperties.add("type");
+				        translatorProperties.add(TranlatorPropertyType.OVERRIDE.name());
+				    }
+				    
+	        		cliCall("read-translator-properties",
+	        		        new String[] {"subsystem", "teiid"},
+	        		        translatorProperties.toArray(new String[0]),
+	        		        builder);
 	        		return builder.getPropertyDefinitions();
 				}
 			}
@@ -1266,6 +1304,10 @@ public class Admin8Factory {
 	        		if (node.hasDefined("required")) {
 	        			def.setRequired(node.get("required").asBoolean());
 	        		}
+
+	        		if (node.hasDefined("owner")) {
+                        def.addProperty("owner", node.get("owner").asString());
+                    }   
 
 	        		if (node.hasDefined("read-only")) {
 	        			String access = node.get("read-only").asString();
@@ -1466,7 +1508,7 @@ public class Admin8Factory {
 	        try {
 	        	if (subsystem != null) {
 		        	addProfileNode(builder);
-		            builder.addNode("subsystem", subsystem); //$NON-NLS-1$ //$NON-NLS-2$
+		            builder.addNode("subsystem", subsystem); //$NON-NLS-1$
 	        	}
 	            builder.setOperationName(operationName);
 	            request = builder.buildRequest();
@@ -1490,7 +1532,7 @@ public class Admin8Factory {
 	        	}
 	        	addProfileNode(builder);
 	        	for (int i = 0; i < address.length; i+=2) {
-		            builder.addNode(address[i], address[i+1]); //$NON-NLS-1$ //$NON-NLS-2$
+		            builder.addNode(address[i], address[i+1]);
 	        	}
 	            builder.setOperationName(operationName);
 	            request = builder.buildRequest();
@@ -1535,7 +1577,7 @@ public class Admin8Factory {
 		    				if (server.get("response", "outcome").asString().equals(Util.SUCCESS)) {
 		    					ModelNode result = server.get("response", "result");
 		    					if (result.isDefined()) {
-		    				        List<ModelNode> nodeList = result.asList(); //$NON-NLS-1$
+		    				        List<ModelNode> nodeList = result.asList();
 		    				        for(ModelNode node : nodeList) {
 		    				        	T anObj = mapper.unwrap(node);
 		    				        	if (anObj instanceof DomainAware) {
@@ -1624,7 +1666,7 @@ public class Admin8Factory {
 	        		"vdb-name", vdbName,
 	        		"vdb-version", String.valueOf(vdbVersion),
 	        		"data-role", dataRole,
-	        		"mapped-role", mappedRoleName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"mapped-role", mappedRoleName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1641,7 +1683,7 @@ public class Admin8Factory {
 	        		"vdb-name", vdbName,
 	        		"vdb-version", String.valueOf(vdbVersion),
 	        		"data-role", dataRole,
-	        		"mapped-role", mappedRoleName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"mapped-role", mappedRoleName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1657,13 +1699,13 @@ public class Admin8Factory {
 	        ModelNode request = buildRequest("teiid", "add-anyauthenticated-role",
 	        		"vdb-name", vdbName,
 	        		"vdb-version", String.valueOf(vdbVersion),
-	        		"data-role", dataRole); //$NON-NLS-1$ //$NON-NLS-2$
+	        		"data-role", dataRole); //$NON-NLS-1$
 
 	        if (!anyAuthenticated) {
 	        	request = buildRequest("teiid", "remove-anyauthenticated-role",
 		        		"vdb-name", vdbName,
 		        		"vdb-version", String.valueOf(vdbVersion),
-		        		"data-role", dataRole); //$NON-NLS-1$ //$NON-NLS-2$
+		        		"data-role", dataRole); //$NON-NLS-1$
 	        }
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
@@ -1680,7 +1722,7 @@ public class Admin8Factory {
 	        final ModelNode request = buildRequest("teiid", "change-vdb-connection-type",
 	        		"vdb-name", vdbName,
 	        		"vdb-version", String.valueOf(vdbVersion),
-	        		"connection-type", type.name());//$NON-NLS-1$ //$NON-NLS-2$
+	        		"connection-type", type.name());//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1700,7 +1742,7 @@ public class Admin8Factory {
 	        		"model-name", modelName,
 	        		"source-name", sourceName,
 	        		"translator-name", translatorName,
-	        		"ds-name", dsName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"ds-name", dsName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1719,7 +1761,7 @@ public class Admin8Factory {
 	        		"vdb-version", String.valueOf(vdbVersion),
 	        		"source-name", sourceName,
 	        		"translator-name", translatorName,
-	        		"ds-name", dsName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"ds-name", dsName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1739,7 +1781,7 @@ public class Admin8Factory {
 	        		"model-name", modelName,
 	        		"source-name", sourceName,
 	        		"translator-name", translatorName,
-	        		"ds-name", dsName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"ds-name", dsName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1756,7 +1798,7 @@ public class Admin8Factory {
 	        		"vdb-name", vdbName,
 	        		"vdb-version", String.valueOf(vdbVersion),
 	        		"model-name", modelName,
-	        		"source-name", sourceName);//$NON-NLS-1$ //$NON-NLS-2$
+	        		"source-name", sourceName);//$NON-NLS-1$
 	        try {
 	            ModelNode outcome = this.connection.execute(request);
 	            if (!Util.isSuccess(outcome)) {
@@ -1798,7 +1840,7 @@ public class Admin8Factory {
 				request = buildRequest("teiid", "restart-vdb",
 		        		"vdb-name", vdbName,
 		        		"vdb-version", String.valueOf(vdbVersion),
-		        		"model-names", modelNames);//$NON-NLS-1$ //$NON-NLS-2$
+		        		"model-names", modelNames);//$NON-NLS-1$
 			}
 			else {
 				request = buildRequest("teiid", "restart-vdb",

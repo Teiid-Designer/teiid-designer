@@ -1752,7 +1752,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
 	    	}
 		}
     	if (widthSet) {
-    		if (obj.getDelimiter() != null || obj.getHeader() != null || obj.getQuote() != null || obj.getSelector() != null || usingSelector) {
+    		if (obj.getDelimiter() != null || obj.getHeader() != null || obj.getQuote() != null || usingSelector) {
         		handleValidationError(Messages.getString(Messages.ValidationVisitor.text_table_width), obj);
     		}
     	} else {

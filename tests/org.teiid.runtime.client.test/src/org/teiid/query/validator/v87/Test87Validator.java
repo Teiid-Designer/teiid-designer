@@ -7,15 +7,16 @@
 */
 package org.teiid.query.validator.v87;
 
+import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.validator.v8.Test8Validator;
+import org.teiid.query.validator.v86.Test86Validator;
 
 /**
  *
  */
-@SuppressWarnings( "javadoc" )
-public class Test87Validator extends Test8Validator {
+@SuppressWarnings( {"nls", "javadoc"} )
+public class Test87Validator extends Test86Validator {
 
     protected Test87Validator(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
@@ -25,4 +26,10 @@ public class Test87Validator extends Test8Validator {
         this(Version.TEIID_8_7.get());
     }
 
+    @Test
+    public void testTextTableFixedSelector() {
+        helpValidate("SELECT * from texttable(null SELECTOR 'a' columns x string width 1) as x",
+                     new String[] {},
+                     getMetadataFactory().exampleBQTCached());
+    }
 }
