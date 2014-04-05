@@ -2487,12 +2487,12 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         }
 	}
 
-	@Override
+	/* Do not override to allow compatibility with jdk 1.6 */
     public boolean generatedKeyAlwaysReturned() throws SQLException {
 		return false;
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public ResultSet getPseudoColumns(String catalog, String schemaPattern,
 			String tableNamePattern, String columnNamePattern)
 			throws SQLException {

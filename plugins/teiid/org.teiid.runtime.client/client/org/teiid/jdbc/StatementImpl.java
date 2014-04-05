@@ -1264,12 +1264,12 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 	    return getColumnMetadata(tableName, columnName, dataType.getId(), nullable, searchable, writable, signed, caseSensitive, driverConnection);
 	}
 	
-	@Override
+	/* Do not override to allow compatibility with jdk 1.6 */
     public void closeOnCompletion() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public boolean isCloseOnCompletion() throws SQLException {
 		return false;
 	}

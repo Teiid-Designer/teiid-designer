@@ -241,7 +241,7 @@ public class TeiidDriver implements Driver {
         return false;
     }
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public Logger getParentLogger() {
 		return logger;
 	}

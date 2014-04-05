@@ -1089,7 +1089,7 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         }
     }
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public void abort(Executor executor) throws SQLException {
 		if (closed) {
 			return;
@@ -1098,12 +1098,12 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 		close();
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public int getNetworkTimeout() throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public String getSchema() throws SQLException {
 		return null;
 	}
@@ -1111,13 +1111,13 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 	/**
 	 * @see query timeouts and the synchronousTtl setting if using socket connections
 	 */
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public void setNetworkTimeout(Executor executor, int milliseconds)
 			throws SQLException {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public void setSchema(String schema) throws SQLException {
 		
 	}

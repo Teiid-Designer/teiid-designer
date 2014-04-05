@@ -1982,12 +1982,12 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 		throw new UnsupportedOperationException();	
 	}
 
-	@Override
+	/* Do not override to allow compatibility with jdk 1.6 */
     public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
 		return DataTypeTransformer.transform(getTeiidVersion(), getObject(columnIndex), type);
 	}
 
-	@Override
+    /* Do not override to allow compatibility with jdk 1.6 */
     public <T> T getObject(String columnLabel, Class<T> type)
 			throws SQLException {
 		return DataTypeTransformer.transform(getTeiidVersion(), getObject(columnLabel), type);
