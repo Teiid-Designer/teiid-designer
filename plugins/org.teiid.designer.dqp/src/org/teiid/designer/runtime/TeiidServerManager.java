@@ -491,7 +491,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * @return a status indicating if the specified server was removed from the registry
      */
     private IStatus removeServerInternal( ITeiidServer teiidServer, boolean notifyListeners ) {
-        boolean removed = false;
+        ITeiidServer removed = null;
 
         try {
             this.serverLock.writeLock().lock();
@@ -511,7 +511,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
             this.serverLock.writeLock().unlock();
         }
 
-        if (removed) {
+        if (removed != null) {
             if (notifyListeners) {
                 notifyListeners(ExecutionConfigurationEvent.createRemoveServerEvent(teiidServer));
             }

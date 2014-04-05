@@ -134,11 +134,15 @@ public class KeyInValueHashMap<K, V> extends AbstractMap<K, V> {
      * 
      * @param value
      * 
-     * @return true if the value was removed.
+     * @return removed value or null.
      */
-    public boolean remove(V value) {
-        EntryWrapper entry = new EntryWrapper(value);
-        return entrySet.remove(entry);
+    @Override
+    public V remove(Object value) {
+        EntryWrapper entry = new EntryWrapper((V) value);
+        if (entrySet.remove(entry))
+            return (V) value;
+
+        return null;
     }
     
     @Override
