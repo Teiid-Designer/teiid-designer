@@ -194,7 +194,7 @@ public class LdapImportWizardManager implements IChangeNotifier {
      * @param entryNode
      */
     public void removeEntry(ILdapEntryNode entryNode) {
-        if (ldapEntryNodes.remove(entryNode))
+        if (ldapEntryNodes.remove(entryNode) != null)
             notifyChanged();
     }
 
