@@ -457,7 +457,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	}
                 	
                 	// Check for duplicate model and/or user file names
-                	if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), getVdb()) ) {
+                	if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
                 		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
                 				ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);
                 	}

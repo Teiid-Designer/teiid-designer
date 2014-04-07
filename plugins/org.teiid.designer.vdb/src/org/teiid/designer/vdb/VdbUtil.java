@@ -507,16 +507,19 @@ public class VdbUtil {
 	 * @param vdb
 	 * @return if model already exists in VDB or not
 	 */
-	public static boolean modelAlreadyExistsInVdb(String modelName, Vdb vdb) {
+	public static boolean modelAlreadyExistsInVdb(String modelName, IPath pathIncludingModel, Vdb vdb) {
 		// Check for duplicate model and/or user file names
 		Map<String, String> existingNames = new HashMap<String, String>();
+		Set<String> existingPaths = new HashSet<String>();
 		
 		for (VdbModelEntry model : vdb.getModelEntries()) {
 			String existingName = model.getName().removeFileExtension().lastSegment();
+			IPath path = model.getName();
 			existingNames.put(existingName.toUpperCase(), existingName);
+			existingPaths.add(path.toString().toUpperCase());
 		}
 		
-		if(existingNames.get(modelName.toUpperCase()) != null ) {
+		if(existingNames.get(modelName.toUpperCase()) != null && !existingPaths.contains(pathIncludingModel.toString().toUpperCase())) {
 			return true;
 		}
 		
@@ -539,17 +542,21 @@ public class VdbUtil {
 		
 		// Assume existing names will not include duplicates, but the MAP will insure they are unique
 		Map<String, String> existingNames = new HashMap<String, String>();
+		Set<String> existingPaths = new HashSet<String>();
 		
 		if( theVdb != null ) {
 			for (VdbModelEntry modelEntry : theVdb.getModelEntries()) {
 				String existingName = modelEntry.getName().removeFileExtension().lastSegment();
+				IPath path = modelEntry.getName();
 				existingNames.put(existingName.toUpperCase(), existingName);
+				existingPaths.add(path.toString().toUpperCase());
 			}
 		}
 		
 		// Check target model first
 		String targetModelName = model.getFullPath().removeFileExtension().lastSegment();
-		if( existingNames.get(targetModelName.toUpperCase()) != null ) {
+		if( existingNames.get(targetModelName.toUpperCase()) != null 
+				&& !existingPaths.contains(model.getFullPath().toString().toUpperCase())) {
 			return false;
 		}
 		
@@ -568,7 +575,9 @@ public class VdbUtil {
 			ModelResource modelRes = ModelUtil.getModel(res);
 			
 			String refModelName = modelRes.getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
-			if( existingNames.get(refModelName.toUpperCase()) != null ) {
+			IPath refModelPath = modelRes.getCorrespondingResource().getFullPath();
+			if( existingNames.get(refModelName.toUpperCase()) != null 
+					&& !existingPaths.contains(refModelPath.toString().toUpperCase())) {
 				return false;
 			}
 			
