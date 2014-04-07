@@ -9,7 +9,9 @@ package org.teiid.designer.runtime.ui.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -161,7 +163,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             return SelectionUtilities.getSelectedObjects(selection);
         }
 
-        return null;
+        return Collections.emptyList();
     }
     
     /**
