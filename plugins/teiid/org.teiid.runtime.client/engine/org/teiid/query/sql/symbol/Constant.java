@@ -240,13 +240,13 @@ public class Constant extends SimpleNode implements Expression, IConstant<Langua
                 if (xsign == 0)
                     return 0;
                 bd = bd.stripTrailingZeros();
-                result =  prime * result + bd.hashCode();
+                return prime * result + bd.hashCode();
             }
 
             result = prime * result + this.value.hashCode();
         }
 
-        return this.value.hashCode();
+        return result;
     }
 
     @Override
