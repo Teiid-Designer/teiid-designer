@@ -92,18 +92,13 @@ public class ResolverVisitor extends LanguageVisitor
 	private static final String SYS_PREFIX = CoreConstants.SYSTEM_MODEL + '.';
 
 	@Removed(Version.TEIID_8_5)
-    private static ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
+    private ThreadLocal<Boolean> determinePartialName = new ThreadLocal<Boolean>() {
     	@Override
         protected Boolean initialValue() {
     		return false;
     	}
     };
 
-    @Removed(Version.TEIID_8_5)
-    public static void setFindShortName(boolean enabled) {
-    	determinePartialName.set(enabled);
-    }
-    
     private Collection<GroupSymbol> groups;
     private GroupContext externalContext;
     protected IQueryMetadataInterface metadata;
@@ -1203,14 +1198,9 @@ public class ResolverVisitor extends LanguageVisitor
 		return hasUserDefinedAggregate;
 	}
 
-	@Override
+	@Deprecated
+    @Override
     public void setProperty(String propertyName, Object value) {
-        if (SHORT_NAME.equals(propertyName) && value instanceof Boolean) {
-            if (isTeiidVersionOrGreater(Version.TEIID_8_5))
-                // Not applicable for Teiid 8.5
-                return;
-
-            ResolverVisitor.setFindShortName((Boolean) value);
-        }
+        /* No longer required. To be removed on removal of deprecated client plugins */
     }
 }

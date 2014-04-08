@@ -18,7 +18,8 @@ import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 public interface IResolverVisitor<LO extends ILanguageObject, GS extends IGroupSymbol> {
     
     public static final String SHORT_NAME = "shortName"; //$NON-NLS-1$
-    
+
+    @Deprecated
     void setProperty(String propertyName, Object value);
 
     void resolveLanguageObject(LO obj, IQueryMetadataInterface metadata) throws Exception;

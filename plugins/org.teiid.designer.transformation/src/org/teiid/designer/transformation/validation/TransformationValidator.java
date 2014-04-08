@@ -51,6 +51,7 @@ import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.query.IQueryResolver;
 import org.teiid.designer.query.IQueryService;
+import org.teiid.designer.query.metadata.DelegatingQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IReferenceCollectorVisitor;
 import org.teiid.designer.query.sql.IResolverVisitor;
@@ -432,11 +433,21 @@ public class TransformationValidator implements QueryValidator {
         
         try {
             // Attempt to resolve the command
-            final IQueryMetadataInterface metadata = getQueryMetadata();
-            
+
+            /*
+             * Wrap the metadata so the findShortName flag can be overridden
+             */
+            final IQueryMetadataInterface metadata = new DelegatingQueryMetadataInterface(getQueryMetadata()) {
+                @Override
+                public boolean findShortName() {
+                    return elementSymbolOptimization == ElementSymbolOptimization.OPTIMIZED;
+                }
+            };
+
             String targetFullName = TransformationHelper.getSqlEObjectFullName(this.targetGroup);
             IGroupSymbol gSymbol = factory.createGroupSymbol(targetFullName);
             if (this.elementSymbolOptimization == ElementSymbolOptimization.OPTIMIZED) {
+                /* To be removed on removal of deprecated teiid client plugins */
                 resolverVisitor.setProperty(IResolverVisitor.SHORT_NAME, true);
             }
             int teiidCommandType = getTeiidCommandType(transformType);
@@ -448,6 +459,7 @@ public class TransformationValidator implements QueryValidator {
             // create status
             status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
         } finally {
+            /* To be removed on removal of deprecated teiid client plugins */
             resolverVisitor.setProperty(IResolverVisitor.SHORT_NAME, false);
         }
 
