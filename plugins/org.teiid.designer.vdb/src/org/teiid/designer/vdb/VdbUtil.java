@@ -518,6 +518,7 @@ public class VdbUtil {
 	
 	/**
 	 * @param modelName
+	 * @param pathIncludingModel 
 	 * @param vdb
 	 * @return if model already exists in VDB or not
 	 */

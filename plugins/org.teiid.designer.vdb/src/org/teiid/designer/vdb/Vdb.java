@@ -1125,7 +1125,7 @@ public final class Vdb {
     }
     
     /**
-     * @param domain Sets security-domain to the specified value.
+     * @param newValue Sets security-domain to the specified value.
      */
     public final void setSecurityDomain( String newValue ) {
     	final String old = this.securityDomain;
@@ -1139,7 +1139,7 @@ public final class Vdb {
     }
     
     /**
-     * @param pattern Sets gss-pattern to the specified value.
+     * @param newValue Sets gss-pattern to the specified value.
      */
     public final void setGssPattern( String newValue ) {
     	final String old = this.gssPattern;
@@ -1153,7 +1153,7 @@ public final class Vdb {
     }
     
     /**
-     * @param pattern Sets password-pattern to the specified value.
+     * @param newValue Sets password-pattern to the specified value.
      */
     public final void setPasswordPattern( String newValue ) {
     	final String old = this.passwordPattern;
@@ -1167,7 +1167,7 @@ public final class Vdb {
     }
     
     /**
-     * @param pattern Sets query time-out to the specified value.
+     * @param newValue Sets query time-out to the specified value.
      */
     public final void setAuthenticationType( String newValue ) {
     	final String old = this.authenticationType;

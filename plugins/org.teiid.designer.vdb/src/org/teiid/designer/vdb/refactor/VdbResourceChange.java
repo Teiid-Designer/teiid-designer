@@ -43,6 +43,11 @@ public class VdbResourceChange extends ResourceChange {
     private String parentFolder;
     private String vdbName;
 
+    /**
+     * @param projectName
+     * @param parentFolder
+     * @param vdbName
+     */
     public VdbResourceChange(String projectName, String parentFolder, String vdbName) {
         super();
         CoreArgCheck.isNotNull(projectName);
@@ -141,6 +146,9 @@ public class VdbResourceChange extends ResourceChange {
         return this.vdbName;
     }
 
+    /**
+     * @see org.eclipse.ltk.core.refactoring.resource.ResourceChange#getModifiedResource()
+     */
     @Override
     protected IResource getModifiedResource() {
         return findVdb();
@@ -157,6 +165,10 @@ public class VdbResourceChange extends ResourceChange {
         return change;
     }
 
+    /**
+     * @param monitor
+     * @return status
+     */
     protected IStatus performTask(IProgressMonitor monitor) {
         // Refresh the project so that the new resource may be found
         // and a model resource extracted
@@ -194,24 +206,40 @@ public class VdbResourceChange extends ResourceChange {
         return Status.OK_STATUS;
     }
 
+    /**
+     * @param replacedResourcePaths
+     */
     public void addReplacements(Set<PathPair> replacedResourcePaths) {
         replacements.addAll(replacedResourcePaths);
     }
 
+    /**
+     * @param invalidResourcePath
+     * @param newResourcePath
+     */
     public void addReplacement(String invalidResourcePath, String newResourcePath) {
         PathPair resourcePair = new PathPair(invalidResourcePath, newResourcePath);
         replacements.add(resourcePair);
     }
 
+    /**
+     * @return the resource replacement paths
+     */
     public Set<PathPair> getReplacedResources() {
         return replacements;
     }
 
+    /**
+     * @see org.eclipse.ltk.core.refactoring.Change#getName()
+     */
     @Override
     public String getName() {
         return VdbPlugin.UTIL.getString(getClass().getSimpleName() + ".name", vdbName); //$NON-NLS-1$
     }
 
+    /**
+     * @see org.eclipse.ltk.core.refactoring.Change#perform(org.eclipse.core.runtime.IProgressMonitor)
+     */
     @Override
     public Change perform(IProgressMonitor pm) {
         Job job = new Job(getName()) {

@@ -102,7 +102,7 @@ public class VdbSourceInfo {
 	public boolean removeSource(VdbSource source) {
 		CoreArgCheck.isNotNull(source, "source"); //$NON-NLS-1$
 		
-		Iterator iter = this.sources.iterator();
+		Iterator<VdbSource> iter = this.sources.iterator();
 		while(iter.hasNext()) {
 			VdbSource theSource = (VdbSource)iter.next();
 			if(theSource.getName().equalsIgnoreCase(source.getName())) {

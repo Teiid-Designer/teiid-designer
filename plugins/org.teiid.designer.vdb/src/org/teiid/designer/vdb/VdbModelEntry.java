@@ -148,7 +148,7 @@ public final class VdbModelEntry extends VdbEntry {
                 }
 
                 sourceInfo.add(defaultName, jndiName, translator);
-                Properties translatorProps = helper.getTranslatorProperties(mr);
+                Properties translatorProps = helper.getTranslatorOverrideProperties(mr);
                 if( !translatorProps.isEmpty() ) {
                 	updateTranslatorOverrides(translatorProps);
                 }
@@ -383,7 +383,8 @@ public final class VdbModelEntry extends VdbEntry {
             if(isRelational) {
                 try {
                     final ModelResource mr = ModelerCore.getModelEditor().findModelResource(modelResc);
-                    List<EObject> eObjs = mr.getEObjects();
+                    @SuppressWarnings("unchecked")
+					List<EObject> eObjs = mr.getEObjects();
                     for(EObject eObj: eObjs) {
                         if(eObj instanceof Procedure && ((Procedure)eObj).isFunction()) {
                             hasUdf = true;
