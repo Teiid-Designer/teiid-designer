@@ -29,7 +29,14 @@ public class ConnectionInfoProviderFactory {
     private static final String PROFILE_ATTRIBUTE = "profile"; //$NON-NLS-1$
     private static final String CATEGORY_ATTRIBUTE = "category"; //$NON-NLS-1$
     private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
+    
+    private static final ConnectionInfoProviderFactory INSTANCE = new ConnectionInfoProviderFactory();
+    
     private IConnectionInfoHelper helper = new ConnectionInfoHelper();
+    
+    public static ConnectionInfoProviderFactory getInstance() {
+    	return INSTANCE;
+    }
 
     public IConnectionInfoProvider getProvider( IConnectionProfile profile ) {
         String instanceID = profile.getProviderId();

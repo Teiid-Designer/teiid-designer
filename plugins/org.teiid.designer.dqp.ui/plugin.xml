@@ -147,6 +147,15 @@
             name="org.teiid.designer.runtime.ui.connection.VdbSourceConnectionHandler">
       </class>
    </extension>
+   <extension
+        id="EditTranslatorOverridesAction"
+        name="%editTranslatorOverridesAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.properties.EditTOPropertiesAction"
+         label="%editTranslatorOverridesAction.label">
+      </resourceAction>
+   </extension>
 
 <!-- Decorator -->
    <extension

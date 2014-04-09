@@ -16,7 +16,7 @@ import org.teiid.designer.ui.common.table.PropertyEditingSupport;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
 
 
-class TranslatorOverridePropertyEditingSupport extends PropertyEditingSupport {
+public class TranslatorOverridePropertyEditingSupport extends PropertyEditingSupport {
 
     /**
      * @param viewer

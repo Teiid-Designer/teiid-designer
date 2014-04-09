@@ -49,7 +49,7 @@ import org.teiid.designer.vdb.TranslatorOverride;
 /**
  * Used to edit a translator override name.
  */
-final class EditTranslatorOverrideDialog extends MessageDialog {
+public final class EditTranslatorOverrideDialog extends MessageDialog {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(EditTranslatorOverrideDialog.class);
 

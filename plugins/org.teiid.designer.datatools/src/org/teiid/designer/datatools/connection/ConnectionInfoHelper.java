@@ -24,7 +24,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 /**
  * @since 8.0
  */
-public class ConnectionInfoHelper implements IConnectionInfoHelper {
+public class ConnectionInfoHelper implements IConnectionInfoHelper, ITranslatorOverridesProvider {
 
     private ResourceAnnotationHelper resourceAnnotationHelper;
 
@@ -426,7 +426,7 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
     
     /**
      * Utility method to clear all connection info properties from a source model
-     * 
+     * ConnectionInfoHelper.errorFindingTranslatorOverrideProperties
      * @param modelResource
      * @throws ModelWorkspaceException
      */
@@ -453,5 +453,69 @@ public class ConnectionInfoHelper implements IConnectionInfoHelper {
         }
         
         return endPointPropId;
+	}
+	
+	
+	@Override
+	public Properties getTranslatorOverrideProperties( ModelResource modelResource){
+		Properties props = new Properties();
+		
+		try {
+			Properties rawProps = getHelper().getProperties(modelResource, TRANSLATOR_NAMESPACE);
+			// Strip namespace
+			for( Object key : rawProps.keySet()) {
+				String value = (String)rawProps.get(key);
+				int loc = ((String)key).indexOf(':') +1;
+				String propID = ((String)key).substring(loc);
+				props.put(propID, value);
+			}
+			
+		} catch (ModelWorkspaceException e) {
+			DatatoolsPlugin.Util.log(IStatus.ERROR,
+                    e, DatatoolsPlugin.Util.getString("ConnectionInfoHelper.errorFindingTranslatorOverrideProperties", modelResource.getItemName()));
+		}
+
+		return props;
+	}
+
+	@Override
+	public void replaceTranlatorOverrideProperties(ModelResource modelResource, Properties properties) {
+		if( properties.isEmpty() ) {
+			return;
+		}
+
+		clearTranslatorOverrideProperties(modelResource);
+		
+		Properties finalProps = new Properties();
+		
+		for( Object key : properties.keySet()) {
+			String value = (String)properties.get(key);
+			finalProps.put(TRANSLATOR_NAMESPACE + key, value);
+		}
+		
+		try {
+            // Add new connection properties
+            getHelper().setProperties(modelResource, finalProps);
+		}  catch (ModelWorkspaceException e) {
+            DatatoolsPlugin.Util.log(IStatus.ERROR,
+                    e, DatatoolsPlugin.Util.getString("ConnectionInfoHelper.errorReplacingTranslatorOverrideProperties", modelResource.getItemName()));
+		}
+	}
+
+	@Override
+	public void clearTranslatorOverrideProperties(ModelResource modelResource) {
+		String translatorName = getTranslatorName(modelResource);
+		
+		try {
+			getHelper().removeProperties(modelResource, TRANSLATOR_NAMESPACE);
+			Properties props = new Properties();
+			props.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, translatorName);
+
+            // Add new connection properties
+            getHelper().setProperties(modelResource, props);
+		}  catch (ModelWorkspaceException e) {
+            DatatoolsPlugin.Util.log(IStatus.ERROR,
+                    e, DatatoolsPlugin.Util.getString("ConnectionInfoHelper.errorClearingTranslatorOverrideProperties", modelResource.getItemName()));
+		}
 	}
 }
