@@ -61,8 +61,6 @@
       <import plugin="org.eclipse.debug.core" version="3.7.100" match="compatible"/>
       <import plugin="org.eclipse.datatools.sqltools.editor.core" version="1.0.2" match="compatible"/>
       <import plugin="org.eclipse.datatools.sqltools.routineeditor" version="1.0.0" match="compatible"/>
-      <import plugin="org.teiid.designer.ui" version="8.2.0" match="compatible"/>
-      <import plugin="org.teiid.designer.ui.common" version="8.2.0" match="compatible"/>
       <import plugin="org.jboss.tools.locus.sf.saxon" version="9.2.1" match="compatible"/>
       <import plugin="org.apache.xerces"/>
       <import plugin="org.eclipse.core.runtime.compatibility" version="3.2.200" match="compatible"/>
@@ -70,6 +68,8 @@
       <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
       <import plugin="org.teiid.datatools.connectivity.ui" version="8.2.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.datatools.connectivity.oda.flatfile.ui" version="3.1.7" match="compatible"/>
+      <import plugin="org.eclipse.birt.report.data.oda.hive.ui" version="4.3.2" match="compatible"/>
+      <import plugin="org.eclipse.birt.data.oda.mongodb.ui" version="4.3.2" match="compatible"/>
    </requires>
 
    <plugin
