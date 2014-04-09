@@ -42,8 +42,8 @@ chomp $root_dir;
 
 # Check we have one argument
 if (($#ARGV + 1) != 1 ) {
-	print "usage: $0 <new version>\n";
-	exit 1;
+  print "usage: $0 <new version>\n";
+  exit 1;
 }
 
 # Directory names that should be ignored when 
@@ -70,7 +70,7 @@ sub process_pom {
   my($filename, $directories, $suffix) = fileparse($_);
   my $line;
 
-	# Get the contents of the pom
+  # Get the contents of the pom
   open(INF, "<$_") or die "Cannot open $!";
   my @contents = (<INF>);
   close(INF);
@@ -93,46 +93,48 @@ sub process_pom {
   open(OUF, ">$_") or die "Cannot open $!";
  
   # Loop through each line and find the version tag.
-	# However version tag can appear as a child of parent
-	# and build tags so need to ignore these.
-	
-	my $ignore = 0;
+  # However version tag can appear as a child of parent
+  # and build tags so need to ignore these.
+  
+  my $ignore = 0;
   foreach $line (@contents) {
     my $x = $line;
     
-		if ($x =~ m/<parent>/) {
-			$ignore++;
-		}
-		elsif ($x =~ m/<\/parent>/) {
-			$ignore--;
-		}
-		elsif ($x =~ m/<build>/) {
-			$ignore++;
-		}
-		elsif ($x =~ m/<\/build>/) {
-			$ignore--;
-		}
-		elsif ($x =~ m/<dependencies>/) {
-			$ignore++;
-		}
-		elsif ($x =~ m/<\/dependencies>/) {
-			$ignore--;
-		}
-		elsif ($x =~ m/<version>/ && $ignore == 0) {
-			my $old_version = $x;
-			$old_version =~ s/<.*?>//g;
-			chomp $old_version;
-			
-      print "$_\t$old_version -> $new_version-SNAPSHOT\n";
-      $x = "\t<version>$new_version-SNAPSHOT</version>\n";
-		}
+    if ($x =~ m/<parent>/) {
+      $ignore++;
+    }
+    elsif ($x =~ m/<\/parent>/) {
+      $ignore--;
+    }
+    elsif ($x =~ m/<build>/) {
+      $ignore++;
+    }
+    elsif ($x =~ m/<\/build>/) {
+      $ignore--;
+    }
+    elsif ($x =~ m/<dependencies>/) {
+      $ignore++;
+    }
+    elsif ($x =~ m/<\/dependencies>/) {
+      $ignore--;
+    }
+    elsif ($x =~ m/<version>/ && $ignore == 0) {
+      my $old_version = $x;
+      my $new_version_snapshot = $new_version . "-SNAPSHOT";
+      if ($old_version =~ /<.*>(.*)<.*>/) {
+        $old_version = $1;
+
+        print "$_\t$old_version -> $new_version_snapshot\n";
+        $x =~ s/$old_version/$new_version_snapshot/;
+      }
+    }
  
     print OUF $x;
   }
  
   close(OUF);
 
-	return 1;
+  return 1;
 }
 
 #
@@ -141,41 +143,41 @@ sub process_pom {
 sub process_manifest {
   my($filename, $directories, $suffix) = fileparse($_);
 
-	# Ignore manifests in directories other than META-INF
-	unless ($directories =~ m/\/META-INF\/$/) {
-		return 0;
-	}
+  # Ignore manifests in directories other than META-INF
+  unless ($directories =~ m/\/META-INF\/$/) {
+    return 0;
+  }
 
-	# Get the contents of the manifest file
-	open(INF, "<$_") or die "Cannot open $!";
-	my @contents = (<INF>);
-	close(INF);
-	
-	# Prepare to modify the manifest file
-	open(OUF, ">$_") or die "Cannot open $!";
-	
-	my $line;
+  # Get the contents of the manifest file
+  open(INF, "<$_") or die "Cannot open $!";
+  my @contents = (<INF>);
+  close(INF);
+  
+  # Prepare to modify the manifest file
+  open(OUF, ">$_") or die "Cannot open $!";
+  
+  my $line;
   foreach $line (@contents) {
-	  my $x = $line;
+    my $x = $line;
 
-		# If the line starts with Bundle-Version then
-		# find the old version for logging and replace
-		# the line with our new version
-		if ($x =~ m/^Bundle-Version:/) {
-			my $old_version = $x;
-			$old_version =~ s/^Bundle-Version: //g;
-			chomp($old_version);
+    # If the line starts with Bundle-Version then
+    # find the old version for logging and replace
+    # the line with our new version
+    if ($x =~ m/^Bundle-Version:/) {
+      my $old_version = $x;
+      $old_version =~ s/^Bundle-Version: //g;
+      chomp($old_version);
 
-			print "$_\t$old_version -> $new_version.qualifier\n";
-			$x = "Bundle-Version: $new_version.qualifier\n";
-		}
-		
-		print OUF $x;
-	}
+      print "$_\t$old_version -> $new_version.qualifier\n";
+      $x = "Bundle-Version: $new_version.qualifier\n";
+    }
+    
+    print OUF $x;
+  }
 
-	close(OUF);
+  close(OUF);
 
-	return 1;
+  return 1;
 }
 
 #
@@ -183,9 +185,9 @@ sub process_manifest {
 #
 sub process_feature_xml {
   my($filename, $directories, $suffix) = fileparse($_);
-	my $line;
+  my $line;
 
-	# Get the contents of the feature xml
+  # Get the contents of the feature xml
   open(INF, "<$_") or die "Cannot open $!";
   my @contents = (<INF>);
   close(INF);
@@ -194,28 +196,28 @@ sub process_feature_xml {
   open(OUF, ">$_") or die "Cannot open $!";
  
   # Loop through each line and find the version tag.
-	# However version tag can appear as a child of parent
-	# and build tags so need to ignore these.
-	
-	my $allow = 0;
+  # However version tag can appear as a child of parent
+  # and build tags so need to ignore these.
+  
+  my $allow = 0;
   foreach $line (@contents) {
     my $x = $line;
 
-		if ($x =~ m/<feature/) {
-			$allow = 1;
-		}
-   	elsif ($x =~ m/version=/ && $allow == 1) {
-			my $old_version = $x;
-			$old_version =~ s/version=|"//g;
-			chomp $old_version;
-			
+    if ($x =~ m/<feature/) {
+      $allow = 1;
+    }
+    elsif ($x =~ m/version=/ && $allow == 1) {
+      my $old_version = $x;
+      $old_version =~ s/version=|"//g;
+      chomp $old_version;
+      
       print "$_\t$old_version -> $new_version.qualifier\n";
       $x = "      version=\"$new_version.qualifier\"\n";
 
-			# Other versions can appear in include section so 
-			# no more updating
-			$allow = 0;
-		}
+      # Other versions can appear in include section so 
+      # no more updating
+      $allow = 0;
+    }
  
     print OUF $x;
   }
@@ -230,13 +232,13 @@ sub process_feature_xml {
 #
 sub process_user_guide {
   my($filename, $directories, $suffix) = fileparse($_);
-	my $line;
+  my $line;
 
-	unless ($directories =~ m/Teiid_Designer_User_Guide/) {
-		return;
-	}
+  unless ($directories =~ m/Teiid_Designer_User_Guide/) {
+    return;
+  }
 
-	# Get the contents of the master xml
+  # Get the contents of the master xml
   open(INF, "<$_") or die "Cannot open $!";
   my @contents = (<INF>);
   close(INF);
@@ -245,23 +247,23 @@ sub process_user_guide {
   open(OUF, ">$_") or die "Cannot open $!";
 
   # Loop through each line and find the releaseinfo and
-	# productnumber tags.
+  # productnumber tags.
 
-	my @tags = ('releaseinfo', 'productnumber');
-	my $tag;
+  my @tags = ('releaseinfo', 'productnumber');
+  my $tag;
   foreach $line (@contents) {
     my $x = $line;
 
-		foreach $tag (@tags) {
-			if ($x =~ m/<$tag>/) {
-				my $old_version = $x;
-				$old_version =~ s/<$tag>//g;
-				chomp $old_version;
+    foreach $tag (@tags) {
+      if ($x =~ m/<$tag>/) {
+  my $old_version = $x;
+  $old_version =~ s/<$tag>//g;
+  chomp $old_version;
 
-				print "$_\t$old_version -> $new_version\n";
-				$x = "    <$tag>$new_version\n";
-			}
-		}
+  print "$_\t$old_version -> $new_version\n";
+  $x = "    <$tag>$new_version\n";
+      }
+    }
 
     print OUF $x;
   }
@@ -271,13 +273,13 @@ sub process_user_guide {
 
 sub process_about_properties {
   my($filename, $directories, $suffix) = fileparse($_);
-	my $line;
+  my $line;
 
-	unless ($directories =~ m/\/org\.teiid\.designer\//) {
-		return;
-	}
+  unless ($directories =~ m/\/org\.teiid\.designer\//) {
+  return;
+}
 
-	# Get the contents of the about properties
+  # Get the contents of the about properties
   open(INF, "<$_") or die "Cannot open $!";
   my @contents = (<INF>);
   close(INF);
@@ -286,25 +288,25 @@ sub process_about_properties {
   open(OUF, ">$_") or die "Cannot open $!";
 
   # Loop through each line and find the releaseinfo and
-	# productnumber tags.
+  # productnumber tags.
 
   foreach $line (@contents) {
     my $x = $line;
 
-		if ($x =~ m/Version: /) {
-			my $old_version = $x;
-			$old_version =~ s/Version: //g;
-			$old_version =~ s/\\n|\\//g;
-			chomp $old_version;
+    if ($x =~ m/Version: /) {
+      my $old_version = $x;
+      $old_version =~ s/Version: //g;
+      $old_version =~ s/\\n|\\//g;
+      chomp $old_version;
 
-			print "$_\t$old_version -> $new_version\n";
-			$x = "Version: $new_version\\n\\\n";
-		}
+      print "$_\t$old_version -> $new_version\n";
+      $x = "Version: $new_version\\n\\\n";
+    }
 
     print OUF $x;
   }
 
-	close(OUF);
+  close(OUF);
 }
 
 #
@@ -314,47 +316,47 @@ sub process {
   my($filename, $directories, $suffix) = fileparse($_);
 
   # For each keyword test its presence in
-	# path and return if present
-	foreach (@ignoreDirs) {
-		if ($directories =~ m/\/$_\//) {
-			return;
-		}
-	}
+  # path and return if present
+  foreach (@ignoreDirs) {
+    if ($directories =~ m/\/$_\//) {
+      return;
+    }
+  }
 
-	# Only update teiid plugins and features
-	unless ($directories =~ m/[t|T]eiid|techpreview/) {
-	  return;
-	}
+  # Only update teiid plugins and features (and site directory)
+  unless ($directories =~ m/[t|T]eiid|techpreview|site/) {
+    return;
+  }
 
   # Process pom.xml files
-	if (uc($filename) eq 'POM.XML') {
-		$poms = $poms + &process_pom($File::Find::name);
-		return;
-	}
+  if (uc($filename) eq 'POM.XML') {
+    $poms = $poms + &process_pom($File::Find::name);
+    return;
+  }
 
   # Process manifest files
-	if (uc($filename) eq 'MANIFEST.MF') {
-		$manifests = $manifests + &process_manifest($File::find::name);
-		return;
-	}
+  if (uc($filename) eq 'MANIFEST.MF') {
+    $manifests = $manifests + &process_manifest($File::find::name);
+    return;
+  }
 
   # Process feature.xml files
-	if (uc($filename) eq 'FEATURE.XML') {
-		$features = $features + &process_feature_xml($File::find::name);
-		return;
-	}
+  if (uc($filename) eq 'FEATURE.XML') {
+    $features = $features + &process_feature_xml($File::find::name);
+    return;
+  }
 
-	# Process the user guide master xml
-	if (uc($filename) eq 'MASTER.XML') {
-		&process_user_guide($File::find::name);
-		return;
-	}
+  # Process the user guide master xml
+  if (uc($filename) eq 'MASTER.XML') {
+    &process_user_guide($File::find::name);
+    return;
+  }
 
-	# Process the about properties
-	if (uc($filename) eq 'ABOUT.PROPERTIES') {
-		&process_about_properties($File::find::name);
-		return;
-	}
+  # Process the about properties
+  if (uc($filename) eq 'ABOUT.PROPERTIES') {
+    &process_about_properties($File::find::name);
+    return;
+  }
 }
 
 # Find each file under root directory and pass to process
