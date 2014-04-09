@@ -310,6 +310,11 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                     currentScore++;
                     continue;
                 }
+                if (sourceType.isArray() && targetType.isArray()
+                    && sourceType.getComponentType().equals(targetType.getComponentType())) {
+                    currentScore++;
+                    continue;
+                }
                 if (sourceType.isArray()) {
                     if (isVarArgArrayParam(nextMethod, types, i, targetType)) {
                 		//vararg array parameter

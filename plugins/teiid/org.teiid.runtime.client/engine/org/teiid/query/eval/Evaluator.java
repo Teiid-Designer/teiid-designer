@@ -1183,7 +1183,7 @@ public class Evaluator {
 					}
 					return XMLSystemFunctions.jsonToXml(rootName, (Clob)lob, true);
 				} catch (Exception e) {
-					throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30384, f.getFunctionDescriptor().getName(), e.getMessage()));
+					throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30384, f.getFunctionDescriptor().getName()));
 				}
 			}
 		} else if (passing.getExpression() instanceof XMLParse) {
