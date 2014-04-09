@@ -689,8 +689,8 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
             
         /**<p>
          * </p>
-         * @param parent
-         * @param title
+         * @param shell the shell
+         * @param theXmlText the xml text
          * @since 4.0
          */
         public ShowVdbXmlDialog(final Shell shell, final String theXmlText) {

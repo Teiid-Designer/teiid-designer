@@ -9,6 +9,7 @@ public class DataSourceItem extends Object implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private String name;
+	private String jndiName;
 	private String driver;
 
 	/**
@@ -31,6 +32,22 @@ public class DataSourceItem extends Object implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Get the DataSource jndi name
+	 * @return the dataSource jndi name
+	 */
+	public String getJndiName() {
+		return jndiName;
+	}
+
+	/**
+	 * Set the DataSource jndi name
+	 * @param jndiName the dataSource jndi name
+	 */
+	public void setJndiName(String jndiName) {
+		this.jndiName = jndiName;
 	}
 
 	/**
