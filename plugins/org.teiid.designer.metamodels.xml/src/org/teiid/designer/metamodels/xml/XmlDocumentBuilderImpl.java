@@ -1712,12 +1712,12 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
                 final Map.Entry next = (Map.Entry)entries.next();
                 final String prefix = (String)next.getKey();
                 final String uri = (String)next.getValue();
+                final XmlNamespace ns = docFactory.createXmlNamespace();
+                if ("this".equals(prefix) || prefix == null || prefix.trim().length() == 0) ns.setPrefix(XmlDocumentUtil.createXmlPrefixFromUri(uri)); //$NON-NLS-1$
+                else ns.setPrefix(prefix);
+                ns.setUri(uri);
+                ns.setElement(root);
                 if (!schemaUris.contains(uri)) {
-                    final XmlNamespace ns = docFactory.createXmlNamespace();
-                    if ("this".equals(prefix) || prefix == null || prefix.trim().length() == 0) ns.setPrefix(XmlDocumentUtil.createXmlPrefixFromUri(uri)); //$NON-NLS-1$
-                    else ns.setPrefix(prefix);
-                    ns.setUri(uri);
-                    ns.setElement(root);
                     schemaUris.add(uri);
                     this.uriToNamespaceMap.put(uri, ns);
                 }
