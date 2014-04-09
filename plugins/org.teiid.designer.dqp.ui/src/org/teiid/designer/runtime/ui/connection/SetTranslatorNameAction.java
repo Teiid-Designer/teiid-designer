@@ -26,6 +26,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -40,7 +41,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
-public class SetTranslatorNameAction extends SortableSelectionAction {
+public class SetTranslatorNameAction extends SortableSelectionAction  implements IConnectionAction {
     private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetTranslatorNameAction.title"); //$NON-NLS-1$
     private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.title"); //$NON-NLS-1$
     private static final String SPACE = " "; //$NON-NLS-1$

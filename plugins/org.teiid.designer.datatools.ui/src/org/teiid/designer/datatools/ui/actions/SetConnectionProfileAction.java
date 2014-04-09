@@ -10,6 +10,7 @@ package org.teiid.designer.datatools.ui.actions;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -39,6 +40,7 @@ import org.teiid.designer.datatools.ui.dialogs.SelectConnectionProfileDialog;
 import org.teiid.designer.jdbc.JdbcFactory;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.impl.JdbcFactoryImpl;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
@@ -50,7 +52,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 /**
  * @since 8.0
  */
-public class SetConnectionProfileAction extends SortableSelectionAction {
+public class SetConnectionProfileAction extends SortableSelectionAction  implements IConnectionAction {
     private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
 
     private static final String NO_PROFILE_PROVIDER_FOUND_KEY = "NoProfileProviderFound"; //$NON-NLS-1$
@@ -215,9 +217,9 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
 
     private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
-        List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
+        List<?> allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
-            Iterator iter = allObjs.iterator();
+            Iterator<?> iter = allObjs.iterator();
             result = true;
             Object nextObj = null;
             while (iter.hasNext() && result) {
@@ -346,7 +348,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
         
         // Non-null model supplied. Transfer the import settings
         if (modelResc != null) {
-            List rootObjs = null;
+            List<?> rootObjs = null;
             try {
                 rootObjs = modelResc.getAllRootEObjects();
             } catch (Exception ex) {
@@ -354,7 +356,7 @@ public class SetConnectionProfileAction extends SortableSelectionAction {
                 return null;
             }
             if(rootObjs!=null) {
-                for (final Iterator modelIter = rootObjs.iterator(); modelIter.hasNext();) {
+                for (final Iterator<?> modelIter = rootObjs.iterator(); modelIter.hasNext();) {
                     final Object obj = modelIter.next();
                     if (obj instanceof JdbcSource) {
                         jdbcSource=(JdbcSource)obj;

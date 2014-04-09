@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.ui.dialogs.PropertyPage;
+import org.teiid.designer.ui.actions.IConnectionAction;
 
 /**
  * This action provides "Edit Connection Profile" functionality.
@@ -44,7 +45,7 @@ import org.eclipse.ui.dialogs.PropertyPage;
  *
  * @since 8.0
  */
-public class EditConnectionProfileAction extends Action {
+public class EditConnectionProfileAction extends Action implements IConnectionAction {
 
 	// for stashing the size of the dialog for consistency 
 	public final static String MEMENTO_ROOT = "Connectivity_Property_Dialog_Root";//$NON-NLS-1$

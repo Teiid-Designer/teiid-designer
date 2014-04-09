@@ -174,6 +174,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
     private static final String CREATE_RENAME_ACTION_ERROR_MESSAGE = getString("createRenameActionErrorMessage"); //$NON-NLS-1$
     public static final String MODELING_LABEL = UiConstants.Util.getString("ModelerSpecialActionManager.specialLabel"); //$NON-NLS-1$
+    public static final String CONNECTION_LABEL = UiConstants.Util.getString("ModelResourceActionManager.connectionLabel"); //$NON-NLS-1$
 
     /**
      * An ID signifying the start of the view menu. Can be used by contributions which want to be added to the beginning of the
@@ -1288,6 +1289,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (modelingActionMenu != null && modelingActionMenu.getItems().length > 0) {
                 theMenu.insertBefore(ContextMenu.INSERT_END, modelingActionMenu);
             }
+            MenuManager connectionActionMenu = getConnectionActionMenu(selection);
+            if (connectionActionMenu != null && connectionActionMenu.getItems().length > 0) {
+                theMenu.insertBefore(ContextMenu.INSERT_END, connectionActionMenu);
+            }
         } // End of resource additions
 
         if (SelectionUtilities.isSingleSelection(selection)) {
@@ -1338,7 +1343,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         return result;
     }
 
-    // Convienced method to get the modeling action sub-menu for a given selection.
+    // Convenience method to get the modeling action sub-menu for a given selection.
     private MenuManager getModelingActionMenu( ISelection theSelection ) {
         MenuManager menu = new MenuManager(MODELING_LABEL, ModelerActionBarIdManager.getModelingMenuId()); 
 
@@ -1357,6 +1362,22 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             Object[] items = mraMenu.getItems();
             for (int i = 0; i < items.length; i++) {
                 menu.add(mraMenu.getItems()[i]);
+            }
+        }
+
+        return menu;
+    }
+    
+    // Convenience method to get the modeling action sub-menu for a given selection.
+    private MenuManager getConnectionActionMenu( ISelection theSelection ) {
+        MenuManager menu = new MenuManager(CONNECTION_LABEL, ModelerActionBarIdManager.getConnectionMenuId()); 
+
+        MenuManager connMenu = ModelResourceActionManager.getModelResourceConnectionActionMenu(theSelection);
+
+        if (connMenu != null && connMenu.getItems().length > 0) {
+            Object[] items = connMenu.getItems();
+            for (int i = 0; i < items.length; i++) {
+                menu.add(connMenu.getItems()[i]);
             }
         }
 

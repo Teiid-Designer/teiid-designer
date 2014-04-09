@@ -19,6 +19,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditor;
@@ -38,7 +39,7 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
  *
  * @since 8.0
  */
-public class RemoveConnectionInfoAction extends SortableSelectionAction {
+public class RemoveConnectionInfoAction extends SortableSelectionAction  implements IConnectionAction {
     private static final String label = DatatoolsUiConstants.UTIL.getString("SetConnectionProfileAction.title"); //$NON-NLS-1$
 
     private ConnectionInfoHelper helper;
@@ -116,9 +117,9 @@ public class RemoveConnectionInfoAction extends SortableSelectionAction {
 
     private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
-        List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
+        List<?> allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
-            Iterator iter = allObjs.iterator();
+            Iterator<?> iter = allObjs.iterator();
             result = true;
             Object nextObj = null;
             while (iter.hasNext() && result) {

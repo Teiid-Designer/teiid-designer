@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -28,6 +29,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.dialog.AbstractPasswordDialog;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -39,7 +41,7 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
 /**
  * @since 8.0
  */
-public class CreateDataSourceAction extends SortableSelectionAction implements DqpUiConstants {
+public class CreateDataSourceAction extends SortableSelectionAction implements IConnectionAction, DqpUiConstants {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(CreateDataSourceAction.class);
     private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$
 

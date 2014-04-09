@@ -36,6 +36,9 @@ public class ModelerActionBarIdManager implements IModelerRcpActionIds {
         
         /** Name of modeling sub-menu. */
         String MODELING_MENU = "modelingMenu"; //$NON-NLS-1$
+        
+        /** Name of connection sub-menu. */
+        String CONNECTION_MENU = "connectionMenu"; //$NON-NLS-1$
 
         /** Name of refactor menu. */
         String REFACTOR_MENU = "refactorMenu"; //$NON-NLS-1$
@@ -267,6 +270,15 @@ public class ModelerActionBarIdManager implements IModelerRcpActionIds {
      */
     public static String getModelingMenuId() {
         return (RCP_APP ? ID_MODELING_MENU : EditMenu.MODELING_MENU);
+    }
+    
+    /**
+     * Obtains the ID for the edit menu's connection submenu based on if the product is a RCP or an IDE application.
+     * @return the modeling menu ID (never <code>null</code>)
+     * @since 4.4
+     */
+    public static String getConnectionMenuId() {
+        return (RCP_APP ? ID_MODELING_MENU : EditMenu.CONNECTION_MENU);
     }
     
     /**

@@ -26,6 +26,7 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -36,7 +37,7 @@ import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
-public class EditTOPropertiesAction  extends SortableSelectionAction implements DqpUiConstants {
+public class EditTOPropertiesAction  extends SortableSelectionAction  implements IConnectionAction, DqpUiConstants {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(EditTOPropertiesAction.class);
     private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$
 

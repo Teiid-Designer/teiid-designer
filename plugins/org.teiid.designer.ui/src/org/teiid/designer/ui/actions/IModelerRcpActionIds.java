@@ -182,6 +182,12 @@ public interface IModelerRcpActionIds {
      * @since 4.4
      */
     String ID_MODELING_MENU = Prefixes.SUBMENU + "modeling"; //$NON-NLS-1$
+    
+    /**
+     * The Edit -> Connection menu ID.
+     * @since 4.4
+     */
+    String ID_CONNECTION_MENU = Prefixes.SUBMENU + "connection"; //$NON-NLS-1$
 
     /**
      * The File -> New menu ID.

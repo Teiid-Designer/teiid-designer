@@ -18,6 +18,7 @@ import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileSummaryDialog;
+import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -27,7 +28,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 /**
  * @since 8.0
  */
-public class ViewConnectionProfileAction extends SortableSelectionAction  {
+public class ViewConnectionProfileAction extends SortableSelectionAction  implements IConnectionAction {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ViewConnectionProfileAction.class);
     private static final String TITLE = getString("title"); //$NON-NLS-1$
 
@@ -134,9 +135,9 @@ public class ViewConnectionProfileAction extends SortableSelectionAction  {
 
     private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
-        List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
+        List<?> allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
-            Iterator iter = allObjs.iterator();
+            Iterator<?> iter = allObjs.iterator();
             result = true;
             Object nextObj = null;
             while (iter.hasNext() && result) {

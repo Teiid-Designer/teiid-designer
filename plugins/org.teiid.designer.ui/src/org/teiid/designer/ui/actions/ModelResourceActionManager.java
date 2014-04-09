@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -39,10 +40,11 @@ import org.teiid.designer.ui.product.IModelerProductContexts;
 public abstract class ModelResourceActionManager {
 	/** Array of all extensions to the DiagramHelper extension point */
 	private static final String MODELS_LABEL = UiConstants.Util.getString("ModelResourceActionManager.modelsLabel"); //$NON-NLS-1$
-	private static Collection actions;
+	private static final String CONNECTION_LABEL = UiConstants.Util.getString("ModelResourceActionManager.connectionLabel"); //$NON-NLS-1$
+	private static Collection<Object> actions;
 	private static boolean actionsLoaded = false;
 	
-	public static Collection getActions(Object selection) {
+	private static Collection<Object> getActions(Object selection) {
 		if( !actionsLoaded ) {
 			loadExtensions();
 		}
@@ -50,7 +52,7 @@ public abstract class ModelResourceActionManager {
 	}
 	
 	private static void loadExtensions() {
-		HashMap actionExtList = new HashMap();
+		HashMap<String, Object> actionExtList = new HashMap<String, Object>();
 		actionsLoaded = true;
 
 
@@ -95,11 +97,11 @@ public abstract class ModelResourceActionManager {
 		Object[] actionsArray = actionExtList.values().toArray();
 		Arrays.sort(actionsArray);
 		// Now we need to set the actual map
-		actions = new ArrayList(actionsArray.length);
-		Collection keys = actionExtList.keySet();
+		actions = new ArrayList<Object>(actionsArray.length);
+		Collection<String> keys = actionExtList.keySet();
 		for(int i=0; i<actionsArray.length; i++ ) {
 			Object key = null;
-			for(Iterator iter = keys.iterator(); iter.hasNext(); ) {
+			for(Iterator<String> iter = keys.iterator(); iter.hasNext(); ) {
 				key = iter.next();
 				if( actionExtList.get(key) == (actionsArray[i])) {
 					actions.add(actionsArray[i]);
@@ -114,17 +116,50 @@ public abstract class ModelResourceActionManager {
         MenuManager menu = new MenuManager(MODELS_LABEL,
                 "resourceActions"); //$NON-NLS-1$
         
-        Collection modelResourceActions = getActions(theSelection);
+        Collection<Object> modelResourceActions = getActions(theSelection);
         
         // create a NewChildAction for every new child type
-        Iterator iter = modelResourceActions.iterator();
+        Iterator<Object> iter = modelResourceActions.iterator();
         Action nextAction = null;
 
         while (iter.hasNext()) {
         	nextAction = (Action)iter.next();
         	if( UiPlugin.getDefault().isProductContextValueSupported(IModelerProductContexts.Actions.MODEL_RESOURCE_ACTION_GROUP, nextAction.getClass().getName()) ) {
         		if( nextAction instanceof ISelectionAction ) {
-            		if( ((ISelectionAction)nextAction).isApplicable(theSelection) ) {
+            		if( !(nextAction instanceof IConnectionAction) && ((ISelectionAction)nextAction).isApplicable(theSelection) ) {
+    		        	if( nextAction instanceof ISelectionListener) {
+    		        		((ISelectionListener)nextAction).selectionChanged(null, theSelection);
+    		        	}
+    		            menu.add(nextAction);
+            		}
+        		} else {
+		        	if( nextAction instanceof ISelectionListener) {
+		        		((ISelectionListener)nextAction).selectionChanged(null, theSelection);
+		        	}
+		            menu.add(nextAction);
+        		}
+        	}
+        }
+        if( menu.getItems().length == 0 )
+        	return null;
+        
+        return menu;
+    }
+    
+    public static MenuManager getModelResourceConnectionActionMenu(final ISelection theSelection) {
+        MenuManager menu = new MenuManager(CONNECTION_LABEL,  "connectionActions"); //$NON-NLS-1$
+        
+        Collection<Object> modelResourceActions = getActions(theSelection);
+        
+        // create a NewChildAction for every new child type
+        Iterator<Object> iter = modelResourceActions.iterator();
+        Action nextAction = null;
+
+        while (iter.hasNext()) {
+        	nextAction = (Action)iter.next();
+        	if( UiPlugin.getDefault().isProductContextValueSupported(IModelerProductContexts.Actions.MODEL_RESOURCE_ACTION_GROUP, nextAction.getClass().getName()) ) {
+        		if( nextAction instanceof ISelectionAction ) {
+            		if( nextAction instanceof IConnectionAction && ((ISelectionAction)nextAction).isApplicable(theSelection) ) {
     		        	if( nextAction instanceof ISelectionListener) {
     		        		((ISelectionListener)nextAction).selectionChanged(null, theSelection);
     		        	}
