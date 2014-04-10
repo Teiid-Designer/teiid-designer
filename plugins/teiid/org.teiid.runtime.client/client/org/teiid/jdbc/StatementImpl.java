@@ -65,7 +65,6 @@ import org.teiid.core.types.SQLXMLImpl;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.EnhancedTimer.Task;
 import org.teiid.net.TeiidURL;
@@ -206,12 +205,12 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
     protected boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+        return minVersion.isLessThan(Version.TEIID_8_0.get());
     }
 
     protected boolean isGreaterThanTeiidSeven() {
         ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.isGreaterThan(TeiidServerVersion.TEIID_7_SERVER);
+        return minVersion.isGreaterThan(Version.TEIID_7_7.get());
     }
 
     protected void checkSupportedVersion(Version teiidVersion) {

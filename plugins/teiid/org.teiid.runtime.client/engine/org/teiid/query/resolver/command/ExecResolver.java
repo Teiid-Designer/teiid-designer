@@ -32,7 +32,7 @@ import java.util.TreeMap;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
@@ -403,7 +403,7 @@ public class ExecResolver extends ProcedureContainerResolver {
             namedParameters = true;
         }
         
-        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_7_SERVER))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
             findCommand7Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);
         else
             findCommand8Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);

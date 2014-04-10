@@ -137,7 +137,7 @@ public class QueryParser implements IQueryParser {
 	@Since(Version.TEIID_8_0)
 	public Command parseProcedure(String sql, boolean update) throws Exception {
         try{
-            if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
                 return parseUpdateProcedure(sql);
 
             if (update) {

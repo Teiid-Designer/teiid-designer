@@ -681,7 +681,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 boolean previewServer = false;
 
                 // version attribute
-                ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
+                ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
                 Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
                 if (versionNode != null) teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
 

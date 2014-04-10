@@ -69,7 +69,7 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.TimestampWithTimezone;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.BatchResults.Batch;
 import org.teiid.jdbc.BatchResults.BatchFetcher;
 import org.teiid.runtime.client.Messages;
@@ -170,7 +170,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 	}
 
 	private boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+        return getTeiidVersion().isLessThan(Version.TEIID_8_0.get());
     }
 
     private void checkSupportedVersion() {

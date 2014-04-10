@@ -41,7 +41,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstant
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -121,7 +121,7 @@ public class SimpleQueryResolver extends CommandResolver {
             qrv.visit(query);
             ResolverVisitor visitor = (ResolverVisitor)qrv.getVisitor();
 			visitor.throwException(true);
-			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_6_SERVER)) {
+			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get())) {
 				ExpressionMappingVisitor emv = new ExpressionMappingVisitor(getTeiidVersion(), null) {
 					@Override
                     public Expression replaceExpression(Expression element) {

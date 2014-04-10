@@ -132,7 +132,7 @@ public class UpdateProcedureResolver extends CommandResolver {
     private void resolveCommand(TriggerAction ta, TempMetadataAdapter metadata, boolean resolveNullLiterals) throws Exception {
 
         ICreateProcedureCommand<Block, GroupSymbol, Expression, LanguageVisitor> cmd;
-        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
             cmd = create(ASTNodes.CREATE_UPDATE_PROCEDURE_COMMAND);
         } else {
             cmd = create(ASTNodes.CREATE_PROCEDURE_COMMAND);

@@ -165,7 +165,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     public void visit(AggregateSymbol obj) {
         preVisitVisitor(obj);
 
-        if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
             visitNode(obj.getExpression());
         else {
             Expression[] args = obj.getArgs();

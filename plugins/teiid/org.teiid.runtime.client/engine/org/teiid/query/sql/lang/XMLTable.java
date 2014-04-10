@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.IXMLTable;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
@@ -92,7 +92,7 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
      * @param columns
      */
     public void setColumns(List<XMLColumn> columns) {
-        if (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER) && columns.isEmpty()) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()) && columns.isEmpty()) {
             usingDefaultColumn = true;
             XMLColumn xmlColumn = parser.createASTNode(ASTNodes.XML_COLUMN);
             xmlColumn.setName("OBJECT_VALUE"); //$NON-NLS-1$

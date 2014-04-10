@@ -41,7 +41,7 @@ import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeAliases;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.MetadataFactory;
@@ -80,7 +80,7 @@ public class SystemMetadata {
 	 * @param teiidVersion
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
-	    if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+	    if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
 	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionFailure, this.getClass().getSimpleName(), teiidVersion));
 
 		this.teiidVersion = teiidVersion;

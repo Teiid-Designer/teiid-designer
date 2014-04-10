@@ -17,7 +17,7 @@ import org.teiid.client.batch.Batch2Serializer;
 import org.teiid.client.batch.Batch3Serializer;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * @since 4.2
@@ -33,15 +33,6 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
  * </ul>
  */
 public abstract class BatchSerializer {
-
-    protected static final ITeiidServerVersion TEIID_8_0 = TeiidServerVersion.TEIID_8_SERVER;
-
-    protected static final ITeiidServerVersion TEIID_8_2 = new TeiidServerVersion(
-                                                                                                                      ITeiidServerVersion.EIGHT,
-                                                                                                                      ITeiidServerVersion.TWO,
-                                                                                                                      ITeiidServerVersion.ZERO);
-
-    protected static final ITeiidServerVersion TEIID_8_6 = TeiidServerVersion.TEIID_8_6_SERVER;
 
     private final ITeiidServerVersion teiidVersion;
 
@@ -65,11 +56,11 @@ public abstract class BatchSerializer {
      * @return correct version of batch serializer according to teiid version
      */
     public static BatchSerializer getInstance(ITeiidServerVersion teiidVersion) {
-        if (teiidVersion.isLessThan(TEIID_8_0))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
             return new Batch0Serializer(teiidVersion);
-        else if (teiidVersion.isLessThan(TEIID_8_2))
+        else if (teiidVersion.isLessThan(Version.TEIID_8_2.get()))
             return new Batch1Serializer(teiidVersion);
-        else if (teiidVersion.isLessThan(TEIID_8_6))
+        else if (teiidVersion.isLessThan(Version.TEIID_8_6.get()))
             return new Batch2Serializer(teiidVersion);
         else
             return new Batch3Serializer(teiidVersion);

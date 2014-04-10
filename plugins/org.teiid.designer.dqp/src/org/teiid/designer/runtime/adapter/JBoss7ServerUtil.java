@@ -26,6 +26,7 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * @since 8.0
@@ -235,7 +236,7 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      */
     public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBoss7Server jboss7Server) throws Exception {
         if (! serverStarted(parentServer))
-            return TeiidServerVersion.DEFAULT_TEIID_8_SERVER;
+            return Version.TEIID_8_6.get();
         
         ModelNode request = new ModelNode();
         request.get(OP).set(READ_ATTRIBUTE_OPERATION);   

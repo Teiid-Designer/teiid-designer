@@ -64,6 +64,7 @@ import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion.VersionID;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.common.util.UiUtil;
 
@@ -384,7 +385,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                 serverVersions.add(version.toString());
             }
         } catch (Exception ex) {
-            serverVersions.addAll(TeiidServerVersion.DEFAULT_TEIID_SERVER_IDS);
+            for (VersionID versionId : VersionID.values()) {
+                serverVersions.add(versionId.toString());
+            }
         }
 
         Collections.sort(serverVersions, Collections.reverseOrder());

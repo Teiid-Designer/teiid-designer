@@ -12,28 +12,64 @@ package org.teiid.designer.runtime.version.spi;
  */
 public interface ITeiidServerVersion {
     
+    /**
+     * dot
+     */
     String DOT = ".";  //$NON-NLS-1$
     
+    /**
+     * wildcard character used in version strings
+     */
     String WILDCARD = "x"; //$NON-NLS-1$
     
+    /**
+     * zero
+     */
     String ZERO = "0"; //$NON-NLS-1$
 
+    /**
+     * one
+     */
     String ONE = "1"; //$NON-NLS-1$
 
+    /**
+     * two
+     */
     String TWO = "2"; //$NON-NLS-1$
 
+    /**
+     * three
+     */
     String THREE = "3"; //$NON-NLS-1$
 
+    /**
+     * four
+     */
     String FOUR = "4"; //$NON-NLS-1$
 
+    /**
+     * five
+     */
     String FIVE = "5"; //$NON-NLS-1$
 
+    /**
+     * six
+     */
     String SIX = "6"; //$NON-NLS-1$
 
+    /**
+     * seven
+     */
     String SEVEN = "7"; //$NON-NLS-1$
 
+    /**
+     * eight
+     */
     String EIGHT = "8"; //$NON-NLS-1$
 
+    /**
+     * nine
+     */
     String NINE = "9"; //$NON-NLS-1$
 
     /**
@@ -69,31 +105,6 @@ public interface ITeiidServerVersion {
             return id;
         }
     }
-
-    /**
-     * Default teiid 8 server version
-     */
-    String DEFAULT_TEIID_8_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
-
-    /**
-     * Default teiid 7 server version
-     */
-    String DEFAULT_TEIID_7_SERVER_ID = SEVEN + DOT + SEVEN + DOT + ZERO;
-
-    /**
-     * teiid 8.4 server version - made the CREATE VIRTUAL PROCEDURE keywords optional
-     */
-    String TEIID_8_4_SERVER_ID = EIGHT + DOT + FOUR + DOT + ZERO;
-
-    /**
-     * teiid 8.6 server version - required due to method added to Admin API
-     */
-    String TEIID_8_6_SERVER_ID = EIGHT + DOT + SIX + DOT + ZERO;
-
-    /**
-     * teiid 8.7 server version - required due to changes to SQLStringVisitor
-     */
-    String TEIID_8_7_SERVER_ID = EIGHT + DOT + SEVEN + DOT + ZERO;
 
     /**
      * Teiid version property constant

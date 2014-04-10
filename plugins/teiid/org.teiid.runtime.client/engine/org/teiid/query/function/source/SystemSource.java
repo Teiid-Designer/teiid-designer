@@ -747,7 +747,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Since(Version.TEIID_8_0)
     private void addEndsWithFunction() {
-	    if (teiidVersion.getMinimumVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+	    if (teiidVersion.getMinimumVersion().isLessThan(Version.TEIID_8_0.get()))
             return;
 
         FunctionMethod f =
@@ -788,7 +788,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Removed(Version.TEIID_8_0)
 	private void addToCharsFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
 	        return;
 
 		functions.add(
@@ -801,7 +801,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Removed(Version.TEIID_8_0)
 	private void addToBytesFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
             return;
 
 		functions.add(

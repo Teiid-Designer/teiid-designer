@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ICommand;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -89,7 +89,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      */
     @Override
     public List<? extends Expression> getResultSetColumns() {
-        if (returnsResultSet() || parser.getVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER)) {
+        if (returnsResultSet() || parser.getVersion().isLessThan(Version.TEIID_8_0.get())) {
             return getProjectedSymbols();
         }
         return Collections.emptyList();

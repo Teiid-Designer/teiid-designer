@@ -36,7 +36,7 @@ import org.teiid.core.types.Transform;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.AggregateAttributes;
 import org.teiid.metadata.FunctionMethod;
@@ -272,7 +272,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	public FunctionDescriptor[] determineNecessaryConversions(String name, Class<?> returnType, Expression[] args, Class<?>[] types, boolean hasUnknownType) throws Exception {
 		// Check for no args - no conversion necessary
 		if(types.length == 0) {
-		    if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+		    if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
 		        return new FunctionDescriptor[0];
 
 			return null;
@@ -467,7 +467,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
          * but if someone uses teiid 7, they will encounter this exception so the designer
          * client resolver must mirror the same exception.
          */
-        if(teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER) && result.isExplicit()) {
+        if(teiidVersion.isLessThan(Version.TEIID_8_0.get()) && result.isExplicit()) {
             throw new Exception();
         }
 

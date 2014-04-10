@@ -1078,7 +1078,7 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
     }
 
     protected boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+        return getTeiidVersion().isLessThan(Version.TEIID_8_0.get());
     }
 
     protected void checkSupportedVersion(Version teiidVersion) {

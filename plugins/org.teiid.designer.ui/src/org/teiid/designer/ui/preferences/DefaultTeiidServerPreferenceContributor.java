@@ -24,6 +24,7 @@ import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion.VersionID;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -224,7 +225,9 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             }
         } catch (Exception ex) {
             Util.log(ex);
-            items.addAll(TeiidServerVersion.DEFAULT_TEIID_SERVER_IDS);
+            for (VersionID versionId : VersionID.values()) {
+                items.add(versionId.toString());
+            }
         }
 
         Collections.sort(items, Collections.reverseOrder());

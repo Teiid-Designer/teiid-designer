@@ -16,7 +16,7 @@ import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  *
@@ -128,6 +128,6 @@ public class JBossServerUtil {
      *                 and can only be a maximum of version 7
      */
     public static ITeiidServerVersion getTeiidRuntimeVersion(IServer parentServer, JBossServer jbossServer) {
-        return TeiidServerVersion.DEFAULT_TEIID_7_SERVER;
+        return Version.TEIID_7_7.get();
     }
 }

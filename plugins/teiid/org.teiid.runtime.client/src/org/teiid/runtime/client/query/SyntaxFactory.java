@@ -59,7 +59,7 @@ import org.teiid.designer.query.sql.symbol.IMultipleElementSymbol;
 import org.teiid.designer.query.sql.symbol.IReference;
 import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.mapping.relational.QueryNode;
 import org.teiid.query.metadata.StoredProcedureInfo;
 import org.teiid.query.metadata.TempMetadataID;
@@ -175,7 +175,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
         aggregateSymbol.setDistinct(isDistinct);
 
         if (expression != null) {
-            if (isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER))
+            if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
                 aggregateSymbol.setArgs(new Expression[] { expression });
             else
                 aggregateSymbol.setExpression(expression);
@@ -264,7 +264,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public IRaiseStatement createRaiseStatement(Expression expression) {
-        if (isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER)) {
+        if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get())) {
             RaiseStatement raiseStatement = create(ASTNodes.RAISE_STATEMENT);
             raiseStatement.setExpression(expression);
             return raiseStatement;
@@ -414,7 +414,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public ICreateProcedureCommand createCreateProcedureCommand(Block block) {
-        if (isGreaterThanOrEqualTo(TeiidServerVersion.TEIID_8_SERVER)) {
+        if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get())) {
             CreateProcedureCommand command = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
             command.setBlock(block);
             return command;

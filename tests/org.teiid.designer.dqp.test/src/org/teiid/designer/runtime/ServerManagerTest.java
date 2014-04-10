@@ -130,7 +130,7 @@ public class ServerManagerTest {
     @Before
     public void beforeEach() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(server1.getServerVersion()).thenReturn(TeiidServerVersion.DEFAULT_TEIID_8_SERVER);
+        when(server1.getServerVersion()).thenReturn(TeiidServerVersion.DEFAULT_TEIID_SERVER);
 
         String stateLocationPath = System.getProperty("java.io.tmpdir");
         this.mgr = new TeiidServerManager(stateLocationPath, serversProvider, new DefaultStorageProvider());

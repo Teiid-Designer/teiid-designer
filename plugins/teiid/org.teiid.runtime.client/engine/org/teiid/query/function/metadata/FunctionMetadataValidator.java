@@ -154,7 +154,7 @@ public class FunctionMetadataValidator {
     public static final void validateName(ITeiidServerVersion teiidVersion, String name) throws Exception {
         validateIsNotNull(name, "Name"); //$NON-NLS-1$
         validateLength(name, MAX_LENGTH, "Name"); //$NON-NLS-1$
-        if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
             validateNameCharacters(name, "Name"); //$NON-NLS-1$
     }
 

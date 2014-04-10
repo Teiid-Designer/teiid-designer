@@ -89,56 +89,9 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     }
 
     /**
-     * Minimum 7 server version
-     */
-    public static final ITeiidServerVersion TEIID_7_SERVER = new TeiidServerVersion(SEVEN, SEVEN, ZERO);
-
-    /**
-     * Minimum 8 server version
-     */
-    public static final ITeiidServerVersion TEIID_8_SERVER = new TeiidServerVersion(EIGHT, ZERO, ZERO);
-
-    /**
-     * The default teiid 8 server version
-     */
-    public static final ITeiidServerVersion DEFAULT_TEIID_8_SERVER = new TeiidServerVersion(DEFAULT_TEIID_8_SERVER_ID);
-
-    /**
-     * The default teiid 7 server version
-     */
-    public static final ITeiidServerVersion DEFAULT_TEIID_7_SERVER = new TeiidServerVersion(DEFAULT_TEIID_7_SERVER_ID);
-
-    /**
-     * The teiid 8.4 server version - this version made the CREATE VIRTUAL PROCEDURE keywords optional
-     */
-    public static final ITeiidServerVersion TEIID_8_4_SERVER = new TeiidServerVersion(TEIID_8_4_SERVER_ID);
-
-    /**
-     * The teiid 8.6 server version - this version introduced an Admin API change
-     */
-    public static final ITeiidServerVersion TEIID_8_6_SERVER = new TeiidServerVersion(TEIID_8_6_SERVER_ID);
-
-    /**
-     * The teiid 8.7 server version - this version introduced changes to SQLStringVisitor
-     */
-    public static final ITeiidServerVersion TEIID_8_7_SERVER = new TeiidServerVersion(TEIID_8_7_SERVER_ID);
-
-    /**
      * The default preferred server
      */
-    public static final ITeiidServerVersion DEFAULT_TEIID_SERVER = DEFAULT_TEIID_8_SERVER;
-
-    /**
-     * Collection of the default teiid instance version identifiers
-     */
-    public static Collection<String> DEFAULT_TEIID_SERVER_IDS = null;
-    
-    static {
-        List<String> ids = new ArrayList<String>();
-        ids.add(DEFAULT_TEIID_7_SERVER_ID);
-        ids.add(DEFAULT_TEIID_8_SERVER_ID);
-        DEFAULT_TEIID_SERVER_IDS = Collections.unmodifiableCollection(ids);
-    }
+    public static final ITeiidServerVersion DEFAULT_TEIID_SERVER = Version.TEIID_8_6.get();
 
     private String versionString = ZERO + DOT + ZERO + DOT + ZERO;
 

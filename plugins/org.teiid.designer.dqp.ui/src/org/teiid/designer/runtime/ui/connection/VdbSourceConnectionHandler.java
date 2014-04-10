@@ -9,11 +9,9 @@ package org.teiid.designer.runtime.ui.connection;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -34,7 +32,7 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
@@ -288,7 +286,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
                     // the resource-adapter properties and NOT the translator.
                     // So added the check and ignore getting translator properties if version < 8.6
                     
-                    if( !defaultServer.getServerVersion().isLessThan(TeiidServerVersion.TEIID_8_6_SERVER)) {
+                    if( !defaultServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
 	                    for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
 	                        TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
 	                        prop.advanced = propDefn.isAdvanced();

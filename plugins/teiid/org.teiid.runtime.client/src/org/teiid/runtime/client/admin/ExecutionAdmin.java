@@ -53,7 +53,6 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.Messages;
@@ -129,7 +128,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     private boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER);
+        return minVersion.isLessThan(Version.TEIID_8_0.get());
     }
 
     @Override
@@ -673,7 +672,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         for (Translator translator : translators) {
             if (translator.getName() != null) {
                 Collection<? extends PropertyDefinition> propDefs = null;
-                if( teiidServer.getServerVersion().isLessThan(TeiidServerVersion.TEIID_8_6_SERVER)) {
+                if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
                 	propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
                 } else {
                 	propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());

@@ -3,7 +3,7 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.query.sql.symbol.IElementSymbol;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
@@ -188,7 +188,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             int result = 1;
 
             result = prime * result + this.groupSymbol.hashCode();
-            if (getTeiidVersion().isLessThan(TeiidServerVersion.TEIID_8_SERVER))
+            if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
                 result = prime * result + (this.getShortCanonicalName() == null ? 0 : this.getShortCanonicalName().hashCode());
             else
                 result = prime * result + (this.getShortName() == null ? 0 : this.getShortName().hashCode());

@@ -13,7 +13,7 @@ import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.VDB;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.admin.v7.Admin7Spec;
 import org.teiid.runtime.client.admin.v8.Admin8Spec;
 
@@ -21,8 +21,6 @@ import org.teiid.runtime.client.admin.v8.Admin8Spec;
  *
  */
 public abstract class AdminSpec {
-
-    protected static final ITeiidServerVersion TEIID_8_0 = TeiidServerVersion.TEIID_8_SERVER;
 
     private final ITeiidServerVersion teiidVersion;
 
@@ -42,7 +40,7 @@ public abstract class AdminSpec {
      * @return admin spec for specific teiid version
      */
     public static AdminSpec getInstance(ITeiidServerVersion teiidVersion) {
-        if (teiidVersion.isLessThan(TEIID_8_0))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
             return new Admin7Spec(teiidVersion);
         else
             return new Admin8Spec(teiidVersion);
