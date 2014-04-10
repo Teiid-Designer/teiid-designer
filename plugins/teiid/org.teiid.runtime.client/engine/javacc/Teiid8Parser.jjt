@@ -183,7 +183,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
     private void requires(boolean condition) throws ParseException {
       if (!condition)
         throw new ParseException(Messages.getString(
-                Messages.Misc.TeiidVersionFailure, getVersion().toString()));
+                Messages.TeiidParser.teiid_version_failure, getVersion().toString()));
     }
 
 } // end class

@@ -81,7 +81,7 @@ public class SystemMetadata {
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
 	    if (teiidVersion.isLessThan(TeiidServerVersion.TEIID_8_SERVER))
-	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionTooLow, this.getClass().getSimpleName()));
+	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionFailure, this.getClass().getSimpleName(), teiidVersion));
 
 		this.teiidVersion = teiidVersion;
 		this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);

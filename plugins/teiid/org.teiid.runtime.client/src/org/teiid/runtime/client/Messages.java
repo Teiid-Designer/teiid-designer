@@ -362,7 +362,8 @@ public class Messages {
         invalidNodeType,
         udt_format_wrong,
         proc_type_conflict,
-        param_out;
+        param_out,
+        teiid_version_failure;
         
         @Override
         public String toString() {
@@ -425,7 +426,6 @@ public class Messages {
     @SuppressWarnings( "javadoc" )
     public enum Misc {
         ReflectionHelper_errorConstructing,
-        TeiidVersionTooLow,
         TeiidVersionFailure,
         Evaluator_noValue,
         ExceptionHolder_convertedException;

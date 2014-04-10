@@ -233,11 +233,21 @@ public interface Admin {
     /**
      * Get all of the available configuration Properties for the specified translator
      * @param translatorName - Name of the translator
-     * @return
+     * @return translator property definitions
      * @throws AdminException
      */
     @Deprecated
     Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName) throws AdminException;
+
+    /**
+     * Get all of the available configuration Properties for the specified translator
+     * @param translatorName - Name of the translator
+     * @param type - Type of property definition (import, override, extension-metadata)
+     * @return translator property definitions
+     * @throws AdminException
+     */
+    @Since(Version.TEIID_8_7)
+    Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException;
     
 
     /**

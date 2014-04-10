@@ -86,6 +86,7 @@ import org.teiid.adminapi.impl.VDBMetadataMapper.TransactionMetadataMapper;
 import org.teiid.adminapi.impl.VDBTranslatorMetaData;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
@@ -141,6 +142,11 @@ public class Admin8Factory {
     		admin.setProfileName(profileName);
     	}
     	return admin;
+    }
+
+    private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
+        if (getTeiidVersion().isLessThan(requiredVersion))
+            throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
     }
 
     /**
@@ -1218,7 +1224,7 @@ public class Admin8Factory {
 	        props.add(cp);
 	        return props;
 		}
-		
+
 		@Deprecated
         @Override
 	    public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName) throws AdminException{
@@ -1246,6 +1252,21 @@ public class Admin8Factory {
 			throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70055, translatorName));
 	    }
 		
+		@Override
+        @Since(Version.TEIID_8_7)
+        public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException{
+            requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7.get());
+
+		    BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+            Collection<? extends Translator> translators = getTranslators();
+            for (Translator t:translators) {
+                if (t.getName().equalsIgnoreCase(translatorName)) {
+                    cliCall("read-translator-properties", new String[] {"subsystem", "teiid"}, new String[] {"translator-name", translatorName, "type", type.name()}, builder);
+                    return builder.getPropertyDefinitions();
+                }
+            }
+            throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70055, translatorName));
+        }
 
 		private class BuildPropertyDefinitions extends ResultCallback{
 			private ArrayList<PropertyDefinition> propDefinitions = new ArrayList<PropertyDefinition>();
