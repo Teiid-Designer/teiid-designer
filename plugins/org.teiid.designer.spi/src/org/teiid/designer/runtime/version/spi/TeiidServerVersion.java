@@ -263,7 +263,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     
     @Override
     public boolean hasWildCards() {
-        return minorVersion.equals(WILDCARD) || microVersion.equals(WILDCARD);
+        return majorVersion.equals(WILDCARD) || minorVersion.equals(WILDCARD) || microVersion.equals(WILDCARD);
     }
 
     @Override
@@ -296,7 +296,9 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean compareTo(ITeiidServerVersion otherVersion) {
-        if (! getMajor().equals(otherVersion.getMajor()))
+        String entryMajor = otherVersion.getMajor();
+
+        if (! getMajor().equals(entryMajor) && ! getMajor().equals(WILDCARD) && ! entryMajor.equals(WILDCARD))
             return false;
         
         String entryMinor = otherVersion.getMinor();
@@ -326,7 +328,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         if (! this.hasWildCards())
             return this;
 
-        String major = getMajor();
+        String major = getMajor().equals(WILDCARD) ? SEVEN : getMajor();
         String minor = getMinor().equals(WILDCARD) ? ZERO : getMinor();
         String micro = getMicro().equals(WILDCARD) ? ZERO : getMicro();
 
@@ -338,7 +340,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         if (! this.hasWildCards())
             return this;
 
-        String major = getMajor();
+        String major = getMajor().equals(WILDCARD) ? NINE : getMajor();
         String minor = getMinor().equals(WILDCARD) ? NINE : getMinor();
         String micro = getMicro().equals(WILDCARD) ? NINE : getMicro();
 
@@ -347,21 +349,18 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        ITeiidServerVersion myMaxVersion = getMaximumVersion();
+        ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
+
+        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
         if (majCompResult > 0)
             return true;
-
-        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-            return false;
         
-        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
         if (majCompResult == 0 && minCompResult > 0)
             return true;
 
-        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-            return false;
-
-        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
             return true;
             
@@ -370,21 +369,18 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isLessThan(ITeiidServerVersion otherVersion) {
-        int majCompResult = getMajor().compareTo(otherVersion.getMajor());
+        ITeiidServerVersion myMaxVersion = getMaximumVersion();
+        ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
+
+        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
         if (majCompResult < 0)
             return true;
 
-        if (getMinor().equals(WILDCARD) || otherVersion.getMinor().equals(WILDCARD))
-            return false;
-        
-        int minCompResult = getMinor().compareTo(otherVersion.getMinor());
+        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
         if (majCompResult == 0 && minCompResult < 0)
             return true;
 
-        if (getMicro().equals(WILDCARD) || otherVersion.getMicro().equals(WILDCARD))
-            return false;
-
-        int micCompResult = getMicro().compareTo(otherVersion.getMicro());
+        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
             return true;
             
