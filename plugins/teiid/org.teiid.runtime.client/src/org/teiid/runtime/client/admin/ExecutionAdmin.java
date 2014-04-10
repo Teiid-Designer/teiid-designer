@@ -740,8 +740,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public void undeployVdb( String vdbName) throws Exception {
-        adminSpec.undeploy(admin, appendVdbExtension(vdbName), getVdb(vdbName).getVersion());
         ITeiidVdb vdb = getVdb(vdbName);
+        adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdb != null ? vdb.getVersion() : 1);
+        vdb = getVdb(vdbName);
 
         refreshVDBs();
 

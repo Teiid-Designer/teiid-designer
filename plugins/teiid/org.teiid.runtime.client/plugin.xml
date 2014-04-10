@@ -94,7 +94,7 @@
                     generated="false"
                     id="org.eclipse.datatools.connectivity.db.version"
                     name="%VERSION_PROPERTY_NAME"
-                    value="7.7.+"
+                    value="x.x.x"
                     required="true"
                     visible="false"/>
                 <property
@@ -126,11 +126,11 @@
        point="org.eclipse.datatools.connectivity.sqm.core.databaseDefinition">
       <definition
           allowsConnections="true"
-          description="Definition of the Teiid Database 8.4"
+          description="Definition of the Teiid Database"
           file="src/org/teiid/runtime/client/database/teiidDB.xmi"
           product="Teiid"
           productDisplayString="%PRODUCT_DISPLAY_STRING"
-          version="7.7+"
+          version="x.x.x"
           versionDisplayString="%VERSION_DISPLAY_STRING">
       </definition>
    </extension>
@@ -141,7 +141,7 @@
             provider="org.teiid.datatools.connectivity.sql.TeiidSchemaLoader"
             eclass="org.eclipse.datatools.modelbase.sql.schema.Schema"
             product="Teiid"
-            version="7.7+"/>
+            version="x.x.x"/>
    </extension>
    <extension point="org.eclipse.datatools.connectivity.ui.driverUIContributor">
       <driverUIContributor
@@ -166,7 +166,7 @@
             configurationClass="org.teiid.datatools.connectivity.ui.TeiidDBUIConfiguration"
             default="false"
             product="Teiid"
-            version="7.7+">
+            version="x.x.x">
       </dbUIConfiguration>
    </extension>
 
