@@ -1,9 +1,0 @@
-[submodule "plugins/teiid/org.teiid.7.7.x"]
-	path = plugins/teiid/org.teiid.7.7.x
-	url = git://github.com/Teiid-Designer/teiid.git
-[submodule "plugins/teiid/org.teiid.8.3.x"]
-	path = plugins/teiid/org.teiid.8.3.x
-	url = git://github.com/Teiid-Designer/teiid.git
-[submodule "plugins/teiid/org.teiid.8.4.x"]
-	path = plugins/teiid/org.teiid.8.4.x
-	url = git://github.com/Teiid-Designer/teiid.git

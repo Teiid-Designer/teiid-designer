@@ -51,14 +51,8 @@
       <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
       <import plugin="org.teiid.designer.modelgenerator"/>
       <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
-      <import plugin="org.teiid.8.3.x" version="8.1.0" match="compatible"/>
-      <import plugin="org.teiid.7.7.x" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.query.ui"/>
       <import plugin="org.teiid.designer.schema.tools"/>
-      <import plugin="org.jboss.tools.locus.mockito" version="1.9.5" match="greaterOrEqual"/>
-      <import plugin="org.teiid.7.7.x" version="8.1.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.8.3.x" version="8.1.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.8.4.x" version="8.1.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.designer.transformation"/>
       <import plugin="org.teiid.designer.ui.common"/>
       <import plugin="org.teiid.designer.ui"/>
@@ -72,8 +66,10 @@
       <import plugin="org.teiid.designer.jdbc.test.framework" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc.relational"/>
       <import plugin="org.teiid.designer.vdb"/>
-      <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
-      <import plugin="org.teiid.designer.ui.common" version="8.1.0" match="compatible"/>
+      <import plugin="org.teiid.runtime.client" version="8.4.0" match="compatible"/>
+      <import plugin="org.apache.ant" version="1.8.4" match="compatible"/>
+      <import plugin="org.junit" version="4.11.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.runtime.client" version="8.5.0" match="equivalent"/>
    </requires>
 
    <plugin
@@ -330,34 +326,18 @@
          unpack="false"/>
 
    <plugin
-         id="org.teiid.8.4.x.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.8.3.x.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.7.7.x.test"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.jboss.tools.locus.mockito"
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.runtime.client.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
