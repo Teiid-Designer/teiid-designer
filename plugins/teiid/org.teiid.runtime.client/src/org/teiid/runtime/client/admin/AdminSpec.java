@@ -36,6 +36,12 @@ public abstract class AdminSpec {
     }
 
     /**
+     * Get the instance of the {@link AdminSpec} appropriate to the version
+     * of the teiid instance.
+     * <p>
+     * Note. the teiid version is wrapped since the implementation of the
+     * version 8 spec caches against the version.
+     *
      * @param teiidVersion
      * @return admin spec for specific teiid version
      */

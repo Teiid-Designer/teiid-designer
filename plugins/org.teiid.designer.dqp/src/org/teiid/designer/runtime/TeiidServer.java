@@ -140,6 +140,13 @@ public class TeiidServer implements ITeiidServer {
     // Methods
     // ===========================================================================================================================
 
+    protected void setServerVersion(ITeiidServerVersion teiidVersion) {
+        if (teiidVersion == null)
+            return;
+
+        this.serverVersion = teiidVersion;
+    }
+
     @Override
     public ITeiidServerVersion getServerVersion() {
         return serverVersion;
@@ -183,7 +190,24 @@ public class TeiidServer implements ITeiidServer {
         }
 
         if (this.admin == null) {
+            /*
+             * The version should be determined prior to getting an admin
+             * instance and 'connect' (which is in fact nothing but a refresh),
+             * since both stash the version and use it during init and refresh
+             * of translators etc...
+             */
             try {
+                setServerVersion(getAdapterFactory().getTeiidRuntimeVersion(parentServer));
+            } catch (Exception ex) {
+                DqpPlugin.Util.log(ex);
+            }
+
+            try {
+                /*
+                 * By the time this has been called the teiid version should be correct
+                 * for the given server hence use of the version should not produce
+                 * any results against an incorrect version.
+                 */
                 this.admin = TeiidRuntimeRegistry.getInstance().getExecutionAdmin(this);
 
                 if (admin != null) {
@@ -194,24 +218,6 @@ public class TeiidServer implements ITeiidServer {
                      */
                     getEventManager().permitListeners(false);
 
-                    /*
-                     * Since we have connected successfully, query the runtime version
-                     * of the server to ensure it is correct rather than the guess made
-                     * when the server was stopped.
-                     */
-                    try {
-                        ITeiidServerVersion teiidVersion = getAdapterFactory().getTeiidRuntimeVersion(parentServer);
-                        if (teiidVersion != null)
-                            serverVersion = teiidVersion;
-                    } catch (Exception ex) {
-                        DqpPlugin.Util.log(ex);
-                    }
-
-                    /*
-                     * The version should be determined prior to this 'connect'
-                     * which is in fact nothing but a refresh, which may well
-                     * depend on the version being correct.
-                     */
                     this.admin.connect();
                 }
             } catch (Exception ex) {

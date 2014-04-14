@@ -43,11 +43,12 @@ public class Admin8Spec extends AdminSpec {
         if (teiidAdminInfo.getPassword() != null) {
             passwordArray = teiidAdminInfo.getPassword().toCharArray();
         }
-        
-        Admin admin = Admin8Factory.getInstance(teiidServer.getServerVersion()).createAdmin( teiidServer.getHost(), 
-                                                                                              teiidAdminInfo.getPortNumber(), 
-                                                                                              teiidAdminInfo.getUsername(),
-                                                                                              passwordArray);
+
+        Admin admin = Admin8Factory.getInstance().createAdmin(teiidServer.getServerVersion(),
+                                                              teiidServer.getHost(),
+                                                              teiidAdminInfo.getPortNumber(),
+                                                              teiidAdminInfo.getUsername(),
+                                                              passwordArray);
 
         return admin;
     }

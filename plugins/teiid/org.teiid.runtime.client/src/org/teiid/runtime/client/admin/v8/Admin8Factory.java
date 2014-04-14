@@ -98,56 +98,20 @@ import org.teiid.runtime.client.Messages;
 @SuppressWarnings("nls")
 public class Admin8Factory {
 	private static final Logger LOGGER = Logger.getLogger(Admin8Factory.class.getName());
-	private static Map<ITeiidServerVersion, Admin8Factory> factoryCache = new HashMap<ITeiidServerVersion, Admin8Factory>();
 
-	private final ITeiidServerVersion teiidVersion;
+    private static Admin8Factory instance;
 
 	/**
-     * @param teiidVersion
-     */
-    public Admin8Factory(ITeiidServerVersion teiidVersion) {
-        this.teiidVersion = teiidVersion;
-    }
+	 * @return singleton instance
+	 */
+	public static Admin8Factory getInstance() {
+	    if (instance == null)
+	        instance = new Admin8Factory();
 
-    public static Admin8Factory getInstance(ITeiidServerVersion teiidVersion) {
-		Admin8Factory factory = factoryCache.get(teiidVersion);
-		if (factory == null) {
-		    factory = new Admin8Factory(teiidVersion);
-		    factoryCache.put(teiidVersion, factory);;
-		}
-
-		return factory;
+	    return instance;
 	}
 
-    /**
-     * @return the teiidVersion
-     */
-    public ITeiidServerVersion getTeiidVersion() {
-        return this.teiidVersion;
-    }
-
-     /**
-     * Creates a ServerAdmin with the specified connection properties.
-     * @param userName
-     * @param password
-     * @param serverURL
-     * @param applicationName
-     * @param profileName - Name of the domain mode profile
-     * @return
-     * @throws AdminException
-     */
-    public Admin createAdmin(String host, int port, String userName, char[] password, String profileName) throws AdminException {
-    	AdminImpl admin = (AdminImpl)createAdmin(host, port, userName, password);
-    	if (admin != null) {
-    		admin.setProfileName(profileName);
-    	}
-    	return admin;
-    }
-
-    private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
-        if (getTeiidVersion().isLessThan(requiredVersion))
-            throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
-    }
+	private Admin8Factory() {};
 
     /**
      * Creates a ServerAdmin with the specified connection properties.
@@ -158,7 +122,7 @@ public class Admin8Factory {
      * @return
      * @throws AdminException
      */
-    public Admin createAdmin(String host, int port, String userName, char[] password) throws AdminException {
+    public Admin createAdmin(ITeiidServerVersion teiidVersion, String host, int port, String userName, char[] password) throws AdminException {
         if(host == null) {
             host = "localhost"; //$NON-NLS-1$
         }
@@ -177,29 +141,13 @@ public class Admin8Factory {
                 LOGGER.info("Connected to " //$NON-NLS-1$
                         + (domainMode ? "domain controller at " : "standalone controller at ") //$NON-NLS-1$ //$NON-NLS-2$
                         + host + ":" + port); //$NON-NLS-1$
-                return new AdminImpl(newClient);
+                return new AdminImpl(teiidVersion, newClient);
             }
             LOGGER.info(Messages.gs(Messages.TEIID.TEIID70051, host, port)); //$NON-NLS-1$ //$NON-NLS-2$
         } catch (UnknownHostException e) {
         	 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70000, host, e.getLocalizedMessage()));
         }
         return null;
-    }
-
-    public Admin createAdmin(ModelControllerClient connection) {
-    	return new AdminImpl(connection);
-    }
-
-    /**
-     * Name of the domain mode profile.
-     * @param connection
-     * @param profileName
-     * @return
-     */
-    public Admin createAdmin(ModelControllerClient connection, String profileName) {
-    	AdminImpl admin = new AdminImpl(connection);
-    	admin.setProfileName(profileName);
-    	return admin;
     }
 
     private class AuthenticationCallbackHandler implements CallbackHandler {
@@ -255,17 +203,35 @@ public class Admin8Factory {
     public class AdminImpl implements Admin{
     	private static final String CLASS_NAME = "class-name";
 		private static final String JAVA_CONTEXT = "java:/";
+		private final ITeiidServerVersion teiidVersion;
 		private ModelControllerClient connection;
     	private boolean domainMode = false;
     	private String profileName = "ha";
 
-    	public AdminImpl (ModelControllerClient connection) {
-    		this.connection = connection;
+        /**
+         * @param teiidVersion
+         * @param connection
+         */
+        public AdminImpl(ITeiidServerVersion teiidVersion, ModelControllerClient connection) {
+            this.teiidVersion = teiidVersion;
+            this.connection = connection;
             List<String> nodeTypes = Util.getNodeTypes(connection, new DefaultOperationRequestAddress());
             if (!nodeTypes.isEmpty()) {
                 this.domainMode = nodeTypes.contains("server-group"); //$NON-NLS-1$
             }
-    	}
+        }
+
+        /**
+         * @return the teiidVersion
+         */
+        public ITeiidServerVersion getTeiidVersion() {
+            return this.teiidVersion;
+        }
+
+        private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
+            if (getTeiidVersion().isLessThan(requiredVersion))
+                throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
+        }
 
 		public void setProfileName(String name) {
 			this.profileName = name;
