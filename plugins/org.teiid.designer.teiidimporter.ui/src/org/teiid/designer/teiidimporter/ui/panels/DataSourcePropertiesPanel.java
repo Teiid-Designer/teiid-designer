@@ -32,9 +32,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -66,6 +68,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
     
     private List<DataSourcePropertiesPanelListener> listeners = new ArrayList<DataSourcePropertiesPanelListener>();
     private Button resetButton;
+    private Text propDescriptionText;
     
     /**
      * DataSourcePropertiesPanel constructor
@@ -136,6 +139,15 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         // Create 'Required' label below table 
         Label reqdLabel = new Label(panel,SWT.NONE);
         reqdLabel.setText(Messages.dataSourcePropertiesPanel_requiredLabel);
+
+        // Create Property description label below table 
+        propDescriptionText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
+        propDescriptionText.setBackground(parent.getBackground());
+        propDescriptionText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridData descriptionLabelGridData = new GridData(GridData.FILL_HORIZONTAL);
+        descriptionLabelGridData.horizontalIndent = 20;
+        descriptionLabelGridData.heightHint = (2 * propDescriptionText.getLineHeight());
+        propDescriptionText.setLayoutData(descriptionLabelGridData);
 
         ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
@@ -496,8 +508,10 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
      * Handler for selection changed events
      */
     void handlePropertySelected( SelectionChangedEvent event ) {
-        if(isReadOnly) return;
         IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        setPropertyDescriptionText(selection);
+
+        if(isReadOnly) return;
 
         if (selection.isEmpty()) {
             if (this.resetButton.isEnabled()) {
@@ -511,7 +525,20 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             }
         }
     }
-
+    
+   /*
+    * Sets the property description text below the table
+    * @selection the selection
+    */
+    private void setPropertyDescriptionText(IStructuredSelection selection) {
+        if(selection==null || selection.isEmpty()) {
+        	this.propDescriptionText.setText(""); //$NON-NLS-1$
+        } else {
+            PropertyItem prop = (PropertyItem)selection.getFirstElement();
+            this.propDescriptionText.setText(prop.getDescription());
+        }
+    }
+    
     /*
      * Handler for ResetAction
      */

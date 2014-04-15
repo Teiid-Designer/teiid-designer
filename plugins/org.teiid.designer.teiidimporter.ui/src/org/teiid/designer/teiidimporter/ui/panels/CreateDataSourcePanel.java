@@ -299,7 +299,7 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
         if(isCreateNew) {
             return this.driversPanel.getSelectedDriverName();
         }
-        return this.dataSourceManager.getDataSourceDriver(this.editDSName);
+        return this.dataSourceManager.getDataSourceDriver(this.editDSName,null);
     }
     
     /**

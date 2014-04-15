@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
@@ -45,13 +44,13 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_SALESORCE_DRIVER_DISPLAYNAME = "Salesforce"; //$NON-NLS-1$
     public static final String TEIID_WEBSERVICE_DRIVER_DISPLAYNAME = "WebService"; //$NON-NLS-1$
 
-    public static final String TEIID_FILE_CLASS = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
     public static final String TEIID_GOOGLE_CLASS = "org.teiid.resource.adapter.google.SpreadsheetManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_INFINISPAN_CLASS = "org.teiid.resource.adapter.infinispan.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_SALESORCE_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_WEBSERVICE_CLASS = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
-    public static final String TEIID_MONGODB_CLASS = "org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_FILE_CLASS = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_INFINISPAN_CLASS = "org.teiid.resource.adapter.infinispan.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_SALESORCE_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_WEBSERVICE_CLASS = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+//    public static final String TEIID_MONGODB_CLASS = "org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory"; //$NON-NLS-1$
     
     public static final String ACCESS = "access"; //$NON-NLS-1$
     public static final String DB2 = "db2"; //$NON-NLS-1$
@@ -216,52 +215,6 @@ public class TranslatorHelper implements UiConstants {
         }
 
         return JDBC_ANSI; 
-	}
-	
-	/**
-	 * Get the Driver Name for the supplied class and server version
-	 * @param driverClassName the driver class name
-	 * @param teiidVersion the teiid version
-	 * @return the driver name
-	 */
-	public static String getDriverNameForClass(String driverClassName, ITeiidServerVersion teiidVersion) {
-		String driverName = null;
-		if(!CoreStringUtil.isEmpty(driverClassName)) {
-			// Teiid 8.3 and below
-			if(!isTeiid84OrHigher(teiidVersion)) {
-				if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_FILE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_FILE_DRIVER;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_GOOGLE_DRIVER;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_INFINISPAN_CLASS)) {
-					driverName = TranslatorHelper.TEIID_INFINISPAN_DRIVER;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_LDAP_CLASS)) {
-					driverName = TranslatorHelper.TEIID_LDAP_DRIVER;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_SALESORCE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER;
-				}
-			// Teiid 8.4 and higher
-			} else {
-				if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_FILE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_FILE_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_GOOGLE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_GOOGLE_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_INFINISPAN_CLASS)) {
-					driverName = TranslatorHelper.TEIID_INFINISPAN_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_LDAP_CLASS)) {
-					driverName = TranslatorHelper.TEIID_LDAP_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_SALESORCE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_WEBSERVICE_CLASS)) {
-					driverName = TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP;
-				} else if(driverClassName.equalsIgnoreCase(TranslatorHelper.TEIID_MONGODB_CLASS)) {
-					driverName = TranslatorHelper.TEIID_MONGODB_DRIVER_84UP;
-				}
-			}
-		}
-		return driverName;
 	}
 	
 	/**

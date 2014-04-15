@@ -10,6 +10,7 @@ package org.teiid.designer.teiidimporter.ui.panels;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -465,6 +466,10 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             dataSources = new ArrayList<ITeiidDataSource>();
             UTIL.log(ex);
         }
+        
+        // get className - driverMap for RA sources
+        Map<String,String> classNameDriverNameMap = dataSourceManager.getClassNameDriverNameMap(dataSources);
+        
         for(ITeiidDataSource dataSource: dataSources) {
             DataSourceItem dsObj = new DataSourceItem();
             // ------------------------
@@ -483,7 +488,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
             }
 
             // Driver name
-            String dsDriver = dataSourceManager.getDataSourceDriver(name);
+            String dsDriver = dataSourceManager.getDataSourceDriver(name, classNameDriverNameMap);
             dsObj.setDriver(dsDriver);
             // ------------------------
             // Add PropertyItem to List
