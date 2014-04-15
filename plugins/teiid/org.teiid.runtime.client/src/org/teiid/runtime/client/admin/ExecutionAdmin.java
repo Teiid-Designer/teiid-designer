@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -52,6 +53,7 @@ import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.spi.ITeiidTranslator.TranslatorPropertyType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.TeiidDriver;
@@ -591,9 +593,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
     private void internalSetPropertyValue( ITeiidTranslator translator,
                                            String propName,
                                            String value,
+                                           TranslatorPropertyType type,
                                            boolean notify ) throws Exception {
-        if (translator.isValidPropertyValue(propName, value) == null) {
-            String oldValue = translator.getPropertyValue(propName);
+        if (translator.isValidPropertyValue(propName, value, type) == null) {
+            String oldValue = translator.getPropertyValue(propName, type);
 
             // don't set if value has not changed
             if (oldValue == null) {
@@ -671,13 +674,20 @@ public class ExecutionAdmin implements IExecutionAdmin {
     protected void refreshTranslators( Collection<? extends Translator> translators ) throws Exception {
         for (Translator translator : translators) {
             if (translator.getName() != null) {
-                Collection<? extends PropertyDefinition> propDefs = null;
                 if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
-                	propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
-                } else {
-                	propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
+                	Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
+                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
+                } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7.get())) {
+                	Collection<? extends PropertyDefinition> propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
+                } else { // TEIID SERVER VERSION 8.7 AND HIGHER
+                	Collection<? extends PropertyDefinition> propDefs  = 
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
+                	Collection<? extends PropertyDefinition> importPropDefs  = 
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
+                	Collection<? extends PropertyDefinition> extPropDefs  = 
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
+                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer));
                 }
-                this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
             }
         }
     }
@@ -704,18 +714,19 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @since 7.0
      */
     public void setProperties( ITeiidTranslator translator,
-                               Properties changedProperties ) throws Exception {
+                               Properties changedProperties,
+                               TranslatorPropertyType type) throws Exception {
         ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         ArgCheck.isNotNull(changedProperties, "changedProperties"); //$NON-NLS-1$
         ArgCheck.isNotEmpty(changedProperties.entrySet(), "changedProperties"); //$NON-NLS-1$
 
         if (changedProperties.size() == 1) {
             String name = changedProperties.stringPropertyNames().iterator().next();
-            setPropertyValue(translator, name, changedProperties.getProperty(name));
+            setPropertyValue(translator, name, changedProperties.getProperty(name), type);
         } else {
 
             for (String name : changedProperties.stringPropertyNames()) {
-                internalSetPropertyValue(translator, name, changedProperties.getProperty(name), false);
+                internalSetPropertyValue(translator, name, changedProperties.getProperty(name), type, false);
             }
             // this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUpdateConnectorEvent(translator));
         }
@@ -730,11 +741,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
      */
     public void setPropertyValue( ITeiidTranslator translator,
                                   String propName,
-                                  String value ) throws Exception {
+                                  String value,
+                                  TranslatorPropertyType type) throws Exception {
         ArgCheck.isNotNull(translator, "translator"); //$NON-NLS-1$
         ArgCheck.isNotEmpty(propName, "propName"); //$NON-NLS-1$
         ArgCheck.isNotEmpty(value, "value"); //$NON-NLS-1$
-        internalSetPropertyValue(translator, propName, value, true);
+        internalSetPropertyValue(translator, propName, value, type, true);
     }
 
     @Override

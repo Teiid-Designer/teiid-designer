@@ -17,9 +17,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.TranslatorOverride;
-import org.teiid.designer.vdb.TranslatorOverrideProperty;
 
 
 /**

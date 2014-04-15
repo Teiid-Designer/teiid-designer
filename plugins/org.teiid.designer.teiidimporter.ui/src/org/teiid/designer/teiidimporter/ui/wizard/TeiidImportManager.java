@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -35,8 +36,12 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.CoreModelerPlugin;
+import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.translators.TranslatorOverride;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
@@ -48,6 +53,7 @@ import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
+import org.teiid.designer.runtime.connection.TranslatorUtils;
 import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -79,6 +85,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
     private boolean createConnectionProfile = true;
+    private TranslatorOverride translatorOverride;
     
     IStatus vdbDeploymentStatus = null;
     private ConnectionInfoHelper connectionInfoHelper = new ConnectionInfoHelper();
@@ -174,7 +181,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         // If different translator is selected, reset deployment status
         if(areDifferent(this.translatorName,translatorName)) {
             this.vdbDeploymentStatus = null;
-        }
+            this.translatorOverride = createTranslatorOverride(translatorName, new Properties());        }
         this.translatorName = translatorName;
     }
     
@@ -201,7 +208,25 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      * @return the optional properties map
      */
     public Map<String,String> getOptionalImportProps() {
-        return this.optionalImportProps;
+        Map<String, String> allProps = new HashMap<String, String>();
+        for( String key : this.optionalImportProps.keySet()) {
+        	allProps.put(key, this.optionalImportProps.get(key));
+        }
+        
+        // Add import properties from override object
+        if( translatorOverride != null && this.translatorOverride.getProperties().length > 0 ) {
+        	// process them
+        	for( TranslatorOverrideProperty prop : this.translatorOverride.getProperties() ) {
+        		if( prop.hasOverridenValue() ) {
+        			String value = prop.getOverriddenValue();
+        			String key = prop.getDefinition().getId();
+        			allProps.put(key, value);
+        			System.out.println("      getOptionalImportProps() import prop >>> key = " + key + "  value = " + value);
+        		}
+        	}
+        }
+        
+        return allProps;
     }
 
     /**
@@ -710,6 +735,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         return ddlImporter;
     }
     
+    public TranslatorOverride getTranslatorOverride() {
+    	return this.translatorOverride;
+    }
+    
     /*
      * Writes the DDL String to a Temporary File, to pass to the DDL Importer
      * @param ddl the DDL string
@@ -774,6 +803,62 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         }
         
         return true;
+    }
+    
+    private TranslatorOverride createTranslatorOverride(String translatorName, Properties existingProperties) {
+    	Properties importerProperties = new Properties();
+    	TranslatorOverride override = new TranslatorOverride(translatorName, importerProperties);
+    	
+    	try {
+			ITeiidTranslator translator = this.getServerImportManager().getTranslator(translatorName);
+
+			if (translator != null) {
+				PropertyDefinition[] propertyDefinitionsFromServer = 
+						TranslatorUtils.getTranslatorPropertyDefinitions(translatorName, ITeiidTranslator.TranslatorPropertyType.IMPORT);
+				
+			    List<PropertyDefinition> defaultServerPropDefns = new ArrayList<PropertyDefinition>();
+	            // assume all server properties are new
+	            for (PropertyDefinition propDefn : propertyDefinitionsFromServer) {
+	            	//System.out.println("propDefn ID = " + propDefn.getId() + " Display Name = " + propDefn.getDisplayName());
+	            	defaultServerPropDefns.add(propDefn);
+	            }
+
+			    if (!existingProperties.isEmpty()) {
+			        // translator properties already exist, match with server props
+			        for (Object key : importerProperties.keySet()) {
+			        	String keyStr = (String)key;
+			        	String value = (String)importerProperties.get(key);
+			        	
+			            PropertyDefinition serverPropDefn = null;
+
+			            // see if property definitions from server already exist in overridden translator
+			            for (PropertyDefinition propDefn : propertyDefinitionsFromServer) {
+			                // found a matching one
+			                if (keyStr.equals(propDefn.getId())) {
+			                    serverPropDefn = (PropertyDefinition)propDefn;
+			                    defaultServerPropDefns.remove(serverPropDefn); // Remove it from cached list
+			                    break;
+			                }
+			            }
+
+			            if (serverPropDefn != null) {
+			            	TranslatorOverrideProperty newProp = new TranslatorOverrideProperty(new TranslatorPropertyDefinition(serverPropDefn), value);
+			                // found existing property so update defn and use value from old defn
+			            	override.addProperty(newProp);
+			            }
+			        }
+			    }
+			    
+			    for (PropertyDefinition propDefn : defaultServerPropDefns) {
+			    	override.addProperty(new TranslatorOverrideProperty(new TranslatorPropertyDefinition(propDefn), null));
+			    }
+			}
+		} catch (Exception error) {
+			error.printStackTrace();
+            WidgetUtil.showError(error);
+		}
+        
+        return override;
     }
     
 }

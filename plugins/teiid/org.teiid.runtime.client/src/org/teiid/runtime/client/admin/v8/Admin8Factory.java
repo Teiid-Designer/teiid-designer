@@ -1533,8 +1533,8 @@ public class Admin8Factory {
 	            if (Util.isSuccess(outcome)) {
 			    	if (outcome.hasDefined("result")) {
 			    		result = outcome.get("result");
+			    		callback.onSuccess(outcome, result);
 			    	}
-	                callback.onSuccess(outcome, result);
 	            }
 	            else {
 	            	callback.onFailure(Util.getFailureDescription(outcome));

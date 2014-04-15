@@ -59,7 +59,8 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 
     private TeiidImportManager importManager;
     private SelectDataSourcePage selectDataSourcePage;
-    private SelectTranslatorAndTargetPage selectTranslatorAndTargetPage;
+    private SelectTranslatorPage selectTranslatorPage;
+    private SelectTargetPage selectTargetPage;
     private ShowDDLPage showDDLPage;
     private DdlImportDifferencesPage differencesPage;
     
@@ -158,8 +159,12 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         addPage(selectDataSourcePage);
         
         // Translator and TargetModel Selection Page
-        this.selectTranslatorAndTargetPage = new SelectTranslatorAndTargetPage(importManager);
-        addPage(selectTranslatorAndTargetPage);
+        this.selectTranslatorPage = new SelectTranslatorPage(importManager);
+        addPage(selectTranslatorPage);
+        
+        // Translator and TargetModel Selection Page
+        this.selectTargetPage = new SelectTargetPage(importManager);
+        addPage(selectTargetPage);
 
         // View DDL Page
         this.showDDLPage = new ShowDDLPage(importManager);
@@ -186,7 +191,7 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
     @Override
     public boolean finish() {
     	// Get createConnectionProfile flag and provide to manager.  determines if CP is created or not.
-    	importManager.setCreateConnectionProfile(this.selectTranslatorAndTargetPage.isCreateConnectionProfile());
+    	importManager.setCreateConnectionProfile(this.selectTargetPage.isCreateConnectionProfile());
     	
     	// Saves the model
         importManager.saveUsingDdlDiffReport(getShell());

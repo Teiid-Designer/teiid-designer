@@ -17,6 +17,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
@@ -26,13 +28,12 @@ import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-import org.teiid.designer.vdb.TranslatorOverrideProperty;
-import org.teiid.designer.vdb.TranslatorPropertyDefinition;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -95,7 +96,8 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
             }
             provider = getProvider(modelResource);
             if( provider == null ) {
-            	// TODO: FAIL WITH MESSAGE DIALOG
+            	MessageDialog.openWarning(getShell(), getString("translatorOverridesNotSupported.title"),  //$NON-NLS-1$
+            			getString("translatorOverridesNotSupported.message1")); //$NON-NLS-1$
             	return;
             }
         }
@@ -137,8 +139,24 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
             		filteredProperties.put(key, (String)props.getProperty((String)key));
             	}
             }
-            
+
             TranslatorOverride override = createOverride(translatorType, filteredProperties);
+            
+            boolean overridesSupported = teiidServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get());
+            boolean noOverrideProperties = override.getProperties().length == 0;
+            
+            if( !overridesSupported) {
+            	// Warn users that server version does not support built-ins
+            	MessageDialog.openWarning(getShell(), getString("translatorOverridesNotSupported.title"), //$NON-NLS-1$
+            			getString("translatorOverridesNotSupported.message2")); //$NON-NLS-1$
+            	return;
+            }
+            
+            if( noOverrideProperties ) {
+            	MessageDialog.openWarning(getShell(), getString("translatorOverridesNotAvailable.title"), //$NON-NLS-1$
+            			getString("translatorOverridesNotAvailable.message", translatorType)); //$NON-NLS-1$
+            	return;
+            }
             
             // 2) Get Translator Type to seed dialog
             final EditTOPropertiesDialog dialog = new EditTOPropertiesDialog(iww.getShell(), override);
@@ -263,7 +281,6 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
         try {
 			provider = providerFactory.getProvider(modelResource);
 		} catch (Exception e) {
-			DqpUiConstants.UTIL.log(IStatus.ERROR,e, e.getMessage());
 			return null;
 		}
 

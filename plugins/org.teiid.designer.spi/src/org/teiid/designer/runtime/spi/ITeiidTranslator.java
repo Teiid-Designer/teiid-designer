@@ -15,13 +15,15 @@ import java.util.Properties;
  *
  */
 public interface ITeiidTranslator {
+	
+	enum TranslatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA};
 
     /**
      * Obtains all the names of the properties whose values are invalid.
      * 
      * @return the names of the properties with invalid values (never <code>null</code> but can be empty)
      */
-    Collection<String> findInvalidProperties();
+    Collection<String> findInvalidProperties(TranslatorPropertyType propType);
 
     /**
      * {@inheritDoc}
@@ -42,7 +44,7 @@ public interface ITeiidTranslator {
      * 
      * @see org.teiid.teiidServerapi.AdminObject#getPropertyValue(java.lang.String)
      */
-    String getPropertyValue(String name);
+    String getPropertyValue(String name, TranslatorPropertyType type);
 
     /**
      * @return type
@@ -65,8 +67,7 @@ public interface ITeiidTranslator {
      * @return null if the property exists and the proposed value is valid or an error message
      * @since 7.0
      */
-    String isValidPropertyValue(String name,
-                                                String value);
+    String isValidPropertyValue(String name, String value, TranslatorPropertyType type);
 
     /**
      * Sets a connector property.
@@ -76,8 +77,7 @@ public interface ITeiidTranslator {
      * @throws Exception if there is a problem changing the property
      * @since 5.0
      */
-    void setPropertyValue(String name,
-                                          String value) throws Exception;
+    void setPropertyValue(String name, String value, TranslatorPropertyType type) throws Exception;
 
     /**
      * @param changedProperties the list of properties that are being changed (never <code>null</code> or empty)
@@ -90,11 +90,23 @@ public interface ITeiidTranslator {
      * @param name the name of the <code>TeiidPropertyDefinition</code> being requested (never <code>null</code> or empty)
      * @return the property definition or <code>null</code> if not found
      */
-    TeiidPropertyDefinition getPropertyDefinition( String name );
+    TeiidPropertyDefinition getPropertyDefinition( String name , TranslatorPropertyType type);
     
     /**
      * @return an immutable collection of property definitions (never <code>null</code>);
      * @since 7.0
      */
     Collection<TeiidPropertyDefinition> getPropertyDefinitions();
+    
+    /**
+     * @return an immutable collection of import property definitions (never <code>null</code>);
+     * @since 7.0
+     */
+    Collection<TeiidPropertyDefinition> getImportPropertyDefinitions();
+    
+    /**
+     * @return an immutable collection of import property definitions (never <code>null</code>);
+     * @since 7.0
+     */
+    Collection<TeiidPropertyDefinition> getExtensionPropertyDefinitions();
 }

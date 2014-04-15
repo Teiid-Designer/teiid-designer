@@ -27,6 +27,7 @@ public class PropertyItem extends Object implements Serializable {
 	private String value;
 	private String defaultValue;
 	private String originalValue;
+	private String description;
 
 	/**
 	 * Constructor
@@ -169,6 +170,27 @@ public class PropertyItem extends Object implements Serializable {
 	    return isValid;
 	}
 	
+	
+	/**
+	 * 
+	 * @return the description
+	 */
+	public String getDescription() {
+		if( description == null ) {
+			return this.getDisplayName();
+		}
+		return description;
+	}
+
+	/**
+	 * Set Description
+	 * 
+	 * @param description
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	/**
 	 * Determine if the property has changed from its original value
 	 * @return 'true' if property has changed, 'false' if not.

@@ -48,6 +48,8 @@ import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelResource;

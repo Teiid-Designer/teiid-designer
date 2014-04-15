@@ -1,6 +1,6 @@
-package org.teiid.designer.runtime.ui.connection.properties;
+package org.teiid.designer.core.translators;
 
-import static org.teiid.designer.vdb.VdbPlugin.UTIL;
+import static org.teiid.designer.core.ModelerCore.Util;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,20 +25,20 @@ public class TranslatorOverride {
     public static String validateName( String proposedName ) {
         // must have a name
         if (StringUtilities.isEmpty(proposedName)) {
-            return UTIL.getString(PREFIX + "emptyTranslatorName"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyTranslatorName"); //$NON-NLS-1$
         }
 
         // make sure only letters, digits, or dash
         for (char c : proposedName.toCharArray()) {
             if (!Character.isLetter(c) && !Character.isDigit(c)
                     && (c != '-')) {
-                return UTIL.getString(PREFIX + "invalidTranslatorName", proposedName); //$NON-NLS-1$
+                return Util.getString(PREFIX + "invalidTranslatorName", proposedName); //$NON-NLS-1$
             }
         }
 
         // first char must be letter
         if (!Character.isLetter(proposedName.charAt(0))) {
-            return UTIL.getString(PREFIX + "translatorNameMustStartWithLetter"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "translatorNameMustStartWithLetter"); //$NON-NLS-1$
         }
 
         // valid name
@@ -52,19 +52,19 @@ public class TranslatorOverride {
     public static String validateType( String proposedType ) {
         // must have a type
         if (StringUtilities.isEmpty(proposedType)) {
-            return UTIL.getString(PREFIX + "emptyTranslatorType"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyTranslatorType"); //$NON-NLS-1$
         }
 
         // make sure only letters, digits, or dash
         for (char c : proposedType.toCharArray()) {
             if (!Character.isLetterOrDigit(c) && c != '-') {
-                return UTIL.getString(PREFIX + "invalidTranslatorType", proposedType); //$NON-NLS-1$
+                return Util.getString(PREFIX + "invalidTranslatorType", proposedType); //$NON-NLS-1$
             }
         }
 
         // first char must be letter
         if (!Character.isLetter(proposedType.charAt(0))) {
-            return UTIL.getString(PREFIX + "translatorTypeMustStartWithLetter"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "translatorTypeMustStartWithLetter"); //$NON-NLS-1$
         }
 
         // valid type

@@ -9,9 +9,11 @@ package org.teiid.designer.runtime.ui.connection;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -28,11 +30,10 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.connection.ModelConnectionMapper;
+import org.teiid.designer.runtime.connection.TranslatorUtils;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
-import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.VdbSourceConnection;
@@ -116,7 +117,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
 
         selectJndiDataSourceAction = new SelectJndiDataSourceAction(getString("selectJndiDataSourceAction.label")); //$NON-NLS-1$
 
-        Collection<IAction> actionsList = new ArrayList();
+        Collection<IAction> actionsList = new ArrayList<IAction>();
         actionsList.add(selectTranslatorAction);
         actionsList.add(selectJndiDataSourceAction);
 
@@ -269,68 +270,7 @@ public class VdbSourceConnectionHandler implements SourceHandler {
      */
     @Override
     public PropertyDefinition[] getTranslatorDefinitions( String translatorName ) {
-        if (StringUtilities.isEmpty(translatorName)) {
-            throw new IllegalArgumentException();
-        }
-
-        ITeiidServer defaultServer = getDefaultServer();
-
-        if ((defaultServer != null) && defaultServer.isConnected()) {
-            try {
-                ITeiidTranslator translator = defaultServer.getTranslator(translatorName);
-
-                if (translator != null) {
-                    Collection<PropertyDefinition> props = new ArrayList<PropertyDefinition>();
-                    
-                    // NOTE: For server versions prior to 8.6, translator.getPropertyDefinitions() will only return property definitions for
-                    // the resource-adapter properties and NOT the translator.
-                    // So added the check and ignore getting translator properties if version < 8.6
-                    
-                    if( !defaultServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
-	                    for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
-	                        TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
-	                        prop.advanced = propDefn.isAdvanced();
-	                        prop.description = propDefn.getDescription();
-	                        prop.displayName = propDefn.getDisplayName();
-	                        prop.id = propDefn.getName();
-	                        prop.masked = propDefn.isMasked();
-	                        prop.modifiable = propDefn.isModifiable();
-	                        prop.required = propDefn.isRequired();
-	
-	                        prop.defaultValue = (propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
-	                                                                                : propDefn.getDefaultValue().toString();
-	
-	                        if (propDefn.isConstrainedToAllowedValues()) {
-	                            Collection values = propDefn.getAllowedValues();
-	                            prop.allowedValues = new String[values.size()];
-	                            int i = 0;
-	
-	                            for (Object value : values) {
-	                                prop.allowedValues[i++] = value.toString();
-	                            }
-	                        } else {
-	                            // if boolean type turn into allowed values
-	                            String type = propDefn.getPropertyTypeClassName();
-	
-	                            if (Boolean.class.getName().equals(type) || Boolean.TYPE.getName().equals(type)) {
-	                                prop.allowedValues = new String[] { Boolean.TRUE.toString(), Boolean.FALSE.toString() };
-	                            }
-	                        }
-	
-	                        props.add(prop);
-	                    }
-                    }
-
-                    return props.toArray(new PropertyDefinition[props.size()]);
-                }
-            } catch (Exception e) {
-                UTIL.log(IStatus.ERROR, e, UTIL.getString("VdbSourceConnectionHandler.errorObtainingTranslatorProperties", //$NON-NLS-1$
-                                                          translatorName,
-                                                          defaultServer.getHost()));
-            }
-        }
-
-        return null;
+    	return TranslatorUtils.getTranslatorPropertyDefinitions(translatorName, ITeiidTranslator.TranslatorPropertyType.OVERRIDE);
     }
 
     /**

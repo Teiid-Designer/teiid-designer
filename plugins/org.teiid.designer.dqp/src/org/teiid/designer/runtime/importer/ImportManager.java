@@ -376,6 +376,19 @@ public final class ImportManager implements IExecutionConfigurationListener {
     public Collection<ITeiidTranslator> getTranslators() throws Exception {
         return getImportServer().getTranslators();
     }
+    
+    /**
+     * Get the translator
+     * @return the collection of translators
+     * @throws Exception the exception
+     */
+    public ITeiidTranslator getTranslator(String name) throws Exception {
+    	for( ITeiidTranslator translator : getTranslators() ) {
+    		if( name.equalsIgnoreCase(translator.getName()) ) return translator;
+    	}
+        return null;
+    }
+
 
     /**
      * Delete dataSource with the provided jndiName

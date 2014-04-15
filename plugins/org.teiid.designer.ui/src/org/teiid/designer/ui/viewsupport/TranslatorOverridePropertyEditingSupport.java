@@ -5,15 +5,15 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.vdb.ui.translators;
+package org.teiid.designer.ui.viewsupport;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ui.common.table.PropertyEditingSupport;
-import org.teiid.designer.vdb.TranslatorOverrideProperty;
 
 
 public class TranslatorOverridePropertyEditingSupport extends PropertyEditingSupport {

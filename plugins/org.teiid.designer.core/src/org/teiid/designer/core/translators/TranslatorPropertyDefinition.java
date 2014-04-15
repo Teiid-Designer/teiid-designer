@@ -5,9 +5,9 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.vdb;
+package org.teiid.designer.core.translators;
 
-import static org.teiid.designer.vdb.VdbPlugin.UTIL;
+import static org.teiid.designer.core.ModelerCore.Util;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
@@ -32,7 +32,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     public static String validateName( String proposedName ) {
         // must have a name
         if (StringUtilities.isEmpty(proposedName)) {
-            return UTIL.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
         }
         
         // Make sure is a valid java identifier
@@ -40,10 +40,10 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
         for (char c : proposedName.toCharArray()) {
         	if(i==0) {
         		if(!Character.isJavaIdentifierStart(c)) {
-                    return UTIL.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
+                    return Util.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
         		}
         	} else if (!Character.isJavaIdentifierPart(c)) {
-                return UTIL.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
+                return Util.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
             }
         	i++;
         }
@@ -59,7 +59,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
     public static String validateValue( String proposedValue ) {
         // must have a value
         if (StringUtilities.isEmpty(proposedValue)) {
-            return UTIL.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
         }
 
         // valid
@@ -164,7 +164,7 @@ public class TranslatorPropertyDefinition implements PropertyDefinition {
             return this.delegate.getDescription();
         }
 
-        return UTIL.getString(PREFIX + "customPropertyDescription"); //$NON-NLS-1$
+        return Util.getString(PREFIX + "customPropertyDescription"); //$NON-NLS-1$
     }
 
     /**

@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+
 import org.teiid.adminapi.AdminObject;
 import org.teiid.adminapi.PropertyDefinition;
 import org.teiid.adminapi.Translator;
@@ -32,6 +33,8 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     private final ITeiidServer teiidServer;
 
     private final Collection<TeiidPropertyDefinition> propDefs = new ArrayList<TeiidPropertyDefinition>();
+    private final Collection<TeiidPropertyDefinition> importPropDefs = new ArrayList<TeiidPropertyDefinition>();
+    private final Collection<TeiidPropertyDefinition> extPropDefs = new ArrayList<TeiidPropertyDefinition>();
 
     /**
      * @param translator
@@ -62,6 +65,57 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
             teiidPropertyDefn.setMasked(propDefn.isMasked());
             
             this.propDefs.add(teiidPropertyDefn);
+        }
+    }
+    
+    /**
+     * @param translator
+     * @param propDefs
+     * @param importPropDefs
+     * @param extPropDefs
+     * @param teiidServer
+     */
+    public TeiidTranslator( Translator translator, 
+    						Collection<? extends PropertyDefinition> propDefs, 
+    						Collection<? extends PropertyDefinition> importPropDefs,
+    						Collection<? extends PropertyDefinition> extPropDefs,
+    						ITeiidServer teiidServer) {
+    	this(translator, propDefs, teiidServer);
+    	
+        for (PropertyDefinition propDefn : importPropDefs) {
+            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
+            
+            teiidPropertyDefn.setName(propDefn.getName());
+            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
+            teiidPropertyDefn.setDescription(propDefn.getDescription());
+            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
+            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
+            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
+            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
+            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
+            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
+            teiidPropertyDefn.setRequired(propDefn.isRequired());
+            teiidPropertyDefn.setMasked(propDefn.isMasked());
+            
+            this.importPropDefs.add(teiidPropertyDefn);
+        }
+        
+        for (PropertyDefinition propDefn : extPropDefs) {
+            TeiidPropertyDefinition teiidPropertyDefn = new TeiidPropertyDefinition();
+            
+            teiidPropertyDefn.setName(propDefn.getName());
+            teiidPropertyDefn.setDisplayName(propDefn.getDisplayName());
+            teiidPropertyDefn.setDescription(propDefn.getDescription());
+            teiidPropertyDefn.setPropertyTypeClassName(propDefn.getPropertyTypeClassName());
+            teiidPropertyDefn.setDefaultValue(propDefn.getDefaultValue());
+            teiidPropertyDefn.setAllowedValues(propDefn.getAllowedValues());
+            teiidPropertyDefn.setModifiable(propDefn.isModifiable());
+            teiidPropertyDefn.setConstrainedToAllowedValues(propDefn.isConstrainedToAllowedValues());
+            teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
+            teiidPropertyDefn.setRequired(propDefn.isRequired());
+            teiidPropertyDefn.setMasked(propDefn.isMasked());
+            
+            this.extPropDefs.add(teiidPropertyDefn);
         }
     }
 
@@ -100,18 +154,18 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      * @return the names of the properties with invalid values (never <code>null</code> but can be empty)
      */
     @Override
-    public Collection<String> findInvalidProperties() {
+    public Collection<String> findInvalidProperties(TranslatorPropertyType propType) {
         Collection<String> propertyNames = new ArrayList<String>();
 
         for (TeiidPropertyDefinition propDefn : this.propDefs) {
             String name = propDefn.getName();
-            String value = getPropertyValue(name);
+            String value = getPropertyValue(name, propType);
 
             if (value == null  ||  value.length() == 0) {
                 if (propDefn.isRequired()) {
                     propertyNames.add(name);
                 }
-            } else if (isValidPropertyValue(name, value) != null) {
+            } else if (isValidPropertyValue(name, value, propType) != null) {
                 propertyNames.add(name);
             }
         }
@@ -149,7 +203,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      * @see AdminObject#getPropertyValue(java.lang.String)
      */
     @Override
-    public String getPropertyValue( String name ) {
+    public String getPropertyValue( String name, TranslatorPropertyType type) {
         return translator.getPropertyValue(name);
     }
 
@@ -184,11 +238,20 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     }
     
     @Override
-    public TeiidPropertyDefinition getPropertyDefinition( String name ) {
+    public TeiidPropertyDefinition getPropertyDefinition( String name, TranslatorPropertyType type) {
         ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
-
-        for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
-            if (name.equals(propDef.getName())) return propDef;
+        if( type == TranslatorPropertyType.OVERRIDE ) {
+	        for (TeiidPropertyDefinition propDef : getPropertyDefinitions()) {
+	            if (name.equals(propDef.getName())) return propDef;
+	        }
+        } else if( type == TranslatorPropertyType.IMPORT ) {
+	        for (TeiidPropertyDefinition propDef : getImportPropertyDefinitions()) {
+	            if (name.equals(propDef.getName())) return propDef;
+	        }
+        } else if( type == TranslatorPropertyType.EXTENSION_METADATA ) {
+	        for (TeiidPropertyDefinition propDef : getExtensionPropertyDefinitions()) {
+	            if (name.equals(propDef.getName())) return propDef;
+	        }
         }
 
         return null;
@@ -218,9 +281,10 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      */
     @Override
     public String isValidPropertyValue( String name,
-                                        String value ) {
+                                        String value,
+                                        TranslatorPropertyType propType) {
         // make sure there is a property definition
-        TeiidPropertyDefinition definition = this.getPropertyDefinition(name);
+        TeiidPropertyDefinition definition = this.getPropertyDefinition(name, propType);
         if (definition == null) return Messages.getString(Messages.ExecutionAdmin.missingPropertyDefinition, name);
 
         // make sure there is a value
@@ -308,7 +372,8 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
      */
     @Override
     public void setPropertyValue( String name,
-                                  String value ) throws Exception {
+                                  String value,
+                                  TranslatorPropertyType type) throws Exception {
         ArgCheck.isNotNull(name, "name"); //$NON-NLS-1$
         getProperties().setProperty(name, value); // TODO does the teiidServer call do this
     }
@@ -337,8 +402,18 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
     public Collection<TeiidPropertyDefinition> getPropertyDefinitions() {
         return this.propDefs;
     }
+    
+    @Override
+	public Collection<TeiidPropertyDefinition> getImportPropertyDefinitions() {
+		return this.importPropDefs;
+	}
 
-    /**
+	@Override
+	public Collection<TeiidPropertyDefinition> getExtensionPropertyDefinitions() {
+		return this.extPropDefs;
+	}
+
+	/**
      * {@inheritDoc}
      * 
      * @see java.lang.Object#toString()

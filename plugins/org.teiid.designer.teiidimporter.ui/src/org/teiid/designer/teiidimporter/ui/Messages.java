@@ -93,30 +93,33 @@ public class Messages extends NLS {
     public static String selectDataSourcePage_CannotImportLdapTypeMsg;
     public static String selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg;
     
+    public static String SelectTargetPage_title;
+    public static String SelectTargetPage_TgtModelDefnGroup;
+    public static String SelectTargetPage_CreateConnectionProfileCB_Label;
+    public static String SelectTargetPage_CreateConnectionProfileCB_ToolTip;
+    public static String SelectTargetPage_Location;
+    public static String SelectTargetPage_Browse;
+    public static String SelectTargetPage_Name;
+    public static String SelectTargetPage_ModelStatus;
+    public static String SelectTargetPage_SrcModelUndefined;
+    public static String SelectTargetPage_SrcModelSelected;
+    public static String SelectTargetPage_SelectTargetModelTitle;
+    public static String SelectTargetPage_SelectTargetModelMsg;
+    public static String SelectTargetPage_NoOpenProjMsg;
+    public static String SelectTargetPage_SrcLocationNotSpecified;
+    public static String SelectTargetPage_ConnProfileInTargetIncompatible;
+    public static String SelectTranslatorPage_ConfirmDeleteTitle;
+    public static String SelectTranslatorPage_ConfirmDeleteMsg;
+    
     public static String SelectTranslatorPage_title;
     public static String SelectTranslatorPage_dsNameLabel;
     public static String SelectTranslatorPage_dsTypeLabel;
     public static String SelectTranslatorPage_translatorLabel;
     public static String SelectTranslatorPage_SrcDefnGroup;
-    public static String SelectTranslatorPage_TgtModelDefnGroup;
-    public static String SelectTranslatorPage_Location;
-    public static String SelectTranslatorPage_Browse;
-    public static String SelectTranslatorPage_Name;
-    public static String SelectTranslatorPage_ModelStatus;
-    public static String SelectTranslatorPage_SrcModelUndefined;
-    public static String SelectTranslatorPage_SrcModelSelected;
-    public static String SelectTranslatorPage_SelectTargetModelTitle;
-    public static String SelectTranslatorPage_SelectTargetModelMsg;
-    public static String SelectTranslatorPage_NoOpenProjMsg;
-    public static String SelectTranslatorPage_SrcLocationNotSpecified;
-    public static String SelectTranslatorPage_ConnProfileInTargetIncompatible;
-    public static String SelectTranslatorPage_ConfirmDeleteTitle;
-    public static String SelectTranslatorPage_ConfirmDeleteMsg;
     public static String SelectTranslatorPage_NoDataSourceNameMsg;
     public static String SelectTranslatorPage_NoDataSourceDriverMsg;
     public static String SelectTranslatorPage_NoTranslatorMsg;
-    public static String SelectTranslatorPage_CreateConnectionProfileCB_Label;
-    public static String SelectTranslatorPage_CreateConnectionProfileCB_ToolTip;
+
 
     public static String ShowDDLPage_title;
     public static String ShowDDLPage_DDLContentsGroup;

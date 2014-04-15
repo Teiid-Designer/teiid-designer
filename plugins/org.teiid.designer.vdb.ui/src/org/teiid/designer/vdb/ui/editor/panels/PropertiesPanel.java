@@ -264,11 +264,11 @@ public class PropertiesPanel {
 	}
 	
 	void updateSecurityWidgets() {
-    	if( vdbEditor.getVdb().getSecurityDomain() == null ) {
-    		gssPatternText.setEnabled(false);
-    		passwordPatternText.setEnabled(false);
-    		authenticationTypeText.setEnabled(false);
-    	}
+		boolean enabled = vdbEditor.getVdb().getSecurityDomain() != null;
+		
+		gssPatternText.setEnabled(enabled);
+    	passwordPatternText.setEnabled(enabled);
+    	authenticationTypeText.setEnabled(enabled);
 	}
 	
 	void handleLanguageSelected() {

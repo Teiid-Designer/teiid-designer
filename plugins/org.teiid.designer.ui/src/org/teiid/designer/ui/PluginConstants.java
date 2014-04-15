@@ -132,6 +132,8 @@ public interface PluginConstants {
         String NEW_WEB_SERVICE_MODEL_ICON = OBJ16 + "new-web-service-model.png"; //$NON-NLS-1$
         String NEW_XML_DOCUMENT_MODEL_ICON = OBJ16 + "new-xml-document-model.png"; //$NON-NLS-1$
         String NEW_VDB_ICON = OBJ16 + "newvdb_wiz.gif"; //$NON-NLS-1$
+        
+        String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
     }
 
     // ======================================================================================================

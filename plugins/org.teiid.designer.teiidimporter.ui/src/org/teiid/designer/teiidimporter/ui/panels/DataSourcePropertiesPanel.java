@@ -658,7 +658,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         public String getToolTipText( Object element ) {
             PropertyItem propObj = (PropertyItem)element;
             if(this.nameColumn) {
-                return propObj.getDisplayName();
+                return propObj.getDescription();
             }
             
             if(propObj.hasValidValue()) {

@@ -292,6 +292,8 @@ public class DataSourceManager implements UiConstants {
             // DisplayName
             String displayName = propDefn.getDisplayName();
             propItem.setDisplayName(displayName);
+            
+            propItem.setDescription(propDefn.getDescription());
             // isModifiable 
             // TODO: remove this workaround (due to erroneous .rar values)
             boolean isModifiable = isModifiable(driverName,propDefn);

@@ -19,6 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.PropertyElement;

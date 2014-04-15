@@ -45,12 +45,12 @@ public class TranslatorTemplate implements ITeiidTranslator {
     }
 
     @Override
-    public String getPropertyValue( String name ) {
+    public String getPropertyValue( String name, TranslatorPropertyType type) {
         if (this.changedProperties.containsKey(name)) {
             return this.changedProperties.getProperty(name);
         }
 
-        return translator.getPropertyValue(name);
+        return translator.getPropertyValue(name, type);
     }
     
     @Override
@@ -59,8 +59,8 @@ public class TranslatorTemplate implements ITeiidTranslator {
     }
 
     @Override
-    public String isValidPropertyValue(String name, String value) {
-        return translator.isValidPropertyValue(name, value);
+    public String isValidPropertyValue(String name, String value, TranslatorPropertyType type) {
+        return translator.isValidPropertyValue(name, value, type);
     }
 
     @Override
@@ -77,8 +77,9 @@ public class TranslatorTemplate implements ITeiidTranslator {
 
     @Override
     public void setPropertyValue( String name,
-                                  String value ) throws Exception {
-        if (isValidPropertyValue(name, value) == null) {
+                                  String value,
+                                  TranslatorPropertyType type) throws Exception {
+        if (isValidPropertyValue(name, value, type) == null) {
             this.changedProperties.setProperty(name, value);
         } else {
             throw new Exception(Util.getString("invalidPropertyValue", value, name)); //$NON-NLS-1$
@@ -86,8 +87,8 @@ public class TranslatorTemplate implements ITeiidTranslator {
     }
 
     @Override
-    public Collection<String> findInvalidProperties() {
-        return translator.findInvalidProperties();
+    public Collection<String> findInvalidProperties(TranslatorPropertyType type) {
+        return translator.findInvalidProperties(type);
     }
 
     @Override
@@ -106,12 +107,24 @@ public class TranslatorTemplate implements ITeiidTranslator {
     }
 
     @Override
-    public TeiidPropertyDefinition getPropertyDefinition(String name) {
-        return translator.getPropertyDefinition(name);
+    public TeiidPropertyDefinition getPropertyDefinition(String name, TranslatorPropertyType type) {
+        return translator.getPropertyDefinition(name, type);
     }
 
     @Override
     public Collection<TeiidPropertyDefinition> getPropertyDefinitions() {
        return translator.getPropertyDefinitions();
     }
+
+	@Override
+	public Collection<TeiidPropertyDefinition> getImportPropertyDefinitions() {
+		return translator.getImportPropertyDefinitions();
+	}
+
+	@Override
+	public Collection<TeiidPropertyDefinition> getExtensionPropertyDefinitions() {
+		return translator.getExtensionPropertyDefinitions();
+	}
+    
+    
 }

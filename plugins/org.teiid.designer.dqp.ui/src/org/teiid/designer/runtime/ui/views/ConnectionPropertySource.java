@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.views;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
@@ -26,6 +28,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.runtime.JDBCConnectionPropertyNames;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
+import org.teiid.designer.runtime.spi.ITeiidTranslator.TranslatorPropertyType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -110,7 +113,7 @@ public class ConnectionPropertySource implements IPropertySource {
                             return null;
                         }
 
-                        return (validator.isValidPropertyValue(id, newValue));
+                        return (validator.isValidPropertyValue(id, newValue, TranslatorPropertyType.OVERRIDE));
                     }
                 });
             } else {
@@ -147,7 +150,7 @@ public class ConnectionPropertySource implements IPropertySource {
     @Override
 	public Object getPropertyValue( Object id ) {
         String propName = (String)id;
-        String result = this.translator.getPropertyValue(propName);
+        String result = this.translator.getPropertyValue(propName, TranslatorPropertyType.OVERRIDE);
 
         // property not found or value is null
         if (result == null) return null;
@@ -155,7 +158,7 @@ public class ConnectionPropertySource implements IPropertySource {
         // return empty string
         if (result.length() == 0) return result;
 
-        TeiidPropertyDefinition propDefn = this.translator.getPropertyDefinition(propName);
+        TeiidPropertyDefinition propDefn = this.translator.getPropertyDefinition(propName, TranslatorPropertyType.OVERRIDE);
 
         // if masked property don't return actual result
         if (propDefn.isMasked()) {
@@ -204,9 +207,9 @@ public class ConnectionPropertySource implements IPropertySource {
         String propName = (String)id;
 
         try {
-            String oldValue = this.translator.getPropertyValue(propName);
+            String oldValue = this.translator.getPropertyValue(propName, TranslatorPropertyType.OVERRIDE);
             String newValue = value.toString();
-            this.translator.setPropertyValue(propName, newValue);
+            this.translator.setPropertyValue(propName, newValue, TranslatorPropertyType.OVERRIDE);
             this.provider.propertyChanged(new PropertyChangeEvent(translator, propName, oldValue, newValue));
         } catch (Exception e) {
             UTIL.log(e);

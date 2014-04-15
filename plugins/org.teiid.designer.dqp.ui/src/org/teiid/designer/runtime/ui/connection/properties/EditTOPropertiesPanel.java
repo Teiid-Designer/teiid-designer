@@ -23,13 +23,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.vdb.TranslatorOverrideProperty;
+import org.teiid.designer.ui.viewsupport.TranslatorOverridePropertyEditingSupport;
+import org.teiid.designer.ui.viewsupport.TranslatorPropertyLabelProvider;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.translators.TranslatorOverridePropertyEditingSupport;
 
 public class EditTOPropertiesPanel {
 
@@ -120,16 +121,19 @@ public class EditTOPropertiesPanel {
             // create columns
             TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(DqpUiConstants.UTIL.getString(PREFIX + "propertyColumn.text")); //$NON-NLS-1$
-            column.setLabelProvider(new PropertyLabelProvider(true));
+            column.setLabelProvider(new TranslatorPropertyLabelProvider(true)); // PropertyLabelProvider(false));
             column.getColumn().pack();
             column.getColumn().setWidth(400);
 
             column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(DqpUiConstants.UTIL.getString(PREFIX + "valueColumn.text")); //$NON-NLS-1$
-            column.setLabelProvider(new PropertyLabelProvider(false));
+            column.setLabelProvider(new TranslatorPropertyLabelProvider(false)); // PropertyLabelProvider(false));
             column.setEditingSupport(new TOPropertyEditingSupport(this.propertiesViewer));
             column.getColumn().pack();
             column.getColumn().setWidth(150);
+            if( override.getProperties().length == 0 ) {
+            	((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 4;
+            }
 
             //
             // add note below the table
