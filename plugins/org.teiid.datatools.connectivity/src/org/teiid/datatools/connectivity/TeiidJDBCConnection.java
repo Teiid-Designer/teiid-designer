@@ -7,7 +7,9 @@
  */
 package org.teiid.datatools.connectivity;
 
+import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.SQLException;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.drivers.jdbc.IJDBCConnectionProfileConstants;
@@ -31,12 +33,24 @@ public class TeiidJDBCConnection extends JDBCConnection {
         super(profile, factoryClass);
     }
 
+    private Connection connect(Driver jdbcDriver, String connectURL, Properties connectionProps) throws Exception {
+        if (jdbcDriver == null)
+            throw new IllegalArgumentException("No driver found for connection to " + connectURL); //$NON-NLS-1$
+
+        try {
+            return jdbcDriver.connect(connectURL, connectionProps);
+        } catch (SQLException ex) {
+            /* Found the driver ok but failed to connect */
+            String msg = "The teiid driver failed to connect to " + connectURL + " with the given username and password.";  //$NON-NLS-1$//$NON-NLS-2$
+            throw new Exception(msg, ex);
+        }
+    }
+
     @Override
     protected Object createConnection( ClassLoader classloader ) throws Throwable {
         Properties props = getConnectionProfile().getBaseProperties();
         Properties connectionProps = new Properties();
 
-        // boolean hasDriver = (getDriverDefinition() != null);
         String driverClass = null;
         if (getDriverDefinition() != null) {
             driverClass = getDriverDefinition().getProperty(IJDBCDriverDefinitionConstants.DRIVER_CLASS_PROP_ID);
@@ -82,9 +96,13 @@ public class TeiidJDBCConnection extends JDBCConnection {
         Driver jdbcDriver = null;
         try {
             jdbcDriver = (Driver) classloader.loadClass(driverClass).newInstance();
-            if (jdbcDriver != null)
-                return jdbcDriver.connect(connectURL, connectionProps);
-        } catch (Exception ex) { /* Do nothing */ }
+        } catch (ClassNotFoundException ex) {
+            /* Do nothing */
+        }
+
+        if (jdbcDriver != null) {
+            return connect(jdbcDriver, connectURL, connectionProps);
+        }
 
         /*
          * Failed to find the driver with the given classloader so try to get a match from
@@ -100,10 +118,10 @@ public class TeiidJDBCConnection extends JDBCConnection {
             ITeiidServerVersion teiidServerVersion = new TeiidServerVersion(teiidVersion);
             jdbcDriver = ConnectivityUtil.getTeiidDriver(teiidServerVersion, driverClass);
             if (jdbcDriver != null) {
-                return jdbcDriver.connect(connectURL, connectionProps);
+                return connect(jdbcDriver, connectURL, connectionProps);
             }
         }
 
-        throw new Exception("Cannot find Teiid Driver"); //$NON-NLS-1$
+        throw new Exception("Cannot find suitable Teiid Driver for JDBC connection"); //$NON-NLS-1$
     }
 }
