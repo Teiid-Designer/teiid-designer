@@ -176,7 +176,7 @@ public class ConnectivityUtil {
         }
 
         if (driverDefinitionId == null)
-            throw new Exception("Failure to find or create Teiid driver for version" + serverVersion); //$NON-NLS-1$
+            throw new Exception(Messages.getString(Messages.ConnectivityUtil.noTeiidDriverDefinitionFound, serverVersion));
 
         storeJDBCPassword(connectionURL, password);
         return driverDefinitionId;
@@ -232,7 +232,8 @@ public class ConnectivityUtil {
                                                                                           username,
                                                                                           vdbName));
         } catch (Exception e) {
-            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
+            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+                                                         Messages.getString(Messages.ConnectivityUtil.errorGettingProfile), e);
             throw new CoreException(status);
         }
 
@@ -270,7 +271,8 @@ public class ConnectivityUtil {
             driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, password);
             return createDriverProps(serverVersion, driverDefinitionId, driverPath, connectionURL, username, vdbName);
         } catch (Exception ex) {
-            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile properties", ex); //$NON-NLS-1$
+            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+                                       Messages.getString(Messages.ConnectivityUtil.errorGettingProfileProperties), ex);
             throw new CoreException(status);
         }
     }
@@ -311,7 +313,8 @@ public class ConnectivityUtil {
                                                       username,
                                                       vdbName));
         } catch (Exception e) {
-            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0, "error getting profile", e); //$NON-NLS-1$
+            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
+                                       Messages.getString(Messages.ConnectivityUtil.errorGettingProfile), e);
             throw new CoreException(status);
         }
     }
@@ -362,7 +365,7 @@ public class ConnectivityUtil {
         if (driver != null && driver.getClass().getName().equals(driverClass))
             return driver;
 
-        String msg = "No Teiid Driver ( "+ driverClass + " ) available for version " + teiidServerVersion;  //$NON-NLS-1$//$NON-NLS-2$
+        String msg = Messages.getString(Messages.ConnectivityUtil.noTeiidDriverFound, driverClass, teiidServerVersion);
         throw new IllegalStateException(msg);
     }
 }

@@ -35,13 +35,13 @@ public class TeiidJDBCConnection extends JDBCConnection {
 
     private Connection connect(Driver jdbcDriver, String connectURL, Properties connectionProps) throws Exception {
         if (jdbcDriver == null)
-            throw new IllegalArgumentException("No driver found for connection to " + connectURL); //$NON-NLS-1$
+            throw new IllegalArgumentException(Messages.getString(Messages.TeiidJDBCConnection.noDriverFound, connectURL));
 
         try {
             return jdbcDriver.connect(connectURL, connectionProps);
         } catch (SQLException ex) {
             /* Found the driver ok but failed to connect */
-            String msg = "The teiid driver failed to connect to " + connectURL + " with the given username and password.";  //$NON-NLS-1$//$NON-NLS-2$
+            String msg = Messages.getString(Messages.TeiidJDBCConnection.invalidUserPassword, connectURL);
             throw new Exception(msg, ex);
         }
     }
@@ -122,6 +122,6 @@ public class TeiidJDBCConnection extends JDBCConnection {
             }
         }
 
-        throw new Exception("Cannot find suitable Teiid Driver for JDBC connection"); //$NON-NLS-1$
+        throw new Exception(Messages.getString(Messages.TeiidJDBCConnection.noDriverFound, connectURL));
     }
 }
