@@ -12,6 +12,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
@@ -122,7 +123,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 			} else {
 				MessageDialog
 						.openWarning(
-								DqpUiPlugin.getDefault().getCurrentWorkbenchWindow().getShell(),
+								getShell(),
 								getString("noTeiidInstance.title"), //$NON-NLS-1$
 								getString("noTeiidInstance.message")); //$NON-NLS-1$
 			}
@@ -137,6 +138,34 @@ public class ExecuteVdbWorker implements VdbConstants {
 			throws Exception {
 		processForDTP(teiidServer, vdbName);
 	}
+
+    /**
+     * Opens an error dialog if necessary.  Takes care of
+     * complex rules necessary for making the error dialog look nice.
+     */
+    private void openError(String genericTitle, IStatus status) {
+        if (status == null) {
+            return;
+        }
+
+        int codes = IStatus.ERROR | IStatus.WARNING;
+
+        //simple case: one error, not a multistatus
+        if (!status.isMultiStatus()) {
+            ErrorDialog.openError(getShell(), genericTitle, null, status, codes);
+            return;
+        }
+
+        //one error, single child of multistatus
+        IStatus[] children = status.getChildren();
+        if (children.length == 1) {
+            ErrorDialog.openError(getShell(), status.getMessage(), null, children[0], codes);
+            return;
+        }
+
+        //several problems
+        ErrorDialog.openError(getShell(), genericTitle, null, status, codes);
+    }
 
 	public void processForDTP(ITeiidServer teiidServer, String vdbName)
 			throws Exception {
@@ -195,7 +224,9 @@ public class ExecuteVdbWorker implements VdbConstants {
 		if( connectionStatus.getSeverity() < IStatus.ERROR ) {
 			OpenScrapbookEditorAction sbAction = new OpenScrapbookEditorAction();
 			sbAction.run(profile, vdbName);
+		} else {
+		    openError(getString("vdbConnectionError.title"), //$NON-NLS-1$
+		                      connectionStatus);
 		}
 	}
-		
 }
