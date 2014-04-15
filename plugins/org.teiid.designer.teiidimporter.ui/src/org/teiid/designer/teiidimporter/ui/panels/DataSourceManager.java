@@ -10,8 +10,14 @@ package org.teiid.designer.teiidimporter.ui.panels;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -19,6 +25,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
@@ -223,7 +230,7 @@ public class DataSourceManager implements UiConstants {
     public List<PropertyItem> getDataSourcePropertyItems(String dsName) {
         
         // Get the driver template properties
-        String driverName = getDataSourceDriver(dsName);
+        String driverName = getDataSourceDriver(dsName, null);
         List<PropertyItem> propertyItems = getDriverPropertyItems(driverName);
         
         if(!propertyItems.isEmpty()) {
@@ -338,30 +345,125 @@ public class DataSourceManager implements UiConstants {
     }
     
     /**
+     * Create a map of class-name to the associated DataSource template name.  This
+     * matches the className of the datasource to the 'managedconnectionfactory-class' name from the template.
+     * @param teiidDataSources the collection of Teiid DataSources
+     * @return Map of RA class-name to DS template name
+     */
+    public Map<String,String> getClassNameDriverNameMap(Collection<ITeiidDataSource> teiidDataSources) {
+    	Map<String,String> raClassToDriverNameMap = new HashMap<String,String>();
+    	
+    	// Get all distinct class-names from dataSources
+    	Set<String> dsClassNames = new HashSet<String>();
+    	for(ITeiidDataSource ds : teiidDataSources) {
+    		String dsClass = ds.getPropertyValue("class-name"); //$NON-NLS-1$
+    		if(!CoreStringUtil.isEmpty(dsClass)) {
+    			dsClassNames.add(dsClass);
+    		}
+    	}
+    	
+    	// Get all available templates from the server
+        Set<String> availableTemplateNames;
+        try {
+        	availableTemplateNames = teiidImportServer.getDataSourceTemplateNames();
+        } catch (Exception ex) {
+        	availableTemplateNames = Collections.EMPTY_SET;
+            UTIL.log(ex);
+        }
+    	
+        for(String className : dsClassNames) {
+            // Loop through all available templates.  break if matching template is found
+            for(String templateName : availableTemplateNames) {
+                Collection<TeiidPropertyDefinition> propDefns;
+                try {
+                    // Get the driver template properties
+                    propDefns = teiidImportServer.getTemplatePropertyDefns(templateName);
+                    // Get default value for managedconnectionfactory-class
+                    String mcfDefault = getManagedConnectionFactoryClassDefault(propDefns);
+                    if(className.equals(mcfDefault)) {
+                    	raClassToDriverNameMap.put(className, templateName);
+                    	break;
+                    }
+                } catch (Exception ex) {
+                    UTIL.log(ex);
+                }
+            }
+        }
+    	
+    	return raClassToDriverNameMap;
+    }
+    
+    /**
      * Get the Driver name for the supplied DataSource name - from the TeiidServer
      * @param dsName the data source name
+     * @param raClassNameDriverNameMap optionally supplied mapping of className to TemplateName
      * @return the dataSource driver name
      */
-    public String getDataSourceDriver(String dsName) {
+    public String getDataSourceDriver(String dsName, Map<String,String> raClassNameDriverNameMap) {
         String driverName = null;
-        ITeiidServerVersion teiidVersion = null;
         Properties props = new Properties();
         try {
             props = teiidImportServer.getDataSourceProperties(dsName);
-            teiidVersion = teiidImportServer.getTeiidServerVersion();
         } catch (Exception ex) {
             UTIL.log(ex);
             return null;
         }
         driverName = props.getProperty(DRIVER_KEY);
-        // If driver-name not found, look for class name and match up the .rar
+        
+        // If driver-name not found - 1) use map (if supplied) to get the driverName or 2) attempt to match server template
         if(CoreStringUtil.isEmpty(driverName)) {
             String className = props.getProperty(CLASSNAME_KEY);
-            if(!CoreStringUtil.isEmpty(className)) {
-            	driverName = TranslatorHelper.getDriverNameForClass(className, teiidVersion);
+            
+            if(raClassNameDriverNameMap!=null) {
+            	driverName = raClassNameDriverNameMap.get(className);
+            } else {
+            	String dsTemplateName = findDSTemplateWithMatchingClass(className);
+            	if(!CoreStringUtil.isEmpty(dsTemplateName)) {
+            		driverName = dsTemplateName;
+            	}
             }
         }
         return driverName;
+    }
+    
+    /**
+     * Iterates through all of the available dataSource templates to find template with 'managedconnectionfactory-class' that
+     * matches the supplied className.  If no match is found, null is returned.
+     * @param className the dataSource class name
+     * @return the templateName with 'managedconnectionfactory-class' that matches className, null if not found.
+     */
+    private String findDSTemplateWithMatchingClass(String className) {
+    	if(CoreStringUtil.isEmpty(className)) return null;
+    	
+    	String dsTemplateName = null;
+    	
+    	// Get all available templates from the server
+        Set<String> availableTemplateNames;
+        try {
+        	availableTemplateNames = teiidImportServer.getDataSourceTemplateNames();
+        } catch (Exception ex) {
+        	availableTemplateNames = Collections.EMPTY_SET;
+            UTIL.log(ex);
+        }
+    	
+        // Loop through all available templates.  break if matching template is found
+        for(String templateName : availableTemplateNames) {
+            Collection<TeiidPropertyDefinition> propDefns;
+            try {
+                // Get the driver template properties
+                propDefns = teiidImportServer.getTemplatePropertyDefns(templateName);
+                // Get default value for managedconnectionfactory-class
+                String mcfDefault = getManagedConnectionFactoryClassDefault(propDefns);
+                if(className.equals(mcfDefault)) {
+                	dsTemplateName = templateName;
+                	break;
+                }
+            } catch (Exception ex) {
+                UTIL.log(ex);
+            }
+        }
+    	
+    	return dsTemplateName;
     }
     
     /**
