@@ -693,9 +693,9 @@ public class TeiidServer implements ITeiidServer {
     }
     
     @Override
-    public void deployDynamicVdb(String vdbName, InputStream inStream) throws Exception {
+    public void deployDynamicVdb(String vdbDeploymentName, InputStream inStream) throws Exception {
         connect();
-        admin.deployDynamicVdb(vdbName,inStream);
+        admin.deployDynamicVdb(vdbDeploymentName,inStream);
     }
     
     @Override

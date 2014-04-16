@@ -166,8 +166,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
         try {
             deployedImportVdb = getImportServer().getVdb(vdbName);
             if( deployedImportVdb != null ) {
-                String vdbDeployName = getVdbDeploymentName(deployedImportVdb);
-                getImportServer().undeployDynamicVdb(vdbDeployName);
+                getImportServer().undeployDynamicVdb(deployedImportVdb.getName());
             }
         } catch (Exception ex) {
             resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerUndeployVdbError, vdbName));
@@ -268,8 +267,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
         try {
             deployedImportVdb = getImportServer().getVdb(importerVdbName);
             if( deployedImportVdb != null ) {
-                String vdbDeployName = getVdbDeploymentName(deployedImportVdb);
-                getImportServer().undeployDynamicVdb(vdbDeployName);
+                getImportServer().undeployDynamicVdb(deployedImportVdb.getName());
             }
         } catch (Exception ex) {
             resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerUndeployVdbError, importerVdbName));
