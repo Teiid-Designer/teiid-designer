@@ -132,6 +132,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
         ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
         return minVersion.isLessThan(Version.TEIID_8_0.get());
     }
+    
+    private boolean isLessThanTeiidEightSeven() {
+        ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
+        return minVersion.isLessThan(Version.TEIID_8_7.get());
+    }
 
     @Override
     public boolean dataSourceExists( String name ) {
@@ -169,6 +174,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
         String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
         String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
     
+        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
+    	if(isLessThanTeiidEightSeven()) {
+    		undeployVdb(vdbName);
+    	}
+        
         doDeployVdb(vdbDeploymentName, vdbName, 1, vdbFile.getContents());
     }
     
@@ -184,7 +194,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
         
         // Get VDB name
         String vdbName = deploymentName.substring(0, deploymentName.indexOf(DYNAMIC_VDB_SUFFIX));
-        
+
+        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
+    	if(isLessThanTeiidEightSeven()) {
+    		undeployDynamicVdb(vdbName);
+    	}
+    	
         // Deploy the VDB
         // TODO: Dont assume vdbVersion
         doDeployVdb(deploymentName,vdbName,1,inStream);
@@ -752,7 +767,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Override
     public void undeployVdb( String vdbName) throws Exception {
         ITeiidVdb vdb = getVdb(vdbName);
-        adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdb != null ? vdb.getVersion() : 1);
+        if(vdb!=null) {
+        	adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdb.getVersion());
+        }
         vdb = getVdb(vdbName);
 
         refreshVDBs();
@@ -766,8 +783,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
     
     @Override
     public void undeployDynamicVdb( String vdbName) throws Exception {
-        adminSpec.undeploy(admin, appendDynamicVdbSuffix(vdbName), getVdb(vdbName).getVersion());
         ITeiidVdb vdb = getVdb(vdbName);
+        if(vdb!=null) {
+        	adminSpec.undeploy(admin, appendDynamicVdbSuffix(vdbName), vdb.getVersion());
+        }
+        vdb = getVdb(vdbName);
 
         refreshVDBs();
 
