@@ -154,6 +154,7 @@ public class CreateDataSourceDialog extends TitleAreaDialog implements CreateDat
         if(status.isOK()) {
             getButton(OK).setEnabled(true);
             setErrorMessage(null);
+            setMessage(status.getMessage());
         } else {
             getButton(OK).setEnabled(false);
             setErrorMessage(status.getMessage());

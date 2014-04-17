@@ -43,7 +43,10 @@ public class Messages extends NLS {
     public static String dataSourcePropertiesPanel_valueColText;
     public static String dataSourcePropertiesPanel_resetButton;
     public static String dataSourcePropertiesPanel_resetTooltip;
+    public static String dataSourcePropertiesPanel_applyButton;
+    public static String dataSourcePropertiesPanel_applyTooltip;
     public static String dataSourcePropertiesPanel_invalidPropertyMsg;
+    public static String dataSourcePropertiesPanel_applyPropertyChangesMsg;
     public static String dataSourcePropertiesPanel_validPropertyTooltip;
     public static String dataSourcePropertiesPanel_invalidPropertyTooltip;
     public static String dataSourcePropertiesPanelOk;
