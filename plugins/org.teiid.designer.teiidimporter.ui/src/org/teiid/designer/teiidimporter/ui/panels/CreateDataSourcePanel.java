@@ -254,6 +254,9 @@ public final class CreateDataSourcePanel extends Composite implements UiConstant
             // Validate the properties
             if(panelStatus.isOK()) {
                 panelStatus = this.propertiesPanel.getStatus();
+                if(panelStatus.isOK()) {
+                    panelStatus = new Status(IStatus.OK, PLUGIN_ID, Messages.createDataSourcePanelOk);        
+                }
             }
         }        
     }

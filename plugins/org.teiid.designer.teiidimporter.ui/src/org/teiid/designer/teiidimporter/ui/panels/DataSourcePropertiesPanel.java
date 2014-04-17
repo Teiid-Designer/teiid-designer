@@ -9,11 +9,15 @@ package org.teiid.designer.teiidimporter.ui.panels;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -22,9 +26,12 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -68,6 +75,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
     
     private List<DataSourcePropertiesPanelListener> listeners = new ArrayList<DataSourcePropertiesPanelListener>();
     private Button resetButton;
+    private Button applyButton;
     private Text propDescriptionText;
     
     /**
@@ -119,6 +127,21 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
             @Override
             public void widgetSelected(SelectionEvent e) {
                 handleResetProperty();
+            }
+            
+        });        
+
+        applyButton = new Button(panel, SWT.PUSH);
+        applyButton.setText(Messages.dataSourcePropertiesPanel_applyButton); 
+        applyButton.setToolTipText(Messages.dataSourcePropertiesPanel_applyTooltip);
+        applyButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        applyButton.setEnabled(false);
+        applyButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	applyButton.setEnabled(false);
+            	firePropertyChanged();
             }
             
         });        
@@ -209,6 +232,28 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         // Add editing support if its not readonly
         if(!isReadOnly) {
             column.setEditingSupport(new DataSourcePropertyEditingSupport(this.propertiesViewer,this));
+            
+            ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy(this.propertiesViewer) {
+                @Override
+				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+                    // Enable editor with single mouse click
+                    if (event.eventType == ColumnViewerEditorActivationEvent.MOUSE_CLICK_SELECTION) {
+                        EventObject source = event.sourceEvent;
+                        if (source instanceof MouseEvent) {
+                        	Object eventSource = event.getSource();
+                        	if(eventSource instanceof ViewerCell && ((ViewerCell)eventSource).getColumnIndex()==1) {
+                        		applyButton.setEnabled(true);
+                        		firePropertyChanged();
+                        		return true;
+                        	}
+                        }
+                    }
+                    applyButton.setEnabled(false);
+                    firePropertyChanged();
+                    return false;
+                }
+            };
+            TableViewerEditor.create(this.propertiesViewer, activationSupport, ColumnViewerEditor.DEFAULT);
         }
         column.getColumn().pack();
 
@@ -268,6 +313,8 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         prop.reset();
         this.propertiesViewer.refresh();
         this.resetButton.setEnabled(false);
+        this.applyButton.setEnabled(false);
+    	firePropertyChanged();
     }
     
     /**
@@ -563,6 +610,10 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         		resultStatus = new Status(IStatus.ERROR, PLUGIN_ID, Messages.dataSourcePropertiesPanel_invalidPropertyMsg);
             	break;
             }
+        }
+        
+        if(applyButton.isEnabled()) {
+        	resultStatus = new Status(IStatus.ERROR, PLUGIN_ID, Messages.dataSourcePropertiesPanel_applyPropertyChangesMsg);
         }
         
         return resultStatus;        
