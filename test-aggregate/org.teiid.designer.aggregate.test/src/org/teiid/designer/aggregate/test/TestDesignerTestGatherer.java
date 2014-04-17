@@ -50,11 +50,20 @@ public class TestDesignerTestGatherer extends TestCase {
 
     private static final String TEST = "test"; //$NON-NLS-1$
 
+    private static final String NEWLINE = "\n"; //$NON-NLS-1$
+
     private static Map<String, URL> testCache = new HashMap<String, URL>();
 
     private static Map<String, Integer> testsInPackage = new HashMap<String, Integer>();
 
     private static Map<String, Integer> testsInClass = new HashMap<String, Integer>();
+
+    /**
+     * @param string
+     */
+    private static void log(String message) {
+        TestDesignerPlugin.logInfo(message);
+    }
 
     /**
      * Assemble a junit 3 test suite
@@ -73,29 +82,27 @@ public class TestDesignerTestGatherer extends TestCase {
             if (Platform.isFragment(bundle)) {
                 // Ignore test fragments since AllTests classes loaded from their
                 // host bundles
-                System.out.println("Ignoring Test fragment " + bundle.getSymbolicName() + " since it is accessible from its host bundle");
+                log("Ignoring Test fragment " + bundle.getSymbolicName() + " since it is accessible from its host bundle"); //$NON-NLS-1$ //$NON-NLS-2$
                 continue;
             }
 
             if (bundle.getSymbolicName().contains(TEST)) {
                 // Ignore the test framework plugins
-                System.out.println("Ignoring Test framework plugin " + bundle.getSymbolicName());
+                log("Ignoring Test framework plugin " + bundle.getSymbolicName()); //$NON-NLS-1$
                 continue;
             }
 
             if (!bundle.getSymbolicName().matches(BUNDLE_FILTER)) {
-                System.out.println("Ignoring non-teiid plugin " + bundle.getSymbolicName());
+                log("Ignoring non-teiid plugin " + bundle.getSymbolicName()); //$NON-NLS-1$
                 continue;
             }
 
             collectTests(aggregateSuite, bundle);
         }
 
-        System.out.println("=== Number of Tests found per Class ==="); //$NON-NLS-1$
-        outputCounts(testsInClass);
+        outputCounts("=== Number of Tests found per Class ===", testsInClass); //$NON-NLS-1$
 
-        System.out.println("=== Number of Tests found per Package ==="); //$NON-NLS-1$
-        outputCounts(testsInPackage);
+        outputCounts("=== Number of Tests found per Package ===", testsInPackage); //$NON-NLS-1$
 
         if (aggregateSuite.countTestCases() == 0) {
             aggregateSuite.addTest(TestSuite.warning("Cannot find any tests conforming to the filter " + BUNDLE_FILTER)); //$NON-NLS-1$
@@ -112,13 +119,14 @@ public class TestDesignerTestGatherer extends TestCase {
 
         Enumeration<URL> entries = bundle.findEntries(BUNDLE_ROOT, ALL_TESTS_CLASS, true);
         if (entries == null || !entries.hasMoreElements()) {
-            System.out.println("No AllTest class found in plugin " + bundle.getSymbolicName());
+            log("No AllTest class found in plugin " + bundle.getSymbolicName()); //$NON-NLS-1$
             return;
         }
 
-        System.out.println("Collecting Tests for " + bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST); //$NON-NLS-1$
+        StringBuffer buffer = new StringBuffer("Collecting Tests for " + bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST + NEWLINE); //$NON-NLS-1$
 
         TestSuite suite = new TestSuite(bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST);
+        int totalTestClasses = 0;
 
         while (entries.hasMoreElements()) {
             URL element = entries.nextElement();
@@ -153,19 +161,26 @@ public class TestDesignerTestGatherer extends TestCase {
                     }
                 }
 
+                totalTestClasses += suite.testCount();
                 parentSuite.addTest(suite);
             }
             catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }
         }
+
+        buffer.append("Collected " + totalTestClasses + " test classes for " + bundle.getSymbolicName() + PACKAGE_SEPARATOR + TEST + NEWLINE); //$NON-NLS-1$ //$NON-NLS-2$
+        log(buffer.toString());
     }
 
     /**
+     * @param title
      * @param counts
      */
-    private static void outputCounts(Map<String, Integer> counts) {
+    private static void outputCounts(String title, Map<String, Integer> counts) {
         int total = 0;
+        StringBuffer buffer = new StringBuffer(title);
+
         List<String> outLines = new ArrayList<String>();
         for (Map.Entry<String, Integer> entry : counts.entrySet()) {
             outLines.add(entry.getKey() + "\t\t\t" + entry.getValue()); //$NON-NLS-1$
@@ -174,13 +189,15 @@ public class TestDesignerTestGatherer extends TestCase {
 
         Collections.sort(outLines);
 
-        System.out.println();
+        buffer.append(NEWLINE);
         for (String outLine : outLines) {
-            System.out.println(outLine);
+            buffer.append(outLine);
+            buffer.append(NEWLINE);
         }
 
-        System.out.println("Total Number of Tests = " + total); //$NON-NLS-1$
-        System.out.println();
+        buffer.append("Total Number of Tests = " + total); //$NON-NLS-1$
+        buffer.append(NEWLINE);
+        log(buffer.toString());
     }
 
     private static void count(Class<?> testClass, int noTestCases) {
