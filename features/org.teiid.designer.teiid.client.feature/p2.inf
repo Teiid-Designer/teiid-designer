@@ -1,0 +1,23 @@
+#
+# Installation of this new version of the feature
+# should remove the 3 deprecated client runtime
+# plugins.
+#
+# Removal of plugins is possible by setting the
+# min and max of the requirement to 0
+#
+# The namespace is p2's standard IU while the name
+# is the id of the plugin
+#
+requires.0.namespace = org.eclipse.equinox.p2.iu
+requires.0.name = org.teiid.7.7.x
+requires.0.min = 0
+requires.0.max = 0
+requires.0.namespace = org.eclipse.equinox.p2.iu
+requires.1.name = org.teiid.8.3.x
+requires.1.min = 0
+requires.1.max = 0
+requires.0.namespace = org.eclipse.equinox.p2.iu
+requires.2.name = org.teiid.8.4.x
+requires.2.min = 0
+requires.2.max = 0
