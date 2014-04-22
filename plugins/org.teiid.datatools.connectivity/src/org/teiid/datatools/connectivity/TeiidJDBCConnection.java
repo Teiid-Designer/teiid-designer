@@ -96,8 +96,8 @@ public class TeiidJDBCConnection extends JDBCConnection {
         Driver jdbcDriver = null;
         try {
             jdbcDriver = (Driver) classloader.loadClass(driverClass).newInstance();
-        } catch (ClassNotFoundException ex) {
-            /* Do nothing */
+        } catch (Throwable ex) {
+            /* Do nothing as jbdcDriver will be null */
         }
 
         if (jdbcDriver != null) {
