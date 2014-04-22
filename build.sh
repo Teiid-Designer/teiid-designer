@@ -48,6 +48,7 @@ function checkout {
 function show_help {
 	echo "Usage: $0 [-d] [-h]"
 	echo "-d - enable maven debugging"
+	echo "-s - skip test execution"
   exit 1
 }
 
@@ -85,11 +86,12 @@ DEBUG=0
 #
 # Determine the command line options
 #
-while getopts "bdh" opt;
+while getopts "bdhs" opt;
 do
 	case $opt in
 	d) DEBUG=1 ;;
 	h) show_help ;;
+  s) SKIP=1 ;;
 	*) show_help ;;
 	esac
 done
@@ -120,11 +122,18 @@ if [ "${DEBUG}" == "1" ]; then
 fi
 
 #
+# Skip tests
+#
+if [ "${SKIP}" == "1" ]; then
+  SKIP_FLAG="-DskipTests"
+fi
+
+#
 # Maven options
 # -P <profiles> : The profiles to be used for downloading jbosstools artifacts
 # -D maven.repo.local : Assign the $LOCAL_REPO as the target repository
 #
-MVN_FLAGS="${MVN_FLAGS} -P target-platform,multiple.target -Dmaven.repo.local=${LOCAL_REPO} -Dno.jbosstools.site -Dtycho.localArtifacts=ignore"
+MVN_FLAGS="${MVN_FLAGS} -P target-platform,multiple.target -Dmaven.repo.local=${LOCAL_REPO} -Dno.jbosstools.site -Dtycho.localArtifacts=ignore ${SKIP_FLAG}"
 
 echo "==============="
 
