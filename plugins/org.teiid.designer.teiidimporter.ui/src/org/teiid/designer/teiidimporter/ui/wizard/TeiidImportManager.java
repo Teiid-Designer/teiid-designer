@@ -476,7 +476,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     public void setTargetModelLocation(IPath targetPath) {
         this.targetModelLocation=targetPath;
         if(this.ddlImporter!=null) {
-            this.ddlImporter.setModelFolder(targetPath.toOSString());
+            this.ddlImporter.setModelFolder(targetPath.toString());
         }
     }
     
