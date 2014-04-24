@@ -17,6 +17,7 @@ import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialogModel;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 
 /**
  * Dialog model class designed to provide generic editor panels for specific relational object types

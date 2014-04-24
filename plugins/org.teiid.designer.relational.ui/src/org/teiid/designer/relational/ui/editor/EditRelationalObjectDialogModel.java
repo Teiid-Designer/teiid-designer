@@ -10,8 +10,8 @@ package org.teiid.designer.relational.ui.editor;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.widgets.Composite;
 import org.teiid.designer.relational.model.RelationalReference;
-import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 
 /**
  *

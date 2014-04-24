@@ -73,6 +73,7 @@ import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;

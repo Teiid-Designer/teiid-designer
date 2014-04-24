@@ -12,7 +12,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Composite;
 import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.model.RelationalReference;
-import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.edit.RelationalIndexEditorPanel;
 import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialogModel;
@@ -20,6 +19,7 @@ import org.teiid.designer.transformation.model.RelationalViewIndex;
 import org.teiid.designer.transformation.model.RelationalViewProcedure;
 import org.teiid.designer.transformation.model.RelationalViewTable;
 import org.teiid.designer.transformation.ui.Messages;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 
 /**
  *

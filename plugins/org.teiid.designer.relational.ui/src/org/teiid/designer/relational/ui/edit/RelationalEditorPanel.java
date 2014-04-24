@@ -31,6 +31,7 @@ import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialogModel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;

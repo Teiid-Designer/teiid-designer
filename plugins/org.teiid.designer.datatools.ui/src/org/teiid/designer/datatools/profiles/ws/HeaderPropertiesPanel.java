@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
@@ -116,7 +117,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                     return new Object[0];
                 }
                 
-                List<HeaderPropertiesPanel.Property> properties= new ArrayList<HeaderPropertiesPanel.Property>();
+                List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
                 for( Object key : props.keySet() ) {
                 	String keyStr = (String)key;
                 	if( ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
@@ -125,10 +126,10 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ) {
                 		// do nothing;
                 	} else {
-                		properties.add(new Property(keyStr, (String)props.get(key)));
+                		properties.add(new SimpleProperty(keyStr, (String)props.get(key)));
                 	}
                 }
-                return properties.toArray(new Property[0]);
+                return properties.toArray(new SimpleProperty[0]);
             }
 
             /**
@@ -157,8 +158,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             public int compare( Viewer viewer,
                                 Object e1,
                                 Object e2 ) {
-                Property prop1 = (Property)e1;
-                Property prop2 = (Property)e2;
+            	SimpleProperty prop1 = (SimpleProperty)e1;
+                SimpleProperty prop2 = (SimpleProperty)e2;
 
                 return super.compare(viewer, prop1.getName(), prop2.getName());
             }
@@ -242,14 +243,14 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
-    private Property getSelectedProperty() {
+    private SimpleProperty getSelectedProperty() {
         IStructuredSelection selection = (IStructuredSelection)this.propertiesViewer.getSelection();
 
         if (selection.isEmpty()) {
             return null;
         }
 
-        return (Property)selection.getFirstElement();
+        return (SimpleProperty)selection.getFirstElement();
     }
 	
     void handleAddProperty() {
@@ -275,11 +276,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             // select the new property
             
             
-            Property prop = null;
+            SimpleProperty prop = null;
             
             for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
-            	if( item.getData() instanceof Property && ((Property)item.getData()).getName().equals(name) ) {
-            		prop = (Property)item.getData();
+            	if( item.getData() instanceof SimpleProperty && ((SimpleProperty)item.getData()).getName().equals(name) ) {
+            		prop = (SimpleProperty)item.getData();
             		break;
             	}
             }
@@ -291,7 +292,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
     }
     
     void handleRemoveProperty() {
-        Property selectedProperty = getSelectedProperty();
+        SimpleProperty selectedProperty = getSelectedProperty();
         assert (selectedProperty != null);
 
         // update model
@@ -300,68 +301,6 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         // update UI
         this.propertiesViewer.refresh();
     }
-    		
-	class Property {
-		private String name;
-		private String value;
-		
-		public Property(String name, String value) {
-			super();
-			this.name = name;
-			this.value = value;
-		}
-
-		/**
-		 * @return the name
-		 */
-		public String getName() {
-			return this.name;
-		}
-
-		/**
-		 * @param name the name to set
-		 */
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		/**
-		 * @return the value
-		 */
-		public String getValue() {
-			return this.value;
-		}
-
-		/**
-		 * @param value the value to set
-		 */
-		public void setValue(String value) {
-			this.value = value;
-		}
-		
-	    /**
-	     * {@inheritDoc}
-	     * 
-	     * @see java.lang.Object#equals(java.lang.Object)
-	     */
-	    @Override
-	    public boolean equals( Object obj ) {
-	        if (this == obj) {
-	            return true;
-	        }
-
-	        if (obj == null) {
-	            return false;
-	        }
-
-	        if (!getClass().equals(obj.getClass())) {
-	            return false;
-	        }
-
-	        return this.getName().equals(((Property)obj).getName());
-	    }
-		
-	}
 	
 	class PropertyLabelProvider extends ColumnLabelProvider {
 
@@ -376,11 +315,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof Property ) {
+			if( element instanceof SimpleProperty ) {
 				if( columnID == 0 ) {
-					return ((Property)element).getName();
+					return ((SimpleProperty)element).getName();
 				} else if( columnID == 1 ) {
-					return ((Property)element).getValue();
+					return ((SimpleProperty)element).getValue();
 				}
 			}
 			return super.getText(element);
@@ -431,11 +370,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof Property ) {
+			if( element instanceof SimpleProperty ) {
 				if( columnID == 0 ) {
-					return ((Property)element).getName();
+					return ((SimpleProperty)element).getName();
 				} else if( columnID == 1 ) {
-					return ((Property)element).getValue();
+					return ((SimpleProperty)element).getValue();
 				}
 			}
 			return 0;
@@ -449,10 +388,10 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof Property ) {
+			if( element instanceof SimpleProperty ) {
 				if( columnID == 0 ) {
-					String oldKey = ((Property)element).getName();
-					String oldValue = ((Property)element).getValue();
+					String oldKey = ((SimpleProperty)element).getName();
+					String oldValue = ((SimpleProperty)element).getValue();
 					String newKey = (String)value;
 					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
 						profileProperties.remove(oldKey);
@@ -460,8 +399,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 						propertiesViewer.refresh();
 					}
 				} else if( columnID == 1 ) {
-					String key = ((Property)element).getName();
-					String oldValue = ((Property)element).getValue();
+					String key = ((SimpleProperty)element).getName();
+					String oldValue = ((SimpleProperty)element).getValue();
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 						profileProperties.put(key,newValue);

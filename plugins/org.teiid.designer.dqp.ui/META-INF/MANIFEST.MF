@@ -9,6 +9,7 @@ Bundle-Localization: plugin
 Export-Package: org.teiid.designer.runtime.ui,
  org.teiid.designer.runtime.ui.actions,
  org.teiid.designer.runtime.ui.connection,
+ org.teiid.designer.runtime.ui.connection.properties,
  org.teiid.designer.runtime.ui.dialogs,
  org.teiid.designer.runtime.ui.jdbc,
  org.teiid.designer.runtime.ui.preferences,

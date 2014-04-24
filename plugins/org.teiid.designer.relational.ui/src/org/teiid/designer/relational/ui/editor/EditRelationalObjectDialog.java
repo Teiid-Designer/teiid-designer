@@ -20,8 +20,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.ui.Messages;
-import org.teiid.designer.relational.ui.edit.IDialogStatusListener;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
+import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 
 /**
  *
