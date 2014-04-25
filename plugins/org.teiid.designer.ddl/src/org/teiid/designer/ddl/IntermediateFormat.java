@@ -26,6 +26,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.ModelType.Type;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -71,12 +72,6 @@ public class IntermediateFormat {
         TIME_FORMATTER.setLenient(false);
         DATE_FORMATTER = new SimpleDateFormat(DATE_FORMAT);
         DATE_FORMATTER.setLenient(false);
-    }
-
-    public static class ModelTypes {
-        public static final String VIRTUAL = "Virtual"; //$NON-NLS-1$
-        public static final String PHYSICAL = "Physical"; //$NON-NLS-1$
-        public static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
     }
 
     public static class Xml {
@@ -479,16 +474,13 @@ public class IntermediateFormat {
         final ModelAnnotation modelAnnotation = wrapper.getContents().getModelAnnotation();
 
         final ModelType modelTypeEnum = modelAnnotation.getModelType();
+        Type type = Type.getType(modelTypeEnum.getValue());
         String modelType = null;
-        switch (modelTypeEnum.getValue()) {
-            case ModelType.PHYSICAL:
-                modelType = ModelTypes.PHYSICAL;
-                break;
-            case ModelType.VIRTUAL:
-                modelType = ModelTypes.VIRTUAL;
-                break;
-            case ModelType.UNKNOWN:
-                modelType = ModelTypes.UNKNOWN;
+        switch (type) {
+            case PHYSICAL:
+            case VIRTUAL:
+            case UNKNOWN:
+                modelType = type.getCamelCaseName();
                 break;
             default:
                 modelType = modelTypeEnum.getName();
