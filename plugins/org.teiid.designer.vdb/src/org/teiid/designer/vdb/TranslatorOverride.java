@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.VdbPlugin.UTIL;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -16,12 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;

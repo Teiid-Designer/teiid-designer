@@ -11,7 +11,7 @@ import static org.teiid.designer.core.ModelerCore.Util;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 
 /**

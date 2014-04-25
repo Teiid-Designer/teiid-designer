@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * The <code>DataSourcePropertyEditingSupport</code> class provides cell editing support for data source properties. A combobox editor is used when there

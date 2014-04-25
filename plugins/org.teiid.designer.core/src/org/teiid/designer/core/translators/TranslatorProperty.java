@@ -2,8 +2,8 @@ package org.teiid.designer.core.translators;
 
 
 import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.StringUtilities;
 
 public class TranslatorProperty implements PropertyDefinition {
 

@@ -8,14 +8,12 @@
 package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCES;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  *

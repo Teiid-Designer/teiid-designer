@@ -8,14 +8,13 @@
 package org.teiid.designer.core.transaction;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
-import org.teiid.designer.core.util.StringUtilities;
 
 /**
  * UndoableImpl

@@ -1,18 +1,16 @@
 package org.teiid.designer.core.translators;
 
 import static org.teiid.designer.core.ModelerCore.Util;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
-import org.teiid.designer.core.util.StringUtilities;
 
 public class TranslatorOverride {
 

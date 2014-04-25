@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.sqltools.editor.core.connection.ISQLEditorConnectionInfo;
 import org.eclipse.datatools.sqltools.internal.sqlscrapbook.SqlscrapbookPlugin;
@@ -22,7 +21,7 @@ import org.eclipse.datatools.sqltools.sqlscrapbook.actions.OpenScrapbookAction;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 
 

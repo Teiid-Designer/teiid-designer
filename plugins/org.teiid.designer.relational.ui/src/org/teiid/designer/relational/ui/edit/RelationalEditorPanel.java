@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.editor.EditRelationalObjectDialogModel;

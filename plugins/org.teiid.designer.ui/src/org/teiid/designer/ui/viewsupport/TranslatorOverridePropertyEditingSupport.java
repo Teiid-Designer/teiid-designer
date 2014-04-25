@@ -11,8 +11,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.ui.common.table.PropertyEditingSupport;
 
 

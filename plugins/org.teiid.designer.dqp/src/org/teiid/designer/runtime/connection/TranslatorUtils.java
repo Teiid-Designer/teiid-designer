@@ -3,11 +3,10 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorProperty;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;

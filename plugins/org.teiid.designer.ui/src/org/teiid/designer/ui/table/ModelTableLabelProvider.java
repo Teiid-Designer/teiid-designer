@@ -9,7 +9,7 @@ package org.teiid.designer.ui.table;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 

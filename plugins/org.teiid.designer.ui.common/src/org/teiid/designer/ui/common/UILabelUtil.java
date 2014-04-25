@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.ui.common;
 
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  *

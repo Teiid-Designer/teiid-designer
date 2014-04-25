@@ -2,13 +2,11 @@ package org.teiid.designer.runtime.connection;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
-
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.junit.Before;
 import org.junit.Test;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
 
 
