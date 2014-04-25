@@ -287,6 +287,23 @@ public class StringUtilities implements StringConstants {
         return (firstChar + value.substring(1));
     }
 
+    /**
+     * @param value
+     * @return CamelCase version of the given string, ie. converting '_' to capital letters as well
+     *                 as capitalising the first letter.
+     */
+    public static String toCamelCase( final String value ) {
+        StringBuffer sb = new StringBuffer();
+        for (String s : value.split(UNDERSCORE)) {
+            sb.append(Character.toUpperCase(s.charAt(0)));
+            if (s.length() > 1) {
+                sb.append(s.substring(1, s.length()).toLowerCase());
+            }
+        }
+
+        return sb.toString();
+    }
+
     private StringUtilities() {
     }
 }
