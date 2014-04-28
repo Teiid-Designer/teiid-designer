@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition.Type;
@@ -146,6 +145,15 @@ public interface Constants {
     String INVALID_PROPERTY_TYPE_MED_FILE_NAME = TESTDATA + File.separatorChar
             + "invalidPropertyType" + ExtensionConstants.DOT_MED_EXTENSION; //$NON-NLS-1$
 
+    String TEIID = "Teiid"; //$NON-NLS-1$
+
+    String TRANSLATORS = "Translators"; //$NON-NLS-1$
+
+    String JAVA = "java"; //$NON-NLS-1$
+
+    String ODATA_TRANSLATOR_SOURCE = TESTDATA + File.separatorChar + TEIID + "87" + TRANSLATORS + //$NON-NLS-1$
+            File.separatorChar + "ODataMetadataProcessor.java"; //$NON-NLS-1$
+
     public class Utils {
         public static Set<String> getExtendableMetamodelUris() {
             Set<String> metamodelUris = new HashSet<String>();
@@ -186,6 +194,31 @@ public interface Constants {
             translations.add(0, DEFAULT_TRANSLATIONS[0]);
             translations.add(DEFAULT_TRANSLATIONS[0]);
             return translations;
+        }
+
+        public static Collection<String> getTeiidTranslatorSources() {
+            List<String> teiidTranslators = new ArrayList<String>();
+            File testDataDir = new File(TESTDATA);
+            for (File dataSubDir : testDataDir.listFiles()) {
+                if (! dataSubDir.isDirectory())
+                    continue;
+
+                String dataSubDirName = dataSubDir.getName();
+                if (! dataSubDirName.startsWith(TEIID))
+                    continue;
+
+                if (! dataSubDirName.endsWith(TRANSLATORS))
+                    continue;
+
+                for (String testFile : dataSubDir.list()) {
+                    if (! testFile.endsWith(JAVA))
+                        continue;
+
+                    teiidTranslators.add(TESTDATA + File.separator + dataSubDirName + File.separator + testFile);
+                }
+            }
+
+            return teiidTranslators;
         }
     }
 

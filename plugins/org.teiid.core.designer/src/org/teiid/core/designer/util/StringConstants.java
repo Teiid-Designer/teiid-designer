@@ -40,6 +40,21 @@ public interface StringConstants {
     String COMMA = ","; //$NON-NLS-1$
 
     /**
+     * A Dot.
+     */
+    String DOT = "."; //$NON-NLS-1$
+
+    /**
+     * class extension
+     */
+    String CLASS = "class"; //$NON-NLS-1$
+
+    /**
+     * xml extension
+     */
+    String XML = "xml"; //$NON-NLS-1$
+
+    /**
      * The name of the System property that specifies the string that should be used to separate lines. This property is a standard
      * environment property that is usually set automatically.
      */
@@ -49,4 +64,5 @@ public interface StringConstants {
      * The String that should be used to separate lines; defaults to {@link #NEW_LINE}
      */
     String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, NEW_LINE);
+
 }
