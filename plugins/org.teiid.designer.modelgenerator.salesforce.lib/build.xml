@@ -41,22 +41,14 @@
 	</target>
 
 	<!--
-	   Test for existence of the generated sql parser class
-	-->
-	<target name="check-parser">
-		<available file="${sqlParser}" property="parser-present" />
-	</target>
-
-	<!--
 	   Check whether the libraries have already been downloaded and whether the
 	   parser classes have beeen generated. If either is not present then the
 	   'should-generate' property be set to the 'true'
 	-->
-	<target name="check-work" depends="check-libs, check-parser">
+	<target name="check-work" depends="check-libs">
 		<condition property="should-generate" value="true">
 			<or>
 				<isfalse value="${libs-present}" />
-				<isfalse value="${parser-present}" />
 			</or>
 		</condition>
 	</target>
@@ -72,10 +64,6 @@
 		<!-- Build the target platform and install it -->
 		<echo message="=== Installing target platform ===" />
 		<mvn dir="${GIT-HOME}/target-platform" args="install" />
-
-		<!-- Build the spi dependency and install it -->
-		<echo message="=== Installing the spi plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
 
 		<!-- Call the process sources goal and generate using javacc -->
 		<echo message="=== Generating external libraries ===" />
