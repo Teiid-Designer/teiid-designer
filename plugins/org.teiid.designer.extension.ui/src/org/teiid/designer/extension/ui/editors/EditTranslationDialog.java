@@ -21,6 +21,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -212,6 +216,36 @@ public class EditTranslationDialog extends FormDialog {
                     handleLocaleChanged(locales.get(index));
                 }
             });
+            
+            cbxLocales.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if( e.keyCode == 13) {
+						int index = ((CCombo)e.widget).getSelectionIndex();
+	                    handleLocaleChanged(locales.get(index));
+					}
+				}
+				
+				@Override
+				public void keyPressed(KeyEvent e) {
+				}
+			});
+            
+            cbxLocales.addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusLost(FocusEvent e) {
+                    int index = ((CCombo)e.widget).getSelectionIndex();
+                    if( ! locales.isEmpty() && index > 0 && index < locales.size()) {
+                    	handleLocaleChanged(locales.get(index));
+                    }
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+				}
+			});
 
             final LocaleProposalProvider proposalProvider = new LocaleProposalProvider(cbxLocales);
             proposalProvider.init();

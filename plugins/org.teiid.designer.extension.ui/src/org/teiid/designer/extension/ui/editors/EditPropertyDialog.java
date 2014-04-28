@@ -195,6 +195,9 @@ final class EditPropertyDialog extends FormDialog {
 
     private void addMessage(ErrorMessage errorMsg) {
         errorMsg.update(this.scrolledForm.getMessageManager());
+        if( errorMsg.isOk() ) {
+        	this.scrolledForm.setMessage(errorMsg.getMessage(),IMessageProvider.NONE);
+        }
     }
 
     private void configureColumn(TableViewerColumn viewerColumn,
