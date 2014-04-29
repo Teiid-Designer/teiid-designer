@@ -288,7 +288,7 @@ public class ImportWsdlSchemaHandler {
 		requestInfo.setTreeModel(this.requestSchemaTreeModel);
 		if (this.requestSchemaTreeModel.getNamespace()!=null){
 			try {
-				requestInfo.addNamespace((String)((ModelImpl)importManager.getWSDLModel()).getReverseNamespaces().get(this.requestSchemaTreeModel.getNamespace()), this.requestSchemaTreeModel.getNamespace());
+				requestInfo.addNamespace((String)((ModelImpl)importManager.getWSDLModel()).getNamespaces().get(this.requestSchemaTreeModel.getNamespace()), this.requestSchemaTreeModel.getNamespace());
 			} catch (ModelGenerationException ex) {
 				throw new RuntimeException(ex);
 			}

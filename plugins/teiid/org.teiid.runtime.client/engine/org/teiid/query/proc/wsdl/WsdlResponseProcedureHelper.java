@@ -117,9 +117,15 @@ public class WsdlResponseProcedureHelper extends AbstractWsdlHelper implements I
         //
 
         Map<String, String> namespaceMap = responseInfo.getNamespaceMap();
-        if (namespaceMap.isEmpty()) {
+        Object nsObject = responseInfo.getOperation().getBinding().getPort().getNamespaceURI();
+        if (namespaceMap.isEmpty() && nsObject==null) {
             return null;
         }
+        
+//        if (nsObject!=null){
+//        	namespaceMap.put();
+//        }
+//       
 
         StringBuffer sb = new StringBuffer();
 
@@ -161,7 +167,7 @@ public class WsdlResponseProcedureHelper extends AbstractWsdlHelper implements I
         //
         // CREATE VIRTUAL PROCEDURE
         // BEGIN
-        //     SELECT t.* FROM XMLTABLE(XMLNAMESPACES(DEFAULT
+        //  SELECT t.* FROM XMLTABLE(XMLNAMESPACES(DEFAULT
         // 'http://quickstart.samples/xsd'), '/getPriceResponse' PASSING xml_in
         // COLUMNS return_ double) AS t;
         // END
@@ -170,14 +176,14 @@ public class WsdlResponseProcedureHelper extends AbstractWsdlHelper implements I
         //
         // CREATE VIRTUAL PROCEDURE
         // BEGIN
-        //     SELECT t.* FROM
+        // SELECT t.* FROM
         // XMLTABLE( XMLNAMESPACES(DEFAULT
-        // 'http://www.oorsprong.org/websamples.countryinfo'), 
-        //           '/CapitalCityResponse' 
-        //                PASSING
-        // COUNTRYINFOSERVICEXML.CAPITALCITY.EXTRACT_CAPITALCITYRESPONSE.xml_in 
-        //                     COLUMNS CapitalCityResult string) 
-        //      AS t;
+        // 'http://www.oorsprong.org/websamples.countryinfo'),
+        //  '/CapitalCityResponse'
+        //  PASSING
+        // COUNTRYINFOSERVICEXML.CAPITALCITY.EXTRACT_CAPITALCITYRESPONSE.xml_in
+        //  COLUMNS CapitalCityResult string)
+        //  AS t;
         // END
         //
         // CREATE VIRTUAL PROCEDURE
