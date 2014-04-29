@@ -117,8 +117,8 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 		this.xmlAttribute = attribute;
 		this.xmlElement = attribute.getElement();
 		setRootPath(rootPath);
-		setRelativePathInternal(attribute);
 		initNameSymbol(xmlAttribute.getName());
+		setRelativePathInternal(attribute);
 		this.datatype = datatype;
 		this.defaultValue = StringUtilities.EMPTY_STRING;
 		validate();
