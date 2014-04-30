@@ -187,6 +187,7 @@ public class TeiidServerContainerNode<T extends ITeiidResourceNode> extends Teii
             clearError();
         } catch (Exception e) {
             setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(TeiidServerContainerNode.class.getSimpleName() + ".ServerContentLabelNotConnected"))); //$NON-NLS-1$
+            DqpPlugin.Util.log(e);
         }
     }
 
