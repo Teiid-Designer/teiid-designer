@@ -157,27 +157,25 @@ public final class ModelType implements Serializable {
         }
 
         /**
-         * @param s
-         * @return index of the given string once successfully parsed
+         * @param name
+         * @return the type with the given name
          */
-        public static int parseString(String s) {
-            if (! getNames().contains(s))
-                throw new IllegalArgumentException("Unknown model type"); //$NON-NLS-1$
+        public static Type getType(String name) {
+            name = name.toUpperCase();
 
-            Type type = Type.valueOf(s);
-            return type.getValue();
+            if (! getNames().contains(name))
+                throw new IllegalArgumentException(name + " is an unknown model type"); //$NON-NLS-1$
+
+            return Type.valueOf(name);
         }
 
         /**
-         * @param index
-         * @return literal for the given index
+         * @param name
+         * @return index of the given string once successfully parsed
          */
-        public static String getString(int index) {
-            Type[] enumValues = values();
-            if (index < 0 || index >= enumValues.length)
-                throw new IllegalArgumentException("Unknown model type"); //$NON-NLS-1$
-
-            return enumValues[index].getLiteral();
+        public static int parseString(String name) {
+            Type type = getType(name);
+            return type.getValue();
         }
 
         /**
@@ -187,9 +185,18 @@ public final class ModelType implements Serializable {
         public static Type getType(int index) {
             Type[] enumValues = values();
             if (index < 0 || index >= enumValues.length)
-                throw new IllegalArgumentException("Unknown model type"); //$NON-NLS-1$
+                throw new IllegalArgumentException(index + " denotes an unknown model type"); //$NON-NLS-1$
 
             return enumValues[index];
+        }
+
+        /**
+         * @param index
+         * @return literal for the given index
+         */
+        public static String getString(int index) {
+            Type type = getType(index);
+            return type.getLiteral();
         }
     }
 

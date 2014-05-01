@@ -40,6 +40,11 @@ public class TeiidPropertyDefinition {
     
     private final static String MASKED = "masked"; //$NON-NLS-1$
 
+    /*
+     * The owner or target / applicable property of the definition
+     */
+    private final static String OWNER = "owner"; //$NON-NLS-1$
+
     private Map<String, Object> properties = new HashMap<String, Object>();
     
     private <V> V getProperty(String key, Class<V> klazz) {
@@ -131,14 +136,14 @@ public class TeiidPropertyDefinition {
     /**
      * @return the allowedValues
      */
-    public Collection<Object> getAllowedValues() {
+    public Collection<String> getAllowedValues() {
         return getProperty(ALLOWED_VALUES, Collection.class);
     }
 
     /**
      * @param allowedValues the allowedValues to set
      */
-    public void setAllowedValues(Collection<Object> allowedValues) {
+    public void setAllowedValues(Collection<String> allowedValues) {
         setProperty(ALLOWED_VALUES, allowedValues);
     }
 
@@ -210,5 +215,19 @@ public class TeiidPropertyDefinition {
      */
     public void setMasked(boolean masked) {
         setProperty(MASKED, masked);
+    }
+
+    /**
+     * @return owner or target object type
+     */
+    public String getOwner() {
+        return getProperty(OWNER, String.class);
+    }
+
+    /**
+     * @param owner
+     */
+    public void setOwner(String owner) {
+        setProperty(OWNER, owner);
     }
 }

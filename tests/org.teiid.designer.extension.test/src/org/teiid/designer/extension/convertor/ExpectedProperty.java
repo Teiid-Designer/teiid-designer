@@ -7,25 +7,33 @@
 */
 package org.teiid.designer.extension.convertor;
 
+import org.teiid.designer.extension.convertor.MxdConstants.TargetObjectMappings;
+
 @SuppressWarnings( "javadoc" )
-public class ExpProperty {
+public class ExpectedProperty {
 
     private String name;
-    private String type;
-    private String displayName;
+    private TargetObjectMappings target;
+    private Class<?> type;
     private boolean advanced;
     private boolean index;
     private boolean masked;
     private boolean required;
+    private String displayName;
+    private String description;
 
-    public ExpProperty(String name, String type, String displayName, boolean advanced, boolean index, boolean masked, boolean required) {
+    public ExpectedProperty(String name, TargetObjectMappings target, Class<?> type,
+                            boolean advanced, boolean index, boolean masked, boolean required,
+                            String displayName, String description) {
         this.name = name;
+        this.target = target;
         this.type = type;
-        this.displayName = displayName;
         this.advanced = advanced;
         this.index = index;
         this.masked = masked;
         this.required = required;
+        this.displayName = displayName;
+        this.description = description;
     }
 
     /**
@@ -36,9 +44,16 @@ public class ExpProperty {
     }
 
     /**
+     * @return the mapping
+     */
+    public TargetObjectMappings getTarget() {
+        return this.target;
+    }
+
+    /**
      * @return the type
      */
-    public String getType() {
+    public Class<?> getType() {
         return this.type;
     }
 
@@ -47,6 +62,13 @@ public class ExpProperty {
      */
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return this.description;
     }
 
     /**

@@ -118,7 +118,7 @@ public class RegistryDeploymentValidator {
      * @param showInfoDialog flag indicates whether info dialog should be shown to user
      * @return the ModelExtensionDefinition, null if invalid
      */
-    private static ModelExtensionDefinition parseMed( InputStream mxdContents,
+    public static ModelExtensionDefinition parseMed( InputStream mxdContents,
                                                       boolean showInfoDialog ) {
         ModelExtensionDefinition med = null;
         try {
@@ -142,7 +142,7 @@ public class RegistryDeploymentValidator {
      * @param nsPrefix the ModelExtensionDefinition Namespace Prefix
      * @return the ModelExtensionDefinition, null if not found
      */
-    private static ModelExtensionDefinition getRegisteredMedWithNSPrefix( ModelExtensionRegistry registry,
+    public static ModelExtensionDefinition getRegisteredMedWithNSPrefix( ModelExtensionRegistry registry,
                                                                           String nsPrefix ) {
         return registry.getDefinition(nsPrefix);
     }
@@ -154,7 +154,7 @@ public class RegistryDeploymentValidator {
      * @param nsUri the ModelExtensionDefinition Namespace URI
      * @return the ModelExtensionDefinition, null if not found
      */
-    private static ModelExtensionDefinition getRegisteredMedWithNSUri( ModelExtensionRegistry registry,
+    public static ModelExtensionDefinition getRegisteredMedWithNSUri( ModelExtensionRegistry registry,
                                                                        String nsUri ) {
         return registry.getDefinitionWithNSUri(nsUri);
     }

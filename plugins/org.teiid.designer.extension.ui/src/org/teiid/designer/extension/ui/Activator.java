@@ -8,13 +8,11 @@
 package org.teiid.designer.extension.ui;
 
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.eclipse.ui.IWorkbenchPage;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
@@ -23,6 +21,7 @@ import org.teiid.core.designer.util.LoggingUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelRegistry;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.ui.server.TeiidInstanceMedListener;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 
@@ -31,6 +30,11 @@ import org.teiid.designer.ui.common.actions.ActionService;
  * 
  */
 public final class Activator extends AbstractUiPlugin {
+
+    /**
+     * The plug-in identifier of this plugin (value <code>"org.teiid.designer.transformation"</code>).
+     */
+    public static final String PLUGIN_ID = "org.teiid.designer.extension.ui"; //$NON-NLS-1$
 
     /**
      * The shared instance.
@@ -186,6 +190,10 @@ public final class Activator extends AbstractUiPlugin {
             }
             
         }
+
+        // Wire as listener to server manager and to receive configuration changes
+        TeiidInstanceMedListener listener = TeiidInstanceMedListener.getInstance();
+        ModelerCore.getTeiidServerManager().addListener(listener);
     }
 
 }

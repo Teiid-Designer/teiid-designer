@@ -7,13 +7,6 @@
 */
 package org.teiid.designer.extension.convertor;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Date;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -104,8 +97,6 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
-import org.teiid.core.designer.util.StringConstants;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.extension.convertor.mxd.DisplayType;
 import org.teiid.designer.extension.convertor.mxd.MetaclassType;
 import org.teiid.designer.extension.convertor.mxd.ObjectFactory;
@@ -114,116 +105,7 @@ import org.teiid.designer.extension.convertor.mxd.PropertyType;
 /**
  *
  */
-public class TranslatorAnnotationVisitor extends ASTVisitor implements StringConstants {
-
-    private static final String EXTENSION_METADATA_PROP = "ExtensionMetadataProperty"; //$NON-NLS-1$
-
-    private static final String DESIGNER_PACKAGE = "org.teiid.designer.metamodels.relational.impl"; //$NON-NLS-1$
-
-    private static final String IMPL = "Impl"; //$NON-NLS-1$
-
-    private enum AnnotationProperties {
-        APPLICABLE,
-
-        ADVANCED,
-
-        DATATYPE,
-
-        DISPLAY,
-
-        DESCRIPTION,
-
-        REQUIRED;
-
-        /**
-         * @return id
-         */
-        public Object getId() {
-            return name().toLowerCase();
-        }
-
-        /**
-         * @param id
-         * @return annotation with id
-         */
-        public static AnnotationProperties findKey(String id) {
-            for (AnnotationProperties property : AnnotationProperties.values()) {
-                if (property.getId().equals(id))
-                    return property;
-            }
-
-            throw new IllegalStateException("Annotation property with id " + id + " does not exist"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-    }
-
-    /**
-     * Maps the classes named in the applicable property of the Teiid
-     * annotations to the designers classes used in the mxd files
-     */
-    public enum NameMappings {
-
-        /**
-         * 
-         */
-        TABLE,
-
-        /**
-         * 
-         */
-        PROCEDURE,
-
-        /**
-         * 
-         */
-        COLUMN;
-
-        private String applicable;
-
-        private String mapping;
-
-        NameMappings() {
-            this.applicable = StringUtilities.upperCaseFirstChar(name().toLowerCase())
-                                                                                                    + DOT
-                                                                                                    + CLASS;
-            this.mapping = DESIGNER_PACKAGE + DOT + this.applicable + IMPL;
-        }
-
-        /**
-         * @param name
-         * @return true is name matches applicable
-         */
-        public boolean isApplicable(String name) {
-            return applicable.equals(name);
-        }
-
-        /**
-         * @return the mapping
-         */
-        public String getMapping() {
-            return this.mapping;
-        }
-    }
-
-    private static final String[] validDataTypes = new String[] {
-        BigInteger.class.getSimpleName().toLowerCase(),
-        BigDecimal.class.getSimpleName().toLowerCase(),
-        Blob.class.getSimpleName().toLowerCase(),
-        Boolean.class.getSimpleName().toLowerCase(),
-        Byte.class.getSimpleName().toLowerCase(),
-        char.class.getSimpleName().toLowerCase(),
-        Clob.class.getSimpleName().toLowerCase(),
-        Date.class.getSimpleName().toLowerCase(),
-        Double.class.getSimpleName().toLowerCase(),
-        Float.class.getSimpleName().toLowerCase(),
-        Integer.class.getSimpleName().toLowerCase(),
-        Long.class.getSimpleName().toLowerCase(),
-        Object.class.getSimpleName().toLowerCase(),
-        short.class.getSimpleName().toLowerCase(),
-        String.class.getSimpleName().toLowerCase(),
-        Time.class.getSimpleName().toLowerCase(),
-        Timestamp.class.getSimpleName().toLowerCase(),
-        XML.toLowerCase()
-    };
+public class TranslatorAnnotationVisitor extends ASTVisitor implements MxdConstants {
 
     private class Context {
 
@@ -297,15 +179,6 @@ public class TranslatorAnnotationVisitor extends ASTVisitor implements StringCon
         return Boolean.valueOf(value);
     }
 
-    private void validateDataType(String dataType) {
-        for (String valid : validDataTypes) {
-            if (valid.equals(dataType))
-                return;
-        }
-
-        throw new IllegalStateException("The data type " + dataType + " is not recognised"); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
     private MetaclassType getMetaclassType(String name) {
         if (name == null)
             throw new IllegalStateException("The MetaclassType name cannot be null"); //$NON-NLS-1$
@@ -316,12 +189,12 @@ public class TranslatorAnnotationVisitor extends ASTVisitor implements StringCon
              * <p:extendedMetaclass name="org.teiid.designer.metamodels.relational.impl.ColumnImpl">
              */
             metaclassType = factory.createMetaclassType();
-            if (NameMappings.TABLE.isApplicable(name))
-                metaclassType.setName(NameMappings.TABLE.getMapping());
-            else if (NameMappings.PROCEDURE.isApplicable(name))
-                metaclassType.setName(NameMappings.PROCEDURE.getMapping());
-            else if (NameMappings.COLUMN.isApplicable(name))
-                metaclassType.setName(NameMappings.COLUMN.getMapping());
+            if (TargetObjectMappings.TABLE.getAnnotationClass().equals(name))
+                metaclassType.setName(TargetObjectMappings.TABLE.getDesignerClass());
+            else if (TargetObjectMappings.PROCEDURE.getAnnotationClass().equals(name))
+                metaclassType.setName(TargetObjectMappings.PROCEDURE.getDesignerClass());
+            else if (TargetObjectMappings.COLUMN.getAnnotationClass().equals(name))
+                metaclassType.setName(TargetObjectMappings.COLUMN.getDesignerClass());
             else
                 throw new IllegalStateException("Unsupported MetaclassType " + name); //$NON-NLS-1$
 
@@ -410,7 +283,7 @@ public class TranslatorAnnotationVisitor extends ASTVisitor implements StringCon
             if (dataType != null) {
                 // Remove .class extension
                 dataType = dataType.toLowerCase().split("\\.")[0]; //$NON-NLS-1$
-                validateDataType(dataType);
+                ValidDataTypes.validateDataType(dataType);
                 propertyType.setType(dataType);
             }
 

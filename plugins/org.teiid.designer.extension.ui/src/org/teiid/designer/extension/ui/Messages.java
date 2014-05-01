@@ -361,6 +361,13 @@ public class Messages extends NLS {
 
     public static String metaclassNotFoundByProvider;
 
+    public static String analyseTranslatorsJob;
+    public static String errorOccurredAnalysingTranslators;
+    public static String teiidGeneratedMed;
+    public static String translatorExtensionConversionResult;
+    public static String failureToReceiveTranslators;
+    public static String parsingError;
+
     static {
         NLS.initializeMessages("org.teiid.designer.extension.ui.messages", Messages.class); //$NON-NLS-1$
     }

@@ -23,6 +23,8 @@ import org.teiid.core.designer.util.ModelType;
 import org.teiid.designer.extension.convertor.mxd.MetaclassType;
 import org.teiid.designer.extension.convertor.mxd.ModelExtension;
 import org.teiid.designer.extension.convertor.mxd.ObjectFactory;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
 
 /**
  *
@@ -71,6 +73,9 @@ public class MxdConvertor {
     }
 
     /**
+     * Reads a teiid annotated source file, ie. containing 'ExtensionMetadataProperty'
+     * annotations, parses the annotations and return a collection of {@link MetaclassType}s.
+     *
      * @param sourceFile
      * @return collection of {@link MetaclassType}
      * @throws IOException
@@ -87,6 +92,18 @@ public class MxdConvertor {
         cu.accept(visitor);
 
         return visitor.getMetaclasses();
+    }
+
+    /**
+     * Reads a set of teiid property definitions and returns a
+     * collection of {@link MetaclassType}s.
+     *
+     * @param extensions
+     * @return collection of {@link MetaclassType}
+     */
+    public Collection<MetaclassType> read(Collection<TeiidPropertyDefinition> extensions) {
+        TeiidPropertyDefinitionConvertor defnConvertor = new TeiidPropertyDefinitionConvertor();
+        return defnConvertor.getMetaclasses(extensions);
     }
 
     /**
@@ -128,4 +145,32 @@ public class MxdConvertor {
         marshaller.setProperty("jaxb.formatted.output",Boolean.TRUE); //$NON-NLS-1$
         marshaller.marshal(element, output);
     }
+
+    /**
+     * Convenience method uniting the {@link #read(Collection)} and
+     * {@link #write(String, org.teiid.core.designer.util.ModelType.Type, Collection, OutputStream)}
+     * functions for a single {@link ITeiidTranslator}.
+     *
+     * @param translator
+     * @param output the destination output stream of the resulting xml
+     * @return true if conversion was successful
+     *
+     * @throws Exception
+     */
+    public boolean convert(ITeiidTranslator translator, OutputStream output) throws Exception {
+        Collection<TeiidPropertyDefinition> extensions = translator.getExtensionPropertyDefinitions();
+        if (extensions == null || extensions.isEmpty())
+            return false;
+
+        String name = translator.getName();
+        try {
+            ModelType.Type modelType = ModelType.Type.PHYSICAL;
+            Collection<MetaclassType> metaClasses = read(extensions);
+            write(name, modelType, metaClasses, output);
+            return true;
+        } catch (IllegalArgumentException e) {
+            throw new Exception(e);
+        }
+    }
+
 }

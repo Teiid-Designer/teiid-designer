@@ -114,7 +114,7 @@ public class TeiidTranslator implements Comparable<TeiidTranslator>, ITeiidTrans
             teiidPropertyDefn.setAdvanced(propDefn.isAdvanced());
             teiidPropertyDefn.setRequired(propDefn.isRequired());
             teiidPropertyDefn.setMasked(propDefn.isMasked());
-            
+            teiidPropertyDefn.setOwner(propDefn.getPropertyValue("owner")); //$NON-NLS-1$
             this.extPropDefs.add(teiidPropertyDefn);
         }
     }
