@@ -67,7 +67,7 @@ public class PackageDiagramActionAdapter
 	private RenameAction renameAction;
 
     private AbstractAction saveDiagramAction;
-    
+
     private LockDiagramAction lockDiagramAction;
     
     // actions map is needed since we want to override the default print action

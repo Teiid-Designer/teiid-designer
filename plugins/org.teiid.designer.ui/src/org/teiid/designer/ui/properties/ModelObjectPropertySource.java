@@ -36,6 +36,7 @@ import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.properties.extension.ModelExtensionPropertySource;
 import org.teiid.designer.ui.properties.udp.ExtensionPropertySource;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
 
