@@ -111,12 +111,14 @@ public class EditTOPropertiesPanel {
                 }
             });
 
+            int visibleTableRows = 7;
             Table table = this.propertiesViewer.getTable();
             table.setHeaderVisible(true);
             table.setLinesVisible(true);
             table.setLayout(new TableLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).horizontalSpan = 2;
+            ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * visibleTableRows;
 
             // create columns
             TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
