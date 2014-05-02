@@ -10,14 +10,16 @@ package org.teiid.designer.vdb.ui.translators;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD_TRANSLATOR;
-import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT;
-import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE_TRANSLATOR;
+import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -55,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.ui.common.UiPlugin;
@@ -67,6 +69,7 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
+import org.teiid.designer.vdb.ui.editor.ConfirmationDialog;
 
 
 /**
@@ -77,6 +80,8 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
 public final class TranslatorOverridesPanel extends Composite {
 
     static final String PREFIX = I18nUtil.getPropertyPrefix(TranslatorOverridesPanel.class);
+    
+    static final String CONFIRM_REMOVE_MESSAGE = Util.getString(PREFIX + "confirmRemoveMessage"); //$NON-NLS-1$
     
     Button addPropertyButton;
     Button deletePropertyButton;
@@ -270,7 +275,9 @@ public final class TranslatorOverridesPanel extends Composite {
     			
     			@Override
     			public void widgetSelected(SelectionEvent e) {
-    				handleTranslatorRemoved();
+                    if (ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) {
+        				handleTranslatorRemoved();
+                    }
     			}
 
     			@Override
@@ -706,7 +713,7 @@ public final class TranslatorOverridesPanel extends Composite {
         ISelection selection = this.translatorsViewer.getSelection();
 
         if (selection.isEmpty()) {
-            this.txtDescription.setText(StringUtilities.EMPTY_STRING);
+            this.txtDescription.setText(StringConstants.EMPTY_STRING);
 
             if (this.txtDescription.isEnabled()) {
                 this.txtDescription.setEnabled(false);
