@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -61,6 +62,7 @@ public class EditTOPropertiesDialog extends TitleAreaDialog {
         
         Composite mainPanel = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().margins(20, 20).applyTo(mainPanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(mainPanel);
 
         this.setTitle(DqpUiConstants.UTIL.getString("EditTOPropertiesDialog.title")); //$NON-NLS-1$
         this.setMessage(DqpUiConstants.UTIL.getString("EditTOPropertiesDialog.message")); //$NON-NLS-1$
