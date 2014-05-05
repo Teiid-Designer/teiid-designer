@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.vdb.ui.editor.panels;
 
-import static org.teiid.designer.vdb.VdbPlugin.UTIL;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 import java.util.HashSet;
 import java.util.Set;
@@ -172,7 +171,7 @@ public class AddLanguagePropertyDialog extends MessageDialog {
             // make sure property ID doesn't already exist
             for (String existingName : this.existingNames) {
                 if (existingName.equals(this.name)) {
-                    errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
+                    errorMsg = Util.getString(PREFIX + "languageAlreadyExists", this.name); //$NON-NLS-1$
                     break;
                 }
             }
@@ -187,13 +186,13 @@ public class AddLanguagePropertyDialog extends MessageDialog {
     public String validateName( String proposedName ) {
         // must have a name
         if (StringUtilities.isEmpty(proposedName)) {
-            return UTIL.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyLanguageName"); //$NON-NLS-1$
         }
 
         // make sure only letters
         for (char c : proposedName.toCharArray()) {
             if (!Character.isLetter(c)) {
-                return UTIL.getString(PREFIX + "invalidPropertyName", proposedName); //$NON-NLS-1$
+                return Util.getString(PREFIX + "invalidLanguageName", proposedName); //$NON-NLS-1$
             }
         }
 
