@@ -10,12 +10,17 @@ package org.teiid.designer.vdb.ui.editor.panels;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -51,6 +56,8 @@ public class PropertiesPanel {
     
 
     ListViewer allowedLanguagesViewer;
+    List<String> languages = new ArrayList<String>();
+    
 	Button addLanguageButton;
 	Button removeLanguageButton;
 	
@@ -209,8 +216,28 @@ public class PropertiesPanel {
             data.horizontalSpan=2;
             this.allowedLanguagesViewer.getControl().setLayoutData(data);
             
+            this.allowedLanguagesViewer.setContentProvider(new IStructuredContentProvider() {
+            	@Override
+				public Object[] getElements(Object inputElement) {
+            		return ((List)inputElement).toArray();
+            	}
+
+            	@Override
+				public void dispose() {
+            	}
+
+            	@Override
+				public void inputChanged(
+            			Viewer viewer,
+            			Object oldInput,
+            			Object newInput) {
+            	}
+            });
+              
+            this.allowedLanguagesViewer.setInput(languages); 
+            
             for( String value : vdbEditor.getVdb().getAllowedLanguages() ) {
-            		this.allowedLanguagesViewer.add(value);
+            		this.languages.add(value);
             }
             
             this.allowedLanguagesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -224,6 +251,7 @@ public class PropertiesPanel {
                     handleLanguageSelected();
                 }
             });
+            this.allowedLanguagesViewer.refresh();
             
             Composite toolbarPanel = WidgetFactory.createPanel(languageGroup, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
             
@@ -302,7 +330,7 @@ public class PropertiesPanel {
             vdbEditor.getVdb().addAllowedLanguage(language);
 
             // update UI from model
-            this.allowedLanguagesViewer.add(language);
+            this.languages.add(language);
             
             this.allowedLanguagesViewer.refresh();
 
@@ -331,7 +359,7 @@ public class PropertiesPanel {
         // update model
         this.vdbEditor.getVdb().removeAllowedLanguage(selectedLanguage);
         
-        this.allowedLanguagesViewer.remove(selectedLanguage);
+        this.languages.remove(selectedLanguage);
         // update UI
         this.allowedLanguagesViewer.refresh();
     }
