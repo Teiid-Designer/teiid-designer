@@ -1,5 +1,7 @@
 package org.teiid.designer.runtime.ui.connection;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,8 +16,11 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -24,6 +29,9 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
+import org.teiid.designer.runtime.connection.TranslatorUtils;
+import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.IConnectionAction;
@@ -183,6 +191,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         private Text translatorField;
         
         private String translatorName;
+        
+        private Collection<String> translatorNames = new ArrayList<String>();
+        private Combo translatorNameCombo;
 
         //============================================================================================================================
         // Constructors
@@ -208,6 +219,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
          */
         @Override
         protected Control createDialogArea(final Composite parent) {
+        	ITeiidServer server = TranslatorUtils.getDefaultServer();
+        	boolean serverAvailable =  (server != null && server.isConnected());
+        	
             final Composite dlgPanel = (Composite)super.createDialogArea(parent);
             GridData pgd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
             pgd.minimumWidth = 400;
@@ -215,30 +229,89 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
             dlgPanel.setLayoutData(pgd);
             ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
             
-            Label msgLabel = WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.message")); //$NON-NLS-1$
+            String message = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.message"); //$NON-NLS-1$
+            if( serverAvailable ) {
+            	message = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.selectTranslatorMessage"); //$NON-NLS-1$
+            }
+            Label msgLabel = WidgetFactory.createLabel(dlgPanel, message);
             GridData gd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
             gd.horizontalSpan = 2;
             msgLabel.setLayoutData(gd);
             
-            WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.nameLabel") + SPACE); //$NON-NLS-1$
-            this.translatorField = WidgetFactory.createTextField(dlgPanel);
-            if( this.translatorName != null && this.translatorName.length() > 0 ) {
-            	this.translatorField.setText(this.translatorName);
+            
+            if( !serverAvailable ) {
+	            WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.nameLabel") + SPACE); //$NON-NLS-1$
+	            this.translatorField = WidgetFactory.createTextField(dlgPanel);
+	            if( this.translatorName != null && this.translatorName.length() > 0 ) {
+	            	this.translatorField.setText(this.translatorName);
+	            }
+	            this.translatorField.addModifyListener(new ModifyListener() {
+	    			
+	    			@Override
+	    			public void modifyText(ModifyEvent e) {
+	    				if( translatorField.getText() != null && translatorField.getText().length() > 0 ) {
+	    					getButton(IDialogConstants.OK_ID).setEnabled(true);
+	    					translatorName = translatorField.getText();
+	    				} else {
+	    					translatorName = ""; //$NON-NLS-1$
+	    					getButton(IDialogConstants.OK_ID).setEnabled(false);
+	    				}
+	    				
+	    			}
+	    		});
+            } else {
+            	// -------------------------------------
+                // Combo for Translator selection
+                // -------------------------------------
+
+                Label translatorLabel = new Label(dlgPanel,SWT.NONE);
+                translatorLabel.setText("Translator");
+                
+                /*
+                 * Refresh the list of currently available translators on the server
+                 */
+                try {
+                    translatorNames.clear();
+                    Collection<ITeiidTranslator> availableTranslators = TranslatorUtils.getTranslators();
+                    for(ITeiidTranslator translator: availableTranslators) {
+                        translatorNames.add(translator.getName());
+                    }
+                } catch (Exception ex) {
+                    translatorNames.clear();
+                    DqpUiPlugin.UTIL.log(ex);
+                }
+                
+                this.translatorNameCombo = WidgetFactory.createCombo(dlgPanel,
+                                                                         SWT.READ_ONLY,
+                                                                         GridData.FILL_HORIZONTAL,
+                                                                         translatorNames.toArray());
+				this.translatorNameCombo.setVisibleItemCount(8);
+				this.translatorNameCombo.addSelectionListener(new SelectionListener() {
+					
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+			            int selIndex = translatorNameCombo.getSelectionIndex();
+			            translatorName = translatorNameCombo.getItem(selIndex);
+					}
+					
+					@Override
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+				});
+		    	if( translatorName != null ) {
+		            // walk through the metamodel classes and select the matching type
+		            String[] names = translatorNameCombo.getItems();
+		            for (int i = 0; i < names.length; i++) {
+		                if (names[i].equalsIgnoreCase(translatorName)) {
+		                	translatorNameCombo.select(i);
+		                    break;
+		                }
+		            }
+		           
+		    	} else {
+		    		translatorNameCombo.select(-1);
+		    	}
             }
-            this.translatorField.addModifyListener(new ModifyListener() {
-    			
-    			@Override
-    			public void modifyText(ModifyEvent e) {
-    				if( translatorField.getText() != null && translatorField.getText().length() > 0 ) {
-    					getButton(IDialogConstants.OK_ID).setEnabled(true);
-    					translatorName = translatorField.getText();
-    				} else {
-    					translatorName = ""; //$NON-NLS-1$
-    					getButton(IDialogConstants.OK_ID).setEnabled(false);
-    				}
-    				
-    			}
-    		});
 
             return dlgPanel;
         }
@@ -251,7 +324,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         @Override
         public void create() {
             super.create();
-            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            getButton(IDialogConstants.OK_ID).setEnabled(this.translatorName != null);
         }
         
         /**<p>
