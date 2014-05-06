@@ -40,6 +40,8 @@ public class Messages  extends NLS {
 	public static String order;
 	public static String constraint;
 	public static String mask;
+	public static String options;
+	public static String mappedRoleNames;
 	public static String allowedLanguages;
 	public static String columnMasking;
 	public static String conditions;
