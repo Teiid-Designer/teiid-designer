@@ -694,6 +694,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
                 } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7.get())) {
                 	Collection<? extends PropertyDefinition> propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
+                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
                 } else { // TEIID SERVER VERSION 8.7 AND HIGHER
                 	Collection<? extends PropertyDefinition> propDefs  = 
                 			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
@@ -725,6 +726,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     /**
      * @param translator the translator whose properties are being changed (never <code>null</code>)
      * @param changedProperties a collection of properties that have changed (never <code>null</code> or empty)
+     * @param type the translator property type
      * @throws Exception if there is a problem changing the properties
      * @since 7.0
      */
@@ -751,6 +753,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @param translator the translator whose property is being changed (never <code>null</code>)
      * @param propName the name of the property being changed (never <code>null</code> or empty)
      * @param value the new value
+     * @param type the translator property type
      * @throws Exception if there is a problem setting the property
      * @since 7.0
      */
@@ -928,7 +931,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Removed(Version.TEIID_8_0)
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
-        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs"), getServer().getServerVersion()))
+        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs"), getServer().getServerVersion()))  //$NON-NLS-1$
             throw new UnsupportedOperationException(Messages.getString(Messages.ExecutionAdmin.mergeVdbUnsupported));
 
         admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
@@ -994,7 +997,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 }
                 
                 // Refreshes from adminApi
-                refresh();
+                refreshVDBs();
                 
                 // Get the VDB
                 ITeiidVdb vdb = getVdb(vdbName);
@@ -1011,7 +1014,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 }
             } while (System.currentTimeMillis() < waitUntil);
             
-            refresh();
+            refreshVDBs();
             return;
         }
 
