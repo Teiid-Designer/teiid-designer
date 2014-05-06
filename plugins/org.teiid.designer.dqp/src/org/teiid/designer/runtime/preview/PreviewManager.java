@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +24,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -95,6 +98,7 @@ import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
+import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -509,55 +513,59 @@ public final class PreviewManager extends JobChangeAdapter
         if (helper.hasConnectionInfo(modelResource)) {
         	// Get JBossDs JNDI name - if available, it is used
         	String srcJndiName = helper.getJndiProperty(modelResource);
-        	// JBossDs JNDI found - use it
-        	if(!CoreStringUtil.isEmpty(srcJndiName)) {
-        		modelEntry.setJndiName(0,srcJndiName);
-        	// Not found - default to original method
-        	} else {
-        		String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
-        		// create data source on server if we need to
-        		if (!previewServer.dataSourceExists(jndiName)) {
-        			TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
-        			ITeiidDataSource theDataSource = null;
-        			try {
-        				theDataSource = factory.createDataSource(previewServer, model, jndiName, true);
-					} catch (TeiidExecutionException ex) {
-						switch( ex.getCode() ) {
-							case ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND: {
-								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
-							} break;
-							case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER: {
-								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);						
-							} break;
-							case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED: {
-								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
-							} break;
-							
-							default: break;
+        	String translatorName = helper.getTranslatorName(modelResource);
+        	
+        	if( ! DataSourceConnectionConstants.Translators.LOOPBACK.equals(translatorName) ) {
+	        	// JBossDs JNDI found - use it
+	        	if(!CoreStringUtil.isEmpty(srcJndiName)) {
+	        		modelEntry.setJndiName(0,srcJndiName);
+	        	// Not found - default to original method
+	        	} else {
+	        		String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
+	        		// create data source on server if we need to
+	        		if (!previewServer.dataSourceExists(jndiName)) {
+	        			TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
+	        			ITeiidDataSource theDataSource = null;
+	        			try {
+	        				theDataSource = factory.createDataSource(previewServer, model, jndiName, true);
+						} catch (TeiidExecutionException ex) {
+							switch( ex.getCode() ) {
+								case ITeiidDataSource.ERROR_CODES.JDBC_DRIVER_SOURCE_NOT_FOUND: {
+									connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
+								} break;
+								case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_TYPE_DOES_NOT_EXIST_ON_SERVER: {
+									connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);						
+								} break;
+								case ITeiidDataSource.ERROR_CODES.DATA_SOURCE_COULD_NOT_BE_CREATED: {
+									connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, ex.getMessage(), null);
+								} break;
+								
+								default: break;
+							}
 						}
-					}
-        			if( theDataSource instanceof FailedTeiidDataSource ) {
-        				FailedTeiidDataSource fds = (FailedTeiidDataSource)theDataSource;
-        				
-        				switch( fds.getReasonCode() ) {
-	        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROVIDER: {
-	        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
-										"No connection provider associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
-							} break;
-	        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROFILE_DEFINED_IN_MODEL: {
-	        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
-										"No connection profile associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
-							} break;
-	        				case ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE: {
-								connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
-										"No Teiid connection properties associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
-							} break;
-        				}
-        			}
-        		}
-                if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
-                    modelEntry.setJndiName(0, jndiName);
-                }
+	        			if( theDataSource instanceof FailedTeiidDataSource ) {
+	        				FailedTeiidDataSource fds = (FailedTeiidDataSource)theDataSource;
+	        				
+	        				switch( fds.getReasonCode() ) {
+		        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROVIDER: {
+		        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+											"No connection provider associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+								} break;
+		        				case ITeiidDataSource.ERROR_CODES.NO_CONNECTION_PROFILE_DEFINED_IN_MODEL: {
+		        					connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+											"No connection profile associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+								} break;
+		        				case ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE: {
+									connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, 
+											"No Teiid connection properties associated with model: '" + fds.getModelName() + "'. Could not create data source",  null);
+								} break;
+	        				}
+	        			}
+	        		}
+	                if (!jndiName.equals(getSourceJndiName(modelEntry)) ) {
+	                    modelEntry.setJndiName(0, jndiName);
+	                }
+	        	}
         	}
         } else {
             connectionInfoError = new Status(IStatus.ERROR, PLUGIN_ID, NLS.bind(Messages.ModelDoesNotHaveConnectionInfoError,
@@ -566,22 +574,23 @@ public final class PreviewManager extends JobChangeAdapter
 
         // If modelEntry translator name is null (or 'loopback'), see if it can be overridden.
         //   - need to check for loopback, since it may be used for default (see below)
-        String srcTranslatorName = getSourceTranslatorName(modelEntry);
-        if ( CoreStringUtil.isEmpty(srcTranslatorName) || srcTranslatorName.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK) ) {
-        	String translator = helper.getTranslatorName(modelResource);
-        	if(!CoreStringUtil.isEmpty(translator) && !translator.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK)) {
-        		modelEntry.setTranslatorName(0, translator);
-        	} else {
-        		IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
+        String vdbSrcTranslatorName = getSourceTranslatorName(modelEntry);
+        String resourceTranslatorName = helper.getTranslatorName(modelResource);
+        boolean modelEntryHasLoopback = CoreStringUtil.isEmpty(vdbSrcTranslatorName) || vdbSrcTranslatorName.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK);
+        boolean resourceHasLoopback = !CoreStringUtil.isEmpty(resourceTranslatorName) && resourceTranslatorName.equalsIgnoreCase(DataSourceConnectionConstants.Translators.LOOPBACK);
+        
+        // ONLY check for connection profile if resource translator AND vdb model entry translator are not both LOOPBACK
+        // If not, then check for connection profile. If no profile, then use loopback. if Profile, then get the translator from the profile.
+        if ( modelEntryHasLoopback && !resourceHasLoopback) {
+    		IConnectionProfile connectionProfile = helper.getConnectionProfile(modelResource);
 
-        		// get translator
-        		if (connectionProfile == null) {
-        			// Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
-        			modelEntry.setTranslatorName(0, DataSourceConnectionConstants.Translators.LOOPBACK);
-        		} else {
-        			modelEntry.setTranslatorName(0, JdbcTranslatorHelper.getTranslator(connectionProfile));
-        		}
-        	}
+    		// get translator
+    		if (connectionProfile == null) {
+    			// Teiid throws an error when deploying VDB if translator is not set so set to LOOPBACK as default
+    			modelEntry.setTranslatorName(0, DataSourceConnectionConstants.Translators.LOOPBACK);
+    		} else {
+    			modelEntry.setTranslatorName(0, JdbcTranslatorHelper.getTranslator(connectionProfile));
+    		}
         }
 
         return ((connectionInfoError == null) ? Status.OK_STATUS : connectionInfoError);
