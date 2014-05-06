@@ -3,10 +3,17 @@ package org.teiid.designer.runtime.connection;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.translators.TranslatorOverride;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
@@ -188,5 +195,69 @@ public class TranslatorUtils {
         }
 
         return props.toArray(new PropertyDefinition[props.size()]);
+    }
+    
+    public static TranslatorOverride createOverride(String type, Properties properties, ITeiidTranslator.TranslatorPropertyType defType) {
+    	
+    	TranslatorOverride override = new TranslatorOverride(type, properties);
+        PropertyDefinition[] propertyDefinitionsFromServer = getTranslatorPropertyDefinitions(type, defType);
+
+        if (propertyDefinitionsFromServer != null) {
+            List<PropertyDefinition> newServerProps = new ArrayList<PropertyDefinition>();
+
+            // assume all server properties are new
+            for (PropertyDefinition propDefn : propertyDefinitionsFromServer) {
+            	//System.out.println("propDefn ID = " + propDefn.getId() + " Display Name = " + propDefn.getDisplayName());
+                newServerProps.add(propDefn);
+            }
+
+            if (!properties.isEmpty()) {
+                // translator properties already exist, match with server props
+                for (Object key : properties.keySet()) {
+                	String keyStr = (String)key;
+                	String value = (String)properties.get(key);
+                	
+                    PropertyDefinition serverPropDefn = null;
+
+                    // see if property definitions from server already exist in overridden translator
+                    for (PropertyDefinition propDefn : propertyDefinitionsFromServer) {
+                        // found a matching one
+                        if (keyStr.equals(propDefn.getId())) {
+                            serverPropDefn = propDefn;
+                            newServerProps.remove(serverPropDefn); // Remove it from cached list
+                            break;
+                        }
+                    }
+
+                    if (serverPropDefn != null) {
+                    	TranslatorOverrideProperty newProp = new TranslatorOverrideProperty(new TranslatorPropertyDefinition(serverPropDefn), value);
+                        // found existing property so update defn and use value from old defn
+                    	override.addProperty(newProp);
+                    }
+                }
+            }
+            
+            for (PropertyDefinition propDefn : newServerProps) {
+            	override.addProperty(new TranslatorOverrideProperty(new TranslatorPropertyDefinition(propDefn), null));
+            }
+        }
+        
+        return override;
+    }
+    
+    public static Collection<ITeiidTranslator> getTranslators() {
+    	Collection<ITeiidTranslator> translators = Collections.emptyList();
+    	
+        ITeiidServer defaultServer = getDefaultServer();
+
+        if ((defaultServer != null) && defaultServer.isConnected()) {
+        	try {
+				translators = defaultServer.getTranslators();
+			} catch (Exception e) {
+				 DqpPlugin.Util.log(IStatus.ERROR, e, "Error retrieving translators for the server: " + defaultServer.getDisplayName());
+			}
+        }
+        
+        return translators;
     }
 }
