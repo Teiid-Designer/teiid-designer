@@ -982,10 +982,22 @@ public class IntermediateFormat {
             if (name == null) {
                 DdlPlugin.Util.log(IStatus.WARNING, DdlPlugin.Util.getString("IntermediateFormat.0", entity)); //$NON-NLS-1$
                 return getObjectNameInDdl(entity);
+            } else {
+            	name = getRealName((String)name);
             }
             return (String)name;
         }
         return getObjectNameInDdl(entity);
+    }
+    
+    private String getRealName(String value) {
+    	// looking for "PRIMARY"3 type values
+    	// strip off the integer at end
+    	if( value.indexOf('"') == 0) {
+    		int lastQuoteIndex = value.lastIndexOf('"');
+    		return value.substring(0, lastQuoteIndex+1);
+    	}
+    	return value;
     }
 
 }

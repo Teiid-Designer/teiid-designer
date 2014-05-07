@@ -24,6 +24,10 @@
   <xsl:variable name="line-feed">
   	 <xsl:text>&#x0a;</xsl:text>
   </xsl:variable>
+  
+    <xsl:variable name="primary-name">
+  	 <xsl:text>&#34;PRIMARY&#34;</xsl:text>
+  </xsl:variable>
 
 <!--
   ************************************************************************
@@ -372,18 +376,31 @@ CREATE TABLE </xsl:text><xsl:value-of select="@name"/><xsl:text>
 <xsl:text>
 ALTER TABLE </xsl:text>
 <xsl:value-of select="@tableName"/>
-<xsl:text>
-  ADD CONSTRAINT </xsl:text>
-<xsl:value-of select="@name"/>
-<xsl:text>
-    PRIMARY KEY (</xsl:text>
-	<xsl:for-each select="./column">
-		<xsl:value-of select="@name"/>
-		<xsl:if test="position() != last()">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
-	</xsl:for-each>
-<xsl:text>)</xsl:text> 
+<xsl:if test="@name=$primary-name">
+	<xsl:text>
+	    ADD PRIMARY KEY (</xsl:text>
+		<xsl:for-each select="./column">
+			<xsl:value-of select="@name"/>
+			<xsl:if test="position() != last()">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	<xsl:text>)</xsl:text> 
+</xsl:if>
+<xsl:if test="@name!=$primary-name">
+	<xsl:text>
+	  ADD CONSTRAINT </xsl:text>
+	<xsl:value-of select="@name"/>
+	<xsl:text>
+	    PRIMARY KEY (</xsl:text>
+		<xsl:for-each select="./column">
+			<xsl:value-of select="@name"/>
+			<xsl:if test="position() != last()">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+	<xsl:text>)</xsl:text>
+</xsl:if>
 <xsl:value-of select="$terminationString"/>
 <xsl:value-of select="$line-feed"/>
 </xsl:template>
