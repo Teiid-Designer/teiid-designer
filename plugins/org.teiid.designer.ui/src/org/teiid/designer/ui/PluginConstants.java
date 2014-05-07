@@ -124,6 +124,8 @@ public interface PluginConstants {
 
         String TEIID_SERVER_DEFAULT_ICON = CVIEW16 + "teiid-server-default.png"; //$NON-NLS-1$
         String TEIID_SERVER_DISCONNECTED_ICON = CVIEW16 + "teiid-server-disconnected.png"; //$NON-NLS-1$
+        String JBOSS_SERVER_STOPPED_ICON = CVIEW16 + "jboss-stopped.png"; //$NON-NLS-1$
+        String JBOSS_SERVER_STARTED_ICON = CVIEW16 + "jboss-started.png"; //$NON-NLS-1$
         
         String NEW_WIZARD_ICON = OBJ16 + "new-wizard.png"; //$NON-NLS-1$
         String NEW_MODEL_PROJECT_ICON = OBJ16 + "new-model-project.png"; //$NON-NLS-1$

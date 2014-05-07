@@ -96,8 +96,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
     private ProgressBar progressBar;
 
-    private Text customNameText;
-
     private Label jbServerNameLabel;
 
     private Label hostNameLabel;
@@ -345,14 +343,15 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         Composite composite = toolkit.createComposite(section);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(5, 10).spacing(5, 20).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
+
+        Label jbLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
+        blueForeground(jbLabel);
         
-        Label customNameLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.customLabel")); //$NON-NLS-1$
-        blueForeground(customNameLabel);
-        
-        customNameText = toolkit.createText(composite, teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(customNameText);
-        customNameText.addKeyListener(dirtyKeyListener);
-        
+        String jbServerName = parentServer != null ? parentServer.getName() : ""; //$NON-NLS-1$
+        jbServerNameLabel = toolkit.createLabel(composite, jbServerName);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(jbServerNameLabel);
+        blueForeground(jbServerNameLabel);
+
         Label hostLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.hostLabel")); //$NON-NLS-1$
         blueForeground(hostLabel);
         
@@ -396,14 +395,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
         // Can only edit if teiid server has been stopped
         versionValueCombo.setEnabled(! teiidServer.isConnected());
-
-        Label jbLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerOverviewSection.jbLabel")); //$NON-NLS-1$
-        blueForeground(jbLabel);
-        
-        String jbServerName = parentServer != null ? parentServer.getName() : ""; //$NON-NLS-1$
-        jbServerNameLabel = toolkit.createLabel(composite, jbServerName);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(jbServerNameLabel);
-        blueForeground(jbServerNameLabel);
 
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
@@ -565,7 +556,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         if (teiidServer == null || form.isDisposed())
             return;
 
-        customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
         hostNameLabel.setText(teiidServer.getHost());
         versionValueCombo.setText(teiidServer.getServerVersion().toString());
         // Can only edit if teiid server has been stopped
@@ -621,8 +611,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     
     @Override
     public void setFocus() {
-        if(customNameText != null && ! customNameText.isDisposed()) {
-            customNameText.setFocus();
+        if(versionValueCombo != null && ! versionValueCombo.isDisposed()) {
+        	versionValueCombo.setFocus();
         }
     }
 
@@ -636,7 +626,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             newTeiidServerVersion = new TeiidServerVersion(versionValueCombo.getText());
 
         // Overwrite the properties of the Teiid Instance
-        teiidServer.setCustomLabel(customNameText.getText());
 
         TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
 

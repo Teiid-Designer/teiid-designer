@@ -66,6 +66,12 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
     IServer getParent();
 
     /**
+     * Get the parent server name
+     * @return the parent serverName
+     */
+    String getParentName();
+
+    /**
      * @return <code>true</code> if a connection to this server exists and is working
      */
     boolean isConnected();
