@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -67,6 +68,7 @@ import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -115,7 +117,7 @@ public final class NewVdbWizard extends AbstractWizard
     static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
     static final String SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES = VdbUiConstants.Util.getString("selectedModelsAndDependenciesContainDuplicateNamesMessage"); //$NON-NLS-1$
-    
+    static final String ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE = VdbUiConstants.Util.getString("selectedModelsAreInDifferentProjectsMessage"); //$NON-NLS-1$
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
 
@@ -170,6 +172,20 @@ public final class NewVdbWizard extends AbstractWizard
                 }
             }
             
+            // Need to check if all selections in PROJECT
+            IProject targetProject = null;
+            for (int ndx = selection.length; --ndx >= 0;) {
+            	Object obj = selection[ndx];
+            	if( obj instanceof IFile ) {
+            		IProject proj = ((IFile)obj).getProject();
+            		
+            		if( targetProject == null ) {
+            			targetProject = proj;
+            		} else if( proj != targetProject ) {
+            			return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE, null);
+            		}
+            	}
+            }
             return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
         }
     };
@@ -391,6 +407,7 @@ public final class NewVdbWizard extends AbstractWizard
         WidgetFactory.createLabel(mainPanel, FOLDER_LABEL);
         final String name = (this.folder == null ? null : this.folder.getFullPath().makeRelative().toString());
         this.folderText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, name, SWT.READ_ONLY);
+        this.folderText.setBackground(getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         this.folderText.addModifyListener(new ModifyListener() {
             @Override
 			public void modifyText( final ModifyEvent event ) {
@@ -525,8 +542,13 @@ public final class NewVdbWizard extends AbstractWizard
             public boolean select( final Viewer viewer,
                                    final Object parent,
                                    final Object element ) {
-                if (element instanceof IContainer) 
+
+                if (element instanceof IContainer) {
+                	if( folder != null ) {
+                		return (folder.getProject() == element );
+                	}
                 	return true;
+                }
                 
                 final IFile file = (IFile)element;
                 
@@ -549,6 +571,10 @@ public final class NewVdbWizard extends AbstractWizard
 	
 	void addModels(Object[] models) {
 		for( Object model : models) {
+			if( this.folder == null ) {
+				this.folder = ((IFile)model).getProject();
+				this.folderText.setText(folder.getFullPath().makeRelative().toString());
+			}
 			if( !modelsForVdb.contains(model) ) {
 				modelsForVdb.add((IResource)model);
 			}
