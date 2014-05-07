@@ -104,9 +104,9 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     /**
      * Create a new instance with the given version segments
      * 
-     * @param major
-     * @param minor
-     * @param micro
+     * @param major the major version
+     * @param minor the minor version
+     * @param micro the micro version
      */
     public TeiidServerVersion(String major, String minor, String micro) {
         if (major == null)
@@ -127,7 +127,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     /**
      * Create a new instance with the given version string
      * 
-     * @param versionString
+     * @param versionString the version string
      */
     public TeiidServerVersion(String versionString) {
         this.versionString = versionString;
@@ -137,7 +137,14 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         if (tokens.length >= 3) {
             majorVersion = tokens[0];
             minorVersion = tokens[1];
-            microVersion = tokens[2];
+            if(tokens[2]!=null) {
+            	int dashIndex = tokens[2].indexOf('-');
+            	if(dashIndex!=-1 && tokens[2].length()>0) {
+            		microVersion = tokens[2].substring(0,dashIndex);
+            	} else {
+                    microVersion = tokens[2];
+            	}
+            }
         }
         else if(tokens.length == 2) {
             majorVersion = tokens[0];
@@ -146,6 +153,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         else {
             majorVersion = tokens[0];
         }
+        this.versionString = majorVersion + DOT + minorVersion + DOT + microVersion;
     }
 
     /**

@@ -522,6 +522,11 @@ public class TeiidServer implements ITeiidServer {
 		return Status.OK_STATUS;
     }
 
+    @Override
+	public String getParentName() {
+    	return this.parentServer.getName();
+    }
+    
     /**
      * {@inheritDoc}
      * 
@@ -530,13 +535,7 @@ public class TeiidServer implements ITeiidServer {
     @Override
     public String toString() {
         String txt = Util.getString("serverToStringWithNoCustomLabel", //$NON-NLS-1$
-                                    getUrl(),
-                                    getTeiidAdminInfo().getUsername(),
                                     parentServer.getName());
-
-        if (this.customLabel != null) {
-            txt = Util.getString("serverToStringWithCustomLabel", this.customLabel, txt); //$NON-NLS-1$
-        }
 
         return txt;
     }

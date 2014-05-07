@@ -108,7 +108,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
                  * unchanged message should be clarified slightly.
                  */
                 message = UTIL.getString("defaultServerUnchangedMessage1Server", //$NON-NLS-1$
-                                                            currentDefaultServer.getDisplayName());
+                                                            currentDefaultServer.getParentName());
             }
             else {
                 /*
@@ -116,7 +116,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
                  * than change it
                  */
                 message = UTIL.getString("defaultServerUnchangedMessageMultiServer", //$NON-NLS-1$
-                                                            currentDefaultServer.getDisplayName());
+                                                            currentDefaultServer.getParentName());
             }
 
             MessageDialog.openInformation(getShell(), title, message);
@@ -144,7 +144,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         if( currentDefaultServer!=null && currentDefaultServer.isConnected() ) {
 	    	disconnectOldDefault = MessageDialog.openQuestion(getShell(), 
 	    			UTIL.getString("setDefaultServerActionDisconnectOldTitle"),  //$NON-NLS-1$
-	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getDisplayName())); //$NON-NLS-1$
+	    			UTIL.getString("setDefaultServerActionDisconnectOldMessage", currentDefaultServer.getParentName())); //$NON-NLS-1$
     	}
     	if( disconnectOldDefault ) {
     		currentDefaultServer.disconnect();
@@ -159,7 +159,7 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
          * If the new default teiid instance is connected then reconnect it to 
          * clear out any caches.
          */
-        if( this.selectedServer.isConnected() ) {
+        if( this.selectedServer.isParentConnected() ) {
         	final ITeiidServer theNewDefaultServer = this.selectedServer;
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
 
@@ -175,7 +175,8 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         }
         
         String title = UTIL.getString("defaultServerChangedTitle"); //$NON-NLS-1$
-        String message = UTIL.getString("defaultServerChangedMessage", selectedServer.getDisplayName()); //$NON-NLS-1$
+        String serverName = selectedServer.getParentName();
+        String message = UTIL.getString("defaultServerChangedMessage", serverName); //$NON-NLS-1$
         MessageDialog.openInformation(getShell(), title, message);
     }
 
