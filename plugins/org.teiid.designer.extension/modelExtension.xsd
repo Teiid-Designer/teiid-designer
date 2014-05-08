@@ -26,6 +26,28 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
+                <!-- <xs:element name="teiidVersion" minOccurs="1">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation>Version of the teiid instance that this extension med is installed on</xs:documentation>
+                        </xs:annotation>
+                        <xs:attribute name="major" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>The major version component.</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="minor" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>The minor version component.</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="micro" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>The micro version component.</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element> -->
 				<xs:element name="extendedMetaclass" type="metaclassType" maxOccurs="unbounded">
 					<xs:annotation>
 						<xs:documentation>One or more metaclasses being extended by this model extension.</xs:documentation>

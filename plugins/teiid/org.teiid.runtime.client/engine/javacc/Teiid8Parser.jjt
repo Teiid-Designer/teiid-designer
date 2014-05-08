@@ -181,9 +181,15 @@ public class Teiid8Parser extends AbstractTeiidParser {
     }
 
     private void requires(boolean condition) throws ParseException {
-      if (!condition)
-        throw new ParseException(Messages.getString(
+        if (!condition)
+            throw new ParseException(Messages.getString(
                 Messages.TeiidParser.teiid_version_failure, getVersion().toString()));
+    }
+
+    private void requiresVersionAtLeast(Version version) throws ParseException {
+        if (! versionAtLeast(version))
+            throw new ParseException(Messages.getString(
+                Messages.TeiidParser.teiid_version_atleast_failure, version.get().toString(), getVersion().toString()));
     }
 
 } // end class
@@ -942,7 +948,7 @@ Command userCommand(ParseInfo info) :
 	command = alter(info) |
 	command = createTrigger(info) |
 	{
-      requires(versionAtLeast(Version.TEIID_8_5));
+      requiresVersionAtLeast(Version.TEIID_8_5);
     }
     block = compoundStatement(info)
     {
@@ -999,7 +1005,7 @@ Command createTempTable(ParseInfo info) #Create :
     <TEMPORARY>
     {
       if(! localToken)
-        // LOCAL is only optional for Teiid 8.5+        requires(versionAtLeast(Version.TEIID_8_5));
+        // LOCAL is only optional for Teiid 8.5+        requiresVersionAtLeast(Version.TEIID_8_5);
     }
     <TABLE>
     table = id(null)
@@ -2139,7 +2145,7 @@ QueryCommand queryPrimary(ParseInfo info) :
          <RPAREN> 
           (<COMMA> <LPAREN> expr = expressionList(info) 
            {
-             requires(versionAtLeast(Version.TEIID_8_6));
+             requiresVersionAtLeast(Version.TEIID_8_6);
 
              select = createASTNode(ASTNodes.SELECT);
              select.setSymbols(expr);
@@ -2872,7 +2878,7 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 	  (
         <FOR> <ORDINALITY> 
         {
-          requires(versionAtLeast(Version.TEIID_8_7));
+          requiresVersionAtLeast(Version.TEIID_8_7);
           jjtThis.setOrdinal(true);
           return jjtThis; 
         }
@@ -3747,7 +3753,7 @@ GroupBy groupBy(ParseInfo info) #GroupBy :
       expressions = expressionList(info)
       <RPAREN>
       {
-        requires(versionAtLeast(Version.TEIID_8_5));
+        requiresVersionAtLeast(Version.TEIID_8_5);
         rollup = true;
       }
       |
@@ -4238,7 +4244,7 @@ Expression nestedExpression(ParseInfo info) :
     ( <LPAREN> 
         [expression = expression(info)
         (LOOKAHEAD(2) <COMMA>arrayExpression = expression(info) {
-          requires(versionAtLeast(Version.TEIID_8_5));
+          requiresVersionAtLeast(Version.TEIID_8_5);
           if (expression != null) {
              arrayExpressions = arrayExpressions(arrayExpressions, expression);
              expression = null;
@@ -4246,7 +4252,7 @@ Expression nestedExpression(ParseInfo info) :
           arrayExpressions = arrayExpressions(arrayExpressions, arrayExpression);})*]
         [<COMMA>
           {
-            requires(versionAtLeast(Version.TEIID_8_5));
+            requiresVersionAtLeast(Version.TEIID_8_5);
             arrayExpressions = arrayExpressions(arrayExpressions, expression);
           } ]
       <RPAREN>
@@ -4572,7 +4578,7 @@ Expression function(ParseInfo info) #Function :
 		}
 		[<COMMA> expression = expression(info)
 		 {
-		   requires(versionAtLeast(Version.TEIID_8_6));
+		   requiresVersionAtLeast(Version.TEIID_8_6);
 		   args.add(expression);
 		 }
 		]
@@ -5000,7 +5006,7 @@ ParsedDataType parseDataType() :
 }
 {
     type = parseDataTypePrimary()
-    (<LSBRACE><RSBRACE> {requires(versionAtLeast(Version.TEIID_8_5)); arraySuffixes++;})*
+    (<LSBRACE><RSBRACE> {requiresVersionAtLeast(Version.TEIID_8_5); arraySuffixes++;})*
     {
         if (arraySuffixes > 0) {
            type.setType(type.getType() + StringUtil.join(Collections.nCopies(arraySuffixes, "[]"), ""));
@@ -5342,7 +5348,7 @@ void createTable(MetadataFactory factory) :
 	<CREATE> (
         (<FOREIGN> <TABLE>) | 
         ([<VIRTUAL>] <VIEW> {view = true;}) |
-        (<GLOBAL> <TEMPORARY> <TABLE> { requires(versionAtLeast(Version.TEIID_8_5)); globalTemp = true; view = true;})
+        (<GLOBAL> <TEMPORARY> <TABLE> { requiresVersionAtLeast(Version.TEIID_8_5); globalTemp = true; view = true;})
     )
 
 	tableName = id(null)
@@ -5579,7 +5585,7 @@ void createColumn(MetadataFactory factory, Table table) :
 	 (
        <SERIAL>
        {
-         requires(versionAtLeast(Version.TEIID_8_5));
+         requiresVersionAtLeast(Version.TEIID_8_5);
          type = new ParsedDataType("INTEGER");
          autoIncrement = true;
          notNull = true;

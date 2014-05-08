@@ -363,7 +363,8 @@ public class Messages {
         udt_format_wrong,
         proc_type_conflict,
         param_out,
-        teiid_version_failure;
+        teiid_version_failure,
+        teiid_version_atleast_failure;
         
         @Override
         public String toString() {
