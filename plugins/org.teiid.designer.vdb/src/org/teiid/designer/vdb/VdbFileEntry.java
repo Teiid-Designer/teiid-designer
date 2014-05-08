@@ -16,7 +16,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.vdb.manifest.EntryElement;
 
 
@@ -55,7 +56,7 @@ public final class VdbFileEntry extends VdbEntry {
      * @param entryType the type of FileEntry
      * @param monitor the progress monitor or <code>null</code>
      */
-    VdbFileEntry( final Vdb vdb,
+    public VdbFileEntry( final Vdb vdb,
                   final IPath sourcePath,
                   final FileEntryType entryType,
                   final IProgressMonitor monitor ) {
@@ -83,9 +84,9 @@ public final class VdbFileEntry extends VdbEntry {
         super(vdb, Path.fromPortableString(element.getPath()), monitor);
         
         this.sourceFilePath = Path.fromPortableString(element.getPath());
-        if(element.getPath().startsWith("/"+VdbHelper.UDF_FOLDER)) {  //$NON-NLS-1$
+        if(element.getPath().startsWith(StringConstants.FORWARD_SLASH + VdbFolders.UDF.getReadFolder())) {
             this.fileType = FileEntryType.UDFJar;
-        } else if(element.getPath().startsWith("/"+VdbHelper.OTHER_FILES_FOLDER)) { //$NON-NLS-1$
+        } else {
             this.fileType = FileEntryType.UserFile;
         }
         
@@ -96,9 +97,9 @@ public final class VdbFileEntry extends VdbEntry {
     private IPath determinePath(IPath sourcePath,FileEntryType entryType) {
         String fileName = sourcePath.lastSegment();
         if(entryType==FileEntryType.UserFile) {
-            return new Path("/"+VdbHelper.OTHER_FILES_FOLDER+"/"+fileName);  //$NON-NLS-1$ //$NON-NLS-2$
+            return new Path(StringConstants.FORWARD_SLASH + VdbFolders.OTHER_FILES.getReadFolder() + StringConstants.FORWARD_SLASH + fileName);  
         } else if(entryType==FileEntryType.UDFJar) {
-            return new Path("/"+VdbHelper.UDF_FOLDER+"/"+fileName);  //$NON-NLS-1$ //$NON-NLS-2$
+            return new Path(StringConstants.FORWARD_SLASH + VdbFolders.UDF.getReadFolder() + StringConstants.FORWARD_SLASH + fileName);  
         }
         return null;
     }
@@ -110,7 +111,7 @@ public final class VdbFileEntry extends VdbEntry {
         String zipName = getName().toString();
         // Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
         // being located at the file system "root" folder.
-        if( zipName.startsWith("/") ) { //$NON-NLS-1$
+        if(zipName.startsWith(StringConstants.FORWARD_SLASH)) {
             zipName = zipName.substring(1, zipName.length());
         }
         final ZipEntry zipEntry = new ZipEntry(zipName);

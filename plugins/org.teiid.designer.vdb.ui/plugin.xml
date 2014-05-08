@@ -122,7 +122,15 @@
 	      class="org.teiid.designer.vdb.ui.build.VdbDifferentServerVersionResolutionGenerator" 
 	      markerType="org.teiid.designer.vdb.ui.vdbMarker"> 
           <attribute name="differentValidationVersion" value="true"/>
-       </markerResolutionGenerator> 
+       </markerResolutionGenerator>
+    <markerResolutionGenerator
+          class="org.teiid.designer.vdb.ui.build.VdbDuplicateNamesMarkerResolutionGenerator"
+          markerType="org.teiid.designer.vdb.ui.vdbMarker">
+       <attribute
+             name="duplicateModelNames"
+             value="true">
+       </attribute>
+    </markerResolutionGenerator>
 	</extension>
 	  <extension
          point="org.teiid.designer.core.refactorModelHandler">
