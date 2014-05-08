@@ -14,10 +14,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbModelEntry.Problem;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
-import org.teiid.designer.vdb.VdbModelEntry.Problem;
 
 /**
  * 
@@ -128,7 +129,7 @@ public class ModelElement extends EntryElement {
         		props.add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
         	}
         }
-        for (final VdbModelEntry importedEntry : entry.getImports())
+        for (final VdbEntry importedEntry : entry.getImports())
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
         for (final String importedVdbName : entry.getImportVdbNames())
             props.add(new PropertyElement(IMPORT_VDB_REFERENCE, importedVdbName));

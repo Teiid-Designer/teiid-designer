@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.metamodels.function.aspects.validation.rules;
 
-import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -16,6 +16,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.validation.ObjectValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -192,8 +193,8 @@ public class ScalarFunctionRule implements ObjectValidationRule {
             } else {
                 final ModelResource resrc = ModelerCore.getModelWorkspace().findModelResource(scalarFunc);
                 IProject project = resrc.getModelProject().getProject();
-                IFolder libFolder = VdbHelper.getFolder(project,VdbHelper.UDF_FOLDER);
-                boolean found = VdbHelper.isFileInFolder(libFolder,udfJarPath);
+                IContainer libFolder = VdbHelper.getFolder(project, VdbFolders.UDF.getReadFolder());
+                boolean found = VdbHelper.isFileInFolder(libFolder, udfJarPath);
                 if(!found) {
                     String message = FunctionPlugin.Util.getString("ScalarFunctionRule.udfJarNotFound",udfJarPath); //$NON-NLS-1$
                     ValidationProblem problem  = new ValidationProblemImpl(0, IStatus.ERROR ,message); 

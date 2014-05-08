@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -37,7 +38,7 @@ public class UdfJarDialogCellEditor extends DialogCellEditor {
         
         Object value = getValue();
         
-        String selectedFile = VdbFileDialogUtil.selectUdfOrFile(cellEditorWindow.getShell(), proj, true);
+        String selectedFile = VdbFileDialogUtil.selectFile(cellEditorWindow.getShell(), proj, VdbFolders.UDF);
         
         if( value != null && (selectedFile == null ||  selectedFile.length() == 0) ) {
         	selectedFile = (String)value;

@@ -25,6 +25,7 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 
@@ -32,7 +33,6 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
  * Chooser Dialog for selecting a VdbFile from the Workspace - either 
  *  1) selects a udf jar from the udf jar folder (lib)
  *  2) selects a 'user file' from the user files folder (otherFiles)
- * The 'jarOnly' flag determines 1) vs 2)
  */
 public class ChooseVdbFileFromWorkspaceDialog extends ElementTreeSelectionDialog {
 
@@ -42,14 +42,14 @@ public class ChooseVdbFileFromWorkspaceDialog extends ElementTreeSelectionDialog
      * @param title Dialog Title
      * @param message Dialog Message
      * @param project the current project, for scoping the selections
-     * @param jarOnly if 'true' choose udfJar from the udf folder, otherwise choose generic file from user files folder
+     * @param vdbFolder type of folder being analysed
      */
     ChooseVdbFileFromWorkspaceDialog( final Shell shell,
                       final String title,
                       final String message,
                       final IProject project,
-                      final boolean jarOnly ) {
-        super(shell, new ModelExplorerLabelProvider(), new ChooseFileDialogContentProvider(project,jarOnly));
+                      final VdbFolders vdbFolder ) {
+        super(shell, new ModelExplorerLabelProvider(), new ChooseFileDialogContentProvider(project, vdbFolder));
         setTitle(title);
         setMessage(message);
         setAllowMultiple(false);
@@ -71,19 +71,17 @@ public class ChooseVdbFileFromWorkspaceDialog extends ElementTreeSelectionDialog
  * Workspace File Chooser Dialog - Content provider
  */
 final class ChooseFileDialogContentProvider implements ITreeContentProvider {
-
-    private static final String JAR_EXT = "jar"; //$NON-NLS-1$
     
     private IProject[] projects;
-    private boolean jarOnly = false;
+    private VdbFolders vdbFolder;
 
     /**
      * @param project the supplied project
-     * @param jarOnly 'true' if only interested in jar files
+     * @param vdbFolder type of folder
      */
-    public ChooseFileDialogContentProvider(IProject project, boolean jarOnly) {
+    public ChooseFileDialogContentProvider(IProject project, VdbFolders vdbFolder) {
         this.projects = new IProject[]{project};
-        this.jarOnly = jarOnly;
+        this.vdbFolder = vdbFolder;
     }
     
     @Override
@@ -114,11 +112,8 @@ final class ChooseFileDialogContentProvider implements ITreeContentProvider {
         if(element instanceof IFile) return false;
         IContainer container = (IContainer)element;
         // only return the appropriate folder contents
-        if(container instanceof IFolder) {
-            if(this.jarOnly && !container.getName().equals(VdbHelper.UDF_FOLDER)) {
-                return false;
-            }
-            if(!this.jarOnly && !container.getName().equals(VdbHelper.OTHER_FILES_FOLDER)) {
+        if(container instanceof IFolder && vdbFolder != null) {
+            if(VdbFolders.UDF.equals(vdbFolder) && !VdbFolders.UDF.getReadFolder().equals(container.getName())) {
                 return false;
             }
         }
@@ -139,14 +134,23 @@ final class ChooseFileDialogContentProvider implements ITreeContentProvider {
     }
     
     boolean validFile( final IFile file ) {
-        IContainer fileContainer = file.getParent();
-        if( !(fileContainer instanceof IFolder) ) return false;
         String ext = file.getFileExtension();
         if (ext == null) return false;
         ext = ext.toLowerCase();
-        if(jarOnly) {
-            return JAR_EXT.equals(ext); 
+        if(VdbFolders.UDF.equals(vdbFolder)) {
+            return VdbHelper.JAR_EXT.equals(ext);
         } else {
+            // Other files
+
+            // Deny jar files as they are udf
+            if (VdbHelper.JAR_EXT.equals(ext))
+                return false;
+
+            // Allow xsd files even though they are model files
+            // as they are being moved to the other files section of vdb
+            if (ModelUtil.isXsdFile(file))
+                return true;
+
             return !ModelUtil.isModelFile(file);
         }
     }

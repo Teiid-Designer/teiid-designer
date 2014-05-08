@@ -23,6 +23,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,13 +51,16 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
-import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
@@ -113,8 +117,8 @@ public final class Vdb {
 
         String prefix = name.toString();
 
-        if (prefix.contains(StringUtilities.SPACE)) {
-            prefix = prefix.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        if (prefix.contains(StringConstants.SPACE)) {
+            prefix = prefix.replaceAll(StringConstants.SPACE, StringConstants.UNDERSCORE);
         }
 
         return prefix;
@@ -368,8 +372,13 @@ public final class Vdb {
                                              final Set<T> entries,
                                              final IProgressMonitor monitor ) {
         // Return existing entry if it exists
-        if (!entries.add(entry)) for (final T existingEntry : entries)
-            if (existingEntry.equals(entry)) return existingEntry;
+        if (!entries.add(entry)) {
+            for (final T existingEntry : entries) {
+                if (existingEntry.equals(entry))
+                    return existingEntry;
+            }
+        }
+
         // Mark VDB as modified
         setModified(this, Event.ENTRY_ADDED, null, entry);
         return entry;
@@ -526,7 +535,7 @@ public final class Vdb {
         entries.clear();
         modelEntries.clear();
         listeners.clear();
-        description.set(StringUtilities.EMPTY_STRING);
+        description.set(StringConstants.EMPTY_STRING);
         // Clean up state folder
         FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton().getStateLocation().append(file.getFullPath().segment(0)).toFile());
         // Mark VDB as unmodified
@@ -581,7 +590,7 @@ public final class Vdb {
             if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
                 zipName = zipName.substring(1, zipName.length());
             }
-            if(zipName.startsWith(VdbHelper.UDF_FOLDER)) {
+            if(zipName.startsWith(VdbFolders.UDF.getReadFolder())) {
                 udfJarEntries.add(entry);
             }
         }
@@ -606,7 +615,7 @@ public final class Vdb {
             if(entryName!=null && entryName.startsWith("/") ) { //$NON-NLS-1$
                 entryShortenedName = entryName.substring(1, entryName.length());
             }
-            if(entryShortenedName.startsWith(VdbHelper.UDF_FOLDER)) {
+            if(entryShortenedName.startsWith(VdbFolders.UDF.getReadFolder())) {
                 udfJarNames.add(entryName);
             }
         }
@@ -630,9 +639,7 @@ public final class Vdb {
             if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
                 zipName = zipName.substring(1, zipName.length());
             }
-            if(zipName.startsWith(VdbHelper.OTHER_FILES_FOLDER)) {
-                userFileEntries.add(entry);
-            }
+            userFileEntries.add(entry);
         }
         return userFileEntries;
     }
@@ -912,12 +919,12 @@ public final class Vdb {
     public final void removeEntry( final VdbEntry entry ) {
         entry.dispose();
         if (entry instanceof VdbModelEntry) {
-        	String entryName = entry.getName().toString();
-        	modelEntries.remove(entry);
-        	
+            String entryName = entry.getName().toString();
+            modelEntries.remove(entry);
+
             synchronizeUdfJars(new HashSet<VdbFileEntry>());
 
-        	handleRemovedVdbModelEntry(entryName);
+            handleRemovedVdbModelEntry(entryName);
         }
         else entries.remove(entry);
         setModified(this, Event.ENTRY_REMOVED, entry, null);
@@ -1226,6 +1233,58 @@ public final class Vdb {
      */
     public VdbModelBuilder getBuilder() {
     	return this.builder;
+    }
+
+    private boolean isXsdSchema(VdbModelEntry modelEntry) {
+        return ModelUtil.MODEL_CLASS_XML_SCHEMA.equalsIgnoreCase(modelEntry.getModelClass());
+    }
+
+    /**
+     * Moves any Xsd files in the model collection
+     * into the otherFiles collection
+     *
+     * @param monitor
+     */
+    public void migrateXsdFiles(IProgressMonitor monitor) {
+        Map<VdbModelEntry, VdbFileEntry> modelIndex = new HashMap<VdbModelEntry, VdbFileEntry>();
+
+        /*
+         * Cycle through all the model entries and if there are any
+         * Xsd files then add them as file entries.
+         *
+         * Index them so that the obsolete model entries can be cleaned up.
+         */
+        for (VdbModelEntry modelEntry : modelEntries) {
+            // No longer valid to make xsd files model entries so pick them out and
+            // add them as normal entries instead
+            if (!isXsdSchema(modelEntry))
+                continue;
+
+            VdbFileEntry entry = (VdbFileEntry) addFileEntry(modelEntry.getName(), FileEntryType.UserFile, monitor);
+            if (entry != null) {
+                modelIndex.put(modelEntry, entry);
+            }
+        }
+
+        /*
+         * Clean up the obsolete model entries
+         * - replace import references
+         */
+        for (Entry<VdbModelEntry, VdbFileEntry> mapEntry : modelIndex.entrySet()) {
+            VdbModelEntry oldEntry = mapEntry.getKey();
+            VdbFileEntry newEntry = mapEntry.getValue();
+
+            /* Update the import collections of entries that import this xsd */
+            for (VdbModelEntry importByEntry : oldEntry.getImportedBy()) {
+                importByEntry.replaceImport(oldEntry, newEntry);
+            }
+
+            /* Remove obsolete entry */
+            modelEntries.remove(oldEntry);
+
+            /* Delete the index of the xsd file */
+            oldEntry.getIndexFile().delete();
+        }
     }
 
     /**

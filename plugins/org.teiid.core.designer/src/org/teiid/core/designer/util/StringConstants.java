@@ -23,7 +23,12 @@ public interface StringConstants {
      * A space.
      */
     String SPACE = " "; //$NON-NLS-1$
-    
+
+    /**
+     * A star.
+     */
+    String STAR = "*"; //$NON-NLS-1$
+
     /**
      * An underscore.
      */
@@ -64,5 +69,10 @@ public interface StringConstants {
      * The String that should be used to separate lines; defaults to {@link #NEW_LINE}
      */
     String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, NEW_LINE);
+
+    /**
+     * Forward slash
+     */
+    String FORWARD_SLASH = "/"; //$NON-NLS-1$
 
 }
