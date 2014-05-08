@@ -674,15 +674,21 @@ public final class VdbModelEntry extends VdbEntry {
 	                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
 	                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
 	                
-	                String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
-	                if (CoreStringUtil.isEmpty(translatorName)) {
-	                    final String translator = helper.getTranslatorName(mr);
-	                    this.sourceInfo.getSource(0).setTranslatorName(translator == null ? EMPTY_STR : translator);
+	                final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
+	                final String resourceTranslatorName = helper.getTranslatorName(mr);
+	                if (!CoreStringUtil.isEmpty(resourceTranslatorName) && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
+	                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STR : resourceTranslatorName);
 	                }
 	                
 	                Properties translatorProps = helper.getTranslatorProperties(mr);
 	                if( !translatorProps.isEmpty() ) {
 	                	updateTranslatorOverrides(translatorProps);
+	                }
+	                
+	                final String jndiName = this.sourceInfo.getSource(0).getJndiName();
+	                final String resourceJndiName = helper.getJndiProperty(mr);
+	                if (!CoreStringUtil.isEmpty(resourceJndiName) && !CoreStringUtil.equals(jndiName, resourceJndiName)) {
+	                    this.sourceInfo.getSource(0).setJndiName(resourceJndiName == null ? EMPTY_STR : resourceJndiName);
 	                }
             	}
                 
