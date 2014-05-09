@@ -72,7 +72,12 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         /**
          * Teiid 8.7
          */
-        TEIID_8_7(VersionID.TEIID_8_7);
+        TEIID_8_7(VersionID.TEIID_8_7),
+
+        /**
+         * Teiid 8.8
+         */
+        TEIID_8_8(VersionID.TEIID_8_8);
 
         private final ITeiidServerVersion version;
 

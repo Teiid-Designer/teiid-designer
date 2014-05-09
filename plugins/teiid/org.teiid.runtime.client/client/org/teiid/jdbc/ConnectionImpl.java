@@ -108,8 +108,7 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
             
     //  Flag to represent if the connection state needs to be readOnly, default value false.
     private boolean readOnly = false;
-    
-    private boolean disableLocalTransactions = false;
+
     private DQP dqp;
     protected ServerConnection serverConn;
     private int transactionIsolation = DEFAULT_ISOLATION;
@@ -133,8 +132,6 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         logConnectionProperties(url, info);
         
         setExecutionProperties(info);
-        
-        this.disableLocalTransactions = Boolean.valueOf(this.propInfo.getProperty(ExecutionProperties.DISABLE_LOCAL_TRANSACTIONS)).booleanValue();
     }
     
     boolean isInLocalTxn() {
@@ -379,8 +376,12 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
     }
 
     void beginLocalTxnIfNeeded() throws SQLException {
-        if (this.transactionXid != null || inLocalTxn || this.autoCommitFlag || disableLocalTransactions) {
-        	return;
+        if (this.transactionXid != null || inLocalTxn || this.autoCommitFlag) {
+            return;
+        }
+        String prop = this.propInfo.getProperty(ExecutionProperties.DISABLE_LOCAL_TRANSACTIONS);
+        if (prop != null && Boolean.valueOf(prop)) {
+            return;
         }
         try {
         	try {
