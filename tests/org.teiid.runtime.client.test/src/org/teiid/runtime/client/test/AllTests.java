@@ -44,6 +44,7 @@ import org.teiid.query.sql.v8.Test8Create;
 import org.teiid.query.sql.v8.Test8CreateDrop;
 import org.teiid.query.sql.v8.Test8SQLStringVisitor;
 import org.teiid.query.sql.v8.TestQuery8Parser;
+import org.teiid.query.sql.v84.TestQuery84Parser;
 import org.teiid.query.sql.v85.Test85Cloning;
 import org.teiid.query.sql.v85.Test85Create;
 import org.teiid.query.sql.v85.Test85CreateDrop;
@@ -101,6 +102,7 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test8Create.class,
                                         Test8CreateDrop.class,
                                         TestQuery8Parser.class,
+                                        TestQuery84Parser.class,
                                         Test8SQLStringVisitor.class,
                                         Test85Cloning.class,
                                         Test85Create.class,

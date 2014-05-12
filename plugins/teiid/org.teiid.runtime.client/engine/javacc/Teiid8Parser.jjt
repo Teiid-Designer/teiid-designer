@@ -948,7 +948,7 @@ Command userCommand(ParseInfo info) :
 	command = alter(info) |
 	command = createTrigger(info) |
 	{
-      requiresVersionAtLeast(Version.TEIID_8_5);
+      requiresVersionAtLeast(Version.TEIID_8_4);
     }
     block = compoundStatement(info)
     {
