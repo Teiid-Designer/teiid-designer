@@ -173,7 +173,7 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
             return nsMap;
         }
         
-        if (parts.length==1){
+        if (parts!=null && parts.length==1){
             ns = getPartElementNamespace(parts[0]);
         }
         if (ns==null) ns = getWrapperProcedure().getNamespaceURI();
@@ -261,7 +261,10 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
         	elementName = requestInfo.getOperation().getName();
         }
             
-        Map<String, String> nsMap = (!(requestInfo.isMessageServiceMode()) ? getNamespaceString(parts) : null);
+        Map<String, String> nsMap = getNamespaceString(parts);
+        if( nsMap == null ) { 
+        	nsMap = new HashMap<String, String>();
+        }
         String nsString = nsMap.get(NSSTRING);
         String nsPrefix = nsMap.get(NSPREFIX);
         if (nsPrefix!=null &! isDefaultNS(nsPrefix)){
