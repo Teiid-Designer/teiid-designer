@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 
 /**
  * ChooseVdbFileOptionsDialog
@@ -39,22 +41,22 @@ public class ChooseVdbFileOptionsDialog extends MessageDialog {
     private boolean selectFromWorkspace = false;
     private boolean selectFromFileSystem = false;
     private boolean copyToWorkspace = false;
-    private boolean udfJarOption = false;
+    private VdbFolders vdbFolder = null;
     private boolean disableWorkspaceOption = false;
     
     /**
      * @param parentShell the parent shell
      * @param dialogTitle the dialog title
      * @param dialogMessage the dialog message
-     * @param isUdfJar 'true' if this is a udf jar selection, 'false' for otherfiles
+     * @param vdbFolder type of folder being chosen from
      * @param disableWorkspaceOption 'true' if the workspace option is to be disabled
      */
     public ChooseVdbFileOptionsDialog( Shell parentShell,
                                String dialogTitle,
                                String dialogMessage,
-                               boolean isUdfJar, boolean disableWorkspaceOption) {
+                               VdbFolders vdbFolder, boolean disableWorkspaceOption) {
         super(parentShell, dialogTitle, null, dialogMessage, QUESTION, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);
-        this.udfJarOption = isUdfJar;
+        this.vdbFolder = vdbFolder;
         this.disableWorkspaceOption=disableWorkspaceOption;
     }
 
@@ -86,11 +88,11 @@ public class ChooseVdbFileOptionsDialog extends MessageDialog {
         layout.numColumns = 1;
         radioComposite.setLayout(layout);
         
-        String selectFromWorkspaceRadioText;
-        String selectFromFileSystemRadioText;
+        String selectFromWorkspaceRadioText = StringConstants.EMPTY_STRING;
+        String selectFromFileSystemRadioText = StringConstants.EMPTY_STRING;
         
         // Change radio text based on Udf or other
-        if(this.udfJarOption) {
+        if(VdbFolders.UDF.equals(vdbFolder)) {
             selectFromWorkspaceRadioText = Messages.chooseUdfFromWorkspaceRadioText;
             selectFromFileSystemRadioText = Messages.chooseUdfFromFileSystemRadioText;
         } else {
@@ -165,49 +167,49 @@ public class ChooseVdbFileOptionsDialog extends MessageDialog {
      */
     private void setInitialDialogChoices() {
         // Udf Jar selection Mode
-        if(this.udfJarOption) {
+        if (VdbFolders.UDF.equals(vdbFolder)) {
             // if workspace option is disabled, 
             //   -initial radio choice is 'file system'
             //   -copy to workspace is checked and disabled
-            if(this.disableWorkspaceOption) {
+            if (this.disableWorkspaceOption) {
                 selectFromWorkspaceRadio.setSelection(false);
-                this.selectFromWorkspace=false;
+                this.selectFromWorkspace = false;
                 selectFromFileSystemRadio.setSelection(true);
-                this.selectFromFileSystem=true;
+                this.selectFromFileSystem = true;
                 copyToWorkspaceCheckbox.setSelection(true);
-                this.copyToWorkspace=true;
+                this.copyToWorkspace = true;
                 selectFromWorkspaceRadio.setEnabled(false);
                 copyToWorkspaceCheckbox.setEnabled(false);
-            // if workspace option is available
-            //   -initial radio choice is 'workspace'
-            //   -copy to workspace is unchecked and disabled
+                // if workspace option is available
+                //   -initial radio choice is 'workspace'
+                //   -copy to workspace is unchecked and disabled
             } else {
                 selectFromWorkspaceRadio.setSelection(true);
-                this.selectFromWorkspace=true;
+                this.selectFromWorkspace = true;
                 selectFromFileSystemRadio.setSelection(false);
-                this.selectFromFileSystem=false;
+                this.selectFromFileSystem = false;
                 copyToWorkspaceCheckbox.setSelection(false);
-                this.copyToWorkspace=false;
+                this.copyToWorkspace = false;
                 selectFromWorkspaceRadio.setEnabled(true);
                 copyToWorkspaceCheckbox.setEnabled(false);
             }
-        // File selection Mode
         } else {
+            // File selection Mode
             // -initial radio choice is 'file system'
             // -copy to workspace is unchecked
             selectFromWorkspaceRadio.setSelection(false);
-            this.selectFromWorkspace=false;
+            this.selectFromWorkspace = false;
             selectFromFileSystemRadio.setSelection(true);
-            this.selectFromFileSystem=true;
+            this.selectFromFileSystem = true;
             copyToWorkspaceCheckbox.setSelection(false);
-            this.copyToWorkspace=false;
+            this.copyToWorkspace = false;
             selectFromWorkspaceRadio.setEnabled(true);
             copyToWorkspaceCheckbox.setEnabled(true);
             // disable workspace radio if necessary
-            if(this.disableWorkspaceOption) {
+            if (this.disableWorkspaceOption) {
                 this.selectFromWorkspaceRadio.setEnabled(false);
             }
-        }        
+        }
     }
     
     /*
@@ -219,9 +221,9 @@ public class ChooseVdbFileOptionsDialog extends MessageDialog {
             this.selectFromFileSystem=true;
             this.selectFromWorkspace=false;
             // Udf from fileSystem must be copied to workspace
-            if(this.udfJarOption) {
+            if (VdbFolders.UDF.equals(vdbFolder)) {
                 this.copyToWorkspaceCheckbox.setSelection(true);
-                this.copyToWorkspace=true;
+                this.copyToWorkspace = true;
                 this.copyToWorkspaceCheckbox.setEnabled(false);
             } else {
                 this.copyToWorkspaceCheckbox.setEnabled(true);
