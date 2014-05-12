@@ -12,7 +12,7 @@
 ==
 -->
 
-<project name="generate-libs" default="generate">
+<project name="generate-libs" default="generate" xmlns:ac="antlib:net.sf.antcontrib">
 
 	<property name="GIT-HOME" location="../../.." />
 
@@ -48,8 +48,11 @@
 	<!--
 	   Test whether all the required libraries are present
 	-->
-	<target name="check-libs">
-		<filelist id="my.libs" dir="lib" files="${libs}" />
+	<target name="check-libs" depends="init-ant-contrib">
+		<!-- correct any extra whitespace created from formatting -->
+		<removeWhitespace arg="${libs}"/>
+
+		<filelist id="my.libs" dir="lib" files="${rwsResult}" />
 		<restrict id="missing.libs">
 			<filelist refid="my.libs" />
 			<not>
@@ -66,8 +69,11 @@
 	<!--
 	   Test for existence of the generated sql parser class
 	-->
-	<target name="check-parsers">
-		<filelist id="my.parsers" dir="engine/org/teiid/query/parser" files="${parsers}" />
+	<target name="check-parsers" depends="init-ant-contrib">
+		<!-- correct any extra whitespace created from formatting -->
+		<removeWhitespace arg="${parsers}"/>
+
+		<filelist id="my.parsers" dir="engine/org/teiid/query/parser" files="${rwsResult}" />
 		<restrict id="missing.parsers">
 			<filelist refid="my.parsers" />
 			<not>
@@ -99,37 +105,38 @@
 		<echo message="Project source generation is up-to-date" />
 	</target>
 
-	<target name="dependencies" if="should-generate">
-		<!-- Build the target platform and install it -->
-		<echo message="=== Installing target platform ===" />
-		<mvn dir="${GIT-HOME}/target-platform" args="install" />
+	<target name="dependencies" depends="init-ant-contrib" if="should-generate">
 
-		<!-- Build the spi dependency and install it -->
-		<echo message="=== Installing the spi plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.designer.spi" args="install" />
-
-		<!-- Build the datatools connectivity model dependency and install it -->
-		<echo message="=== Installing the datatools connectivity model plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.model" args="install" />
-
-		<!-- Build the datatools connectivity dependency and install it -->
-		<echo message="=== Installing the datatools connectivity plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity" args="install" />
-
-		<!-- Build the datatools connectivity ui dependency and install it -->
-		<echo message="=== Installing the datatools connectivity ui plugin dependency ===" />
-		<mvn dir="${GIT-HOME}/plugins/org.teiid.datatools.connectivity.ui" args="install" />
+		<!-- Executes maven from the root directory, installing
+		     the project dependencies.
+		-->
+		<mvn dir="${GIT-HOME}"
+			 args="-pl target-platform,
+			           plugins/org.teiid.designer.spi,
+			           plugins/org.teiid.datatools.connectivity.model,
+			           plugins/org.teiid.datatools.connectivity,
+			           plugins/org.teiid.datatools.connectivity.ui
+			       install"/>
 	</target>
 
-	<target name="clean" depends="dependencies" if="should-generate">
+	<target name="clean-internal" if="should-generate">
 
 		<echo message="Removing generated files ..." />
-		<mvn dir="." args="clean" />
-
+		<delete>
+			<fileset dir="engine/org/teiid/query/parser">
+				<include name="**/v*/Teiid*Parser.java"/>
+				<include name="**/v*/Teiid*ParserConstants.java"/>
+				<include name="**/v*/Teiid*ParserTokenManager.java"/>
+			</fileset>
+		</delete>
 	</target>
 
-	<target name="generate" depends="check-work, nothing-todo, clean" if="should-generate">
+	<target name="clean">
+		<property name="should-generate" value="true"/>
+		<antcall target="clean-internal"/>
+	</target>
 
+	<target name="generate" depends="check-work, nothing-todo, clean-internal, dependencies" if="should-generate">
 		<echo message="Generating from maven ..." />
 
 		<!-- Call the process sources goal and generate using javacc -->

@@ -2,22 +2,110 @@
 
 <!-- == == Common targets for use as imports == -->
 
-<project name="common">
+<project name="common" xmlns:ac="antlib:net.sf.antcontrib">
 
-    <macrodef name="mvn">
-        <attribute name="dir" />
-        <attribute name="args" />
+    <property name="ant-contrib-version" value="1.0b3" />
+    <property name="ant-contrib-name" value="ant-contrib-${ant-contrib-version}" />
+    <property name="ant-contrib-jar" value="${ant-contrib-name}.jar" />
+    <property name="ant-contrib-zip" value="${ant-contrib-name}-bin.zip" />
+    <property name="ant-contrib-sf-url" value="http://downloads.sourceforge.net/project/ant-contrib/ant-contrib/${ant-contrib-version}/${ant-contrib-zip}" />
+
+    <available property="ant-contrib-exists" file="${ant.library.dir}/${ant-contrib-jar}" />
+
+    <!--
+         Downloads the ant-contrib jar from sourceforge then
+         unzips and moves it to the ant.library.dir directory
+         of the eclipse installation,
+         eg. /opt/eclipse/plugins/org.apache.ant_1.8.4.v201303080030/lib/
+      -->
+    <target name="download-ant-contrib" unless="ant-contrib-exists">
+        <echo message="Downloading ant-contrib library"/>
+
+        <!-- Create the ant lib directory if not already exists -->
+        <mkdir dir="${ant.library.dir}" />
+
+        <!-- Download from sourceforge -->
+        <get src="${ant-contrib-sf-url}"
+             dest="${ant.library.dir}/${ant-contrib-zip}"
+             username="true" />
+
+        <!-- Unzip to destination -->
+        <unzip src="${ant.library.dir}/${ant-contrib-zip}"
+               dest="${ant.library.dir}"
+               overwrite="no" />
+
+        <!-- Move jar libraries into correct locations -->
+        <move todir="${ant.library.dir}">
+            <fileset file="${ant.library.dir}/ant-contrib/*.jar" />
+            <fileset file="${ant.library.dir}/ant-contrib/lib/*.jar" />
+        </move>
+
+        <!-- Tidy up -->
+        <delete file="${ant.library.dir}/${ant-contrib-zip}" />
+        <delete dir="${ant.library.dir}/ant-contrib" />
+    </target>
+
+    <!--
+        Initialises support for the ant-contrib library if necessary
+        downloading it from sourceforge.
+    -->
+    <target name="init-ant-contrib" depends="download-ant-contrib">
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties" uri="antlib:net.sf.antcontrib">
+            <classpath>
+                <pathelement location="${ant.library.dir}/ant-contrib-1.0b3.jar" />
+            </classpath>
+        </taskdef>
+    </target>
+
+    <!--
+       Removes any extraneous whitespace from the given argument.
+       For example, an ant property might want to place a comma-separated
+       list of values on different lines. This will remove the extra space
+       between the commas, eg. red,  blue, green becomes red,blue,green
+
+       Sets the new value in the property 'rwsResult'. If no removal of
+       whitespace is required then the original value is assigned to this
+       property. Subsequent calls to this macro will change this property.
+    -->
+    <macrodef name="removeWhitespace">
+        <attribute name="arg"/>
+
         <sequential>
-            <exec dir="@{dir}" executable="mvn.bat" osfamily="windows" failifexecutionfails="true" failonerror="true">
-                <arg line="@{args}" />
-            </exec>
-            <exec dir="@{dir}" executable="mvn" osfamily="mac" failifexecutionfails="true" failonerror="true">
-                <arg line="@{args}" />
-            </exec>
-            <exec dir="@{dir}" executable="mvn" osfamily="unix" failifexecutionfails="true" failonerror="true">
-                <arg line="@{args}" />
-            </exec>
+            <ac:var name="rwsResult" unset="true"/>
+
+            <ac:propertyregex override="true" property="rwsResult" defaultValue="@{arg}"
+                              input="@{arg}" regexp=",\s+" replace="," global="true" />
+
+            <ac:propertyregex override="yes" property="rwsResult" defaultValue="${rwsResult}"
+                              input="${rwsResult}" regexp="\s+" replace=" " global="true" />
         </sequential>
     </macrodef>
 
+    <!--
+        A macro for executing maven depending on the platform the ant script is
+        being executed on. Requires directory and args attributes to be assigned.
+
+        Will remove excess whitespace from args prior to execution.
+    -->
+    <macrodef name="mvn">
+        <attribute name="dir" />
+        <attribute name="args" />
+
+        <sequential>
+            <removeWhitespace arg="@{args}"/>
+
+            <echo>Executing maven in directory @{dir} with arguments: ${rwsResult}</echo>
+
+            <exec dir="@{dir}" executable="mvn.bat" osfamily="windows" failifexecutionfails="true" failonerror="true">
+                <arg line="${rwsResult}" />
+            </exec>
+            <exec dir="@{dir}" executable="mvn" osfamily="mac" failifexecutionfails="true" failonerror="true">
+                <arg line="${rwsResult}" />
+            </exec>
+            <exec dir="@{dir}" executable="mvn" osfamily="unix" failifexecutionfails="true" failonerror="true">
+                <arg line="${rwsResult}" />
+            </exec>
+
+        </sequential>
+    </macrodef>
 </project>
