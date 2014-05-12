@@ -262,7 +262,7 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
         }
             
         Map<String, String> nsMap = getNamespaceString(parts);
-        if( nsMap == null ) {
+        if( nsMap == null ) { 
         	nsMap = new HashMap<String, String>();
         }
         String nsString = nsMap.get(NSSTRING);
