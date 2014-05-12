@@ -9,6 +9,7 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +23,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -574,7 +577,7 @@ public final class VdbModelEntry extends VdbEntry {
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
-	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getName()) ) {
+	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getType()) ) {
 	        			return to;
 	        		}
         		}

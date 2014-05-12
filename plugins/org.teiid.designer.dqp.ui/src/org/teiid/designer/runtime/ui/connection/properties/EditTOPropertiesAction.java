@@ -15,8 +15,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -29,9 +31,12 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.ui.PluginConstants;
+import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.actions.IConnectionAction;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.vdb.connections.SourceHandler;
@@ -163,22 +168,8 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
 
             if (dialog.open() == Window.OK) {
             	// Get properties from dialog
+            	editPropertiesInTxn(override, modelResource, provider);
             	
-            	
-            	Properties newOverrideProperties = new Properties();
-            	if( override.getProperties().length > 0) {
-            		
-            		for( TranslatorOverrideProperty prop : override.getProperties()) {            			
-            			if( prop.hasOverridenValue() ) {
-            				String id = prop.getDefinition().getId();
-            				String value = prop.getOverriddenValue();
-            				newOverrideProperties.put(id, value);
-            			}
-            		}
-            		provider.replaceTranlatorOverrideProperties(modelResource, newOverrideProperties);
-            	} else {
-            		provider.clearTranslatorOverrideProperties(modelResource);
-            	}
             	modelResource.save(null, true);
             } else {
             	return; // CANCELLED
@@ -196,6 +187,39 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
 
             }
         }
+    }
+    
+    private void editPropertiesInTxn(TranslatorOverride override, ModelResource modelResource, ITranslatorOverridesProvider provider) {
+		boolean requiredStart = ModelerCore.startTxn(
+				PluginConstants.Transactions.SIGNIFICANT,
+				PluginConstants.Transactions.NOT_UNDOABLE, "Set Translator Override Properties", this);
+		boolean succeeded = false;
+		try {
+	    	Properties newOverrideProperties = new Properties();
+	    	if( override.getProperties().length > 0) {
+	    		
+	    		for( TranslatorOverrideProperty prop : override.getProperties()) {            			
+	    			if( prop.hasOverridenValue() ) {
+	    				String id = prop.getDefinition().getId();
+	    				String value = prop.getOverriddenValue();
+	    				newOverrideProperties.put(id, value);
+	    			}
+	    		}
+	    		provider.replaceTranlatorOverrideProperties(modelResource, newOverrideProperties);
+	    	} else {
+	    		provider.clearTranslatorOverrideProperties(modelResource);
+	    	}
+			succeeded = true;
+		} finally {
+			if (requiredStart) {
+				if (succeeded) {
+					ModelerCore.commitTxn();
+				} else {
+					ModelerCore.rollbackTxn();
+				}
+			}
+		}
+
     }
 
     /**
