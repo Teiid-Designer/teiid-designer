@@ -11,6 +11,8 @@ package org.teiid.designer.ui.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.teiid.designer.ui.UiConstants;
@@ -50,6 +52,14 @@ public class CutAction extends ModelObjectAction implements UiConstants {
         setActionWorker(worker);
     }
         
+    @Override
+	public void runWithEvent(Event event) {
+    	// TEIIDDES-2047.  Ignore cut from StyledText - should never initiate object cut.
+    	if( !(event.widget instanceof StyledText) ) {
+    		run();
+    	}
+	}
+
     /**
      * This method is called in the run() method of AbstractAction to give the actions a hook into canceling
      * the run at the last minute.
