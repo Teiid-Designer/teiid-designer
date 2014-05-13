@@ -15,6 +15,7 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -59,7 +61,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -89,6 +90,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.table.CheckBoxColumnProvider;
 import org.teiid.designer.ui.common.table.DefaultTableProvider;
 import org.teiid.designer.ui.common.table.TableAndToolBar;
@@ -114,6 +116,7 @@ import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
+import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -508,7 +511,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         modelsGroup.getTable().getColumn(0).getColumn().setWidth(col1Width);
     }
 
-    private void createEditorBottom( Composite parent ) {
+    private Composite createEditorBottom( Composite parent ) {
         Composite pnlBottom = new Composite(parent, SWT.BORDER);
         pnlBottom.setLayout(new GridLayout());
         pnlBottom.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -547,16 +550,16 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(pnlProperties, this);
         }
         
-        { // description tab
-            CTabItem descriptionTab = new CTabItem(tabFolder, SWT.NONE);
-            descriptionTab.setText(i18n("descriptionTab")); //$NON-NLS-1$
-            descriptionTab.setToolTipText(i18n("descriptionTabToolTip")); //$NON-NLS-1$
-            Composite pnlDescription = new Composite(tabFolder, SWT.NONE);
-            pnlDescription.setLayout(new GridLayout());
-            pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            descriptionTab.setControl(pnlDescription);
-            descriptionPanel = new DescriptionPanel(pnlDescription, this);
-        }
+//        { // description tab
+//            CTabItem descriptionTab = new CTabItem(tabFolder, SWT.NONE);
+//            descriptionTab.setText(i18n("descriptionTab")); //$NON-NLS-1$
+//            descriptionTab.setToolTipText(i18n("descriptionTabToolTip")); //$NON-NLS-1$
+//            Composite pnlDescription = new Composite(tabFolder, SWT.NONE);
+//            pnlDescription.setLayout(new GridLayout());
+//            pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//            descriptionTab.setControl(pnlDescription);
+//            descriptionPanel = new DescriptionPanel(pnlDescription, this);
+//        }
 
         { // translator overrides tab
             CTabItem translatorOverridesTab = new CTabItem(tabFolder, SWT.NONE);
@@ -567,6 +570,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
 
         tabFolder.setSelection(0);
+        
+        return pnlBottom;
     }
 
     void addSelectionToVdb(VdbFolders vdbFolder, TableViewer tableViewer,
@@ -1136,28 +1141,191 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     public void createPartControl( final Composite parent ) {
         parent.setLayout(new GridLayout());
         parent.setLayoutData(new GridData());
+      
+        { // Header Panel
+	        Composite headerPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL, 1, 6);
+	        Label projectLabel = new Label(headerPanel, SWT.NONE);
+	        projectLabel.setText(Messages.vdbEditor_location);
+	        
+	        Label project = new Label(headerPanel, SWT.NONE);
+	        project.setText(vdb.getFile().getParent().getFullPath().toString());
+	        project.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+	        
+	        { // Validation Info
+	        	Color blueColor = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
+	        	Label label1 = WidgetFactory.createLabel(headerPanel, "  " + i18n("lastValidated") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label1);
+	        	
+	        	String dateTimeString = i18n("undefined"); //$NON-NLS-1$
+	        	if( getVdb().getValidationDateTime() != null ) {
+	        		dateTimeString = getVdb().getValidationDateTime().toString();
+	        	}
+	        	this.validationDateTimeLabel = WidgetFactory.createLabel(headerPanel, dateTimeString);
+	        	validationDateTimeLabel.setForeground(blueColor);
+	        	validationDateTimeLabel.setText(dateTimeString);
+	        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationDateTimeLabel);
+	        	
+	        	Label label3 = WidgetFactory.createLabel(headerPanel, "    " + i18n("teiidRuntimeVersion") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label3);
+	        	
+	        	String versionString = i18n("undefined"); //$NON-NLS-1$
+	        	if( getVdb().getValidationVersion() != null ) {
+	        		versionString = getVdb().getValidationVersion();
+	        	}
+	        	validationVersionLabel = WidgetFactory.createLabel(headerPanel, versionString);
+	        	validationVersionLabel.setForeground(blueColor);
+	        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationVersionLabel);
+	        }
+	        
+	        addSynchronizePanel(headerPanel);
+        }
+        
+        // So create another Tab Folder (bottom oriented)
+//        Composite pnlTop = new Composite(parent, SWT.BORDER);
+//        pnlTop.setLayout(new GridLayout());
+//        pnlTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        CTabFolder tabFolder = WidgetFactory.createTabFolder(parent);
+        tabFolder.setTabPosition(SWT.BOTTOM);
+        { // models tab
+            CTabItem leftTab = new CTabItem(tabFolder, SWT.NONE);
+            leftTab.setText(Messages.vdbEditor_content_tab_label);
+            leftTab.setToolTipText(Messages.vdbEditor_content_tab_tooltip);
+            Composite leftPanel = createEditorTop(tabFolder);
+            
+            leftTab.setControl(leftPanel);
+        }
+        { // advanced tab
+            CTabItem rightTab = new CTabItem(tabFolder, SWT.NONE);
+            rightTab.setText(Messages.vdbEditor_advanced_tab_label);
+            rightTab.setToolTipText(Messages.vdbEditor_advanced_tab_tooltip);
+            Composite rightPanel = createEditorBottom(tabFolder);
 
-        // Insert a ScrolledComposite so controls don't disappear if the panel shrinks
-        final ScrolledComposite scroller = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.H_SCROLL);
-        scroller.setLayout(new GridLayout());
-        scroller.setLayoutData(new GridData(GridData.FILL_BOTH));
-        scroller.setExpandHorizontal(true);
-        scroller.setExpandVertical(true);
-
-        SashForm sash = new SashForm(scroller, SWT.VERTICAL);
-        sash.setLayoutData(new GridData(GridData.FILL_BOTH));
-        scroller.setContent(sash);
-
-        createEditorTop(sash);
-        createEditorBottom(sash);
-        sash.setWeights(new int[] {50, 50});
+            rightTab.setControl(rightPanel);
+        }
+        
+        tabFolder.setSelection(0);
 
         ModelerCore.getWorkspace().addResourceChangeListener(this);
         
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
     }
+    
+    private void addSynchronizePanel(Composite parent ) {
+    	Composite extraButtonPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.BEGINNING, 2, 2);
+        extraButtonPanel.setLayout(new GridLayout(6, false));
+        	
+        synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
+                                                          GridData.HORIZONTAL_ALIGN_BEGINNING);
+        synchronizeAllButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
+        synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+             */
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
+                boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
+                : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
+                boolean synchronize = !showWarningDialog;
+                boolean okIfModelsDirty = true;
 
-    private void createEditorTop( Composite parent ) {
+                // check Workspace for Dirty Open Editors
+                Collection<IFile> iFiles = VdbUtil.getVdbModels(getVdb());
+                boolean askedQuestion = false;
+                for( IFile theFile : iFiles ) {
+                	if( ModelEditorManager.isOpen(theFile) && ModelEditorManager.getModelEditorForFile(theFile, false).isDirty() ) {
+                		askedQuestion = true;
+                		boolean confirm = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
+                                CONFIRM_DIRTY_MODELS_DIALOG_TITLE,
+                				CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE);
+                        if (confirm) {
+                        	okIfModelsDirty = true;
+                        } else {
+                        	okIfModelsDirty = false;
+                        }
+                	}
+                	if( askedQuestion ) {
+                		break;
+                	}
+                }
+                boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
+                if (okIfModelsDirty && showWarningDialog) {
+                	if( hasDataRoles ) {
+                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
+                                                                                                     CONFIRM_DIALOG_TITLE,
+                                                                                                     CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
+                                                                                                     VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
+                                                                                                     false,
+                                                                                                     null,
+                                                                                                     null);
+                        if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
+                            synchronize = true;
+
+                            // save if user wants decision remembered
+                            if (dialog.getToggleState()) {
+                                try {
+                                    prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
+                                    VdbUiPlugin.singleton.getPreferences().flush();
+                                } catch (BackingStoreException e) {
+                                    VdbUiConstants.Util.log(e);
+                                }
+                            }
+                        }
+                	} else {
+                		synchronize = true;
+                	}
+                }
+
+                if (okIfModelsDirty && synchronize) {
+                    UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                        /**
+                         * {@inheritDoc}
+                         * 
+                         * @see java.lang.Runnable#run()
+                         */
+                        @Override
+                        public void run() {
+                            getVdb().synchronize(new NullProgressMonitor());
+                            modelsGroup.getTable().getViewer().refresh();
+                            otherFilesGroup.getTable().getViewer().refresh();
+                            pnlTranslatorOverrides.refresh();
+                            dataRoleResolver.allSynchronized();
+                            VdbEditor.this.doSave(new NullProgressMonitor());
+                            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                            modelDetailsPanel.refreshModelDetails();
+                        }
+                    });
+                }
+            }
+        });
+        synchronizeAllButton.setEnabled(!vdb.isSynchronized());
+        
+        { // synchronize button
+            showImportVdbsButton = WidgetFactory.createButton(extraButtonPanel, "Show Import VDBs",//i18n("showImportVdbsButton"), //$NON-NLS-1$
+                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
+            showImportVdbsButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
+            showImportVdbsButton.addSelectionListener(new SelectionAdapter() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+                 */
+                @Override
+                public void widgetSelected( final SelectionEvent event ) {
+                	
+                	ShowImportVdbsDialog dialog = new ShowImportVdbsDialog(Display.getCurrent().getActiveShell(), getVdb());
+                	
+                	dialog.open();
+                }
+            });
+            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        }
+    }
+
+    private Composite createEditorTop( Composite parent ) {
         Composite pnlTop = new Composite(parent, SWT.BORDER);
         pnlTop.setLayout(new GridLayout());
         pnlTop.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -1211,151 +1379,26 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             filesTab.setControl(pnlFiles);
             createOtherFilesControl(pnlFiles);
         }
-
-        Composite extraButtonPanel = WidgetFactory.createPanel(pnlTop);
-        extraButtonPanel.setLayout(new GridLayout(6, false));
-        { // synchronize button
-        	
-            synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
-                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
-            synchronizeAllButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
-            synchronizeAllButton.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    IPreferenceStore prefStore = VdbUiPlugin.singleton.getPreferenceStore();
-                    boolean showWarningDialog = "".equals(prefStore.getString(SYNCHRONIZE_WITHOUT_WARNING)) ? true //$NON-NLS-1$
-                    : !prefStore.getBoolean(SYNCHRONIZE_WITHOUT_WARNING);
-                    boolean synchronize = !showWarningDialog;
-                    boolean okIfModelsDirty = true;
-
-                    // check Workspace for Dirty Open Editors
-                    Collection<IFile> iFiles = VdbUtil.getVdbModels(getVdb());
-                    boolean askedQuestion = false;
-                    for( IFile theFile : iFiles ) {
-                    	if( ModelEditorManager.isOpen(theFile) && ModelEditorManager.getModelEditorForFile(theFile, false).isDirty() ) {
-                    		askedQuestion = true;
-                    		boolean confirm = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(),
-                                    CONFIRM_DIRTY_MODELS_DIALOG_TITLE,
-                    				CONFIRM_DIRTY_MODELS_DIALOG_MESSAGE);
-                            if (confirm) {
-                            	okIfModelsDirty = true;
-                            } else {
-                            	okIfModelsDirty = false;
-                            }
-                    	}
-                    	if( askedQuestion ) {
-                    		break;
-                    	}
-                    }
-                    boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
-                    if (okIfModelsDirty && showWarningDialog) {
-                    	if( hasDataRoles ) {
-	                        MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
-	                                                                                                     CONFIRM_DIALOG_TITLE,
-	                                                                                                     CONFIRM_SYNCHRONIZE_ALL_MESSAGE,
-	                                                                                                     VdbUiConstants.Util.getString("rememberMyDecision"), //$NON-NLS-1$
-	                                                                                                     false,
-	                                                                                                     null,
-	                                                                                                     null);
-	                        if (dialog.getReturnCode() == IDialogConstants.OK_ID) {
-	                            synchronize = true;
-	
-	                            // save if user wants decision remembered
-	                            if (dialog.getToggleState()) {
-	                                try {
-	                                    prefStore.setValue(SYNCHRONIZE_WITHOUT_WARNING, true);
-	                                    VdbUiPlugin.singleton.getPreferences().flush();
-	                                } catch (BackingStoreException e) {
-	                                    VdbUiConstants.Util.log(e);
-	                                }
-	                            }
-	                        }
-                    	} else {
-                    		synchronize = true;
-                    	}
-                    }
-
-                    if (okIfModelsDirty && synchronize) {
-                        UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-                            /**
-                             * {@inheritDoc}
-                             * 
-                             * @see java.lang.Runnable#run()
-                             */
-                            @Override
-                            public void run() {
-                                getVdb().synchronize(new NullProgressMonitor());
-                                modelsGroup.getTable().getViewer().refresh();
-                                otherFilesGroup.getTable().getViewer().refresh();
-                                pnlTranslatorOverrides.refresh();
-                                dataRoleResolver.allSynchronized();
-                                VdbEditor.this.doSave(new NullProgressMonitor());
-                                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
-                                modelDetailsPanel.refreshModelDetails();
-                            }
-                        });
-                    }
-                }
-            });
-            synchronizeAllButton.setEnabled(!vdb.isSynchronized());
-        }
-        { // synchronize button
-            showImportVdbsButton = WidgetFactory.createButton(extraButtonPanel, "Show Import VDBs",//i18n("showImportVdbsButton"), //$NON-NLS-1$
-                                                              GridData.HORIZONTAL_ALIGN_BEGINNING);
-            showImportVdbsButton.setToolTipText(i18n("synchronizeAllButtonToolTip")); //$NON-NLS-1$
-            showImportVdbsButton.addSelectionListener(new SelectionAdapter() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-                 */
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                	
-                	ShowImportVdbsDialog dialog = new ShowImportVdbsDialog(Display.getCurrent().getActiveShell(), getVdb());
-                	
-                	dialog.open();
-                }
-            });
-            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
-        }
         
-        { // Validatin Info
-        	Color blueColor = Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE);
-        	Label label1 = WidgetFactory.createLabel(extraButtonPanel, "  " + i18n("lastValidated") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label1);
-        	
-        	String dateTimeString = i18n("undefined"); //$NON-NLS-1$
-        	if( getVdb().getValidationDateTime() != null ) {
-        		dateTimeString = getVdb().getValidationDateTime().toString();
-        	}
-        	this.validationDateTimeLabel = WidgetFactory.createLabel(extraButtonPanel, dateTimeString);
-        	validationDateTimeLabel.setForeground(blueColor);
-        	validationDateTimeLabel.setText(dateTimeString);
-        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationDateTimeLabel);
-        	
-        	Label label3 = WidgetFactory.createLabel(extraButtonPanel, "    " + i18n("teiidRuntimeVersion") + " : "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(label3);
-        	
-        	String versionString = i18n("undefined"); //$NON-NLS-1$
-        	if( getVdb().getValidationVersion() != null ) {
-        		versionString = getVdb().getValidationVersion();
-        	}
-        	validationVersionLabel = WidgetFactory.createLabel(extraButtonPanel, versionString);
-        	validationVersionLabel.setForeground(blueColor);
-        	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(validationVersionLabel);
+        { // description tab
+            CTabItem descriptionTab = new CTabItem(tabFolder, SWT.NONE);
+            descriptionTab.setText(i18n("descriptionTab")); //$NON-NLS-1$
+            descriptionTab.setToolTipText(i18n("descriptionTabToolTip")); //$NON-NLS-1$
+            Composite pnlDescription = new Composite(tabFolder, SWT.NONE);
+            pnlDescription.setLayout(new GridLayout());
+            pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            descriptionTab.setControl(pnlDescription);
+            descriptionPanel = new DescriptionPanel(pnlDescription, this);
         }
+
         
         // Set Vdb input on Udf and Other files tab.
         this.udfJarsGroup.setInput(vdb);
         this.otherFilesGroup.setInput(vdb);
         
         tabFolder.setSelection(0);
+        
+        return pnlTop;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

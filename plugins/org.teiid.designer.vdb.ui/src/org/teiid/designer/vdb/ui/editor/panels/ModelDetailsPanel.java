@@ -8,10 +8,12 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.DocumentEvent;
@@ -42,12 +44,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.table.ResourceEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -97,77 +99,28 @@ public class ModelDetailsPanel {
     
     @SuppressWarnings("unused")
 	private void createPanel(Composite parent) {
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(parent);
+		Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, 1);
+		Composite headerPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
+		headerPanel.setLayout(new GridLayout(2, false));
+    	
+		Label label = new Label(headerPanel, SWT.NONE);
+		label.setText("Name"); //$NON-NLS-1$
 
-        // model details tab
-
-        CTabItem modelsTab = new CTabItem(tabFolder, SWT.NONE);
-        modelsTab.setText(Messages.modelDetailsPanel_modelDetails);
-        modelsTab.setToolTipText(Messages.modelDetailsPanel_modelDetailsTooltip);
-        
-        Composite modelDetailsPanel = new Composite(tabFolder, SWT.NONE);
-        modelDetailsPanel.setLayout(new GridLayout(1, false));
-        modelDetailsPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		((GridData)modelDetailsPanel.getLayoutData()).widthHint = 200;
-		modelsTab.setControl(modelDetailsPanel);
+		this.modelNameText = new Text(headerPanel, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+		this.modelNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		this.modelNameText.setBackground(headerPanel.getBackground());
+		this.modelNameText.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
 		
-		NAME_LOCATION_DESCRIPTION_PANEL : {
-			Composite subPanel_1 = WidgetFactory.createPanel(modelDetailsPanel, SWT.NONE, GridData.FILL_BOTH, 1, 2);
-			subPanel_1.setLayout(new GridLayout(2, false));
-	    	
-			Label label = new Label(subPanel_1, SWT.NONE);
-			label.setText("Name"); //$NON-NLS-1$
-	
-			this.modelNameText = new Text(subPanel_1, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
-			this.modelNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			this.modelNameText.setBackground(subPanel_1.getBackground());
-			
-			label = new Label(subPanel_1, SWT.NONE);
-			label.setText("Location"); //$NON-NLS-1$
-	
-			this.modelLocationText = new Text(subPanel_1, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
-			this.modelLocationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-			this.modelLocationText.setBackground(subPanel_1.getBackground());
-			
-			Group descriptionGroup = WidgetFactory.createGroup(subPanel_1, i18n("description"), GridData.FILL_BOTH, 2, 1); //$NON-NLS-1$
-	    	
-	        this.modelDescriptionEditor = new StyledTextEditor(descriptionGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-	        final GridData gridData = new GridData(GridData.FILL_BOTH);
-	        gridData.horizontalSpan = 1;
+		label = new Label(headerPanel, SWT.NONE);
+		label.setText("Location"); //$NON-NLS-1$
 
-	        this.modelDescriptionEditor.setLayoutData(gridData);
-	        //this.modelDescriptionEditor.setText(vdb.getDescription());
-	        this.modelDescriptionEditor.getDocument().addDocumentListener(new IDocumentListener() {
-	            /**
-	             * {@inheritDoc}
-	             * 
-	             * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
-	             */
-	            @Override
-	            public void documentAboutToBeChanged( final DocumentEvent event ) {
-	                // nothing to do
-	            }
-
-	            /**
-	             * {@inheritDoc}
-	             * 
-	             * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
-	             */
-	            @Override
-	            public void documentChanged( final DocumentEvent event ) {
-	            	if( selectedVdbModelEntry != null ) {
-	            		selectedVdbModelEntry.setDescription(modelDescriptionEditor.getText());
-	            	}
-	            }
-
-	        });
-	        
-        	selectedVdbModelEntry = null;
-        	modelNameText.setText(Messages.noSelection);
-        	modelLocationText.setText(Messages.noSelection);
-        	modelDescriptionEditor.setText(EMPTY_STRING);
-		}
-		
+		this.modelLocationText = new Text(headerPanel, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
+		this.modelLocationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		this.modelLocationText.setBackground(headerPanel.getBackground());
+		this.modelLocationText.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+    	
+    	
+        CTabFolder tabFolder = WidgetFactory.createTabFolder(mainPanel);
         
         CTabItem bindingsTab = new CTabItem(tabFolder, SWT.NONE);
         bindingsTab.setText(Messages.modelDetailsPanel_sourceBindingDefinition);
@@ -286,6 +239,7 @@ public class ModelDetailsPanel {
 				}
 
 			});
+			
 			// Table containing Source  binding NAME, TRANSLATOR NAME, JNDI NAME
 			BINDING_TABLE : {
 		        // Create Table Viewer
@@ -347,6 +301,59 @@ public class ModelDetailsPanel {
 				});
 			}
 		}
+		
+        // model details tab
+
+        CTabItem modelsTab = new CTabItem(tabFolder, SWT.NONE);
+        modelsTab.setText(i18n("description")); //$NON-NLS-1$
+        modelsTab.setToolTipText(Messages.modelDetailsPanel_modelDetailsTooltip);
+
+        Composite modelDetailsPanel = new Composite(tabFolder, SWT.NONE);
+        modelDetailsPanel.setLayout(new GridLayout(1, false));
+        modelDetailsPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		((GridData)modelDetailsPanel.getLayoutData()).widthHint = 200;
+		modelsTab.setControl(modelDetailsPanel);
+        
+		NAME_LOCATION_DESCRIPTION_PANEL : {
+	    	
+	        this.modelDescriptionEditor = new StyledTextEditor(modelDetailsPanel, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+	        final GridData gridData = new GridData(GridData.FILL_BOTH);
+	        gridData.horizontalSpan = 1;
+
+	        this.modelDescriptionEditor.setLayoutData(gridData);
+	        //this.modelDescriptionEditor.setText(vdb.getDescription());
+	        this.modelDescriptionEditor.getDocument().addDocumentListener(new IDocumentListener() {
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	             */
+	            @Override
+	            public void documentAboutToBeChanged( final DocumentEvent event ) {
+	                // nothing to do
+	            }
+
+	            /**
+	             * {@inheritDoc}
+	             * 
+	             * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
+	             */
+	            @Override
+	            public void documentChanged( final DocumentEvent event ) {
+	            	if( selectedVdbModelEntry != null ) {
+	            		selectedVdbModelEntry.setDescription(modelDescriptionEditor.getText());
+	            	}
+	            }
+
+	        });
+	        
+        	selectedVdbModelEntry = null;
+        	modelNameText.setText(Messages.noSelection);
+        	modelLocationText.setText(Messages.noSelection);
+        	modelDescriptionEditor.setText(EMPTY_STRING);
+        	modelDescriptionEditor.getTextViewer().setEditable(false);
+		}
+        
 		
         CTabItem problemsTab = new CTabItem(tabFolder, SWT.NONE);
         problemsTab.setText(Messages.modelDetailsPanel_problemsTabLabel);
@@ -429,10 +436,12 @@ public class ModelDetailsPanel {
     		columnAliaslabel.setEnabled(false);
     		columnAliasText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
     		problemsViewer.getTable().removeAll();
+    		modelDescriptionEditor.getTextViewer().setEditable(false);
         } else {
         	modelNameText.setText(selectedVdbModelEntry.getName().lastSegment());
         	modelLocationText.setText(selectedVdbModelEntry.getName().removeLastSegments(1).toString());
         	modelDescriptionEditor.setText(selectedVdbModelEntry.getDescription());
+        	modelDescriptionEditor.getTextViewer().setEditable(true);
         	bindingsViewer.getTable().removeAll();
         	for( VdbSource vdbSource : selectedVdbModelEntry.getSourceInfo().getSources() ) {
         		bindingsViewer.add(vdbSource);
