@@ -15,13 +15,13 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
 import org.teiid.query.sql.symbol.GroupSymbol;
-import org.teiid.query.sql.v8.TestQuery8Parser;
+import org.teiid.query.sql.v84.TestQuery84Parser;
 
 /**
  *
  */
 @SuppressWarnings( {"javadoc"} )
-public class TestQuery85Parser extends TestQuery8Parser {
+public class TestQuery85Parser extends TestQuery84Parser {
 
     protected TestQuery85Parser(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

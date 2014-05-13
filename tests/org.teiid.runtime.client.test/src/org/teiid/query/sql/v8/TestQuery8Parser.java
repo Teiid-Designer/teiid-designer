@@ -306,9 +306,5 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         this.teiidVersion = Version.TEIID_8_3.get();
         this.parser = new QueryParser(teiidVersion);
         helpException(sql);
-
-        this.teiidVersion = Version.TEIID_8_4.get();
-        this.parser = new QueryParser(teiidVersion);
-        helpException(sql);
     }
 }
