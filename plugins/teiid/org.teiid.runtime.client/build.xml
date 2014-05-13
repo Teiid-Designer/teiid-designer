@@ -36,6 +36,7 @@
                                  jgroups.jar,
                                  json-simple.jar,
                                  jta.jar,
+                                 netty.jar,
                                  nux.jar,
                                  xnio-api.jar,
                                  xnio-nio.jar,

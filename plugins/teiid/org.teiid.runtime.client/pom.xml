@@ -14,24 +14,25 @@
 	  <version>8.5.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
-        <jbossas-version>7.2.0.Final</jbossas-version>
+        <jbossas-version>7.2.0.Alpha1-redhat-4</jbossas-version>
         <version.org.jboss.jboss-dmr>1.1.6.Final</version.org.jboss.jboss-dmr>
-        <version.org.jboss.modules.jboss-modules>1.2.0.CR1</version.org.jboss.modules.jboss-modules>
+        <version.org.jboss.modules.jboss-modules>1.2.2.Final</version.org.jboss.modules.jboss-modules>
         <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
-        <version.org.jboss.jboss-threads>2.0.0.GA</version.org.jboss.jboss-threads>
+        <version.org.jboss.jboss-threads>2.1.0.Final</version.org.jboss.jboss-threads>
         <version.org.jboss.logging.jboss-logging>3.1.2.GA</version.org.jboss.logging.jboss-logging>
-        <version.org.jboss.marshalling.jboss-marshalling>1.3.16.GA</version.org.jboss.marshalling.jboss-marshalling>
-        <version.org.jboss.marshalling.jboss-marshalling-river>1.3.16.GA</version.org.jboss.marshalling.jboss-marshalling-river>
-        <version.org.jboss.jboss-remoting>3.2.3.GA</version.org.jboss.jboss-remoting>
-        <version.org.jboss.jboss-sasl>1.0.0.Final</version.org.jboss.jboss-sasl>
+        <version.org.jboss.marshalling.jboss-marshalling>1.3.18.GA</version.org.jboss.marshalling.jboss-marshalling>
+        <version.org.jboss.marshalling.jboss-marshalling-river>1.3.18.GA</version.org.jboss.marshalling.jboss-marshalling-river>
+        <version.org.jboss.jboss-remoting>3.2.16.GA</version.org.jboss.jboss-remoting>
+        <version.org.jboss.jboss-sasl>1.0.3.Final</version.org.jboss.jboss-sasl>
+        <version.org.jboss.netty>3.6.2.Final</version.org.jboss.netty>
+        <version.org.jboss.xnio-api>3.0.7.GA</version.org.jboss.xnio-api>
+        <version.org.jboss.xnio-nio>3.0.7.GA</version.org.jboss.xnio-nio>
         <version.json-simple>1.1</version.json-simple>
-        <version.org.jgroups>3.2.7.Final</version.org.jgroups>
+        <version.org.jgroups>3.2.10.Final</version.org.jgroups>
         <version.connector-api>1.5</version.connector-api>
         <version.jta>1.1</version.jta>
         <version.nux>1.6</version.nux>
-        <version.xnio.api>3.0.3.GA</version.xnio.api>
-        <version.xnio.nio>3.0.3.GA</version.xnio.nio>
-        <version.xom>1.2</version.xom>
+        <version.xom>1.2.5</version.xom>
     </properties>
     <build>
         <plugins>
@@ -90,12 +91,12 @@
                                 <artifactItem>
                                     <groupId>org.jboss.xnio</groupId>
                                     <artifactId>xnio-api</artifactId>
-                                    <version>${version.xnio.api}</version>
+                                    <version>${version.org.jboss.xnio-api}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.jboss.xnio</groupId>
                                     <artifactId>xnio-nio</artifactId>
-                                    <version>${version.xnio.nio}</version>
+                                    <version>${version.org.jboss.xnio-nio}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>xom</groupId>
@@ -167,6 +168,11 @@
                                     <artifactId>jboss-vfs</artifactId>
                                     <version>${version.org.jboss.jboss-vfs}</version>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>io.netty</groupId>
+                                    <artifactId>netty</artifactId>
+                                    <version>${version.org.jboss.netty}</version>
+                                </artifactItem>
                             </artifactItems>
                             <skip>false</skip>
                             <stripVersion>true</stripVersion>
@@ -212,25 +218,6 @@
                     <outputDirectory>${project.basedir}/engine</outputDirectory>
                 </configuration>
             </plugin>
-<!--             <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-antrun-plugin</artifactId> -->
-<!--                 <version>1.7</version> -->
-<!--                 <executions> -->
-<!--                     <execution> -->
-<!--                         <id>fix-broken-error-method</id> -->
-<!--                         <phase>process-sources</phase> -->
-<!--                         <configuration> -->
-<!--                             <tasks> -->
-<!--                                 <replaceregexp file="${project.basedir}//SQLParser.java" byline="true" match="jj_add_error_token\(int " replace="jj_add_error_token_broken\(int " /> -->
-<!--                             </tasks> -->
-<!--                         </configuration> -->
-<!--                         <goals> -->
-<!--                             <goal>run</goal> -->
-<!--                         </goals> -->
-<!--                     </execution> -->
-<!--                 </executions> -->
-<!--             </plugin> -->
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
@@ -365,6 +352,33 @@
             <name>JBoss Public Maven Repository Group</name>
             <url>http://repository.jboss.org/nexus/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>jboss-developer-repository-group</id>
+            <name>JBoss Developer Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/developer/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>jboss-eap-alpha</id>
+            <name>JBoss EAP6.1 Alpha</name>
+            <url>http://maven.repository.redhat.com/techpreview/eap6/6.1.0.Alpha1/maven-repository/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -451,6 +465,10 @@
             <groupId>org.jboss</groupId>
             <artifactId>jboss-vfs</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement> 
         <dependencies>
@@ -482,12 +500,12 @@
             <dependency>
                 <groupId>org.jboss.xnio</groupId>
                 <artifactId>xnio-api</artifactId>
-                <version>${version.xnio.api}</version>
+                <version>${version.org.jboss.xnio-api}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.xnio</groupId>
                 <artifactId>xnio-nio</artifactId>
-                <version>${version.xnio.nio}</version>
+                <version>${version.org.jboss.xnio-nio}</version>
             </dependency>
             <dependency>
                 <groupId>xom</groupId>
@@ -558,7 +576,12 @@
                 <groupId>org.jboss</groupId>
                 <artifactId>jboss-vfs</artifactId>
                 <version>${version.org.jboss.jboss-vfs}</version>
-            </dependency>                         
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty</artifactId>
+                <version>${version.org.jboss.netty}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
