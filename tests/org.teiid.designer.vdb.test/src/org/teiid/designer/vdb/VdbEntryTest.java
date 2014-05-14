@@ -17,13 +17,11 @@ import static org.mockito.Mockito.when;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
@@ -248,7 +246,7 @@ public class VdbEntryTest {
     }
 
     @Test
-    public void shouldVerifyEqualityWhenSamePath() {
+    public void shouldVerifyEqualityWhenSamePath() throws Exception {
         final IPath path = new Path("/my/path/filename");
         final VdbEntry thisEntry = new VdbEntry(vdb, path, null);
         final VdbEntry thatEntry = new VdbEntry(vdb, path, null);

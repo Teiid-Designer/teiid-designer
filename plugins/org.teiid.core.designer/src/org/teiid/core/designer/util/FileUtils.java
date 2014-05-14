@@ -240,16 +240,18 @@ public class FileUtils {
     /**
      * @param source
      * @param destination
+     * @throws Exception
      */
-    public static void copy(final File source, final OutputStream destination) {
+    public static void copy(final File source, final OutputStream destination) throws Exception {
         OperationUtil.perform(new UnreliableCopy(source, destination));
     }
 
     /**
      * @param source
      * @param destination
+     * @throws Exception
      */
-    public static void copy(final InputStream source, final File destination) {
+    public static void copy(final InputStream source, final File destination) throws Exception {
         OperationUtil.perform(new UnreliableCopy(source, destination));
     }
 

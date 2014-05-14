@@ -55,6 +55,7 @@ public class Messages  extends NLS {
 	public static String vdbEditor_content_tab_tooltip;
 	public static String vdbEditor_advanced_tab_label;
 	public static String vdbEditor_advanced_tab_tooltip;
+    public static String vdbEditor_loadingErrMessage;
     
     static {
         NLS.initializeMessages("org.teiid.designer.vdb.ui.messages", Messages.class); //$NON-NLS-1$

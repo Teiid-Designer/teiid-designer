@@ -114,7 +114,7 @@ public final class VdbModelEntry extends VdbEntry {
      */
     VdbModelEntry( final Vdb vdb,
                    final IPath name,
-                   final IProgressMonitor monitor ) {
+                   final IProgressMonitor monitor ) throws Exception {
         super(vdb, name, monitor);
         indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
         final Resource model = findModel();
@@ -173,7 +173,7 @@ public final class VdbModelEntry extends VdbEntry {
         }
     }
 
-    private void updateUdfJars(Resource model) {
+    private void updateUdfJars(Resource model) throws Exception {
         if(model==null) return;
 
         final ModelResource mdlResrc = ModelerCore.getModelEditor().findModelResource(model);
@@ -248,7 +248,7 @@ public final class VdbModelEntry extends VdbEntry {
     
     VdbModelEntry( final Vdb vdb,
                    final ModelElement element,
-                   final IProgressMonitor monitor ) {
+                   final IProgressMonitor monitor ) throws Exception {
         super(vdb, element, monitor);
         this.element = element;
         type =  element.getType();
@@ -513,7 +513,7 @@ public final class VdbModelEntry extends VdbEntry {
      */
     @Override
     final void save( final ZipOutputStream out,
-                     final IProgressMonitor monitor ) {
+                     final IProgressMonitor monitor ) throws Exception {
         super.save(out, monitor);
         // Save model index
         save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
@@ -665,7 +665,7 @@ public final class VdbModelEntry extends VdbEntry {
      * @see org.teiid.designer.vdb.VdbEntry#synchronize(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    public final void synchronize( final IProgressMonitor monitor ) {
+    public final void synchronize( final IProgressMonitor monitor ) throws Exception {
         if (getSynchronization() != Synchronization.NotSynchronized) return;
         synchronizeModelEntry(monitor);
         super.synchronize(monitor);

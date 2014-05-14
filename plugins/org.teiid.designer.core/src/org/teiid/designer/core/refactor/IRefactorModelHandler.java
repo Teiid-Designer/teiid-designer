@@ -55,6 +55,7 @@ public interface IRefactorModelHandler {
 	 * 
 	 * @param refactorType
 	 * @param refactoredResource
+	 * @throws Exception
 	 */
-	void postProcess(RefactorType refactorType, final IResource refactoredResource);
+	void postProcess(RefactorType refactorType, final IResource refactoredResource) throws Exception;
 }

@@ -15,6 +15,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
@@ -57,19 +58,26 @@ public class VdbExtractModelsSyncVdbMarkerResolution implements IMarkerResolutio
         		if( !result ) return;
         		VdbUiRefactorHandler.closeVdbEditor(editor);
         	}
-        	
-			// Add the selected Med
-			UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
-				@Override
-				public void run() {
-					fixVdb(theVdbFile);
-				}
-			});
 
-		}
-	}
+            final Exception[] theException = new Exception[1];
+            // Add the selected Med
+            UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        fixVdb(theVdbFile);
+                    } catch (Exception ex) {
+                        theException[0] = ex;
+                    }
+                }
+            });
 
-	void fixVdb(IFile theVdb) {
+            if (theException[0] != null)
+                ErrorHandler.toExceptionDialog(theException[0]);
+        }
+    }
+
+	void fixVdb(IFile theVdb) throws Exception {
 		VdbUtil.synchronizeVdb(theVdb, true, true);
 	}
 

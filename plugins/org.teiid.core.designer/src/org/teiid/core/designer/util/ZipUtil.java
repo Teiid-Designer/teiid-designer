@@ -10,7 +10,6 @@ package org.teiid.core.designer.util;
 import java.io.File;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.teiid.core.designer.util.FileUtils.UnreliableCopy;
 
 /**
@@ -22,7 +21,7 @@ public final class ZipUtil {
 
     public static void copy( final File source,
                              final ZipEntry entry,
-                             final ZipOutputStream destination ) {
+                             final ZipOutputStream destination ) throws Exception {
         OperationUtil.perform(new UnreliableCopy(source, destination) {
 
             @Override

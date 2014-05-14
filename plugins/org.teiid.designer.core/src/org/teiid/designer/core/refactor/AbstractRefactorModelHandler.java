@@ -29,7 +29,7 @@ public abstract class AbstractRefactorModelHandler implements IRefactorModelHand
     }
 
     @Override
-    public void postProcess(RefactorType refactorType, IResource refactoredResource) {
+    public void postProcess(RefactorType refactorType, IResource refactoredResource) throws Exception {
         // Nothing to do
     }
 
