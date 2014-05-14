@@ -15,7 +15,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -83,7 +81,6 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -583,46 +580,60 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         IProject vdbProject = getVdb().getFile().getProject();
         String fileStr = VdbFileDialogUtil.selectFile(shell, vdbProject, vdbFolder);
 
-        List<File> files = new ArrayList<File>();
-        if(fileStr!=null && !fileStr.trim().isEmpty()) {
-            File theFile = VdbHelper.findVdbFile(fileStr,vdbProject);
-            if(theFile!=null && theFile.exists()) {
-                files.add(theFile);
-            }
+        if(fileStr == null || fileStr.trim().isEmpty()) {
+            // Nothing selected so nothing to do
+            return;
         }
 
         // indicates if this is the first time models are being added
         boolean firstTime = (tableViewer.getTable().getItemCount() == 0);
 
         // Add the VdbFileEntry for userFile to the VDB
-        for (final File file : files) {
-            String fileName = file.getName();
-            IPath filePath = new Path(file.getAbsolutePath());
-            // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
-            Set<VdbEntry> currentUserFiles = getVdb().getUserFileEntries();
-            // Matching entry - prompt user for overwrite
-            if(entrySetContainsName(currentUserFiles, fileName)) {
-                // Prompt user whether to overwrite
-                if(ConfirmationDialog.confirm(new ConfirmationDialog(confirmOverwriteMessage))) {
-                    // Find the matching entry
-                    VdbEntry matchingEntry = null;
-                    for(VdbEntry entry: currentUserFiles) {
-                        String entryShortName = entry.getName().lastSegment();
-                        if(entryShortName.equals(fileName)) {
-                            matchingEntry = entry;
-                            break;
-                        }
+        IPath filePath = null;
+        File testFile = new File(fileStr);
+        if (testFile.exists()) {
+            // Absolute file path so not in the project
+            filePath = new Path(testFile.getAbsolutePath());
+        } else {
+            IFile file = vdbProject.getFile(new Path(fileStr));
+            if (file == null) {
+                // Cannot find the file in the project.
+                // Strange since its not on the file system nor in the project.
+                UiConstants.Util.log(IStatus.ERROR, "File " + fileStr + " is not available to be added to the vdb"); //$NON-NLS-1$//$NON-NLS-2$
+                return;
+            }
+
+            // Add the file through the file's project relative path since
+            // the project's path will be appended to it.
+            filePath = file.getProjectRelativePath();
+        }
+
+        String fileName = filePath.lastSegment();
+
+        // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
+        Set<VdbEntry> currentFiles = getVdb().getEntries();
+        // Matching entry - prompt user for overwrite
+        if (entrySetContainsName(currentFiles, fileName)) {
+            // Prompt user whether to overwrite
+            if (ConfirmationDialog.confirm(new ConfirmationDialog(confirmOverwriteMessage))) {
+                // Find the matching entry
+                VdbEntry matchingEntry = null;
+                for (VdbEntry entry : currentFiles) {
+                    String entryShortName = entry.getName().lastSegment();
+                    if (entryShortName.equals(fileName)) {
+                        matchingEntry = entry;
+                        break;
                     }
-                    // Remove the current entry
-                    if(matchingEntry != null)
-                        getVdb().removeEntry(matchingEntry);
-                    // Add the selected file
-                    getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
                 }
-            // No matching entries - safe to add the new entry
-            } else {
+                // Remove the current entry
+                if (matchingEntry != null)
+                    getVdb().removeEntry(matchingEntry);
+                // Add the selected file
                 getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
             }
+            // No matching entries - safe to add the new entry
+        } else {
+            getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
         }
 
         // refresh table from model
@@ -1987,8 +1998,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     void vdbNotification( final String property ) {
         if (CLOSED.equals(property)) return;
         if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property) || MODEL_JNDI_NAME.equals(property)) {
-            modelsGroup.getTable().getViewer().refresh();
-            otherFilesGroup.getTable().getViewer().refresh();
+            if (! modelsGroup.getTable().getViewer().isBusy())
+                modelsGroup.getTable().getViewer().refresh();
+
+            if (! otherFilesGroup.getTable().getViewer().isBusy())
+                otherFilesGroup.getTable().getViewer().refresh();
+
             modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
             modelDetailsPanel.refreshModelDetails();
         }

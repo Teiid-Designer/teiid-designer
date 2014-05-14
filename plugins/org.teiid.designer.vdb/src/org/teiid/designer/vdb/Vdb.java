@@ -639,7 +639,9 @@ public final class Vdb {
             if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
                 zipName = zipName.substring(1, zipName.length());
             }
-            userFileEntries.add(entry);
+            if(! zipName.startsWith(VdbFolders.UDF.getReadFolder())) {
+                userFileEntries.add(entry);
+            }
         }
         return userFileEntries;
     }
