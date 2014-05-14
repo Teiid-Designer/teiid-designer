@@ -40,7 +40,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 public final class ImportManager implements IExecutionConfigurationListener {
 
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
-    private static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
+    public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
     private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
     private static final int VDB_LOADING_TIMEOUT_SEC = 120;
     

@@ -110,6 +110,7 @@ public class Messages extends NLS {
     public static String SelectTargetPage_SelectTargetModelMsg;
     public static String SelectTargetPage_NoOpenProjMsg;
     public static String SelectTargetPage_SrcLocationNotSpecified;
+    public static String SelectTargetPage_ModelExistsWithThisNameButWrongTypeMsg;
     public static String SelectTargetPage_ConnProfileInTargetIncompatible;
     public static String SelectTranslatorPage_ConfirmDeleteTitle;
     public static String SelectTranslatorPage_ConfirmDeleteMsg;
@@ -122,7 +123,7 @@ public class Messages extends NLS {
     public static String SelectTranslatorPage_NoDataSourceNameMsg;
     public static String SelectTranslatorPage_NoDataSourceDriverMsg;
     public static String SelectTranslatorPage_NoTranslatorMsg;
-
+    public static String SelectTranslatorPage_importPropertiesLabel;
 
     public static String ShowDDLPage_title;
     public static String ShowDDLPage_DDLContentsGroup;

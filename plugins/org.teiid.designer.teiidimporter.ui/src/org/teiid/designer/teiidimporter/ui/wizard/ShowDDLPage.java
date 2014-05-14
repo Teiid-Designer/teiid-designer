@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ddl.importer.ui.DdlImportDifferencesPage;
 import org.teiid.designer.teiidimporter.ui.Messages;
@@ -53,7 +53,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
  */
 public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 
-	private final String EMPTY = StringUtilities.EMPTY_STRING;
+	private final String EMPTY = StringConstants.EMPTY_STRING;
 	private final int GROUP_HEIGHT_190 = 190;
 
     private Text ddlContentsBox;

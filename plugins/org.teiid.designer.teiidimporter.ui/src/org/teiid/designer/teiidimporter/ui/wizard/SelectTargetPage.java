@@ -30,14 +30,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
-import org.teiid.designer.teiidimporter.ui.panels.ImportPropertiesPanel;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -54,6 +54,12 @@ import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
+/**
+ * SelectTargetPage 
+ * TeiidImportWizard page - for selection of the target model
+ * 
+ * @since 8.5
+ */
 public class SelectTargetPage extends AbstractWizardPage implements UiConstants {
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
@@ -250,8 +256,8 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             this.importManager.setTargetModelLocation(folder.getFullPath().makeRelative());
             this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
         } else {
-            this.importManager.setTargetModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.targetModelContainerText.setText(StringUtilities.EMPTY_STRING);
+            this.importManager.setTargetModelLocation(new Path(StringConstants.EMPTY_STRING));
+            this.targetModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
         validatePage();
@@ -287,7 +293,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
             this.targetModelFileText.setText(this.importManager.getTargetModelName());
         } else {
-            this.targetModelFileText.setText(StringUtilities.EMPTY_STRING);
+            this.targetModelFileText.setText(StringConstants.EMPTY_STRING);
         }
         
         // Validate the page
@@ -296,11 +302,45 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     
     // Handler for ModelText changes
     void handleTargetModelTextChanged() {
-        if( !CoreStringUtil.isEmpty(this.targetModelFileText.getText()) ) {
+    	String mdlText = this.targetModelFileText.getText();
+        if( !CoreStringUtil.isEmpty(mdlText) && !matchingModelOfWrongTypeExists(mdlText) ) {
            this.importManager.setTargetModelName(this.targetModelFileText.getText());
         }
 
         validatePage();
+    }
+    
+    /**
+     * Check if the supplied modelName already exists, but is a different type
+     * @param modelName the proposed model Name
+     * @return 'true' if model of different type exists, otherwise 'false'
+     */
+    private boolean matchingModelOfWrongTypeExists(String modelName ) {
+    	IPath modelLocation = importManager.getTargetModelLocation();
+    	if(modelLocation==null) return false;
+    	
+    	IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
+    	
+        IResource containerResource = root.findMember(modelLocation);
+        if(containerResource==null || !(containerResource instanceof IContainer) ) {
+        	return false;
+        }
+        IContainer container = (IContainer)containerResource;
+        if(!container.exists()) return false;
+        
+        IPath modelPath = container.getFullPath().append(modelName);
+        if (!modelName.endsWith(ModelerCore.MODEL_FILE_EXTENSION)) modelPath = modelPath.addFileExtension(ModelerCore.MODEL_FILE_EXTENSION.substring(1));
+
+        IResource modelResource = root.findMember(modelPath);
+        if( modelResource==null || !ModelUtil.isModelFile(modelResource) ) {
+        	return false;
+        }
+        
+        // See if model is non-relational
+        if (!RelationalPackage.eNS_URI.equals(ModelUtil.getXmiHeader(modelResource).getPrimaryMetamodelURI())) {
+        	return true;
+        }
+        return false;
     }
     
     /*
@@ -356,6 +396,12 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
                 ModelNameUtil.IGNORE_CASE );
         if( status.getSeverity() == IStatus.ERROR ) {
             setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_MODEL_NAME + status.getMessage(), ERROR);
+            return false;
+        }
+        
+        // Check if a model exists but wrong type
+        if(matchingModelOfWrongTypeExists(targetModelFileText.getText().trim())) {
+            setThisPageComplete(Messages.SelectTargetPage_ModelExistsWithThisNameButWrongTypeMsg, ERROR);
             return false;
         }
         
