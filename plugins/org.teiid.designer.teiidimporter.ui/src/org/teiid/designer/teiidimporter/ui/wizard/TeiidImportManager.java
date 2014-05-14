@@ -221,7 +221,6 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         			String value = prop.getOverriddenValue();
         			String key = prop.getDefinition().getId();
         			allProps.put(key, value);
-        			System.out.println("      getOptionalImportProps() import prop >>> key = " + key + "  value = " + value);
         		}
         	}
         }
@@ -374,11 +373,19 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         	ddl = Messages.TeiidImportManager_getDdlErrorMsg;
         	success = false;
         }
-        
+                
+        String modifiedDdl = null;
         // If successful getting the DDL, write it to the temp file
         try {
         	if(success) {
-        		writeDdlToTempFile(ddl);
+                // TEIIDDES-2127 - With 8.7, teiid started to schema-qualify the constraint references.
+                // Now we must modify the DDL to remove qualifiers - since we will never have cross-schema references with this import.
+        		if(ddl!=null) {
+        			String importVdbSourceModel = IMPORT_VDB_NAME + ImportManager.IMPORT_SRC_MODEL + "."; //$NON-NLS-1$
+        			modifiedDdl = ddl.replaceAll(importVdbSourceModel, ""); //$NON-NLS-1$
+        		}
+                
+        		writeDdlToTempFile(modifiedDdl);
         	} else {
         		writeDdlToTempFile(""); //$NON-NLS-1$
         	}
@@ -386,7 +393,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
             UTIL.log(ex);
             WidgetUtil.showError(ex);
         }
-        return ddl;
+        return modifiedDdl;
     }
     
     /*
@@ -735,6 +742,10 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         return ddlImporter;
     }
     
+    /**
+     * Get the TranslatorOverride
+     * @return the TranslatorOverride
+     */
     public TranslatorOverride getTranslatorOverride() {
     	return this.translatorOverride;
     }
@@ -835,7 +846,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 			            for (PropertyDefinition propDefn : propertyDefinitionsFromServer) {
 			                // found a matching one
 			                if (keyStr.equals(propDefn.getId())) {
-			                    serverPropDefn = (PropertyDefinition)propDefn;
+			                    serverPropDefn = propDefn;
 			                    defaultServerPropDefns.remove(serverPropDefn); // Remove it from cached list
 			                    break;
 			                }

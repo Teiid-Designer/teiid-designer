@@ -47,8 +47,8 @@ import org.teiid.designer.ui.viewsupport.TranslatorPropertyLabelProvider;
 
 
 /**
- * SelectTranslatorAndTargetPage 
- * Page 2 of the TeiidImportWizard - for selection of the translator and target model
+ * SelectTranslatorPage 
+ * TeiidImportWizard page - for selection of the translator
  * 
  * @since 8.1
  */
@@ -83,6 +83,13 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
 
         setControl(mainPanel);
 
+        // Must have a running 8+ server to use this wizard.
+        if(!importManager.isValidImportServer()) {
+            setErrorMessage(Messages.selectDataSourcePage_InvalidServerMsg); 
+            setPageComplete(false);
+            return;
+        }
+        
         Label serverNameLabel = new Label(mainPanel,SWT.NONE);
         String serverString;
         try {
@@ -172,7 +179,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
     }
     
     private void createImportPropertiesPanel(Composite parent) {
-        Group mainPanel = WidgetFactory.createGroup(parent, "Import Properties");
+        Group mainPanel = WidgetFactory.createGroup(parent, Messages.SelectTranslatorPage_importPropertiesLabel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(mainPanel);
 
         { // right-side is an override description and table with the selected translator's properties
