@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -200,7 +201,7 @@ public class ModelBuildUtil {
             while (itr.hasNext()) {
                 final IResource iResource = (IResource)itr.next();
                 if (iResource.exists()) {
-                    iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+                	iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_ZERO);
                 } // endif
             }
         } catch (final CoreException e) {
@@ -220,7 +221,7 @@ public class ModelBuildUtil {
             // going to create fresh markets
             // defect 16537 - make sure resource exists before deleting markers
             if (iResource.exists()) {
-                iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_INFINITE);
+            	iResource.deleteMarkers(IMarker.PROBLEM, false, IResource.DEPTH_ZERO);
             } // endif
         } catch (final CoreException e) {
             ModelerCore.Util.log(e);
