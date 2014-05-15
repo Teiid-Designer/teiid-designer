@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,10 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -98,7 +95,6 @@ import org.teiid.designer.runtime.spi.FailedTeiidDataSource;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -172,7 +168,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @return <code>true</code> if the model depends on the Preview VDBs model entry
      */
     private boolean dependsOn( IFile modelFile,
-                               IFile pvdbFile ) {
+                               IFile pvdbFile ) throws Exception {
         // TODO implement dependsOn
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
         

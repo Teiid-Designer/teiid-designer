@@ -8,7 +8,6 @@
 package org.teiid.designer.advisor.ui.dialogs;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -44,6 +43,7 @@ import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.DesignerProperties;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceDialog;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
@@ -206,13 +206,20 @@ public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeLis
 			setErrorMessage(Messages.GenerateRestWarDialog_noVdbError);
 			return;
 		}
-		
-		if( !GenerateRestWarAction.isRestWarVdb((IFile)this.selectedVdb) ) {
-			getButton(OK).setEnabled(false);
-			setErrorMessage(Messages.GenerateRestWarDialog_noRestProceduresInVdbError);
-			return;
-		}
-		
+
+        boolean restWarVdb = false;
+        try {
+            restWarVdb = GenerateRestWarAction.isRestWarVdb((IFile)this.selectedVdb);
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
+            restWarVdb = false;
+        }
+
+        if (!restWarVdb) {
+            getButton(OK).setEnabled(false);
+            setErrorMessage(Messages.GenerateRestWarDialog_noRestProceduresInVdbError);
+            return;
+        }
 
 		getButton(OK).setEnabled(true);
 		setErrorMessage(null);

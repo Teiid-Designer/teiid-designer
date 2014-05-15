@@ -21,6 +21,7 @@ import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
 
 
@@ -57,27 +58,34 @@ public class ExecuteVdbAction extends Action {
 
 	@Override
 	public void run() {
-    	if(!checkForConnectedServer()) return;
+        if (!checkForConnectedServer())
+            return;
 
-    	ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), designerProperties);
+        ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), designerProperties);
 
-		dialog.open();
+        dialog.open();
 
-		if (dialog.getReturnCode() == Window.OK) {
-			IFile vdb = dialog.getSelectedVdb();
-			if (vdb != null) {
-				
-		    	if(!isVdbSyncd(vdb)) {
-		    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-		    		String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
-		    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
-		        	if (!MessageDialog.openQuestion(shell,title,msg)) return;
-		     	}
+        if (dialog.getReturnCode() != Window.OK)
+            return;
 
-				worker.run(vdb);
-			}
-		}
-	}
+        IFile vdb = dialog.getSelectedVdb();
+        if (vdb == null)
+            return;
+
+        try {
+            if (!isVdbSyncd(vdb)) {
+                Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+                String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
+                String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
+                if (!MessageDialog.openQuestion(shell, title, msg))
+                    return;
+            }
+
+            worker.run(vdb);
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
+        }
+    }
 	
     /*
      * Check that the default teiid instance is connected.  Show dialog if it is not.
@@ -95,7 +103,7 @@ public class ExecuteVdbAction extends Action {
         return true;
     }
     
-    private boolean isVdbSyncd(IFile file) {
+    private boolean isVdbSyncd(IFile file) throws Exception {
     	Vdb vdb = new Vdb(file, null);
     	return vdb.isSynchronized();
     }

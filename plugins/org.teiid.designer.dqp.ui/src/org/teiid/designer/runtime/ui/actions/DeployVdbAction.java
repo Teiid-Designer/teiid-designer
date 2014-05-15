@@ -391,7 +391,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                                     PreferenceConstants.AUTO_CREATE_DATA_SOURCE_DEFAULT);
     }
     
-    private static void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) {
+    private void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) throws Exception {
     	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
 	    String vdbName = vdb.getFile().getFullPath().removeFileExtension().lastSegment();

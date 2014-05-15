@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,7 +168,7 @@ public final class Vdb {
      */
     public Vdb( final IFile file,
                 final boolean preview,
-                final IProgressMonitor monitor ) {
+                final IProgressMonitor monitor ) throws Exception {
     	this.builder = new VdbModelBuilder();
         this.file = file;
         // Create folder for VDB in state folder
@@ -305,13 +304,8 @@ public final class Vdb {
         this.passwordPattern = pwdPatt[0];
         this.authenticationType = authType[0];
         if( valDateTime[0] != null ) {
-        	try {
-                SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); //$NON-NLS-1$
-				this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
-			} catch (ParseException ex) {
-				// TODO Auto-generated catch block
-				ex.printStackTrace();
-			}
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); //$NON-NLS-1$
+            this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
         }
         this.validationVersion = valVersion[0];
     }
@@ -321,7 +315,7 @@ public final class Vdb {
      * @param monitor
      */
     public Vdb( final IFile file,
-                final IProgressMonitor monitor ) {
+                final IProgressMonitor monitor ) throws Exception {
         this(file, false, monitor);
     }
 
@@ -352,7 +346,7 @@ public final class Vdb {
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      */
     public final VdbEntry addEntry( final IPath name,
-                                    final IProgressMonitor monitor ) {
+                                    final IProgressMonitor monitor ) throws Exception {
         return addEntry(new VdbEntry(this, name, monitor), entries, monitor);
     }
     
@@ -364,7 +358,7 @@ public final class Vdb {
      */
     public final VdbEntry addFileEntry( final IPath name,
                                         final VdbFileEntry.FileEntryType entryType,
-                                        final IProgressMonitor monitor ) {
+                                        final IProgressMonitor monitor ) throws Exception {
         return addEntry(new VdbFileEntry(this, name, entryType, monitor), entries, monitor);
     }
 
@@ -390,7 +384,7 @@ public final class Vdb {
      * @return the newly added {@link VdbModelEntry model entry}, or the existing entry with the supplied name.
      */
     public final VdbModelEntry addModelEntry( final IPath name,
-                                              final IProgressMonitor monitor ) {
+                                              final IProgressMonitor monitor ) throws Exception {
         VdbModelEntry modelEntry = new VdbModelEntry(this, name, monitor);
         VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries, monitor);
 
@@ -1005,7 +999,7 @@ public final class Vdb {
      * 
      * @param monitor
      */
-    public final void save( final IProgressMonitor monitor ) {
+    public final void save( final IProgressMonitor monitor ) throws Exception {
         // Build JAXB model
         final VdbElement vdbElement = new VdbElement(this);
         // Save archive
@@ -1187,7 +1181,7 @@ public final class Vdb {
     }
 
     private final void synchronize( final Collection<VdbEntry> entries,
-                                    final IProgressMonitor monitor ) {
+                                    final IProgressMonitor monitor ) throws Exception {
         for (final VdbEntry entry : entries)
             if (entry.getSynchronization() == Synchronization.NotSynchronized) entry.synchronize(monitor);
     }
@@ -1195,7 +1189,7 @@ public final class Vdb {
     /**
      * @param monitor
      */
-    public final void synchronize( final IProgressMonitor monitor ) {
+    public final void synchronize( final IProgressMonitor monitor ) throws Exception {
     	getBuilder().start();
 
         synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
@@ -1246,8 +1240,9 @@ public final class Vdb {
      * into the otherFiles collection
      *
      * @param monitor
+     * @throws Exception
      */
-    public void migrateXsdFiles(IProgressMonitor monitor) {
+    public void migrateXsdFiles(IProgressMonitor monitor) throws Exception {
         Map<VdbModelEntry, VdbFileEntry> modelIndex = new HashMap<VdbModelEntry, VdbFileEntry>();
 
         /*

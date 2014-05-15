@@ -10,7 +10,6 @@ package org.teiid.designer.ddl.importer;
 import java.io.File;
 import java.io.FileReader;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -85,8 +84,9 @@ public class DdlImporter {
     /**
      * @param monitor
      * @param totalWork
+     * @throws Exception
      */
-    public void importDdl(final IProgressMonitor monitor, final int totalWork ) {
+    public void importDdl(final IProgressMonitor monitor, final int totalWork ) throws Exception {
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;

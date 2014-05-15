@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -185,22 +184,22 @@ public class VdbResourceChange extends ResourceChange {
 
         try {
             vdbFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-        } catch (CoreException ex) {
-            return new Status(IStatus.ERROR, VdbPlugin.ID, ex.getMessage());
-        }
 
-        // Synchronise will add the new resource
-        VdbUtil.synchronizeVdb(vdbFile, false, true);
+            // Synchronise will add the new resource
+            VdbUtil.synchronizeVdb(vdbFile, false, true);
 
-        // This should clean up and remove old resources
-        Vdb actualVdb = new Vdb(vdbFile, monitor);
-        for (VdbModelEntry entry : actualVdb.getModelEntries()) {
-            for (PathPair pathPair : replacements) {
-                if (entry.getName().equals(pathPair.getSourcePath())) {
-                    actualVdb.removeEntry(entry);
-                    actualVdb.save(monitor);
+            // This should clean up and remove old resources
+            Vdb actualVdb = new Vdb(vdbFile, monitor);
+            for (VdbModelEntry entry : actualVdb.getModelEntries()) {
+                for (PathPair pathPair : replacements) {
+                    if (entry.getName().equals(pathPair.getSourcePath())) {
+                        actualVdb.removeEntry(entry);
+                        actualVdb.save(monitor);
+                    }
                 }
             }
+        } catch (Exception ex) {
+            return new Status(IStatus.ERROR, VdbPlugin.ID, ex.getMessage());
         }
 
         return Status.OK_STATUS;
