@@ -10,10 +10,13 @@ package org.teiid.designer.ui.editors;
 import static org.teiid.designer.ui.PluginConstants.Prefs.General.AUTO_OPEN_EDITOR_IF_NEEDED;
 import static org.teiid.designer.ui.UiConstants.Util;
 import static org.teiid.designer.ui.UiConstants.Extensions.MODEL_EDITOR;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -173,10 +176,12 @@ abstract public class ModelEditorManager {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-                for (Iterator iter = editor.getAllEditors().iterator(); iter.hasNext();) {
-                    Object nextPage = iter.next();
-                    if (nextPage == thePage) {
-                        editor.selectPage(thePage);
+            	List copyOfAllEditors = new ArrayList(editor.getAllEditors());
+                for (Object nextPage : copyOfAllEditors) {
+                    if( nextPage instanceof ModelEditorPage ) {
+	                    if (nextPage == thePage && !((ModelEditorPage)nextPage).getControl().isDisposed()) {
+	                        editor.selectPage(thePage);
+	                    }
                     }
                 }
             }
