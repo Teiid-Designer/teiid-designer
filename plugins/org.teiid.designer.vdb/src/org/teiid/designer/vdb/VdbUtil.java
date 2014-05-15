@@ -33,7 +33,6 @@ import javax.xml.validation.SchemaFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -41,18 +40,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.vdb.Vdb.Xml;
@@ -271,7 +269,7 @@ public class VdbUtil {
         	i++;
         	sb.append(val);
         	if( i< numVal ) {
-        		sb.append(StringUtilities.COMMA).append(StringUtilities.SPACE);
+        		sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
         	}
         }
         
@@ -560,9 +558,9 @@ public class VdbUtil {
 	 * @param model file either .xmi or .xsd
 	 * @param theVdb can be null
 	 * @return true if model can be added to an existing VDB
-	 * @throws ModelWorkspaceException 
+	 * @throws Exception
 	 */
-	public static boolean canAddModelToVdb(final IFile model, final Vdb theVdb) throws ModelWorkspaceException {
+	public static boolean canAddModelToVdb(final IFile model, final Vdb theVdb) throws Exception {
 		ModelResource mr = ModelUtil.getModel(model);
 		
 		// Assume existing names will not include duplicates, but the MAP will insure they are unique
@@ -589,11 +587,7 @@ public class VdbUtil {
 		
 		// Now get dependent models and check those
 		ResourceFinder finder = null;
-		try {
-			finder = ModelerCore.getModelContainer().getResourceFinder();
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
-        }
+		finder = ModelerCore.getModelContainer().getResourceFinder();
 		Resource[] refs = finder.findReferencesFrom(mr.getEmfResource(), true, false);
 		
 		for( Resource res : refs ) {
@@ -644,7 +638,7 @@ public class VdbUtil {
      * 
      * @param f The file for which checksum needs to be computed
      * @return The checksum
-     * @throws Exception 
+     * @throws Exception
      * @since 4.3
      */
     public static long getCheckSum(final IFile f) throws Exception {
@@ -731,7 +725,7 @@ public class VdbUtil {
     private static IPath getProjectRelativeModelPath(final String modelPathInVdb, final IProject targetProject) {
         IPath vdbModelPath = new Path(modelPathInVdb);
 
-        IPath targetPath = new Path(StringUtilities.EMPTY_STRING);
+        IPath targetPath = new Path(StringConstants.EMPTY_STRING);
         int iSegs = vdbModelPath.segmentCount();
         if( iSegs > 1 ) {
             for( int i=1; i<iSegs; i++ ) {
@@ -748,8 +742,10 @@ public class VdbUtil {
      * @param zipEntryFullPath
      * @param projectRelativeTargetFolder
      * @return true if successful, false if not
+	 * @throws Exception
      */
-    private static boolean extractFileFromVdbToSameProject(final IFile zipFile, final String zipEntryFullPath, IPath projectRelativeTargetFolder) {
+    private static boolean extractFileFromVdbToSameProject(final IFile zipFile, final String zipEntryFullPath, IPath projectRelativeTargetFolder)
+                                                                                                                throws Exception {
         ZipInputStream zin = null;
         boolean result = false;
 
@@ -783,8 +779,6 @@ public class VdbUtil {
                     break;
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         } finally {
             if( zin != null ) {
                 try {
@@ -795,12 +789,7 @@ public class VdbUtil {
             }
         }
 
-        try {
-            zipFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-        } catch (CoreException ex) {
-            VdbPlugin.UTIL.log(IStatus.ERROR, ex, ex.getMessage());
-        }
-
+        zipFile.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
         return result;
     }
 
@@ -808,8 +797,9 @@ public class VdbUtil {
      * @param theVdb the VDB
      *
 	 * @return status of synchronize
+	 * @throws Exception
      */
-    public static boolean synchronizeWorkspace(final IFile theVdb) {
+    public static boolean synchronizeWorkspace(final IFile theVdb) throws Exception {
         boolean result = false;
         if (! theVdb.exists())
             return result;

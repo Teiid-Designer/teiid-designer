@@ -9,7 +9,6 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,14 +22,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -39,10 +35,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
@@ -77,11 +73,10 @@ import org.teiid.designer.vdb.manifest.SourceElement;
  * @since 8.0
  */
 @ThreadSafe
-public final class VdbModelEntry extends VdbEntry {
+public final class VdbModelEntry extends VdbEntry implements StringConstants {
 
     private static final String INDEX_FOLDER = "runtime-inf/"; //$NON-NLS-1$
-    private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
-    
+
     /**
      * @param path the model path (may not be <code>null</code>)
      * @return the default name to use as the source name (never <code>null</code>)
@@ -111,6 +106,7 @@ public final class VdbModelEntry extends VdbEntry {
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param name the resource path (may not be <code>null</code>)
      * @param monitor the progress monitor or <code>null</code>
+     * @throws Exception
      */
     VdbModelEntry( final Vdb vdb,
                    final IPath name,
@@ -140,7 +136,7 @@ public final class VdbModelEntry extends VdbEntry {
                 final String defaultName = createDefaultSourceName(name);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 String translator = helper.getTranslatorName(mr);
-                if( translator == null ) translator = EMPTY_STR;
+                if( translator == null ) translator = EMPTY_STRING;
                 
                 // Jndi defaults to source name, unless the property is found in the model.
                 String jndiName = defaultName;
@@ -169,7 +165,7 @@ public final class VdbModelEntry extends VdbEntry {
         }
         */
         if (this.description.get() == null) {
-            this.description.set(EMPTY_STR);
+            this.description.set(EMPTY_STRING);
         }
     }
 
@@ -257,7 +253,7 @@ public final class VdbModelEntry extends VdbEntry {
         if (element.getSources() != null && !element.getSources().isEmpty()) {
             for (final SourceElement source : element.getSources()) {
             	sourceInfo.add(source.getName(), source.getJndiName(), 
-            			source.getTranslatorName() == null ? StringUtilities.EMPTY_STRING : source.getTranslatorName());
+            			source.getTranslatorName() == null ? EMPTY_STRING : source.getTranslatorName());
             }
         }
         if(VdbUtil.FUNCTION.equals(type) || VdbUtil.VIRTUAL.equals(type) || VdbUtil.PHYSICAL.equals(type)) {
@@ -330,7 +326,7 @@ public final class VdbModelEntry extends VdbEntry {
         clean();
     }
 
-    private Resource findModel() {
+    private Resource findModel() throws Exception {
         IResource resource = ModelerCore.getWorkspace().getRoot().findMember(getName());
 
         // model not found in workspace
@@ -342,38 +338,27 @@ public final class VdbModelEntry extends VdbEntry {
 
         // as a last resort force loading the resource
         if (emfResource == null) {
-            try {
-                emfResource = ModelerCore.getModelContainer().getResource(URI.createFileURI(resource.getLocation().toString()), true);
-            } catch (CoreException e) {
-                throw CoreModelerPlugin.toRuntimeException(e);
-            }
+            emfResource = ModelerCore.getModelContainer().getResource(URI.createFileURI(resource.getLocation().toString()), true);
         }
 
         return emfResource;
     }
-    
-    private String findModelClass(Resource resource) {
-    	try {
-			return ModelUtil.getModelClass(resource);
-		} catch (ModelWorkspaceException e) {
-			throw CoreModelerPlugin.toRuntimeException(e);
-		}
+
+    private String findModelClass(Resource resource) throws Exception {
+        return ModelUtil.getModelClass(resource);
     }
 
-    private ResourceFinder getFinder() {
-        try {
-            return ModelerCore.getModelContainer().getResourceFinder();
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
-        }
+    private ResourceFinder getFinder() throws Exception {
+        return ModelerCore.getModelContainer().getResourceFinder();
     }
 
     /**
      * Determine if the resource for this entry contains any User-Defined functions.  Currently this includes:
      * 1) FunctionModel with ScalarFunctions and 2) Relational Procedures where function=true
      * @return 'true' if the Model resource contains a User-Defined function, 'false' if not.
+     * @throws Exception
      */
-    public final boolean containsUdf() {
+    public final boolean containsUdf() throws Exception {
         boolean hasUdf = false;
         
         // If its a FunctionModel it has ScalarFunctions/Udfs in it
@@ -383,10 +368,7 @@ public final class VdbModelEntry extends VdbEntry {
         } else {
             Resource modelResc = findModel();
             boolean isRelational = false;
-            try {
-                isRelational = ModelUtil.getModelClass(modelResc).equals(ModelUtil.MODEL_CLASS_RELATIONAL);
-            } catch (ModelWorkspaceException ex) {
-            }
+            isRelational = ModelUtil.getModelClass(modelResc).equals(ModelUtil.MODEL_CLASS_RELATIONAL);
             if(isRelational) {
                 try {
                     final ModelResource mr = ModelerCore.getModelEditor().findModelResource(modelResc);
@@ -519,17 +501,13 @@ public final class VdbModelEntry extends VdbEntry {
         save(out, new ZipEntry(INDEX_FOLDER + indexName), getIndexFile(), monitor);
 
         if (!getVdb().isPreview()) {
-            try {
-                // Convert problems for this model entry to markers on the VDB file
-                final IFile vdbFile = getVdb().getFile();
-                for (final Problem problem : problems) {
-                    final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
-                    marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
-                    marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
-                    marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
-                }
-            } catch (final Exception error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
+            // Convert problems for this model entry to markers on the VDB file
+            final IFile vdbFile = getVdb().getFile();
+            for (final Problem problem : problems) {
+                final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
+                marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
+                marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
+                marker.setAttribute(IMarker.LOCATION, getName().toString() + '/' + problem.getLocation());
             }
         }
     }
@@ -671,112 +649,114 @@ public final class VdbModelEntry extends VdbEntry {
         super.synchronize(monitor);
     }
 
-    void synchronizeModelEntry( final IProgressMonitor monitor ) {
+    void synchronizeModelEntry(final IProgressMonitor monitor) throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
-        if (workspaceFile == null) return;
+        if (workspaceFile == null)
+            return;
         clean();
-        try {
-            final Resource model = findModel();
-            if (ModelUtil.isPhysical(model)) {
-            	if( !this.getSourceInfo().isMultiSource() ) {
-	                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
-	                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
-	                
-	                final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
-	                final String resourceTranslatorName = helper.getTranslatorName(mr);
-	                if (!CoreStringUtil.isEmpty(resourceTranslatorName) && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
-	                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STR : resourceTranslatorName);
-	                }
-	                
-	                Properties translatorProps = helper.getTranslatorProperties(mr);
-	                if( !translatorProps.isEmpty() ) {
-	                	updateTranslatorOverrides(translatorProps);
-	                }
-	                
-	                final String jndiName = this.sourceInfo.getSource(0).getJndiName();
-	                final String resourceJndiName = helper.getJndiProperty(mr);
-	                if (!CoreStringUtil.isEmpty(resourceJndiName) && !CoreStringUtil.equals(jndiName, resourceJndiName)) {
-	                    this.sourceInfo.getSource(0).setJndiName(resourceJndiName == null ? EMPTY_STR : resourceJndiName);
-	                }
-            	}
-                
-            }
-            if (containsUdf()) {
-                updateUdfJars(model);
+        final Resource model = findModel();
+        if (ModelUtil.isPhysical(model)) {
+            if (!this.getSourceInfo().isMultiSource()) {
+                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
+                final ConnectionInfoHelper helper = new ConnectionInfoHelper();
+
+                final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
+                final String resourceTranslatorName = helper.getTranslatorName(mr);
+                if (!CoreStringUtil.isEmpty(resourceTranslatorName)
+                    && !CoreStringUtil.equals(translatorName, resourceTranslatorName)) {
+                    this.sourceInfo.getSource(0).setTranslatorName(resourceTranslatorName == null ? EMPTY_STRING : resourceTranslatorName);
+                }
+
+                Properties translatorProps = helper.getTranslatorProperties(mr);
+                if (!translatorProps.isEmpty()) {
+                    updateTranslatorOverrides(translatorProps);
+                }
+
+                final String jndiName = this.sourceInfo.getSource(0).getJndiName();
+                final String resourceJndiName = helper.getJndiProperty(mr);
+                if (!CoreStringUtil.isEmpty(resourceJndiName) && !CoreStringUtil.equals(jndiName, resourceJndiName)) {
+                    this.sourceInfo.getSource(0).setJndiName(resourceJndiName == null ? EMPTY_STRING : resourceJndiName);
+                }
             }
 
-            // Build model if necessary
-            // Get Index File and check time/date to see if we need to rebuild or not
-            IPath indexPath = new Path(IndexUtil.INDEX_PATH + indexName); //
-            File indexFile = indexPath.toFile();
-            long indexDate = -1;
-            if( indexFile.exists() ) {
-            	indexDate = indexFile.lastModified();
-            	
+        }
+        if (containsUdf()) {
+            updateUdfJars(model);
+        }
+
+        // Build model if necessary
+        // Get Index File and check time/date to see if we need to rebuild or not
+        IPath indexPath = new Path(IndexUtil.INDEX_PATH + indexName); //
+        File indexFile = indexPath.toFile();
+        long indexDate = -1;
+        if (indexFile.exists()) {
+            indexDate = indexFile.lastModified();
+
+        }
+        if (workspaceFile.getLocalTimeStamp() > indexDate) {
+            // Note that this will index and validate the model in the workspace
+            getVdb().getBuilder().buildResources(monitor,
+                                                 Collections.singleton(workspaceFile),
+                                                 ModelerCore.getModelContainer(),
+                                                 false);
+        }
+        problems.clear();
+        // Synchronize model problems
+        for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
+            Object attr = marker.getAttribute(IMarker.SEVERITY);
+            if (attr == null) {
+                continue;
             }
-            if( workspaceFile.getLocalTimeStamp() > indexDate ) {
-            	// Note that this will index and validate the model in the workspace
-            	getVdb().getBuilder().buildResources(monitor, Collections.singleton(workspaceFile), ModelerCore.getModelContainer(), false);
+            // Asserting attr is an Integer...
+            final int severity = ((Integer)attr).intValue();
+            if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
+                problems.add(new Problem(marker));
             }
-            problems.clear();
-            // Synchronize model problems
-            for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
-                Object attr = marker.getAttribute(IMarker.SEVERITY);
-                if (attr == null) {
-                    continue;
-                }
-                // Asserting attr is an Integer...
-                final int severity = ((Integer)attr).intValue();
-                if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
-                    problems.add(new Problem(marker));
-                }
-            }
-            // Also add imported models if not a preview
-            if (!getVdb().isPreview()) {
-            	importVdbNames.clear();
-                Resource[] refs = getFinder().findReferencesFrom(model, true, false);
-                if (refs != null) {
-                    for (final Resource importedModel : refs) {
-                    	java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
-                        IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
-                        final IPath name = modelFiles[0].getFullPath();
-                        
-                        // Check Model File to see if it contains a vdb name property
-                        final String importVdbName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0], VdbConstants.VDB_NAME_KEY);
-                        if( importVdbName != null ) {
-                        	importVdbNames.add(importVdbName);
-                        } else {
-	                        VdbModelEntry importedEntry = null;
-	
-	                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
-	                            if (name.equals(entry.getName())) {
-	                                importedEntry = entry;
-	                                break;
-	                            }
-	                        }
-	
-	                        if (importedEntry == null) importedEntry = getVdb().addModelEntry(name, monitor);
-	                        imports.add(importedEntry);
-	                        importedEntry.importedBy.add(this);
+        }
+        // Also add imported models if not a preview
+        if (!getVdb().isPreview()) {
+            importVdbNames.clear();
+            Resource[] refs = getFinder().findReferencesFrom(model, true, false);
+            if (refs != null) {
+                for (final Resource importedModel : refs) {
+                    java.net.URI uri = java.net.URI.create(importedModel.getURI().toString());
+                    IFile[] modelFiles = ModelerCore.getWorkspace().getRoot().findFilesForLocationURI(uri);
+                    final IPath name = modelFiles[0].getFullPath();
+
+                    // Check Model File to see if it contains a vdb name property
+                    final String importVdbName = ModelUtil.getModelAnnotationPropertyValue(modelFiles[0],
+                                                                                           VdbConstants.VDB_NAME_KEY);
+                    if (importVdbName != null) {
+                        importVdbNames.add(importVdbName);
+                    } else {
+                        VdbModelEntry importedEntry = null;
+
+                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
+                            if (name.equals(entry.getName())) {
+                                importedEntry = entry;
+                                break;
+                            }
                         }
+
+                        if (importedEntry == null)
+                            importedEntry = getVdb().addModelEntry(name, monitor);
+                        imports.add(importedEntry);
+                        importedEntry.importedBy.add(this);
                     }
                 }
-                
-                // Process for any import VDBs
-                // if list is empty, then there may be import VDB's that need to get removed from the VDB
-                getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
-                
-                getVdb().synchronizeUdfJars(udfJars);
             }
-            // Copy snapshot of workspace file index to VDB folder
-            // TODO: If index name of workspace file can change (?), we have to delete the old index and update our index name
-            final Index index = IndexUtil.getIndexFile(indexName, IndexUtil.INDEX_PATH + indexName, getName().lastSegment());
-            FileUtils.copy(index.getIndexFile(), getIndexFile().getParentFile(), true);
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
-        }
-    }
 
+            // Process for any import VDBs
+            // if list is empty, then there may be import VDB's that need to get removed from the VDB
+            getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+
+            getVdb().synchronizeUdfJars(udfJars);
+        }
+        // Copy snapshot of workspace file index to VDB folder
+        // TODO: If index name of workspace file can change (?), we have to delete the old index and update our index name
+        final Index index = IndexUtil.getIndexFile(indexName, IndexUtil.INDEX_PATH + indexName, getName().lastSegment());
+        FileUtils.copy(index.getIndexFile(), getIndexFile().getParentFile(), true);
+    }
 
     /**
      * Replaces the given old entry with the new entry in this entry's

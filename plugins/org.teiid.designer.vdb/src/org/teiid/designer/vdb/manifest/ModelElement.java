@@ -95,8 +95,9 @@ public class ModelElement extends EntryElement {
      * Used to save a model entry
      * 
      * @param entry
+     * @throws Exception
      */
-    ModelElement( final VdbModelEntry entry ) {
+    ModelElement( final VdbModelEntry entry ) throws Exception {
         super(entry);
         final String lastSeg = entry.getName().lastSegment();
         final int ndx = lastSeg.lastIndexOf('.');

@@ -23,11 +23,11 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /**
  * Chooser Dialog for selecting a VdbFile from the Workspace - either 
@@ -93,11 +93,12 @@ final class ChooseFileDialogContentProvider implements ITreeContentProvider {
         IContainer container = (IContainer)element;
         final List<IResource> children = new ArrayList<IResource>();
         try {
-            for (final IResource resource : container.members())
+            for (final IResource resource : container.members()) {
                 if ((resource instanceof IContainer && hasChildren(resource))
                     || (resource instanceof IFile && validFile((IFile)resource))) children.add(resource);
+            }
         } catch (final CoreException error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
+            ErrorHandler.toExceptionDialog(error);
         }
         return children.toArray(new IResource[children.size()]);
     }
@@ -123,7 +124,7 @@ final class ChooseFileDialogContentProvider implements ITreeContentProvider {
                     if (hasChildren(resource)) return true;
                 } else if (validFile((IFile)resource)) return true;
         } catch (final CoreException error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
+            ErrorHandler.toExceptionDialog(error);
         }
         return false;
     }

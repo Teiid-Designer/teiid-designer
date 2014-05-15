@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -35,7 +34,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -63,6 +61,7 @@ import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.PropertyItem;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 /**
@@ -350,7 +349,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
             try {
             	targetModelResc.save(monitor, true);
             } catch (Exception error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
+                ErrorHandler.toExceptionDialog(error);
             }
             return true;
         }
@@ -789,13 +788,18 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         	// Use the importer to process the difference report, generating the model
             if (ddlImporter.getDifferenceReport() == null) return false;
 
+            final Exception[] saveException = new Exception[0];
             new ProgressMonitorDialog(shell).run(false, false, new IRunnableWithProgress() {
 
                 @Override
                 public void run( final IProgressMonitor monitor ) {
                     monitor.beginTask(Messages.TeiidImportManager_ImportingMsg, 100);
                     monitor.worked(50);
-                    ddlImporter.save(monitor, 50);
+                    try {
+                        ddlImporter.save(monitor, 50);
+                    } catch (Exception ex) {
+                        saveException[0] = ex;
+                    }
                     // Create a ConnectionProfile and injects into model
                     if(isCreateConnectionProfile()) {
                     	injectProfileIntoTarget(monitor);
@@ -803,12 +807,15 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                     monitor.done();
                 }
             });
+
+            if (saveException[0] != null)
+                throw saveException[0];
+
         } catch (final InterruptedException error) {
             undeployDynamicVdb();
             return false;
         } catch (final Exception error) {
-            error.printStackTrace();
-            WidgetUtil.showError(error);
+            ErrorHandler.toExceptionDialog(error);
             undeployDynamicVdb();
             return false;
         }

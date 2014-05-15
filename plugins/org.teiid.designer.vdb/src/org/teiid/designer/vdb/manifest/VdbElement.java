@@ -10,14 +10,12 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbDataRole;
@@ -75,8 +73,9 @@ public class VdbElement implements Serializable {
 
     /**
      * @param vdb
+     * @throws Exception
      */
-    public VdbElement( final Vdb vdb ) {
+    public VdbElement( final Vdb vdb ) throws Exception {
         name = vdb.getName().removeFileExtension().lastSegment();
         description = vdb.getDescription();
         version = 1;
