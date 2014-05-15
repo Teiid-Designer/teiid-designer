@@ -229,6 +229,16 @@
             profile="org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile"
             class="org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionInfoProvider"/>
    </extension>
+   
+   <extension
+       id="org.teiid.designer.datatools.profiles.mongodb.ConnectionInfoProvider"
+       name="%mongoDbConnectionInfoProvider"
+       point="org.teiid.designer.datatools.ConnectionInfoProvider">
+       <ConnectionInfoProvider
+            profile="org.eclipse.birt.data.oda.mongodb"
+            class="org.teiid.designer.datatools.profiles.mongodb.MongoDbConnectionInfoProvider"/>
+   </extension>
+   
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
          <category

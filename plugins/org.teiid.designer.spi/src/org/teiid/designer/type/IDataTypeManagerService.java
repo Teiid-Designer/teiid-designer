@@ -97,6 +97,8 @@ public interface IDataTypeManagerService {
         @Updated(version=Version.TEIID_8_0, replaces="connector-file")
         FILE("file"), //$NON-NLS-1$ 
 
+        MONGODB("mongodb"), //$NON-NLS-1$ 
+
         JDBC_XA("connector-jdbc-xa"), //$NON-NLS-1$
 
         @Updated(version=Version.TEIID_8_0, replaces="connector-ws")
