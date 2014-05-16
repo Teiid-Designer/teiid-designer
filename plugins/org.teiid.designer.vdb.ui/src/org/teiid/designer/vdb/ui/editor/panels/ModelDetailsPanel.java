@@ -7,13 +7,11 @@
 */
 package org.teiid.designer.vdb.ui.editor.panels;
 
-import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
-
+import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.DocumentEvent;

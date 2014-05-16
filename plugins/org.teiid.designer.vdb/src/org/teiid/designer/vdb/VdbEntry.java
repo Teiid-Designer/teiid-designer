@@ -10,7 +10,6 @@ package org.teiid.designer.vdb;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +18,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,9 +29,9 @@ import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 
@@ -170,7 +168,15 @@ public class VdbEntry {
      * @return the associated workspace file, or <code>null</code> if it doesn't exist
      */
     public final IFile findFileInWorkspace() {
-        final IResource resource = ModelerCore.getWorkspace().getRoot().findMember(name);
+        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(name);
+        if (resource == null) {
+            // Lets try a little harder since the file may be in the project but not a model resource
+            if (vdb != null && vdb.getFile() != null && vdb.getFile().getProject() != null) {
+                IProject vdbProject = vdb.getFile().getProject();
+                resource = vdbProject.findMember(name);
+            }
+        }
+
         if (!(resource instanceof IFile)) {
             setSynchronization(Synchronization.NotApplicable);
             return null;

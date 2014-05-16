@@ -9,7 +9,6 @@ package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_VISIBLE;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
@@ -43,12 +40,12 @@ import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.index.Index;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.resource.EmfResource;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -92,7 +89,7 @@ public final class VdbModelEntry extends VdbEntry {
     private String modelUuid;
     private final Set<Problem> problems = new HashSet<Problem>();
     private final AtomicBoolean visible = new AtomicBoolean(true);
-    private final CopyOnWriteArraySet<VdbModelEntry> imports = new CopyOnWriteArraySet<VdbModelEntry>();
+    private final CopyOnWriteArraySet<VdbEntry> imports = new CopyOnWriteArraySet<VdbEntry>();
     private final CopyOnWriteArraySet<VdbModelEntry> importedBy = new CopyOnWriteArraySet<VdbModelEntry>();
     private final CopyOnWriteArraySet<String> importVdbNames = new CopyOnWriteArraySet<String>();
     private final CopyOnWriteArraySet<VdbFileEntry> udfJars = new CopyOnWriteArraySet<VdbFileEntry>();
@@ -295,9 +292,14 @@ public final class VdbModelEntry extends VdbEntry {
         // Clear problems
         problems.clear();
         // Clear set of imports and inverse relationships
-        for (final VdbModelEntry entry : imports) {
-            entry.importedBy.remove(this);
-            if (entry.isBuiltIn()) entry.dispose();
+        for (final VdbEntry entry : imports) {
+            if (entry instanceof VdbModelEntry) {
+                VdbModelEntry vdbModelEntry = (VdbModelEntry) entry;
+                vdbModelEntry.importedBy.remove(this);
+
+                if (vdbModelEntry.isBuiltIn())
+                    entry.dispose();
+            }
         }
         imports.clear();
         getIndexFile().delete();
@@ -408,7 +410,7 @@ public final class VdbModelEntry extends VdbEntry {
     /**
      * @return the immutable set of model entries imported by this model entry
      */
-    public final Set<VdbModelEntry> getImports() {
+    public final Set<? extends VdbEntry> getImports() {
         return Collections.unmodifiableSet(imports);
     }
     
@@ -427,7 +429,7 @@ public final class VdbModelEntry extends VdbEntry {
     }
 
 
-    private File getIndexFile() {
+    File getIndexFile() {
         return new File(getVdb().getFolder(), INDEX_FOLDER + indexName);
     }
 
@@ -762,7 +764,20 @@ public final class VdbModelEntry extends VdbEntry {
             throw CoreModelerPlugin.toRuntimeException(error);
         }
     }
-    
+
+
+    /**
+     * Replaces the given old entry with the new entry in this entry's
+     * imports collection
+     *
+     * @param oldEntry
+     * @param newEntry
+     */
+    void replaceImport(VdbEntry oldEntry, VdbEntry newEntry) {
+        imports.remove(oldEntry);
+        imports.add(newEntry);
+    }
+
     /**
      * {@inheritDoc}
      * 
@@ -785,7 +800,7 @@ public final class VdbModelEntry extends VdbEntry {
         builder.append(", problems?="); //$NON-NLS-1$
         builder.append(!problems.isEmpty());
         builder.append(", imports=["); //$NON-NLS-1$
-        for (final Iterator<VdbModelEntry> iter = imports.iterator(); iter.hasNext();) {
+        for (final Iterator<VdbEntry> iter = imports.iterator(); iter.hasNext();) {
             builder.append(iter.next().getName());
             if (iter.hasNext()) builder.append(", "); //$NON-NLS-1$
         }
