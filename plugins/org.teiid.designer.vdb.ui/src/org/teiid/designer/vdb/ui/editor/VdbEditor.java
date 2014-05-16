@@ -82,7 +82,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.ui.UiConstants;
@@ -108,6 +108,7 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry;
+import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
@@ -543,6 +544,80 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         tabFolder.setSelection(0);
     }
 
+    void addSelectionToVdb(VdbFolders vdbFolder, TableViewer tableViewer,
+                                           FileEntryType fileEntryType, String confirmOverwriteMessage) {
+        // userFile Selection Dialog
+        final Shell shell = Display.getCurrent().getActiveShell();
+
+        // Get the VDB Project
+        IProject vdbProject = getVdb().getFile().getProject();
+        String fileStr = VdbFileDialogUtil.selectFile(shell, vdbProject, vdbFolder);
+
+        if(fileStr == null || fileStr.trim().isEmpty()) {
+            // Nothing selected so nothing to do
+            return;
+        }
+
+        // indicates if this is the first time models are being added
+        boolean firstTime = (tableViewer.getTable().getItemCount() == 0);
+
+        // Add the VdbFileEntry for userFile to the VDB
+        IPath filePath = null;
+        File testFile = new File(fileStr);
+        if (testFile.exists()) {
+            // Absolute file path so not in the project
+            filePath = new Path(testFile.getAbsolutePath());
+        } else {
+            IFile file = vdbProject.getFile(new Path(fileStr));
+            if (file == null) {
+                // Cannot find the file in the project.
+                // Strange since its not on the file system nor in the project.
+                UiConstants.Util.log(IStatus.ERROR, "File " + fileStr + " is not available to be added to the vdb"); //$NON-NLS-1$//$NON-NLS-2$
+                return;
+            }
+
+            // Add the file through the file's project relative path since
+            // the project's path will be appended to it.
+            filePath = file.getProjectRelativePath();
+        }
+
+        String fileName = filePath.lastSegment();
+
+        // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
+        Set<VdbEntry> currentFiles = getVdb().getEntries();
+        // Matching entry - prompt user for overwrite
+        if (entrySetContainsName(currentFiles, fileName)) {
+            // Prompt user whether to overwrite
+            if (ConfirmationDialog.confirm(new ConfirmationDialog(confirmOverwriteMessage))) {
+                // Find the matching entry
+                VdbEntry matchingEntry = null;
+                for (VdbEntry entry : currentFiles) {
+                    String entryShortName = entry.getName().lastSegment();
+                    if (entryShortName.equals(fileName)) {
+                        matchingEntry = entry;
+                        break;
+                    }
+                }
+                // Remove the current entry
+                if (matchingEntry != null)
+                    getVdb().removeEntry(matchingEntry);
+                // Add the selected file
+                getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
+            }
+            // No matching entries - safe to add the new entry
+        } else {
+            getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
+        }
+
+        // refresh table from model
+        tableViewer.refresh();
+
+        // pack columns if first time a file is added
+        if (firstTime) {
+            WidgetUtil.pack(tableViewer);
+        }
+    }
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void createUdfJarsControl( Composite parent ) {
         final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
@@ -675,60 +750,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                               // UDF jar selection dialog
-                final Shell shell = Display.getCurrent().getActiveShell();
-                // Get the VDB Project
-                IProject vdbProject = getVdb().getFile().getProject();
-                String fileStr = VdbFileDialogUtil.selectUdfOrFile(shell, vdbProject, true);
-                
-                List<File> files = new ArrayList<File>();
-                if(fileStr!=null && !fileStr.trim().isEmpty()) {
-                    File theFile = VdbHelper.findVdbFile(fileStr,vdbProject);
-                    if(theFile!=null && theFile.exists()) {
-                        files.add(theFile);
-                    }
-                }
-
-                // indicates if this is the first time Udf Jars are being added
-                boolean firstTime = (udfJarsGroup.getTable().getViewer().getTable().getItemCount() == 0);
-
-                // Add the VdbFileEntry for UDF Jar to the VDB
-                for (final File file : files) {
-                    String filePath = file.getAbsolutePath();
-                    String fileName = file.getName();
-                    // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
-                    Set<VdbEntry> currentUdfJarFiles = getVdb().getUdfJarEntries();
-                    // Matching entry - prompt user for overwrite
-                    if(entrySetContainsName(currentUdfJarFiles,fileName)) {
-                        // Prompt user whether to overwrite
-                        if(ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_OVERWRITE_UDFJAR_MESSAGE))) {
-                            // Find the matching entry
-                            VdbEntry matchingEntry = null;
-                            for(VdbEntry entry: currentUdfJarFiles) {
-                                String entryShortName = entry.getName().lastSegment();
-                                if(entryShortName.equals(fileName)) {
-                                    matchingEntry=entry;
-                                    break;
-                                }
-                            }
-                            // Remove the current entry
-                            if(matchingEntry!=null) getVdb().removeEntry(matchingEntry);
-                            // Add the selected file
-                            getVdb().addFileEntry(new Path(filePath), VdbFileEntry.FileEntryType.UDFJar, new NullProgressMonitor());
-                        }
-                    // No matching entries - safe to add the new entry
-                    } else {
-                        getVdb().addFileEntry(new Path(filePath), VdbFileEntry.FileEntryType.UDFJar, new NullProgressMonitor());
-                    }
-                }
-
-                // refresh table from model
-                udfJarsGroup.getTable().getViewer().refresh();
-
-                // pack columns if first time a file is added
-                if (firstTime) {
-                    WidgetUtil.pack(udfJarsGroup.getTable().getViewer());
-                }
+                addSelectionToVdb(VdbFolders.UDF,
+                                              udfJarsGroup.getTable().getViewer(),
+                                              VdbFileEntry.FileEntryType.UDFJar,
+                                              CONFIRM_OVERWRITE_UDFJAR_MESSAGE);
             }
         };
         udfJarsGroup.add(addProvider);
@@ -783,7 +808,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public void selected( IStructuredSelection selection ) {
                 if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
-                final Set<VdbModelEntry> importedBy = new HashSet<VdbModelEntry>();
+                final Set<VdbEntry> importedBy = new HashSet<VdbEntry>();
                 for (final Object element : selection.toList()) {
                     entries.add((VdbEntry)element);
                     if (element instanceof VdbModelEntry) importedBy.addAll(((VdbModelEntry)element).getImportedBy());
@@ -963,61 +988,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                // userFile Selection Dialog
-                final Shell shell = Display.getCurrent().getActiveShell();
-                
-                // Get the VDB Project
-                IProject vdbProject = getVdb().getFile().getProject();
-                String fileStr = VdbFileDialogUtil.selectUdfOrFile(shell, vdbProject, false);
-                
-                List<File> files = new ArrayList<File>();
-                if(fileStr!=null && !fileStr.trim().isEmpty()) {
-                    File theFile = VdbHelper.findVdbFile(fileStr,vdbProject);
-                    if(theFile!=null && theFile.exists()) {
-                        files.add(theFile);
-                    }
-                }
-
-                // indicates if this is the first time models are being added
-                boolean firstTime = (otherFilesGroup.getTable().getViewer().getTable().getItemCount() == 0);
-
-                // Add the VdbFileEntry for userFile to the VDB
-                for (final File file : files) {
-                    String filePath = file.getAbsolutePath();
-                    String fileName = file.getName();
-                    // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
-                    Set<VdbEntry> currentUserFiles = getVdb().getUserFileEntries();
-                    // Matching entry - prompt user for overwrite
-                    if(entrySetContainsName(currentUserFiles,fileName)) {
-                        // Prompt user whether to overwrite
-                        if(ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_OVERWRITE_USERFILE_MESSAGE))) {
-                            // Find the matching entry
-                            VdbEntry matchingEntry = null;
-                            for(VdbEntry entry: currentUserFiles) {
-                                String entryShortName = entry.getName().lastSegment();
-                                if(entryShortName.equals(fileName)) {
-                                    matchingEntry=entry;
-                                    break;
-                                }
-                            }
-                            // Remove the current entry
-                            if(matchingEntry!=null) getVdb().removeEntry(matchingEntry);
-                            // Add the selected file
-                            getVdb().addFileEntry(new Path(filePath), VdbFileEntry.FileEntryType.UserFile, new NullProgressMonitor());
-                        }
-                    // No matching entries - safe to add the new entry
-                    } else {
-                        getVdb().addFileEntry(new Path(filePath), VdbFileEntry.FileEntryType.UserFile, new NullProgressMonitor());
-                    }
-                }
-
-                // refresh table from model
-                otherFilesGroup.getTable().getViewer().refresh();
-
-                // pack columns if first time a file is added
-                if (firstTime) {
-                    WidgetUtil.pack(otherFilesGroup.getTable().getViewer());
-                }
+                addSelectionToVdb(VdbFolders.OTHER_FILES,
+                                              otherFilesGroup.getTable().getViewer(),
+                                              VdbFileEntry.FileEntryType.UserFile,
+                                              CONFIRM_OVERWRITE_USERFILE_MESSAGE);
             }
         };
         otherFilesGroup.add(addProvider);
@@ -1072,10 +1046,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public void selected( IStructuredSelection selection ) {
                 if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
                 final Set<VdbEntry> entries = new HashSet<VdbEntry>();
-                final Set<VdbModelEntry> importedBy = new HashSet<VdbModelEntry>();
+                final Set<VdbEntry> importedBy = new HashSet<VdbEntry>();
                 for (final Object element : selection.toList()) {
                     entries.add((VdbEntry)element);
-                    if (element instanceof VdbModelEntry) importedBy.addAll(((VdbModelEntry)element).getImportedBy());
+                    if (element instanceof VdbModelEntry)
+                        importedBy.addAll(((VdbModelEntry)element).getImportedBy());
                 }
                 if (!importedBy.isEmpty()) importedBy.removeAll(entries);
                 if (!importedBy.isEmpty()) {
@@ -1128,12 +1103,16 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     boolean entrySetContainsName(Set<VdbEntry> entries, String shortName) {
         List<String> currentNames = new ArrayList<String>(entries.size());
-        for(VdbEntry entry: entries) {
+
+        for (VdbEntry entry : entries) {
             IPath entryPath = entry.getName();
             String entryName = entryPath.lastSegment();
             currentNames.add(entryName);
+
         }
-        if(currentNames.contains(shortName)) return true;
+
+        if (currentNames.contains(shortName))
+            return true;
         return false;
     }
     
@@ -1580,12 +1559,15 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             return false;
                         }
                         final IFile file = (IFile)element;
-                        if (!ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) {
+                        if (!ModelUtilities.isModelFile(file)) {
                         	return false;
                         }
-//                        if( ModelUtilities.isVdbSourceModel(file) ) {
-//                        	return false;
-//                        }
+
+                        if (ModelUtil.isXsdFile(file)) {
+                            // xsd files now added as other files - TEIIDDES-2120
+                            return false;
+                        }
+
                         for (final VdbModelEntry modelEntry : getVdb().getModelEntries())
                             if (file.equals(modelEntry.findFileInWorkspace())) return false;
                         return true;
@@ -1925,8 +1907,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     void vdbNotification( final String property ) {
         if (CLOSED.equals(property)) return;
         if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property) || MODEL_JNDI_NAME.equals(property)) {
-            modelsGroup.getTable().getViewer().refresh();
-            otherFilesGroup.getTable().getViewer().refresh();
+            if (! modelsGroup.getTable().getViewer().isBusy())
+                modelsGroup.getTable().getViewer().refresh();
+
+            if (! otherFilesGroup.getTable().getViewer().isBusy())
+                otherFilesGroup.getTable().getViewer().refresh();
+
             modelsGroup.getTable().getViewer().getTable().redraw(); // needed to update the synchronized image
             modelDetailsPanel.refreshModelDetails();
         }

@@ -21,7 +21,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
-import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.validation.ObjectValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -299,7 +299,7 @@ public class ProcedureFunctionRule implements ObjectValidationRule {
             if(resources!=null) {
                 for(int i=0; i<resources.length; i++) {
                     IResource theResc = resources[i];
-                    if(theResc instanceof IFolder && ((IFolder)theResc).getName().equalsIgnoreCase(VdbHelper.UDF_FOLDER)) { 
+                    if(theResc instanceof IFolder && VdbFolders.UDF.getReadFolder().equalsIgnoreCase(((IFolder)theResc).getName())) { 
                         libFolder = (IFolder)theResc;
                         break;
                     }

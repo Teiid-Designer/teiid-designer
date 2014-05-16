@@ -59,6 +59,10 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	public static final String MISSING_JNDI_NAME = "missingJndiName"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String MODEL_WITH_ERRORS = "modelWithErrors"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String DUPLICATE_MODEL_NAMES = "duplicateModelNames"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+	public static final String SINGLE_AUTHENTICATION_TYPE_IGNORED = "singleAuthenticationTypeIgnored"; //$NON-NLS-1$
 	
     private enum MarkerType {
     	DEFAULT,
@@ -71,7 +75,9 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	DIFFERENT_VALIDATION_VERSION,
     	MISSING_TRANSLATOR_TYPE,
     	MISSING_JNDI_NAME,
-    	MODEL_WITH_ERRORS,;
+    	MODEL_WITH_ERRORS,
+    	DUPLICATE_MODEL_NAMES,
+    	SINGLE_AUTHENTICATION_TYPE_IGNORED;
     }
     
     /**
@@ -188,6 +194,8 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_TRANSLATOR_TYPE);
     				} if( iStatus.getMessage().indexOf("and will not be ACTIVE") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MODEL_WITH_ERRORS);
+    				} else if(iStatus.getMessage().indexOf("VDB cannot contain models") > 0 ) { //$NON-NLS-1$
+    					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DUPLICATE_MODEL_NAMES);
     				} else {
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DEFAULT);
     				}
@@ -230,6 +238,8 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
 			attributes.put(MISSING_MODEL, true);
 		} else if (markerType == MarkerType.DIFFERENT_VALIDATION_VERSION) {
 			attributes.put(DIFFERENT_VALIDATION_VERSION, true);
+		} else if (markerType == MarkerType.DUPLICATE_MODEL_NAMES) {
+		    attributes.put(DUPLICATE_MODEL_NAMES, true);
 		}
 		
 		attributes.put(IMarker.LOCATION, file.getName());
