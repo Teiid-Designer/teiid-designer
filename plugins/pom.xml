@@ -63,7 +63,6 @@
 		<module>org.teiid.designer.modelgenerator.wsdl</module>
 		<module>org.teiid.designer.modelgenerator.wsdl.ui</module>
 		<module>org.teiid.designer.modelgenerator.xml</module>
-		<module>org.teiid.designer.modelgenerator.ldap.ui</module>
 		<module>org.teiid.designer.modeshape</module>
 		<module>org.teiid.designer.query.ui</module>
 		<module>org.teiid.designer.relational</module>
