@@ -225,7 +225,6 @@ public class ColumnsInfoPanel {
 		String currentRootPath = this.getFileInfo().getRootPath();
 		if( !StringUtilities.equals(currentRootPath, this.rootPathText.getText())) {
 			this.getFileInfo().setRootPath(this.rootPathText.getText());
-			notifyColumnDataChanged();
 		}
 	}
 

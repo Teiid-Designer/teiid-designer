@@ -64,8 +64,6 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	
 	boolean creatingControl = false;
 
-	boolean synchronizing = false;
-
 	/**
 	 * @since 4.0
 	 */
@@ -142,8 +140,9 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 				this.fileInfo = xmlFileInfo;
 				
 				loadFileContentsViewer();
+				
+				selectedFileText.setText(fileInfo.getDataFile().getName());
 			}
-			synchronizeUI();
 		}
 	}
 
@@ -179,14 +178,6 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	WizardUtil.setPageComplete(this, message, severity);
     }
 
-	private void synchronizeUI() {
-		synchronizing = true;
-
-		selectedFileText.setText(fileInfo.getDataFile().getName());
-
-		synchronizing = false;
-	}
-    
     private void createXmlTableSqlGroup(Composite parent) {
     	Group xmlTableOptionsGroup = WidgetFactory.createGroup(parent, Messages.GeneratedSQLStatement, SWT.NONE, 1);
     	GridData gd = new GridData(GridData.FILL_BOTH);
@@ -211,11 +202,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
         updateSqlText();
     }
     
-    public void handleInfoChanged(boolean reloadFileContents) {
-    	if( synchronizing ) return;
-    	
-    	synchronizeUI();
-
+    public void handleInfoChanged(boolean reloadFileContents) {    	
     	this.columnsInfoPanel.refresh();
     	
     	updateSqlText();
