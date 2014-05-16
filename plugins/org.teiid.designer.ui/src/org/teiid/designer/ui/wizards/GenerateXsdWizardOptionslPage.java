@@ -473,12 +473,11 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
             while (params.hasNext()) {
                 final ProcedureParameter param = (ProcedureParameter)params.next();
                 final DirectionKind dir = param.getDirection();
-                if (dir == DirectionKind.OUT_LITERAL && res == null) {
+                if ((dir.equals(DirectionKind.OUT_LITERAL) ||
+                	dir.equals(DirectionKind.INOUT_LITERAL) ||
+                	dir.equals(DirectionKind.RETURN_LITERAL))
+                	  && res == null)  {
                     addRoot(root);
-                } else if (dir == DirectionKind.INOUT_LITERAL) {
-                    if (res == null) {
-                        addRoot(root);
-                    }
                 }
             }
         } else if (root instanceof IFile) {
