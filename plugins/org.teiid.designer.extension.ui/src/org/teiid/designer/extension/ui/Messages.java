@@ -13,6 +13,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
 
     public static String builtInColumnText;
+    public static String importedColumnText;
     public static String descriptionColumnText;
     public static String extendedMetamodelUriColumnText;
     public static String modelTypeColumnText;
@@ -29,6 +30,7 @@ public class Messages extends NLS {
     public static String versionColumnToolTip;
     public static String descriptionColumnToolTip;
     public static String builtInColumnToolTip;
+    public static String importedColumnToolTip;
     public static String namespaceUriColumnToolTip;
     public static String metamodelUriColumnToolTip;
     public static String modelTypesColumnToolTip;
@@ -53,6 +55,9 @@ public class Messages extends NLS {
     public static String allowedValueLabel;
     public static String allowedValueToolTip;
     public static String editAllowedValueDialogTitle;
+
+    public static String openMedViewFailedTitle;
+    public static String openMedCouldNotViewFile;
 
     public static String cloneMedActionText;
     public static String cloneMedActionToolTip;

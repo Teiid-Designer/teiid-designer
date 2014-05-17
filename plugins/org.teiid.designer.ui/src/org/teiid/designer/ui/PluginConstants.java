@@ -9,9 +9,9 @@ package org.teiid.designer.ui;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.common.PreferenceKeyAndDefaultValue;
@@ -30,8 +30,7 @@ public interface PluginConstants {
     public static final String EMPTY_STRING = ""; //$NON-NLS-1$
     public static final String MODEL_PROJECT_NATURE_ID = ModelerCore.NATURE_ID;
     public static final String XML_EXTENSIONS_PROJECT_NAME = "XMLExtensionsProject"; //$NON-NLS-1$
-    public static final String BUILTIN_MEDS_PROJECT_NAME = "BuiltInMedsProject"; //$NON-NLS-1$
-    public static final List<String> HIDDEN_PROJECTS = Arrays.asList(XML_EXTENSIONS_PROJECT_NAME, BUILTIN_MEDS_PROJECT_NAME);
+    public static final List<String> HIDDEN_PROJECTS = Arrays.asList(XML_EXTENSIONS_PROJECT_NAME, ExtensionConstants.BUILTIN_MEDS_PROJECT_NAME);
      
     // ============================================================================================================================
     // Image constants

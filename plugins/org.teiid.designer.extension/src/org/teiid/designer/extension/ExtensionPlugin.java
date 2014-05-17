@@ -9,15 +9,18 @@ package org.teiid.designer.extension;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -45,7 +48,41 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 /**
  * @since 8.0
  */
-public class ExtensionPlugin extends Plugin {
+public class ExtensionPlugin extends Plugin implements ExtensionConstants {
+
+    /**
+     * Visitor that collects mxd resources
+     */
+    public static class MxdResourceCollectorVisitor implements IResourceVisitor {
+
+        List<IFile> resources = new ArrayList<IFile>();
+
+        @Override
+        public boolean visit(IResource resource) {
+            /*
+             * Always needs to return true since the search will not recurse into
+             * projects and folders!
+             *
+             * However, we only add the resource if its an mxd.
+             */
+            if (! resource.exists() || resource.getType() != IResource.FILE)
+                return true;
+
+            if (MED_EXTENSION.equalsIgnoreCase(resource.getFileExtension()))
+                resources.add((IFile) resource);
+
+            return true;
+        }
+
+        /**
+         * Get the found file resource collection
+         *
+         * @return collection of {@link IFile} resources
+         */
+        public Collection<IFile> getFileResources() {
+            return Collections.unmodifiableCollection(resources);
+        }
+    }
 
     /**
      * The shared instance.
@@ -53,12 +90,13 @@ public class ExtensionPlugin extends Plugin {
     private static ExtensionPlugin plugin;
 
     /**
-     * The plugin identifier.
+     * Logging Utility instance
      */
-    public static final String PLUGIN_ID = "org.teiid.designer.extension"; //$NON-NLS-1$
-
     public static PluginUtil Util = new LoggingUtil(PLUGIN_ID);
 
+    /**
+     * @return singleton instance
+     */
     public static ExtensionPlugin getInstance() {
         return plugin;
     }
@@ -127,6 +165,9 @@ public class ExtensionPlugin extends Plugin {
         return assistant;
     }
 
+    /**
+     * @return the assistant aggregator
+     */
     public ModelExtensionAssistantAggregator getModelExtensionAssistantAggregator() {
     	if(this.assistantAggregator==null) {
     		initializeMedRegistry();
@@ -134,10 +175,13 @@ public class ExtensionPlugin extends Plugin {
         return this.assistantAggregator;
     }
 
+    /**
+     * @return the model extension registry
+     */
     public ModelExtensionRegistry getRegistry() {
-    	if(this.registry==null) {
-    		initializeMedRegistry();
-    	}
+        if (this.registry == null) {
+            initializeMedRegistry();
+        }
         return this.registry;
     }
     
@@ -154,13 +198,18 @@ public class ExtensionPlugin extends Plugin {
             // Load Built-In MEDs into the Registry
             loadBuiltInMeds();
 
-            // Load User-Defined MEDs into the Registry
-            loadUserDefinedMeds();
+            // Load Imported and custom MEDs into the Registry
+            loadDefinedMeds();
+
         } catch (Exception e) {
             Util.log(e);
         }
     }
 
+    /**
+     * @param metaclassUri
+     * @return meta class name provider for given uri
+     */
     public ExtendableMetaclassNameProvider getMetaclassNameProvider( String metaclassUri ) {
     	// if metaclassNameProvidersMap is null, MED registry has not yet been initialized
     	if(this.metaclassNameProvidersMap==null) {
@@ -172,7 +221,6 @@ public class ExtensionPlugin extends Plugin {
     /**
      * @param modelObject the model object being checked (cannot be <code>null</code>)
      * @return <code>true</code> if the model object is related to a model extension definition
-     * @throws Exception if there is a problem accessing the model object
      */
     public boolean isModelExtensionDefinitionRelated( Object modelObject ) {
         for (String namespacePrefix : this.registry.getAllNamespacePrefixes()) {
@@ -430,8 +478,9 @@ public class ExtensionPlugin extends Plugin {
     @Override
     public void stop( final BundleContext context ) throws Exception {
         try {
-            // Save the User-defined MEDs that are currently in the registry (not necessary to save Built Ins)
-            saveUserDefinedMeds();
+            // Save the used-defined and imported MEDs that are currently
+            // in the registry (not necessary to save Built Ins)
+            saveDefinedMeds();
         } finally {
             super.stop(context);
         }
@@ -450,12 +499,12 @@ public class ExtensionPlugin extends Plugin {
     }
 
     /*
-     * Save the User-Defined MEDS in the Registry to the defined file system location.
+     * Save the defined MEDS in the Registry to the defined file system location.
      */
-    private void saveUserDefinedMeds() {
+    private void saveDefinedMeds() {
         if (this.registry != null) {
             // Save the registry User-Defined Definitions to the specified location
-            this.registry.saveUserDefinitions(getUserDefinitionsPath());
+            this.registry.saveDefinedDefinitions(getUserDefinitionsPath());
         }
     }
 
@@ -463,10 +512,10 @@ public class ExtensionPlugin extends Plugin {
      * Load the User-Defined MEDS into the Registry. These are the MEDS which were previously registered and saved at the last
      * shutdown.
      */
-    private void loadUserDefinedMeds() throws CoreException {
+    private void loadDefinedMeds() throws CoreException {
         if (this.registry != null) {
             // Restore the User-Defined Definitions into the Registry
-            final IStatus status = this.registry.restoreUserDefinitions(getUserDefinitionsPath());
+            final IStatus status = this.registry.restoreDefinedDefinitions(getUserDefinitionsPath());
 
             if (!status.isOK()) {
                 Util.log(status);
@@ -478,16 +527,15 @@ public class ExtensionPlugin extends Plugin {
         }
     }
 
-    /*
-     * Return the path string to the directory containing the persisted user definitions.
+    /**
+     * @return the path string to the directory containing the persisted user definitions.
      */
-    private String getUserDefinitionsPath() {
+    public String getUserDefinitionsPath() {
         return getRuntimePath().toFile().getAbsolutePath();
     }
 
     /**
      * @return the <code>designer.extension</code> plugin's runtime workspace path or the test runtime path
-     * @throws IOException if an error occurs obtaining the path
      * @since 6.0.0
      */
     public IPath getRuntimePath() {
