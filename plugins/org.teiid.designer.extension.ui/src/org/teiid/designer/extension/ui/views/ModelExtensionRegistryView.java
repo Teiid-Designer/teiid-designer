@@ -7,27 +7,25 @@
  */
 package org.teiid.designer.extension.ui.views;
 
-import static org.teiid.designer.extension.ExtensionConstants.MED_EXTENSION;
 import static org.teiid.designer.extension.ExtensionConstants.MedOperations.SHOW_IN_REGISTRY;
-import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.UNREGISTER_MED;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourceAttributes;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -39,34 +37,37 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -75,10 +76,12 @@ import org.eclipse.ui.part.ViewPart;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
+import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
+import org.teiid.designer.extension.registry.ExtensionDefinitionsManager;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.registry.RegistryEvent;
 import org.teiid.designer.extension.registry.RegistryListener;
@@ -86,18 +89,19 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
-import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 
 /**
  * The ModelExtension Registry View
  */
-public final class ModelExtensionRegistryView extends ViewPart {
+public final class ModelExtensionRegistryView extends ViewPart implements ExtensionConstants {
 
     private IAction cloneMedAction;
 
@@ -113,23 +117,29 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     private TableViewer viewer;
 
+    private RegistryListener registryListener = new RegistryListener() {
+
+        @Override
+        public void process(RegistryEvent event) {
+            handleRegistryChanged(event);
+        }
+    };
+
     /**
      * Constructor
      */
     public ModelExtensionRegistryView() {
         this.registry = (Platform.isRunning() ? ExtensionPlugin.getInstance().getRegistry() : null);
-        if(this.registry!=null) this.registry.addListener(new RegistryListener() {
+        if(this.registry != null)
+            this.registry.addListener(registryListener);
+    }
 
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.teiid.designer.extension.registry.RegistryListener#process(org.teiid.designer.extension.registry.RegistryEvent)
-             */
-            @Override
-            public void process( RegistryEvent event ) {
-                handleRegistryChanged(event);
-            }
-        });
+    @Override
+    public void dispose() {
+        if (this.registry != null)
+            this.registry.removeListener(registryListener);
+
+        super.dispose();
     }
 
     private void configureColumn( TableViewerColumn viewerColumn,
@@ -137,7 +147,6 @@ public final class ModelExtensionRegistryView extends ViewPart {
                                   String headerText,
                                   String headerToolTip,
                                   boolean resizable ) {
-        viewerColumn.setLabelProvider(new MedLabelProvider(columnIndex));
 
         TableColumn column = viewerColumn.getColumn();
         column.setText(headerText);
@@ -209,7 +218,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             URL imageUrl = new URL("platform:/plugin/org.eclipse.search/icons/full/etool16/search.gif"); //$NON-NLS-1$
             this.findMedReferencesAction.setImageDescriptor(ImageDescriptor.createFromURL(imageUrl));
         } catch (Exception e) {
-            UTIL.log(e);
+            ErrorHandler.toExceptionDialog(e);
         }
 
         this.registerMedAction = new Action(Messages.registerMedActionText, SWT.BORDER) {
@@ -246,6 +255,9 @@ public final class ModelExtensionRegistryView extends ViewPart {
         // NOTE: create in the order in ColumnIndexes
         TableViewerColumn column = new TableViewerColumn(this.viewer, SWT.CENTER);
         configureColumn(column, ColumnIndexes.BUILT_IN, Messages.builtInColumnText, Messages.builtInColumnToolTip, false);
+
+        column = new TableViewerColumn(this.viewer, SWT.CENTER);
+        configureColumn(column, ColumnIndexes.IMPORTED, Messages.importedColumnText, Messages.importedColumnToolTip, false);
 
         column = new TableViewerColumn(this.viewer, SWT.LEFT);
         configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, Messages.namespacePrefixColumnText,
@@ -323,6 +335,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
         });
 
+        this.viewer.setLabelProvider(new MedLabelProvider());
         this.viewer.setContentProvider(new IStructuredContentProvider() {
 
             /**
@@ -441,7 +454,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         wizardDialog.setBlockOnOpen(true);
         wizardDialog.open();
     }
-    
+
     /*
      * Handler for View Built-In MEDS
      */
@@ -450,38 +463,44 @@ public final class ModelExtensionRegistryView extends ViewPart {
         assert (selectedMed != null) : "Clone MED action should not be enabled if there is no selection"; //$NON-NLS-1$
 
         IFile medFile = null;
-        
-        // If the selected MED is built in, look in hidden BuiltIn MEDs folder first.  If not in the hidden folder,
-        // then copy it there
-        if(selectedMed.isBuiltIn()) {
-        	String medName = selectedMed.getNamespacePrefix().toLowerCase();
-        	
-            final IProject hiddenProject = ModelerCore.getWorkspace().getRoot().getProject(org.teiid.designer.ui.PluginConstants.BUILTIN_MEDS_PROJECT_NAME);
-            if(hiddenProject==null) return;
-                        
-            medFile = hiddenProject.getFile(new Path(medName));
-            // If not found, copy the med into the hidden folder
-            if(!medFile.exists()) {
-            	IProgressMonitor monitor = new NullProgressMonitor();
-            	medFile = copyMedToBuiltInProj(selectedMed,hiddenProject,medName+".mxd",monitor); //$NON-NLS-1$
-            }
-        // Lookup User-defined MEDs in the workspace
-        } else {
-        	medFile = findWorkspaceMedMatch(selectedMed.getNamespacePrefix());
-        }
 
-        // Open the MED file in the editor
-        if(medFile!=null) {
-        	IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
-        	try {
-				IDE.openEditor(page, medFile);
-			} catch (PartInitException ex) {
-				UTIL.log(ex);
-			}
+        try {
+            // If the selected MED is built in, look in hidden BuiltIn MEDs folder first.  If not in the hidden folder,
+            // then copy it there
+            if (selectedMed.isBuiltIn()) {
+                medFile = copyMedToBuiltInProject(EMPTY_STRING, selectedMed);
+            } else if (selectedMed.isImported()) {
+                // Must be a MED imported from a teiid instance translator
+
+                // Save the definition to the imported med filesystem directory
+                String definitionsPath = ExtensionPlugin.getInstance().getUserDefinitionsPath();
+                ExtensionDefinitionsManager manager = new ExtensionDefinitionsManager(definitionsPath);
+                File defnFile = manager.saveDefinition(new ModelExtensionDefinitionWriter(), selectedMed);
+                if (defnFile != null)
+                    // Since the file is outside of the workspace, create a link to it in the
+                    // built-in project so that it can be opened in the editor
+                    medFile = linkMedToBuiltInProject(TEIID_IMPORT_DIRECTORY, defnFile);
+            } else {
+                // Lookup MED in the workspace
+                medFile = findWorkspaceMedMatch(selectedMed.getNamespacePrefix());
+            }
+
+            // Open the MED file in the editor
+            if (medFile != null) {
+                IWorkbenchPage page = UiPlugin.getDefault().getCurrentWorkbenchWindow().getActivePage();
+                IDE.openEditor(page, medFile);
+            } else {
+                MessageDialog.openError(getShell(),
+                                        Messages.openMedViewFailedTitle,
+                                        NLS.bind(Messages.openMedCouldNotViewFile, selectedMed.getNamespacePrefix()));
+            }
+
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
         }
 
     }
-    
+
     /*
      * Try to find MED in the workspace.  It is returned if found, otherwise returns null
      * @param nsPrefix the namespace prefix of the med
@@ -495,7 +514,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
         	Collection<IFile> projFiles = DotProjectUtils.getAllProjectResources(project);    
         	for(IFile projFile : projFiles) {
 				String fileExt = projFile.getFileExtension();
-				if(fileExt!=null && fileExt.equalsIgnoreCase("mxd")) {  //$NON-NLS-1$
+				if(fileExt!=null && MED_EXTENSION.equalsIgnoreCase(fileExt)) {
 					if(medFileMatches( projFile , nsPrefix )) {
 						medFileMatch = projFile;
 						break;
@@ -515,94 +534,185 @@ public final class ModelExtensionRegistryView extends ViewPart {
      * @return 'true' if matches, 'false' if not.
      */
     private boolean medFileMatches(IFile medFile, String nsPrefix) {
-    	boolean matchFound = false;
-    	
+
     	InputStream fileContents = null;
         try {
             fileContents = medFile.getContents();
         } catch (CoreException e) {
-            UTIL.log(IStatus.ERROR, e, NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()));
+            ErrorHandler.toExceptionDialog(NLS.bind(Messages.medFileGetContentsErrorMsg, medFile.getName()), e);
+            return false;
         }
 
-        if (fileContents != null) {
-            // Parse file contents to get the MED. Show info dialog if parse errors.
-            ModelExtensionDefinition med = null;
+        if (fileContents == null)
+            return false;
 
-            try {
-                ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance()
-                                                                                                          .getMedSchema());
-                med = parser.parse(fileContents, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+        // Parse file contents to get the MED. Show info dialog if parse errors.
+        ModelExtensionDefinition med = null;
 
-                if (!parser.getErrors().isEmpty()) {
-                    MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle,
-                                            NLS.bind(Messages.medFileParseErrorMsg, medFile.getName()));
-                    return false;
-                }
-            } catch (Exception e) {
-                UTIL.log(e);
-                MessageDialog.openError(getShell(), Messages.registerMedActionFailedTitle, Messages.registerMedActionFailedMsg);
+        try {
+            ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(
+                                                                                       ExtensionPlugin.getInstance().getMedSchema());
+            med = parser.parse(fileContents, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+
+            if (!parser.getErrors().isEmpty()) {
+                MessageDialog.openError(getShell(),
+                                        Messages.registerMedActionFailedTitle,
+                                        NLS.bind(Messages.medFileParseErrorMsg, medFile.getName()));
                 return false;
             }
-
-            // Continue checks on parsable MED
-            if (med != null) {
-            	String medFileNsPrefix = med.getNamespacePrefix();
-            	if(medFileNsPrefix!=null && medFileNsPrefix.equals(nsPrefix)) {
-            		matchFound = true;
-            	}
-            }
+        } catch (Exception e) {
+            ErrorHandler.toExceptionDialog(Messages.registerMedActionFailedMsg, e);
+            return false;
         }
-    	return matchFound;
+
+        // Continue checks on parsable MED
+        if (med == null)
+            return false;
+
+        String medFileNsPrefix = med.getNamespacePrefix();
+        if (medFileNsPrefix == null)
+            return false;
+
+        if (! medFileNsPrefix.equals(nsPrefix)) {
+            return false;
+        }
+
+        return true;
     }
-    
+
     /**
-     * Copy the supplied MED to the supplied project.
-     * @param med the ModelExtensionDefinition
-     * @param project the project
-     * @param medFileName the name for the MED file
-     * @param monitor progress monitor
-     * @return the file resource
+     * Create directory structure defined by given path
+     *
+     * @param mxdFilePath
+     * @param project
+     * @throws CoreException
      */
-    private IFile copyMedToBuiltInProj(ModelExtensionDefinition med, IProject project, String medFileName, IProgressMonitor monitor) {
-        InputStream medInputStream = null;
-        IFile createdMedFile = null;
-        		
-        try {
-        	// If project does not exist, create it.
-            if(!project.exists()) project.create(monitor);
-            // Open the project
-            project.open(monitor);
-            
-            // Get the Med file
-            createdMedFile = project.getFile(new Path(medFileName));
-            
-            // Create the file if it does not exist
-            if(createdMedFile!=null && !createdMedFile.exists()) {
-            	// Write the MED
-            	final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
-            	medInputStream = medWriter.writeAsStream(med);
+    private void createDirectories(IPath filePath, IProject project) throws CoreException {
+        /*
+         * Allows files in sub-directories to be copied into project
+         * by constructing the path of directories first
+         */
+        if (filePath.segmentCount() == 1)
+            return;
 
-            	// Create the resource and set it to read-only
-            	createdMedFile.create(medInputStream, false, monitor);
-            	ResourceAttributes attributes = createdMedFile.getResourceAttributes();
-            	attributes.setReadOnly(true);
-            	createdMedFile.setResourceAttributes(attributes);
+        // Path has directories that would need to be created
+        StringBuilder directory = new StringBuilder();
+        NullProgressMonitor monitor = new NullProgressMonitor();
+        for (String segment : filePath.segments()) {
+            if (filePath.lastSegment().equals(segment))
+                break;
 
-            	// Refresh project
-            	project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-            }
-        } catch (CoreException e) {
-            UTIL.log(e);
-        } finally {
-        	if (medInputStream != null) {
-        		try {
-        			medInputStream.close();
-        		} catch (IOException e) {
-        			e.printStackTrace();
-        		}
-        	}
+            directory.append(File.separator).append(segment);
+
+            Path folderPath = new Path(directory.toString());
+            IFolder folder = project.getFolder(folderPath);
+            if (folder == null || folder.exists())
+                continue;
+
+            folder.create(false, true, monitor);
         }
-        return createdMedFile;
+    }
+
+    private IFile getFileFromBuiltInProject(IPath filePath) throws Exception {
+        final IProject builtInProject = ModelerCore.getWorkspace().getRoot().getProject(ExtensionConstants.BUILTIN_MEDS_PROJECT_NAME);
+        if (builtInProject == null)
+            return null;
+
+        NullProgressMonitor monitor = new NullProgressMonitor();
+        builtInProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+
+        // If project does not exist, create it.
+        if(!builtInProject.exists())
+            builtInProject.create(monitor);
+
+        // Open the project
+        builtInProject.open(monitor);
+
+        return builtInProject.getFile(filePath);
+    }
+
+    private IFile linkMedToBuiltInProject(String subDirectory, File mxdFile) throws Exception {
+        if(mxdFile == null || ! mxdFile.exists())
+            return null;
+
+        StringBuilder mxdPathBuilder = new StringBuilder(subDirectory);
+        mxdPathBuilder.append(File.separator).append(mxdFile.getName());
+
+        IPath mxdLinkPath = new Path(mxdPathBuilder.toString());
+        IFile mxdLink = getFileFromBuiltInProject(mxdLinkPath);
+        IProject project = mxdLink.getProject();
+        NullProgressMonitor monitor = new NullProgressMonitor();
+
+        // If link exists then delete it since it may be stale and out-of-date
+        if (mxdLink.exists()) {
+            mxdLink.delete(true, monitor);
+        }
+
+        // Create link
+        createDirectories(mxdLinkPath, project);
+        mxdLink.createLink(new Path(mxdFile.getAbsolutePath()), IResource.NONE, null);
+
+        // Set the link to read-only to avoid editing these imported files
+        ResourceAttributes attributes = mxdLink.getResourceAttributes();
+        attributes.setReadOnly(true);
+        mxdLink.setResourceAttributes(attributes);
+
+        // Refresh project
+        project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+
+        return mxdLink;
+    }
+
+    /**
+     * Copy the given med to the built-in project, creating (if necessary)
+     * and adding it to the given sub-directory.
+     *
+     * @param subDirectory
+     * @param medDefinition
+     * @return the created {@link IFile} handle to the med
+     */
+    private IFile copyMedToBuiltInProject(String subDirectory, ModelExtensionDefinition medDefinition) throws Exception {
+        String medName = medDefinition.getNamespacePrefix().toLowerCase();
+
+        StringBuilder mxdPathBuilder = new StringBuilder(subDirectory);
+        mxdPathBuilder.append(File.separator).append(medName).append(DOT_MED_EXTENSION);
+
+        IPath mxdFilePath = new Path(mxdPathBuilder.toString());
+        IFile mxdFile = getFileFromBuiltInProject(mxdFilePath);
+        IProject project = mxdFile.getProject();
+
+        // If failed to get a handle or mxd already exists then return
+        if (mxdFile.exists())
+            return mxdFile;
+
+        InputStream medInputStream = null;
+        try {
+            createDirectories(mxdFilePath, project);
+
+            // Create the MED
+            final ModelExtensionDefinitionWriter medWriter = new ModelExtensionDefinitionWriter();
+            medInputStream = medWriter.writeAsStream(medDefinition);
+
+            NullProgressMonitor monitor = new NullProgressMonitor();
+            // Create the resource and set it to read-only
+            mxdFile.create(medInputStream, false, monitor);
+            ResourceAttributes attributes = mxdFile.getResourceAttributes();
+            attributes.setReadOnly(true);
+            mxdFile.setResourceAttributes(attributes);
+
+            // Refresh project
+            project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+
+            return mxdFile;
+        } finally {
+            if (medInputStream != null) {
+                try {
+                    medInputStream.close();
+                } catch (IOException e) {
+                    throw e;
+                }
+            }
+        }
     }
 
     void handleFindMedReferences() {
@@ -699,9 +809,9 @@ public final class ModelExtensionRegistryView extends ViewPart {
             }
 
             if (valid) {
-                result = new StatusInfo(ExtensionPlugin.PLUGIN_ID);
+                result = new StatusInfo(ExtensionConstants.PLUGIN_ID);
             } else {
-                result = new StatusInfo(ExtensionPlugin.PLUGIN_ID, IStatus.ERROR, Messages.selectMedDialogNotMedSelectionMsg);
+                result = new StatusInfo(ExtensionConstants.PLUGIN_ID, IStatus.ERROR, Messages.selectMedDialogNotMedSelectionMsg);
             }
 
             return result;
@@ -721,16 +831,22 @@ public final class ModelExtensionRegistryView extends ViewPart {
         return false;
     }
 
-    void handleRegistryChanged( RegistryEvent event ) {
-        ModelExtensionDefinition med = event.getDefinition();
+    void handleRegistryChanged( final RegistryEvent event ) {
+        final ModelExtensionDefinition med = event.getDefinition();
 
-        if (event.isAdd()) {
-            this.viewer.add(med);
-        } else if (event.isChange()) {
-            this.viewer.refresh(med);
-        } else if (event.isRemove()) {
-            this.viewer.remove(med);
-        }
+        // Ensure this is called in the UI thread
+        UiUtil.runInSwtThread(new Runnable() {
+            @Override
+            public void run() {
+                if (event.isAdd()) {
+                    viewer.add(med);
+                } else if (event.isChange()) {
+                    viewer.refresh(med);
+                } else if (event.isRemove()) {
+                    viewer.remove(med);
+                }
+            }
+        }, true);
     }
 
     void handleUnregisterMed() {
@@ -785,104 +901,129 @@ public final class ModelExtensionRegistryView extends ViewPart {
 
     interface ColumnIndexes {
         int BUILT_IN = 0;
-        int DESCRIPTION = 6;
-        int METAMODEL_URI = 3;
-        int MODEL_TYPES = 4;
-        int NAMESPACE_PREFIX = 1;
-        int NAMESPACE_URI = 2;
-        int VERSION = 5;
+        int IMPORTED = 1;
+        int NAMESPACE_PREFIX = 2;
+        int NAMESPACE_URI = 3;
+        int METAMODEL_URI = 4;
+        int MODEL_TYPES = 5;
+        int VERSION = 6;
+        int DESCRIPTION = 7;
     }
 
-    class MedLabelProvider extends ColumnLabelProvider {
+    class MedLabelProvider extends StyledCellLabelProvider {
 
-        private final int columnIndex;
-
-        public MedLabelProvider( int columnIndex ) {
-            this.columnIndex = columnIndex;
-        }
-
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-         */
-        @Override
-        public Image getImage( Object element ) {
-            if (this.columnIndex == ColumnIndexes.BUILT_IN) {
-                assert element instanceof ModelExtensionDefinition;
-                ModelExtensionDefinition med = (ModelExtensionDefinition)element;
-
-                if (med.isBuiltIn()) {
-                    return Activator.getDefault().getImage(CHECK_MARK);
-                }
+        private Image getImage( int columnIndex, ModelExtensionDefinition element ) {
+            switch (columnIndex) {
+                case ColumnIndexes.BUILT_IN:
+                    if (element.isBuiltIn())
+                        return Activator.getDefault().getImage(CHECK_MARK);
+                    break;
+                case ColumnIndexes.IMPORTED:
+                    if (element.isImported())
+                        return Activator.getDefault().getImage(CHECK_MARK);
+                    break;
             }
 
             return null;
         }
 
-        /**
-         * {@inheritDoc}
-         * 
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText( Object element ) {
-            assert element instanceof ModelExtensionDefinition;
-            ModelExtensionDefinition med = (ModelExtensionDefinition)element;
+        private String getText( int columnIndex, ModelExtensionDefinition element ) {
+            switch (columnIndex) {
+                case ColumnIndexes.BUILT_IN:
+                case ColumnIndexes.IMPORTED:
+                    return CoreStringUtil.Constants.EMPTY_STRING;
 
-            if (this.columnIndex == ColumnIndexes.BUILT_IN) {
-                return CoreStringUtil.Constants.EMPTY_STRING;
-            }
+                case ColumnIndexes.NAMESPACE_PREFIX:
+                    return element.getNamespacePrefix();
 
-            if (this.columnIndex == ColumnIndexes.NAMESPACE_PREFIX) {
-                return med.getNamespacePrefix();
-            }
+                case ColumnIndexes.NAMESPACE_URI:
+                    return element.getNamespaceUri();
 
-            if (this.columnIndex == ColumnIndexes.NAMESPACE_URI) {
-                return med.getNamespaceUri();
-            }
+                case ColumnIndexes.METAMODEL_URI:
+                    String metamodelUri =  element.getMetamodelUri();
+                    return Activator.getDefault().getMetamodelName(metamodelUri);
 
-            if (this.columnIndex == ColumnIndexes.METAMODEL_URI) {
-                String metamodelUri = med.getMetamodelUri();
-                return Activator.getDefault().getMetamodelName(metamodelUri);
-            }
+                case ColumnIndexes.MODEL_TYPES:
+                    Collection<String> modelTypes =  element.getSupportedModelTypes();
 
-            if (this.columnIndex == ColumnIndexes.MODEL_TYPES) {
-                Collection<String> modelTypes = med.getSupportedModelTypes();
-
-                if (modelTypes.isEmpty()) {
-                    return Messages.allModelTypesAreSupported;
-                }
-
-                StringBuilder text = new StringBuilder();
-                boolean firstTime = true;
-
-                for (String modelType : modelTypes) {
-                    if (firstTime) {
-                        firstTime = false;
-                    } else {
-                        text.append(", "); //$NON-NLS-1$
+                    if (modelTypes.isEmpty()) {
+                        return Messages.allModelTypesAreSupported;
                     }
 
-                    text.append(Activator.getDefault().getModelTypeName(modelType));
-                }
+                    StringBuilder text = new StringBuilder();
+                    boolean firstTime = true;
 
-                return text.toString();
+                    for (String modelType : modelTypes) {
+                        if (firstTime) {
+                            firstTime = false;
+                        } else {
+                            text.append(SPACE).append(COMMA);
+                        }
+
+                        text.append(Activator.getDefault().getModelTypeName(modelType));
+                    }
+
+                    return text.toString();
+
+                case ColumnIndexes.VERSION:
+                    return Integer.toString( element.getVersion());
+
+                case ColumnIndexes.DESCRIPTION:
+                    return  element.getDescription();
+
+                default:
+                    // shouldn't happen
+                    assert false : "Unknown column index of " + columnIndex; //$NON-NLS-1$
+                    return null;
             }
-
-            if (this.columnIndex == ColumnIndexes.VERSION) {
-                return Integer.toString(med.getVersion());
-            }
-
-            if (this.columnIndex == ColumnIndexes.DESCRIPTION) {
-                return med.getDescription();
-            }
-
-            // shouldn't happen
-            assert false : "Unknown column index of " + this.columnIndex; //$NON-NLS-1$
-            return null;
         }
 
+        @Override
+        public void update(ViewerCell cell) {
+            assert cell.getElement() instanceof ModelExtensionDefinition;
+
+            int columnIndex = cell.getColumnIndex();
+            ModelExtensionDefinition element = (ModelExtensionDefinition) cell.getElement();
+
+            String text = getText(columnIndex, element);
+            Image img = getImage(columnIndex, element);
+
+            if (text != null)
+                cell.setText(text);
+
+            if (img != null)
+                cell.setImage(img);
+
+            super.update(cell);
+        }
+
+        /**
+         * Override the paint method to ensure that the
+         * check boxes in the built-in and imported columns
+         * are centred.
+         */
+        @Override
+        protected void paint(Event event, Object element) {
+            TableItem tableItem = (TableItem) event.item;
+            Image img = tableItem.getImage(event.index);
+
+            if (img == null) {
+                super.paint(event, element);
+                return;
+            }
+
+            Rectangle bounds = tableItem.getBounds(event.index);
+            Rectangle imgBounds = img.getBounds();
+            bounds.width /= 2;
+            bounds.width -= imgBounds.width / 2;
+            bounds.height /= 2;
+            bounds.height -= imgBounds.height / 2;
+
+            int x = bounds.width > 0 ? bounds.x + bounds.width : bounds.x;
+            int y = bounds.height > 0 ? bounds.y + bounds.height : bounds.y;
+
+            event.gc.drawImage(img, x, y);
+        }
     }
 
     private static Shell getShell() {
@@ -908,7 +1049,7 @@ public final class ModelExtensionRegistryView extends ViewPart {
                     result = ((IProject)element).isOpen() && !((IProject)element).hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
                     && ((IProject)element).hasNature(ModelerCore.NATURE_ID);
                 } catch (CoreException e) {
-                    UiConstants.Util.log(e);
+                    ErrorHandler.toExceptionDialog(e);
                 }
 
                 return result;

@@ -10,7 +10,6 @@ package org.teiid.designer.extension.ui.editors;
 import static org.teiid.designer.extension.ui.UiConstants.UTIL;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.MED_EDITOR;
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.REGISTERY_MED_UPDATE_ACTION;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -18,7 +17,6 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -302,7 +300,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         // If file is in the BuiltInMedsProject, mark as built-in
         IFile medFile = getFile();
         String projName = medFile.getProject().getName();
-        if(projName!=null && projName.equals(org.teiid.designer.ui.PluginConstants.BUILTIN_MEDS_PROJECT_NAME)) {
+        if(projName!=null && projName.equals(ExtensionConstants.BUILTIN_MEDS_PROJECT_NAME)) {
         	this.medBeingEdited.markAsBuiltIn();
         }
 

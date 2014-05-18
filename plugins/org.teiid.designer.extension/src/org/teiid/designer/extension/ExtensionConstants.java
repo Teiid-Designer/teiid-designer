@@ -9,9 +9,9 @@ package org.teiid.designer.extension;
 
 import java.util.Comparator;
 import java.util.Locale;
-
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.LoggingUtil;
+import org.teiid.core.designer.util.StringConstants;
 
 
 /**
@@ -19,7 +19,7 @@ import org.teiid.core.designer.util.LoggingUtil;
  *
  * @since 8.0
  */
-public interface ExtensionConstants {
+public interface ExtensionConstants extends StringConstants {
 
     /**
      * The plugin identifier. Value is {@value}.
@@ -44,13 +44,38 @@ public interface ExtensionConstants {
     /**
      * The model extension definition file extension prefixed with a dot.
      */
-    String DOT_MED_EXTENSION = '.' + MED_EXTENSION;
+    String DOT_MED_EXTENSION = DOT + MED_EXTENSION;
 
     /**
      * The identifier of the model extension definition (MED) file project builder.
      */
     String MED_BUILDER_ID = "org.teiid.designer.extension.ui.modelExtensionDefinitionBuilder"; //$NON-NLS-1$
-    
+
+    /**
+     * Name of the hidden project used to store MED mxd files that are either built-in or imported
+     */
+    String BUILTIN_MEDS_PROJECT_NAME = "BuiltInMedsProject"; //$NON-NLS-1$
+
+    /**
+     * Directory used to store med imported from a Teiid Instance
+     */
+    String TEIID_IMPORT_DIRECTORY = "imported"; //$NON-NLS-1$
+
+    /**
+     * Type of mxd file being managed
+     */
+    public enum MxdType {
+        /**
+         * Custom mxd files created by users
+         */
+        USER,
+
+        /**
+         * mxd files imported from teiid instances
+         */
+        IMPORTED;
+    }
+
     /**
      * The model extension definition schema attribute names.
      */

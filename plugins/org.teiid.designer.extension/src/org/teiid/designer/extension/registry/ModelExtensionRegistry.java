@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.registry;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -20,16 +19,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.ExtensionConstants.MxdType;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.Messages;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.definition.ModelExtensionDefinitionParser;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 
@@ -166,6 +169,9 @@ public final class ModelExtensionRegistry {
      */
     public boolean addListener( RegistryListener listener ) {
         CoreArgCheck.isNotNull(listener, "listener is null"); //$NON-NLS-1$
+        if (this.listeners.contains(listener))
+            return false;
+
         return this.listeners.add(listener);
     }
 
@@ -212,11 +218,50 @@ public final class ModelExtensionRegistry {
     public Collection<ModelExtensionDefinition> getUserDefinedDefinitions() {
         Collection<ModelExtensionDefinition> userDefns = new ArrayList<ModelExtensionDefinition>();
         for (ModelExtensionDefinition med : definitions.values()) {
-            if (!med.isBuiltIn()) {
+            if (!med.isBuiltIn() && !med.isImported()) {
                 userDefns.add(med);
             }
         }
         return userDefns;
+    }
+
+    /**
+     * @return a collection of the imported model extension definitions (never <code>null</code>)
+     */
+    public Collection<ModelExtensionDefinition> getImportedDefinitions() {
+        Collection<ModelExtensionDefinition> importedDefns = new ArrayList<ModelExtensionDefinition>();
+        for (ModelExtensionDefinition med : definitions.values()) {
+            if (med.isImported()) {
+                importedDefns.add(med);
+            }
+        }
+        return importedDefns;
+    }
+
+    /**
+     * @param definedMedFiles
+     * @param mxdType
+     */
+    private IStatus addDefinitions(Collection<File> definedMedFiles, MxdType mxdType) {
+        boolean allSuccess = true;
+        for (File medFile : definedMedFiles) {
+            try {
+                ModelObjectExtensionAssistant assistant = ExtensionPlugin.getInstance()
+                                                                                                        .createDefaultModelObjectExtensionAssistant();
+                ModelExtensionDefinition definition = addDefinition(new FileInputStream(medFile), assistant);
+                if (MxdType.IMPORTED.equals(mxdType))
+                    definition.markAsImported();
+
+            } catch (Exception e) {
+                allSuccess = false;
+                String errMessage = NLS.bind(Messages.errorAddingUserDefinition, medFile.getAbsolutePath());
+                Util.log(IStatus.ERROR, e, errMessage);
+            }
+        }
+        if (allSuccess)
+            return new Status(IStatus.OK, ExtensionConstants.PLUGIN_ID, 0, StringConstants.EMPTY_STRING, null);
+        else
+            return new Status(IStatus.WARNING, ExtensionConstants.PLUGIN_ID, 0, Messages.errorRestoringUserDefinitions, null);
     }
 
     /**
@@ -226,38 +271,30 @@ public final class ModelExtensionRegistry {
      * not being restored)
      * @return IStatus indicating successful loading.
      */
-    public IStatus restoreUserDefinitions( String userDefinitionsPath ) {
-        boolean allSuccess = true;
-        String errMessage = null;
-        UserExtensionDefinitionsManager mgr = new UserExtensionDefinitionsManager(userDefinitionsPath);
+    public IStatus restoreDefinedDefinitions( String userDefinitionsPath ) {
+        MultiStatus status = new MultiStatus(ExtensionConstants.PLUGIN_ID, 0, StringConstants.EMPTY_STRING, null);
+        ExtensionDefinitionsManager mgr = new ExtensionDefinitionsManager(userDefinitionsPath);
 
-        Collection<File> userMedFiles = mgr.getUserDefinitionFiles();
-        for (File medFile : userMedFiles) {
-            try {
-                addDefinition(new FileInputStream(medFile), ExtensionPlugin.getInstance()
-                                                                           .createDefaultModelObjectExtensionAssistant());
-            } catch (Exception e) {
-                allSuccess = false;
-                errMessage = NLS.bind(Messages.errorAddingUserDefinition, medFile.getAbsolutePath());
-                Util.log(IStatus.ERROR, e, errMessage);
-            }
-        }
-        if (allSuccess) {
-            return new Status(IStatus.OK, ExtensionPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
-        }
-        return new Status(IStatus.WARNING, ExtensionPlugin.PLUGIN_ID, 0, Messages.errorRestoringUserDefinitions, null);
+        Collection<File> definedMedFiles = mgr.retrieveDefinitionFiles(MxdType.USER);
+        status.add(addDefinitions(definedMedFiles, MxdType.USER));
+
+        definedMedFiles = mgr.retrieveDefinitionFiles(MxdType.IMPORTED);
+        status.add(addDefinitions(definedMedFiles, MxdType.IMPORTED));
+
+        return status;
     }
 
     /**
-     * Save all user-defined MEDs that are currently in the registry to the file system (at the specified path location). Any user
+     * Save all user-defined and imported MEDs that are currently in the registry to the file system (at the specified path location). Any user
      * meds that have been previously saved at the specified location will be overwritten.
-     * 
-     * @param userDefinitionsPath the directory path where the MEDs are persisted (can be <code>null</code> ore empty if MEDs are 
+     *
+     * @param definedDefinitionsPath the directory path where the MEDs are persisted (can be <code>null</code> ore empty if MEDs are 
      * not being saved)
      */
-    public void saveUserDefinitions( String userDefinitionsPath ) {
-        UserExtensionDefinitionsManager mgr = new UserExtensionDefinitionsManager(userDefinitionsPath);
-        mgr.saveUserDefinitions(getUserDefinedDefinitions());
+    public void saveDefinedDefinitions( String definedDefinitionsPath ) {
+        ExtensionDefinitionsManager mgr = new ExtensionDefinitionsManager(definedDefinitionsPath);
+        mgr.saveDefinitions(getUserDefinedDefinitions());
+        mgr.saveDefinitions(getImportedDefinitions());
     }
 
     /**

@@ -8,7 +8,6 @@
 package org.teiid.designer.extension.definition;
 
 import static org.teiid.designer.extension.ExtensionPlugin.Util;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.HashCodeUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -48,6 +46,11 @@ public class ModelExtensionDefinition implements NamespaceProvider, PropertyChan
     private boolean builtIn;
 
     /**
+     * Indicates if this MED has been imported from teiid. Imported can be unregistered but cannot be edited. Defaults to {@value} .
+     */
+    private boolean imported;
+
+    /**
      * The registered property change listeners (never <code>null</code>).
      */
     private final CopyOnWriteArrayList<PropertyChangeListener> listeners;
@@ -62,6 +65,9 @@ public class ModelExtensionDefinition implements NamespaceProvider, PropertyChan
      */
     private final ModelExtensionDefinitionHeader header;
 
+    /**
+     * @param assistant
+     */
     public ModelExtensionDefinition( ModelExtensionAssistant assistant ) {
         CoreArgCheck.isNotNull(assistant, "assistant is null"); //$NON-NLS-1$
 
@@ -370,6 +376,20 @@ public class ModelExtensionDefinition implements NamespaceProvider, PropertyChan
      */
     public void markAsBuiltIn() {
         this.builtIn = true;
+    }
+
+    /**
+     * @return <code>true</code> if this MED has been imported
+     */
+    public boolean isImported() {
+        return this.imported;
+    }
+
+    /**
+     * Marks this MED as being imported from a teiid instance.
+     */
+    public void markAsImported() {
+        this.imported = true;
     }
 
     /**

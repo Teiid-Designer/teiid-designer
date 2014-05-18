@@ -87,7 +87,9 @@ public class TeiidInstanceMedListener implements IExecutionConfigurationListener
         // Add the supplied MED
         FileInputStream inputStream = new FileInputStream(medToRegister);
         try {
-            registry.addDefinition(inputStream, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+            ModelExtensionDefinition definition = registry.addDefinition(inputStream, ExtensionPlugin.getInstance().createDefaultModelObjectExtensionAssistant());
+            if (definition != null)
+                definition.markAsImported();
         } finally {
             try {
                 inputStream.close();
