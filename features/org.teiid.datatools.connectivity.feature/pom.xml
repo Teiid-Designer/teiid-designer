@@ -9,6 +9,6 @@
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>org.teiid.datatools.connectivity.feature</artifactId>
-	<version>8.3.2-SNAPSHOT</version>
+	<version>8.3.3-SNAPSHOT</version>
 	<packaging>eclipse-feature</packaging>
 </project>
