@@ -9,7 +9,6 @@ package org.teiid.designer.ddl.importer.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -54,7 +53,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
 
     private static final int PANEL_GRID_SPAN = 3;
     		
-    private final DdlImporter importer;
+    final DdlImporter importer;
 	private Composite stackPanel;
 	private Composite differencesPanel;
 	private Composite parseErrorPanel;
@@ -211,75 +210,97 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         super.setVisible(visible);
         
         // If the page is being shown, import the DDL and generate the difference report 
-        if(visible) {
-        	// Perform the DDL Import
-        	try {
-        		new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
+        if(! visible)
+            return;
 
-        			@Override
-        			public void run( final IProgressMonitor monitor ) {
-        				monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
-        				importer.importDdl(monitor, 100);
-        				monitor.done();
-        			}
-        		});
-        	} catch (Exception ex) {
-        		DdlImporterUiPlugin.UTIL.log(IStatus.ERROR,ex,DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
-        		importer.addProgressMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG);
-        	}
-        	
-        	// Hard Failure (eg parse error) will show the error page
-        	if(importer.hasParseError()) {
-    			this.stackLayout.topControl = parseErrorPanel;
-    			this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_TITLE);
-    			
-    			this.ddlContentsArea.setText(importer.getDdlString());
-    			String parseErrorMessage = importer.getParseErrorMessage();
-    			// Get the offSet of the error if set
-    			int offset = importer.getParseErrorIndex();
-    			// Highlight the problem line if possible
-    			if(offset>-1) {
-    				StyledText styledText = ddlContentsArea.getTextWidget();
-        			int line = styledText.getLineAtOffset(offset);
-        			if(line>-1) {
-        				int startIndx = styledText.getOffsetAtLine(line);
-        				int endIndx = styledText.getOffsetAtLine(line+1);
-        				styledText.setSelection(startIndx, endIndx);
-        			}
-    			}
-                String msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_MSG,parseErrorMessage);
-    	        setErrorMessage(msg);
+        // Perform the DDL Import
+        final Exception importException[] = new Exception[1];
+        try {
+            new ProgressMonitorDialog(getShell()).run(true, true, new IRunnableWithProgress() {
 
-    			importer.undoImport();
-    		// Show differences page
-    		} else {
-    			this.stackLayout.topControl = differencesPanel;
-    			this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_TITLE);
-    			
-            	// Set the checkbox tree roots (create,delete,update)
-            	List<OperationList> rootList = new ArrayList<OperationList>();
-            	DifferenceReport diffReport = this.importer.getDifferenceReport();
-            	if(diffReport!=null) {
-            		OperationList createObjs = this.importer.getDifferenceReport().getObjectsToCreate();
-            		OperationList deleteObjs = this.importer.getDifferenceReport().getObjectsToDelete();
-            		OperationList updateObjs = this.importer.getDifferenceReport().getObjectsToUpdate();
-            		if(!createObjs.getList().isEmpty()) rootList.add(createObjs);
-            		if(!deleteObjs.getList().isEmpty()) rootList.add(deleteObjs);
-            		if(!updateObjs.getList().isEmpty()) rootList.add(updateObjs);
-            	} 
-            	this.treeViewer.setInput(rootList);
-            	this.treeViewer.expandToLevel(2);
-            	this.setAllNodesSelected(true);
-            	
-            	List<String> progressMessages = this.importer.getAllMessages();
-        		messagesList.setItems(progressMessages.toArray(new String[progressMessages.size()]));
+                @Override
+                public void run(final IProgressMonitor monitor) {
+                    monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
+                    try {
+                        importer.importDdl(monitor, 100);
+                    } catch (Exception ex) {
+                        importException[0] = ex;
+                    }
+                    monitor.done();
+                }
+            });
 
-        		validate();
-    		}
-    		        		
-    		this.stackPanel.layout();
+            if (importException[0] != null)
+                throw importException[0];
 
+        } catch (Exception ex) {
+            String msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG, ex.getLocalizedMessage());
+            DdlImporterUiPlugin.UTIL.log(IStatus.ERROR, ex, msg);
+            importer.addProgressMessage(msg);
         }
+
+        // Hard Failure (eg parse error) will show the error page
+        if (importException[0] != null || importer.hasParseError()) {
+            String title = null;
+            String msg = null;
+            this.stackLayout.topControl = parseErrorPanel;
+            this.ddlContentsArea.setText(importer.getDdlString());
+
+            if (importException[0] != null) {
+                title = DdlImporterUiI18n.DIFFERENCE_PAGE_GENERAL_ERROR_TITLE;
+                msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_DDLIMPORT_ERROR_MSG, importException[0].getLocalizedMessage());
+
+            } else if (importer.hasParseError()) {
+                title = DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_TITLE;
+                String parseErrorMessage = importer.getParseErrorMessage();
+                // Get the offSet of the error if set
+                int offset = importer.getParseErrorIndex();
+                // Highlight the problem line if possible
+                if (offset > -1) {
+                    StyledText styledText = ddlContentsArea.getTextWidget();
+                    int line = styledText.getLineAtOffset(offset);
+                    if (line > -1) {
+                        int startIndx = styledText.getOffsetAtLine(line);
+                        int endIndx = styledText.getOffsetAtLine(line + 1);
+                        styledText.setSelection(startIndx, endIndx);
+                    }
+                }
+                msg = I18n.format(DdlImporterUiI18n.DIFFERENCE_PAGE_PARSE_ERROR_MSG, parseErrorMessage);
+            }
+
+            setErrorMessage(msg);
+            importer.undoImport();
+            this.setTitle(title);
+            // Show differences page
+        } else {
+            this.stackLayout.topControl = differencesPanel;
+            this.setTitle(DdlImporterUiI18n.DIFFERENCE_PAGE_TITLE);
+
+            // Set the checkbox tree roots (create,delete,update)
+            List<OperationList> rootList = new ArrayList<OperationList>();
+            DifferenceReport diffReport = this.importer.getDifferenceReport();
+            if (diffReport != null) {
+                OperationList createObjs = this.importer.getDifferenceReport().getObjectsToCreate();
+                OperationList deleteObjs = this.importer.getDifferenceReport().getObjectsToDelete();
+                OperationList updateObjs = this.importer.getDifferenceReport().getObjectsToUpdate();
+                if (!createObjs.getList().isEmpty())
+                    rootList.add(createObjs);
+                if (!deleteObjs.getList().isEmpty())
+                    rootList.add(deleteObjs);
+                if (!updateObjs.getList().isEmpty())
+                    rootList.add(updateObjs);
+            }
+            this.treeViewer.setInput(rootList);
+            this.treeViewer.expandToLevel(2);
+            this.setAllNodesSelected(true);
+
+            List<String> progressMessages = this.importer.getAllMessages();
+            messagesList.setItems(progressMessages.toArray(new String[progressMessages.size()]));
+
+            validate();
+        }
+
+        this.stackPanel.layout();
     }
 
     /**

@@ -66,6 +66,7 @@ import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /**
  * @since 8.0
@@ -295,7 +296,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                                                              ServerOptions.ADD_TO_REGISTRY);
                     }
                 } catch (Exception ex) {
-                    DqpPlugin.handleException(ex);
+                    ErrorHandler.toExceptionDialog(ex);
                 }
 
                 if (teiidServer != null) {

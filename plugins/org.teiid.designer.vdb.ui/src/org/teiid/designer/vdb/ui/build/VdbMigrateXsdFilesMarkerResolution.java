@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.ui.Messages;
@@ -56,16 +57,23 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
             return;
 
         final IFile theVdbFile = (IFile)resource;
-
+        final Exception[] theException = new Exception[1];
         UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
             @Override
             public void run() {
-                fixVdb(theVdbFile);
+                try {
+                    fixVdb(theVdbFile);
+                } catch (Exception ex) {
+                    theException[0] = ex;
+                }
             }
         });
+
+        if (theException[0] != null)
+            ErrorHandler.toExceptionDialog(theException[0]);
     }
 
-    void fixVdb(IFile theVdb) {
+    void fixVdb(IFile theVdb) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
         Vdb vdb = new Vdb(theVdb, false, monitor);
 

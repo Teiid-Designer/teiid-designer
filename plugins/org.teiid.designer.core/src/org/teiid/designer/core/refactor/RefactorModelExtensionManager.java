@@ -112,8 +112,9 @@ public class RefactorModelExtensionManager {
     /**
      * @param refactorType type of refactoring
      * @param refactoredResource the refactored resource
+     * @throws Exception
 	 */
-	public static void postProcess(RefactorType refactorType, final IResource refactoredResource) {
+	public static void postProcess(RefactorType refactorType, final IResource refactoredResource) throws Exception {
 		if( !handlersLoaded ) {
 			loadExtensions();
 		}

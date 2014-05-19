@@ -49,7 +49,8 @@ public class Messages  extends NLS {
 	public static String modelDetailsPanel_problemsTabTooltip;
 	public static String modelDetailsPanel_problemPathLabel;
 	public static String modelDetailsPanel_problemDescriptionLabel;
-    
+    public static String vdbEditor_loadingErrMessage;
+
     static {
         NLS.initializeMessages("org.teiid.designer.vdb.ui.messages", Messages.class); //$NON-NLS-1$
     }

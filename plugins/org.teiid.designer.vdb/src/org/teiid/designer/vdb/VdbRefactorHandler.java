@@ -21,7 +21,7 @@ import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 public class VdbRefactorHandler extends AbstractRefactorModelHandler {
 
     @Override
-    public void postProcess( RefactorType type, IResource refactoredResource) {
+    public void postProcess( RefactorType type, IResource refactoredResource) throws Exception {
         // only care about renames
         if ((type == RefactorType.RENAME) && (refactoredResource.getType() == IResource.FILE)
                 && Vdb.FILE_EXTENSION_NO_DOT.equals(((IFile)refactoredResource).getFileExtension())) {

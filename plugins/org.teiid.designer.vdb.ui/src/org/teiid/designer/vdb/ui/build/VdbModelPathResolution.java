@@ -15,6 +15,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
@@ -58,17 +59,24 @@ public class VdbModelPathResolution implements IMarkerResolution {
         	}
 
             // Add the selected Med
+            final Exception[] theException = new Exception[1];
             UiBusyIndicator.showWhile(Display.getDefault(), new Runnable() {
                 @Override
                 public void run() {
-                  fixVdb(theVdbFile);
+                    try {
+                        fixVdb(theVdbFile);
+                    } catch (Exception ex) {
+                        theException[0] = ex;
+                    }
                 }
             });
 
+            if (theException[0] != null)
+                ErrorHandler.toExceptionDialog(theException[0]);
         }
     }
     
-    void fixVdb( IFile theVdb ) {
+    void fixVdb( IFile theVdb ) throws Exception {
     	VdbUtil.synchronizeVdb(theVdb, false, true);
     }
     

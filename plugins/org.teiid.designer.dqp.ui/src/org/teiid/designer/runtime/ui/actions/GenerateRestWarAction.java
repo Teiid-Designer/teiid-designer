@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,10 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -45,11 +42,11 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.extension.rest.RestModelExtensionConstants;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
@@ -169,65 +166,85 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         }
         notifyResult(rc == Window.OK);
     }
-    
-    public boolean setSelection(ISelection selection) {
-    	boolean result = false;
-        List restfulProcedureArray = null;
-        if (!SelectionUtilities.isMultiSelection(selection)) {
-            Object obj = SelectionUtilities.getSelectedObject(selection);
-            // If a VDB is selected and it contains a web service model then
-            // enable
-            if (obj instanceof IFile) {
-                String extension = ((IFile)obj).getFileExtension();
-                if (extension != null && extension.equals(VDB_EXTENSION)) {
-                    this.selectedVDB = (IFile)obj;
-                    Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
-                    Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-                    for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                        final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
-                        if (ModelIdentifier.isVirtualModelType(modelResource)) {
-                            restfulProcedureArray = new ArrayList<RestProcedure>();
-                            String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
-                            Collection<EObject> eObjectList = null;
-                            try {
-                                eObjectList = modelResource.getEObjects();
-                                for (EObject eObject : eObjectList) {
-                                    if (SqlAspectHelper.isProcedure(eObject)) {
-                                        IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(eObject);
-                                        final StringBuffer sb = new StringBuffer();
-                                        final String[] segments = path.segments();
-                                        for (int i = 0; i < segments.length; i++) {
-                                            if (i != 0) {
-                                                sb.append('.');
-                                            }
-                                            final String segment = segments[i];
-                                            sb.append(segment);
-                                        }
-                                        String fullName = sb.toString();
-                                        String name = ((ProcedureImpl)eObject).getName();
-                                        createRestProcedureCollection((Procedure)eObject, name, fullName, restfulProcedureArray);
-                                    }
-                                }
 
-                                if (restfulProcedureArray.size() > 0) {
-                                    restfulProcedureMap.put(modelName, restfulProcedureArray);
-                                }
+    /**
+     * @param result
+     * @param obj
+     */
+    private static boolean isVdb(Object obj) {
+        if (obj == null)
+            return false;
 
-                            } catch (ModelWorkspaceException e) {
-                                throw new RuntimeException(e);
-                            }
+        if (! (obj instanceof IFile))
+            return false;
 
-                            if (restfulProcedureArray.size() > 0) {
-                            	result = true;
-                            }
+        return VDB_EXTENSION.equals(((IFile) obj).getFileExtension());
+    }
 
-                        }
+    /**
+     * @param eObjectList
+     * @return list of rest procedures
+     */
+    private static List<RestProcedure> findRestProcedures(ModelResource modelResource) throws Exception {
+        List<RestProcedure> restfulProcedureArray = new ArrayList<RestProcedure>();
+        Collection<EObject> eObjectList = modelResource.getEObjects();
+        for (EObject eObject : eObjectList) {
+            if (SqlAspectHelper.isProcedure(eObject)) {
+                IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(eObject);
+                final StringBuffer sb = new StringBuffer();
+                final String[] segments = path.segments();
+                for (int i = 0; i < segments.length; i++) {
+                    if (i != 0) {
+                        sb.append('.');
                     }
-
+                    final String segment = segments[i];
+                    sb.append(segment);
                 }
+                String fullName = sb.toString();
+                String name = ((ProcedureImpl)eObject).getName();
+                createRestProcedureCollection((Procedure)eObject, name, fullName, restfulProcedureArray);
             }
         }
-        
+
+        return restfulProcedureArray;
+    }
+
+    public boolean setSelection(ISelection selection) {
+        if (SelectionUtilities.isMultiSelection(selection))
+            return false;
+
+        Object obj = SelectionUtilities.getSelectedObject(selection);
+        // If a VDB is selected and it contains a web service model then
+        // enable
+        if (! (obj instanceof IFile))
+            return false;
+
+        if (! isVdb(obj))
+            return false;
+
+        this.selectedVDB = (IFile)obj;
+
+        boolean result = false;
+        try {
+            Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
+            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                if (! ModelIdentifier.isVirtualModelType(modelResource))
+                    continue;
+
+                List<RestProcedure> restfulProcedureArray = findRestProcedures(modelResource);
+                if (restfulProcedureArray.size() > 0) {
+                    String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
+                    restfulProcedureMap.put(modelName, restfulProcedureArray);
+                    result = true;
+                }
+            }
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            return false;
+        }
+
         return result;
     }
 
@@ -239,54 +256,34 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         setEnabled(enable);
     }
     
-    public static boolean isRestWarVdb(IFile vdbFile) {
-    	boolean result = false;
-        String extension = vdbFile.getFileExtension();
-        if (extension != null && extension.equals(VDB_EXTENSION)) {
-        	List restfulProcedureArray = null;
-        	
+    /**
+     * @param vdbFile
+     * @return is the given file a rest war vdb
+     * @throws Exception
+     */
+    public static boolean isRestWarVdb(IFile vdbFile) throws Exception {
+        if (! isVdb(vdbFile))
+            return false;
+
+        boolean result = false;
+        try {
             Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
             Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbModelEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
-                if (ModelIdentifier.isVirtualModelType(modelResource)) {
-                	restfulProcedureArray = new ArrayList<RestProcedure>();
+                if (! ModelIdentifier.isVirtualModelType(modelResource))
+                    continue;
 
-                    Collection<EObject> eObjectList = null;
-                    try {
-                        eObjectList = modelResource.getEObjects();
-                        for (EObject eObject : eObjectList) {
-                            if (SqlAspectHelper.isProcedure(eObject)) {
-                                IPath path = ModelerCore.getModelEditor().getModelRelativePathIncludingModel(eObject);
-                                final StringBuffer sb = new StringBuffer();
-                                final String[] segments = path.segments();
-                                for (int i = 0; i < segments.length; i++) {
-                                    if (i != 0) {
-                                        sb.append('.');
-                                    }
-                                    final String segment = segments[i];
-                                    sb.append(segment);
-                                }
-                                String fullName = sb.toString();
-                                String name = ((ProcedureImpl)eObject).getName();
-                                createRestProcedureCollection((Procedure)eObject, name, fullName, restfulProcedureArray);
-                            }
-                        }
-
-                        if (restfulProcedureArray.size() > 0) {
-                        	result = true;
-                        }
-                    } catch (ModelWorkspaceException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if( result ) {
-                    	break;
-                    }
+                List<RestProcedure> restfulProcedureArray = findRestProcedures(modelResource);
+                if (restfulProcedureArray.size() > 0) {
+                    result = true;
+                    break;
                 }
             }
-
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            return false;
         }
-        
         return result;
     }
 

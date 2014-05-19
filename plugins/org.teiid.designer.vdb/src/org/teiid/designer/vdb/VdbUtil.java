@@ -45,6 +45,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -175,43 +176,48 @@ public class VdbUtil {
             return null;
         }
 
-        OperationUtil.perform(new Unreliable() {
+        try {
+            OperationUtil.perform(new Unreliable() {
 
-            ZipFile archive = null;
-            InputStream entryStream = null;
+                ZipFile archive = null;
+                InputStream entryStream = null;
 
-            @Override
-            public void doIfFails() {
-            }
+                @Override
+                public void doIfFails() {
+                }
 
-            @Override
-            public void finallyDo() throws Exception {
-                if (entryStream != null) entryStream.close();
-                if (archive != null) archive.close();
-            }
+                @Override
+                public void finallyDo() throws Exception {
+                    if (entryStream != null) entryStream.close();
+                    if (archive != null) archive.close();
+                }
 
-            @Override
-            public void tryToDo() throws Exception {
-                archive = new ZipFile(file.getLocation().toString());
-                boolean foundManifest = false;
-                for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
-                    final ZipEntry zipEntry = iter.nextElement();
-                    entryStream = archive.getInputStream(zipEntry);
-                    if (zipEntry.getName().equals(MANIFEST)) {
-                        // Initialize using manifest
-                        foundManifest = true;
-                        final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-                        unmarshaller.setSchema(getManifestSchema());
-                        manifest[0] = (VdbElement)unmarshaller.unmarshal(entryStream);
+                @Override
+                public void tryToDo() throws Exception {
+                    archive = new ZipFile(file.getLocation().toString());
+                    boolean foundManifest = false;
+                    for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
+                        final ZipEntry zipEntry = iter.nextElement();
+                        entryStream = archive.getInputStream(zipEntry);
+                        if (zipEntry.getName().equals(MANIFEST)) {
+                            // Initialize using manifest
+                            foundManifest = true;
+                            final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                            unmarshaller.setSchema(getManifestSchema());
+                            manifest[0] = (VdbElement)unmarshaller.unmarshal(entryStream);
 
-                    }
-                    // Don't process any more than we need to.
-                    if (foundManifest) {
-                        break;
+                        }
+                        // Don't process any more than we need to.
+                        if (foundManifest) {
+                            break;
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
 
         return manifest[0];
     }
@@ -326,11 +332,18 @@ public class VdbUtil {
 		MultiStatus finalStatus = new MultiStatus(VdbConstants.PLUGIN_ID, 0, VdbPlugin.UTIL.getString("vdbValidationOK"), null); //$NON-NLS-1$
 		
 		if (theVdbFile.exists()) {
+
+            Vdb theVdb = null;
+            try {
+                theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
+            } catch (Exception ex) {
+                statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getLocalizedMessage(), ex));
+            }
+
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdbFile);
-			Vdb theVdb = new Vdb(theVdbFile, new NullProgressMonitor());	
-			if (manifest != null) {
+			if (theVdb != null && manifest != null) {
 				// Check the validation version of the VDB against current Default teiid instance
-				
+
 				String serverVersion = ModelerCore.getTeiidServerVersion().toString();
 				if( serverVersion != null ) {
 					String validationVersion = theVdb.getValidationVersion();
@@ -721,8 +734,11 @@ public class VdbUtil {
      * @param theVdb the VDB
      * @param extractMissingModels
 	 * @param updateValidationVersion
+	 *
+	 * @throws Exception
      */
-    public static void synchronizeVdb(final IFile theVdb, boolean extractMissingModels, boolean updateValidationVersion) {
+    public static void synchronizeVdb(final IFile theVdb, boolean extractMissingModels, boolean updateValidationVersion) 
+                                                                                                                                                            throws Exception {
         if (! theVdb.exists())
             return;
 
@@ -863,10 +879,6 @@ public class VdbUtil {
         }
 
         actualVDB.save(new NullProgressMonitor());
-        try {
-            theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-        } catch (CoreException ex) {
-            VdbPlugin.UTIL.log(IStatus.ERROR, ex, ex.getMessage());
-        }
+        theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
 }

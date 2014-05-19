@@ -7,7 +7,6 @@
  */
 package org.teiid.core.designer.util;
 
-import org.teiid.core.designer.CoreModelerPlugin;
 
 /**
  * 
@@ -16,7 +15,7 @@ import org.teiid.core.designer.CoreModelerPlugin;
  */
 public final class OperationUtil {
 
-    public static <T> T perform( final ReturningUnreliable<T> unreliable ) {
+    public static <T> T perform( final ReturningUnreliable<T> unreliable ) throws Exception {
         Throwable significantError = null;
         try {
             return unreliable.tryToDo();
@@ -29,12 +28,14 @@ public final class OperationUtil {
             } catch (final Throwable error) {
                 if (significantError == null) significantError = error;
             }
-            if (significantError != null) throw CoreModelerPlugin.toRuntimeException(significantError);
+
+            if (significantError != null)
+                throw new Exception(significantError);
         }
         return null; // Unreachable
     }
 
-    public static void perform( final Unreliable unreliable ) {
+    public static void perform( final Unreliable unreliable ) throws Exception {
         Throwable significantError = null;
         try {
             unreliable.tryToDo();
@@ -47,8 +48,10 @@ public final class OperationUtil {
             } catch (final Throwable error) {
                 if (significantError == null) significantError = error;
             }
-            if (significantError != null) throw CoreModelerPlugin.toRuntimeException(significantError);
         }
+
+        if (significantError != null)
+            throw new Exception(significantError);
     }
 
     private OperationUtil() {

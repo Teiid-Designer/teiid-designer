@@ -35,6 +35,7 @@ import org.teiid.designer.core.xmi.ModelImportInfo;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
 
 /**
@@ -66,7 +67,11 @@ public class VdbResourceFinder {
         this.container = (ContainerImpl)ModelerCore.createContainer("tempVdbModelContainer"); //$NON-NLS-1$
         ModelEditorImpl.setContainer(this.container);
         
-        this.vdb = new Vdb(vdbFile, false, new NullProgressMonitor());
+        try {
+            this.vdb = new Vdb(vdbFile, false, new NullProgressMonitor());
+        } catch (Exception ex) {
+            throw ErrorHandler.toCoreException(ex);
+        }
         
     	Collection<Resource> theFiles = new ArrayList<Resource>();
     	
