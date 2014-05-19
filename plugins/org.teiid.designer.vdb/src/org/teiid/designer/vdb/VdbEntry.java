@@ -11,7 +11,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -25,7 +24,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
@@ -57,7 +55,7 @@ public class VdbEntry {
 
     VdbEntry( final Vdb vdb,
               final EntryElement element,
-              final IProgressMonitor monitor ) {
+              final IProgressMonitor monitor ) throws Exception {
         this(vdb, Path.fromPortableString(element.getPath()));
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
@@ -92,13 +90,13 @@ public class VdbEntry {
 
     VdbEntry( final Vdb vdb,
               final IPath name,
-              final IProgressMonitor monitor ) {
+              final IProgressMonitor monitor ) throws Exception {
         this(vdb, name);
         // Synchronize with workspace file
         setSynchronization(synchronizeEntry(monitor));
     }
 
-    private long computeChecksum( final IFile file ) {
+    private long computeChecksum( final IFile file ) throws Exception {
         return OperationUtil.perform(new OperationUtil.ReturningUnreliable<Long>() {
 
             private InputStream stream = null;
@@ -244,7 +242,7 @@ public class VdbEntry {
     }
 
     void save( final ZipOutputStream out,
-               final IProgressMonitor monitor ) {
+               final IProgressMonitor monitor ) throws Exception {
     	String zipName = name.toString();
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
     	// being located at the file system "root" folder.
@@ -261,11 +259,12 @@ public class VdbEntry {
      * @param zipEntry
      * @param file
      * @param monitor
+     * @throws Exception
      */
     protected final void save( final ZipOutputStream out,
                                final ZipEntry zipEntry,
                                final File file,
-                               final IProgressMonitor monitor ) {
+                               final IProgressMonitor monitor ) throws Exception {
         ZipUtil.copy(file, zipEntry, out);
     }
 
@@ -291,8 +290,9 @@ public class VdbEntry {
 
     /**
      * @param monitor
+     * @throws Exception
      */
-    public void synchronize( final IProgressMonitor monitor ) {
+    public void synchronize( final IProgressMonitor monitor ) throws Exception {
         if (synchronization.get() != Synchronization.NotSynchronized) return;
         setSynchronization(synchronizeEntry(monitor));
     }
@@ -300,7 +300,7 @@ public class VdbEntry {
     /*
      * Private since called by constructor and don't want subclasses overriding
      */
-    private Synchronization synchronizeEntry( final IProgressMonitor monitor ) {
+    private Synchronization synchronizeEntry( final IProgressMonitor monitor ) throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null) return Synchronization.NotApplicable;
         long oldChecksum = 0L;
@@ -309,13 +309,9 @@ public class VdbEntry {
             oldChecksum = checksum;
             checksum = computeChecksum(workspaceFile);
             // Copy snapshot of workspace file to VDB folder
-            try {
-                FileUtils.copy(workspaceFile.getLocation().toFile(),
-                               new File(vdb.getFolder(), name.toString()).getParentFile(),
-                               true);
-            } catch (final IOException error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
-            }
+            FileUtils.copy(workspaceFile.getLocation().toFile(),
+                           new File(vdb.getFolder(), name.toString()).getParentFile(),
+                           true);
         } finally {
             checksumLock.writeLock().unlock();
         }

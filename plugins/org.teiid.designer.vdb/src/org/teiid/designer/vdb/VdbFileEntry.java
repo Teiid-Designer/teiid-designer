@@ -55,11 +55,12 @@ public final class VdbFileEntry extends VdbEntry {
      * @param sourcePath the resource path (may not be <code>null</code>)
      * @param entryType the type of FileEntry
      * @param monitor the progress monitor or <code>null</code>
+     * @throws Exception
      */
     public VdbFileEntry( final Vdb vdb,
                   final IPath sourcePath,
                   final FileEntryType entryType,
-                  final IProgressMonitor monitor ) {
+                  final IProgressMonitor monitor ) throws Exception {
         
         super(vdb, sourcePath, monitor);
         
@@ -79,7 +80,7 @@ public final class VdbFileEntry extends VdbEntry {
      */
     VdbFileEntry( final Vdb vdb,
                   final EntryElement element,
-                  final IProgressMonitor monitor ) {
+                  final IProgressMonitor monitor ) throws Exception {
         
         super(vdb, Path.fromPortableString(element.getPath()), monitor);
         
@@ -106,7 +107,7 @@ public final class VdbFileEntry extends VdbEntry {
     
     @Override
     void save( final ZipOutputStream out,
-               final IProgressMonitor monitor ) {
+               final IProgressMonitor monitor ) throws Exception {
         // Name of VDB entry
         String zipName = getName().toString();
         // Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models

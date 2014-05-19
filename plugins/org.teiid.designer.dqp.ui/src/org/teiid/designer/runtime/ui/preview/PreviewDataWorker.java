@@ -87,6 +87,7 @@ import org.teiid.designer.runtime.ui.server.RuntimeAssistant;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.editors.ModelEditorManager;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -251,9 +252,7 @@ public class PreviewDataWorker {
                 e = ((InvocationTargetException)e).getTargetException();
             }
             DqpUiConstants.UTIL.log(e);
-            MessageDialog.openError(getShell(),
-                                    null,
-                                    getString("error_in_execution")); //$NON-NLS-1$
+            ErrorHandler.toExceptionDialog(getString("error_in_execution"), e); //$NON-NLS-1$
         }
 
         if (dialog.getReturnCode() == Window.OK && setUpSuccessfull) {

@@ -168,7 +168,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @return <code>true</code> if the model depends on the Preview VDBs model entry
      */
     private boolean dependsOn( IFile modelFile,
-                               IFile pvdbFile ) {
+                               IFile pvdbFile ) throws Exception {
         // TODO implement dependsOn
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
         
