@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
@@ -587,9 +588,9 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	                @Override
 	                public void widgetSelected(SelectionEvent e) {
 	                    // Open dialog and get file
-	                    String selectedFile = VdbFileDialogUtil.selectUdfOrFile(udfJarPathBrowse.getShell(),
+	                    String selectedFile = VdbFileDialogUtil.selectFile(udfJarPathBrowse.getShell(),
 	                                                                            getModelFile().getProject(),
-	                                                                            true);
+	                                                                            VdbFolders.UDF);
 	                    getRelationalReference().setUdfJarPath(selectedFile);
 	                    handleInfoChanged();
 	                }

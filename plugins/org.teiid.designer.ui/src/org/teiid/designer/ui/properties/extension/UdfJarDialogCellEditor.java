@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -34,8 +35,8 @@ public class UdfJarDialogCellEditor extends DialogCellEditor {
     protected Object openDialogBox(Control cellEditorWindow) {
         // Determine if there is a lib folder under the project
         IProject proj = getProject(this.eObject);
-        
-        String selectedFile = VdbFileDialogUtil.selectUdfOrFile(cellEditorWindow.getShell(), proj, true);
+
+        String selectedFile = VdbFileDialogUtil.selectFile(cellEditorWindow.getShell(), proj, VdbFolders.UDF);
         
         return selectedFile;
     }
