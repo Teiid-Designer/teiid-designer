@@ -52,6 +52,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.wizards.webservices.RestWarDeploymentInfoDialog;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.RestProcedure;
+import org.teiid.designer.runtime.ui.wizards.webservices.util.WarArchiveUtil;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -73,6 +74,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
     
     private Properties designerProperties;
 
+    /**
+     * 
+     */
     public GenerateRestWarAction() {
         this.setText(UTIL.getString(I18N_PREFIX + "text")); //$NON-NLS-1$
         this.setToolTipText(UTIL.getString(I18N_PREFIX + "tooltip")); //$NON-NLS-1$
@@ -82,6 +86,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         
     }
     
+    /**
+     * @param properties Designer properties for WAR generation
+     */
     public void setDesingerProperties(Properties properties) {
     	this.designerProperties = properties;
     }
@@ -209,6 +216,10 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         return restfulProcedureArray;
     }
 
+    /**
+     * @param selection
+     * @return
+     */
     public boolean setSelection(ISelection selection) {
         if (SelectionUtilities.isMultiSelection(selection))
             return false;
@@ -256,82 +267,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         setEnabled(enable);
     }
     
-    /**
-     * @param vdbFile
-     * @return is the given file a rest war vdb
-     * @throws Exception
-     */
-    public static boolean isRestWarVdb(IFile vdbFile) throws Exception {
-        if (! isVdb(vdbFile))
-            return false;
-
-        boolean result = false;
-        try {
-            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
-            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
-                if (! ModelIdentifier.isVirtualModelType(modelResource))
-                    continue;
-
-                List<RestProcedure> restfulProcedureArray = findRestProcedures(modelResource);
-                if (restfulProcedureArray.size() > 0) {
-                    result = true;
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            DqpPlugin.Util.log(ex);
-            return false;
-        }
-        return result;
-    }
-
-    private static String getRestMethod( Procedure procedure ) {
-        String restMethod = null;
-
-        try {
-            // try new way first
-            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
-                                                                                                    .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
-            restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
-
-            if (CoreStringUtil.isEmpty(restMethod.trim())) {
-                // try old way
-                restMethod = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
-                                                                               ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                                       + "REST-METHOD"); //$NON-NLS-1$
-            }
-        } catch (Exception e) {
-            UTIL.log(e);
-        }
-
-        return restMethod;
-    }
-
-    private static String getUri( Procedure procedure ) {
-        String uri = null;
-
-        try {
-            // try new way first
-            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
-                                                                                                    .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
-            uri = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
-
-            if (CoreStringUtil.isEmpty(uri)) {
-                uri = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
-                                                                        ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE
-                                                                                + "URI"); //$NON-NLS-1$
-            }
-        } catch (Exception e) {
-            UTIL.log(e);
-        }
-
-        return uri;
-    }
-
     private static String getHeaders( Procedure procedure ) {
         Object headers = null;
 
@@ -384,13 +319,13 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                                                 String name,
                                                 String fullName,
                                                 List restfulProcedureArray ) {
-        String restMethod = getRestMethod(procedure);
+        String restMethod = WarArchiveUtil.getRestMethod(procedure);
         LinkedList<String> queryParameterList = new LinkedList<String>();
         LinkedList<String> headerParameterList = new LinkedList<String>();
         
 
         if (restMethod != null) {
-            String uri = getUri(procedure);
+            String uri = WarArchiveUtil.getUri(procedure);
             String charSet = getCharset(procedure);
             if (charSet==null){
             	charSet=Charset.defaultCharset().name();

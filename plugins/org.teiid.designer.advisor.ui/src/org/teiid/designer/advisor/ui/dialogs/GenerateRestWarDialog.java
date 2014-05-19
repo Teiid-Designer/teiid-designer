@@ -36,6 +36,7 @@ import org.teiid.designer.advisor.ui.Messages;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.actions.GenerateRestWarAction;
+import org.teiid.designer.runtime.ui.wizards.webservices.util.WarArchiveUtil;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
@@ -209,7 +210,7 @@ public class GenerateRestWarDialog extends TitleAreaDialog implements IChangeLis
 
         boolean restWarVdb = false;
         try {
-            restWarVdb = GenerateRestWarAction.isRestWarVdb((IFile)this.selectedVdb);
+            restWarVdb = WarArchiveUtil.isRestWarVdb((IFile)this.selectedVdb);
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
             restWarVdb = false;
