@@ -10,9 +10,8 @@ package org.teiid.designer.vdb;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * 

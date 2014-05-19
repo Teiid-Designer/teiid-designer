@@ -7,7 +7,7 @@
  */
 package org.teiid.designer.vdb.ui.editor;
 
-import static org.teiid.designer.core.util.StringConstants.EMPTY_STRING;
+import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
 import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_ADDED;
 import static org.teiid.designer.vdb.Vdb.Event.DATA_POLICY_REMOVED;
@@ -15,7 +15,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

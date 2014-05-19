@@ -9,7 +9,6 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -40,8 +39,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;

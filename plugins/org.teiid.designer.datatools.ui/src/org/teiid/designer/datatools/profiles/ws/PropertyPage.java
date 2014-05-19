@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -54,7 +53,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ws.PropertyPage.ExtraPropertiesPanel.Property;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;

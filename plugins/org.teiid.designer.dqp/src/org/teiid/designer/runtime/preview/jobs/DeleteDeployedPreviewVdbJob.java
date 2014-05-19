@@ -9,14 +9,13 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.spi.ITeiidServer;

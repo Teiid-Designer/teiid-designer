@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;

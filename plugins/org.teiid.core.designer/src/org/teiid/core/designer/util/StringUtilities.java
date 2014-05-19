@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.core.util;
+package org.teiid.core.designer.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,7 +14,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -22,43 +21,7 @@ import org.teiid.core.designer.TeiidDesignerRuntimeException;
  * 
  * @since 8.0
  */
-public class StringUtilities {
-
-    /**
-     * An empty string.
-     */
-    public static String EMPTY_STRING = ""; //$NON-NLS-1$
-    
-    /**
-     * A space.
-     */
-    public static String SPACE = " "; //$NON-NLS-1$
-    
-    /**
-     * An underscore.
-     */
-    public static String UNDERSCORE = "_"; //$NON-NLS-1$
-
-    /**
-     * The String "\n"
-     */
-    public static final String NEW_LINE = "\n"; //$NON-NLS-1$
-    
-    /**
-     * A Comma.
-     */
-    public static String COMMA = ","; //$NON-NLS-1$
-
-    /**
-     * The name of the System property that specifies the string that should be used to separate lines. This property is a standard
-     * environment property that is usually set automatically.
-     */
-    public static final String LINE_SEPARATOR_PROPERTY_NAME = "line.separator"; //$NON-NLS-1$
-
-    /**
-     * The String that should be used to separate lines; defaults to {@link #NEW_LINE}
-     */
-    public static final String LINE_SEPARATOR = System.getProperty(LINE_SEPARATOR_PROPERTY_NAME, NEW_LINE);
+public class StringUtilities implements StringConstants {
 
     /**
      * Returns the path representing the concatenation of the specified path prefix and suffix. The resulting path is guaranteed to

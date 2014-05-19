@@ -10,14 +10,12 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.TranslatorOverrideProperty;
 

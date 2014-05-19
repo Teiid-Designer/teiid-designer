@@ -10,7 +10,6 @@ package org.teiid.designer.vdb;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +18,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -31,9 +28,9 @@ import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 

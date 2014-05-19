@@ -9,9 +9,7 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.Collection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -20,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;

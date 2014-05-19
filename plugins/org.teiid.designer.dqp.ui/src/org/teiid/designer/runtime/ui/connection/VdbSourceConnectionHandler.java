@@ -9,11 +9,9 @@ package org.teiid.designer.runtime.ui.connection;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -24,8 +22,8 @@ import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;

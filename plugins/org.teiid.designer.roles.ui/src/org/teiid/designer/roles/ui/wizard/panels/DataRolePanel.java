@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.roles.ui.wizard.DataRolesModelTreeProvider;
 import org.teiid.designer.ui.common.util.WidgetFactory;

@@ -9,11 +9,10 @@ package org.teiid.designer.vdb;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import org.eclipse.core.runtime.ListenerList;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.util.StringUtilities;
+import org.teiid.core.designer.util.StringUtilities;
 
 
 /**
