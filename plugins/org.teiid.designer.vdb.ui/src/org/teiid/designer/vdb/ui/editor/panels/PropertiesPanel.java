@@ -41,6 +41,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
+import org.teiid.designer.vdb.ui.util.RestVdbUtil;
 
 /**
  *
@@ -50,10 +51,10 @@ public class PropertiesPanel {
 	
     static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidQueryTimeoutValueTitle"); //$NON-NLS-1$
     static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidQueryTimeoutValueMessage"); //$NON-NLS-1$
-
+    static final String NO_REST_PROCEDURES_TITLE = i18n("noValidRestProceduresTitle"); //$NON-NLS-1$
+    static final String NO_REST_PROCEDURES_MESSAGE = i18n("noValidRestProceduresMessage"); //$NON-NLS-1$
     
 	VdbEditor vdbEditor;
-    
 
     ListViewer allowedLanguagesViewer;
     List<String> languages = new ArrayList<String>();
@@ -195,11 +196,35 @@ public class PropertiesPanel {
 		autoGenRESTCheckbox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
+            	boolean validRestVdb = false;
+            	try {
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdbEditor.getVdb().getFile());
+        		} catch (Exception ex) {
+        			throw new RuntimeException(ex);
+        		}
+            	if (!validRestVdb){
+            		((Button)e.getSource()).setSelection(false);
+            		MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            NO_REST_PROCEDURES_TITLE,
+                            NO_REST_PROCEDURES_MESSAGE);
+            	}
             	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
             }
-
+            
             @Override
             public void widgetSelected( SelectionEvent e ) {
+            	boolean validRestVdb = false;
+            	try {
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdbEditor.getVdb().getFile());
+        		} catch (Exception ex) {
+        			throw new RuntimeException(ex);
+        		}
+            	if (!validRestVdb){
+            		((Button)e.getSource()).setSelection(false);
+            		MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            NO_REST_PROCEDURES_TITLE,
+                            NO_REST_PROCEDURES_MESSAGE);
+            	}
             	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
             }
         });

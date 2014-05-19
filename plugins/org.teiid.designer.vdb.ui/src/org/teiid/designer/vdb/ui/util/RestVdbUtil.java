@@ -5,10 +5,9 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.runtime.ui.wizards.webservices.util;
+package org.teiid.designer.vdb.ui.util;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
-import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,8 +27,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
@@ -45,112 +42,18 @@ import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
-import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
 
 /**
- * 
+ * Validation for REST based VDB
  *
- * @since 8.0
+ * @since 8.5
  */
-public class WarArchiveUtil {
+public class RestVdbUtil {
 
-    public static final String TARGETNS = "targetNs"; //$NON-NLS-1$
-    public static final String WEBSERVICENAME = "webserviceName"; //$NON-NLS-1$
-    public static final String URLROOT = "urlRoot"; //$NON-NLS-1$
-    public static final String SERVICEURL = "serviceUrl"; //$NON-NLS-1$
-    public static final String WSDLFILE_EXT = "wsdl"; //$NON-NLS-1$
-    public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+	public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
     private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
-
-    public XSDSchema importSchema( String path ) {
-        XSDParser parser = new XSDParser(null);
-        parser.parse(path);
-        XSDSchema schema = parser.getSchema();
-        schema.setSchemaLocation(path);
-        return schema;
-    }
-
-    /**
-     * @param uri
-     * @return
-     */
-    public static ArrayList<String> getPathParameters( String uri ) {
-        ArrayList pathParams = new ArrayList();
-        String param;
-        if (uri.contains("{")) { //$NON-NLS-1$
-            while (uri.indexOf("}") > -1) { //$NON-NLS-1$
-                int start = uri.indexOf("{"); //$NON-NLS-1$
-                int end = uri.indexOf("}"); //$NON-NLS-1$
-                param = uri.substring(start + 1, end);
-                uri = uri.substring(end + 1);
-                pathParams.add(param);
-            }
-        }
-        return pathParams;
-    }
-
-    /**
-     * Generate a WSDL file using passed in WS Model Resources and user supplied values
-     * 
-     * @since 7.1
-     */
-    public void generateWSDL( ArrayList<ModelResource> wsModelResourceList,
-                              Properties userSuppliedValues ) {
-
-        BasicWsdlGenerator wsdlGenerator = new BasicWsdlGenerator();
-        ModelResource wsModel = null;
-        // This will be overwritten by the web service model name
-        String webServiceName = userSuppliedValues.getProperty(WEBSERVICENAME, "TeiidWS"); //$NON-NLS-1$
-        for (ModelResource webServiceModel : wsModelResourceList) {
-            try {
-                wsModel = webServiceModel;
-                wsdlGenerator.addWebServiceModel(webServiceModel.getEmfResource());
-                webServiceName = webServiceModel.getItemName();
-                List<? extends IResource> iResources = WorkspaceResourceFinderUtil.getDependentResources(webServiceModel.getResource());
-                for (IResource iResource : iResources) {
-                    if (ModelIdentifier.isSchemaModel(iResource)) {
-                        wsdlGenerator.addXsdModel(importSchema(iResource.getLocation().toOSString()), iResource.getLocation());
-                    }
-                }
-            } catch (ModelWorkspaceException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-
-        // TODO: Create wizard to override these default values as part of the soap war generator in 7.1
-        webServiceName = webServiceName.substring(0, webServiceName.lastIndexOf(".")); //$NON-NLS-1$
-        wsdlGenerator.setName(webServiceName);
-        wsdlGenerator.setTargetNamespace(userSuppliedValues.getProperty(TARGETNS, "http://teiid.org")); //$NON-NLS-1$
-        wsdlGenerator.setUrlRootForReferences(userSuppliedValues.getProperty(URLROOT, "")); //$NON-NLS-1$
-        wsdlGenerator.setUrlSuffixForReferences(""); //$NON-NLS-1$
-        wsdlGenerator.setUrlForWsdlService(userSuppliedValues.getProperty(SERVICEURL, "http://serverName:port/warName/")); //$NON-NLS-1$
-        final IStatus status = wsdlGenerator.generate(new NullProgressMonitor());
-
-        // nothing more to do if an error is expected
-        if (status.getSeverity() == IStatus.ERROR) {
-            throw new RuntimeException("Unable to generate WSDL"); //$NON-NLS-1$
-        }
-
-        String fileName = webServiceName + "." + WSDLFILE_EXT; //$NON-NLS-1$
-        try {
-            // Create our WSDL file and write to it
-            String path = wsModel.getResource().getLocation().toOSString();
-            OutputStream stream = new FileOutputStream(new File(path.substring(0, path.lastIndexOf("/")), fileName)); //$NON-NLS-1$
-            wsdlGenerator.write(stream);
-            // Get an iFile instance to refresh our workspace
-            IFile iFile = wsModel.getModelProject().getProject().getFile(fileName);
-            iFile.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (CoreException e) {
-            throw new RuntimeException(e.getMessage());
-        }
-
-    }
-    
     /**
      * @param vdbFile
      * @return is the given file a rest war vdb
@@ -183,6 +86,7 @@ public class WarArchiveUtil {
     /**
      * @param result
      * @param obj
+     * @return 
      */
     private static boolean isVdb(Object obj) {
         if (obj == null)
@@ -249,7 +153,7 @@ public class WarArchiveUtil {
                                                                                 + "URI"); //$NON-NLS-1$
             }
         } catch (Exception e) {
-            UTIL.log(e);
+        	ModelerCore.Util.log(e);
         }
 
         return uri;
@@ -276,7 +180,7 @@ public class WarArchiveUtil {
                                                                                        + "REST-METHOD"); //$NON-NLS-1$
             }
         } catch (Exception e) {
-            UTIL.log(e);
+        	ModelerCore.Util.log(e);
         }
 
         return restMethod;
