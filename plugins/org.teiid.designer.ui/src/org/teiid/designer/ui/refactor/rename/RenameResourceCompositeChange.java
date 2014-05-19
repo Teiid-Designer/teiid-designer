@@ -16,6 +16,7 @@ import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
 import org.teiid.designer.core.refactor.RefactorModelExtensionManager;
 import org.teiid.designer.ui.refactor.AbstractResourcesCompositeChange;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /**
  *
@@ -58,21 +59,25 @@ public class RenameResourceCompositeChange extends AbstractResourcesCompositeCha
     
     @Override
     protected void postPerform(Change change) {
-        Object[] objects = change.getAffectedObjects();
-        if (objects != null) {
-            for (Object object : objects) {
+        try {
+            Object[] objects = change.getAffectedObjects();
+            if (objects != null) {
+                for (Object object : objects) {
+                    if (object instanceof IResource) {
+                        RefactorModelExtensionManager.postProcess(RefactorType.RENAME, (IResource) object);
+                    }
+                }
+            }
+
+            if (change instanceof ResourceChange) {
+                ResourceChange resourceChange = (ResourceChange)change;
+                Object object = resourceChange.getModifiedElement();
                 if (object instanceof IResource) {
                     RefactorModelExtensionManager.postProcess(RefactorType.RENAME, (IResource) object);
                 }
             }
-        }
-
-        if (change instanceof ResourceChange) {
-            ResourceChange resourceChange = (ResourceChange)change;
-            Object object = resourceChange.getModifiedElement();
-            if (object instanceof IResource) {
-                RefactorModelExtensionManager.postProcess(RefactorType.RENAME, (IResource) object);
-            }
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
         }
     }
 }

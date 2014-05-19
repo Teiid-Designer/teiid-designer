@@ -27,6 +27,7 @@ import org.teiid.designer.runtime.ui.vdb.VdbConstants;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
 
 
@@ -92,30 +93,36 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
      */
     @Override
     public void run() {
-    	if(!checkForConnectedServer()) return;
-    	
-    	IFile vdb = selectedVDB;
-    	
-    	if(!isVdbSyncd(vdb)) {
-    		Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
-    		String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
-    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
-        	if (!MessageDialog.openQuestion(shell,title,msg)) return;
-     	}
-    	
-    	if (vdb == null) {
-    		ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), null);
+        if (!checkForConnectedServer())
+            return;
 
-    		dialog.open();
+        IFile vdb = selectedVDB;
 
-    		if (dialog.getReturnCode() == Window.OK) {
-    			vdb = dialog.getSelectedVdb();
-    		}
-    	}
-    	
-    	if( vdb != null ) {
-    		worker.run(vdb);
-    	}
+        try {
+            if (!isVdbSyncd(vdb)) {
+                Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+                String title = UTIL.getString("VdbNotSyncdDialog.title"); //$NON-NLS-1$
+                String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
+                if (!MessageDialog.openQuestion(shell, title, msg))
+                    return;
+            }
+
+            if (vdb == null) {
+                ExecuteVdbDialog dialog = new ExecuteVdbDialog(worker.getShell(), null);
+
+                dialog.open();
+
+                if (dialog.getReturnCode() == Window.OK) {
+                    vdb = dialog.getSelectedVdb();
+                }
+            }
+
+            if (vdb != null) {
+                worker.run(vdb);
+            }
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
+        }
     }
     
     /*
@@ -134,7 +141,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
         return true;
     }
     
-    private boolean isVdbSyncd(IFile file) {
+    private boolean isVdbSyncd(IFile file) throws Exception {
     	Vdb vdb = new Vdb(file, null);
     	return vdb.isSynchronized();
     }

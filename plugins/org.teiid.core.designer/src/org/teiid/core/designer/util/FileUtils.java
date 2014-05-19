@@ -240,31 +240,30 @@ public class FileUtils {
     /**
      * @param source
      * @param destination
+     * @throws Exception
      */
-    public static void copy(final File source, final OutputStream destination) {
+    public static void copy(final File source, final OutputStream destination) throws Exception {
         OperationUtil.perform(new UnreliableCopy(source, destination));
     }
 
     /**
      * @param source
      * @param destination
+     * @throws Exception
      */
-    public static void copy(final InputStream source, final File destination) {
+    public static void copy(final InputStream source, final File destination) throws Exception {
         OperationUtil.perform(new UnreliableCopy(source, destination));
     }
 
     /**
      * @param source
      * @param destination
+     * @throws Exception
      */
-    public static void copy(final InputStream source, final OutputStream destination) {
-        try {
-            final byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
-            for (int len = source.read(buf); len >= 0; len = source.read(buf))
-                destination.write(buf, 0, len);
-        } catch (final IOException error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
-        }
+    public static void copy(final InputStream source, final OutputStream destination) throws Exception {
+        final byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
+        for (int len = source.read(buf); len >= 0; len = source.read(buf))
+            destination.write(buf, 0, len);
     }
 
     /**

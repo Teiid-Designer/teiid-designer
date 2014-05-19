@@ -68,16 +68,6 @@ public class CoreModelerPlugin extends Plugin {
     }
 
     /**
-     * @param error
-     */
-    public static RuntimeException toRuntimeException( final Throwable error ) {
-        if (error instanceof Error) throw (Error)error;
-        if (error instanceof RuntimeException) return (RuntimeException)error;
-        if (error != null) return new RuntimeException(error);
-        return null;
-    }
-
-    /**
      * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
      * @since 4.3.2
      */

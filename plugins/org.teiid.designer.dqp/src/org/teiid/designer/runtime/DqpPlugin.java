@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.wst.server.core.IServer;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
@@ -318,8 +318,6 @@ public class DqpPlugin extends Plugin {
 
             @Override
             public void run() {
-                String title = Util.getString("TeiidParentServerListener.initTeiidServerException.title"); //$NON-NLS-1$
-                String message = Util.getString("TeiidParentServerListener.initTeiidServerException.message"); //$NON-NLS-1$
                 String reason = Util.getString("TeiidParentServerListener.initTeiidServerException.reason"); //$NON-NLS-1$
 
                 MultiStatus multiStatus = new MultiStatus(PLUGIN_ID, 0, reason, null);
@@ -330,7 +328,7 @@ public class DqpPlugin extends Plugin {
                     throwable = throwable.getCause();
                 } while (throwable != null);
 
-                ErrorDialog.openError(getDisplay().getActiveShell(), title, message, multiStatus);
+                StatusManager.getManager().handle(multiStatus, StatusManager.SHOW);
             }
         };
 
