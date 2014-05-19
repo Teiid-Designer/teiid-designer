@@ -87,7 +87,6 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.workspace.ResourceChangeUtilities;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -196,6 +195,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private DataRolesPanel dataRolesPanel;
     VdbDataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
+
+    @SuppressWarnings( "unused" )
     private PropertiesPanel propertiesPanel;
     DescriptionPanel descriptionPanel;
     
@@ -1714,7 +1715,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 						break;
 					}
 					success = true;
-				} catch (ModelWorkspaceException ex) {
+				} catch (Exception ex) {
 					UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
 				} finally {
 					if( success ) {

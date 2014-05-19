@@ -61,7 +61,6 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
@@ -614,7 +613,7 @@ public final class NewVdbWizard extends AbstractWizard
 					break;
 				}
 			}
-		} catch (ModelWorkspaceException ex) {
+		} catch (Exception ex) {
 			okToAdd = false;
 			VdbUiConstants.Util.log(ex);
             WizardUtil.setPageComplete(this.mainPage, ex.getLocalizedMessage(), IMessageProvider.ERROR);

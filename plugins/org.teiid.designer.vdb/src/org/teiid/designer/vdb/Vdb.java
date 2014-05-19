@@ -161,6 +161,7 @@ public final class Vdb {
      * @param file
      * @param preview indicates if this is a Preview VDB
      * @param monitor
+     * @throws Exception
      */
     public Vdb( final IFile file,
                 final boolean preview,
@@ -288,6 +289,7 @@ public final class Vdb {
     /**
      * @param file
      * @param monitor
+     * @throws Exception
      */
     public Vdb( final IFile file,
                 final IProgressMonitor monitor ) throws Exception {
@@ -319,6 +321,7 @@ public final class Vdb {
      * @param name
      * @param monitor
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
+     * @throws Exception
      */
     public final VdbEntry addEntry( final IPath name,
                                     final IProgressMonitor monitor ) throws Exception {
@@ -330,6 +333,7 @@ public final class Vdb {
      * @param entryType the type of file entry being added
      * @param monitor
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
+     * @throws Exception
      */
     public final VdbEntry addFileEntry( final IPath name,
                                         final VdbFileEntry.FileEntryType entryType,
@@ -357,6 +361,7 @@ public final class Vdb {
      * @param name
      * @param monitor
      * @return the newly added {@link VdbModelEntry model entry}, or the existing entry with the supplied name.
+     * @throws Exception
      */
     public final VdbModelEntry addModelEntry( final IPath name,
                                               final IProgressMonitor monitor ) throws Exception {
@@ -945,6 +950,7 @@ public final class Vdb {
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
      * @param monitor
+     * @throws Exception
      */
     public final void save( final IProgressMonitor monitor ) throws Exception {
         // Build JAXB model
@@ -999,8 +1005,8 @@ public final class Vdb {
                 out = null;
                 // Replace archive in workspace with temporary archive
                 final File archiveFile = ModelerCore.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
-                if (!archiveFile.delete()) throw new RuntimeException(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
-                if (!tmpArchive.renameTo(archiveFile)) throw new RuntimeException(
+                if (!archiveFile.delete()) throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
+                if (!tmpArchive.renameTo(archiveFile)) throw new Exception(
                                                                                   VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$
                 // Mark as unmodified
                 if (isModified()) modified.set(false);
@@ -1079,6 +1085,7 @@ public final class Vdb {
 
     /**
      * @param monitor
+     * @throws Exception
      */
     public final void synchronize( final IProgressMonitor monitor ) throws Exception {
     	getBuilder().start();

@@ -3,7 +3,6 @@ package org.teiid.designer.ddl.importer.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -112,17 +111,26 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         try {
         	// Use the importer to process the difference report, generating the model
             if (importer.getDifferenceReport() == null) return false;
-            
+
+            final Exception[] saveException = new Exception[1];
             new ProgressMonitorDialog(getShell()).run(false, false, new IRunnableWithProgress() {
 
                 @Override
                 public void run( final IProgressMonitor monitor ) {
                     monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
                     monitor.worked(50);
-                    importer.save(monitor, 50);
+                    try {
+                        importer.save(monitor, 50);
+                    } catch (Exception ex) {
+                        saveException[0] = ex;
+                    }
                     monitor.done();
                 }
             });
+
+            if (saveException[0] != null)
+                throw saveException[0];
+
             // Show Warning Dialog if the importer finished, but with warnings
             IStatus importStatus = importer.getImportStatus();
             if(importStatus!=null && importStatus.getSeverity()==IStatus.WARNING) {

@@ -26,7 +26,6 @@ import org.modeshape.common.text.Position;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
@@ -276,26 +275,23 @@ public class DdlImporter {
     /**
      * @param monitor
      * @param totalWork
+     * @throws Exception
      */
-    public void save(IProgressMonitor monitor, int totalWork ) {
+    public void save(IProgressMonitor monitor, int totalWork ) throws Exception {
         monitor.subTask(DdlImporterI18n.SAVING_MODEL_MSG);
-        try {
-        	// Set model type etc if new model
-            if (!model.exists()) {
-                ModelAnnotation modelAnnotation = model.getModelAnnotation();
-                modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-                modelAnnotation.setModelType(importManager.getModelType());
-            }
-            
-            // Update the model, based on difference report
-            importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
-
-            // Save model
-            model.save(monitor, false);
-            
-        } catch (Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
+        // Set model type etc if new model
+        if (!model.exists()) {
+            ModelAnnotation modelAnnotation = model.getModelAnnotation();
+            modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+            modelAnnotation.setModelType(importManager.getModelType());
         }
+
+        // Update the model, based on difference report
+        importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
+
+        // Save model
+        model.save(monitor, false);
+
         monitor.worked(totalWork);
         monitor.done();
     }
