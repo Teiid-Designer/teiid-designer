@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 import org.eclipse.core.resources.IMarker;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.designer.vdb.VdbModelEntry.Problem;
 
 /**
@@ -41,14 +40,10 @@ public class ProblemElement implements Serializable {
     public ProblemElement() {
     }
 
-    ProblemElement( final Problem problem ) {
-        try {
-            severity = (problem.getSeverity() == IMarker.SEVERITY_ERROR ? Severity.ERROR : Severity.WARNING);
-            message = problem.getMessage();
-            location = problem.getLocation();
-        } catch (final Exception error) {
-            throw CoreModelerPlugin.toRuntimeException(error);
-        }
+    ProblemElement( final Problem problem ) throws Exception {
+        severity = (problem.getSeverity() == IMarker.SEVERITY_ERROR ? Severity.ERROR : Severity.WARNING);
+        message = problem.getMessage();
+        location = problem.getLocation();
     }
 
     /**

@@ -191,6 +191,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private DataRolesPanel dataRolesPanel;
     VdbDataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
+
+    @SuppressWarnings( "unused" )
     private PropertiesPanel propertiesPanel;
     DescriptionPanel descriptionPanel;
     

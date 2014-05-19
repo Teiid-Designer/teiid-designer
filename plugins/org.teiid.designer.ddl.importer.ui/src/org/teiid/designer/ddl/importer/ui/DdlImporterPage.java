@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.I18n;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -69,6 +68,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /*
  * DdlImporterPage - for selection of DDL to import and target model being generated or updated
@@ -216,7 +216,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                               for (final IResource resource : container.members())
                                                                   if (resource instanceof IContainer) children.add(resource);
                                                           } catch (final CoreException error) {
-                                                              throw CoreModelerPlugin.toRuntimeException(error);
+                                                              ErrorHandler.toExceptionDialog(error);
                                                           }
                                                           return children.toArray(new IResource[children.size()]);
                                                       }
@@ -227,7 +227,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                               for (final IResource resource : container.members())
                                                                   if (resource instanceof IContainer) return true;
                                                           } catch (final CoreException error) {
-                                                              throw CoreModelerPlugin.toRuntimeException(error);
+                                                              ErrorHandler.toExceptionDialog(error);
                                                           }
                                                           return false;
                                                       }
@@ -504,7 +504,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 File ddlFile = new File(ddlFileName);
                 ddlFileContentsBox.setText(FileUtil.readSafe(ddlFile));
             } catch (final IOException error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
+                ErrorHandler.toExceptionDialog(error);
             }
         }
         ddlFileContentsBox.setTopIndex(0);
@@ -791,7 +791,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                     if ((resource instanceof IContainer && hasChildren((IContainer)resource))
                         || (resource instanceof IFile && validFile((IFile)resource))) children.add(resource);
             } catch (final CoreException error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
+                ErrorHandler.toExceptionDialog(error);
             }
             return children.toArray(new IResource[children.size()]);
         }
@@ -815,7 +815,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                         if (hasChildren(resource)) return true;
                     } else if (validFile((IFile)resource)) return true;
             } catch (final CoreException error) {
-                throw CoreModelerPlugin.toRuntimeException(error);
+                ErrorHandler.toExceptionDialog(error);
             }
             return false;
         }
