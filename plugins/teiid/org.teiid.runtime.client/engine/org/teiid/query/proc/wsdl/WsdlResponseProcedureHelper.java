@@ -132,7 +132,7 @@ public class WsdlResponseProcedureHelper extends AbstractWsdlHelper implements I
         sb.append(XMLNAMESPACES).append(L_PAREN);
         int i = 0;
         for (Entry<String, String> entry : namespaceMap.entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
+            if (entry.getKey()==null || entry.getKey().equalsIgnoreCase(XSI_NAMESPACE_PREFIX)) {
                 continue;
             }
             

@@ -19,6 +19,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDElementDeclarationImpl;
 import org.eclipse.xsd.impl.XSDModelGroupImpl;
 import org.eclipse.xsd.impl.XSDParticleImpl;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.model.Part;
 
 
@@ -295,6 +296,7 @@ public class SchemaTreeModel {
 			}
 		}
 		
+		if (nsPrefix==null) nsPrefix=StringUtilities.EMPTY_STRING;
 		//  This is default.. no need to alias
 		//	if (nsPrefix.equals(ResponseInfo.DEFAULT_NS)) nsPrefix = ""; //$NON-NLS-1$ //$NON-NLS-2$
 		//  We will always prefix, since we can't count on a service default for a given element
