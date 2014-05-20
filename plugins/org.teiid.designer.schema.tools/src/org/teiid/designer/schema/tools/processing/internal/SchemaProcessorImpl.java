@@ -343,8 +343,9 @@ public class SchemaProcessorImpl implements SchemaProcessor {
     public XSDTypeDefinition resolveElementType( XSDElementDeclaration elem,
                                                  ElementContentTraversalContext traverseCtx ) throws SchemaProcessingException {
         XSDTypeDefinition type = elem.getType();
+        //Type is an optional attribute, so we will return null if it is not there.
         if (null == type) {
-            throw new SchemaProcessingException(ToolsPlugin.Util.getString("SchemaProcessor.no.type.declaration", elem.getName())); //$NON-NLS-1$
+        	return null;
         }
         return resolveType(type, traverseCtx);
     }
