@@ -725,7 +725,7 @@ public final class VdbModelEntry extends VdbEntry implements StringConstants {
                     if (importVdbName != null) {
                         importVdbNames.add(importVdbName);
                     } else {
-                        VdbModelEntry importedEntry = null;
+                        VdbEntry importedEntry = null;
 
                         for (final VdbModelEntry entry : getVdb().getModelEntries()) {
                             if (name.equals(entry.getName())) {
@@ -735,9 +735,11 @@ public final class VdbModelEntry extends VdbEntry implements StringConstants {
                         }
 
                         if (importedEntry == null)
-                            importedEntry = getVdb().addModelEntry(name, monitor);
+                            importedEntry = getVdb().addEntry(name, monitor);
                         imports.add(importedEntry);
-                        importedEntry.importedBy.add(this);
+
+                        if (importedEntry instanceof VdbModelEntry)
+                            ((VdbModelEntry) importedEntry).importedBy.add(this);
                     }
                 }
             }

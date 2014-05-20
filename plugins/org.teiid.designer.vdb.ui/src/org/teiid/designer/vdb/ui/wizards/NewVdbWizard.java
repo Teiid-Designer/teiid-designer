@@ -528,8 +528,11 @@ public final class NewVdbWizard extends AbstractWizard
                 	return true;
                 
                 final IFile file = (IFile)element;
-                
-                if (ModelUtilities.isModelFile(file) || ModelUtil.isXsdFile(file)) { 
+
+                // See TEIIDDES-2120
+                // xsd files no longer added to vdbs as models
+                // but are added to the Other Files section.
+                if (ModelUtilities.isModelFile(file) && !ModelUtil.isXsdFile(file)) {
                 	return true;
                 }
 

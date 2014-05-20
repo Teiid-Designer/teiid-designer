@@ -491,7 +491,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     public void addModels( final List<IFile> models ) {
         try {
             for (final Object model : models) {
-                vdb.addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                vdb.addEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
             }
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
@@ -633,11 +633,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     if (matchingEntry != null)
                         getVdb().removeEntry(matchingEntry);
                     // Add the selected file
-                    getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
+                    getVdb().addEntry(filePath, new NullProgressMonitor(), fileEntryType);
                 }
                 // No matching entries - safe to add the new entry
             } else {
-                getVdb().addFileEntry(filePath, fileEntryType, new NullProgressMonitor());
+                getVdb().addEntry(filePath, new NullProgressMonitor(), fileEntryType);
             }
 
         } catch (Exception ex) {
@@ -1727,7 +1727,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     try {
                         // add the models
                         for (final Object model : models) {
-                            getVdb().addModelEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                            getVdb().addEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
                         }
                     } catch (Exception ex) {
                         ErrorHandler.toExceptionDialog(ex);
