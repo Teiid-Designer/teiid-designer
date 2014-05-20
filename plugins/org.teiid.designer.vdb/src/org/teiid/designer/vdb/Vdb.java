@@ -345,12 +345,32 @@ public final class Vdb {
     /**
      * @param name
      * @param monitor
+     * @param extraParameters
+     *
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    public final VdbEntry addEntry( final IPath name,
-                                    final IProgressMonitor monitor ) throws Exception {
-        return addEntry(new VdbEntry(this, name, monitor), entries, monitor);
+    public final <T extends VdbEntry> T addEntry( final IPath name, final IProgressMonitor monitor, Object... extraParameters ) throws Exception {
+        CoreArgCheck.isNotNull(name);
+
+        if (ModelUtil.isModelFile(name) && !ModelUtil.isXsdFile(name))
+            return (T) addModelEntry(name, monitor);
+        else {
+            /*
+             * TODO
+             * Can we make this better so that the extra parameter is not required?
+             */
+            FileEntryType fileEntryType = FileEntryType.UserFile;
+            if (extraParameters != null && extraParameters.length > 0) {
+                for (Object obj : extraParameters) {
+                    if (obj instanceof FileEntryType)
+                        fileEntryType = (FileEntryType) obj;
+                }
+            }
+
+            // Xsd files despite being models are now added to file entries collection
+           return (T) addFileEntry(name, fileEntryType, monitor);
+        }
     }
     
     /**
@@ -360,7 +380,7 @@ public final class Vdb {
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    public final VdbEntry addFileEntry( final IPath name,
+    private VdbEntry addFileEntry( final IPath name,
                                         final VdbFileEntry.FileEntryType entryType,
                                         final IProgressMonitor monitor ) throws Exception {
         return addEntry(new VdbFileEntry(this, name, entryType, monitor), entries, monitor);
@@ -388,8 +408,7 @@ public final class Vdb {
      * @return the newly added {@link VdbModelEntry model entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    public final VdbModelEntry addModelEntry( final IPath name,
-                                              final IProgressMonitor monitor ) throws Exception {
+    private VdbModelEntry addModelEntry( final IPath name, final IProgressMonitor monitor ) throws Exception {
         VdbModelEntry modelEntry = new VdbModelEntry(this, name, monitor);
         VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries, monitor);
 

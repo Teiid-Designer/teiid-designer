@@ -16,10 +16,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.FileInputStream;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
@@ -105,7 +103,7 @@ public class VdbModelEntryTest {
         
         final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
         when(modelResource.getAnnotations()).thenReturn(annotations);
-        entry = vdb.addModelEntry(modelPath, null);
+        entry = vdb.addEntry(modelPath, null);
     }
     
     @After

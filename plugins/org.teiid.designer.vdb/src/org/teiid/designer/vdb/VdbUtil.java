@@ -550,12 +550,12 @@ public class VdbUtil {
 	}
 	
 	/**
-	 * Method to determine whether or not a model file (xmi or xsd) can be added to a VDB.
+	 * Method to determine whether or not a model file (xmi) can be added to a VDB.
 	 * The basic check is to look at the existing model names (without extension) and the target file to be added
 	 * and include any dependent models that would be added. ALL of these names (without extension) must be unique
 	 * and ignore case
 	 * 
-	 * @param model file either .xmi or .xsd
+	 * @param model file either .xmi
 	 * @param theVdb can be null
 	 * @return true if model can be added to an existing VDB
 	 * @throws Exception
@@ -591,8 +591,15 @@ public class VdbUtil {
 		Resource[] refs = finder.findReferencesFrom(mr.getEmfResource(), true, false);
 		
 		for( Resource res : refs ) {
+		    if (ModelUtil.isXsdFile(res)) {
+		        // See TEIIDDES-2120
+		        // Xsd files are now added to 'Other Files' so are
+		        // not applicable to this test
+		        continue;
+		    }
+
 			ModelResource modelRes = ModelUtil.getModel(res);
-			
+
 			String refModelName = modelRes.getCorrespondingResource().getFullPath().removeFileExtension().lastSegment();
 			IPath refModelPath = modelRes.getCorrespondingResource().getFullPath();
 			if( existingNames.get(refModelName.toUpperCase()) != null 
@@ -974,14 +981,14 @@ public class VdbUtil {
         for (String thePath : modelPathsToReplace) {
             IResource matchingResource = oldModelPathToResourceMap.get(thePath);
             if (matchingResource != null) {
-                actualVDB.addModelEntry(matchingResource.getFullPath(), new NullProgressMonitor());
+                actualVDB.addEntry(matchingResource.getFullPath(), new NullProgressMonitor());
             }
         }
 
         for (String thePath : dependentViewModelPaths) {
             IResource matchingResource = oldModelPathToResourceMap.get(thePath);
             if (matchingResource != null) {
-                actualVDB.addModelEntry(matchingResource.getFullPath(), new NullProgressMonitor());
+                actualVDB.addEntry(matchingResource.getFullPath(), new NullProgressMonitor());
             }
         }
 

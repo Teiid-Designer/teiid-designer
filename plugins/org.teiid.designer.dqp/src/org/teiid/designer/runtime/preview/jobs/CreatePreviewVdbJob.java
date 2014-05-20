@@ -167,7 +167,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             if (resource instanceof IFile) {
                 // don't add if already in the PVDB (only one model per PVDB)
                 if (pvdb.getModelEntries().isEmpty()) {
-                    pvdb.addModelEntry(this.model.getFullPath(), monitor);
+                    pvdb.addEntry(this.model.getFullPath(), monitor);
                 }
                 // Determine if the vdb contains a FunctionModel or Relational ViewMdl with procedure source
                 Set<VdbModelEntry> entries = pvdb.getModelEntries();
