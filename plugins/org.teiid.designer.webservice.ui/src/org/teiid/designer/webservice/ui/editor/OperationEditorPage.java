@@ -135,7 +135,10 @@ public final class OperationEditorPage extends EditorPart
 
                     @Override
                     public void widgetSelected( SelectionEvent event ) {
-                        updateUi(((CTabItem)event.item).getControl());
+                    	Control cntrl = ((CTabItem)event.item).getControl();
+                    	if( ! cntrl.isDisposed() ) {
+                    		updateUi(((CTabItem)event.item).getControl());
+                    	}
                     }
                 });
 
