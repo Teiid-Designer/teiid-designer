@@ -941,6 +941,12 @@
             id="org.teiid.designer.ui.refactor.delete">
       </contribution>
    </extension>
-	
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.ui.build.ModelProjectMarkerResolutionGenerator" 
+	      markerType="org.eclipse.core.resources.problemmarker"> 
+          <attribute name="missingVdbBuilder" value="true"/>
+       </markerResolutionGenerator> 
+	</extension>
 
 </plugin>

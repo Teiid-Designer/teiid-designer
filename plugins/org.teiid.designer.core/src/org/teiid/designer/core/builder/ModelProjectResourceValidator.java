@@ -9,13 +9,19 @@ package org.teiid.designer.core.builder;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -52,6 +58,40 @@ public class ModelProjectResourceValidator implements ResourceValidator {
 	@Override
 	public void validate(IProgressMonitor monitor, Object obj, ValidationContext context) throws ModelerCoreException {
 		//System.out.println("ModelProjectResourceValidator.validate() object = " + obj);
+		IProject project = (IProject)obj;
+		try {
+			IProjectDescription desc = project.getDescription();
+			
+			
+			boolean foundVdbBuilder = false;
+			for( ICommand com : desc.getBuildSpec()) {
+				foundVdbBuilder = com.getBuilderName().equalsIgnoreCase("org.teiid.designer.vdb.ui.vdbBuilder");
+
+				if( foundVdbBuilder ) break;
+			}
+			if( ! foundVdbBuilder ) {
+				ValidationProblem problem = new ValidationProblemImpl(
+						999, IStatus.ERROR, "Model project definition for " + project.getName() + " is out of date. Perform Quick Fix to update the project");
+						//ModelerCore.Util.getString("ModelProjectResourceValidator.duplicateFileNamesError", fileName)); //$NON-NLS-1$
+				
+				try {
+			        @SuppressWarnings("rawtypes")
+					Map<String, Comparable> attributes = new HashMap<String, Comparable>();
+			        attributes.put(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+			        attributes.put(IMarker.MESSAGE, problem.getMessage());
+			        attributes.put("missingVdbBuilder", true);
+					attributes.put(IMarker.LOCATION, project.getName());
+			        createMarker(project, attributes, IMarker.PROBLEM);
+
+				} catch (CoreException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Collection<IFile> allFiles = DotProjectUtils.getAllProjectResources((IProject)obj);
 		
@@ -197,5 +237,31 @@ public class ModelProjectResourceValidator implements ResourceValidator {
                 return;
         }
     }
+    
+	/*
+	 * see org.eclipse.ui.texteditor.MarkerUtilities.createMarker()
+	 * 
+	 * Creates a marker on the given resource with the given type and attributes.
+	 * <p>
+	 * This method modifies the workspace (progress is not reported to the user).</p>
+	 *
+	 * @param resource the resource
+	 * @param attributes the attribute map (key type: <code>String</code>,
+	 *   value type: <code>Object</code>)
+	 * @param markerType the type of marker
+	 * @throws CoreException if this method fails
+	 * @see IResource#createMarker(java.lang.String)
+	 */
+	public void createMarker(final IResource resource, final Map attributes, final String markerType) throws CoreException {
+
+		IWorkspaceRunnable r= new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				IMarker marker= resource.createMarker(markerType);
+				marker.setAttributes(attributes);
+			}
+		};
+
+		resource.getWorkspace().run(r, null,IWorkspace.AVOID_UPDATE, null);
+	}
 
 }
