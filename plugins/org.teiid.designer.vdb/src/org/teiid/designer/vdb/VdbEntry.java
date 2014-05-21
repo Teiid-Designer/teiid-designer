@@ -39,7 +39,7 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
  * @since 8.0
  */
 @ThreadSafe
-public class VdbEntry {
+public abstract class VdbEntry {
 	private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
 	
     private IPath name;
