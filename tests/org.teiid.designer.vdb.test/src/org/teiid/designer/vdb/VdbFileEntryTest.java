@@ -33,11 +33,13 @@ import org.mockito.ArgumentCaptor;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 
 /**
  * 
  */
-public class VdbEntryTest {
+@SuppressWarnings( "javadoc" )
+public class VdbFileEntryTest {
 
     private EclipseMock eclipseMock;
     private VdbEntry entry;
@@ -65,6 +67,7 @@ public class VdbEntryTest {
         FileInputStream fileInputStream = new FileInputStream(tempFile);
         
         final IPath name = mock(Path.class);
+        when(name.lastSegment()).thenReturn("test.xsd");
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
         when(iFile.getLocation().toFile()).thenReturn(tempFile);
@@ -72,11 +75,10 @@ public class VdbEntryTest {
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
+        // ensure path can find a file in the workspace
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
-        
-        
         entry = vdb.addEntry(name, null);
         assertThat(entry.getChecksum(), not(is(0L)));
     }
@@ -90,6 +92,7 @@ public class VdbEntryTest {
         FileInputStream fis2 = new FileInputStream(tempFile2);
         
         final IPath name = mock(Path.class);
+        when(name.lastSegment()).thenReturn("test.xsd");
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(name);
         when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
@@ -99,33 +102,22 @@ public class VdbEntryTest {
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
-        when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
         entry = vdb.addEntry(name, null);
+
+        // A file entry changes the path according to the file entry type so ensure
+        // our mock path can be found in the workspace
+        when(mockRoot.findMember(entry.getName())).thenReturn(iFile);
+
         final long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
+
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
         entry.synchronize(null); // will use second value of iFile.getContents()
 
         // test
         assertThat(entry.getChecksum(), not(is(originalChecksum)));
     }
-//
-//    @Test
-//    public void shouldIndicateNotSynchronizedWhenFileIsChanged() throws Exception {
-//        // create resource change
-//        final IResourceDelta delta = mock(IResourceDelta.class);
-//        when(delta.getKind()).thenReturn(IResourceDelta.CHANGED);
-//        final IFile file = mock(IFile.class);
-//        when(file.getContents()).thenReturn(new ByteArrayInputStream("abcdef".getBytes()));
-//        when(delta.getResource()).thenReturn(file);
-//
-//        // handle event
-//        entry.fileChanged(delta);
-//
-//        // test
-//        assertThat(entry.getSynchronization(), is(Synchronization.NotSynchronized));
-//    }
 
     @Test
     public void shouldIndicateSynchronizationNotApplicableIfNotInWorkspace() throws Exception {
@@ -190,10 +182,14 @@ public class VdbEntryTest {
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
-        when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
         entry = vdb.addEntry(name, null); // will have an original checksum based on first value of iFile.getContents()
+
+        // A file entry changes the path according to the file entry type so ensure
+        // our mock path can be found in the workspace
+        when(mockRoot.findMember(entry.getName())).thenReturn(iFile);
+
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
 
         // add listener
@@ -248,8 +244,8 @@ public class VdbEntryTest {
     @Test
     public void shouldVerifyEqualityWhenSamePath() throws Exception {
         final IPath path = new Path("/my/path/filename");
-        final VdbEntry thisEntry = new VdbEntry(vdb, path, null);
-        final VdbEntry thatEntry = new VdbEntry(vdb, path, null);
+        final VdbFileEntry thisEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile, null);
+        final VdbFileEntry thatEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile, null);
         assertThat(thisEntry.equals(thatEntry), is(true));
         assertThat(thisEntry.hashCode(), is(thatEntry.hashCode()));
     }

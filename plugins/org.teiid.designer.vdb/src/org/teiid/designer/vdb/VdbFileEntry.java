@@ -97,12 +97,11 @@ public final class VdbFileEntry extends VdbEntry {
     
     private IPath determinePath(IPath sourcePath,FileEntryType entryType) {
         String fileName = sourcePath.lastSegment();
-        if(entryType==FileEntryType.UserFile) {
-            return new Path(StringConstants.FORWARD_SLASH + VdbFolders.OTHER_FILES.getReadFolder() + StringConstants.FORWARD_SLASH + fileName);  
-        } else if(entryType==FileEntryType.UDFJar) {
+        if(entryType==FileEntryType.UDFJar) {
             return new Path(StringConstants.FORWARD_SLASH + VdbFolders.UDF.getReadFolder() + StringConstants.FORWARD_SLASH + fileName);  
+        } else {
+            return new Path(StringConstants.FORWARD_SLASH + VdbFolders.OTHER_FILES.getReadFolder() + StringConstants.FORWARD_SLASH + fileName);
         }
-        return null;
     }
     
     @Override
