@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -201,6 +203,34 @@ public class FileUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns fileArray {@code ArrayList} of {@code File} objects that match a pattern in the specified directory. 
+     * @param pathToScan The path to look for the matching files
+     * @param startWith The beginning portion of the file name
+     * @param endsWith The ending portion of the file name (i.e. ".jar")
+     * @return fileArray An ArrayList of 
+     * @since 8.5
+     */
+    public final static ArrayList<File> getFilesForPattern(String pathToScan, String startWith, String endsWith) {
+	    String target_file ;  // fileThatYouWantToFilter
+	    File folderToScan = new File(pathToScan); 
+	
+		File[] listOfFiles = folderToScan.listFiles();
+		ArrayList<File> list = new ArrayList();
+		
+		for (File file:listOfFiles) {
+	        if (file.isFile()) {
+	            target_file = file.getName();
+	            if (target_file.startsWith(startWith)
+		                 && target_file.endsWith(endsWith)) {
+	            	list.add(file);
+		        }
+		    }
+		 }
+		
+		return list;    
     }
 
     /**

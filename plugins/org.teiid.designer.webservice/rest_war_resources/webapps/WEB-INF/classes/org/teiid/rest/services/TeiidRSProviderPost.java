@@ -31,9 +31,14 @@ import javax.ws.rs.core.Response;
 import javax.xml.ws.WebServiceContext;
 
 import org.teiid.core.types.BlobType;
-import org.teiid.core.types.TransformationException;
 import org.teiid.core.types.XMLType;
 import org.teiid.core.util.ReaderInputStream;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.query.parser.QueryParser;
+import org.teiid.query.parser.TeiidNodeFactory;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.rest.RestPlugin;
@@ -43,7 +48,7 @@ public class TeiidRSProviderPost {
     protected WebServiceContext webServiceContext;
 
     private static Logger logger = Logger.getLogger("org.teiid.rest"); //$NON-NLS-1$
-
+    
     @javax.annotation.Resource
     protected void setWebServiceContext( WebServiceContext wsc ) {
         webServiceContext = wsc;
@@ -67,7 +72,7 @@ public class TeiidRSProviderPost {
     	InputStream resultStream = null;
      
         String responseString = null;
-
+        
         try {
 
             DataSource ds = getDataSource(properties.getProperty("jndiName"));
@@ -104,7 +109,7 @@ public class TeiidRSProviderPost {
             }
 
             statement.close(); 
-            resultStream = handleResult(charSet, result);
+            resultStream = handleResult(charSet, result, properties);
 
         } catch (SQLException e) {
             String msg = RestPlugin.Util.getString("TeiidRSProvider.1"); //$NON-NLS-1$
@@ -139,21 +144,26 @@ public class TeiidRSProviderPost {
         return resultStream;
     }
     
-    private InputStream handleResult(String charSet, Object result) throws SQLException, UnsupportedEncodingException {
+    private InputStream handleResult(String charSet, Object result, Properties properties) throws SQLException, UnsupportedEncodingException {
         if (result == null) {
         	return null;
         }
         
+        String teiidVersion = properties.getProperty("teiidVersion");
+        ITeiidServerVersion version = new TeiidServerVersion(teiidVersion);
+        QueryParser queryParser = new QueryParser(version);
+        TeiidParser parser = queryParser.getTeiidParser();
+        
 		if (result instanceof SQLXML) {
 			if (charSet != null) {
-		    	XMLSerialize serialize = new XMLSerialize();
+				XMLSerialize serialize = (XMLSerialize)TeiidNodeFactory.getInstance().create(parser, ASTNodes.XML_SERIALIZE);
 		    	serialize.setTypeString("blob"); //$NON-NLS-1$
 		    	serialize.setDeclaration(true);
 		    	serialize.setEncoding(charSet);
 		    	serialize.setDocument(true);
 		    	try {
 					return ((BlobType)XMLSystemFunctions.serialize(serialize, new XMLType((SQLXML)result))).getBinaryStream();
-				} catch (TransformationException e) {
+				} catch (Exception e) {
 					throw new SQLException(e);
 				}
 			}
