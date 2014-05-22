@@ -52,6 +52,11 @@ public class WebArchiveBuilderConstants {
     public static final String PROPERTY_JNDI_NAME = "jndiName"; //$NON-NLS-1$
 
     /**
+     * Property indicating the Teiid server version.
+     */
+    public static final String PROPERTY_TEIID_VERSION = "teiidVersion"; //$NON-NLS-1$
+    
+    /**
      * Property indicating the security type to use for the Teiid web service connection.
      */
     public static final String PROPERTY_SECURITY_TYPE = "securityType"; //$NON-NLS-1$

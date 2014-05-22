@@ -39,9 +39,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.jboss.ide.eclipse.as.core.util.FileUtil;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.TempDirectory;
+import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -61,7 +63,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private List<String> models = new ArrayList<String>();
     private Map<String, List<RestProcedure>> modelMapOfProcedures = new HashMap<String, List<RestProcedure>>();
     File webXmlFile = null;
-    public static String newline = System.getProperty("line.separator"); //$NON-NLS-1$
+    public static String NEWLINE = System.getProperty("line.separator"); //$NON-NLS-1$
 
     // =============================================================
     // Constants
@@ -428,21 +430,26 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private void createPropertiesFile( File webInfClassesDirectory,
                                          Properties properties ) throws IOException {
 
-        // Create teiidsoap.properties file
+        // Create teiidrest.properties file
         File teiidRestProperties = new File(webInfClassesDirectory + File.separator + "teiidrest.properties"); //$NON-NLS-1$
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
         if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
             jndiValue = JNDI_PREFIX + "/" + jndiValue; //$NON-NLS-1$
         }
-
+        
+        ITeiidServerVersion teiidVersion = ModelerCore.getTeiidServerVersion();
+        
+        String version = teiidVersion.toString();
+        
         FileWriter fstream = null;
         BufferedWriter out = null;
         try {
             // Create file
             fstream = new FileWriter(teiidRestProperties);
             out = new BufferedWriter(fstream);
-            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + "=" + jndiValue); //$NON-NLS-1$
+            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + "=" + jndiValue + NEWLINE); //$NON-NLS-1$
+            out.write(WebArchiveBuilderConstants.PROPERTY_TEIID_VERSION + "=" + version); //$NON-NLS-1$
         } finally {
             // Close the output stream
             out.close();
@@ -492,7 +499,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             String methods = generateMethods(resource);
             AntTasks.replace(resourceJavaFile, "${httpMethods}", methods); //$NON-NLS-1$
 
-            singletonSb.append(newline + "singletons.add(new org.teiid.rest.services." + resource + "());"); //$NON-NLS-1$ //$NON-NLS-2$
+            singletonSb.append(NEWLINE + "singletons.add(new org.teiid.rest.services." + resource + "());"); //$NON-NLS-1$ //$NON-NLS-2$
 
         }
 
@@ -510,6 +517,10 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         AntTasks.replace(teiidRestApplication, "${resources}", singletonSb.toString()); //$NON-NLS-1$
 
         template.delete();
+        String spiPath = DesignerSPIPlugin.getPluginPath();
+        File spiFile = new File(spiPath);
+        String runtimePath = ModelerCore.getTeiidRuntimePath();
+        File runtimeFile = new File(runtimePath);
         // Compile classes
         JavaCompiler compilerTool = ToolProvider.getSystemJavaCompiler();
         if (compilerTool != null) {
@@ -520,6 +531,9 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.8.3.jar"; //$NON-NLS-1$
             String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + "json-1.0.jar"; //$NON-NLS-1$
             String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
+            
+            FileUtils.copy(spiFile, webInfLibDirectory, true);
+            FileUtils.copy(runtimeFile, webInfLibDirectory, true);
 
             List<File> classPaths = new ArrayList<File>();
             classPaths.add(new File(pathToJar1));
@@ -528,8 +542,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             classPaths.add(new File(pathToJar4));
             classPaths.add(new File(pathToJar5));
 
-            String runtimePath = ModelerCore.getTeiidRuntimePath();
-            classPaths.add(new File(runtimePath));
+            classPaths.add(runtimeFile);
+            classPaths.add(spiFile);
 
             fileManager.setLocation(StandardLocation.CLASS_PATH, classPaths);
 
@@ -561,10 +575,30 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             Boolean includeJars = (Boolean)properties.get(WebArchiveBuilderConstants.PROPERTY_INCLUDE_RESTEASY_JARS);
 
-            // Delete RESTEasy and dependent jars if the user elected not to include them
+            // Delete RESTEasy and dependent jars if the user elected not to include them. Some jars are required even without
+            // the RESTEasy jars. We will need to save those to a temp folder and then copy them back after removing the RESTEasy jars.
             if (!includeJars) {
+            	File tempFolder = new File(webInfClassesDirectory+"/tmp"); //$NON-NLS-1$
+            	File jsonJar = new File(pathToJar4);
+                ArrayList jarsToAdd = FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "org.eclipse", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                jarsToAdd.addAll(FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "saxon", ".jar")); //$NON-NLS-1$ //$NON-NLS-2$
+                jarsToAdd.add(jsonJar);
+                jarsToAdd.add(spiFile);
+                jarsToAdd.add(runtimeFile);
+                Iterator iter = jarsToAdd.iterator();
+                
+                while (iter.hasNext()){
+                	FileUtils.copy((File)iter.next(), tempFolder, true);
+                }
 
                 FileUtils.removeChildrenRecursively(webInfLibDirectory);
+                jarsToAdd = FileUtils.getFilesForPattern(tempFolder.getCanonicalPath(), "", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                iter = jarsToAdd.iterator();
+                while (iter.hasNext()){
+                	FileUtils.copy((File)iter.next(), webInfLibDirectory, true);
+                }
+                
+                tempFolder.delete();
 
             }
 
@@ -600,12 +634,12 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                   RestProcedure restProcedure ) {
         commonRestMethodLogic(sb, restProcedure, ""); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            sb.append("\tparameterMap = getInputs(is);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append("\tparameterMap = getInputs(is);" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         // Gen return and execute
-        sb.append("\treturn convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
-                  + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\treturn convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + NEWLINE //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
+                  + "}" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -616,14 +650,14 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                    RestProcedure restProcedure ) {
         commonRestMethodLogic(sb, restProcedure, "json"); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            sb.append("\tparameterMap = getJSONInputs(is, \""+restProcedure.getCharSet()+ "\");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            sb.append("\tparameterMap = getJSONInputs(is, \""+restProcedure.getCharSet()+ "\");" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // Gen return and execute
-        sb.append("\tString result = convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + newline //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        sb.append("\tString result = convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + NEWLINE //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                   + "\t"); //$NON-NLS-1$
-        sb.append("\tString json = convertXMLToJSON(result);" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
-        sb.append("\treturn json;" + newline + "\t" + "}" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        sb.append("\tString json = convertXMLToJSON(result);" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\treturn json;" + NEWLINE + "\t" + "}" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     }
 
@@ -634,15 +668,15 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private void commonRestMethodLogic( StringBuilder sb,
                                         RestProcedure restProcedure,
                                         String methodAppendString ) {
-        sb.append("@" + restProcedure.getRestMethod().toUpperCase() + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$
+        sb.append("@" + restProcedure.getRestMethod().toUpperCase() + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$
         String uri = methodAppendString == "" ? restProcedure.getUri() : methodAppendString + "/" + restProcedure.getUri(); //$NON-NLS-1$ //$NON-NLS-2$
         
-        sb.append("@Path( \"" + uri + "\" )" + newline + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        sb.append("@Path( \"" + uri + "\" )" + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
-            sb.append(restProcedure.getConsumesAnnotation() + newline + "\t"); //$NON-NLS-1$
+            sb.append(restProcedure.getConsumesAnnotation() + NEWLINE + "\t"); //$NON-NLS-1$
         }
         if (restProcedure.getProducesAnnotation() != null && !restProcedure.getProducesAnnotation().isEmpty()) {
-            sb.append(restProcedure.getProducesAnnotation() + newline + "\t"); //$NON-NLS-1$
+            sb.append(restProcedure.getProducesAnnotation() + NEWLINE + "\t"); //$NON-NLS-1$
         }
         // Gen method signature
         sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -691,26 +725,26 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             if (pathParams.size() > 0 || headerParamList.size() > 0 || queryParamList.size() > 0 ) {
                 sb.append(", "); //$NON-NLS-1$
             }
-            sb.append(" InputStream is ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(" InputStream is ) { " + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
-            sb.append(" ) { " + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(" ) { " + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         // Gen setting of parameter(s)
-        sb.append("\tMap<String, String> parameterMap = getParameterMap();" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("\tMap<String, String> parameterMap = getParameterMap();" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         //We will always consider header parameters first, so the supporting procedure knows the correct order
         if (headerParamList.size() > 0) {
             for (String param : headerParamList) {
-                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
         }
         if (pathParams.size() > 0) {
             for (String param : pathParams) {
-                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
         }
         if (queryParamList.size() > 0) {
             for (String param : queryParamList) {
-                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + newline + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                sb.append("\tparameterMap.put(\"" + param + "\", " + param + ");" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             }
         }
     }
