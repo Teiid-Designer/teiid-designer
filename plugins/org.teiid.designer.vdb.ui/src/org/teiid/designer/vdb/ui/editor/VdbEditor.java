@@ -15,6 +15,7 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -60,6 +62,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -169,6 +173,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String INFORM_DATA_ROLES_ON_ADD_MESSAGE = i18n("informDataRolesExistOnAddMessage"); //$NON-NLS-1$
     static final String CANNOT_ADD_DUPLICATE_MODEL_NAME_TITLE = i18n("cannotAddDuplicateModelNameTitle"); //$NON-NLS-1$
     static final String CANNOT_ADD_DUPLICATE_MODEL_NAME_MESSAGE = i18n("cannotAddDuplicateModelNameMessage"); //$NON-NLS-1$
+    static final String INVALID_INTEGER_INPUT_TITLE = i18n("invalidVdbVersionValueTitle"); //$NON-NLS-1$
+    static final String INVALID_INTEGER_INPUT_MESSAGE = i18n("invalidVdbVersionValueMessage"); //$NON-NLS-1$
     
     static final int MODELS_PANEL_WIDTH_HINT = 300;  // Models Panel Overall Width
     static final int MODELS_PANEL_IMAGE_COL_WIDTH = 50;  // Image Cols Width
@@ -1298,6 +1304,32 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     private void addSynchronizePanel(Composite parent ) {
     	Composite extraButtonPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.BEGINNING, 2, 2);
         extraButtonPanel.setLayout(new GridLayout(6, false));
+        
+        Label vdbVersionLabel = WidgetFactory.createLabel(extraButtonPanel, "Version"); //$NON-NLS-1$
+    	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(vdbVersionLabel);
+    	
+    	final Text vdbVersionText = WidgetFactory.createTextField(extraButtonPanel);
+    	GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(vdbVersionText);
+    	((GridData)vdbVersionText.getLayoutData()).widthHint = 30;
+    	vdbVersionText.addModifyListener(new ModifyListener() {
+			
+			@Override
+			public void modifyText(ModifyEvent e) {
+				try {
+                    int versionValue = Integer.parseInt(vdbVersionText.getText());
+                    if (versionValue > -1) {
+                        getVdb().setVersion(versionValue);
+					}
+				} catch (NumberFormatException ex) {
+					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                            INVALID_INTEGER_INPUT_TITLE,
+                            INVALID_INTEGER_INPUT_MESSAGE);
+					vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
+				}
+				
+			}
+		});
+    	vdbVersionText.setText(Integer.toString(getVdb().getVersion()));
         	
         synchronizeAllButton = WidgetFactory.createButton(extraButtonPanel, i18n("synchronizeAllButton"), //$NON-NLS-1$
                                                           GridData.HORIZONTAL_ALIGN_BEGINNING);
