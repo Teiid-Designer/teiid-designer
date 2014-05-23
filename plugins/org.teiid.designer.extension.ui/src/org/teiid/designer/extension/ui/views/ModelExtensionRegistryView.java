@@ -179,7 +179,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
                 handleCloneMed();
             }
         };
-        this.cloneMedAction.setToolTipText(Messages.viewMedActionToolTip);
+        this.cloneMedAction.setToolTipText(Messages.cloneMedActionToolTip);
         this.cloneMedAction.setEnabled(false);
         this.cloneMedAction.setImageDescriptor(PlatformUI.getWorkbench()
                                                          .getSharedImages()
