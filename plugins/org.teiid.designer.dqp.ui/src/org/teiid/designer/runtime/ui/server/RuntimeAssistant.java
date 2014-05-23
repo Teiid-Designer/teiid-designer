@@ -197,7 +197,7 @@ public final class RuntimeAssistant {
         if (!getServer().isConnected()) {
         	if( !ignoreFailedConnection ) {
 	            MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
-	                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getDisplayName())); // getServer().getHost())); //$NON-NLS-1$
+	                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getParentName())); //$NON-NLS-1$
         	}
             return false;
         }
