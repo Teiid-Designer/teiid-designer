@@ -293,8 +293,12 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
                 this.ddlContentsBox.setText(ddl);
             } else {
                 IStatus deployStatus = importManager.deployDynamicVdb();
-                if(deployStatus == null || !deployStatus.isOK()) {
+                if(deployStatus == null) {
                     ddlContentsBox.setText(Messages.ShowDDLPage_vdbDeploymentErrorMsg);  
+                } else if(!deployStatus.isOK()) {
+                	StringBuffer sb = new StringBuffer(deployStatus.getMessage());
+                	sb.append("\n\n"+ Messages.ShowDDLPage_vdbDeploymentCheckServerLogMsg); //$NON-NLS-1$
+                    ddlContentsBox.setText(sb.toString());  
                 } else {
                     String ddl = importManager.getDdl();
                     // Consider null DDL an error..

@@ -132,6 +132,7 @@ public class Messages extends NLS {
     public static String ShowDDLPage_exportDDLToWorkspaceButton;
     public static String ShowDDLPage_exportDDLToWorkspaceButtonTooltip;
     public static String ShowDDLPage_vdbDeploymentErrorMsg;
+    public static String ShowDDLPage_vdbDeploymentCheckServerLogMsg;
     public static String ShowDDLPage_exportDDLDialogTitle;
     public static String ShowDDLPage_exportDDLDialogDefaultFileName;
     public static String ShowDDLPage_exportDDLDialogDefaultFileExt;
