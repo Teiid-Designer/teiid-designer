@@ -126,7 +126,7 @@ public abstract class ModelResourceActionManager {
         	nextAction = (Action)iter.next();
         	if( UiPlugin.getDefault().isProductContextValueSupported(IModelerProductContexts.Actions.MODEL_RESOURCE_ACTION_GROUP, nextAction.getClass().getName()) ) {
         		if( nextAction instanceof ISelectionAction ) {
-            		if( !(nextAction instanceof IConnectionAction) && ((ISelectionAction)nextAction).isApplicable(theSelection) ) {
+            		if( /*!(nextAction instanceof IConnectionAction) && */((ISelectionAction)nextAction).isApplicable(theSelection) ) {
     		        	if( nextAction instanceof ISelectionListener) {
     		        		((ISelectionListener)nextAction).selectionChanged(null, theSelection);
     		        	}

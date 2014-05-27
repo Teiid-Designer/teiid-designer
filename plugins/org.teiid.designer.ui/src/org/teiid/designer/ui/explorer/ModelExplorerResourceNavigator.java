@@ -45,6 +45,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -674,10 +675,12 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         
         // configure section toolbar
         Button[] buttons = FormUtil.createSectionToolBar(this.defaultServerSection, toolkit,
-                                                         new Image[] { changeServerImage } );
+                                                         new String[] { "Change..." } );
 
         Button changeServerButton = buttons[0];        
         changeServerButton.setEnabled(true);
+        
+        RowDataFactory.swtDefaults().hint(65, 21).applyTo(changeServerButton);
         changeServerButton.addSelectionListener(new SelectionAdapter() {
 
             /**
@@ -1360,10 +1363,10 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             if (modelingActionMenu != null && modelingActionMenu.getItems().length > 0) {
                 theMenu.insertBefore(ContextMenu.INSERT_END, modelingActionMenu);
             }
-            MenuManager connectionActionMenu = getConnectionActionMenu(selection);
-            if (connectionActionMenu != null && connectionActionMenu.getItems().length > 0) {
-                theMenu.insertBefore(ContextMenu.INSERT_END, connectionActionMenu);
-            }
+//            MenuManager connectionActionMenu = getConnectionActionMenu(selection);
+//            if (connectionActionMenu != null && connectionActionMenu.getItems().length > 0) {
+//                theMenu.insertBefore(ContextMenu.INSERT_END, connectionActionMenu);
+//            }
         } // End of resource additions
 
         if (SelectionUtilities.isSingleSelection(selection)) {

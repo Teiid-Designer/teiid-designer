@@ -832,15 +832,15 @@ public final class ModelerActionService extends AbstractActionService
             
         }
         
-        MenuManager connMenu = ModelResourceActionManager.getModelResourceConnectionActionMenu(theSelection);
+//        MenuManager connMenu = ModelResourceActionManager.getModelResourceConnectionActionMenu(theSelection);
 
-        if (connMenu != null && connMenu.getItems().length > 0) {
-            Object[] items = connMenu.getItems();
-            for (int i = 0; i < items.length; i++) {
-                menu.add(connMenu.getItems()[i]);
-                foundModelActions = true;
-            }
-        }
+//        if (connMenu != null && connMenu.getItems().length > 0) {
+//            Object[] items = connMenu.getItems();
+//            for (int i = 0; i < items.length; i++) {
+//                menu.add(connMenu.getItems()[i]);
+//                foundModelActions = true;
+//            }
+//        }
         
         if( foundModelActions ) {
         	menu.add(new Separator());
