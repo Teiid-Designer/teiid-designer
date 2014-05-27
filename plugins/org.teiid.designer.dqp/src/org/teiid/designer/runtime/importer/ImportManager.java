@@ -198,7 +198,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
         try {
             finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
         } catch (Exception ex) {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, timeoutSec, vdbName));
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, vdbName));
             return resultStatus;
         }
         
@@ -218,7 +218,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
                 resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
             }
         } else {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, VDB_LOADING_TIMEOUT_SEC, vdbName));
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, vdbName, timeoutSec));
         }
 
         return resultStatus;
