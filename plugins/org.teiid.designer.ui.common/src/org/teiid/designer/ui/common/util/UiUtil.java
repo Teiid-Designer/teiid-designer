@@ -9,6 +9,9 @@ package org.teiid.designer.ui.common.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -155,6 +158,54 @@ public final class UiUtil implements UiConstants {
         }
 
         return result;
+    }
+
+    /**
+     * @param file
+     * @return collection of editors that have the given file as input
+     */
+    public static Collection<IEditorPart> getEditorsForFile( IFile file) {
+        List<IEditorPart> results = new ArrayList<IEditorPart>();
+        if (file == null)
+            return Collections.emptyList();
+
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench == null)
+            return Collections.emptyList();
+
+        IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
+        if (workbenchWindows == null || workbenchWindows.length == 0)
+            return Collections.emptyList();
+
+        for (IWorkbenchWindow window : workbenchWindows) {
+            IWorkbenchPage[] pages = window.getPages();
+            if (pages == null || pages.length == 0)
+                continue;
+
+            for (IWorkbenchPage page : pages) {
+                // look through the open editors and see if there is one available for this model file.
+                IEditorReference[] editors = page.getEditorReferences();
+                if (editors == null || editors.length == 0)
+                    continue;
+
+                for (IEditorReference editorReference: editors) {
+                    IEditorPart editor = editorReference.getEditor(false);
+                    if (editor == null)
+                        continue;
+
+                    IEditorInput input = editor.getEditorInput();
+                    if (input instanceof IFileEditorInput) {
+                        if (file.equals(((IFileEditorInput)input).getFile())) {
+                            // found it;
+                            results.add(editor);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return results;
     }
 
     public static IEditorPart getEditorForFile( IFile file, boolean forceOpen ) {

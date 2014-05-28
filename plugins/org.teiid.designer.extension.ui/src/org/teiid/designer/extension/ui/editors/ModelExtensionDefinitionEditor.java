@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -47,6 +48,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IMemento;
@@ -78,13 +80,117 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.actions.ShowModelExtensionRegistryViewAction;
+import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.forms.MessageFormDialog;
 
 /**
  * 
  */
 public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor implements IPersistableEditor,
-        IResourceChangeListener, PropertyChangeListener, RegistryListener {
+        PropertyChangeListener, RegistryListener {
+
+    private static class MedResourceChangeListener implements IResourceChangeListener, IResourceDeltaVisitor {
+
+        private final IFile file;
+
+        public MedResourceChangeListener(IFile file) {
+            this.file = file;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((this.file == null) ? 0 : this.file.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            MedResourceChangeListener other = (MedResourceChangeListener)obj;
+            if (this.file == null) {
+                if (other.file != null)
+                    return false;
+            } else if (!this.file.equals(other.file))
+                return false;
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+         */
+        @Override
+        public void resourceChanged( final IResourceChangeEvent event ) {
+            int type = event.getType();
+
+            if (type != IResourceChangeEvent.POST_CHANGE)
+                return;
+
+            IResourceDelta delta = event.getDelta();
+
+            if (delta == null)
+                return;
+
+            try {
+                delta.accept(this);
+            } catch (Exception e) {
+                UTIL.log(IStatus.ERROR, e, e.getMessage());
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+         */
+        @Override
+        public boolean visit( IResourceDelta delta ) {
+            final Collection<IEditorPart> openEditors = UiUtil.getEditorsForFile(file);
+            if (openEditors.isEmpty())
+                return false; // Nothing more to do since no open editor
+
+            if (! delta.getResource().equals(file))
+                return true; // Keep visiting
+
+            // MXD file has been deleted so close editor
+            Runnable runnable = null;
+            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
+                runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        for (IEditorPart editor : openEditors)
+                            editor.getSite().getPage().closeEditor(editor, false);
+                    }
+                };
+
+            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
+                runnable = new Runnable() {
+
+                        @Override
+                        public void run() {
+                            for (IEditorPart editor : openEditors) {
+                                if (editor instanceof ModelExtensionDefinitionEditor)
+                                    ((ModelExtensionDefinitionEditor) editor).refreshMed();
+                            }
+                        }
+                };
+            }
+
+            if (runnable != null)
+                UiUtil.runInSwtThread(runnable, true);
+
+            return false; // stop visiting
+        }
+    }
 
     /**
      * The memento key for the index of the selected editor.
@@ -112,6 +218,8 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     private IAction updateRegisteryAction;
 
     private MedOutlinePage contentOutlinePage;
+
+    private MedResourceChangeListener medResourceListener;
 
     /**
      * Allow inner classes access to the <code>MedEditorPage</code>s.
@@ -141,6 +249,7 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         int pageNum = 0;
 
         try {
+
             // Page 1: overview editor
             MedEditorPage page = new OverviewEditorPage(this);
             addPage(pageNum, page);
@@ -256,6 +365,23 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         contributeToMenu(form.getMenuManager());
     }
 
+    private boolean isBuiltIn(IFile file) {
+        String projName = file.getProject().getName();
+        if (projName == null)
+            return false;
+
+        return projName.equals(ExtensionConstants.BUILTIN_MEDS_PROJECT_NAME);
+    }
+
+    private boolean isImported(IFile file) {
+        IContainer parent = file.getParent();
+        if (parent == null)
+            return false;
+
+        return isBuiltIn(file) &&
+            parent.getName().equals(ExtensionConstants.TEIID_IMPORT_DIRECTORY);
+    }
+
     private void createMed() throws Exception {
         ModelExtensionDefinitionParser parser = new ModelExtensionDefinitionParser(ExtensionPlugin.getInstance().getMedSchema());
         this.originalMed = parser.parse(getFile().getContents(), ExtensionPlugin.getInstance()
@@ -299,10 +425,10 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
         
         // If file is in the BuiltInMedsProject, mark as built-in
         IFile medFile = getFile();
-        String projName = medFile.getProject().getName();
-        if(projName!=null && projName.equals(ExtensionConstants.BUILTIN_MEDS_PROJECT_NAME)) {
-        	this.medBeingEdited.markAsBuiltIn();
-        }
+        if (isImported(medFile))
+            this.medBeingEdited.markAsImported();
+        else if (isBuiltIn(medFile))
+            this.medBeingEdited.markAsBuiltIn();
 
         // hook selection synchronizer
         if (this.selectionSynchronizer == null) {
@@ -328,7 +454,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
 
         try {
             createMed();
-            ModelerCore.getWorkspace().addResourceChangeListener(this);
+            medResourceListener = new MedResourceChangeListener(getFile());
+            ModelerCore.getWorkspace().addResourceChangeListener(medResourceListener);
+
         } catch (Exception e) {
             throw new PartInitException(Messages.errorOpeningMedEditor, e);
         }
@@ -376,7 +504,14 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     @Override
     public void dispose() {
+        if (medEditorPages != null)
+            medEditorPages.clear();
+
         getRegistry().removeListener(this); // unregister to receive registry events
+
+        if (medResourceListener != null)
+            ModelerCore.getWorkspace().removeResourceChangeListener(medResourceListener);
+
         super.dispose();
     }
 
@@ -598,78 +733,6 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-     */
-    @Override
-    public void resourceChanged( final IResourceChangeEvent event ) {
-        int type = event.getType();
-
-        if (type == IResourceChangeEvent.POST_CHANGE) {
-            IResourceDelta delta = event.getDelta();
-
-            if (delta == null) {
-                return;
-            }
-
-            try {
-                delta.accept(new IResourceDeltaVisitor() {
-
-                    /**
-                     * {@inheritDoc}
-                     * 
-                     * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
-                     */
-                    @Override
-                    public boolean visit( IResourceDelta delta ) {
-                        if (delta.getResource().equals(getFile())) {
-                            // MXD file has been deleted so close editor
-                            if ((delta.getKind() & IResourceDelta.REMOVED) != 0) {
-                                if (!getShell().isDisposed()) {
-                                    getShell().getDisplay().asyncExec(new Runnable() {
-
-                                        /**
-                                         * {@inheritDoc}
-                                         * 
-                                         * @see java.lang.Runnable#run()
-                                         */
-                                        @Override
-                                        public void run() {
-                                            getEditorSite().getPage().closeEditor(accessThis(), false);
-                                        }
-                                    });
-                                }
-                            } else if (ResourceChangeUtilities.isContentChanged(delta)) {
-                                if (!getShell().isDisposed()) {
-                                    getShell().getDisplay().asyncExec(new Runnable() {
-
-                                        /**
-                                         * {@inheritDoc}
-                                         * 
-                                         * @see java.lang.Runnable#run()
-                                         */
-                                        @Override
-                                        public void run() {
-                                            refreshMed();
-                                        }
-                                    });
-                                }
-                            }
-
-                            return false; // stop visiting
-                        }
-
-                        return true; // keep visiting
-                    }
-                });
-            } catch (Exception e) {
-                UTIL.log(IStatus.ERROR, e, e.getMessage());
-            }
-        }
-    }
-
-    /**
      * Refreshes the editor's dirty state by comparing the MED being edited with the original MED.
      */
     protected void refreshDirtyState() {
@@ -682,6 +745,9 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
     }
 
     void refreshMed() {
+        if (getContainer() == null || getContainer().isDisposed())
+            return;
+
         if (!isSynchronized()) {
             unhookRefreshListener();
 
@@ -713,8 +779,15 @@ public final class ModelExtensionDefinitionEditor extends SharedHeaderFormEditor
      */
     private void refreshReadOnlyState() {
         ResourceAttributes attributes = getFile().getResourceAttributes();
-        boolean newValue = ((attributes == null) ? true : attributes.isReadOnly());
 
+        /*
+         * For some reason the linked files for the imported meds do not persist
+         * their read-only status hence we need to provide a little brute-force
+         */
+        if (isImported(getFile()))
+            attributes.setReadOnly(true);
+
+        boolean newValue = ((attributes == null) ? true : attributes.isReadOnly());
         if (isReadOnly() != newValue) {
             this.readOnly = newValue;
 
