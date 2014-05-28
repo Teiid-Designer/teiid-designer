@@ -8,7 +8,9 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.jboss.ide.eclipse.as.storage;bundle-version="8.5.0",
+ org.jboss.ide.eclipse.as.storage.ui;bundle-version="8.5.0",
  org.teiid.core.designer;bundle-version="8.5.0",
  org.teiid.designer.spi;bundle-version="8.5.0",
- org.teiid.designer.dqp;bundle-version="8.5.0"
+ org.teiid.designer.dqp;bundle-version="8.5.0",
+ org.eclipse.ui
 Export-Package: org.teiid.designer.runtime.storage.unit

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.jboss.ide.eclipse.as.storage.ui.category"
+            name="Workspace Configuration Settings"
+            parentCategory="org.eclipse.ui.Basic">
+      </category>
+      <wizard
+            category="org.jboss.ide.eclipse.as.storage.ui.category"
+            class="org.jboss.ide.eclipse.as.storage.ui.wizard.StorageExportWizard"
+            icon="icons/property_export.png"
+            id="org.jboss.ide.eclipse.as.storage.ui.wizard1"
+            name="Workspace Configuration">
+      </wizard>
+   </extension>
+
+</plugin>

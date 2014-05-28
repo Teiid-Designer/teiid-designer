@@ -8,4 +8,12 @@
             class="org.teiid.designer.runtime.storage.unit.DqpStorageUnit">
       </storageUnit>
    </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.teiid.designer.dqp.storage.category"
+            name="Configured Teiid Instances"
+            parentCategory="org.jboss.ide.eclipse.as.storage.ui.category">
+      </category>
+   </extension>
 </plugin>

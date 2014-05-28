@@ -1,0 +1,28 @@
+<project
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion> 
+	<parent>
+	  <groupId>org.jboss.tools.teiid.plugins</groupId>
+	  <artifactId>preview</artifactId>
+	  <version>0.0.4-SNAPSHOT</version>
+	</parent>
+	<groupId>org.jboss.tools.plugins.preview</groupId>
+	<artifactId>org.jboss.ide.eclipse.as.storage.ui</artifactId> 
+	<version>8.5.0-SNAPSHOT</version>
+	<packaging>eclipse-plugin</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-compiler-plugin</artifactId>
+                <version>${tychoVersion}</version>
+                <!-- not strictly needed but this suppresses warnings when compiling 
+                    that the default value (1.5) is being overwritten by the value in the MANIFEST.MF -->
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
