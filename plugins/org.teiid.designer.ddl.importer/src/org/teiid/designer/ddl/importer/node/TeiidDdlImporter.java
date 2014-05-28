@@ -25,8 +25,12 @@ import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
@@ -53,11 +57,17 @@ public class TeiidDdlImporter extends StandardImporter {
 	private static final String NS_TEIID_MONGO = "teiid_mongo"; //$NON-NLS-1$
 	private static final String NS_TEIID_SALESFORCE = "teiid_sf"; //$NON-NLS-1$
 	private static final String NS_TEIID_RELATIONAL = "teiid_rel"; //$NON-NLS-1$
+	private static final String NS_TEIID_ACCUMULO = "teiid_accumulo"; //$NON-NLS-1$
+    private static final String NS_TEIID_EXCEL = "teiid_excel"; //$NON-NLS-1$
+    private static final String NS_TEIID_JPA = "teiid_jpa"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_ODATA = "odata"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_WEBSERVICE= "ws"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_MONGO = "mongo"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_SALESFORCE = "salesforce"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_RELATIONAL = "relational"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_ACCUMULO = "accumulo"; //$NON-NLS-1$
+    private static final String NS_DESIGNER_EXCEL = "excel"; //$NON-NLS-1$
+    private static final String NS_DESIGNER_JPA = "jpa2"; //$NON-NLS-1$
 	
 	interface TYPES_UPPER {
 		String ARRAY = "ARRAY"; //$NON-NLS-1$
@@ -359,6 +369,52 @@ public class TeiidDdlImporter extends StandardImporter {
 		processOptions(optionNodes,prm);
 
 		return prm;
+	}
+	
+	/**
+	 * Perform the import
+	 * @param rootNode the rootNode of the DDL
+	 * @param importManager the import manager which maintains import options
+	 * @return the RelationalModel created
+	 * @throws Exception
+	 */
+	@Override
+	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
+
+		setImporterManager(importManager);
+
+		// Create a RelationalModel for the imported DDL
+		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
+
+		// Map for holding deferred nodes, which much be created later
+		Map<AstNode,RelationalReference> deferredCreateMap = new HashMap<AstNode,RelationalReference>();
+
+		// Create objects from the DDL.  (populated map of deferred nodes)
+		for (AstNode node : rootNode) {
+			if (is(node, StandardDdlLexicon.TYPE_CREATE_SCHEMA_STATEMENT)) {
+				RelationalSchema schema = getFactory().createSchema();
+				model.addChild(schema);
+				initialize(schema, node);
+				for (AstNode node1 : node) {
+					Map<AstNode,RelationalReference> deferredMap = createObject(node1, model, schema);
+					if(!deferredMap.isEmpty()) {
+						deferredCreateMap.putAll(deferredMap);
+					}
+				}
+			} else if (is(node, TeiidDdlLexicon.OptionNamespace.STATEMENT)) { 
+				// No Objects created for Teiid Option namespace
+			} else {
+				Map<AstNode,RelationalReference> deferredMap = createObject(node, model, null);
+				if(!deferredMap.isEmpty()) {
+					deferredCreateMap.putAll(deferredMap);
+				}
+			}
+		}
+
+		// Now process all the 'deferred' nodes.  These are nodes which reference other nodes (which are required to exist first)
+		createDeferredObjects(deferredCreateMap,model);
+
+		return model;
 	}
 
 	/**
@@ -808,7 +864,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			Object optionValue = optionNode.getProperty(StandardDdlLexicon.VALUE);
 			if(!CoreStringUtil.isEmpty(optionName)) {
 				// Translate incoming Teiid-namespaced ExtProps into the equivalent Designer MED NS
-				if(isNamespaced(optionName)) {
+				if(isUriNamespaced(optionName) || isPrefixNamespaced(optionName)) {
 					optionName = translateNamespacedOptionName(optionName);
 				}
 				String optionValueStr = (String)optionValue;
@@ -826,10 +882,29 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @return the equivalent designer-namespaced PropName.
 	 */
 	private String translateNamespacedOptionName(String namespacedPropName) {
-		if(isNamespaced(namespacedPropName)) {
-			// Get the namespace and convert to designer equivalent
-			String propNs = getExtensionPropertyNamespace(namespacedPropName);
-			String designerNs = translateTeiidNSToDesignerNS(propNs);
+		// ===============================================================================================================
+		// Handling for propNames which are namespaced with URI, eg http://www.teiid.org/translator/excel/2014}CELL_NUMBER
+		// ===============================================================================================================
+		if(isUriNamespaced(namespacedPropName)) {
+			// Get the Namespace URI
+			String propNsUri = getExtensionPropertyNsUri(namespacedPropName);
+			
+			// Translate the uri to corresponding designer med prefix
+			String designerNs = translateTeiidNsUriToDesignerNSPrefix(propNsUri);
+			
+			// Get name portion of incoming name
+			String propName = getExtensionPropertyName(namespacedPropName);
+			
+			// return reassembled namespaced name
+			return designerNs+':'+propName;
+		// =====================================================================================
+		// Handling for propNames which are namespaced with a prefix, eg teiid_excel:CELL_NUMBER
+		// =====================================================================================
+		} else if(isPrefixNamespaced(namespacedPropName)) {
+			// Get the Namespace prefix
+			String propNsPrefix = getExtensionPropertyNsPrefix(namespacedPropName);
+			
+			String designerNs = translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix);
 			
 			// Get name portion of incoming name
 			String propName = getExtensionPropertyName(namespacedPropName);
@@ -841,14 +916,14 @@ public class TeiidDdlImporter extends StandardImporter {
 	}
 
     /**
-	 * Get the Namespace from the extension property name.  The propertyName may or may not be namespaced.
+	 * Get the Namespace prefix from the extension property name.  The propertyName may or may not be namespaced.
 	 * If it's not a null is returned
 	 * @param propName the extension property name, including namespace
 	 * @return the namespace, if present.  'null' if not namespaced
 	 */
-	private String getExtensionPropertyNamespace(String propName) {
+	private String getExtensionPropertyNsPrefix(String propName) {
 		String namespace = null;
-		if(!CoreStringUtil.isEmpty(propName)) {
+		if(!CoreStringUtil.isEmpty(propName) && isPrefixNamespaced(propName)) {
 			int index = propName.indexOf(':');
 			if(index!=-1) {
 				namespace = propName.substring(0,index);
@@ -862,26 +937,75 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @param propName the extension property name, with or without namespace
 	 * @return the name without namespace, if present.
 	 */
-	private String getExtensionPropertyName(String propName) {
-		String name = propName;
-		if(isNamespaced(propName)) {
-			int index = propName.indexOf(':');
-			name = propName.substring(index+1);
+	private String getExtensionPropertyNsUri(String propName) {
+		String name = null;
+		if(propName!=null) {
+			propName.trim();
+			if(isUriNamespaced(propName)) {
+				int index1 = propName.indexOf('{');
+				int index2 = propName.indexOf('}');
+				name = propName.substring(index1+1, index2);
+			}
 		}
 		return name;
 	}
 	
     /**
-	 * Determine if the property name has a leading namespace
+	 * Get the Name from the extension property name.  If its not namespaced, just return the name.  Otherwise strip off the namespace
+	 * @param namespacedPropName the extension property name, with or without namespace
+	 * @return the name without namespace, if present.
+	 */
+	private String getExtensionPropertyName(String namespacedPropName) {
+		String name = namespacedPropName;
+		
+		if(isPrefixNamespaced(namespacedPropName)) {
+			int index = namespacedPropName.indexOf(':');
+			name = namespacedPropName.substring(index+1);
+		} else if(isUriNamespaced(namespacedPropName)) {
+			int index = namespacedPropName.indexOf('}');
+			name = namespacedPropName.substring(index+1);
+		}
+		
+		return name;
+	}
+	
+    /**
+	 * Determine if the property name has a leading namespace prefix
 	 * @param propName the extension property name, including namespace
 	 * @return 'true' if a namespace is present, 'false' if not.
 	 */
-	private boolean isNamespaced(String propName) {
-		boolean isNamespaced = false;
-		if(!CoreStringUtil.isEmpty(propName)) {
-			isNamespaced = propName.indexOf(':') != -1;
+	private boolean isPrefixNamespaced(String propName) {
+		boolean isPrefixNamespaced = false;
+		if(!CoreStringUtil.isEmpty(propName) && !hasOpenCloseBraces(propName) && propName.indexOf(':') != -1) {
+			isPrefixNamespaced = true;
 		}
-		return isNamespaced;
+		return isPrefixNamespaced;
+	}
+	
+    /**
+	 * Determine if the property name has a leading namespace uri
+	 * @param propName the extension property name, including namespace uri
+	 * @return 'true' if a namespace uri is present, 'false' if not.
+	 */
+	private boolean isUriNamespaced(String propName) {
+		boolean isUriNamespaced = false;
+		if(!CoreStringUtil.isEmpty(propName) && hasOpenCloseBraces(propName)) {
+			isUriNamespaced = true;
+		}
+		return isUriNamespaced;
+	}
+	
+	/**
+	 * Determine if the supplied property name has open and closed braces
+	 * @param propName the extension property name
+	 * @return 'true' if both open and closed braces are found
+	 */
+	private boolean hasOpenCloseBraces(String propName) {
+		boolean hasBoth = false;
+		if( !CoreStringUtil.isEmpty(propName) && propName.indexOf('{')!=-1 && propName.indexOf('}')!=-1 ) {
+			hasBoth = true;
+		}
+		return hasBoth;
 	}
 	
 	/**
@@ -889,7 +1013,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @param teiidNamespace
 	 * @return the designer MED namespace equivalent
 	 */
-	private String translateTeiidNSToDesignerNS(String teiidNamespace) {
+	private String translateTeiidNSPrefixToDesignerNSPrefix(String teiidNamespace) {
 		String designerNS = teiidNamespace;
 		if(NS_TEIID_ODATA.equals(teiidNamespace)) {
 			designerNS = NS_DESIGNER_ODATA; 
@@ -901,10 +1025,38 @@ public class TeiidDdlImporter extends StandardImporter {
 			designerNS = NS_DESIGNER_SALESFORCE;
 		} else if(NS_TEIID_MONGO.equals(teiidNamespace)) {
 			designerNS = NS_DESIGNER_MONGO;
+		} else if(NS_TEIID_ACCUMULO.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_ACCUMULO;
+		} else if(NS_TEIID_EXCEL.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_EXCEL;
+		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
+			designerNS = NS_DESIGNER_JPA;
 		} 
 		return designerNS;
-	}
+	}  
 	
-        
+	/**
+	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
+	 * @param teiidNsUri the teiid namespace uri
+	 * @return the designer MED namespace equivalent
+	 */
+	private String translateTeiidNsUriToDesignerNSPrefix(String teiidNsUri) {
+		String designerNsPrefix = null;
+		
+		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+		
+		Collection<ModelExtensionDefinition> meds = registry.getAllDefinitions();
+		for(ModelExtensionDefinition med : meds) {
+			String designerMedNsUri = med.getNamespaceUri();
+			String designerMedNsPrefix = med.getNamespacePrefix();
+			
+			if(!CoreStringUtil.isEmpty(designerMedNsUri) && designerMedNsUri.equals(teiidNsUri)) {
+				designerNsPrefix = designerMedNsPrefix;
+				break;
+			}
+		}
+		
+		return designerNsPrefix;
+	}        
 	
 }
