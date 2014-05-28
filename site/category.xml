@@ -24,6 +24,9 @@ Visit the project home page at:  http://www.teiid.org  for details.
    <feature id="org.teiid.designer.teiid.client.feature">
     <category name="DataTools"/>
    </feature>
+   <feature id="org.teiid.designer.preview.feature">
+    <category name="DataTools"/>
+   </feature>
    <!--
    <feature id="org.teiid.designer.test.feature">
     <category name="DataTools"/>

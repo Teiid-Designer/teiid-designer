@@ -51,6 +51,7 @@
       <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
       <import plugin="org.teiid.designer.modelgenerator"/>
       <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
+      <import plugin="org.teiid.runtime.client" version="8.4.0" match="compatible"/>
       <import plugin="org.teiid.designer.query.ui"/>
       <import plugin="org.teiid.designer.schema.tools"/>
       <import plugin="org.teiid.designer.transformation"/>
@@ -66,10 +67,12 @@
       <import plugin="org.teiid.designer.jdbc.test.framework" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc.relational"/>
       <import plugin="org.teiid.designer.vdb"/>
-      <import plugin="org.teiid.runtime.client" version="8.4.0" match="compatible"/>
       <import plugin="org.apache.ant" version="1.8.4" match="compatible"/>
       <import plugin="org.junit" version="4.11.0" match="greaterOrEqual"/>
       <import plugin="org.teiid.runtime.client" version="8.5.0" match="equivalent"/>
+      <import plugin="org.jboss.ide.eclipse.as.storage" version="8.5.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.designer.dqp.storage" version="8.5.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.designer.spi" version="8.3.1"/>
    </requires>
 
    <plugin

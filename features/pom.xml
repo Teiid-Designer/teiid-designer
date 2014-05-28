@@ -18,6 +18,7 @@
 		<module>org.teiid.designer.test.feature</module>
 		<module>org.teiid.designer.runtime.feature</module>
 		<module>org.teiid.datatools.connectivity.feature</module>
+		<module>org.teiid.designer.preview.feature</module>
 	</modules>
 </project>
 	

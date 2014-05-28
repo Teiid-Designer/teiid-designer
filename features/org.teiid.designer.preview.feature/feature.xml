@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  ~ Teiid (http://www.teiid.org)
+  - See the COPYRIGHT.txt file distributed with this work for information
+  - regarding copyright ownership.
+  -
+  - Distributed under license by Red Hat, Inc. All rights reserved.
+  - This program is made available under the terms of the
+  - Eclipse Public License v1.0 which accompanies this distribution, and is
+  - available at http://www.eclipse.org/legal/epl-v10.html.
+  -
+  - See the AUTHORS.txt file in the distribution for a full listing of
+  - individual contributors.
+  -->
+<feature
+      id="org.teiid.designer.preview.feature"
+      label="Teiid Designer Preview Feature"
+      version="8.5.0.qualifier"
+      provider-name="%providerName">
+
+   <description url="http://www.teiid.org/">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime" version="3.9.100" match="greaterOrEqual"/>
+      <import plugin="org.jboss.ide.eclipse.as.storage" version="8.5.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.core.designer" version="8.5.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.designer.spi" version="8.5.0" match="greaterOrEqual"/>
+      <import plugin="org.teiid.designer.dqp" version="8.5.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.jboss.ide.eclipse.as.storage"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.teiid.designer.dqp.storage"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
