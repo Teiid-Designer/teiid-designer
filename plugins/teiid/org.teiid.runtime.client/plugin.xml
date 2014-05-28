@@ -70,7 +70,7 @@
             defaultDefinitionName="%TEIID_DRIVER_DEFAULT_INSTANCE_NAME"
             description="%TEIID_DRIVER_TEMPLATE_DESCRIPTION"
             emptyJarListIsOK="false"
-            id="org.teiid.runtime.driver.serverDriverTemplate"
+            id="org.teiid.runtime.client.driver.serverDriverTemplate"
             jarList="TEIID_HOME/client/teiid-client.jar"
             name="%TEIID_DRIVER_TEMPLATE_NAME"
             parentCategory="org.teiid.datatools.connectivity.driver.teiidCategory"
@@ -147,7 +147,7 @@
       <driverUIContributor
             class="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor"
             driverTemplateID="org.teiid.runtime.client.driver.serverDriverTemplate"
-            id="org.teiid.datatools.connectivity.ui.TeiidServerUIContributor">
+            id="org.teiid.datatools.connectivity.ui.TeiidDriverUIContributor">
       </driverUIContributor>
    </extension>
 
