@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.runtime.spi;
 
+import java.io.File;
 import java.util.Collection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -147,9 +148,25 @@ public interface ITeiidServerManager extends EventManager {
     void setDefaultServer(ITeiidServer teiidServer);
 
     /**
+     * Load Teiid instances from the given file
+     *
+     * @param serverFile
+     * @return the default teiid instance if one has been set in the file
+     * @throws Exception
+     */
+    public ITeiidServer loadServers(File serverFile) throws Exception;
+
+    /**
      * Try and restore the manager's prior state
      */
     void restoreState();
+
+    /**
+     * Save the state of the manager to the given file
+     *
+     * @param stateFilePath
+     */
+    void saveState(String stateFilePath);
 
     /**
      * Saves the {@link ITeiidServer} registry to the file system and performs any other tasks
@@ -176,4 +193,5 @@ public interface ITeiidServerManager extends EventManager {
      * @param listener
      */
     void removeTeiidServerVersionListener(ITeiidServerVersionListener listener);
+
 }

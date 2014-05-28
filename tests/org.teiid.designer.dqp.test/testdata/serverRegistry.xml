@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <servers>
-  <server customLabel="My Custom Label" default="true" version="8.1.2" parentServerId="server1">
-    <admin host="localhost" password="YWRtaW4=" port="31443" secure="true" user="admin"/>
-    <jdbc jdbchost="localhost" jdbcport="31000" jdbcsecure="false" jdbcuser="teiid"/>
+  <server host="localhost" customLabel="My Custom Label" default="true" version="8.1.2" parentServerId="server1">
+    <admin password="YWRtaW4=" port="31443" secure="true" user="admin"/>
+    <jdbc jdbcport="31000" jdbcsecure="false" jdbcuser="teiid"/>
   </server>
-  <server version="8.2.1" parentServerId="server2">
-    <admin host="myserver.com" port="31444" secure="false" user="admin2"/>
-    <jdbc jdbchost="myserver.com" jdbcpassword="dGVpaWQ=" jdbcport="31001" jdbcsecure="true" jdbcuser="teiid2"/>
+  <server host="myserver.com" version="8.2.1" parentServerId="server2">
+    <admin port="31444" secure="false" user="admin2"/>
+    <jdbc jdbcpassword="dGVpaWQ=" jdbcport="31001" jdbcsecure="true" jdbcuser="teiid2"/>
   </server>
 </servers>

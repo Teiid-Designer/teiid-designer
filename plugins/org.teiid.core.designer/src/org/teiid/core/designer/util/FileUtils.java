@@ -661,6 +661,27 @@ public class FileUtils {
          }
      }
 
+     /**
+     * @param stream
+     * @param outFile
+     * @throws Exception
+     */
+    public static void writeStreamToFile(InputStream stream, File outFile) throws Exception {
+         FileOutputStream os = null;
+         try {
+             os = new FileOutputStream(outFile);
+             byte[] buf = new byte[8192];
+             int c = 0;
+             while ((c = stream.read(buf, 0, buf.length)) > 0) {
+                 os.write(buf, 0, c);
+                 os.flush();
+             }
+         } finally {
+             if (os != null)
+                 os.close();
+         }
+     }
+
     private FileUtils() {
     }
 

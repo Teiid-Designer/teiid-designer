@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.teiid.designer.dqp.storage;singleton:=true
+Bundle-Version: 8.5.0.qualifier
+Bundle-Vendor: %pluginProvider
+Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.jboss.ide.eclipse.as.storage;bundle-version="8.5.0",
+ org.teiid.core.designer;bundle-version="8.5.0",
+ org.teiid.designer.spi;bundle-version="8.5.0",
+ org.teiid.designer.dqp;bundle-version="8.5.0"
+Export-Package: org.teiid.designer.runtime.storage.unit

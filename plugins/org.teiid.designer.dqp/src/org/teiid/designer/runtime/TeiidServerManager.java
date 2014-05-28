@@ -11,6 +11,7 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -86,94 +87,97 @@ public final class TeiidServerManager implements ITeiidServerManager {
     /**
      * The attribute used to persist a server's custom label. May not exist if server is not using a custom label.
      */
-    private static final String CUSTOM_LABEL_ATTR = "customLabel"; //$NON-NLS-1$
+    public static final String CUSTOM_LABEL_ATTR = "customLabel"; //$NON-NLS-1$
     
     /**
      * The attribute indicating if the server is currently the preview server.
      */
-    private static final String DEFAULT_ATTR = "default"; //$NON-NLS-1$
+    public static final String DEFAULT_ATTR = "default"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's login password.
      */
-    private static final String PASSWORD_ATTR = "password"; //$NON-NLS-1$
+    public static final String PASSWORD_ATTR = "password"; //$NON-NLS-1$
 
     /**
      * The file name used when persisting the server registry.
      */
-    private static final String REGISTRY_FILE = "serverRegistry.xml"; //$NON-NLS-1$
+    public static final String REGISTRY_FILE = "serverRegistry.xml"; //$NON-NLS-1$
 
     /**
      * The tag used when persisting a server.
      */
-    private static final String SERVER_TAG = "server"; //$NON-NLS-1$
+    public static final String SERVER_TAG = "server"; //$NON-NLS-1$
 
     /**
      * The server collection tag used when persisting the server registry.
      */
-    private static final String SERVERS_TAG = "servers"; //$NON-NLS-1$
+    public static final String SERVERS_TAG = "servers"; //$NON-NLS-1$
     
     /**
      * The tag used when persisting admin connection info.
      */
-    private static final String ADMIN_TAG = "admin"; //$NON-NLS-1$
+    public static final String ADMIN_TAG = "admin"; //$NON-NLS-1$
     
     /**
      * The tag used when persisting jdbc connection info.
      */
-    private static final String JDBC_TAG = "jdbc"; //$NON-NLS-1$
+    public static final String JDBC_TAG = "jdbc"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's login user.
      */
-    private static final String USER_ATTR = "user"; //$NON-NLS-1$
+    public static final String USER_ATTR = "user"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's host value.
      */
-    private static final String HOST_ATTR = "host"; //$NON-NLS-1$
+    public static final String HOST_ATTR = "host"; //$NON-NLS-1$
 
-    private static final String PARENT_SERVER_ID = "parentServerId"; //$NON-NLS-1$
+    /**
+     * The attribute used to persist a server's parent id
+     */
+    public static final String PARENT_SERVER_ID = "parentServerId"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's version value.
      */
-    private static final String SERVER_VERSION = "version"; //$NON-NLS-1$
+    public static final String SERVER_VERSION = "version"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's port value.
      */
-    private static final String PORT_ATTR = "port"; //$NON-NLS-1$
+    public static final String PORT_ATTR = "port"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's secure value.
      */
-    private static final String SECURE_ATTR = "secure"; //$NON-NLS-1$
+    public static final String SECURE_ATTR = "secure"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's jdbc host value.
      */
-    private static final String JDBC_HOST_ATTR = "jdbchost"; //$NON-NLS-1$
+    public static final String JDBC_HOST_ATTR = "jdbchost"; //$NON-NLS-1$
 
     /**
      * The attribute used to persist a server's jdbc port value.
      */
-    private static final String JDBC_PORT_ATTR = "jdbcport"; //$NON-NLS-1$
+    public static final String JDBC_PORT_ATTR = "jdbcport"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's login user.
      */
-    private static final String JDBC_USER_ATTR = "jdbcuser"; //$NON-NLS-1$
+    public static final String JDBC_USER_ATTR = "jdbcuser"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's login password.
      */
-    private static final String JDBC_PASSWORD_ATTR = "jdbcpassword"; //$NON-NLS-1$
+    public static final String JDBC_PASSWORD_ATTR = "jdbcpassword"; //$NON-NLS-1$
     
     /**
      * The attribute used to persist a server's secure value.
      */
-    private static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
+    public static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
 
     private class TeiidServerKeyValueAdapter implements KeyFromValueAdapter<String, ITeiidServer> {
 
@@ -422,7 +426,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
     /**
      * @return the name of the state file that the server registry is persisted to or <code>null</code>
      */
-    private String getStateFileName() {
+    public String getStateFileName() {
         String name = this.stateLocationPath;
 
         if (this.stateLocationPath != null) {
@@ -641,6 +645,162 @@ public final class TeiidServerManager implements ITeiidServerManager {
         preferences.addPreferenceChangeListener(preferenceChangeListener);
     }
 
+    @Override
+    public ITeiidServer loadServers(File serverFile) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = factory.newDocumentBuilder();
+        Document doc = docBuilder.parse(serverFile);
+        Node root = doc.getDocumentElement();
+        NodeList servers = root.getChildNodes();
+
+        ITeiidServer defaultServer = null;
+
+        for (int size = servers.getLength(), i = 0; i < size; ++i) {
+            ITeiidAdminInfo teiidAdminInfo = null;
+            ITeiidJdbcInfo teiidJdbcInfo = null;
+            Node serverNode = servers.item(i);
+
+            // server attributes (host, custom label, default teiid instance)
+            NamedNodeMap serverAttributeMap = serverNode.getAttributes();
+
+            if (serverAttributeMap == null) {
+                continue;
+            }
+
+            String host = null;
+            String parentServerId = null;
+            String customLabel = null;
+            boolean previewServer = false;
+
+            // version attribute
+            ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+            Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
+            if (versionNode != null) teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
+
+            // host attribute
+            Node hostNode = serverAttributeMap.getNamedItem(HOST_ATTR);
+
+            if (hostNode != null) {
+                host = hostNode.getNodeValue();
+            }
+
+            Node parentServerNode = serverAttributeMap.getNamedItem(PARENT_SERVER_ID);
+
+            if (parentServerNode != null) {
+                parentServerId = parentServerNode.getNodeValue();
+            }
+
+            // custom label attribute
+            Node customLabelNode = serverAttributeMap.getNamedItem(CUSTOM_LABEL_ATTR);
+
+            if (customLabelNode != null) {
+                customLabel = customLabelNode.getNodeValue();
+            }
+
+            // default teiid instance attribute
+            Node defaultServerNode = serverAttributeMap.getNamedItem(DEFAULT_ATTR);
+
+            if (defaultServerNode != null) {
+                previewServer = Boolean.parseBoolean(defaultServerNode.getNodeValue());
+            }
+
+            // Check for newer XML structure where server contains child nodes (admin & jdbc elements)
+            NodeList connectionNodes = serverNode.getChildNodes();
+
+            if (connectionNodes.getLength() > 0) {
+                for (int connSize = connectionNodes.getLength(), j = 0; j < connSize; ++j) {
+                    Node connNode = connectionNodes.item(j);
+                    if (connNode.getNodeType() != Node.TEXT_NODE) {
+                        if (connNode.getNodeName().equalsIgnoreCase(ADMIN_TAG)) {
+                            NamedNodeMap attributeMap = connNode.getAttributes();
+                            if (attributeMap == null) continue;
+
+                            // if host is null than an older registry xml file is being used
+                            if (host == null) {
+                                Node adminHostNode = attributeMap.getNamedItem(HOST_ATTR);
+                                assert (adminHostNode != null);
+                                host = adminHostNode.getNodeValue();
+                            }
+
+                            // port must be non-null/not empty to be valid server
+                            Node adminPortNode = attributeMap.getNamedItem(PORT_ATTR); // should always have one
+                            assert (adminPortNode != null);
+                            String adminPort = adminPortNode.getNodeValue();
+
+                            // username must be non-null/not empty to be valid server
+                            Node userNode = attributeMap.getNamedItem(USER_ATTR); // should always have one
+                            assert (userNode != null);
+                            String adminUsername = userNode.getNodeValue();
+                            Node passwordNode = attributeMap.getNamedItem(PASSWORD_ATTR);
+                            String adminPassword = ((passwordNode == null) ? null : new String(
+                                                                                               Base64.decode(passwordNode.getNodeValue()),
+                                                                                               "UTF-8")); //$NON-NLS-1$
+                            Node adminSecureNode = attributeMap.getNamedItem(SECURE_ATTR);
+                            String adminSecureStr = ((adminSecureNode == null) ? Boolean.FALSE.toString() : adminSecureNode.getNodeValue());
+
+                            teiidAdminInfo = new TeiidAdminInfo(adminPort, adminUsername, secureStorageProvider,
+                                                                adminPassword, Boolean.parseBoolean(adminSecureStr));
+                        } else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
+                            NamedNodeMap attributeMap = connNode.getAttributes();
+                            if (attributeMap == null) continue;
+
+                            // if host is null than an older registry xml file is being used
+                            if (host == null) {
+                                Node jdbcHostNode = attributeMap.getNamedItem(JDBC_HOST_ATTR);
+                                assert (jdbcHostNode != null);
+                                host = jdbcHostNode.getNodeValue();
+                            }
+
+                            // port must be non-null/not empty to be valid server
+                            Node jdbcPortNode = attributeMap.getNamedItem(JDBC_PORT_ATTR);
+                            assert (jdbcPortNode != null);
+                            String jdbcPort = jdbcPortNode.getNodeValue();
+
+                            // username must be non-null/not empty to be valid server
+                            Node jdbcUserNode = attributeMap.getNamedItem(JDBC_USER_ATTR);
+                            assert (jdbcUserNode != null);
+                            String jdbcUsername = jdbcUserNode.getNodeValue();
+
+                            Node jdbcPasswordNode = attributeMap.getNamedItem(JDBC_PASSWORD_ATTR);
+                            String jdbcPassword = ((jdbcPasswordNode == null) ? null : new String(
+                                                                                                  Base64.decode(jdbcPasswordNode.getNodeValue()),
+                                                                                                  "UTF-8")); //$NON-NLS-1$
+                            Node jdbcSecureNode = attributeMap.getNamedItem(JDBC_SECURE_ATTR);
+                            String jdbcSecureStr = ((jdbcSecureNode == null) ? Boolean.FALSE.toString() : jdbcSecureNode.getNodeValue());
+                            teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUsername, secureStorageProvider, jdbcPassword,
+                                                              Boolean.parseBoolean(jdbcSecureStr));
+                        }
+                    }
+                }
+            }
+
+            // add server to registry
+            IServer parentServer = null;
+            try {
+                parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
+            } catch (OrphanedTeiidServerException ex) {
+                // Cannot add the Teiid Instance since it has no parent
+                continue;
+            }
+
+            TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
+            ITeiidServer teiidServer = teiidServerFactory.createTeiidServer(teiidServerVersion,
+                                                                            teiidAdminInfo,
+                                                                            teiidJdbcInfo,
+                                                                            this,
+                                                                            parentServer);
+            teiidServer.setCustomLabel(customLabel);
+
+           addServerInternal(teiidServer, true);
+
+            if (previewServer) {
+                defaultServer = teiidServer;
+            }
+        }
+
+        return defaultServer;
+    }
+
     private void restoreStateInternal() {
 
         // Initialize teiid parent server state listener
@@ -657,154 +817,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 return;
             }
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            Document doc = docBuilder.parse(new File(getStateFileName()));
-            Node root = doc.getDocumentElement();
-            NodeList servers = root.getChildNodes();
+            defaultServer = loadServers(new File(getStateFileName()));
 
-            for (int size = servers.getLength(), i = 0; i < size; ++i) {
-                ITeiidAdminInfo teiidAdminInfo = null;
-                ITeiidJdbcInfo teiidJdbcInfo = null;
-                Node serverNode = servers.item(i);
-
-                // server attributes (host, custom label, default teiid instance)
-                NamedNodeMap serverAttributeMap = serverNode.getAttributes();
-
-                if (serverAttributeMap == null) {
-                    continue;
-                }
-
-                String host = null;
-                String parentServerId = null;
-                String customLabel = null;
-                boolean previewServer = false;
-
-                // version attribute
-                ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
-                Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
-                if (versionNode != null) teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
-
-                // host attribute
-                Node hostNode = serverAttributeMap.getNamedItem(HOST_ATTR);
-
-                if (hostNode != null) {
-                    host = hostNode.getNodeValue();
-                }
-
-                Node parentServerNode = serverAttributeMap.getNamedItem(PARENT_SERVER_ID);
-
-                if (parentServerNode != null) {
-                    parentServerId = parentServerNode.getNodeValue();
-                }
-
-                // custom label attribute
-                Node customLabelNode = serverAttributeMap.getNamedItem(CUSTOM_LABEL_ATTR);
-
-                if (customLabelNode != null) {
-                    customLabel = customLabelNode.getNodeValue();
-                }
-
-                // default teiid instance attribute
-                Node defaultServerNode = serverAttributeMap.getNamedItem(DEFAULT_ATTR);
-
-                if (defaultServerNode != null) {
-                    previewServer = Boolean.parseBoolean(defaultServerNode.getNodeValue());
-                }
-
-                // Check for newer XML structure where server contains child nodes (admin & jdbc elements)
-                NodeList connectionNodes = serverNode.getChildNodes();
-
-                if (connectionNodes.getLength() > 0) {
-                    for (int connSize = connectionNodes.getLength(), j = 0; j < connSize; ++j) {
-                        Node connNode = connectionNodes.item(j);
-                        if (connNode.getNodeType() != Node.TEXT_NODE) {
-                            if (connNode.getNodeName().equalsIgnoreCase(ADMIN_TAG)) {
-                                NamedNodeMap attributeMap = connNode.getAttributes();
-                                if (attributeMap == null) continue;
-
-                                // if host is null than an older registry xml file is being used
-                                if (host == null) {
-                                    Node adminHostNode = attributeMap.getNamedItem(HOST_ATTR);
-                                    assert (adminHostNode != null);
-                                    host = adminHostNode.getNodeValue();
-                                }
-
-                                // port must be non-null/not empty to be valid server
-                                Node adminPortNode = attributeMap.getNamedItem(PORT_ATTR); // should always have one
-                                assert (adminPortNode != null);
-                                String adminPort = adminPortNode.getNodeValue();
-
-                                // username must be non-null/not empty to be valid server
-                                Node userNode = attributeMap.getNamedItem(USER_ATTR); // should always have one
-                                assert (userNode != null);
-                                String adminUsername = userNode.getNodeValue();
-                                Node passwordNode = attributeMap.getNamedItem(PASSWORD_ATTR);
-                                String adminPassword = ((passwordNode == null) ? null : new String(
-                                                                                                   Base64.decode(passwordNode.getNodeValue()),
-                                                                                                   "UTF-8")); //$NON-NLS-1$
-                                Node adminSecureNode = attributeMap.getNamedItem(SECURE_ATTR);
-                                String adminSecureStr = ((adminSecureNode == null) ? Boolean.FALSE.toString() : adminSecureNode.getNodeValue());
-
-                                teiidAdminInfo = new TeiidAdminInfo(adminPort, adminUsername, secureStorageProvider,
-                                                                    adminPassword, Boolean.parseBoolean(adminSecureStr));
-                            } else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
-                                NamedNodeMap attributeMap = connNode.getAttributes();
-                                if (attributeMap == null) continue;
-
-                                // if host is null than an older registry xml file is being used
-                                if (host == null) {
-                                    Node jdbcHostNode = attributeMap.getNamedItem(JDBC_HOST_ATTR);
-                                    assert (jdbcHostNode != null);
-                                    host = jdbcHostNode.getNodeValue();
-                                }
-
-                                // port must be non-null/not empty to be valid server
-                                Node jdbcPortNode = attributeMap.getNamedItem(JDBC_PORT_ATTR);
-                                assert (jdbcPortNode != null);
-                                String jdbcPort = jdbcPortNode.getNodeValue();
-
-                                // username must be non-null/not empty to be valid server
-                                Node jdbcUserNode = attributeMap.getNamedItem(JDBC_USER_ATTR);
-                                assert (jdbcUserNode != null);
-                                String jdbcUsername = jdbcUserNode.getNodeValue();
-
-                                Node jdbcPasswordNode = attributeMap.getNamedItem(JDBC_PASSWORD_ATTR);
-                                String jdbcPassword = ((jdbcPasswordNode == null) ? null : new String(
-                                                                                                      Base64.decode(jdbcPasswordNode.getNodeValue()),
-                                                                                                      "UTF-8")); //$NON-NLS-1$
-                                Node jdbcSecureNode = attributeMap.getNamedItem(JDBC_SECURE_ATTR);
-                                String jdbcSecureStr = ((jdbcSecureNode == null) ? Boolean.FALSE.toString() : jdbcSecureNode.getNodeValue());
-                                teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUsername, secureStorageProvider, jdbcPassword,
-                                                                  Boolean.parseBoolean(jdbcSecureStr));
-                            }
-                        }
-                    }
-                }
-
-                // add server to registry
-                IServer parentServer = null;
-                try {
-                    parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
-                } catch (OrphanedTeiidServerException ex) {
-                    // Cannot add the Teiid Instance since it has no parent
-                    continue;
-                }
-
-                TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
-                ITeiidServer teiidServer = teiidServerFactory.createTeiidServer(teiidServerVersion,
-                                                                                teiidAdminInfo,
-                                                                                teiidJdbcInfo,
-                                                                                this,
-                                                                                parentServer);
-                teiidServer.setCustomLabel(customLabel);
-
-               addServerInternal(teiidServer, true);
-
-                if (previewServer) {
-                    defaultServer = teiidServer;
-                }
-            }
         } catch (Exception e) {
             Util.log(e);
         } finally {
@@ -950,25 +964,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
     }
 
-    private void saveState() throws TransformerFactoryConfigurationError {
-        if (this.stateLocationPath == null)
-            return; // no persistence
-        
-        if (teiidServers.isEmpty()) {
-            if (stateFileExists()) {
-                // delete current registry file since all servers have been deleted
-                try {
-                    new File(getStateFileName()).delete();
-                } catch (Exception e) {
-                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                                Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
-                    Util.log(status);
-                }
-            }
-
-            return;
-        }
-
+    @Override
+    public void saveState(String stateFilePath) {
+        FileOutputStream fileOutputStream = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
@@ -1039,7 +1037,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
             }
 
             DOMSource source = new DOMSource(doc);
-            StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
+            fileOutputStream = new FileOutputStream(stateFilePath);
+            StreamResult resultXML = new StreamResult(fileOutputStream);
             TransformerFactory transFactory = TransformerFactory.newInstance();
             Transformer transformer = transFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
@@ -1049,7 +1048,36 @@ public final class TeiidServerManager implements ITeiidServerManager {
             IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
                                         Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
             Util.log(status);
+        } finally {
+            if (fileOutputStream != null)
+                try {
+                    fileOutputStream.close();
+                } catch (IOException ex) {
+                    Util.log(ex);
+                }
         }
+    }
+
+    private void saveState() throws TransformerFactoryConfigurationError {
+        if (this.stateLocationPath == null)
+            return; // no persistence
+
+        if (teiidServers.isEmpty()) {
+            if (stateFileExists()) {
+                // delete current registry file since all servers have been deleted
+                try {
+                    new File(getStateFileName()).delete();
+                } catch (Exception e) {
+                    IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
+                                                Util.getString("errorDeletingServerRegistryFile", getStateFileName())); //$NON-NLS-1$
+                    Util.log(status);
+                }
+            }
+
+            return;
+        }
+
+        saveState(getStateFileName());
     }
 
     /**

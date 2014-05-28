@@ -14,5 +14,6 @@
     <packaging>pom</packaging>
     <modules>
       <module>org.jboss.ide.eclipse.as.storage</module>
+      <module>org.teiid.designer.dqp.storage</module>
     </modules>
 </project>
