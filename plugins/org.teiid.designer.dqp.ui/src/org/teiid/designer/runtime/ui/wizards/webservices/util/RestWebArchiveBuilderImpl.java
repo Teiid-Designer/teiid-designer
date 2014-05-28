@@ -39,7 +39,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.jboss.ide.eclipse.as.core.util.FileUtil;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.TempDirectory;
@@ -580,8 +579,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             if (!includeJars) {
             	File tempFolder = new File(webInfClassesDirectory+"/tmp"); //$NON-NLS-1$
             	File jsonJar = new File(pathToJar4);
-                ArrayList jarsToAdd = FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "org.eclipse", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
-                jarsToAdd.addAll(FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "saxon", ".jar")); //$NON-NLS-1$ //$NON-NLS-2$
+                ArrayList jarsToAdd = FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "saxon", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
                 jarsToAdd.add(jsonJar);
                 jarsToAdd.add(spiFile);
                 jarsToAdd.add(runtimeFile);

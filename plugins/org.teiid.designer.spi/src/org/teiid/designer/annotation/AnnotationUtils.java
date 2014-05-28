@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.eclipse.core.runtime.Assert;
+
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
@@ -101,9 +101,6 @@ public class AnnotationUtils {
      * @return testVersion is greater than or equal to the currentVersion's minimum version
      */
     private static boolean isGreaterOrEqualThan(ITeiidServerVersion testVersion, ITeiidServerVersion currentVersion) {
-        // Removed annotation versiion should NOT contain wildcards
-        Assert.isLegal(! testVersion.hasWildCards());
-
         // Ensure we have no wildcards in the current version
         currentVersion = currentVersion.getMinimumVersion();
         if (currentVersion.equals(testVersion) || currentVersion.isGreaterThan(testVersion))
