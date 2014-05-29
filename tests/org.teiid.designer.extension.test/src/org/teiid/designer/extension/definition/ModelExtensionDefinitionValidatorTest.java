@@ -377,14 +377,14 @@ public class ModelExtensionDefinitionValidatorTest implements Constants {
     }
 
     @Test
-    public void nullModelTypesShouldBeValid() {
-        assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(null, Constants.Utils.getDefaultModelTypes()).isOk());
+    public void nullModelTypesShouldBeInValid() {
+        assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(null, Constants.Utils.getDefaultModelTypes()).isError());
     }
 
     @Test
-    public void emptyModelTypesShouldBeValid() {
+    public void emptyModelTypesShouldBeInValid() {
         assertTrue(ModelExtensionDefinitionValidator.validateModelTypes(Collections.<String>emptyList(),
-                                                                        Constants.Utils.getDefaultModelTypes()).isOk());
+                                                                        Constants.Utils.getDefaultModelTypes()).isError());
     }
 
 }
