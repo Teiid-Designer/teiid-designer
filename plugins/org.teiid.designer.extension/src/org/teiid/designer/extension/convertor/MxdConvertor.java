@@ -35,7 +35,7 @@ public class MxdConvertor {
 
     private static final String SCHEMA_LOCATION = "http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd"; //$NON-NLS-1$
 
-    private static final String NAMESPACE_URI = "http://www.jboss.org/teiiddesigner/ext/{NAME}/2014"; //$NON-NLS-1$
+    private static final String NAMESPACE_URI = "http://www.teiid.org/translator/{NAME}/2014"; //$NON-NLS-1$
 
     private static MxdConvertor INSTANCE;
 
@@ -163,6 +163,16 @@ public class MxdConvertor {
             return false;
 
         String name = translator.getName();
+        // HACK - fixes erroneous excel extension until TEIID-2974 is fixed and available to Designer
+        if(name!=null && name.equals("excel")) {  //$NON-NLS-1$
+        	for(TeiidPropertyDefinition extDefn : extensions) {
+        		String extName = extDefn.getName();
+        		if(extName!=null && extName.endsWith("FIRST_DATA_ROW_NUMBER")) { //$NON-NLS-1$
+        			extDefn.setOwner("org.teiid.metadata.Table"); //$NON-NLS-1$
+        		}
+        	}
+        }
+        
         try {
             ModelType.Type modelType = ModelType.Type.PHYSICAL;
             Collection<MetaclassType> metaClasses = read(extensions);
