@@ -291,7 +291,8 @@ public final class ModelExtensionDefinitionValidator {
                                                final Set<String> validModelTypes) {
         // ok to have null or empty collection of model types
         if ((supportedModelTypes == null) || supportedModelTypes.isEmpty()) {
-            return ValidationStatus.OK_STATUS;
+        	MedStatus status = ValidationStatus.OK_STATUS;
+            return addStatus(status, ValidationStatus.createErrorMessage(Messages.noModelTypeDefinedMsg));
         }
 
         MedStatus status = ValidationStatus.OK_STATUS;
