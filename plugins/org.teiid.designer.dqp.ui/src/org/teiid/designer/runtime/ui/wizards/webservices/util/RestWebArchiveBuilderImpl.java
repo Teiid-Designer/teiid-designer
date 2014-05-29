@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -33,14 +32,13 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.core.ModelerCore;
@@ -48,6 +46,8 @@ import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.webservice.WebServicePlugin;
+import org.teiid.designer.webservice.lib.WebServiceLibConstants;
+import org.teiid.designer.webservice.lib.WebServiceLibPlugin;
 import org.teiid.designer.webservice.util.AntTasks;
 
 
@@ -56,7 +56,7 @@ import org.teiid.designer.webservice.util.AntTasks;
  * 
  * @since 8.0
  */
-public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
+public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceLibConstants, StringConstants {
 
     private IPath webServicePluginPath = null;
     private List<String> models = new ArrayList<String>();
@@ -171,7 +171,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             // Get the build directory and create it if it doesn't already
             // exist.
-            final String webServicePluginPath = getWSPluginInstallPath().toOSString();
+            final String webServicePluginPath = WebServiceLibPlugin.getDefault().getInstallPath().toOSString();
             final String buildDirectoryName = webServicePluginPath + File.separator + WebArchiveBuilderConstants.REST_BUILD_DIR;
             File buildDirectory = new File(buildDirectoryName);
             buildDirectory.mkdir();
@@ -191,13 +191,13 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             final File contextDirectory = new File(contextDirectoryName);
             contextDirectory.mkdir();
             // Create the WEB-INF directory.
-            final String webInfDirectoryName = contextDirectoryName + File.separator + "WEB-INF"; //$NON-NLS-1$
+            final String webInfDirectoryName = contextDirectoryName + File.separator + WEB_INF;
             final File webInfDirectory = new File(webInfDirectoryName);
             webInfDirectory.mkdir();
             // Create the classes directory.
-            final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + "classes"; //$NON-NLS-1$
+            final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + CLASSES;
             // Create the classes directory.
-            final String webInfLibDirectoryName = webInfDirectoryName + File.separator + "lib"; //$NON-NLS-1$
+            final String webInfLibDirectoryName = webInfDirectoryName + File.separator + LIB;
             final File webInfClassesDirectory = new File(webInfClassesDirectoryName);
             final File webInfLibDirectory = new File(webInfLibDirectoryName);
             webInfLibDirectory.mkdir();
@@ -226,7 +226,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             monitor.subTask(TASK_CREATING_WAR_ARCHIVE);
             // ZIP everything in the context directory into the new WAR file.
-            final String warFileName = tempDirectoryName + File.separator + contextName + ".war"; //$NON-NLS-1$
+            final String warFileName = tempDirectoryName + File.separator + contextName + DOT_WAR;
             AntTasks.zip(contextDirectoryName, warFileName);
             monitor.worked(20);
 
@@ -241,7 +241,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Move the temporary WAR file to its destination.
             final File warFile = new File(warFileName);
             final String newWarFileName = getFileName((String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_FILE_SAVE_LOCATION),
-                                                      contextName + ".war"); //$NON-NLS-1$
+                                                      contextName + DOT_WAR);
             File newWarFile = new File(newWarFileName);
             if (newWarFile.exists()) {
                 if (!newWarFile.delete()) {
@@ -291,7 +291,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         final String newWarFileName = getFileName((String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_FILE_SAVE_LOCATION),
-                                                  contextName + ".war"); //$NON-NLS-1$
+                                                  contextName + DOT_WAR);
 
         fileExists = (new File(newWarFileName)).exists();
 
@@ -343,7 +343,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                 String name ) {
 
         String fileName = path;
-        if (!fileName.endsWith("/") && !fileName.endsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (!fileName.endsWith(FORWARD_SLASH) && !fileName.endsWith(DOUBLE_BACK_SLASH)) {
 
             fileName = fileName + File.separator;
         }
@@ -359,12 +359,10 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectory
      * @since 7.4
      */
-    private void getWebFiles( File contextDirectory,
-                              File webInfDirectory ) throws Exception {
-
+    private void getWebFiles( File contextDirectory, File webInfDirectory ) throws Exception {
         // Copy all of the Web files
-        final String webLibPath = getWebLibDirectoryPath();
-        final String webAppsDirectoryName = webLibPath + File.separator + "webapps"; //$NON-NLS-1$
+        final String webLibPath = WebServiceLibPlugin.getDefault().getRestWebLibDirectoryPath();
+        final String webAppsDirectoryName = webLibPath + File.separator + WEBAPPS;
         final File webAppsDirectory = new File(webAppsDirectoryName);
         FileUtils.copyRecursively(webAppsDirectory, contextDirectory, null, false);
     }
@@ -380,7 +378,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     private void replaceJBossWebXmlVariables( String webInfDirectoryName, String securityDomain) {
 
         // Replace variables in the jboss-web.xml file.
-        File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + "jboss-web.xml"); //$NON-NLS-1$
+        File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + JBOSS_WEB_XML);
 
         String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -405,7 +403,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                            String contextName ) throws Exception {
 
         // Replace variables in the web.xml file.
-        webXmlFile = new File(webInfDirectoryName + File.separator + "web.xml"); //$NON-NLS-1$
+        webXmlFile = new File(webInfDirectoryName + File.separator + WEB_XML);
 
         // Update for Basic Auth if HTTPBasic security is selected
         if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
@@ -430,11 +428,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                                          Properties properties ) throws IOException {
 
         // Create teiidrest.properties file
-        File teiidRestProperties = new File(webInfClassesDirectory + File.separator + "teiidrest.properties"); //$NON-NLS-1$
+        File teiidRestProperties = new File(webInfClassesDirectory + File.separator +TEIID_REST_PROPS);
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
         if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
-            jndiValue = JNDI_PREFIX + "/" + jndiValue; //$NON-NLS-1$
+            jndiValue = JNDI_PREFIX + FORWARD_SLASH + jndiValue;
         }
         
         ITeiidServerVersion teiidVersion = ModelerCore.getTeiidServerVersion();
@@ -447,8 +445,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Create file
             fstream = new FileWriter(teiidRestProperties);
             out = new BufferedWriter(fstream);
-            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + "=" + jndiValue + NEWLINE); //$NON-NLS-1$
-            out.write(WebArchiveBuilderConstants.PROPERTY_TEIID_VERSION + "=" + version); //$NON-NLS-1$
+            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + EQUALS + jndiValue + NEWLINE);
+            out.write(WebArchiveBuilderConstants.PROPERTY_TEIID_VERSION + EQUALS + version);
         } finally {
             // Close the output stream
             out.close();
@@ -483,7 +481,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             resources.add(resourceJavaFile);
 
             ITeiidServerVersion version = ModelerCore.getTeiidServerVersion();
-            boolean greaterThan82 = version.isGreaterThan(new TeiidServerVersion("8.2.0")); //$NON-NLS-1$
+            boolean greaterThan82 = version.isGreaterThan(TeiidServerVersion.Version.TEIID_8_2.get());
 
             if (greaterThan82) {
             	teiidProviderJavaFile = "TeiidRSProviderPost"; //$NON-NLS-1$
@@ -525,11 +523,12 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
         if (compilerTool != null) {
             StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
 
-            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-core-asl-1.8.3.jar"; //$NON-NLS-1$
-            String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-jaxrs-1.8.3.jar"; //$NON-NLS-1$
-            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + "jackson-mapper-asl-1.8.3.jar"; //$NON-NLS-1$
-            String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + "json-1.0.jar"; //$NON-NLS-1$
-            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + "jaxrs-api-2.2.0.GA.jar"; //$NON-NLS-1$
+            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_CORE_ASL_JAR;
+            String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_JAXRS_JAR;
+            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_MAPPER_ASL_JAR;
+            String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + JSON_JAR;
+            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + JAXRS_API_JAR;
+            String pathToJar6 = webInfLibDirectory.getCanonicalPath() + File.separator + SAXONHE_JAR;
             
             FileUtils.copy(spiFile, webInfLibDirectory, true);
             FileUtils.copy(runtimeFile, webInfLibDirectory, true);
@@ -578,8 +577,10 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
             // the RESTEasy jars. We will need to save those to a temp folder and then copy them back after removing the RESTEasy jars.
             if (!includeJars) {
             	File tempFolder = new File(webInfClassesDirectory+"/tmp"); //$NON-NLS-1$
-            	File jsonJar = new File(pathToJar4);
-                ArrayList jarsToAdd = FileUtils.getFilesForPattern(webInfLibDirectory.getCanonicalPath(), "saxon", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                File jsonJar = new File(pathToJar4);
+                File saxonJar = new File(pathToJar6);
+                List<File> jarsToAdd = new ArrayList<File>();
+                jarsToAdd.add(saxonJar);
                 jarsToAdd.add(jsonJar);
                 jarsToAdd.add(spiFile);
                 jarsToAdd.add(runtimeFile);
@@ -590,7 +591,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
                 }
 
                 FileUtils.removeChildrenRecursively(webInfLibDirectory);
-                jarsToAdd = FileUtils.getFilesForPattern(tempFolder.getCanonicalPath(), "", ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
+                jarsToAdd = FileUtils.getFilesForPattern(tempFolder.getCanonicalPath(), EMPTY_STRING, ".jar"); //$NON-NLS-1$
                 iter = jarsToAdd.iterator();
                 while (iter.hasNext()){
                 	FileUtils.copy((File)iter.next(), webInfLibDirectory, true);
@@ -761,40 +762,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder {
     */
     private boolean hasHeaders(RestProcedure restProcedure) {
     	return restProcedure.getHeaderParameterList() != null && restProcedure.getHeaderParameterList().size()>0;
-    }
-
-    /**
-     * Return the path to the lib directory
-     * 
-     * @return
-     * @throws Exception
-     * @since 7.4
-     */
-    private String getWebLibDirectoryPath() throws Exception {
-        final String webServicePluginPath = getWSPluginInstallPath().toOSString();
-        final String webServiceLibFolder = webServicePluginPath + File.separator + "rest_war_resources"; //$NON-NLS-1$
-        if (new File(webServiceLibFolder).exists()) {
-            return webServiceLibFolder;
-        }
-        final String msg = WebServicePlugin.Util.getString("DefaultWebArchiveBuilderImpl.web_lib_directory_does_not_exist", webServiceLibFolder); //$NON-NLS-1$
-        WebServicePlugin.Util.log(IStatus.ERROR, msg);
-        throw new FileNotFoundException(msg);
-    }
-    
-    
-
-    /**
-     * @return IPath
-     * @throws IOException 
-     */
-    public IPath getWSPluginInstallPath() throws IOException {
-        if (this.webServicePluginPath == null) {
-            URL url = FileLocator.find(WebServicePlugin.getInstance().getBundle(), new Path(""), null); //$NON-NLS-1$
-            url = FileLocator.toFileURL(url);
-            this.webServicePluginPath = new Path(url.getFile());
-        }
-
-        return (IPath)this.webServicePluginPath.clone();
     }
 
     class URLValidator implements Serializable {

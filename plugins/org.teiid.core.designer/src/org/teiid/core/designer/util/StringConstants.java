@@ -75,4 +75,13 @@ public interface StringConstants {
      */
     String FORWARD_SLASH = "/"; //$NON-NLS-1$
 
+    /**
+     * Back slash used in regular expressions
+     */
+    String DOUBLE_BACK_SLASH = "\\"; //$NON-NLS-1$
+
+    /**
+     * Equals
+     */
+    String EQUALS = "="; //$NON-NLS-1$
 }
