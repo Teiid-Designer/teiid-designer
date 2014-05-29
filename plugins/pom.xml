@@ -83,6 +83,7 @@
 		<module>org.teiid.designer.ui.common</module>
 		<module>org.teiid.designer.vdb</module>
 		<module>org.teiid.designer.vdb.ui</module>
+		<module>org.teiid.designer.webservice.lib</module>
 		<module>org.teiid.designer.webservice</module>
 		<module>org.teiid.designer.webservice.ui</module>
 		<module>org.teiid.designer.xml</module>

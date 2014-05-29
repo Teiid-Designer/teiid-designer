@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,7 +32,6 @@ import javax.tools.ToolProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -47,15 +45,17 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDParser;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.TempDirectory;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
-import org.teiid.designer.sdt.ModelerSdtPlugin;
 import org.teiid.designer.vdb.ui.util.VdbResourceFinder;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
+import org.teiid.designer.webservice.lib.WebServiceLibConstants;
+import org.teiid.designer.webservice.lib.WebServiceLibPlugin;
 import org.teiid.designer.webservice.util.AntTasks;
 
 /**
@@ -63,7 +63,7 @@ import org.teiid.designer.webservice.util.AntTasks;
  * 
  * @since 8.0
  */
-public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
+public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceLibConstants, StringConstants {
 
     private IPath webServicePluginPath = null;
     private List<String> ports = new ArrayList<String>();
@@ -127,8 +127,8 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             final URLValidator urlValidator = new URLValidator();
 
             // Check for invalid characters
-            String[] invalidChars = new String[] {"/" //$NON-NLS-1$
-                , "\\" //$NON-NLS-1$
+            String[] invalidChars = new String[] {FORWARD_SLASH
+                , DOUBLE_BACK_SLASH
                 , CoreStringUtil.Constants.SPACE};
             final String invalidChar = validateInvalidCharactersInContextName(contextName, invalidChars);
 
@@ -190,7 +190,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             // Get the build directory and create it if it doesn't already
             // exist.
-            final String webServicePluginPath = getWSPluginInstallPath().toOSString();
+            final String webServicePluginPath = WebServiceLibPlugin.getDefault().getInstallPath().toOSString();
             final String buildDirectoryName = webServicePluginPath + File.separator + WebArchiveBuilderConstants.BUILD_DIR;
             File buildDirectory = new File(buildDirectoryName);
             buildDirectory.mkdir();
@@ -210,20 +210,20 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             final File contextDirectory = new File(contextDirectoryName);
             contextDirectory.mkdir();
             // Create the images directory.
-            final String imagesDirectoryName = contextDirectoryName + File.separator + "images"; //$NON-NLS-1$
+            final String imagesDirectoryName = contextDirectoryName + File.separator + IMAGES;
             final File imagesDirectory = new File(imagesDirectoryName);
             imagesDirectory.mkdir();
             // Create the WEB-INF directory.
-            final String webInfDirectoryName = contextDirectoryName + File.separator + "WEB-INF"; //$NON-NLS-1$
+            final String webInfDirectoryName = contextDirectoryName + File.separator + WEB_INF;
             final File webInfDirectory = new File(webInfDirectoryName);
             webInfDirectory.mkdir();
            //  Create the WEB-INF/wsdl directory.
-            final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + "wsdl"; //$NON-NLS-1$
+            final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + WSDL;
             final File webInfWsdlDirectory = new File(webInfWsdlDirectoryName);
             // Create the classes directory.
-            final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + "classes"; //$NON-NLS-1$
+            final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + CLASSES;
             // Create the WEB-INF/lib directory.
-            final String webInfLibDirectoryName = webInfDirectoryName + File.separator + "lib"; //$NON-NLS-1$
+            final String webInfLibDirectoryName = webInfDirectoryName + File.separator + LIB;
             final File webInfClassesDirectory = new File(webInfClassesDirectoryName);
             final File webInfLibDirectory = new File(webInfLibDirectoryName);
             webInfLibDirectory.mkdir();
@@ -258,7 +258,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
 
             monitor.subTask(TASK_CREATING_WAR_ARCHIVE);
             // ZIP everything in the context directory into the new WAR file.
-            final String warFileName = tempDirectoryName + File.separator + contextName + ".war"; //$NON-NLS-1$
+            final String warFileName = tempDirectoryName + File.separator + contextName + DOT_WAR;
             AntTasks.zip(contextDirectoryName, warFileName);
             monitor.worked(20);
 
@@ -273,7 +273,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             // Move the temporary WAR file to its destination.
             final File warFile = new File(warFileName);
             final String newWarFileName = getFileName((String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_FILE_SAVE_LOCATION),
-                                                      contextName + ".war"); //$NON-NLS-1$
+                                                      contextName + DOT_WAR);
             File newWarFile = new File(newWarFileName);
             if (newWarFile.exists()) {
                 if (!newWarFile.delete()) {
@@ -323,7 +323,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         }
 
         final String newWarFileName = getFileName((String)properties.get(WebArchiveBuilderConstants.PROPERTY_WAR_FILE_SAVE_LOCATION),
-                                                  contextName + ".war"); //$NON-NLS-1$
+                                                  contextName + DOT_WAR);
 
         fileExists = (new File(newWarFileName)).exists();
 
@@ -375,7 +375,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                                 String name ) {
 
         String fileName = path;
-        if (!fileName.endsWith("/") && !fileName.endsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (!fileName.endsWith(FORWARD_SLASH) && !fileName.endsWith(DOUBLE_BACK_SLASH)) {
 
             fileName = fileName + File.separator;
         }
@@ -391,13 +391,12 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
      * @param webInfDirectory
      * @since 7.1
      */
-    private void getWebFiles( File contextDirectory,
-                              File webInfDirectory,
+    private void getWebFiles( File contextDirectory, File webInfDirectory,
                               boolean containsGlobalDataTypes) throws Exception {
 
         // Copy all of the Web files
-        final String webLibPath = getWebLibDirectoryPath();
-        final String webAppsDirectoryName = webLibPath + File.separator + "webapps"; //$NON-NLS-1$
+        final String webLibPath = WebServiceLibPlugin.getDefault().getSoapWebLibDirectoryPath();
+        final String webAppsDirectoryName = webLibPath + File.separator + WEBAPPS;
         final File webAppsDirectory = new File(webAppsDirectoryName);
         FileUtils.copyRecursively(webAppsDirectory, contextDirectory, null, false);
         
@@ -425,7 +424,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                                            String contextName ) throws Exception {
 
         // Replace variables in the web.xml file.
-        File webXmlFile = new File(webInfDirectoryName + File.separator + "web.xml"); //$NON-NLS-1$
+        File webXmlFile = new File(webInfDirectoryName + File.separator + WEB_XML);
 
         // Update for Basic Auth if HTTPBasic security is selected
         if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
@@ -453,7 +452,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                                                 String securityDomain ) {
 
         // Replace variables in the jboss-web.xml file.
-        File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + "jboss-web.xml"); //$NON-NLS-1$
+        File jbossWebXmlFile = new File(webInfDirectoryName + File.separator + JBOSS_WEB_XML);
 
         String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -473,7 +472,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                                                Properties properties, SecurityCredentials securityCredentials ) {
 
         // Replace variables in the jbossws-cxf.xml file.
-        File jbossWSCxfXMLFile = new File(webInfDirectoryName + File.separator + "jbossws-cxf.xml"); //$NON-NLS-1$
+        File jbossWSCxfXMLFile = new File(webInfDirectoryName + File.separator + JBOSS_WEB_CXF);
 
         AntTasks.replace(jbossWSCxfXMLFile, "${jaxws.endpoint}", createEndpointTags(properties, securityCredentials, getPorts())); //$NON-NLS-1$
 
@@ -495,11 +494,11 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                                          Properties properties ) throws IOException {
 
         // Create teiidsoap.properties file
-        File teiisSoapProperties = new File(webInfClassesDirectory + File.separator + "teiidsoap.properties"); //$NON-NLS-1$
+        File teiisSoapProperties = new File(webInfClassesDirectory + File.separator + TEIID_SOAP_PROPS);
         String jndiValue = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME);
 
         if (jndiValue != null && !jndiValue.startsWith(JNDI_PREFIX)) {
-            jndiValue = JNDI_PREFIX + "/" + jndiValue; //$NON-NLS-1$
+            jndiValue = JNDI_PREFIX + FORWARD_SLASH + jndiValue;
         }
 
         FileWriter fstream = null;
@@ -511,9 +510,9 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
             Iterator it = operationToProcedureMap.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry)it.next();
-                out.write(pairs.getKey() + "=" + pairs.getValue() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                out.write(pairs.getKey() + EQUALS + pairs.getValue() + NEW_LINE);
             }
-            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + "=" + jndiValue); //$NON-NLS-1$
+            out.write(WebArchiveBuilderConstants.PROPERTY_JNDI_NAME + EQUALS + jndiValue);
         } finally {
             // Close the output stream
             out.close();
@@ -613,34 +612,6 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         return useMotem == null ? false : useMotem.equals(Boolean.TRUE);
     }
 
-    /**
-     * Return the path to the lib directory
-     * 
-     * @return
-     * @throws Exception
-     * @since 7.1
-     */
-    private String getWebLibDirectoryPath() throws Exception {
-        final String webServicePluginPath = getWSPluginInstallPath().toOSString();
-        final String webServiceLibFolder = webServicePluginPath + File.separator + "war_resources"; //$NON-NLS-1$
-        if (new File(webServiceLibFolder).exists()) {
-            return webServiceLibFolder;
-        }
-        final String msg = WebServicePlugin.Util.getString("DefaultWebArchiveBuilderImpl.web_lib_directory_does_not_exist", webServiceLibFolder); //$NON-NLS-1$
-        WebServicePlugin.Util.log(IStatus.ERROR, msg);
-        throw new FileNotFoundException(msg);
-    }
-
-    public IPath getWSPluginInstallPath() throws IOException {
-        if (this.webServicePluginPath == null) {
-            URL url = FileLocator.find(WebServicePlugin.getInstance().getBundle(), new Path(""), null); //$NON-NLS-1$
-            url = FileLocator.toFileURL(url);
-            this.webServicePluginPath = new Path(url.getFile());
-        }
-
-        return (IPath)this.webServicePluginPath.clone();
-    }
-
     class URLValidator implements Serializable {
         /**
          */
@@ -706,7 +677,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
                             File xsd = new File(fullFilePath);
                             FileUtils.copy(xsd, webinfWsdlFolder, true);
                             // Get handle to new file in wsdl folder
-                            File xsdCopy = new File(webinfWsdlFolder.getPath() + "/" + fileNameWithExtension); //$NON-NLS-1$
+                            File xsdCopy = new File(webinfWsdlFolder.getPath() + FORWARD_SLASH + fileNameWithExtension);
                            // Replace the schemaLocation of the global data
                             // types schema import with the relative path to xsd
                             AntTasks.replace(xsdCopy,
@@ -732,7 +703,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder {
         wsdlGenerator.setTargetNamespace(tns);
         wsdlGenerator.setUrlRootForReferences(CoreStringUtil.Constants.EMPTY_STRING);
         wsdlGenerator.setUrlSuffixForReferences(CoreStringUtil.Constants.EMPTY_STRING);
-        wsdlGenerator.setUrlForWsdlService("http://" + host + ":" + port + "/" + contextName + "/"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        wsdlGenerator.setUrlForWsdlService("http://" + host + ":" + port + FORWARD_SLASH + contextName + FORWARD_SLASH); //$NON-NLS-1$ //$NON-NLS-2$
         final IStatus status = wsdlGenerator.generate(new NullProgressMonitor());
 
         // nothing more to do if an error is expected
