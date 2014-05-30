@@ -180,7 +180,13 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         // If different translator is selected, reset deployment status
         if(areDifferent(this.translatorName,translatorName)) {
             this.vdbDeploymentStatus = null;
-            this.translatorOverride = createTranslatorOverride(translatorName, new Properties());        }
+            if( translatorName != null ) {
+            	this.translatorOverride = createTranslatorOverride(translatorName, new Properties());
+            } else {
+            	// TO make sure the wrong override property isn't cached when translatorName set to NULL
+            	this.translatorOverride = null;
+            }
+        }
         this.translatorName = translatorName;
     }
     

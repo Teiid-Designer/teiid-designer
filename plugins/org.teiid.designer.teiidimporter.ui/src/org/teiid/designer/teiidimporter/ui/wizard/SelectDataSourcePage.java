@@ -9,6 +9,7 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -204,7 +205,14 @@ public class SelectDataSourcePage extends AbstractWizardPage
      */
     @Override
     public void selectionChanged(String selectedSourceName) {
-        importManager.setDataSourceName(this.dataSourcePanel.getSelectedDataSourceName());
+    	// If DS changed, need to null out translator name. It'll be discovered in SelectTranslatorPage.setVisible()
+    	
+    	boolean dsChanged = importManager.getDataSourceName() != null ? !importManager.getDataSourceName().equals(this.dataSourcePanel.getSelectedDataSourceName()) : true;
+    	if( dsChanged ) {
+    		importManager.setTranslatorName(null);
+    	}
+    	
+		importManager.setDataSourceName(this.dataSourcePanel.getSelectedDataSourceName());
         importManager.setDataSourceJndiName(this.dataSourcePanel.getSelectedDataSourceJndiName());
         importManager.setDataSourceDriverName(this.dataSourcePanel.getSelectedDataSourceDriver());
         importManager.setDataSourceProperties(this.propertiesPanel.getDataSourceProperties());

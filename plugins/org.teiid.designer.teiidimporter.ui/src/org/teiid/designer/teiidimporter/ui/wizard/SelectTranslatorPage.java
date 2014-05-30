@@ -285,6 +285,10 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
      * @return the translator name
      */
     private String getInitialTranslatorSelection() {
+    	if( importManager.getTranslatorName() != null ) {
+    		return importManager.getTranslatorName();
+    	}
+    	
         String driverName = importManager.getDataSourceDriverName();
         if(translatorNames.isEmpty() || CoreStringUtil.isEmpty(driverName)) {
             return null;
