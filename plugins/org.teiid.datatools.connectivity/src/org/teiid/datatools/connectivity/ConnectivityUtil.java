@@ -46,7 +46,7 @@ public class ConnectivityUtil {
     /* Property keys for the ad-hoc teiid drivers created if no other suitable teiid driver can be found */
     private static final String TEIID_ADHOC_DRIVER_ID_SKELETON = "DriverDefn.org.teiid.MAJOR.MINOR.driver.serverDriverTemplate.Ad-hoc Teiid Server JDBC Driver MAJOR.MINOR Default"; //$NON-NLS-1$
     private static final String TEIID_ADHOC_DRIVER_DEFAULT_NAME = "Ad-hoc Teiid Server JDBC Driver"; //$NON-NLS-1$
-    private static final String TEIID_ADHOC_DRIVER_DEFN_TYPE = "org.teiid.datatools.connectivity.driver.serverDriverTemplate"; //$NON-NLS-1$
+    private static final String TEIID_ADHOC_DRIVER_DEFN_TYPE = "org.teiid.runtime.client.driver.serverDriverTemplate"; //$NON-NLS-1$
 
     /**
      * Base key for the secure storage node used for holding passwords
