@@ -391,7 +391,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
             }
         };
         
-        this.createVdbDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SOURCE_BINDING_ICON));
+        this.createVdbDataSourceAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.CREATE_VDB_DATA_SOURCE_ICON));
         this.createVdbDataSourceAction.setText("Create VDB Data Source"); //getString("createDataSourceAction.text")); //$NON-NLS-1$
         this.createVdbDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
         this.createVdbDataSourceAction.setEnabled(true);
@@ -488,6 +488,25 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         if (selectedObjs.size() == 1) {
             Object selection = selectedObjs.get(0);
             
+            if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
+                // If we have a legitimate teiid data source then the server must be connected
+            	manager.add(this.createDataSourceAction);
+            	manager.add(new Separator());
+                manager.add(this.deleteDataSourceAction);              
+                manager.add(new Separator());
+            }
+
+            if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
+             // If we have a legitimate teiid vdb then the server must be connected
+                ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
+                this.executeVdbAction.setEnabled(teiidVdb.isActive());
+                manager.add(this.executeVdbAction);
+                manager.add(this.createVdbDataSourceAction);
+                manager.add(new Separator());
+                manager.add(this.undeployVdbAction);
+                manager.add(new Separator());
+            }
+            
             // This will adapt either the TeiidResourceNode or the
             // TeiidServerContainerNode to the TeiidServer
             teiidServer = RuntimeAssistant.adapt(selection, ITeiidServer.class);
@@ -512,21 +531,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 }
             }
 
-            if (RuntimeAssistant.adapt(selection, ITeiidDataSource.class) != null) {
-                // If we have a legitimate teiid data source then the server must be connected
-                manager.add(this.deleteDataSourceAction);                
-                manager.add(new Separator());
-            }
 
-            if (RuntimeAssistant.adapt(selection, ITeiidVdb.class) != null) {
-             // If we have a legitimate teiid vdb then the server must be connected
-                ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
-                this.executeVdbAction.setEnabled(teiidVdb.isActive());
-                manager.add(this.executeVdbAction);
-                manager.add(this.createVdbDataSourceAction);
-                manager.add(new Separator());
-                manager.add(this.undeployVdbAction);
-            }
             manager.add(new Separator());
             manager.add(clearPreviewArtifactsAction);
             
