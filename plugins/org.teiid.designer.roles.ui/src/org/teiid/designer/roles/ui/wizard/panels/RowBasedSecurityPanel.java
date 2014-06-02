@@ -8,6 +8,7 @@
 package org.teiid.designer.roles.ui.wizard.panels;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -48,6 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -57,7 +59,6 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.RolesUiPlugin;
@@ -100,6 +101,18 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	void createControl() {
 		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(getPrimaryPanel());
 		GridDataFactory.fillDefaults().applyTo(getPrimaryPanel());
+		
+		{ // Message/description Text
+			Composite thePanel = WidgetFactory.createPanel(getPrimaryPanel(), SWT.NONE, 1, 1);
+			GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
+			
+			Text helpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+			helpText.setBackground(thePanel.getBackground());
+			helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+			helpText.setText(Messages.rowBasedSecurityHelpText);
+
+		}
 		
 		{
 	        this.tableViewer = new TableViewer(getPrimaryPanel(), (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
@@ -464,8 +477,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
      */
     class RowBasedSecurityDialog extends AbstractAddOrEditTitleDialog {
     	
-        private String targetColumn;
-        private Text targetColumnText;
+        private String targetTableOrView;
+        private Text targetTableOrViewText;
         
         private StyledTextEditor textEditor;
         private String conditionString;
@@ -484,7 +497,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             	this.conditionString = permission.getCondition();
             	isEdit = true;
             	this.constraint = permission.isConstraint();
-            	this.targetColumn = permission.getTargetName();
+            	this.targetTableOrView = permission.getTargetName();
             }
         }
 
@@ -501,31 +514,32 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     	        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(innerPanel);
     	        GridDataFactory.fillDefaults().grab(true, false).applyTo(innerPanel);        
     	        
-    	        WidgetFactory.createLabel(innerPanel, Messages.targetColumn);
+    	        WidgetFactory.createLabel(innerPanel, Messages.target);
 
-    	        this.targetColumnText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
+    	        this.targetTableOrViewText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
     	        if( isEdit ) {
-    	        	this.targetColumnText.setText(this.targetColumn);
+    	        	this.targetTableOrViewText.setText(this.targetTableOrView);
+    	        	this.targetTableOrViewText.setEditable(false);
     	        }
     	        
-    	        this.targetColumnText.addModifyListener(new ModifyListener() {
+    	        this.targetTableOrViewText.addModifyListener(new ModifyListener() {
     	            @Override
     	            public void modifyText( ModifyEvent e ) {
     	            	handleInputChanged();
     	            }
     	        });
-    	        this.targetColumnText.setEditable(false);
-    	        this.targetColumnText.setBackground(innerPanel.getBackground());
+    	        this.targetTableOrViewText.setEditable(false);
+    	        this.targetTableOrViewText.setBackground(innerPanel.getBackground());
     	        
     	        Button button = new Button(innerPanel, SWT.PUSH);
     	        button.setText(Messages.dotDotDot);
-    	        button.setToolTipText(Messages.browseVdbForTargetColumn);
+    	        button.setToolTipText(Messages.browseVdbForTarget);
     	        button.addSelectionListener(new SelectionListener() {
 					
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						// Open dialog to display models tree so user can select a column object
-						handleBrowseForColumn();
+						handleBrowseForTableOrView();
 					}
 					
 					@Override
@@ -534,6 +548,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 						
 					}
 				});
+    	        button.setEnabled(!isEdit);
     	        
     	        Label label = WidgetFactory.createLabel(innerPanel, Messages.constraint);
     	        label.setToolTipText(Messages.constraintButtonTooltip);
@@ -596,7 +611,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
          */
         public String getTargetName() {
             CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-            return this.targetColumn;
+            return this.targetTableOrView;
         }
 
         /**
@@ -617,12 +632,14 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             return constraint;
         }
         
-        private void handleBrowseForColumn() {
-        	SelectColumnDialog dialog = new SelectColumnDialog(getShell());
+        private void handleBrowseForTableOrView() {
+        	SelectTableOrViewDialog dialog = new SelectTableOrViewDialog(getShell());
         	
             if (dialog.open() == Window.OK) {
-            	targetColumn = dialog.getColumnName();
-            	targetColumnText.setText(targetColumn);
+            	targetTableOrView = dialog.getTargetName();
+            	if( targetTableOrView != null ) {
+            		targetTableOrViewText.setText(targetTableOrView);
+            	}
             	handleInputChanged();
             }
         }
@@ -640,8 +657,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
         	setMessage(Messages.clickOkToFinish); //Messages.clickOKToFinish);
         	
             conditionString = textEditor.getText();
-            targetColumn = targetColumnText.getText();
-            if( targetColumn == null || targetColumn.trim().isEmpty() ) {
+            targetTableOrView = targetTableOrViewText.getText();
+            if( targetTableOrView == null || targetTableOrView.trim().isEmpty() ) {
             	enable = false;
         		setErrorMessage(Messages.targetColumnIsUndefined);
         		return;
@@ -656,13 +673,13 @@ public class RowBasedSecurityPanel extends DataRolePanel {
         }
     }
     
-    class SelectColumnDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
+    class SelectTableOrViewDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
-        private Text columnNameText;
-        private String columnName;
+        private Text nameText;
+        private String name;
         private MessageLabel statusMessageLabel;
 
-        public SelectColumnDialog( Shell parent ) {
+        public SelectTableOrViewDialog( Shell parent ) {
             super(parent, getPermissionTreeProvider(), getPermissionTreeProvider());
             setTitle(Messages.columnSelection);
             setMessage(Messages.selectColumnForCondition);
@@ -677,15 +694,15 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             GridData panelData = new GridData(GridData.FILL_BOTH);
             panel.setLayoutData(panelData);
 
-            Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Column", GridData.FILL_HORIZONTAL,1, 2); //$NON-NLS-1$
+            Group selectedGroup = WidgetFactory.createGroup(panel, Messages.selectedTableViewOrProcedure, GridData.FILL_HORIZONTAL,1, 2);
 
-            this.columnNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
+            this.nameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
             GridData data = new GridData(GridData.FILL_HORIZONTAL);
             data.heightHint = convertHeightInCharsToPixels(1);
-            this.columnNameText.setLayoutData(data);
-            this.columnNameText.setEditable(false);
-            this.columnNameText.setBackground(panel.getBackground());
-            this.columnNameText.setText(Messages.undefined);
+            this.nameText.setLayoutData(data);
+            this.nameText.setEditable(false);
+            this.nameText.setBackground(panel.getBackground());
+            this.nameText.setText(Messages.undefined);
 
             super.createDialogArea(panel);
 
@@ -737,28 +754,28 @@ public class RowBasedSecurityPanel extends DataRolePanel {
         public void selectionChanged( SelectionChangedEvent event ) {
             TreeSelection selection = (TreeSelection)event.getSelection();
             if (selection.isEmpty()) {
-                this.columnNameText.setText(Messages.undefined);
-                this.columnName = null;
+                this.nameText.setText(Messages.undefined);
+                this.name = null;
                 updateOnSelection(null);
                 return;
             }
 
             Object firstElement = selection.getFirstElement();
 
-            if (!(firstElement instanceof Column)) {
-                this.columnNameText.setText(Messages.undefined);
-                this.columnName = null;
+            if( isValidSelection(firstElement) ) {
+                EObject target = (EObject)selection.getFirstElement();
+                name = getFullTargetName(target);
+                this.nameText.setText(name);
             } else {
-                Column column = (Column)selection.getFirstElement();
-                columnName = getFullColumnName(column);
-                this.columnNameText.setText(column.getName());
+                this.nameText.setText(Messages.undefined);
+                this.name = null;
             }
 
             updateOnSelection(firstElement);
         }
         
-        private String getFullColumnName(Column column) {
-        	String targetName = getResourceName(column.eResource()) + '/' + ModelerCore.getModelEditor().getModelRelativePath(column);
+        private String getFullTargetName(EObject target) {
+        	String targetName = getResourceName(target.eResource()) + '/' + ModelerCore.getModelEditor().getModelRelativePath(target);
 
             targetName = targetName.replace(B_SLASH, DELIM);
             
@@ -776,37 +793,35 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             }
             return res.getURI().path();
         }
+        
+        private boolean isValidSelection(Object obj ) {
+        	return (obj instanceof org.teiid.designer.metamodels.relational.Table || 
+        			obj instanceof org.teiid.designer.metamodels.relational.View ||
+        			obj instanceof org.teiid.designer.metamodels.relational.Procedure);
+        }
 
         private void updateOnSelection( Object selectedObject ) {
             IStatus status = new Status(IStatus.INFO,
-            		RolesUiPlugin.PLUGIN_ID,
-                                        "Valid column selected. Click OK to finish."); //$NON-NLS-1$
+            		RolesUiPlugin.PLUGIN_ID, Messages.rowBasedSecurityOkMessage);
             if (selectedObject != null) {
-                if (!(selectedObject instanceof Column)) {
+                if (!isValidSelection(selectedObject)) {
                     status = new Status(IStatus.ERROR,
-                    		RolesUiPlugin.PLUGIN_ID,
-                                        "Selected object is not a column"); //$NON-NLS-1$
+                    		RolesUiPlugin.PLUGIN_ID, Messages.invalidSelectionRowBasedSecurityMessage);
                     getOkButton().setEnabled(false);
                 } else {
                     getOkButton().setEnabled(true);
                 }
             } else {
                 status = new Status(IStatus.ERROR,
-                		RolesUiPlugin.PLUGIN_ID,
-                                    "No column selected"); //$NON-NLS-1$
+                		RolesUiPlugin.PLUGIN_ID, Messages.noTargetSelected);
                 getOkButton().setEnabled(false);
             }
 
             this.statusMessageLabel.setErrorStatus(status);
         }
 
-        /**
-         * Returns the current TeiidTranslator
-         * 
-         * @return the TeiidTranslator. may return null
-         */
-        public String getColumnName() {
-            return this.columnName;
+        public String getTargetName() {
+            return this.name;
         }
 
     }

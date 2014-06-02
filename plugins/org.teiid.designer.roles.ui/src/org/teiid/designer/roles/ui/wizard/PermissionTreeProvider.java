@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,6 +30,7 @@ import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.View;
@@ -111,6 +113,7 @@ public class PermissionTreeProvider implements ILabelProvider, ITreeContentProvi
 			if( eObj instanceof Table || 
 				eObj instanceof View ||
 				eObj instanceof Procedure ||
+				eObj instanceof ProcedureResult ||
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||
@@ -135,6 +138,7 @@ public class PermissionTreeProvider implements ILabelProvider, ITreeContentProvi
 			if( eObj instanceof Table || 
 				eObj instanceof View ||
 				eObj instanceof Procedure ||
+				eObj instanceof ProcedureResult ||
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||

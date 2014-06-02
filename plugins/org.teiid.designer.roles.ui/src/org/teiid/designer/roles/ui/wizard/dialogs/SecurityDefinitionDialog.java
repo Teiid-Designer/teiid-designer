@@ -49,6 +49,7 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     private String maskString;
     private int order = 0;
     private Text orderText;
+    private boolean allowsFilter;
     private boolean allowsMasking;
     
     private boolean isEdit;
@@ -62,7 +63,8 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
      * @param permission
      * @param okEnabled
      */
-    public SecurityDefinitionDialog( Shell parentShell, String title, String message, Permission permission, boolean allowsMasking ) {
+    public SecurityDefinitionDialog( Shell parentShell, String title, String message, Permission permission, boolean allowsFilter,
+    		boolean allowsMasking ) {
         super(parentShell, title, message, true);
 
     	this.targetName = permission.getTargetName();
@@ -76,6 +78,7 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
         	this.maskString = permission.getMask();
         	this.order = permission.getOrder();
         }
+        this.allowsFilter = allowsFilter;
         this.allowsMasking = allowsMasking;
     }
 
@@ -156,6 +159,11 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     	                // NO OP
     	            }
     	        });
+	        }
+	        this.constraintButton.setEnabled(allowsFilter);
+	        this.conditionTextEditor.getTextWidget().setEnabled(allowsFilter);
+	        if( !allowsFilter ) {
+	        	this.conditionTextEditor.getTextWidget().setBackground(innerPanel.getBackground());
 	        }
 	        
 	        label = WidgetFactory.createLabel(innerPanel, Messages.order);
@@ -270,7 +278,7 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
         this.constraint = constraintButton.getSelection();
     	boolean conditionEmpty = (this.conditionString == null || this.conditionString.trim().isEmpty());
     	
-        if( conditionEmpty) {
+        if( conditionEmpty && allowsFilter) {
         	enable = false;
     		setErrorMessage(Messages.conditionIsUndefined);
         }

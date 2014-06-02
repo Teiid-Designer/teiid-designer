@@ -210,7 +210,7 @@ public class DataRoleWizard extends AbstractWizard {
         new Label(mainPanel, SWT.NONE);
         
         
-        CTabFolder mainTabFolder = WidgetFactory.createTabFolder(mainPanel);
+        CTabFolder mainTabFolder = WidgetFactory.createTabFolder(mainPanel, SWT.NONE);
         mainTabFolder.setLayout(new GridLayout(1, false));
         mainTabFolder.setBorderVisible(true);
         final GridData folderGD = new GridData(GridData.FILL_BOTH);
@@ -286,7 +286,7 @@ public class DataRoleWizard extends AbstractWizard {
         permissionsPanel.setLayoutData(modelsGridData);
         
         Label infoLabel = new Label(permissionsPanel, SWT.NONE);
-        infoLabel.setText("Set object level permissions (i.e. tables, procedures, columns, etc...)");
+        infoLabel.setText(Messages.permissionsTabHelpText);
         infoLabel.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
         GridData gd_1 = new GridData();
         gd_1.horizontalSpan = 2;

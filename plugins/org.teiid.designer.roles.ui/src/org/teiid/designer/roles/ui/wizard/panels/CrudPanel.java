@@ -175,17 +175,24 @@ public class CrudPanel extends DataRolePanel {
         	if( perm == null ) {
         		perm = getTreeProvider().createPermission(target);
         	}
+        	boolean allowsCondition = getTreeProvider().allowsCondition(target);
+        	boolean allowsMask = getTreeProvider().allowsMasking(target);
         	
         	String message = getTreeProvider().getSecurityDialogMessage(target);
         	SecurityDefinitionDialog dialog = 
         			new SecurityDefinitionDialog(getShell(), 
-        					Messages.setSecurityValuesTitle, message, perm, getTreeProvider().allowsMasking(target));
+        					Messages.setSecurityValuesTitle, message, perm, 
+        					allowsCondition, allowsMask);
         	
         	if( dialog.open() == Window.OK) {
-                perm.setMask(dialog.getMask());
-                perm.setOrder(dialog.getOrder());
-                perm.setCondition(dialog.getCondition());
-                perm.setConstraint(dialog.getConstraintValue());
+        		if( allowsCondition) {
+        			perm.setCondition(dialog.getCondition());
+                    perm.setConstraint(dialog.getConstraintValue());
+        		}
+        		if( allowsMask ) {
+	                perm.setMask(dialog.getMask());
+	                perm.setOrder(dialog.getOrder());
+        		}
         		
     	        getWizard().refreshAllTabs();
     	    	

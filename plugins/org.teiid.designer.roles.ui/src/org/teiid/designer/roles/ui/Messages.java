@@ -44,6 +44,7 @@ public class Messages  extends NLS {
 	public static String mappedRoleNames;
 	public static String allowedLanguages;
 	public static String columnMasking;
+	public static String columnExpression;
 	public static String conditions;
 	public static String dataRoleWizardTitle;
 	public static String editDataRoleWizardEditTitle;
@@ -64,6 +65,7 @@ public class Messages  extends NLS {
 	public static String editColumnRowBasedSecurityMessage;
 	public static String targetColumn;
 	public static String dotDotDot;
+	public static String browseVdbForTarget;
 	public static String browseVdbForTargetColumn;
 	public static String constraintButtonTooltip;
 	public static String clickOkToFinish;
@@ -85,7 +87,17 @@ public class Messages  extends NLS {
 	public static String target;
 	public static String security;
 	public static String securityTooltip;
-	//public static String xxxxx;
+	public static String rowBasedSecurityHelpText;
+	public static String selectedTableViewOrProcedure;
+	public static String rowBasedSecurityOkMessage;
+	public static String invalidSelectionRowBasedSecurityMessage;
+	public static String noTargetSelected;
+	public static String columnExpressionHelpText;
+	public static String selectedColumn;
+	public static String columnMaskingOkMessage;
+	public static String invalidSelectionColumnMaskingMessage;
+	public static String noColumnSelected;
+	public static String permissionsTabHelpText;
 	//public static String xxxxx;
 	//public static String xxxxx;
 	//public static String xxxxx;
