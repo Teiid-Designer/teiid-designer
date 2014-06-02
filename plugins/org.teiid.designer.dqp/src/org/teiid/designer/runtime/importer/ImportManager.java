@@ -363,7 +363,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
      * @throws Exception the exception
      */
     public String getDisplayName() throws Exception {
-        return getImportServer().getDisplayName();
+        return getImportServer().getParentName();
     }
     
     /**
