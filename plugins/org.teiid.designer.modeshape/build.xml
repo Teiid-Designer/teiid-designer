@@ -59,7 +59,7 @@
 
 	<!-- Disabled since the jars have been included in the codebase -->
 	<!--target name="generate" depends="check-work, nothing-todo" if="should-generate"-->
-	<target name="generate" depends="nothing-todo" if="should-generate">
+	<target name="generate" depends="init-ant-contrib, nothing-todo" if="should-generate">
 		<echo message="Generating from maven ..." />
 
 		<!-- Build the target platform and install it -->
@@ -72,7 +72,7 @@
 
 	</target>
 
-	<target name="clean">
+	<target name="clean" depends="init-ant-contrib">
 
 		<echo message="Removing libraries from lib directories" />
 	    <mvn dir="." args="clean" />

@@ -12,7 +12,7 @@
 ==
 -->
 
-<project name="generate-libs" default="generate" xmlns:ac="antlib:net.sf.antcontrib">
+<project name="generate-libs" default="generate">
 
 	<property name="GIT-HOME" location="../../.." />
 
@@ -137,7 +137,7 @@
 		<antcall target="clean-internal"/>
 	</target>
 
-	<target name="generate" depends="check-work, nothing-todo, clean-internal, dependencies" if="should-generate">
+	<target name="generate" depends="init-ant-contrib, check-work, nothing-todo, clean-internal, dependencies" if="should-generate">
 		<echo message="Generating from maven ..." />
 
 		<!-- Call the process sources goal and generate using javacc -->

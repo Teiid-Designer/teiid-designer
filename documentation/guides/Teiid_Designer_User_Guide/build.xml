@@ -12,7 +12,7 @@
 
 	<import file="${GIT-HOME}/scripts/build-common.xml" />
 
-	<target name="maven-generate">
+	<target name="maven-generate" depends="init-ant-contrib">
 
 		<echo message="Generating using maven ..." />
 

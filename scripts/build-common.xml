@@ -85,7 +85,10 @@
         A macro for executing maven depending on the platform the ant script is
         being executed on. Requires directory and args attributes to be assigned.
 
-        Will remove excess whitespace from args prior to execution.
+        Will remove excess whitespace from args prior to execution
+
+        Targets should depend on init-ant-contrib target above in order to ensure
+        that the ant-contrib library is correctly added to the ant classpath.
     -->
     <macrodef name="mvn">
         <attribute name="dir" />

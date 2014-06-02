@@ -54,7 +54,7 @@
 		<echo message="Project source generation is up-to-date" />
 	</target>
 
-	<target name="generate" depends="check-work, nothing-todo" if="should-generate">
+	<target name="generate" depends="init-ant-contrib, check-work, nothing-todo" if="should-generate">
 
 		<echo message="=== Generating zip file of execution plan payload data ===" />
 		<zip destfile="${DEST-ZIP}" update="true">
