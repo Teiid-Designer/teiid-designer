@@ -1,4 +1,5 @@
-modeshape-common-3.3.6.GA-redhat-2
-modeshape-sequencer-ddl-3.3.6.GA-redhat-2
+modeshape-common-3.8.1.GA
+modeshape-sequencer-ddl-3.8.1.GA
 
-Both taken from dv-6.0.0.ER5-redhat-1-repository
+built from branch 3.8.x-prod-ip6.1
+
