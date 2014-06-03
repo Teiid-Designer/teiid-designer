@@ -127,9 +127,9 @@
         </para>
 		
         <section id="guide-example-model-jdbc-section">
-            <title>Model a JDBC Source</title>
+            <title>Model a Relational (via JDBC) Source</title>
 
-            <para>This section shows how to Model a JDBC Source, using the Guide View action set.  We will connect to a MySQL database
+            <para>This section shows how to Model a Relatioanl Source, using the Guide View action set.  We will connect to a MySQL database
             for this example, but you can use the same process to connect to any supported database.</para>
         <orderedlist>
             <listitem>
