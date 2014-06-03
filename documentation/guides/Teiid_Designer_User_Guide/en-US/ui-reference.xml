@@ -1019,7 +1019,7 @@
 				view in the dialog.
 			</para>
 			<figure id="sql-reserved-words-view-image">
-				<title>System Catalog View</title>
+				<title>SQL Reserved Words View</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/sql-reserved-words-view.png"/>
@@ -1029,7 +1029,7 @@
 			<para>You can also display the view by selecting the the main menu's
 				<emphasis role="bold">Metadata > Show SQL Reserved Words</emphasis> action as shown below.</para>
 			<figure>
-				<title>SQL Reservered Words Action</title>
+				<title>SQL Reserved Words Action</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/show-sql-reserved-words-action.png"/>
@@ -1049,25 +1049,24 @@
 				<emphasis role="bold">Window > Show View > Other...</emphasis>
 				and select the
 				<emphasis role="bold">Teiid Designer > Model Extension Registry</emphasis>
-				view in the dialog.
+				view in the dialog.  You can also open the MED Registry view from the MED Editor - by selecting the MED Editor toolbar action in
+				the right corner of the MED Editor header section.
 			</para>
 			<para>The <emphasis role="bold">Model Extension Registry</emphasis> view shows the currently registered MEDs. 
 				Registered MEDs can be applied to models in the workspace (see <xref linkend="model-object-extension-properties-section"/>). The Model 
 				Extension Registry view looks like this:</para>
 			<figure id="med-registry-view-figure">
-				<title>System Catalog View</title>
+				<title>MED Registry View</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/med-registry-view.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
-			<para>You can also open the view by selecting the MED Editor toolbar action in 
-				the right corner of shared sub-editor header section.</para>
 			<para>For each registered MED, the namespace prefix, namespace URI, extended model class, version, 
 				and description is shown. In addition, a flag indicating if the MED is built-in is shown. 
 				The Model Extension Registry view has toolbar actions that register a workspace MED file, 
-				unregister a user-defined MED, and copy a registered MED to the workspace. All these actions 
+				unregister a user-defined MED, copy a registered MED to the workspace, or view the MED.  All of these actions 
 				are also available via a context menu.</para>
 			<para>A MED registry keeps track of all the MEDs that are registered in a workspace. Only registered MEDs can be used to extend a model. 
 					There are 2 different types of MEDs stored in the registry:

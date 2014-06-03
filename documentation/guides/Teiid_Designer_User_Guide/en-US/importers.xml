@@ -206,6 +206,25 @@
 			<imagedata fileref="images/screencaps/jdbc-importer-page-6.png"/>
 			</imageobject></mediaobject>
 		</figure>
+		<!-- 
+			####### RELATIONAL MODEL COSTING
+			#########################################
+		 -->
+		<section id="relational-import-model-costing-section">
+			<title>Relational Model Costing</title>
+		    <para>On the final page of import, you are presented with a checkbox option to 
+		    <emphasis role="bold">Include Cost Statistics</emphasis>.  If this option is selected,
+		    the table cardinalities will be determined and the table cardinality properties will be set.
+		    Later, during query execution, if the table cardinalities are available they are used by the
+		    Teiid query engine to optimize the query plan.</para>
+		    
+		    <para>After import, you can update the cardinalities at any time.  If you would like to
+		    update the Cost Statistics for the entire model, select the model - then use the Modeling
+		    Context menu action <emphasis role="bold">Update Source Data Statistics</emphasis>.  
+		    Likewise, you can update the cardinality for a specific table or tables, by selecting the
+		    table(s) in ModelExplorer then using the same 
+		    <emphasis role="bold">Update Source Data Statistics</emphasis> action.</para>
+		</section>
 	</section>
 	<!-- 
 		####### TEIID DATA SOURCE IMPORTER 
