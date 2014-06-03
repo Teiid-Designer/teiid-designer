@@ -19,7 +19,7 @@
 	<section id="manage-connection-profiles-section">
 		<title>Manage Connection Profiles</title>
 		<para>Teiid Designer utilizes the Eclipse Data Tools Platform (DTP) Connection Profile framework for connection management. Connection Profiles
-			provide a mechanism to connect to JDBC and non-JDBC sources to access metadata for constructing metadata source models.
+			provide a mechanism to connect to relational and non-relational sources to access metadata for constructing metadata source models.
 			Teiid Designer also provides a custom Teiid connection profile template designed as a JDBC source to a deployed VDB.
 		</para>
 		<para>By selecting various Teiid Designer Import options, any applicable Connection Profiles you have defined in your Database

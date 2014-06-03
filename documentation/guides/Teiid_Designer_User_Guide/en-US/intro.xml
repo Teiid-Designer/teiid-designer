@@ -568,7 +568,7 @@
             <itemizedlist>
                 <listitem>Consuming a SOAP Web Service</listitem>
                 <listitem>Modelling from a Flat File Source (a text file)</listitem>
-                <listitem>Modelling from a JDBC Data Source</listitem>
+                <listitem>Modelling from a Relational Data Source</listitem>
                 <listitem>Modelling from a Local XML File Source</listitem>
                 <listitem>Modelling from a Remote XML File Source</listitem>
                 <listitem>Modelling from a Teiid Data Source (deployed on server)</listitem>
@@ -645,7 +645,7 @@
 
     		<para>The critical artifact that <emphasis role="bold">Teiid Designer</emphasis> is intended to manage is the
 	   		  <emphasis role="bold">VDB</emphasis>, or <emphasis role="bold">Virtual DataBase</emphasis>. Through the 
-	   		  Teiid server, VDB's behave like standard JDBC database schema which can be connected to, queried and 
+	   		  Teiid server, VDB's behave like standard relational database schema which can be connected to, queried and 
 	   		  updated based on how the VDB is configured. Since VDB's are just databases once they are deployed, they 
 	   		  can be used as sources to other view model transformations. This allows creating and deploying re-usable 
 	   		  or common VDB's in multiple layers depending on your business needs. </para>
@@ -761,9 +761,9 @@
 			virtual view. In other words, you can test the views with actual data
 			by simply selecting the table, view, procedure or XML document. The
 			preview functionality insures that data access behavior in Teiid Designer will
-			reliably match when the VDB is deployed to the Server. 
-			( See:  <xref linkend="server-management-chapter"/> for details)</para> 
-			
+			reliably match when the VDB is deployed to the Server.  For more info on server
+			management see <xref linkend="server-management-chapter" /></para> 
+
 			<para> Previewing information is a fast and easy way to sample the data. Of course, to
 			run more complicated queries like what your application likely uses,
 			simply execute the VDB in Teiid Designer and type in any query or SQL

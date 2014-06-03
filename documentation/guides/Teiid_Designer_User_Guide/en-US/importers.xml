@@ -87,10 +87,10 @@
 		####### JDBC IMPORTER #########################################
 	 -->
 	<section id="jdbc-import-section">
-		<title>Import From JDBC Database</title>
+		<title>Import From Relational Database</title>
 		<itemizedlist>
 			<listitem>
-				<para>You can create relational source models from your JDBC source 
+				<para>You can create source models from your relational source 
 				schema data using the steps below.</para>
 				<note>
 					<para>Depending the detail provided in the database connection url 
@@ -132,7 +132,7 @@
 							<imagedata fileref="images/screencaps/jdbc-importer-page-2A.png"/>
 							</imageobject></mediaobject>
 						</figure>
-						<para>Because JDBC databases are different, special processing of 
+						<para>Because relational databases are different, special processing of 
 						your metadata to be required in order to convert datatypes or to 
 						interpret your metadata. The <emphasis role="bold">JDBC Metadata 
 						Processor</emphasis> drop-down selector will be auto-selected 
@@ -234,7 +234,7 @@
 		<title>Import From Teiid Data Source Connection</title>
 		<para>The <emphasis role="bold">Teiid Connection &gt;&gt; Source 
 		Model</emphasis> import option provides a means to create relational 
-		source models from JDBC and other deployed data sources that are not 
+		source models from relational and other deployed data sources that are not 
 		supported by other Teiid Designer importers.</para>
 		<para>NOTE: To launch this importer, you must have at minimum a Teiid 
 		8.x server running in Designer. The Teiid importer deploys a dynamic 
