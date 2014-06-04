@@ -70,16 +70,13 @@
 	            Teiid Designer is bundled with 3 versions of the Teiid Client Runtime, notably:
                 <itemizedlist>
                     <listitem>
-                        <para>Version 7.7 - supports Teiid Server 7.7 version installed on JBoss Server 5.1;</para>
+                        <para>Teiid Server 7.7 version installed on JBoss Server 5.1;</para>
                     </listitem>
                     <listitem>
-                        <para>Version 8.3 - supports Teiid Server 8.0, 8.1, 8.2 and 8.3 versions installed on JBoss Server 7;</para>
+                        <para>Teiid Server 8.0, 8.1, 8.2 and 8.3 versions installed on JBoss Server 7;</para>
                     </listitem>
                     <listitem>
-                        <para>Version 8.4 - supports Teiid Server 8.4, installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
-                    </listitem>
-                    <listitem>
-                        <para>Version 8.6 - supports Teiid Server 8.5, installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
+                        <para>Teiid Server 8.4 thru 8.7 installed on JBoss Server 7.1.1, 7.2 and EAP 6.1.</para>
                     </listitem>
                 </itemizedlist>
                 This allows multiple client runtime support from within a single installation of Teiid Designer. However, in order
@@ -87,7 +84,8 @@
                 server can be performed from the Teiid Server section of the Guides View or the Servers view, as described in 
                 <xref linkend="server-version-definition"/>. Care should be taken to ensure that any new models are created against
                 the correct version of server to ensure functionality and internal architecture is correct. Note that VDBs are validated
-                against a server version and noted as such in the editor.
+                against a server version and noted as such in the editor. Note that your VDBs will be validated against the current Teiid runtime client
+                and that version will be persisted in your VDB.
             </para>
         </section>
     </section>

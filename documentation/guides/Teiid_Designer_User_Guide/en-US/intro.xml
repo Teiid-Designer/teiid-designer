@@ -239,64 +239,6 @@
 				reflect the physical storage of the data.
 			</para>
 		</section>
-		<section id="design-runtime-metadata">
-			<title>Design-Time and Runtime Metadata</title>
-			<para> Teiid Designer software distinguishes between design-time metadata
-				and run-time metadata. This distinction becomes important if you use 
-				Teiid Designer Server. Design-time data
-				is laden with details and representations that help the user
-				understand and efficiently organize metadata. Much of that detail is
-				unnecessary to the underlying system that runs the Virtual Database
-				that you will create. Any information that is not absolutely
-				necessary to running the Virtual Database is stripped out of the
-				run-time metadata to ensure maximum system performance.</para>
-				
-			<para><emphasis role="bold">Design-Time Metadata</emphasis></para>
-			
-			<para>
-				Design-time metadata refers to data within
-				your local directory that you have created or have imported. You can
-				model this metadata in Teiid Designer, adding
-				<emphasis role="bold">Source</emphasis>
-				and
-				<emphasis role="bold">View</emphasis>
-				metadata.
-			</para>
-
-			<para><emphasis role="bold">Runtime Metadata</emphasis></para>
-			
-			<para> Once you have adequately modeled your enterprise information
-				systems, including the necessary technical metadata that describes
-				the physical structure of your sources, you can use the metadata for
-				data access.</para>
-			<para> To prepare the metadata for use in Teiid Designer Server, you
-				take a snapshot of a metadata model for Teiid Designer Server to use
-				when resolving queries from your client applications. This run-time
-				metadata represents a static version of design-time metadata you
-				created or imported. This snapshot is in the form of a <emphasis role="bold">Virtual
-				Database</emphasis> definition, or <emphasis role="bold">VDB</emphasis>.</para>
-			<para>
-				As you create this <emphasis role="bold">runtime metadata</emphasis>, Teiid Designer:
-				<itemizedlist>
-					<listitem>
-						<para>derives the runtime metadata from a consistent set of
-							metadata models.</para>
-					</listitem>
-					<listitem>
-						<para>creates a subset of design-time metadata, focusing on
-							the technical metadata that describes the access to underlying
-							enterprise information systems.</para>
-					</listitem>
-					<listitem>
-						<para> optimizes runtime metadata for data access performance.
-						</para>
-					</listitem>
-				</itemizedlist>
-			</para>
-			<para> You can continue to work with the design-time metadata, but
-				once you have created a runtime metadata model, it remains static.
-			</para>
-		</section>
 		<section id="source-view-metadata">
 			<title>Source and View Metadata</title>
 			<para> In addition to the distinction between business and technical
@@ -566,27 +508,26 @@
                 scenerios: 
             </para>
             <itemizedlist>
-                <listitem>Consuming a SOAP Web Service</listitem>
-                <listitem>Modelling from a Flat File Source (a text file)</listitem>
-                <listitem>Modelling from a Relational Data Source</listitem>
-                <listitem>Modelling from a Local XML File Source</listitem>
-                <listitem>Modelling from a Remote XML File Source</listitem>
-                <listitem>Modelling from a Teiid Data Source (deployed on server)</listitem>
-                <listitem>Managing your a Teiid Server</listitem>
+                <listitem>Consume a SOAP Web Service</listitem>
+                <listitem>Create a REST WAR</listitem>
+                <listitem>Model Flat File Source (a text file)</listitem>
+                <listitem>Model JDBC Data Source</listitem>
+                <listitem>Model Local XML File Source</listitem>
+                <listitem>Model Remote XML File Source</listitem>
+                <listitem>Modell Teiid Data Source (deployed on server)</listitem>
+                <listitem>Teiid Server Actions</listitem>
             </itemizedlist>
         </section>
         
         <section id="intro-to-multiple-teiid-clients">
-            <title>Targeting the Right Teiid Server</title>
+            <title>Targeting Your Teiid Submoduler</title>
             <para>
-                Like Teiid Designer, the Teiid server is under continuous development and as such
+                Like Teiid Designer, the Teiid runtime is under continuous development and as such
                 multiple versions have been and are being released. Due to changes in both its
                 code and the underlying JBoss server, the versions are not always backward 
-                compatible. To mitigate this situation, Teiid Designer now provides multiple 
-                implementations of Teiid's runtime client, allowing connection to different 
-                versions of the server. New models must be compatible with their targeted server
-                version hence the correct server version must be selected prior to creating them.
-            </para>
+                compatible. Teiid Designer provides Teiid runtime validation for VDBs based on server versions.
+                New models must be compatible with their targeted server version hence the 
+                correct server version must be selected prior to creating them.            </para>
             <para>
                 To aid with selection of the correct server version, two changes have been made 
                 to Teiid Designer:
@@ -667,7 +608,9 @@
 						<para> runtime-inf</para>
 						<itemizedlist>
 							<listitem>
-								<para> contains a binary INDEX file for each model included in your VDB</para>
+								<para> contains a binary INDEX file for each model included in your VDB. Note that
+								these INDEX files represent the actual runtime metadata and is an optimized subset
+								of data from your design-time metadata in your models.</para>
 							</listitem>
 						</itemizedlist>
 					</listitem>

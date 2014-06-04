@@ -86,33 +86,13 @@
 			the VDB is deployed.
 		</para>
 		<para>The figure below illustrates a sample project setup which includes a UDF jar in a lib folder under
-			a project.
+			a project. When a model defining a UDF is added to a VDB, each function is interrogated and it's referenced UDF jar
+			(if available) is added to the VDB as well as shown in the UDF Jars tab in the editor.
 			<figure>
-				<title>UDF Jar In Project</title>
+				<title>UDF Jar In Project and VDB</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/udf-jar-in-project-lib-folder.png"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</para>
-		<para>This figure shows a VDB containing the several models including the user's Function model.
-			<figure>
-				<title>VDB Models</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/udf-model-in-vdb-editor.png"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</para>
-		<para>When a UDF model is added to a VDB, each scalar function is interrogated and it's referenced UDF jar
-			(if available) is added to the VDB as well as shown in the UDF Jars tab in the editor as shown below.
-			<figure>
-				<title>UDF Jars in VDB</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/udf-jars-tab-in-vdb-editor.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
