@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.oracle.OracleDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalIndex;
 import org.teiid.designer.relational.model.RelationalModel;
@@ -29,7 +31,11 @@ import org.teiid.designer.relational.model.RelationalTable;
  *
  */
 public class OracleImporter extends StandardImporter {
-
+	
+	private static final String VARCHAR2_TYPE_NAME = "VARCHAR2"; //$NON-NLS-1$
+	private static final String NVARCHAR2_TYPE_NAME = "NVARCHAR2"; //$NON-NLS-1$
+	private static final String NUMBER_TYPE_NAME = "NUMBER"; //$NON-NLS-1$
+			
     @Override
     protected RelationalProcedure createProcedure(AstNode procedureNode, RelationalModel model) throws Exception {
     	RelationalProcedure procedure = super.createProcedure(procedureNode, model);
@@ -112,7 +118,22 @@ public class OracleImporter extends StandardImporter {
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
 		Collection<RelationalReference> allRefs = model.getAllReferences();
 
-    	Set<AstNode> astNodes = deferredNodes.keySet();
+		// Make first pass to create the PKs
+		Set<AstNode> astNodes = deferredNodes.keySet();
+		for(AstNode node:astNodes) {
+			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createPrimaryKey(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createPrimaryKey(node1, table, allRefs);
+				}
+			}
+		}
+		
+		// Second pass create other constraints
     	for(AstNode node:astNodes) {
             if (is(node, OracleDdlLexicon.TYPE_CREATE_TABLE_INDEX_STATEMENT)) {
                 RelationalIndex index = getFactory().createIndex();
@@ -147,8 +168,40 @@ public class OracleImporter extends StandardImporter {
 						}
 					}
 				}
-            }
+            } else if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createConstraint(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createConstraint(node1, table, allRefs);
+					else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
+						createColumn(node1, table);
+				}
+			}
+            
     	}
     }
+    
+	/**
+	 * @param jdbcTypeName
+	 *
+	 * @return {@link EObject} represented by the given data type id
+	 * @throws Exception
+	 */
+	@Override
+	protected String getTeiidDataTypeName(String jdbcTypeName) throws Exception {
+	    String standardName = jdbcTypeName;
+	    if (VARCHAR2_TYPE_NAME.equalsIgnoreCase(jdbcTypeName) || NVARCHAR2_TYPE_NAME.equalsIgnoreCase(jdbcTypeName)) {
+	        standardName = RelationalTypeMapping.SQL_TYPE_NAMES.VARCHAR;
+	    }
+	    
+	    if (NUMBER_TYPE_NAME.equalsIgnoreCase(jdbcTypeName)) {
+	        standardName = RelationalTypeMapping.SQL_TYPE_NAMES.NUMERIC;
+	    }
+	    
+	    return super.getTeiidDataTypeName(standardName);
+	}
    
 }

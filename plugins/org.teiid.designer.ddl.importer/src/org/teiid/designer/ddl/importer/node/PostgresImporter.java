@@ -7,21 +7,29 @@
 */
 package org.teiid.designer.ddl.importer.node;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
+import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.postgres.PostgresDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
 import org.teiid.designer.relational.model.RelationalIndex;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
+import org.teiid.designer.relational.model.RelationalTable;
 
 /**
  *
  */
 public class PostgresImporter extends StandardImporter {
+
+    private static final String TEXT_TYPE_NAME = "TEXT"; //$NON-NLS-1$
+    private static final String IMAGE_TYPE_NAME = "IMAGE"; //$NON-NLS-1$
 
     /**
      * Create RelationalReference objects
@@ -53,9 +61,25 @@ public class PostgresImporter extends StandardImporter {
      */
     @Override
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
-        
-    	Set<AstNode> astNodes = deferredNodes.keySet();
-    	for(AstNode node:astNodes) {
+		Collection<RelationalReference> allRefs = model.getAllReferences();
+
+		// Make first pass to create the PKs
+		Set<AstNode> astNodes = deferredNodes.keySet();
+		for(AstNode node:astNodes) {
+			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createPrimaryKey(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createPrimaryKey(node1, table, allRefs);
+				}
+			}
+		}
+		
+		// Second pass create other constraints
+		for(AstNode node:astNodes) {
             if (is(node, PostgresDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
                 RelationalIndex index = getFactory().createIndex();
                 Info info = createInfo(node, model);
@@ -65,8 +89,40 @@ public class PostgresImporter extends StandardImporter {
                     info.getSchema().getIndexes().add(index);
 
                 initialize(index, node, info.getName());
-            }
-    	}
+            } else if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createConstraint(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createConstraint(node1, table, allRefs);
+					else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
+						createColumn(node1, table);
+				}
+			}
+		}
+    	
     }
+    
+	/**
+	 * @param jdbcTypeName
+	 *
+	 * @return {@link EObject} represented by the given data type id
+	 * @throws Exception
+	 */
+	@Override
+	protected String getTeiidDataTypeName(String jdbcTypeName) throws Exception {
+	    String standardName = jdbcTypeName;
+	    if (TEXT_TYPE_NAME.equalsIgnoreCase(jdbcTypeName)) {
+	        standardName = RelationalTypeMapping.SQL_TYPE_NAMES.CLOB;
+	    }
+	    
+	    if (IMAGE_TYPE_NAME.equalsIgnoreCase(jdbcTypeName)) {
+	        standardName = RelationalTypeMapping.SQL_TYPE_NAMES.BLOB;
+	    }
+	    
+	    return super.getTeiidDataTypeName(standardName);
+	}
     
 }
