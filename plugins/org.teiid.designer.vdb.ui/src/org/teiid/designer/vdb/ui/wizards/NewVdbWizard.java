@@ -542,7 +542,7 @@ public final class NewVdbWizard extends AbstractWizard
 
                 if (element instanceof IContainer) {
                 	if( folder != null ) {
-                		return (folder.getProject() == element );
+                		return (folder.getProject() == ((IContainer)element).getProject() );
                 	}
                 	return true;
                 }
