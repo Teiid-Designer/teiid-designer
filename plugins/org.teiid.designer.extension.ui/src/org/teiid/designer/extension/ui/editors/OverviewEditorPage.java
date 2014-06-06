@@ -633,7 +633,7 @@ public final class OverviewEditorPage extends MedEditorPage {
     }
 
     private void validateNamespacePrefix() {
-    	if(getMed().isBuiltIn()) {
+    	if(getMed().isBuiltIn() || getMed().isImported()) {
     		this.namespacePrefixError.setStatus(ValidationStatus.OK_STATUS);
     	} else {
     		this.namespacePrefixError.setStatus(ModelExtensionDefinitionValidator.validateNamespacePrefix(getMed().getNamespacePrefix(),
@@ -643,7 +643,7 @@ public final class OverviewEditorPage extends MedEditorPage {
     }
 
     private void validateNamespaceUri() {
-    	if(getMed().isBuiltIn()) {
+    	if(getMed().isBuiltIn() || getMed().isImported()) {
     		this.namespaceUriError.setStatus(ValidationStatus.OK_STATUS);
     	} else {
     		this.namespaceUriError.setStatus(ModelExtensionDefinitionValidator.validateNamespaceUri(getMed().getNamespaceUri(),
