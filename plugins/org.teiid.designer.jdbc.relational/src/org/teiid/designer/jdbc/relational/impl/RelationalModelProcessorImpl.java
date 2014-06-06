@@ -2603,15 +2603,12 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         
         if (uniqueName == null) {
             // name was already unique ...
-        	String finalName = addDoubleQuotesIfDotInName(convertName(convertedName, context));
-        	
+        	String finalName = convertName(convertedName, context);
             entity.setName(finalName);
-//            entity.setName(convertName(convertedName, context));
         } else {
             // name had to be changed to be unique ...
-        	String finalName = addDoubleQuotesIfDotInName(convertName(uniqueName, context));
+        	String finalName = convertName(uniqueName, context);
             entity.setName(finalName);
-//            entity.setName(convertName(convertedName, context));
             forceSetNameInSource = true;
         }
     }
