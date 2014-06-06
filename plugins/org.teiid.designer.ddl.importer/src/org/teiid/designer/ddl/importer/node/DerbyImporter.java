@@ -104,10 +104,25 @@ public class DerbyImporter extends StandardImporter {
      */
     @Override
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
-        Collection<RelationalReference> allRefs = model.getAllReferences();
-        
-    	Set<AstNode> astNodes = deferredNodes.keySet();
-    	for(AstNode node:astNodes) {
+		Collection<RelationalReference> allRefs = model.getAllReferences();
+
+		// Make first pass to create the PKs
+		Set<AstNode> astNodes = deferredNodes.keySet();
+		for(AstNode node:astNodes) {
+			if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createPrimaryKey(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createPrimaryKey(node1, table, allRefs);
+				}
+			}
+		}
+
+		// Second pass create other constraints
+		for(AstNode node:astNodes) {
           	if (is(node, DerbyDdlLexicon.TYPE_CREATE_INDEX_STATEMENT)) {
                 RelationalIndex index = getFactory().createIndex();
                 Info info = createInfo(node, model);
@@ -140,8 +155,19 @@ public class DerbyImporter extends StandardImporter {
                 } catch (EntityNotFoundException error) {
                     addProgressMessage(error.getMessage());
                 }
-            }
-    	}
+            } else if (is(node, StandardDdlLexicon.TYPE_TABLE_CONSTRAINT)) {
+				RelationalTable table = (RelationalTable)deferredNodes.get(node);
+				createConstraint(node, table, allRefs);
+			} else if (is(node, StandardDdlLexicon.TYPE_ALTER_TABLE_STATEMENT)) {
+				RelationalTable table = find(RelationalTable.class, node, null, allRefs);
+				for (AstNode node1 : node) {
+					if (is(node1, StandardDdlLexicon.TYPE_ADD_TABLE_CONSTRAINT_DEFINITION)) 
+						createConstraint(node1, table, allRefs);
+					else if (is(node1, StandardDdlLexicon.TYPE_ADD_COLUMN_DEFINITION))
+						createColumn(node1, table);
+				}
+			}
+		}
     }
     	
 }
