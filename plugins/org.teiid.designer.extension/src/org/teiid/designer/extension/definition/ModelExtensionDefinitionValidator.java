@@ -148,7 +148,8 @@ public final class ModelExtensionDefinitionValidator {
                                         final Set<String> validModelTypes) {
 
     	boolean builtIn = med.isBuiltIn();
-    	if(!builtIn) {
+    	boolean imported = med.isImported();
+    	if(!builtIn && !imported) {
     		MedStatus status = validateMedHeader(med.getHeader(),
     				existingNamespacePrefixes,
     				existingNamespaceUris,
