@@ -1117,7 +1117,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		nativeQueryHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
 		nativeQueryHelpText.setBackground(parent.getBackground());
 		nativeQueryHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).applyTo(nativeQueryHelpText);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 40).applyTo(nativeQueryHelpText);
 		nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
 
         final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.sqlLabel, GridData.FILL_BOTH, 3);
