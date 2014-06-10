@@ -151,18 +151,18 @@ public abstract class RelationalEditorPanel {
 
     protected TabFolder createTabFolder(Composite parent) {
         TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(tabFolder);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(tabFolder);
         return tabFolder;
     }
 
     protected Composite createDescriptionPanel(Composite parent) {
         Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).margins(10, 10).applyTo(thePanel);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
         final Group descGroup = WidgetFactory.createGroup(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
         descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 120).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
         descriptionTextEditor.setText(""); //$NON-NLS-1$
         descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
 

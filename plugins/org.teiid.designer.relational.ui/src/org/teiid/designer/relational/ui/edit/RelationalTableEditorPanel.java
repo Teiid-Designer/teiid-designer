@@ -719,7 +719,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     	columnTable.setLayout(new TableLayout());
 
         this.pkColumnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getControl());        
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getControl());        
         
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.pkColumnsViewer, SWT.LEFT);
@@ -854,7 +854,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     	columnTable.setLayout(new TableLayout());
 
         this.ucColumnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getControl());        
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getControl());        
         
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.ucColumnsViewer, SWT.LEFT);
@@ -974,7 +974,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     	columnTable.setLayout(new TableLayout());
 
         this.fkViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getControl());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getControl());
 
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.fkViewer, SWT.LEFT);
@@ -1089,7 +1089,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     	columnTable.setLayout(new TableLayout());
     	
         this.indexesViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getControl());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getControl());
 
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.indexesViewer, SWT.LEFT);
@@ -1112,7 +1112,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private Composite createNativeQueryPanel(Composite parent) {
 		Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
 		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
-		GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+		GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
 
 		nativeQueryHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
 		nativeQueryHelpText.setBackground(parent.getBackground());
@@ -1252,7 +1252,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     	columnTable.setLayout(new TableLayout());
 
         this.columnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 200).applyTo(columnsViewer.getControl());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(columnsViewer.getControl());
 
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);

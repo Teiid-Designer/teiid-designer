@@ -391,7 +391,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     	columnTable.setLayout(new TableLayout());
     	
         this.columnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getControl());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getControl());
 
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
@@ -865,7 +865,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     	columnTable.setLayout(new TableLayout());
     	
         this.parametersViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getControl());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getControl());
         
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.parametersViewer, SWT.LEFT);
@@ -942,14 +942,14 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	 * Simple panel containing name, name in source values as well as a list of primary key columns from this table
 	 */
 	private Composite createNativeQueryPanel(Composite parent) {
-	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 3);
         GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
 
         nativeQueryHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
         nativeQueryHelpText.setBackground(parent.getBackground());
         nativeQueryHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).applyTo(nativeQueryHelpText);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 40).applyTo(nativeQueryHelpText);
         nativeQueryHelpText.setText(Messages.nativeQueryHelpText);
 
 		final Group descGroup = WidgetFactory.createGroup(thePanel, Messages.sqlLabel, GridData.FILL_BOTH, 3);
