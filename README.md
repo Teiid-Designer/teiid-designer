@@ -26,9 +26,23 @@ For more information on Teiid Desginer, including getting started guides, refere
 or follow us on our [blog](http://teiid.blogspot.com/) or on [Twitter](https://twitter.com/teiiddesigner). Or hop into our [IRC chat room](http://www.jboss.org/teiiddesigner/chat)
 and talk our community of contributors and users.
 
-## Hacking on the code
+## Get the code
 
-For getting the code, developing in Eclipse and building it using maven, please refer to this [article](https://community.jboss.org/wiki/SettingUpYourEclipseDevelopmentEnvironmentForTeiidDesigner80).
+The easiest way to get started with the code is to [create your own fork](http://help.github.com/forking/) of this repository, and then clone your fork:
+
+	$ git clone git@github.com:<you>/teiid-designer.git
+	$ cd teiid-designer
+	$ git remote add upstream git://github.com/Teiid-Designer/teiid-designer.git
+	
+At any time, you can pull changes from the upstream and merge them onto your master:
+
+	$ git checkout master               # switches to the 'master' branch
+	$ git pull upstream master          # fetches all 'upstream' changes and merges 'upstream/master' onto your 'master' branch
+	$ git push origin                   # pushes all the updates to your fork, which should be in-sync with 'upstream'
+
+The general idea is to keep your 'master' branch in-sync with the 'upstream/master'.
+
+For further information about developing in Eclipse and building using maven, please refer to this [article](https://community.jboss.org/wiki/SettingUpYourEclipseDevelopmentEnvironmentForTeiidDesigner80).
 
 ## Contribute fixes and features
 
