@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 import org.eclipse.core.resources.IMarker;
-import org.teiid.designer.vdb.VdbModelEntry.Problem;
+import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 
 /**
  * 

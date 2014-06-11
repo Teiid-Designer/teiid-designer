@@ -66,6 +66,11 @@ public class VdbHelper implements StringConstants {
     public static final String JAR_EXT = "jar";  //$NON-NLS-1$
 
     /**
+     * jar mimetype
+     */
+    public static final String JAR_MIME_TYPE = "application/java-archive"; //$NON-NLS-1$
+
+    /**
      * File filter for choosing only jar files
      */
     public static final FileFilter JAR_FILE_FILTER = new FileFilter(JAR_EXT, STAR + DOT + JAR_EXT);

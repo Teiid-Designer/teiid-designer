@@ -15,7 +15,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -116,8 +114,8 @@ import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry;
-import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
@@ -139,6 +137,7 @@ import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 public final class VdbEditor extends EditorPart implements IResourceChangeListener {
 
     static final String MODEL_COLUMN_NAME = i18n("modelColumnName"); //$NON-NLS-1$
+    static final String SCHEMA_COLUMN_NAME = i18n("schemaColumnName"); //$NON-NLS-1$
     static final String FILE_COLUMN_NAME = i18n("fileColumnName"); //$NON-NLS-1$
     static final String PATH_COLUMN_NAME = i18n("pathColumnName"); //$NON-NLS-1$
     static final String VDB_LOC_COLUMN_NAME = i18n("locationInVdbColumnName"); //$NON-NLS-1$
@@ -190,6 +189,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     Exception vdbLoadingException = null;
 
     TableAndToolBar<VdbModelEntry> modelsGroup;
+    TableAndToolBar<VdbModelEntry> schemaGroup;
     ModelDetailsPanel modelDetailsPanel;
     TableAndToolBar<VdbEntry> otherFilesGroup;
     TableAndToolBar<VdbEntry> udfJarsGroup;
@@ -513,6 +513,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
 
+        schemaGroup.getTable().getViewer().refresh();
         udfJarsGroup.getTable().getViewer().refresh();
         otherFilesGroup.getTable().getViewer().refresh();
     }
@@ -587,8 +588,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         return pnlBottom;
     }
 
-    void addSelectionToVdb(VdbFolders vdbFolder, TableViewer tableViewer,
-                                           FileEntryType fileEntryType, String confirmOverwriteMessage) {
+    void addSelectionToVdb(VdbFolders vdbFolder, TableViewer tableViewer, String confirmOverwriteMessage) {
         // userFile Selection Dialog
         final Shell shell = Display.getCurrent().getActiveShell();
 
@@ -645,11 +645,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     if (matchingEntry != null)
                         getVdb().removeEntry(matchingEntry);
                     // Add the selected file
-                    getVdb().addEntry(filePath, new NullProgressMonitor(), fileEntryType);
+                    getVdb().addEntry(filePath, new NullProgressMonitor());
                 }
                 // No matching entries - safe to add the new entry
             } else {
-                getVdb().addEntry(filePath, new NullProgressMonitor(), fileEntryType);
+                getVdb().addEntry(filePath, new NullProgressMonitor());
             }
 
         } catch (Exception ex) {
@@ -663,6 +663,300 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         if (firstTime) {
             WidgetUtil.pack(tableViewer);
         }
+    }
+
+    void addSchemaToVdb(IStructuredSelection selection) {
+        final ViewerFilter filter = new ViewerFilter() {
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+             *      java.lang.Object)
+             */
+            @Override
+            public boolean select( final Viewer viewer, final Object parent, final Object element ) {
+                if (element instanceof IContainer) {
+                    // Get the project for this container
+                    IProject proj = ((IContainer)element).getProject();
+
+                    // Get the VDB Project
+                    IProject vdbProject = getVdb().getFile().getProject();
+
+                    // Can only add Models from the VDB Project
+                    if(proj.isOpen() && proj.equals(vdbProject)) {
+                        return true;
+                    }
+                    return false;
+                }
+                final IFile file = (IFile)element;
+                if (!ModelUtil.isXsdFile(file)) {
+                    return false;
+                }
+
+                for (final VdbSchemaEntry schemaEntry : getVdb().getSchemaEntries())
+                    if (file.equals(schemaEntry.findFileInWorkspace())) return false;
+                return true;
+            }
+        };
+
+        ModelingResourceFilter wsFilter = new ModelingResourceFilter(filter);
+        wsFilter.setShowHiddenProjects(false);
+        final Object[] schemas = WidgetUtil.showWorkspaceObjectSelectionDialog(ADD_FILE_DIALOG_TITLE,
+                                                                              ADD_FILE_DIALOG_MESSAGE,
+                                                                              true,
+                                                                              null,
+                                                                              wsFilter,
+                                                                              getModelSelectionValidator(),
+                                                                              getModelLabelProvider());
+
+        try {
+            // add the models
+            for (final Object schema : schemas) {
+                getVdb().addEntry(((IFile)schema).getFullPath(), new NullProgressMonitor());
+            }
+        } catch (Exception ex) {
+            ErrorHandler.toExceptionDialog(ex);
+        }
+
+        // refresh table from model
+        schemaGroup.getTable().getViewer().refresh();
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void createSchemaFilesControl( Composite parent ) {
+        final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
+        schemaGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbSchemaEntry>() {
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.DefaultTableProvider#doubleClicked(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public void doubleClicked( VdbSchemaEntry element ) {
+                                                      openEditor(element);
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.TableProvider#getElements()
+                                                   */
+                                                  @Override
+                                                  public VdbSchemaEntry[] getElements() {
+                                                      Set<VdbSchemaEntry> schemaEntries = getVdb().getSchemaEntries();
+                                                      return schemaEntries.toArray(new VdbSchemaEntry[schemaEntries.size()]);
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.DefaultTableProvider#isDoubleClickSupported()
+                                                   */
+                                                  @Override
+                                                  public boolean isDoubleClickSupported() {
+                                                      return false;
+                                                  }
+
+                                                  void openEditor( final VdbSchemaEntry entry ) {
+                                                      try {
+                                                          IDE.openEditor(UiUtil.getWorkbenchPage(), entry.findFileInWorkspace());
+                                                      } catch (final Exception error) {
+                                                          throw new RuntimeException(error);
+                                                      }
+                                                  }
+                                              }, new TextColumnProvider<VdbSchemaEntry>() {
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#getImage(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public Image getImage( final VdbSchemaEntry element ) {
+                                                      return workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.ColumnProvider#getImage()
+                                                   */
+                                                  @Override
+                                                  public Image getImage() {
+                                                      return null;
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.ColumnProvider#getName()
+                                                   */
+                                                  @Override
+                                                  public String getName() {
+                                                      return SCHEMA_COLUMN_NAME;
+                                                  }
+
+                                                  /**
+                                                   * {@inheritDoc}
+                                                   *
+                                                   * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
+                                                   */
+                                                  @Override
+                                                  public String getValue( final VdbSchemaEntry element ) {
+                                                      return element.getName().lastSegment();
+                                                  }
+                                              }, this.locationInVdbColumnProvider, this.descriptionColumnProvider);
+
+        ButtonProvider addProvider = new ButtonProvider() {
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getImageDescriptor()
+             */
+            @Override
+            public ImageDescriptor getImageDescriptor() {
+                return VdbUiPlugin.singleton.getImageDescriptor(Images.ADD_SCHEMA);
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getText()
+             */
+            @Override
+            public String getText() {
+                return null;
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getToolTip()
+             */
+            @Override
+            public String getToolTip() {
+                return i18n("addSchemaToolTip"); //$NON-NLS-1$
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+             */
+            @Override
+            public boolean isEnabled( IStructuredSelection selection ) {
+                return true;
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
+             */
+            @Override
+            public void selected( IStructuredSelection selection ) {
+                addSchemaToVdb(selection);
+            }
+        };
+        schemaGroup.add(addProvider);
+
+        ButtonProvider removeProvider = new ButtonProvider() {
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getImageDescriptor()
+             */
+            @Override
+            public ImageDescriptor getImageDescriptor() {
+                return VdbUiPlugin.singleton.getImageDescriptor(Images.REMOVE_SCHEMA);
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getText()
+             */
+            @Override
+            public String getText() {
+                return null;
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#getToolTip()
+             */
+            @Override
+            public String getToolTip() {
+                return i18n("removeSchemaToolTip"); //$NON-NLS-1$
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#isEnabled(org.eclipse.jface.viewers.IStructuredSelection)
+             */
+            @Override
+            public boolean isEnabled( IStructuredSelection selection ) {
+                return !selection.isEmpty();
+            }
+
+            /**
+             * {@inheritDoc}
+             *
+             * @see org.teiid.designer.ui.common.widget.ButtonProvider#selected(org.eclipse.jface.viewers.IStructuredSelection)
+             */
+            @Override
+            public void selected( IStructuredSelection selection ) {
+                if (!ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) return;
+                final Set<VdbEntry> entries = new HashSet<VdbEntry>();
+                final Set<VdbEntry> importedBy = new HashSet<VdbEntry>();
+                for (final Object element : selection.toList()) {
+                    entries.add((VdbEntry)element);
+                    if (element instanceof VdbModelEntry)
+                        importedBy.addAll(((VdbModelEntry)element).getImportedBy());
+                }
+                if (!importedBy.isEmpty())
+                    importedBy.removeAll(entries);
+                if (!importedBy.isEmpty()) {
+                    if (!ConfirmationDialog.confirm(new ConfirmationDialog(CONFIRM_REMOVE_IMPORTED_BY_MESSAGE) {
+                        /**
+                         * {@inheritDoc}
+                         *
+                         * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+                         */
+                        @Override
+                        protected Control createCustomArea( final Composite parent ) {
+                            final ListViewer viewer = new ListViewer(parent);
+                            viewer.setContentProvider(new DefaultContentProvider());
+                            viewer.setLabelProvider(new LabelProvider() {
+                                /**
+                                 * {@inheritDoc}
+                                 *
+                                 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+                                 */
+                                @Override
+                                public String getText( final Object element ) {
+                                    return ((VdbEntry)element).getName().toString();
+                                }
+                            });
+                            viewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+                            viewer.setInput(importedBy);
+                            return viewer.getControl();
+                        }
+                    })) return;
+                    entries.addAll(importedBy);
+                }
+
+                dataRoleResolver.modelEntriesRemoved(entries);
+
+                for (final VdbEntry entry : entries) {
+                    getVdb().removeEntry(entry);
+                }
+                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+            }
+        };
+
+        schemaGroup.add(removeProvider);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -686,8 +980,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public VdbEntry[] getElements() {
-                                                      Set<VdbEntry> udfJarEntries = getVdb().getUdfJarEntries();
-                                                      return udfJarEntries.toArray(new VdbEntry[udfJarEntries.size()]);
+                                                      Set<VdbFileEntry> udfJarEntries = getVdb().getUdfJarEntries();
+                                                      return udfJarEntries.toArray(new VdbFileEntry[udfJarEntries.size()]);
                                                   }
 
                                                   /**
@@ -799,7 +1093,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public void selected( IStructuredSelection selection ) {
                 addSelectionToVdb(VdbFolders.UDF,
                                               udfJarsGroup.getTable().getViewer(),
-                                              VdbFileEntry.FileEntryType.UDFJar,
                                               CONFIRM_OVERWRITE_UDFJAR_MESSAGE);
             }
         };
@@ -924,8 +1217,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public VdbEntry[] getElements() {
-                                                      Set<VdbEntry> userFileEntries = getVdb().getUserFileEntries();
-                                                      return userFileEntries.toArray(new VdbEntry[userFileEntries.size()]);
+                                                      Set<VdbFileEntry> userFileEntries = getVdb().getUserFileEntries();
+                                                      return userFileEntries.toArray(new VdbFileEntry[userFileEntries.size()]);
                                                   }
 
                                                   /**
@@ -1037,7 +1330,6 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             public void selected( IStructuredSelection selection ) {
                 addSelectionToVdb(VdbFolders.OTHER_FILES,
                                               otherFilesGroup.getTable().getViewer(),
-                                              VdbFileEntry.FileEntryType.UserFile,
                                               CONFIRM_OVERWRITE_USERFILE_MESSAGE);
             }
         };
@@ -1412,6 +1704,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 return;
                             }
                             modelsGroup.getTable().getViewer().refresh();
+                            schemaGroup.getTable().getViewer().refresh();
                             otherFilesGroup.getTable().getViewer().refresh();
                             pnlTranslatorOverrides.refresh();
                             dataRoleResolver.allSynchronized();
@@ -1483,6 +1776,17 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             
         }
 
+        { // schema files tab
+            CTabItem schemaTab = new CTabItem(tabFolder, SWT.NONE);
+            schemaTab.setText(i18n("schemaTab")); //$NON-NLS-1$
+            schemaTab.setToolTipText(i18n("schemaTabToolTip")); //$NON-NLS-1$
+            Composite pnlFiles = new Composite(tabFolder, SWT.NONE);
+            pnlFiles.setLayout(new GridLayout());
+            pnlFiles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            schemaTab.setControl(pnlFiles);
+            createSchemaFilesControl(pnlFiles);
+        }
+
         { // UDF jars tab
             CTabItem filesTab = new CTabItem(tabFolder, SWT.NONE);
             filesTab.setText(i18n("udfJarsTab")); //$NON-NLS-1$
@@ -1516,6 +1820,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             descriptionPanel = new DescriptionPanel(pnlDescription, this);
         }
 
+        this.schemaGroup.setInput(vdb);
         
         // Set Vdb input on Udf and Other files tab.
         this.udfJarsGroup.setInput(vdb);
@@ -1743,7 +2048,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         }
 
                         if (ModelUtil.isXsdFile(file)) {
-                            // xsd files now added as other files - TEIIDDES-2120
+                            // xsd files now added to their own collection - TEIIDDES-2120
                             return false;
                         }
 
@@ -2124,6 +2429,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         if (ENTRY_SYNCHRONIZATION.equals(property) || MODEL_TRANSLATOR.equals(property) || MODEL_JNDI_NAME.equals(property)) {
             if (! modelsGroup.getTable().getViewer().isBusy())
                 modelsGroup.getTable().getViewer().refresh();
+
+            if (! schemaGroup.getTable().getViewer().isBusy())
+                schemaGroup.getTable().getViewer().refresh();
+
+            if (! udfJarsGroup.getTable().getViewer().isBusy())
+                udfJarsGroup.getTable().getViewer().refresh();
 
             if (! otherFilesGroup.getTable().getViewer().isBusy())
                 otherFilesGroup.getTable().getViewer().refresh();

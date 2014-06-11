@@ -15,8 +15,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
-import org.teiid.designer.vdb.VdbModelEntry.Problem;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
 
@@ -40,10 +40,6 @@ public class ModelElement extends EntryElement {
     /**
      */
     public static final String BUILT_IN = "builtIn"; //$NON-NLS-1$
-
-    /**
-     */
-    public static final String INDEX_NAME = "indexName"; //$NON-NLS-1$
 
     /**
      */
@@ -119,7 +115,6 @@ public class ModelElement extends EntryElement {
         	props.add(new PropertyElement(MODEL_CLASS, entry.getModelClass()));
         }
         props.add(new PropertyElement(BUILT_IN, Boolean.toString(entry.isBuiltIn())));
-        props.add(new PropertyElement(INDEX_NAME, entry.getIndexName()));
         if( entry.getSourceInfo().isMultiSource() ) {
         	props.add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(true)));
         	if( entry.getSourceInfo().isAddColumn() ) {
