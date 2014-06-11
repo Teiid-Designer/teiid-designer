@@ -80,6 +80,32 @@
                 </mediaobject>
             </figure>
 	    </para>
+	    <para>A User Defined Function represents a defined method in a java class. In order for the Teiid runtime to register the function 
+	    	and allow it's use in your transformations, you'll need to specify the following as properties in the figure above:
+	    	<itemizedlist>
+				<listitem>
+			    	<para><emphasis role="bold">Function Category</emphasis> - unique name for a grouping of user-defined functions.
+			    		This category will be selectable in the <emphasis>Expression Builder</emphasis> wizard so you can locate and 
+			    		select your function.
+			    		</para>
+			    </listitem>
+			  	<listitem>
+			    	<para><emphasis role="bold">Java Class</emphasis> - fully qualified name of the java class containing your function method.
+			    	</para>
+			    </listitem>
+			    <listitem>
+			    	<para><emphasis role="bold">Java Method</emphasis> - the name of the function method in your java class.
+			    	</para>
+			    </listitem>
+			    <listitem>
+			    	<para><emphasis role="bold">UDF Jar Path</emphasis> - the relative path in your project for the jar containing your UDF which will be in 
+			    		a <emphasis>lib</emphasis> folder in your project. If you are defining your jar for the first time and there is no jars in your lib folder, 
+			    		the property editor will allow you to select a jar from your file system. If one or more jars already exist in a <emphasis>lib</emphasis> 
+			    		folder, the editor will allow you to choose between selecting from your workspace or your file system.
+			    	</para>
+			    </listitem>
+		    </itemizedlist>
+	    </para>
     </section>
     <section id="using-your-function-in-transformation-section">
 	    <title>Utilizing your UDFs in transformations</title>
