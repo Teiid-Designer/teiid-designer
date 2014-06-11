@@ -64,4 +64,13 @@ public interface QueryValidator {
     EObject getTransformationRoot();
     
     void setElementSymbolOptimization(ElementSymbolOptimization status);
+    
+    /**
+     * Returns whether or not a transformation target should be validated
+     * 
+     *  - User Defined Functions (virtual procedures where procedure.isFunction() == TRUE
+     *  
+     *  @return
+     */
+    boolean shouldValidate();
 }

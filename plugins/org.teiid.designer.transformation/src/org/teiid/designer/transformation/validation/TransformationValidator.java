@@ -177,6 +177,9 @@ public class TransformationValidator implements QueryValidator {
                 return new TransformationValidationResult();
             }
         }
+        
+        // User defined functions do not need SQL and shouldn't be validated
+    	if( !shouldValidate() ) return new TransformationValidationResult();
 
         // validate the SQLTransformation on the mapping root
         // get the UUID form of the SqlTransformation
@@ -297,6 +300,10 @@ public class TransformationValidator implements QueryValidator {
         if (!isValidRoot()) {
             return null;
         }
+        
+        // User defined functions do not need SQL and shouldn't be validated
+    	if( !shouldValidate()) return null;
+    	
         SqlTransformationResult commandValidationResult = null;
         
         switch( transformType ) {
@@ -919,5 +926,16 @@ public class TransformationValidator implements QueryValidator {
 	public void setElementSymbolOptimization( ElementSymbolOptimization status ) {
 	    this.elementSymbolOptimization = status;
 	}
+
+	@Override
+	public boolean shouldValidate() {
+        // User defined functions do not need SQL and shouldn't be validated
+    	if( this.targetGroup instanceof Procedure ) {
+    		if( ((Procedure)this.targetGroup).isFunction()) return false;
+    	}
+    	
+    	return true;
+	}
+	
     
 }

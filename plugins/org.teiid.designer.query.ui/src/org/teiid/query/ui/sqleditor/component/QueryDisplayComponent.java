@@ -12,10 +12,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -216,6 +214,10 @@ public class QueryDisplayComponent implements DisplayNodeConstants, UiConstants 
             // node to update/clear the sql panel text.
             sqlDisplayNode = DisplayNodeFactory.createUnknownQueryDisplayNode(null,BLANK);
             return;
+        }
+        
+        if( !this.queryValidator.shouldValidate() ) {
+        	return;
         }
 
         monitor.subTask(MONITOR_CHECKING_DISPLAY_NODES);

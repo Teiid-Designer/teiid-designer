@@ -201,6 +201,14 @@ public class SqlDisplayPanel extends Composite implements UiConstants {
 		public void setElementSymbolOptimization( ElementSymbolOptimization status ) {
 		}
 
+		@Override
+		public boolean shouldValidate() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+		
+		
+
     }
 
     /**

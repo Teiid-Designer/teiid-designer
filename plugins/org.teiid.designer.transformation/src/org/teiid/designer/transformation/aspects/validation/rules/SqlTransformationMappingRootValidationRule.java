@@ -701,6 +701,10 @@ public class SqlTransformationMappingRootValidationRule implements ObjectValidat
         }
         
         EObject target = transRoot.getTarget();
+        
+        // User defined functions do not need SQL and shouldn't be validated
+        if( !validator.shouldValidate()) return;
+    	
         String targetName = ModelerCore.getModelEditor().getName(target);
 
         // Check if sql is empty
