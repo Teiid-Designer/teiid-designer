@@ -45,6 +45,19 @@
 								</mediaobject>
 							</figure>
 						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 (Optional) </emphasis> - The next <emphasis role="bold">Rename Resource File</emphasis> 
+								dialog will preview the changes that will be applied as part of renaming your model.
+								Click <emphasis role="bold">OK</emphasis> to execute the changes or <emphasis role="bold">Cancel</emphasis>.</para>
+							<figure>
+								<title>Preview Changes For Renamed Model</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/rename-model-preview-changes-dialog.png" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
 					</itemizedlist>
 					<note>
 						<para>Renaming a model that is a dependency to another model will automatically 
@@ -53,6 +66,7 @@
 							view model CustomerAccounts which imports CustomerSource will be 
 							changed to reflect the new name.</para>
 					</note>
+					
 				</para>
 			</listitem>
 		</itemizedlist>
@@ -76,7 +90,7 @@
 								<title>Refactor Move Action In Model Explorer</title>
 								<mediaobject>
 									<imageobject>
-										<imagedata fileref="images/screencaps/move-model-action-in-explorer.png" />
+										<imagedata fileref="images/screencaps/rename-model-action-in-explorer.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>
@@ -89,6 +103,19 @@
 								<mediaobject>
 									<imageobject>
 										<imagedata fileref="images/screencaps/move-model-select-location-dialog.png" />
+									</imageobject>
+								</mediaobject>
+							</figure>
+						</listitem>
+						<listitem>
+							<para><emphasis role="bold">Step 4 (Optional) </emphasis> - The next <emphasis role="bold">Move Resource File</emphasis> 
+								dialog will preview the changes that will be applied as part of mvving your model.
+								Click <emphasis role="bold">OK</emphasis> to execute the changes or <emphasis role="bold">Cancel</emphasis>.</para>
+							<figure>
+								<title>Preview Changes For Renamed Model</title>
+								<mediaobject>
+									<imageobject>
+										<imagedata fileref="images/screencaps/move-model-preview-changes-dialog.png" />
 									</imageobject>
 								</mediaobject>
 							</figure>

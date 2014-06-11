@@ -293,21 +293,41 @@
 			for your model objects.
 		</para>
 		<figure>
-			<title>Row-based Security Tab</title>
+			<title>Row Filter Tab</title>
 			<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/screencaps/row-based-security-tab.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<para>Clicking the <emphasis>Add</emphasis> button bring up the following dialog.
+			<figure>
+				<title>Add Row Security Filter</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/add-row-based-security-filter-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
 		<figure>
-			<title>Column Basking Tab</title>
+			<title>Column Masking Tab</title>
 			<mediaobject>
 				<imageobject>
 					<imagedata fileref="images/screencaps/column-mask-tab.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
+		<para>Clicking the <emphasis>Add</emphasis> button bring up the following dialog.
+			<figure>
+				<title>Add Column Masking</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/add-column-mask-dialog.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+		</para>
 		<note>
 			<para>For more details and examples of data roles and permissions, see the Teiid documentation.</para>
         </note>

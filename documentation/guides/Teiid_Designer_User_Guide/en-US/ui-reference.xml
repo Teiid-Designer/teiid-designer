@@ -334,11 +334,11 @@
 					operations and provides quick access to other important actions
 					available in Teiid Designer. These may include specialized actions based on
 					model type.
-					<figure id="context-menu-rel-view-model-image">
+					<figure id="context-menu-rel-table-image">
 						<title>Sample Context Menu</title>
 						<mediaobject>
 							<imageobject>
-								<imagedata fileref="images/screencaps/context-menu-relational-view-model.png" />
+								<imagedata fileref="images/screencaps/new-child-action-in-explorer.png" />
 							</imageobject>
 						</mediaobject>
 					</figure>
