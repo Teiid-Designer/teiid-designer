@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  */
 @ThreadSafe
 // TODO: File constructor
-public final class Vdb {
+public final class Vdb implements VdbConstants {
 
     /**
      * The file extension of VDBs including the dot. ( {@value} )
@@ -88,8 +88,6 @@ public final class Vdb {
      */
     public static final String FILE_EXTENSION_NO_DOT = "vdb"; //$NON-NLS-1$
 
-    private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
-    
     private static final int DEFAULT_TIMEOUT = 0;
 
     /**
@@ -1025,7 +1023,8 @@ public final class Vdb {
 
             @Override
             public void tryToDo() throws Exception {
-                final IPath path = file.getFullPath();
+                IPath path = file.getFullPath();
+                path = path.makeRelativeTo(new Path(tmpFolder.getAbsolutePath()));
                 final File tmpArchive = File.createTempFile(path.removeFileExtension().toString(),
                                                             '.' + path.getFileExtension(),
                                                             tmpFolder);

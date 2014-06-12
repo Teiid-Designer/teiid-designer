@@ -34,7 +34,12 @@ public interface VdbConstants {
      * The VDB file extension
      */
     String VDB_FILE_EXTENSION = "vdb"; //$NON-NLS-1$
-	
+
+    /**
+     * The location of a vdb manifest
+     */
+    String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
+
     /** Constants for the SourceHandler extension point */
     interface SourceHandlerExtension {
         String ID = "sourceHandler"; //$NON-NLS-1$

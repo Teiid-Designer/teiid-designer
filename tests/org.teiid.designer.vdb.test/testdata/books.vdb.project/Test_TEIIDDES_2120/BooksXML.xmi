@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:diagram="http://www.metamatrix.com/metamodels/Diagram" xmlns:mmcore="http://www.metamatrix.com/metamodels/Core" xmlns:transformation="http://www.metamatrix.com/metamodels/Transformation" xmlns:vxmldoc="http://www.metamatrix.com/metamodels/XmlDocument" xmlns:xsd="http://www.eclipse.org/xsd/2002/XSD">
+  <mmcore:ModelAnnotation xmi:uuid="mmuuid:4dd58ac8-ce93-43d7-b360-70173e25ef57" primaryMetamodelUri="http://www.metamatrix.com/metamodels/XmlDocument" modelType="VIRTUAL" ProducerName="Teiid Designer" ProducerVersion="7.8.0.v20120709-1701-H10-Final">
+    <modelImports xmi:uuid="mmuuid:5696a5d9-501b-4351-b3c1-0ce6d96be6f1" name="Books" modelLocation="Books.xsd" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:b25ca49a-1f37-49f0-b966-7e94b67f2f7c" name="BookDatatypes" modelLocation="BookDatatypes.xsd" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:a0436357-1a3b-4714-af07-62bd8459a4dd" name="XMLSchema" modelLocation="http://www.w3.org/2001/XMLSchema" modelType="TYPE" primaryMetamodelUri="http://www.eclipse.org/xsd/2002/XSD"/>
+    <modelImports xmi:uuid="mmuuid:aaf6c65f-19a6-48db-a7c6-4245d3eb5cf7" name="Books" modelLocation="Books.xmi" uuid="mmuuid:f0412384-c65d-4d3b-a62c-9df536532082" modelType="PHYSICAL" primaryMetamodelUri="http://www.metamatrix.com/metamodels/Relational"/>
+  </mmcore:ModelAnnotation>
+  <vxmldoc:XmlDocument xmi:uuid="mmuuid:13f13dda-d88c-4f44-8c24-f9527ac4bf44" name="bookListingDocument">
+    <root xmi:uuid="mmuuid:87a6a6ad-0a52-474d-b595-6d111fcd4758" name="bookListing" namespace="mmuuid/3e55f0be-3933-4302-a77e-004c22e141f0">
+      <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//bookListing;XSDElementDeclaration=1"/>
+      <entities xsi:type="vxmldoc:XmlSequence" xmi:uuid="mmuuid:28986c7f-d601-461e-b8f8-54f691d4a0d9">
+        <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:5637bc68-75ab-419f-9d2c-51d6441ec756" name="book">
+          <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookSetFlat;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle/book;XSDElementDeclaration"/>
+          <entities xsi:type="vxmldoc:XmlSequence" xmi:uuid="mmuuid:4fbcb1b8-ecbc-4f9c-a234-8e0c107b8ccf">
+            <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:ea372963-0c27-4b62-b114-8fd117ecf336" name="title">
+              <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle/title;XSDElementDeclaration"/>
+            </entities>
+            <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:2dcf6a0f-3ee0-48bd-a025-d9af14bdc59b" name="author">
+              <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=1/author;XSDElementDeclaration"/>
+            </entities>
+            <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:1c1ee630-8825-472d-9c16-b4505ba43e5b" name="publisher">
+              <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=2/publisher;XSDElementDeclaration"/>
+            </entities>
+            <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:f480f4ad-5be6-497c-9cd1-25667b7fe5e8" name="publishDate">
+              <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=3/publishDate;XSDElementDeclaration"/>
+            </entities>
+            <entities xsi:type="vxmldoc:XmlElement" xmi:uuid="mmuuid:6a196207-40f4-4828-8d63-7cb284007bdb" name="edition" value="" valueType="DEFAULT">
+              <xsdComponent xsi:type="xsd:XSDElementDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle=4/edition;XSDElementDeclaration"/>
+            </entities>
+            <xsdComponent xsi:type="xsd:XSDModelGroup" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup"/>
+          </entities>
+          <attributes xmi:uuid="mmuuid:6992016a-eee7-4214-93d2-7c73c0ab679d" name="isbn">
+            <xsdComponent xsi:type="xsd:XSDAttributeDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDAttributeUse/isbn;XSDAttributeDeclaration"/>
+          </attributes>
+          <attributes xmi:uuid="mmuuid:ef244c6d-4d9c-4962-8b24-02a421335200" name="type">
+            <xsdComponent xsi:type="xsd:XSDAttributeDeclaration" href="Books.xsd#//BookFlat;XSDComplexTypeDefinition=3/XSDAttributeUse=1/type;XSDAttributeDeclaration"/>
+          </attributes>
+        </entities>
+        <xsdComponent xsi:type="xsd:XSDModelGroup" href="Books.xsd#//BookSetFlat;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup"/>
+      </entities>
+      <declaredNamespaces xmi:uuid="mmuuid:3e55f0be-3933-4302-a77e-004c22e141f0" prefix="BooksNS" uri="http://www.metamatrix.com/XMLSchema/DataSets/Books"/>
+      <declaredNamespaces xmi:uuid="mmuuid:fb1c35f3-1f92-42f3-a2c2-198b33ad8cfe" prefix="xsd" uri="http://www.w3.org/2001/XMLSchema"/>
+      <declaredNamespaces xmi:uuid="mmuuid:218a223d-6fd8-4f7a-8cf3-b85ed62e4ef1" prefix="BookTypesNS" uri="http://www.metamatrix.com/XMLSchema/DataSets/Books/BookDatatypes"/>
+    </root>
+  </vxmldoc:XmlDocument>
+  <transformation:TransformationContainer xmi:uuid="mmuuid:e744f10b-f900-4145-8b6b-da45b81ee475">
+    <transformationMappings xsi:type="transformation:TreeMappingRoot" xmi:uuid="mmuuid:edd50c52-a4c4-4f5b-a509-aadf084a0e8d" inputs="mmuuid/57adb5d2-bf0c-4f27-ab0e-abcdc8d17629" outputs="mmuuid/28986c7f-d601-461e-b8f8-54f691d4a0d9" target="mmuuid/13f13dda-d88c-4f44-8c24-f9527ac4bf44">
+      <nested xmi:uuid="mmuuid:944b338c-0b9a-4a42-9d16-0f639c0f5d7f" inputs="mmuuid/71f69694-e82e-4d4f-a324-637554a48d98" outputs="mmuuid/6992016a-eee7-4214-93d2-7c73c0ab679d"/>
+      <nested xmi:uuid="mmuuid:e34e139f-4991-4839-9eff-baecce2443f9" inputs="mmuuid/8d328831-7336-41d8-84e2-0ec4654c3e75" outputs="mmuuid/ef244c6d-4d9c-4962-8b24-02a421335200"/>
+      <nested xmi:uuid="mmuuid:a81fc3fe-e7f9-4827-9365-201adee9c46a" inputs="mmuuid/8e3fa108-e0aa-4d70-89bd-8c208d4051c2" outputs="mmuuid/ea372963-0c27-4b62-b114-8fd117ecf336"/>
+      <nested xmi:uuid="mmuuid:d9685003-6aec-4aa7-b82f-eb307ea595e6" inputs="mmuuid/23ec6ccb-7a79-4bac-84a1-91b4ece8a65c" outputs="mmuuid/1c1ee630-8825-472d-9c16-b4505ba43e5b"/>
+      <nested xmi:uuid="mmuuid:fffd442e-fa67-414c-87b7-24595b5858f9" inputs="mmuuid/38c8c62c-bb38-42d2-963e-77a1b518bc7e" outputs="mmuuid/f480f4ad-5be6-497c-9cd1-25667b7fe5e8"/>
+      <nested xmi:uuid="mmuuid:16d6cbf9-1787-4690-bb2c-102736b8cd90" inputs="mmuuid/8792f221-ff3b-4c3f-b8f9-80af0726b15d" outputs="mmuuid/6a196207-40f4-4828-8d63-7cb284007bdb"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:f5a79055-7fb8-483d-b6aa-457bb31c1921" outputs="mmuuid/57adb5d2-bf0c-4f27-ab0e-abcdc8d17629" target="mmuuid/57adb5d2-bf0c-4f27-ab0e-abcdc8d17629">
+      <helper xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:d23d99e3-6436-4204-a30e-09b0f0cf64dd">
+        <nested xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:e4b99eca-01d8-444a-952f-6833d8e3923e" selectSql="SELECT Books.BOOKS.ISBN, Books.BOOKS.TYPE, Books.BOOKS.TITLE, convert(Books.BOOKS.PUBLISHER, string) AS publisher, convert(Books.BOOKS.PUBLISH_YEAR, string) AS publishDate, convert(Books.BOOKS.EDITION, object) AS edition FROM Books.BOOKS"/>
+        <aliases xmi:uuid="mmuuid:e4b5d100-71a3-4188-ad77-32906db8d24b" alias="BOOKS">
+          <aliasedObject href="Books.xmi#mmuuid/ff14303a-3474-4653-844b-b710d9dfc65a"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:0241c58d-8b44-4525-bc27-9dd10ed04e37" outputs="mmuuid/71f69694-e82e-4d4f-a324-637554a48d98">
+        <inputs href="Books.xmi#mmuuid/1917ea45-0db0-48e3-a541-06b86b02af1a"/>
+      </nested>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:2ae685f5-4dc6-4ec8-932b-60eed24f0a5d" outputs="mmuuid/8d328831-7336-41d8-84e2-0ec4654c3e75">
+        <inputs href="Books.xmi#mmuuid/8663ef5b-80db-4a96-9547-ecc2ac08efd8"/>
+      </nested>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:0b23972b-34bd-428a-9692-f610b393a92d" outputs="mmuuid/8e3fa108-e0aa-4d70-89bd-8c208d4051c2">
+        <inputs href="Books.xmi#mmuuid/05ab14d7-8081-4495-b17e-9e0ad694fac8"/>
+      </nested>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:f17935aa-5e5c-4731-815b-9c6b2a6bf894" outputs="mmuuid/23ec6ccb-7a79-4bac-84a1-91b4ece8a65c">
+        <inputs href="Books.xmi#mmuuid/83f5a2a8-6426-4a8b-bfc1-692b13eb458d"/>
+      </nested>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:44d09df2-0c30-4db6-9d4d-5c3ce646b808" outputs="mmuuid/38c8c62c-bb38-42d2-963e-77a1b518bc7e">
+        <inputs href="Books.xmi#mmuuid/93e646ff-74e9-4281-8a67-a0ef578cc147"/>
+      </nested>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:4890d56c-df42-4c18-a9e7-a8516a63729b" outputs="mmuuid/8792f221-ff3b-4c3f-b8f9-80af0726b15d">
+        <inputs href="Books.xmi#mmuuid/a95bc59a-db07-47a0-b1d6-26c197f049d2"/>
+      </nested>
+      <inputs href="Books.xmi#mmuuid/ff14303a-3474-4653-844b-b710d9dfc65a"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="transformation:TreeMappingRoot" xmi:uuid="mmuuid:17bba925-a4a2-4778-b0dd-caa1c0081257" inputs="mmuuid/b96f0f53-3da3-4e8f-b9ce-0da01499b4e7" outputs="mmuuid/2dcf6a0f-3ee0-48bd-a025-d9af14bdc59b" target="mmuuid/13f13dda-d88c-4f44-8c24-f9527ac4bf44">
+      <nested xmi:uuid="mmuuid:0cc81e05-1d86-404e-b619-eb4e11ebad6d" inputs="mmuuid/f33002de-cb7e-4b76-abc6-172a4401ed69" outputs="mmuuid/2dcf6a0f-3ee0-48bd-a025-d9af14bdc59b"/>
+    </transformationMappings>
+    <transformationMappings xsi:type="transformation:SqlTransformationMappingRoot" xmi:uuid="mmuuid:d8497ff2-18ab-45f9-b6b1-1bfc2cd2b3e8" outputs="mmuuid/b96f0f53-3da3-4e8f-b9ce-0da01499b4e7" target="mmuuid/b96f0f53-3da3-4e8f-b9ce-0da01499b4e7">
+      <helper xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:bf1b040e-721a-4d6f-b9f1-f272de3f1818">
+        <nested xsi:type="transformation:SqlTransformation" xmi:uuid="mmuuid:7aa54f75-b8e6-4f58-86e8-9fee09844a2e" selectSql="SELECT&#xa;&#x9;&#x9;Books.AUTHORS.LASTNAME AS author&#xa;&#x9;FROM&#xa;&#x9;&#x9;Books.AUTHORS, Books.BOOK_AUTHORS WHERE (INPUTS.isbn = Books.BOOK_AUTHORS.ISBN) AND (Books.AUTHORS.AUTHOR_ID = Books.BOOK_AUTHORS.AUTHOR_ID)"/>
+        <aliases xmi:uuid="mmuuid:6f4af989-f95a-444c-a9eb-f19378444be5" alias="AUTHORS">
+          <aliasedObject href="Books.xmi#mmuuid/32d3c39b-8673-424c-a76e-365b2b2cedbc"/>
+        </aliases>
+        <aliases xmi:uuid="mmuuid:41a78d43-7176-46eb-86b1-97fe696f7b37" alias="BOOK_AUTHORS">
+          <aliasedObject href="Books.xmi#mmuuid/845bbd12-972e-4594-8b37-0f6ab7b9cca1"/>
+        </aliases>
+      </helper>
+      <nested xsi:type="transformation:TransformationMapping" xmi:uuid="mmuuid:412f912b-da1d-47c8-bfb7-17d132f6b6c6" outputs="mmuuid/f33002de-cb7e-4b76-abc6-172a4401ed69">
+        <inputs href="Books.xmi#mmuuid/bbd0c90b-d3f3-4881-a6d9-9a1e567ae4e9"/>
+      </nested>
+      <inputs href="Books.xmi#mmuuid/32d3c39b-8673-424c-a76e-365b2b2cedbc"/>
+      <inputs href="Books.xmi#mmuuid/845bbd12-972e-4594-8b37-0f6ab7b9cca1"/>
+    </transformationMappings>
+  </transformation:TransformationContainer>
+  <transformation:MappingClassSetContainer xmi:uuid="mmuuid:14755fb7-3d9b-43eb-bc0b-bd0e36e13fdf">
+    <mappingClassSets xmi:uuid="mmuuid:63aa85c0-123b-4e3a-a823-760ec6a64c91" target="mmuuid/13f13dda-d88c-4f44-8c24-f9527ac4bf44">
+      <mappingClasses xmi:uuid="mmuuid:57adb5d2-bf0c-4f27-ab0e-abcdc8d17629" name="book">
+        <columns xmi:uuid="mmuuid:71f69694-e82e-4d4f-a324-637554a48d98" name="isbn">
+          <type href="BookDatatypes.xsd#//ISBN;XSDSimpleTypeDefinition=2"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:8d328831-7336-41d8-84e2-0ec4654c3e75" name="type">
+          <type href="BookDatatypes.xsd#//BookType;XSDSimpleTypeDefinition=4"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:8e3fa108-e0aa-4d70-89bd-8c208d4051c2" name="title">
+          <type href="BookDatatypes.xsd#//CommaSeparatedList;XSDSimpleTypeDefinition=5"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:23ec6ccb-7a79-4bac-84a1-91b4ece8a65c" name="publisher">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:38c8c62c-bb38-42d2-963e-77a1b518bc7e" name="publishDate">
+          <type href="BookDatatypes.xsd#//PublicationDate;XSDSimpleTypeDefinition"/>
+        </columns>
+        <columns xmi:uuid="mmuuid:8792f221-ff3b-4c3f-b8f9-80af0726b15d" name="edition">
+          <type href="BookDatatypes.xsd#//BookEdition;XSDSimpleTypeDefinition=3"/>
+        </columns>
+        <inputSet xmi:uuid="mmuuid:3a7ab3f3-80f5-4c7b-905c-9d0f2362a871"/>
+      </mappingClasses>
+      <mappingClasses xmi:uuid="mmuuid:b96f0f53-3da3-4e8f-b9ce-0da01499b4e7" name="author">
+        <columns xmi:uuid="mmuuid:f33002de-cb7e-4b76-abc6-172a4401ed69" name="author">
+          <type href="http://www.w3.org/2001/XMLSchema#string"/>
+        </columns>
+        <inputSet xmi:uuid="mmuuid:1cb95487-61dd-45d2-b5be-f4bb5a270a7c">
+          <inputParameters xmi:uuid="mmuuid:fdc6ca3e-f49b-4838-92e1-e23e614ff566" name="isbn">
+            <type href="BookDatatypes.xsd#//ISBN;XSDSimpleTypeDefinition=2"/>
+          </inputParameters>
+        </inputSet>
+      </mappingClasses>
+      <inputBinding xmi:uuid="mmuuid:8c868e7a-3ec7-4050-91c7-20a17e26b62a" inputParameter="mmuuid/fdc6ca3e-f49b-4838-92e1-e23e614ff566" mappingClassColumn="mmuuid/71f69694-e82e-4d4f-a324-637554a48d98"/>
+    </mappingClassSets>
+  </transformation:MappingClassSetContainer>
+  <diagram:DiagramContainer xmi:uuid="mmuuid:48833ffb-7aa6-4934-89f2-1f3adda067ec">
+    <diagram xmi:uuid="mmuuid:5c9be44a-fe24-4e75-8ee8-718b5c3b4aec" type="packageDiagramType" target="mmuuid/4dd58ac8-ce93-43d7-b360-70173e25ef57">
+      <diagramEntity xmi:uuid="mmuuid:634d524b-4098-47e4-8349-4f3a9a8d180f" modelObject="mmuuid/13f13dda-d88c-4f44-8c24-f9527ac4bf44" xPosition="10" yPosition="10"/>
+    </diagram>
+  </diagram:DiagramContainer>
+</xmi:XMI>

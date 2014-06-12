@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="Books_2120" version="1">
+    <property name="preview" value="false"/>
+    <model name="BookDatatypes" type="OTHER" visible="true" path="/Test_TEIIDDES_2120/BookDatatypes.xsd">
+        <property name="checksum" value="2654680735"/>
+        <property name="modelClass" value="XML Schema (XSD)"/>
+        <property name="builtIn" value="false"/>
+        <property name="indexName" value="2177535116.INDEX"/>
+    </model>
+    <model name="Books" type="PHYSICAL" visible="true" path="/Test_TEIIDDES_2120/Books.xmi">
+        <property name="checksum" value="577545555"/>
+        <property name="modelClass" value="Relational"/>
+        <property name="builtIn" value="false"/>
+        <property name="indexName" value="3719569411.INDEX"/>
+        <source name="Books" connection-jndi-name="Books" translator-name="db2"/>
+    </model>
+    <model name="BooksXML" type="VIRTUAL" visible="true" path="/Test_TEIIDDES_2120/BooksXML.xmi">
+        <property name="checksum" value="3236782186"/>
+        <property name="modelClass" value="XML"/>
+        <property name="builtIn" value="false"/>
+        <property name="indexName" value="3418690534.INDEX"/>
+        <property name="imports" value="/Test_TEIIDDES_2120/Books.xsd"/>
+        <property name="imports" value="/Test_TEIIDDES_2120/BookDatatypes.xsd"/>
+        <property name="imports" value="/Test_TEIIDDES_2120/Books.xmi"/>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/sequence/title">The XML Schema component type for &quot;title&quot; must be marked as an enterprise datatype to be used in this model.</validation-error>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/sequence/publishDate">The XML Schema component type for &quot;publishDate&quot; must be marked as an enterprise datatype to be used in this model.</validation-error>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/sequence/edition">&quot;edition&quot; has a fixed or default value and should not be mapped. (See validation Preferences)</validation-error>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/sequence/edition">The XML Schema component type for &quot;edition&quot; must be marked as an enterprise datatype to be used in this model.</validation-error>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/isbn">The XML Schema component type for &quot;isbn&quot; must be marked as an enterprise datatype to be used in this model.</validation-error>
+        <validation-error severity="WARNING" path="bookListingDocument/bookListing/sequence/book/type">The XML Schema component type for &quot;type&quot; must be marked as an enterprise datatype to be used in this model.</validation-error>
+    </model>
+    <model name="Books" type="OTHER" visible="true" path="/Test_TEIIDDES_2120/Books.xsd">
+        <property name="checksum" value="2392354248"/>
+        <property name="modelClass" value="XML Schema (XSD)"/>
+        <property name="builtIn" value="false"/>
+        <property name="indexName" value="2000970593.INDEX"/>
+        <property name="imports" value="/Test_TEIIDDES_2120/BookDatatypes.xsd"/>
+    </model>
+</vdb>
