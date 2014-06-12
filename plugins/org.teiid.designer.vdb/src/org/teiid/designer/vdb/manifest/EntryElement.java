@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbIndexedEntry;
 
 /**
  * 
@@ -28,6 +29,10 @@ public class EntryElement implements Serializable {
      */
     public static final String CHECKSUM = "checksum"; //$NON-NLS-1$
 
+    /**
+     */
+    public static final String INDEX_NAME = "indexName"; //$NON-NLS-1$
+    
     private static final long serialVersionUID = 1L;
 
     @XmlAttribute( name = "path" )
@@ -52,6 +57,9 @@ public class EntryElement implements Serializable {
         }
         
         getProperties().add(new PropertyElement(CHECKSUM, Long.toString(entry.getChecksum())));
+
+        if (entry instanceof VdbIndexedEntry)
+            getProperties().add(new PropertyElement(INDEX_NAME, ((VdbIndexedEntry) entry).getIndexName()));
     }
 
     /**

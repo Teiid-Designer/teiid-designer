@@ -28,7 +28,7 @@ public class Messages  extends NLS {
 	public static String synchronizeVdbLabel;
 	public static String extractMissingModelsLabel;
 	public static String extractMissingModelsAndSyncLabel;
-	public static String migrateXsdFilesFromModelsToOtherLabel;
+	public static String migrateXsdFilesFromModelsToSchemasLabel;
 
 	public static String modelDetailsPanel_modelDetails;
 	public static String modelDetailsPanel_modelDetailsTooltip;

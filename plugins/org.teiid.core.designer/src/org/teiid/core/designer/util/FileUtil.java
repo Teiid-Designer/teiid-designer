@@ -12,8 +12,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
+import javax.activation.MimetypesFileTypeMap;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.FileUtils.Constants;
 
@@ -167,6 +169,26 @@ public final class FileUtil {
             }
         }
         return writer.toString();
+    }
+
+    /**
+     * @param file
+     * @return Try and determine the file type of the given file
+     */
+    public static String guessFileType(File file) {
+        String mimeType = null;
+
+        InputStream mimeTypesStream = FileUtil.class.getResourceAsStream("mime.types"); //$NON-NLS-1$
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap(mimeTypesStream);
+        mimeType = mimeTypesMap.getContentType(file);
+        if (mimeType != null)
+            return mimeType;
+
+        mimeType = mimeTypesMap.getContentType(file.getName());
+        if (mimeType != null)
+            return mimeType;
+
+        return mimeType;
     }
 
     /**

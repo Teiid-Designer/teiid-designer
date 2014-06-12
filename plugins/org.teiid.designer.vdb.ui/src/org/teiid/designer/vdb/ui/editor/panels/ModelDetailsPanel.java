@@ -8,12 +8,10 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.DocumentEvent;
@@ -54,8 +52,8 @@ import org.teiid.designer.ui.common.table.ResourceEditingSupport;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
-import org.teiid.designer.vdb.VdbModelEntry.Problem;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
