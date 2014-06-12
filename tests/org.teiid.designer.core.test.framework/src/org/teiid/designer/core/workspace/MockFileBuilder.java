@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelWorkspaceMock;
@@ -24,6 +25,8 @@ import org.teiid.designer.metamodels.core.ModelType;
  */
 public class MockFileBuilder implements StringConstants {
 
+    private final String baseName;
+    private final String extension;
     private final File realFile;
     private final IPath path;
     private final IFile resourceFile;
@@ -37,20 +40,34 @@ public class MockFileBuilder implements StringConstants {
     public MockFileBuilder(final File realFile) throws Exception {
         this.realFile = realFile;
 
-        path = mock(IPath.class);
+        String fileName = realFile.getName();
+        IPath absFileNameNoExt = new Path(realFile.getAbsolutePath());
+        if(fileName.lastIndexOf(DOT) > 0) {
+            this.extension = fileName.substring(fileName.lastIndexOf(DOT) + 1);
+            this.baseName = fileName.substring(0, fileName.lastIndexOf(DOT));
+            absFileNameNoExt = absFileNameNoExt.removeFileExtension();
+        } else {
+            this.extension = EMPTY_STRING;
+            this.baseName = fileName;
+        }
+
+        path = new Path(realFile.getAbsolutePath());
         resourceFile = mock(IFile.class);
 
-        when(path.getFileExtension()).thenReturn(getExtension());
-        when(path.toFile()).thenReturn(realFile);
-        when(path.toString()).thenReturn(realFile.getAbsolutePath());
-        when(path.toOSString()).thenReturn(realFile.getAbsolutePath());
-        when(path.toPortableString()).thenReturn(realFile.getAbsolutePath());
-        when(path.lastSegment()).thenReturn(realFile.getName());
+//        when(path.getFileExtension()).thenReturn(getExtension());
+//        when(path.toFile()).thenReturn(realFile);
+//        when(path.toString()).thenReturn(realFile.getAbsolutePath());
+//        when(path.toOSString()).thenReturn(realFile.getAbsolutePath());
+//        when(path.toPortableString()).thenReturn(realFile.getAbsolutePath());
+//        when(path.lastSegment()).thenReturn(realFile.getName());
+//        when(path.removeFileExtension()).thenReturn(absFileNameNoExt);
 
         when(resourceFile.getName()).thenReturn(realFile.getName());
         when(resourceFile.getLocation()).thenReturn(path);
         when(resourceFile.getFullPath()).thenReturn(path);
-        when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
+
+        if (realFile.isFile())
+            when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
 
         if (ModelUtil.isModelFile(path)) {
             emfModel = mock(EmfResource.class);
@@ -87,14 +104,17 @@ public class MockFileBuilder implements StringConstants {
     }
 
     /**
+     * @return base name, ie. no extension
+     */
+    public String getBaseName() {
+        return baseName;
+    }
+
+    /**
      * @return the extension
      */
     public String getExtension() {
-        String fileName = getName();
-        if(fileName.lastIndexOf(DOT) > 0)
-            return fileName.substring(fileName.lastIndexOf(DOT) + 1);
-
-        return EMPTY_STRING;
+        return extension;
     }
 
     /**

@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelResourceMockFactory;
+import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 
@@ -52,7 +53,8 @@ public class VdbFileEntryTest {
         vdbTest.before();
         eclipseMock = vdbTest.getEclipseMock();
         vdb = vdbTest.getVdb();
-        entry = vdb.addEntry(mock(IPath.class), null);
+        MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
+        entry = vdb.addEntry(fileBuilder.getPath(), null);
     }
     
     @After

@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @since 8.0
  */
-public class VdbUtil {
+public class VdbUtil implements VdbConstants {
 
     @SuppressWarnings( "javadoc" )
     public static final String PHYSICAL = "PHYSICAL"; //$NON-NLS-1$
@@ -79,8 +79,6 @@ public class VdbUtil {
     public static final String OTHER = "OTHER"; //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
     public static final String DEPRECATED_TYPE = "TYPE"; //$NON-NLS-1$
-
-    private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
 
     /**
      * @param theVdb
