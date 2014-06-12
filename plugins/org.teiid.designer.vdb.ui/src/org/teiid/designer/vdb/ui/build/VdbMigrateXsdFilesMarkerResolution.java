@@ -32,7 +32,7 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
      */
     @Override
     public String getLabel() {
-        return Messages.migrateXsdFilesFromModelsToOtherLabel;
+        return Messages.migrateXsdFilesFromModelsToSchemasLabel;
     }
 
     /**
@@ -76,9 +76,6 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
     void fixVdb(IFile theVdb) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
         Vdb vdb = new Vdb(theVdb, false, monitor);
-
-        vdb.migrateXsdFiles(monitor);
-
         vdb.save(monitor);
 
         try {

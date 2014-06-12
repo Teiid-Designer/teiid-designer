@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb.ui;
 
 import java.util.ResourceBundle;
-
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.designer.ui.common.UiConstants;
@@ -72,12 +71,14 @@ public interface VdbUiConstants {
         
         String ADD_FILE = CTOOL16 + "add-file.png"; //$NON-NLS-1$
         String ADD_MODEL = CTOOL16 + "add-model.png"; //$NON-NLS-1$
+        String ADD_SCHEMA = CTOOL16 + "add-schema.png"; //$NON-NLS-1$
         String ADD_ROLE = CTOOL16 + "add-role.png"; //$NON-NLS-1$
         String ADD_TRANSLATOR = CTOOL16 + "add-translator.png"; //$NON-NLS-1$
         String EDIT_ROLE = CTOOL16 + "edit-role.png"; //$NON-NLS-1$
         String EDIT_TRANSLATOR = CTOOL16 + "edit-translator.png"; //$NON-NLS-1$
         String REMOVE_FILE = CTOOL16 + "remove-file.png"; //$NON-NLS-1$
         String REMOVE_MODEL = CTOOL16 + "remove-model.png"; //$NON-NLS-1$
+        String REMOVE_SCHEMA = CTOOL16 + "remove-schema.png"; //$NON-NLS-1$
         String REMOVE_ROLE = CTOOL16 + "remove-role.png"; //$NON-NLS-1$
         String REMOVE_TRANSLATOR = CTOOL16 + "remove-translator.png"; //$NON-NLS-1$
         String ADD = CTOOL16 + "add.png"; //$NON-NLS-1$
