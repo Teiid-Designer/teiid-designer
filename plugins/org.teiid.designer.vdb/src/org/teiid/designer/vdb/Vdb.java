@@ -22,7 +22,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -48,6 +47,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -55,7 +55,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
-import org.teiid.designer.core.util.VdbHelper.VdbFolders;
+import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  */
 @ThreadSafe
 // TODO: File constructor
-public final class Vdb {
+public final class Vdb implements VdbConstants {
 
     /**
      * The file extension of VDBs including the dot. ( {@value} )
@@ -88,8 +88,6 @@ public final class Vdb {
      */
     public static final String FILE_EXTENSION_NO_DOT = "vdb"; //$NON-NLS-1$
 
-    private static final String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
-    
     private static final int DEFAULT_TIMEOUT = 0;
 
     /**
@@ -126,7 +124,9 @@ public final class Vdb {
     final IFile file;
 
     private final File folder;
-    final CopyOnWriteArraySet<VdbEntry> entries = new CopyOnWriteArraySet<VdbEntry>();
+    final CopyOnWriteArraySet<VdbFileEntry> fileEntries = new CopyOnWriteArraySet<VdbFileEntry>();
+    final CopyOnWriteArraySet<VdbFileEntry> udfJarEntries = new CopyOnWriteArraySet<VdbFileEntry>();
+    final CopyOnWriteArraySet<VdbSchemaEntry> schemaEntries = new CopyOnWriteArraySet<VdbSchemaEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
     final CopyOnWriteArraySet<VdbDataRole> dataPolicyEntries = new CopyOnWriteArraySet<VdbDataRole>();
     final CopyOnWriteArraySet<VdbImportVdbEntry> importModelEntries = new CopyOnWriteArraySet<VdbImportVdbEntry>();
@@ -246,8 +246,16 @@ public final class Vdb {
                             }
                         }
                         
-                        for (final ModelElement element : manifest.getModels()) 
-                            modelEntries.add(new VdbModelEntry(Vdb.this, element, monitor));
+                        for (final ModelElement element : manifest.getModels()) {
+                            IPath path = Path.fromPortableString(element.getPath());
+                            /* Allows migration from old vdbs where xsd files were considered models */
+                            if (ModelUtil.isXsdFile(path)) {
+                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(Vdb.this, element, monitor);
+                                schemaEntries.add(vdbSchemaEntry);
+                            } else {
+                                modelEntries.add(new VdbModelEntry(Vdb.this, element, monitor));
+                            }
+                        }
 
                         // Initialize model entry imports only after all model entries have been created
                         for (final VdbModelEntry entry : modelEntries) {
@@ -255,7 +263,24 @@ public final class Vdb {
                         }
                                                 
                         for (final EntryElement element : manifest.getEntries()) {
-                            entries.add(new VdbFileEntry(Vdb.this, element, monitor));
+                            IPath path = Path.fromPortableString(element.getPath());
+                            /*
+                             * Xsd files were be added to the manifest as entries but they should
+                             * become schema entries in this runtime instance.
+                             */
+                            if (ModelUtil.isXsdFile(path)) {
+                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(Vdb.this, element, monitor);
+                                schemaEntries.add(vdbSchemaEntry);
+                            } else {
+                                VdbFileEntry vdbFileEntry = new VdbFileEntry(Vdb.this, element, monitor);
+                                switch (vdbFileEntry.getFileType()) {
+                                    case UDFJar:
+                                        udfJarEntries.add(vdbFileEntry);
+                                        break;
+                                    case UserFile:
+                                        fileEntries.add(vdbFileEntry);
+                                }
+                            }
                         }
                         
                         // Vdb Import entries
@@ -320,34 +345,50 @@ public final class Vdb {
     /**
      * @param name
      * @param monitor
-     * @param extraParameters
      *
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    public final <T extends VdbEntry> T addEntry( final IPath name, final IProgressMonitor monitor, Object... extraParameters ) throws Exception {
+    public final <T extends VdbEntry> T addEntry( final IPath name, final IProgressMonitor monitor) throws Exception {
         CoreArgCheck.isNotNull(name);
 
-        if (ModelUtil.isModelFile(name) && !ModelUtil.isXsdFile(name))
+        if (ModelUtil.isXsdFile(name)) {
+           return (T) addSchemaEntry(name, monitor);
+        } else if (ModelUtil.isModelFile(name) && !ModelUtil.isXsdFile(name))
             return (T) addModelEntry(name, monitor);
         else {
-            /*
-             * TODO
-             * Can we make this better so that the extra parameter is not required?
-             */
+            String fileType = FileUtil.guessFileType(name.toFile());
+
             FileEntryType fileEntryType = FileEntryType.UserFile;
-            if (extraParameters != null && extraParameters.length > 0) {
-                for (Object obj : extraParameters) {
-                    if (obj instanceof FileEntryType)
-                        fileEntryType = (FileEntryType) obj;
-                }
+            if(VdbHelper.JAR_MIME_TYPE.equals(fileType)) {
+                fileEntryType = FileEntryType.UDFJar;
             }
 
-            // Xsd files despite being models are now added to file entries collection
            return (T) addFileEntry(name, fileEntryType, monitor);
         }
     }
     
+    /**
+     * @param name
+     * @param monitor
+     * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
+     * @throws Exception
+     */
+    private VdbSchemaEntry addSchemaEntry( final IPath name, final IProgressMonitor monitor ) throws Exception {
+        VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, name, monitor);
+        VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries, monitor);
+
+        // entry did not exist in VDB
+        if (schemaEntry == addedEntry) {
+            schemaEntry.synchronizeSchemaEntry(monitor);
+        } else {
+            // entry already existed in VDB
+            schemaEntry = addedEntry;
+        }
+
+        return schemaEntry;
+    }
+
     /**
      * @param name
      * @param entryType the type of file entry being added
@@ -355,9 +396,20 @@ public final class Vdb {
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    private VdbEntry addFileEntry( final IPath name,
+    private VdbFileEntry addFileEntry( final IPath name,
                                         final VdbFileEntry.FileEntryType entryType,
                                         final IProgressMonitor monitor ) throws Exception {
+        CoreArgCheck.isNotNull(entryType);
+
+        Set<VdbFileEntry> entries = null;
+        switch (entryType) {
+            case UDFJar:
+                entries = udfJarEntries;
+                break;
+            case UserFile:
+                entries = fileEntries;
+        }
+
         return addEntry(new VdbFileEntry(this, name, entryType, monitor), entries, monitor);
     }
 
@@ -494,7 +546,7 @@ public final class Vdb {
         // Add any missing Udf jars to the vdb that are required
         for(VdbFileEntry modelUdfJar: allRequiredUdfJars) {
             if(!currentUdfJarNames.contains(modelUdfJar.getName().toString())) {
-                entries.add(modelUdfJar);
+                udfJarEntries.add(modelUdfJar);
                 jarsAdded = true;
             }
         }
@@ -505,10 +557,10 @@ public final class Vdb {
         for(String currentJarName: currentUdfJarNames) {
             Set<String> allRequiredJarNames = allRequiredJarsMap.keySet();
             if(!allRequiredJarNames.contains(currentJarName)) {
-                for(VdbEntry entry: entries) {
+                for(VdbEntry entry: udfJarEntries) {
                     String entryName = entry.getName().toString();
                     if(entryName!=null && entryName.equals(currentJarName)) {
-                        entries.remove(entry);
+                        udfJarEntries.remove(entry);
                         break;
                     }
                 }
@@ -525,7 +577,9 @@ public final class Vdb {
      * 
      */
     public final void close() {
-        entries.clear();
+        fileEntries.clear();
+        udfJarEntries.clear();
+        schemaEntries.clear();
         modelEntries.clear();
         listeners.clear();
         description.set(StringConstants.EMPTY_STRING);
@@ -563,80 +617,51 @@ public final class Vdb {
      * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
      */
     public final Set<VdbEntry> getEntries() {
+        Set<VdbEntry> entries = new HashSet<VdbEntry>();
+        entries.addAll(schemaEntries);
+        entries.addAll(fileEntries);
+        entries.addAll(udfJarEntries);
         return Collections.unmodifiableSet(entries);
     }
 
     /**
-     * Get the current set of UDF jar entries.  These are the current entries that begin with the UDF path prefix
-     * @return the set of VdbEntry UDF jar objects
+     * Get the current set of schema entries.
+     * @return the set of VdbSchemaEntry objects
      */
-    public final Set<VdbEntry> getUdfJarEntries() {
-        // Get all non-model entries
-        final Set<VdbEntry> entries = getEntries();
-        Set<VdbEntry> udfJarEntries = new HashSet<VdbEntry>();
-        
-        // The list of UserFiles are those that begin with the UDF path prefix
-        for(VdbEntry entry: entries) {
-            // Name of VDB entry
-            String zipName = entry.getName().toString();
-            // Strip off any leading delimiter if it exists.
-            if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
-                zipName = zipName.substring(1, zipName.length());
-            }
-            if(zipName.startsWith(VdbFolders.UDF.getReadFolder())) {
-                udfJarEntries.add(entry);
-            }
-        }
+    public final Set<VdbSchemaEntry> getSchemaEntries() {
+        return Collections.unmodifiableSet(schemaEntries);
+    }
+
+    /**
+     * Get the current set of UDF jar entries.
+     * @return the set of VdbFileEntry UDF jar objects
+     */
+    public final Set<VdbFileEntry> getUdfJarEntries() {
         return Collections.unmodifiableSet(udfJarEntries);
     }
     
     /**
-     * Get the current set of UDF jar entries.  These are the current entries that begin with the UDF path prefix
+     * Get the current set of UDF jar entries.
      * @return the set of VdbEntry UDF jar objects
      */
     public final Set<String> getUdfJarNames() {
-        // Get all non-model entries
-        final Set<VdbEntry> entries = getEntries();
         Set<String> udfJarNames = new HashSet<String>();
         
         // The list of UserFiles are those that begin with the UDF path prefix
-        for(VdbEntry entry: entries) {
+        for(VdbFileEntry entry: udfJarEntries) {
             // Name of VDB entry
             String entryName = entry.getName().toString();
-            String entryShortenedName = entryName;
-            // Strip off any leading delimiter if it exists.
-            if(entryName!=null && entryName.startsWith("/") ) { //$NON-NLS-1$
-                entryShortenedName = entryName.substring(1, entryName.length());
-            }
-            if(entryShortenedName.startsWith(VdbFolders.UDF.getReadFolder())) {
-                udfJarNames.add(entryName);
-            }
+            udfJarNames.add(entryName);
         }
         return Collections.unmodifiableSet(udfJarNames);
     }
 
     /**
-     * Get the current set of UserFile entries.  These are the current entries that begin with the UserFile path prefix
-     * @return the set of VdbEntry userFile objects
+     * Get the current set of UserFile entries.
+     * @return the set of VdbFileEntry userFile objects
      */
-    public final Set<VdbEntry> getUserFileEntries() {
-        // Get all non-model entries
-        final Set<VdbEntry> entries = getEntries();
-        Set<VdbEntry> userFileEntries = new HashSet<VdbEntry>();
-        
-        // Narrow list of UserFiles based on path prefix in the VDB
-        for(VdbEntry entry: entries) {
-            // Name of VDB entry
-            String zipName = entry.getName().toString();
-            // Strip off any leading delimiter if it exists.
-            if(zipName!=null && zipName.startsWith("/") ) { //$NON-NLS-1$
-                zipName = zipName.substring(1, zipName.length());
-            }
-            if(! zipName.startsWith(VdbFolders.UDF.getReadFolder())) {
-                userFileEntries.add(entry);
-            }
-        }
-        return userFileEntries;
+    public final Set<VdbFileEntry> getUserFileEntries() {
+        return Collections.unmodifiableSet(fileEntries);
     }
     
     /**
@@ -807,7 +832,7 @@ public final class Vdb {
     public final boolean isSynchronized() {
         for (final VdbModelEntry entry : modelEntries)
             if (entry.getSynchronization() == Synchronization.NotSynchronized) return false;
-        for (final VdbEntry entry : entries)
+        for (final VdbEntry entry : getEntries())
             if (entry.getSynchronization() == Synchronization.NotSynchronized) return false;
         return true;
     }
@@ -892,8 +917,15 @@ public final class Vdb {
             synchronizeUdfJars(new HashSet<VdbFileEntry>());
 
             handleRemovedVdbModelEntry(entryName);
+        } else if (entry instanceof VdbSchemaEntry) {
+            String entryName = entry.getName().toString();
+            schemaEntries.remove(entry);
+            handleRemovedVdbModelEntry(entryName);
         }
-        else entries.remove(entry);
+        else {
+            fileEntries.remove(entry);
+            udfJarEntries.remove(entry);
+        }
         setModified(this, Event.ENTRY_REMOVED, entry, null);
         
     }
@@ -991,7 +1023,7 @@ public final class Vdb {
 
             @Override
             public void tryToDo() throws Exception {
-                final IPath path = file.getFullPath();
+                IPath path = file.getFullPath();
                 final File tmpArchive = File.createTempFile(path.removeFileExtension().toString(),
                                                             '.' + path.getFileExtension(),
                                                             tmpFolder);
@@ -1014,7 +1046,7 @@ public final class Vdb {
                     marker.delete();
 
                 // Save entries
-                for (final VdbEntry entry : entries)
+                for (final VdbEntry entry : getEntries())
                     entry.save(out, monitor);
                 for (final VdbModelEntry entry : modelEntries)
                     entry.save(out, monitor);
@@ -1110,7 +1142,7 @@ public final class Vdb {
     	getBuilder().start();
 
         synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
-        synchronize(entries, monitor);
+        synchronize(getEntries(), monitor);
 
         getBuilder().stop();
     }
@@ -1153,55 +1185,6 @@ public final class Vdb {
     }
 
     /**
-     * Moves any Xsd files in the model collection
-     * into the otherFiles collection
-     *
-     * @param monitor
-     * @throws Exception
-     */
-    public void migrateXsdFiles(IProgressMonitor monitor) throws Exception {
-        Map<VdbModelEntry, VdbFileEntry> modelIndex = new HashMap<VdbModelEntry, VdbFileEntry>();
-
-        /*
-         * Cycle through all the model entries and if there are any
-         * Xsd files then add them as file entries.
-         *
-         * Index them so that the obsolete model entries can be cleaned up.
-         */
-        for (VdbModelEntry modelEntry : modelEntries) {
-            // No longer valid to make xsd files model entries so pick them out and
-            // add them as normal entries instead
-            if (!isXsdSchema(modelEntry))
-                continue;
-
-            VdbFileEntry entry = (VdbFileEntry) addFileEntry(modelEntry.getName(), FileEntryType.UserFile, monitor);
-            if (entry != null) {
-                modelIndex.put(modelEntry, entry);
-            }
-        }
-
-        /*
-         * Clean up the obsolete model entries
-         * - replace import references
-         */
-        for (Entry<VdbModelEntry, VdbFileEntry> mapEntry : modelIndex.entrySet()) {
-            VdbModelEntry oldEntry = mapEntry.getKey();
-            VdbFileEntry newEntry = mapEntry.getValue();
-
-            /* Update the import collections of entries that import this xsd */
-            for (VdbModelEntry importByEntry : oldEntry.getImportedBy()) {
-                importByEntry.replaceImport(oldEntry, newEntry);
-            }
-
-            /* Remove obsolete entry */
-            modelEntries.remove(oldEntry);
-
-            /* Delete the index of the xsd file */
-            oldEntry.getIndexFile().delete();
-        }
-    }
-
-    /**
      *
      */
     public static class Event {
@@ -1215,9 +1198,6 @@ public final class Vdb {
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an entry
          * is added to a VDB
-         * 
-         * @see #addEntry(IPath, IProgressMonitor)
-         * @see #addModelEntry(IPath, IProgressMonitor)
          */
         public static final String ENTRY_ADDED = "entryAdded"; //$NON-NLS-1$
 

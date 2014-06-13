@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -39,8 +40,7 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
  * @since 8.0
  */
 @ThreadSafe
-public abstract class VdbEntry {
-	private static final String EMPTY_STR = StringUtilities.EMPTY_STRING;
+public abstract class VdbEntry implements StringConstants {
 	
     private IPath name;
     private final Vdb vdb;
@@ -63,7 +63,7 @@ public abstract class VdbEntry {
         }
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
-        this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
+        this.description.set(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
     }
 
     private VdbEntry( final Vdb vdb,
@@ -84,7 +84,7 @@ public abstract class VdbEntry {
 //        };
 //        ModelerCore.getWorkspace().addResourceChangeListener(fileListener);
         if (this.description.get() == null) {
-            this.description.set(EMPTY_STR);
+            this.description.set(EMPTY_STRING);
         }
     }
 
@@ -114,6 +114,9 @@ public abstract class VdbEntry {
             @Override
             public Long tryToDo() throws Exception {
                 stream = file.getContents();
+                if (stream == null)
+                    return -1L;
+
                 return ChecksumUtil.computeChecksum(stream).getValue();
             }
         });

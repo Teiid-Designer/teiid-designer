@@ -136,24 +136,23 @@ final class ChooseFileDialogContentProvider implements ITreeContentProvider {
     
     boolean validFile( final IFile file ) {
         String ext = file.getFileExtension();
-        if (ext == null) return false;
-        ext = ext.toLowerCase();
-        if(VdbFolders.UDF.equals(vdbFolder)) {
-            return VdbHelper.JAR_EXT.equals(ext);
-        } else {
-            // Other files
 
-            // Deny jar files as they are udf
-            if (VdbHelper.JAR_EXT.equals(ext))
-                return false;
+        switch(vdbFolder) {
+            case UDF:
+                if (ext == null)
+                    return false;
 
-            // Allow xsd files even though they are model files
-            // as they are being moved to the other files section of vdb
-            if (ModelUtil.isXsdFile(file))
-                return true;
+                ext = ext.toLowerCase();
+                return VdbHelper.JAR_EXT.equals(ext);
+            case OTHER_FILES:
+                // Deny jar files as they are udf
+                if (VdbHelper.JAR_EXT.equals(ext))
+                    return false;
 
-            return !ModelUtil.isModelFile(file);
+                return !ModelUtil.isModelFile(file);
         }
+
+        return true;
     }
     
     @Override
