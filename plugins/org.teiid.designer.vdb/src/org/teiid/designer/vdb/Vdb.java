@@ -1024,7 +1024,6 @@ public final class Vdb implements VdbConstants {
             @Override
             public void tryToDo() throws Exception {
                 IPath path = file.getFullPath();
-                path = path.makeRelativeTo(new Path(tmpFolder.getAbsolutePath()));
                 final File tmpArchive = File.createTempFile(path.removeFileExtension().toString(),
                                                             '.' + path.getFileExtension(),
                                                             tmpFolder);
