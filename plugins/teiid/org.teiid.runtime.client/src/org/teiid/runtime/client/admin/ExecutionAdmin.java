@@ -931,7 +931,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     @Removed(Version.TEIID_8_0)
     public void mergeVdbs( String sourceVdbName, int sourceVdbVersion, 
                                             String targetVdbName, int targetVdbVersion ) throws Exception {
-        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs"), getServer().getServerVersion()))  //$NON-NLS-1$
+        if (!AnnotationUtils.isApplicable(getClass().getMethod("mergeVdbs", String.class, int.class, String.class, int.class), getServer().getServerVersion()))  //$NON-NLS-1$
             throw new UnsupportedOperationException(Messages.getString(Messages.ExecutionAdmin.mergeVdbUnsupported));
 
         admin.mergeVDBs(sourceVdbName, sourceVdbVersion, targetVdbName, targetVdbVersion);        
