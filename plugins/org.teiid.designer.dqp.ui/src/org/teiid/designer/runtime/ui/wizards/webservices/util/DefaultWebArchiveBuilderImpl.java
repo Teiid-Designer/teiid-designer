@@ -51,6 +51,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.ui.wizards.webservices.WarDeploymentInfoPanel;
+import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.ui.util.VdbResourceFinder;
 import org.teiid.designer.webservice.WebServicePlugin;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
@@ -65,7 +66,6 @@ import org.teiid.designer.webservice.util.AntTasks;
  */
 public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceLibConstants, StringConstants {
 
-    private IPath webServicePluginPath = null;
     private List<String> ports = new ArrayList<String>();
     private Map<String, String> operationToProcedureMap = new HashMap<String, String>();
     private String wsdlFilename = CoreStringUtil.Constants.EMPTY_STRING;
@@ -220,6 +220,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
            //  Create the WEB-INF/wsdl directory.
             final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + WSDL;
             final File webInfWsdlDirectory = new File(webInfWsdlDirectoryName);
+            webInfWsdlDirectory.mkdir();
             // Create the classes directory.
             final String webInfClassesDirectoryName = webInfDirectoryName + File.separator + CLASSES;
             // Create the WEB-INF/lib directory.
@@ -403,7 +404,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
         //Delete builtInDataType.xsd if not applicable to this service
         if (!containsGlobalDataTypes){
         	File builtInDataTypeSchemaFile = new File(webInfDirectory.getPath() + "/wsdl/" + DatatypeConstants.DATATYPES_MODEL_FILE_NAME); //$NON-NLS-1$
-        	boolean deleted = builtInDataTypeSchemaFile.delete();
+        	builtInDataTypeSchemaFile.delete();
         }
        
     }
@@ -633,6 +634,13 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
         }
     }
 
+    /**
+     * @param properties
+     * @param webinfWsdlFolder
+     * @return status of wsdl generation
+     * @throws IOException
+     * @throws CoreException
+     */
     public boolean generateWsdl( Properties properties,
                               File webinfWsdlFolder) throws IOException, CoreException {
 
@@ -661,39 +669,39 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
                 vdbResourceFinder.getAllDependentSchemas(resources, dependentSchemas);
                 for (Resource resource : dependentSchemas) {
                 	
-                    if (ModelUtil.isXsdFile(resource)) {
-                    	String fullFilePath = resource.getURI().path();
-                    	String fileNameWithExtension = new Path(fullFilePath).lastSegment();
-                    	IPath fileLocationPath = new Path(fullFilePath).removeLastSegments(1);
-                    	//String fileLocation = fileLocationPath.toOSString();
-                    	
-                        // Copy the XSD file to the classes folder
-                        XSDSchema xsdSchema = importSchema(fullFilePath);
+                    if (! ModelUtil.isXsdFile(resource))
+                        continue;
 
-                        // Check for an import of the global data types schema
-                        if (containsGlobalDataTypeImport(xsdSchema)) {
-                        	hasGlobalDataType = true;
-                            // Copy iResource to classesFolder and WEB-INF/wsdl
-                            File xsd = new File(fullFilePath);
-                            FileUtils.copy(xsd, webinfWsdlFolder, true);
-                            // Get handle to new file in wsdl folder
-                            File xsdCopy = new File(webinfWsdlFolder.getPath() + FORWARD_SLASH + fileNameWithExtension);
-                           // Replace the schemaLocation of the global data
-                            // types schema import with the relative path to xsd
-                            AntTasks.replace(xsdCopy,
-                                    		 "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
-                                     		 "schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
-                        } else {
-                        	File schemaFile = new File(fullFilePath);
-                            FileUtils.copy(schemaFile, webinfWsdlFolder, true);
-                        }
+                    String fullFilePath = resource.getURI().path();
+                    String fileNameWithExtension = new Path(fullFilePath).lastSegment();
+                    IPath fileLocationPath = new Path(fullFilePath).removeLastSegments(1);
 
-                        wsdlGenerator.addXsdModel(xsdSchema, fileLocationPath);
+                    // Copy the XSD file to the classes folder
+                    XSDSchema xsdSchema = importSchema(fullFilePath);
+
+                    // Check for an import of the global data types schema
+                    if (containsGlobalDataTypeImport(xsdSchema)) {
+                        hasGlobalDataType = true;
+                        // Copy iResource to classesFolder and WEB-INF/wsdl
+                        File xsd = new File(fullFilePath);
+                        FileUtils.copy(xsd, webinfWsdlFolder, true);
+                        // Get handle to new file in wsdl folder
+                        File xsdCopy = new File(webinfWsdlFolder.getPath() + FORWARD_SLASH + fileNameWithExtension);
+                        // Replace the schemaLocation of the global data
+                        // types schema import with the relative path to xsd
+                        AntTasks.replace(xsdCopy,
+                                         "schemaLocation=\"http://www.metamatrix.com/metamodels/SimpleDatatypes-instance\"", //$NON-NLS-1$
+                                         "schemaLocation=\"builtInDataTypes.xsd\""); //$NON-NLS-1$ 
+                    } else {
+                        File schemaFile = new File(fullFilePath);
+                        FileUtils.copy(schemaFile, webinfWsdlFolder, true);
                     }
+
+                    wsdlGenerator.addXsdModel(xsdSchema, fileLocationPath);
                 }
             } catch ( Exception e ) {
             	vdbResourceFinder.dispose();
-                throw new RuntimeException(e.getMessage());
+            	throw ErrorHandler.toCoreException(e);
             }
         }
         
@@ -723,17 +731,15 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
             setPorts(wsdlGenerator.getPorts());
             setOperationToProcedureMap(wsdlGenerator.getOperationToProcedureMap());
 
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
-        } catch (CoreException e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (Exception e) {
+            throw ErrorHandler.toCoreException(e);
         }
-        
+
         return hasGlobalDataType;
 
     }
 
-    public static boolean containsGlobalDataTypeImport( final XSDSchema schema ) {
+    private boolean containsGlobalDataTypeImport( final XSDSchema schema ) {
         boolean containsImport = false;
         if (schema != null) {
             final List<XSDSchemaContent> contents = schema.getContents();
@@ -751,7 +757,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
         return containsImport;
     }
 
-    public XSDSchema importSchema( String path ) {
+    private XSDSchema importSchema( String path ) {
         XSDParser parser = new XSDParser(null);
         parser.parse(path);
         XSDSchema schema = parser.getSchema();

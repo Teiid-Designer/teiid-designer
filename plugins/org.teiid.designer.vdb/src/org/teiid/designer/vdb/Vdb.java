@@ -734,21 +734,39 @@ public final class Vdb implements VdbConstants {
     }
 
     /**
+     * @param entries
+     * @return entries as files
+     */
+    private final Collection<File> convertEntries(Collection<? extends VdbEntry> entries) {
+        final Collection<File> entryFiles = new ArrayList<File>();
+
+        for (VdbEntry entry : entries) {
+            IPath entryPath = new Path(folder.getAbsolutePath() + entry.getName());
+            entryFiles.add(entryPath.toFile());
+        }
+
+        return Collections.unmodifiableCollection(entryFiles);
+    }
+
+    /**
      * Method to return the File objects associated with each model in this VDB.
      * The intention is to allow the Data Policy wizard to display contents of these models in EMF form so users can 
      * pick/chose and set-up their data entitlements.
-     * 
+     *
+     * Note: This will no longer return the schema files since they have their own
+     *          collection and convert getter method.
+     *
      * @return the immutable list of model files within this VDB
      */
     public final Collection<File> getModelFiles() {
-        final Collection<File> modelFiles = new ArrayList<File>();
+        return convertEntries(getModelEntries());
+    }
 
-        for (VdbModelEntry modelEntry : getModelEntries()) {
-            IPath modelPath = new Path(folder.getAbsolutePath() + modelEntry.getName());
-            modelFiles.add(modelPath.toFile());
-        }
-
-        return Collections.unmodifiableCollection(modelFiles);
+    /**
+     * @return the immutable list of schema files within this VDB
+     */
+    public final Collection<File> getSchemaFiles() {
+        return convertEntries(getSchemaEntries());
     }
 
     /**
@@ -1297,10 +1315,6 @@ public final class Vdb implements VdbConstants {
      */
     public VdbModelBuilder getBuilder() {
     	return this.builder;
-    }
-
-    private boolean isXsdSchema(VdbModelEntry modelEntry) {
-        return ModelUtil.MODEL_CLASS_XML_SCHEMA.equalsIgnoreCase(modelEntry.getModelClass());
     }
 
     /**
