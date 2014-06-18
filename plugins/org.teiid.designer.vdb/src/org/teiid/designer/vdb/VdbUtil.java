@@ -548,6 +548,31 @@ public class VdbUtil implements VdbConstants {
 	}
 	
 	/**
+	 * @param schemaName
+	 * @param pathIncludingSchema 
+	 * @param vdb
+	 * @return if model already exists in VDB or not
+	 */
+	public static boolean schemalAlreadyExistsInVdb(String schemaName, IPath pathIncludingSchema, Vdb vdb) {
+		// Check for duplicate model and/or user file names
+		Map<String, String> existingNames = new HashMap<String, String>();
+		Set<String> existingPaths = new HashSet<String>();
+		
+		for (VdbSchemaEntry model : vdb.getSchemaEntries()) {
+			String existingName = model.getName().removeFileExtension().lastSegment();
+			IPath path = model.getName();
+			existingNames.put(existingName.toUpperCase(), existingName);
+			existingPaths.add(path.toString().toUpperCase());
+		}
+		
+		if(existingNames.get(schemaName.toUpperCase()) != null && !existingPaths.contains(pathIncludingSchema.toString().toUpperCase())) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Method to determine whether or not a model file (xmi) can be added to a VDB.
 	 * The basic check is to look at the existing model names (without extension) and the target file to be added
 	 * and include any dependent models that would be added. ALL of these names (without extension) must be unique
