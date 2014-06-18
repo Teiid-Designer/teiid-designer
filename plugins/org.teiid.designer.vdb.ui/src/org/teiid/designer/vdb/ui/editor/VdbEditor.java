@@ -478,14 +478,43 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE, null); 
                 	}
                 	if( ModelUtilities.isVdbSourceModel(file) ) {
-                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE, null);
-                	}
-                	
-                	// Check for duplicate model and/or user file names
-                	if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
-                		return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
-                				ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);
-                	}
+                    }
+                    
+                    // Check for duplicate model and/or user file names
+                   if(  !ModelUtil.isXsdFile(file) && VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
+                       return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
+                               ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);
+                   }
+               }
+           }
+           
+           return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
+       }
+   };
+   
+   private final ISelectionStatusValidator schemaSelectionValidator = new ISelectionStatusValidator() {
+       /**
+        * {@inheritDoc}
+        * 
+        * @see org.eclipse.ui.dialogs.ISelectionStatusValidator#validate(java.lang.Object[])
+        */
+       @Override
+       public IStatus validate( final Object[] selection ) {
+           for (int ndx = selection.length; --ndx >= 0;) {
+               Object obj = selection[ndx];
+               if (obj instanceof IContainer) {
+                   return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE, null);
+               } else if( obj instanceof IFile ) {
+                   IFile file = (IFile)obj;
+               
+                   if ( !ModelUtil.isXsdFile(file) ) {
+                       return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE, null); 
+                   }
+                   
+                   // Check for duplicate model and/or user file names
+                    if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
+                        return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
+                                ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);                	}
                 }
             }
             
@@ -2333,6 +2362,10 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     
     ISelectionStatusValidator getModelSelectionValidator() {
         return this.modelSelectionValidator;
+    }
+    
+    ISelectionStatusValidator getSchemaSelectionValidator() {
+        return this.schemaSelectionValidator;
     }
 
     /**
