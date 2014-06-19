@@ -57,9 +57,6 @@ public class TeiidWSProvider {
 	public static final String SOAP_11_STANDARD_SERVER_FAULT_CODE = "Server"; //$NON-NLS-1$
 
 	protected WebServiceContext webServiceContext;
-	private Connection conn;
-	private PreparedStatement statement;
-	private ResultSet set;
 	String wsdlOperation;
 
 	private static Logger logger = Logger.getLogger("org.teiid.soap"); //$NON-NLS-1$
@@ -84,6 +81,9 @@ public class TeiidWSProvider {
 	public Source execute(String procedureName, String inputMessage)
 			throws SOAPFaultException, SOAPException {
 
+		Connection conn = null;
+		PreparedStatement statement;
+		ResultSet set;
 		// Load
 		try {
 			// Get the inputStream
