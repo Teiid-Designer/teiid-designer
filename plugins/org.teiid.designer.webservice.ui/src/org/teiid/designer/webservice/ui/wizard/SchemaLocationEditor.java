@@ -741,20 +741,23 @@ public class SchemaLocationEditor extends GridPanel
                                Object theParent,
                                Object theElement ) {
             boolean result = false;
-
-            if (theElement instanceof IContainer) {
-                IProject project = ((IContainer)theElement).getProject();
-
-                // check for closed project
-                if (project.isOpen()) {
-                    try {
-                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
-                            result = true;
-                        }
-                    } catch (CoreException theException) {
-                        UTIL.log(theException);
-                    }
-                }
+            
+            IProject parentProject = builder.getParentResource().getProject();
+            if( parentProject != null ) {
+	            if (theElement instanceof IContainer) {
+	                IProject project = ((IContainer)theElement).getProject();
+	
+	                // check for closed project
+	                if (parentProject == project && project.isOpen()) {
+	                    try {
+	                        if (project.getNature(ModelerCore.NATURE_ID) != null) {
+	                            result = true;
+	                        }
+	                    } catch (CoreException theException) {
+	                        UTIL.log(theException);
+	                    }
+	                }
+	            }
             }
 
             return result;
