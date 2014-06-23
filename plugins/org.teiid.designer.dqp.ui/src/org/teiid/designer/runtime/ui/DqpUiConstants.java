@@ -122,6 +122,7 @@ public interface DqpUiConstants {
         public static final String SERVER_WIZBAN = PC.WIZBAN + "export_connectors.jpg"; //"server_wizard_banner.jpg"; //$NON-NLS-1$
         public static final String CREATE_WAR = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
         public static final String DEPLOY_VDB = PC.CTOOL16 + "deployVdb.png"; //$NON-NLS-1$
+        public static final String ACTIVE_VDB_WITH_ERRORS = PC.CTOOL16 + "active_vdb_with_errors.png"; //$NON-NLS-1$
         public static final String EXECUTE_VDB = PC.CTOOL16 + "run_vdb.gif"; //$NON-NLS-1$
         public static final String EDIT_VDB = PC.CTOOL16 + "edit-vdb.gif"; //$NON-NLS-1$
         public static final String INACTIVE_DEPLOYED_VDB = PC.CTOOL16 + "inactiveDeployedVdb.png"; //$NON-NLS-1$

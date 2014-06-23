@@ -171,7 +171,11 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
 
         if (value instanceof ITeiidVdb) {
             if (((ITeiidVdb) value).isActive()) {
-                return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+            	if (((ITeiidVdb) value).getValidityErrors().isEmpty()) {
+            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+            	} else {
+            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.ACTIVE_VDB_WITH_ERRORS);
+            	}
             }
             return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.INACTIVE_DEPLOYED_VDB);
         }
