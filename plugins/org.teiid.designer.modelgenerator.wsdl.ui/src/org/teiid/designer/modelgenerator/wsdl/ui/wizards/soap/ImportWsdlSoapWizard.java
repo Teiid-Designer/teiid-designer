@@ -227,7 +227,9 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         Model model = importManager.getWSDLModel();
         RelationalModelBuilder modelBuilder = new RelationalModelBuilder(model, this.importManager.getConnectionProfile());
         try {
-			modelBuilder.modelOperations(this.importManager.getSelectedOperations(), container);
+			modelBuilder.modelOperations(this.importManager.getSelectedOperations(), 
+					this.importManager.getSourceModelLocation(), this.importManager.getSourceModelName(),
+					this.importManager.getViewModelLocation(), this.importManager.getViewModelName());
 		} catch (ModelWorkspaceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
