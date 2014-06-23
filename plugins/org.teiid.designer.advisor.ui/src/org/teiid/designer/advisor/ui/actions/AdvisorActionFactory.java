@@ -920,10 +920,10 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
 		
 		if( id.equalsIgnoreCase(ConnectionProfileIds.CATEGORY_JDBC) ) {
 			NewJDBCFilteredCPWizard wiz = new NewJDBCFilteredCPWizard();
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true, false);
 		} else {
             INewWizard wiz = new NewTeiidFilteredCPWizard(id);
-			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true);
+			ModelerUiViewUtils.launchWizard(wiz, new StructuredSelection(), properties, true, false);
 		}
 		
 		ProfileManager.getInstance().removeProfileListener(listener);
