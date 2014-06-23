@@ -181,7 +181,7 @@ public class ModelerUiViewUtils {
 	        			// Then if we have a wizard, open it.
 	        			if (descriptor != null) {
 	        				IWorkbenchWizard wizard = descriptor.createWizard();
-	        				ModelerUiViewUtils.launchWizard(wizard, selection, properties, synchronous);
+	        				ModelerUiViewUtils.launchWizard(wizard, selection, properties, synchronous, true);
 	        			}
 	        		} catch (CoreException e) {
 	        			e.printStackTrace();
@@ -207,7 +207,7 @@ public class ModelerUiViewUtils {
 	        			// Then if we have a wizard, open it.
 	        			if (descriptor != null) {
 	        				IWorkbenchWizard wizard = descriptor.createWizard();
-	        				ModelerUiViewUtils.launchWizard(wizard, selection, properties, synchronous);
+	        				ModelerUiViewUtils.launchWizard(wizard, selection, properties, synchronous, true);
 	        			}
 	        		} catch (CoreException e) {
 	        			e.printStackTrace();
@@ -225,7 +225,7 @@ public class ModelerUiViewUtils {
 	 * @param selection
 	 */
 	public static void launchWizard(IWorkbenchWizard wizard, IStructuredSelection selection, boolean synchronous) {
-		ModelerUiViewUtils.launchWizard(wizard, selection, null, synchronous);
+		ModelerUiViewUtils.launchWizard(wizard, selection, null, synchronous, true);
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class ModelerUiViewUtils {
 	 * @param wizard
 	 * @param selection
 	 */
-	public static void launchWizard(final IWorkbenchWizard wizard, final IStructuredSelection selection, final Properties properties, boolean synchronous) {
+	public static void launchWizard(final IWorkbenchWizard wizard, final IStructuredSelection selection, final Properties properties, boolean synchronous, final boolean requiresProject) {
 		if( synchronous ) {
 	        Display.getDefault().syncExec(new Runnable() {
 	        	
@@ -251,9 +251,14 @@ public class ModelerUiViewUtils {
 	        		if(properties!=null) {
 	        		    openProjectStatus = DesignerPropertiesUtil.getProjectStatus(properties);
 	        		}
-	        		if( wizard instanceof NewModelProjectWizard || openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+	        		if( requiresProject ) {
+		        		if( wizard instanceof NewModelProjectWizard || openProjectStatus == null || !IPropertiesContext.NO_OPEN_PROJECT.equalsIgnoreCase(openProjectStatus) ){
+			        		wd.setTitle(wizard.getWindowTitle());
+			        		wd.open();
+		        		}
+	        		} else {
 		        		wd.setTitle(wizard.getWindowTitle());
-		        		wd.open();
+			        	wd.open();
 	        		}
 
 	            }
