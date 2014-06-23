@@ -34,6 +34,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -105,6 +106,12 @@ public class RelationalModelBuilder {
 	private IConnectionProfile connectionProfile;
 	private XSDSchema[] schemas;
 	
+	boolean isSoapImportOption = false;
+	IContainer soapSourceModelFolder;
+	IContainer soapViewModelFolder;
+	String soapSourceModelName;
+	String soapViewModelName;
+	
 	public RelationalModelBuilder(Model model, IConnectionProfile profile) throws SchemaProcessingException {
 		wsdlModel = model;
 		SchemaProcessor processor = new SOAPSchemaProcessor(null);
@@ -123,6 +130,91 @@ public class RelationalModelBuilder {
 			throws ModelBuildingException, ModelerCoreException {
 
 		folder = container;
+		models = new ArrayList<ModelResource>();
+		serviceNameToPhysicalMap = new HashMap<String, ModelResource>();
+		serviceNameToVirtualMap = new HashMap<String, ModelResource>();
+		
+		Map<String, Port> ports = new HashMap<String, Port>();
+		for (Operation operation : operations) {
+			Port port = operation.getBinding().getPort();
+			ports.put(port.getName(), port);
+
+			// all ops on a service/port are created in a single physical model
+			ModelResource serviceVirtualModel;
+			try {
+
+				getPhysicalModelForService(operation);
+				serviceVirtualModel = getVirtualModelForService(operation);
+
+			} catch (CoreException e) {
+				throw new ModelBuildingException(e);
+			}
+
+			Schema schema = factory.createSchema();
+			serviceVirtualModel.getEmfResource().getContents().add(schema);
+			schema.setName(operation.getName());
+			schema.setNameInSource(operation.getName());
+			
+			ProcedureBuilder resultBuilder = new ProcedureBuilder(schema, serviceVirtualModel);
+			builders.add(resultBuilder);
+			modelInputMessage(operation, resultBuilder);
+
+			ProcedureBuilder requestBuilder = new ProcedureBuilder(schema, serviceVirtualModel);
+			builders.add(requestBuilder);
+			modelOutputMessage(operation, requestBuilder);
+
+			//operation.getFaults();
+
+		}
+
+		WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
+
+			@Override
+			public void execute(final IProgressMonitor monitor) {
+				for (ModelResource resource : models) {
+					try {
+						ModelUtilities.saveModelResource(resource, monitor, false, this);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					for (ProcedureBuilder builder : builders) {
+						builder.createTransformations();
+					}
+					
+					try {
+						ModelUtilities.saveModelResource(resource, monitor, false, this);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+
+		IProgressMonitor monitor = new NullProgressMonitor();
+		try {
+			operation.run(monitor);
+		} catch (Exception ex) {
+			if (ex instanceof InvocationTargetException) {
+				throw new ModelBuildingException(
+						((InvocationTargetException) ex).getTargetException());
+			}
+			throw new ModelBuildingException(ex);
+		}
+
+	}
+	
+	public void modelOperations(List<Operation> operations, IContainer sourceContainer, String sourceModelName, IContainer viewContainer, String viewModelName)
+			throws ModelBuildingException, ModelerCoreException {
+
+		isSoapImportOption = true;
+		soapSourceModelFolder = sourceContainer;
+		soapViewModelFolder = viewContainer;
+		soapSourceModelName = sourceModelName;
+		soapViewModelName = viewModelName;
+		
 		models = new ArrayList<ModelResource>();
 		serviceNameToPhysicalMap = new HashMap<String, ModelResource>();
 		serviceNameToVirtualMap = new HashMap<String, ModelResource>();
@@ -323,28 +415,46 @@ public class RelationalModelBuilder {
 			throws CoreException {
 
 		Port port = operation.getBinding().getPort();
-		ModelResource serviceModel;
+		ModelResource serviceModel = null;
 		// we have the model for this port/service in our map
 		if (serviceNameToPhysicalMap.containsKey(port.getService().getName())) {
 			serviceModel = serviceNameToPhysicalMap.get(port.getService()
 					.getName());
 		} else {
 			// we don't have it in out map, and it doesn't exist
-			IFile iFile = createNewFile(port.getService().getName());
-			serviceModel = createNewModelResource(iFile);
-			serviceNameToPhysicalMap.put(port.getService().getName(),
-					serviceModel);
-			ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
-			modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
-			modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-			modelAnnotation.setNameInSource(port.getLocationURI());
-			
-			if( ! procedureExists(serviceModel, INVOKE)) {
-				createPhysicalProcedure(port.getService(), serviceModel);
+			if( isSoapImportOption ) {
+				String srcName = soapSourceModelName;
+				IFile iFile = createNewFile(soapSourceModelFolder, srcName);
+				serviceModel = createNewModelResource(iFile);
+				serviceNameToPhysicalMap.put(soapSourceModelName, serviceModel);
+				ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
+				modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
+				modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+				modelAnnotation.setNameInSource(port.getLocationURI());
+				
+				if( ! procedureExists(serviceModel, INVOKE)) {
+					createPhysicalProcedure(port.getService(), serviceModel);
+				}
+				
+				// Inject the connection profile properties into the physical model
+				connProvider.setConnectionInfo(serviceModel, connectionProfile);
+			} else {
+				IFile iFile = createNewFile(folder, port.getService().getName());
+				serviceModel = createNewModelResource(iFile);
+				serviceNameToPhysicalMap.put(port.getService().getName(),
+						serviceModel);
+				ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
+				modelAnnotation.setModelType(ModelType.PHYSICAL_LITERAL);
+				modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+				modelAnnotation.setNameInSource(port.getLocationURI());
+				
+				if( ! procedureExists(serviceModel, INVOKE)) {
+					createPhysicalProcedure(port.getService(), serviceModel);
+				}
+				
+				// Inject the connection profile properties into the physical model
+				connProvider.setConnectionInfo(serviceModel, connectionProfile);
 			}
-			
-			// Inject the connection profile properties into the physical model
-			connProvider.setConnectionInfo(serviceModel, connectionProfile);
 		}
 		return serviceModel;
 	}
@@ -373,22 +483,39 @@ public class RelationalModelBuilder {
 			serviceModel = serviceNameToVirtualMap.get(port.getService()
 					.getName() + XML);
 		} else {
-			// we don't have it in out map, and it doesn't exist
-			IFile iFile = createNewFile(port.getService().getName() + XML);
-			serviceModel = createNewModelResource(iFile);
-			serviceNameToVirtualMap.put(port.getService().getName(),
-					serviceModel);
-			ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
-			modelAnnotation.setModelType(ModelType.VIRTUAL_LITERAL);
-			modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+			if( isSoapImportOption ) {
+				String viewName = soapViewModelName;
+				// we don't have it in out map, and it doesn't exist
+				IFile iFile = createNewFile(soapViewModelFolder, viewName);
+				serviceModel = createNewModelResource(iFile);
+				serviceNameToVirtualMap.put(soapViewModelName, serviceModel);
+				ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
+				modelAnnotation.setModelType(ModelType.VIRTUAL_LITERAL);
+				modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+			} else {
+				// we don't have it in out map, and it doesn't exist
+				IFile iFile = createNewFile(folder, port.getService().getName() + XML);
+				serviceModel = createNewModelResource(iFile);
+				serviceNameToVirtualMap.put(port.getService().getName(),
+						serviceModel);
+				ModelAnnotation modelAnnotation = serviceModel.getModelAnnotation();
+				modelAnnotation.setModelType(ModelType.VIRTUAL_LITERAL);
+				modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+			}
 		}
 		return serviceModel;
 	}
 
-	private IFile createNewFile(String name) {
-		Path modelPath = new Path(name + DOT_XMI);
-		IFile iFile = folder.getFile(modelPath);
-		return iFile;
+	private IFile createNewFile(IContainer container, String name) {
+		if( name.endsWith(DOT_XMI) )  {
+			Path modelPath = new Path(name);
+			IFile iFile = container.getFile(modelPath);
+			return iFile;
+		} else {
+			Path modelPath = new Path(name + DOT_XMI);
+			IFile iFile = container.getFile(modelPath);
+			return iFile;
+		}
 	}
 
 	private ModelResource createNewModelResource(IFile iFile) {
