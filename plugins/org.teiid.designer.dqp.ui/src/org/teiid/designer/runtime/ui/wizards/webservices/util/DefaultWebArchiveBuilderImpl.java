@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.tools.Diagnostic;
+import javax.tools.Diagnostic.Kind;
+import javax.tools.DiagnosticCollector;
 import java.util.Properties;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
@@ -531,7 +534,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
 	private void createProviderJavaClasses( File webInfLibDirectory,
 	                                          File webInfClassesDirectory,
 	                                          Properties properties,
-	                                          SecurityCredentials securityCredentials ) throws IOException {
+	                                          SecurityCredentials securityCredentials ) throws Exception {
 	
 	    String pathToProviders = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "provider"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	    String pathToCallback = "/org" + File.separator + "teiid" + File.separator + "soap" + File.separator + "wsse"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -598,8 +601,18 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
 	        }
 	
 	        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(sourceFileList);
-	        CompilationTask task = compilerTool.getTask(null, fileManager, null, null, null, compilationUnits);
+	        /*Create a diagnostic controller, which holds the compilation problems*/
+	        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+	        CompilationTask task = compilerTool.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
 	        task.call();
+	        List<Diagnostic<? extends JavaFileObject>> diagnosticList = diagnostics.getDiagnostics();
+            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticList) {
+                diagnostic.getKind();
+                if (diagnostic.getKind().equals(Kind.ERROR)) {
+                    throw new Exception(diagnostic.getMessage(null));
+                }
+            }
+	        
 	        fileManager.close();
 	
 	        // Cleanup wsse.jar. Only needed for dynamic compilation.

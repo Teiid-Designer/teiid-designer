@@ -57,21 +57,15 @@ public class TeiidWSProvider {
 	public static final String SOAP_11_STANDARD_SERVER_FAULT_CODE = "Server"; //$NON-NLS-1$
 
 	protected WebServiceContext webServiceContext;
-	private Connection conn;
-	private PreparedStatement statement;
-	private ResultSet set;
-	String wsdlOperation;
-
+	
 	private static Logger logger = Logger.getLogger("org.teiid.soap"); //$NON-NLS-1$
-
-	private static Properties properties = new Properties();
 
 	@javax.annotation.Resource
 	protected void setWebServiceContext(WebServiceContext wsc) {
 		webServiceContext = wsc;
 	}
 
-	public DataSource getDataSource() throws NamingException {
+	public DataSource getDataSource(Properties properties) throws NamingException {
 
 		InitialContext ctx;
 		DataSource ds = null;
@@ -81,34 +75,19 @@ public class TeiidWSProvider {
 		return ds;
 	}
 
-	public Source execute(String procedureName, String inputMessage)
+	public Source execute(String procedureName, String inputMessage, String wsdlOperation, Properties properties)
 			throws SOAPFaultException, SOAPException {
-
-		// Load
-		try {
-			// Get the inputStream
-			InputStream inputStream = getClass().getClassLoader()
-					.getResourceAsStream("teiidsoap.properties"); //$NON-NLS-1$
-
-			Properties properties = new Properties();
-
-			// load the inputStream using the Properties
-			properties.load(inputStream);
-
-		} catch (IOException e1) {
-			String msg = SoapPlugin.Util.getString(
-					"TeiidWSProvider.1"); //$NON-NLS-1$
-			logger.logrb(Level.SEVERE,  "TeiidWSProvider", "execute", SoapPlugin.PLUGIN_ID, msg, new Throwable(e1)); //$NON-NLS-1$ //$NON-NLS-2$
-			createSOAPFaultMessage(e1, e1.getMessage(),
-					SOAP_11_STANDARD_SERVER_FAULT_CODE);
-		}
+		
+		Connection conn = null;
+		PreparedStatement statement = null;
+		ResultSet set = null;
 
 		// Get a connection
 		Source returnFragment = null;
 
 		try {
 
-			DataSource ds = getDataSource();
+			DataSource ds = getDataSource(properties);
 			conn = ds.getConnection();
 			String responseString;
 			boolean noParm = false;
@@ -250,7 +229,7 @@ public class TeiidWSProvider {
 		throw new SOAPFaultException(sf);
 	}
 
-	private void loadProperties() throws SOAPFaultException, SOAPException {
+	private Properties loadProperties(Properties properties) throws SOAPFaultException, SOAPException {
 		try {
 			// Get the inputStream
 			InputStream inputStream = getClass().getClassLoader()
@@ -267,18 +246,22 @@ public class TeiidWSProvider {
 			logger.logrb(Level.SEVERE,  "TeiidWSProvider", "loadProperties", SoapPlugin.PLUGIN_ID, msg, new Throwable(e)); //$NON-NLS-1$ //$NON-NLS-2$
 			throw new RuntimeException(e);
 		}
+		
+		return properties;
 	}
 
 	public javax.xml.transform.Source invoke(Source request) {
 		javax.xml.transform.Source response = null; 
 		String inputMessage = ""; //$NON-NLS-1$
 		String procedureName = ""; //$NON-NLS-1$
+		String wsdlOperation = ""; //$NON-NLS-1$
+		Properties properties = new Properties();
 		MessageContext mc = webServiceContext.getMessageContext();
 		Object wsdlOperationQName = mc.get(MessageContext.WSDL_OPERATION);  
 		
 		// Load the properties object
 		try {
-			loadProperties();
+			properties = loadProperties(properties);
 		} catch (SOAPFaultException e) {
 			logger.log(Level.SEVERE, e.getMessage());
 			throw new RuntimeException(e);
@@ -313,7 +296,7 @@ public class TeiidWSProvider {
 		}
 
 		try {
-			response = execute(procedureName, inputMessage);
+			response = execute(procedureName, inputMessage, wsdlOperation, properties);
 		} catch (SOAPFaultException e) {
 			throw new RuntimeException(e);
 		} catch (SOAPException e) {
