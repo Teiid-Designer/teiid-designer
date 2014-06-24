@@ -494,6 +494,12 @@ public class WsdlDefinitionPage extends WizardPage
 				buttonValidateWSDL.setEnabled(false);
 				return;
 			}
+			// Let's check if manager has profile defined?
+			if( this.importManager.getConnectionProfile() == null ) {
+				// Set the connection profile
+				this.importManager.setConnectionProfile(profile);
+				this.importManager.validate();
+			}
 			Properties props = profile.getBaseProperties();
 			WidgetUtil.setText(wsdlURIText, props.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID));
 			WidgetUtil.setText(endPointNameText, props.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID));
