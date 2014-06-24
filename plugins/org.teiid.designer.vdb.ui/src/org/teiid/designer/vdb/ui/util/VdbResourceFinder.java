@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelEditorImpl;
@@ -50,7 +50,7 @@ public class VdbResourceFinder {
 	private Vdb vdb;
     private IFile vdbFile;
     
-    private Resource[] vdbModelFiles;
+    private Collection<Resource> vdbResourceFiles;
 
 	/**
 	 * @param vdbFile the vdbFile
@@ -72,16 +72,21 @@ public class VdbResourceFinder {
             throw ErrorHandler.toCoreException(ex);
         }
         
-    	Collection<Resource> theFiles = new ArrayList<Resource>();
+    	Collection<Resource> resourceFiles = new ArrayList<Resource>();
     	
         Collection<File> modelFiles = getVdb().getModelFiles();
-
         for (File modelFile : modelFiles) {
             Resource res = this.container.getResource(URI.createFileURI(modelFile.getPath()), true);
-            theFiles.add(res);
+            resourceFiles.add(res);
+        }
+
+        Collection<File> schemaFiles = getVdb().getSchemaFiles();
+        for (File modelFile : schemaFiles) {
+            Resource res = this.container.getResource(URI.createFileURI(modelFile.getPath()), true);
+            resourceFiles.add(res);
         }
         
-        this.vdbModelFiles = theFiles.toArray(new Resource[0]);
+        this.vdbResourceFiles = resourceFiles;
 	}
 	
 	/**
@@ -116,29 +121,25 @@ public class VdbResourceFinder {
 	
 	/**
 	 * @return collection of Resource's
+	 * @throws CoreException
 	 */
-    public Collection<Resource> getWebServiceResources() {
+    public Collection<Resource> getWebServiceResources() throws CoreException {
     	
     	Collection<Resource> webServiceModels = new ArrayList<Resource>();
-        try {
-            Collection<File> modelFiles = getVdb().getModelFiles();
+        Collection<File> modelFiles = getVdb().getModelFiles();
 
-            for (File modelFile : modelFiles) {
-                boolean isVisible = true;
+        for (File modelFile : modelFiles) {
+            boolean isVisible = true;
 
-                Resource res = this.container.getResource(URI.createFileURI(modelFile.getPath()), true);
-                if (isVisible && ModelUtil.isModelFile(res) && !ModelUtil.isXsdFile(res)) {
-                    EObject firstEObj = res.getContents().get(0);
-                    ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
-                    String mmURI = ma.getPrimaryMetamodelUri();
-                    if (ModelUtil.URI_WEB_SERVICES_VIEW_MODEL.equalsIgnoreCase(mmURI)) {
-                    	webServiceModels.add(res);
-                    }
+            Resource res = this.container.getResource(URI.createFileURI(modelFile.getPath()), true);
+            if (isVisible && ModelUtil.isModelFile(res) && !ModelUtil.isXsdFile(res)) {
+                EObject firstEObj = res.getContents().get(0);
+                ModelAnnotation ma = ModelerCore.getModelEditor().getModelAnnotation(firstEObj);
+                String mmURI = ma.getPrimaryMetamodelUri();
+                if (ModelUtil.URI_WEB_SERVICES_VIEW_MODEL.equalsIgnoreCase(mmURI)) {
+                    webServiceModels.add(res);
                 }
             }
-        } catch (CoreException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
         
         return webServiceModels;
@@ -244,24 +245,7 @@ public class VdbResourceFinder {
     private IWorkspace getWorkspace() {
         return ModelerCore.getWorkspace();
     }
-    
-    
-    /**
-     * @param resource
-     * @return the resource
-     */
-    public Resource findResource( final Resource resource ) {
 
-        try {
-            if (resource != null && resource.getURI() != null && getWorkspace() != null) return findResource(resource.getURI().toString());
-        } catch (final IllegalStateException ise) {
-            // do nothing
-        }
-
-        return null;
-    }
-    
-    
     /**
      * Return the Resource instance corresponding to the specified URI string. The URI represents a relative path within the
      * workspace to particular file resource. If the URI is one of the well-known Teiid Designer/EMF identifiers to a global
@@ -289,7 +273,7 @@ public class VdbResourceFinder {
         // MyDefect : 16368 Refactored methods.
 
         Resource fileResource = null;
-        final Resource[] fileResources = this.vdbModelFiles;
+        final Collection<Resource> fileResources = this.vdbResourceFiles;
 
         // If the workspace URI starts with "http" then check it against the target
         // namespaces of any XML schema in the workspace ...
@@ -309,7 +293,7 @@ public class VdbResourceFinder {
     }
     
     private Resource getExistingVdbResource(File file) {
-    	for( Resource modelFile : this.vdbModelFiles) {
+    	for( Resource modelFile : this.vdbResourceFiles) {
     	
     		String vdbFileStr = WorkspaceResourceFinderUtil.normalizeUriString(modelFile.getURI().toFileString());
     		
@@ -362,7 +346,7 @@ public class VdbResourceFinder {
 		return true;
 	}
 	
-	private Resource getResourceStartsWithHttp(final Resource[] fileResources,
+	private Resource getResourceStartsWithHttp(final Collection<Resource> fileResources,
 			final String workspaceUri) {
 
 		File file = null;
@@ -393,7 +377,7 @@ public class VdbResourceFinder {
         return null;
     }
     
-	private static Resource getResourceStartsWithPathSeparator( final Resource[] fileResources, final String workspaceUri) {
+	private static Resource getResourceStartsWithPathSeparator( final Collection<Resource> fileResources, final String workspaceUri) {
 
 		Resource fileResource = null;
 		IPath pathInWorkspace;
@@ -413,7 +397,7 @@ public class VdbResourceFinder {
 		return null;
 	}
 	
-	private static Resource getResourceByLocation(final Resource[] fileResources,
+	private static Resource getResourceByLocation(final Collection<Resource> fileResources,
 			final String workspaceUri) {
 
 		Resource fileResource = null;
@@ -448,7 +432,7 @@ public class VdbResourceFinder {
 			//Check for backslash vs slash
 			resourceLocation = resourceLocation.replaceAll("/", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
 			///Windows fix for spaces in workspace path
-			resourceLocation = resourceLocation.replaceAll(StringUtilities.SPACE, "%20"); //$NON-NLS-1$ //$NON-NLS-2$
+			resourceLocation = resourceLocation.replaceAll(StringConstants.SPACE, "%20"); //$NON-NLS-1$
 			if (resourceLocation.endsWith(workspaceUri))
 				return fileResource;
 		}
