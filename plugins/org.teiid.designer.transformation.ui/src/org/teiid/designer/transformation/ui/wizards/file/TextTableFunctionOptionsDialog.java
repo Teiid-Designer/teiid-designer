@@ -123,6 +123,7 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
 	            public void widgetSelected(final SelectionEvent event) {
 	            	if( !synchronizing ) {
 		            	dataFileInfo.setIncludeHeader(useHeaderInSQLCB.getSelection());
+		            	dataFileInfo.setDoUseHeaderForColumnNames(useHeaderInSQLCB.getSelection());
 		            	synchronizeUI();
 	            	}
 	            }
