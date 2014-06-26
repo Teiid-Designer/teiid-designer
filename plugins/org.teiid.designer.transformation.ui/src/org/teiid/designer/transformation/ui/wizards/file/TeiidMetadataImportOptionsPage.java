@@ -376,6 +376,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
             public void widgetSelected(final SelectionEvent event) {
             	if( !synchronizing ) {
 	            	dataFileInfo.setDoUseHeaderForColumnNames(useHeaderForColumnNamesCB.getSelection());
+	            	dataFileInfo.setIncludeHeader(useHeaderForColumnNamesCB.getSelection());
 	            	handleInfoChanged(false);
             	}
             }
