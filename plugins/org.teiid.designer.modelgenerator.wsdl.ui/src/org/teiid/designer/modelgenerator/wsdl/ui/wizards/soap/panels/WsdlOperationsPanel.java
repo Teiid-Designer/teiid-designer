@@ -392,7 +392,12 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                 }
 
                 // Set the default binding label
-                Properties properties = importManager.getConnectionProfile().getBaseProperties();
+                Properties properties = new Properties();
+                
+                if( importManager.getConnectionProfile() != null ) {
+	                properties = importManager.getConnectionProfile().getBaseProperties();
+                } else System.out.println(" >>> NO CONNECTION PROFILE");
+                
                 String binding = properties.getProperty(IWSProfileConstants.SOAP_BINDING);
                 if (binding == null)
                     binding = IPort.SOAP11;
@@ -409,6 +414,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                 operationsViewer.refresh(true);
 
                 importManager.setSelectedOperations(new ArrayList());
+
+                
                 setAllNodesSelected(true);
                 updateImportManager();
             }
