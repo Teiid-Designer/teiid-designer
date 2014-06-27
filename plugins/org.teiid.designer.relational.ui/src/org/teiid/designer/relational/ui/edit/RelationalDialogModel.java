@@ -61,7 +61,10 @@ public class RelationalDialogModel extends EditRelationalObjectDialogModel {
                 return Messages.createRelationalSourceFunctionTitle;
             } else if (procedure.isFunction()) {
                 return Messages.createRelationalUserDefinedFunctionTitle;
+            } else if (procedure.isNativeQueryProcedure()) {
+                return Messages.createRelationalNativeQueryProcedureTitle;
             }
+            
             return Messages.createRelationalProcedureTitle;
         } else if (relationalObject instanceof RelationalIndex) {
             return Messages.createRelationalIndexTitle;
@@ -82,6 +85,8 @@ public class RelationalDialogModel extends EditRelationalObjectDialogModel {
                 return Messages.createRelationalSourceFunctionHelpText;
             } else if (procedure.isFunction()) {
                 return Messages.createRelationalUserDefinedFunctionHelpText;
+            } else if (procedure.isNativeQueryProcedure()) {
+                return Messages.createRelationalNativeQueryProcedureHelpText;
             }
 
             return Messages.createRelationalProcedureHelpText;

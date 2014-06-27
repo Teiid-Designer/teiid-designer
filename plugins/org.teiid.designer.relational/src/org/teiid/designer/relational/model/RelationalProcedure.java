@@ -29,6 +29,10 @@ import org.teiid.designer.relational.RelationalPlugin;
  * @since 8.0
  */
 public class RelationalProcedure extends RelationalReference {
+	public enum PROCEDURE_TYPE {
+		PROCEDURE, FUNCTION, SOURCE_FUNCTION, NATIVE_QUERY_PROCEDURE
+	};
+	 
     /**
      * 
      */
@@ -50,7 +54,6 @@ public class RelationalProcedure extends RelationalReference {
      */
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
     
-    private boolean function = false;
     private boolean nonPrepared = false;
     private boolean deterministic = false;
     private boolean returnsNullOnNull = false;
@@ -66,7 +69,9 @@ public class RelationalProcedure extends RelationalReference {
     private String javaMethod;
     private String udfJarPath;
     private String functionCategory;
-    boolean sourceFunction;
+    boolean nativeQueryProcedure;
+    
+    PROCEDURE_TYPE procedureType;
     
     private String  updateCount;
     private List<RelationalParameter> parameters;
@@ -123,13 +128,18 @@ public class RelationalProcedure extends RelationalReference {
      * @return function
      */
     public boolean isFunction() {
-        return function;
+    	return this.procedureType == PROCEDURE_TYPE.FUNCTION;
     }
+    
     /**
      * @param function Sets function to the specified value.
      */
     public void setFunction( boolean function ) {
-        this.function = function;
+        if( function ) {
+        	setProcedureType(PROCEDURE_TYPE.FUNCTION);
+        } else {
+        	setProcedureType(PROCEDURE_TYPE.PROCEDURE);
+        }
     }
 
     /**
@@ -253,16 +263,31 @@ public class RelationalProcedure extends RelationalReference {
      * @return is source function
      */
     public boolean isSourceFunction() {
-        return sourceFunction;
+    	return this.procedureType == PROCEDURE_TYPE.SOURCE_FUNCTION;
     }
+
     /**
-     * @param isSourceFunction Sets sourceFunction to the specified value.
+     * @return is native query procedure
      */
-    public void setSourceFunction( boolean isSourceFunction ) {
-        this.sourceFunction = isSourceFunction;
+    public boolean isNativeQueryProcedure() {
+        return this.procedureType == PROCEDURE_TYPE.NATIVE_QUERY_PROCEDURE;
     }
     
     /**
+     * 
+     */
+    public PROCEDURE_TYPE getProcedureType() {
+		return procedureType;
+	}
+
+    /**
+     * 
+     */
+	public void setProcedureType(PROCEDURE_TYPE type) {
+		this.procedureType = type;
+	}
+
+	/**
      * @return java class name for function may be null
      */
     public String getJavaClassName() {
@@ -515,7 +540,9 @@ public class RelationalProcedure extends RelationalReference {
             } else if(keyStr.equalsIgnoreCase(KEY_DESCRIPTION) ) {
                 setDescription(value);
             } else if(keyStr.equalsIgnoreCase(KEY_FUNCTION) ) {
-                setFunction(Boolean.parseBoolean(value));
+            	if( Boolean.parseBoolean(value) ) {
+            		setProcedureType(PROCEDURE_TYPE.FUNCTION);
+            	}
             } else if(keyStr.equalsIgnoreCase(KEY_UPDATE_COUNT) ) {
                 setUpdateCount(value);
             }

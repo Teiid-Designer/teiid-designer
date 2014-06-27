@@ -232,6 +232,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.includeResultSetCB);
         this.includeResultSetCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
         this.includeResultSetCB.setToolTipText(Messages.includeResultSetTooltip);
+        this.includeResultSetCB.setSelection(getRelationalReference().getResultSet() != null);
         this.includeResultSetCB.addSelectionListener(new SelectionAdapter() {
             /**            		
              * {@inheritDoc}
@@ -444,7 +445,7 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 					if( objs.length == 0 ) {
 						enable = false;
 					}
-					deleteColumnButton.setEnabled(enable);
+					deleteColumnButton.setEnabled(enable && !getRelationalReference().isNativeQueryProcedure());
 					if( enable ) {
 						upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(columnInfo));
 						downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(columnInfo));
@@ -1009,14 +1010,22 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
                     this.useDistinctRowsCB.setEnabled(aggregateState);
             }
 		} else {
-			if( this.addColumnButton != null && this.includeResultSetCB != null ) {
-				boolean enable = this.includeResultSetCB.getSelection();
-				this.addColumnButton.setEnabled(enable);
-				if( !enable ) {
-					this.deleteColumnButton.setEnabled(false);
-					this.downColumnButton.setEnabled(false);
-					this.upColumnButton.setEnabled(false);
-				}
+	        if( this.addColumnButton != null && this.includeResultSetCB != null ) {
+	        	if( getRelationalReference().isNativeQueryProcedure() ) {
+		        	this.addColumnButton.setEnabled(false);
+		        	this.deleteColumnButton.setEnabled(false);
+		        	this.upColumnButton.setEnabled(false);
+		        	this.downColumnButton.setEnabled(false);
+		        	includeResultSetCB.setEnabled(false);
+		        } else {
+					boolean enable = this.includeResultSetCB.getSelection();
+					this.addColumnButton.setEnabled(enable);
+					if( !enable ) {
+						this.deleteColumnButton.setEnabled(false);
+						this.downColumnButton.setEnabled(false);
+						this.upColumnButton.setEnabled(false);
+					}
+		        }
 			}
 		}
 	}
@@ -1264,22 +1273,28 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     class DatatypeEditingSupport extends ComboBoxEditingSupport {
     	
     	private String[] datatypes;
+    	private String[] nativeQueryProcedureColumnDTypes = {"object"};
         /**
          * @param viewer the column viewer
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
+            
+            if( getRelationalReference().isNativeQueryProcedure() ) {
+            	datatypes = nativeQueryProcedureColumnDTypes;
+            } else {
+	            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
+	    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
+	    		Collection<String> dTypes = new ArrayList<String>();
+	    		
+	    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
+	    		Arrays.sort(sortedStrings);
+	    		for( String dType : sortedStrings ) {
+	    			dTypes.add(dType);
+	    		}
+	    		
     		datatypes = dTypes.toArray(new String[dTypes.size()]);
+            }
     		
         }
 

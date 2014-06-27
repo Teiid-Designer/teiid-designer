@@ -42,11 +42,13 @@ public class Messages extends NLS {
     
     public static String procedureLabel;
     public static String sourceFunctionLabel;
+    public static String nativeQueryProcedureLabel;
     public static String userDefinedFunctionLabel;
     public static String selectProcedureTypeDialogSubTitle;
     public static String selectProcedureTypeDialogTitle;
     public static String createRelationalProcedureDescription;
     public static String createRelationalSourceFunctionDescription;
+    public static String createRelationalNativeQueryProcedureDescription;
     public static String createRelationalUserDefinedFunctionDescription;
     public static String createRelationalProcedureActionText;
     public static String createRelationalProcedureTitle;
@@ -57,6 +59,8 @@ public class Messages extends NLS {
     public static String createRelationalUserDefinedFunctionTitle;
     public static String createRelationalSourceFunctionHelpText;
     public static String createRelationalUserDefinedFunctionHelpText;
+    public static String createRelationalNativeQueryProcedureTitle;
+    public static String createRelationalNativeQueryProcedureHelpText;
     
     public static String createRelationalIndexActionText;
     public static String createRelationalIndexTitle;

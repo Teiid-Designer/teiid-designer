@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -39,9 +40,11 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalProcedure;
+import org.teiid.designer.relational.model.RelationalProcedureResultSet;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
@@ -63,6 +66,8 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	private IFile selectedModel;
 	 
 	private Collection<String> datatypes;
+	
+	protected int currentProcedureType = RelationalProcedure.PROCEDURE_TYPE.FUNCTION.ordinal();
 	 
 	/**
 	 * 
@@ -154,6 +159,14 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	        procedureTypeDialog.open();
 	        
 	        if (procedureTypeDialog.getReturnCode() == Window.OK) {
+		        if( procedure.isNativeQueryProcedure() ) {
+		        	RelationalProcedureResultSet resultSet = new RelationalProcedureResultSet("ResultSet");
+		        	RelationalColumn column = new RelationalColumn("output");
+		        	column.setDatatype("object");
+		        	resultSet.addColumn(column);
+		        	procedure.setResultSet(resultSet);
+		        }
+		        
 		        // Hand the table off to the generic edit dialog
 	            RelationalDialogModel dialogModel = new RelationalDialogModel(procedure, selectedModel);
 	            EditRelationalObjectDialog dialog = new EditRelationalObjectDialog(shell, dialogModel);
@@ -271,7 +284,7 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged(false, false);
+	                	handleInfoChanged(RelationalProcedure.PROCEDURE_TYPE.PROCEDURE);
 	                }
 	            });
 	            procedureRB.setSelection(!relationalProcedure.isFunction());
@@ -296,12 +309,12 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged(false, true);
+	                	handleInfoChanged(RelationalProcedure.PROCEDURE_TYPE.SOURCE_FUNCTION);
 	                }
 	            });
 
 	            if (this.relationalProcedure.isSourceFunction()) {
-	                sourceFunctionRB.setSelection(!relationalProcedure.isFunction());
+	                sourceFunctionRB.setSelection(relationalProcedure.isSourceFunction());
 	            }
 
 	            Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
@@ -312,41 +325,40 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
                 ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
     	    	descText.setText(Messages.createRelationalSourceFunctionDescription);
     		}
+    		
+    		{ // Native Query PRocedure
+	            final Button nativeQueryProcedureRB = new Button(panel, SWT.RADIO);
+	            nativeQueryProcedureRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+	            nativeQueryProcedureRB.setText(Messages.nativeQueryProcedureLabel);
+	            nativeQueryProcedureRB.addSelectionListener(new SelectionAdapter() {
+	                /** nativeQueryProcedureRB          		
+	                 * {@inheritDoc}
+	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+	                 */
+	                @Override
+	                public void widgetSelected( SelectionEvent e ) {
+	                	handleInfoChanged(RelationalProcedure.PROCEDURE_TYPE.NATIVE_QUERY_PROCEDURE);
+	                }
+	            });
+
+	            if (this.relationalProcedure.isNativeQueryProcedure()) {
+	            	nativeQueryProcedureRB.setSelection(relationalProcedure.isNativeQueryProcedure());
+	            }
+
+	            Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+    	    	descText.setBackground(parent.getBackground());
+    	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
+                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
+                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
+    	    	descText.setText(Messages.createRelationalNativeQueryProcedureDescription);
+    		}
             
-//    		{ // user defined function
-//	            final Button userDefinedFunctionRB = new Button(panel, SWT.RADIO);
-//	            userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
-//	            userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
-//	            userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
-//	                /**            		
-//	                 * {@inheritDoc}
-//	                 * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-//	                 */
-//	                @Override
-//	                public void widgetSelected( SelectionEvent e ) {
-//	                	handleInfoChanged(true, false);
-//	                }
-//	            });
-//
-//                if (this.relationalProcedure.isFunction() && !this.relationalProcedure.isSourceFunction()) {
-//                    userDefinedFunctionRB.setSelection(!relationalProcedure.isFunction());
-//                }
-//
-//    	    	Text descText = new Text(panel, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
-//    	    	descText.setBackground(parent.getBackground());
-//    	    	descText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-//    	    	descText.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
-//                ((GridData)descText.getLayoutData()).horizontalIndent = 20;
-//                ((GridData)descText.getLayoutData()).heightHint = (3 * descText.getLineHeight());
-//    	    	descText.setText(Messages.createRelationalUserDefinedFunctionDescription);
-//    		}
             return pnlOuter;
     	}
     	
-    	private void handleInfoChanged( final boolean isUdf,
-    	                                final boolean isSourceFunction ) {
-    	    relationalProcedure.setFunction(isUdf || isSourceFunction);
-            relationalProcedure.setSourceFunction(isSourceFunction);
+    	private void handleInfoChanged( RelationalProcedure.PROCEDURE_TYPE typeSelected ) {
+    		relationalProcedure.setProcedureType(typeSelected);
     	}
 
     }

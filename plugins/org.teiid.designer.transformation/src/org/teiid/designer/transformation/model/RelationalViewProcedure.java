@@ -64,13 +64,6 @@ public class RelationalViewProcedure extends RelationalProcedure {
 	public boolean isSourceFunction() {
 		return false;
 	}
-	/* (non-Javadoc)
-	 * @see org.teiid.designer.relational.model.RelationalProcedure#setSourceFunction(boolean)
-	 */
-	@Override
-	public void setSourceFunction(boolean isSourceFunction) {
-		throw new UnsupportedOperationException("RelationalViewProcedure.setSourceFunction() method is not supported");  //$NON-NLS-1$
-	}
 	
 	/**
 	 * Rest enablement flag

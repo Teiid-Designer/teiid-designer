@@ -32,6 +32,7 @@ import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedure;
+import org.teiid.designer.relational.model.RelationalProcedure.PROCEDURE_TYPE;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.RelationalDialogModel;
@@ -116,8 +117,7 @@ public class CreateFunctionAction extends Action {
             	
         		if( mr != null ) {
 	            	RelationalProcedure relationalProcedure = new RelationalProcedure(name);
-	            	relationalProcedure.setFunction(true);
-	            	relationalProcedure.setSourceFunction(true);
+	            	relationalProcedure.setProcedureType(PROCEDURE_TYPE.SOURCE_FUNCTION);
 			        
 			        for (int i=0; i<numArgs; i++ ) {
 			        	RelationalParameter param = new RelationalParameter("arg"+ (i+1)); //$NON-NLS-1$

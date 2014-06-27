@@ -143,5 +143,22 @@ public class RelationalProcedureResultSet extends RelationalTable {
             } 
         }
     }
-        
+
+	@Override
+	public boolean canMoveColumnUp(RelationalColumn column) {
+		if( ((RelationalProcedure)getParent()).isNativeQueryProcedure() ) {
+			return false;
+		}
+		return super.canMoveColumnUp(column);
+	}
+
+	@Override
+	public boolean canMoveColumnDown(RelationalColumn column) {
+		if( ((RelationalProcedure)getParent()).isNativeQueryProcedure() ) {
+			return false;
+		}
+		return super.canMoveColumnDown(column);
+	}
+    
+    
 }
