@@ -84,4 +84,12 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      String ACCEPT_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
      String CONTENT_TYPE_PROPERTY_KEY = "Content-Type"; //$NON-NLS-1$
      String CONTENT_TYPE_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
+     
+     
+     /**
+      * Properties used for REST parameter info
+      */
+     String URI = "URI"; //$NON-NLS-1$
+     String QUERY_STRING = "Query String"; //$NON-NLS-1$
+     String PARAMETER_MAP = "Parameter map"; //$NON-NLS-1$
 }

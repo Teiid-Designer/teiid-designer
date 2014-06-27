@@ -9,7 +9,9 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -46,9 +48,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
@@ -75,15 +80,22 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	private Text passwordText;
 	private Label urlLabel;
 	private Text urlText;
+	private Label urlPreviewLabel;
+	Text urlPreviewText;
 	private Text securityText;
 	private Label securityLabel;
+	private Map<String, String> parameterMap = new LinkedHashMap<String, String>();
+
+	private TabItem parametersTab;
+    private TabItem headerPropertiesTab;
+    ParameterPanel parameterPanel;
 	
 	private TableViewer propertiesViewer;
 	
 	private Properties extraProperties;
 
 	
-    public PropertyPage() {
+	public PropertyPage() {
         super();
         extraProperties = new Properties();
     }
@@ -186,15 +198,108 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalSpan = 1;
         passwordText.setLayoutData(gd);
+        urlPreviewLabel = new Label(scrolled, SWT.NONE);
+        urlPreviewLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.urlPreviewLabel")); //$NON-NLS-1$
+        gd = new GridData();
+        urlPreviewLabel.setLayoutData(gd);
 
+        urlPreviewText = new Text(scrolled, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+		gd.heightHint = 40;
+        gd.horizontalSpan = 3;
+        urlPreviewText.setLayoutData(gd);
+        urlPreviewText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        
         initControls();
         
-        new ExtraPropertiesPanel(scrolled);
-
+        TabFolder tabFolder = new TabFolder(scrolled, SWT.TOP | SWT.BORDER);
+  		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
+          
+  		Composite parameterPanel = WidgetFactory.createPanel(tabFolder);
+  		this.parametersTab = new TabItem(tabFolder, SWT.FILL);
+  		this.parametersTab.setControl(parameterPanel);
+  		this.parametersTab.setText(UTIL.getString("ParametersPanel_groupTitle")); //$NON-NLS-1$
+  		this.parameterPanel = new ParameterPanel(this, parameterPanel, parameterMap, 6);
+  		this.urlPreviewText.setText(updateUrlPreview().toString());
+  		
+  		Composite headerPropertiesPanel = WidgetFactory.createPanel(tabFolder);
+  		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL);
+  		this.headerPropertiesTab.setControl(headerPropertiesPanel);
+  		this.headerPropertiesTab.setText(UTIL.getString("HeaderPropertiesPanel_groupTitle")); //$NON-NLS-1$
+        new HeaderPropertiesPanel(headerPropertiesPanel, this.extraProperties, 6);
+        
         addlisteners();
     }
 	
+	 /**
+	 * @return the extraProperties
+	 */
+	public Properties getExtraProperties() {
+		return this.extraProperties;
+	}
+
+	/**
+	 * @param extraProperties the extraProperties to set
+	 */
+	public void setExtraProperties(Properties extraProperties) {
+		this.extraProperties = extraProperties;
+	}
 	
+	/**
+	 * @return the parameterMap
+	 */
+	public Map<String, String> getParameterMap() {
+		return this.parameterMap;
+	}
+
+	/**
+	 * @param parameterMap the parameterMap to set
+	 */
+	public void setParameterMap(Map<String, String> parameterMap) {
+		this.parameterMap = parameterMap;
+	}
+	
+	 /**
+	 * @return
+	 */
+	StringBuilder updateUrlPreview() {
+		StringBuilder previewUrl = new StringBuilder();
+		String urlText = this.urlText.getText();
+		if (urlText == null || urlText.trim().equals(StringUtilities.EMPTY_STRING)){
+			urlText = "{base URL}"; //$NON-NLS-1$
+		}
+		StringBuilder parameters = buildParameterString();
+		previewUrl.append(urlText).append(parameters);
+		return previewUrl;
+	}
+
+	/**
+	 * @return
+	 */
+	private StringBuilder buildParameterString() {
+		
+		StringBuilder parameterString = new StringBuilder();
+		if (parameterPanel==null) return parameterString;
+		Map<String, String> parameterMap = this.parameterMap;
+
+		for (String key : parameterMap.keySet()) {
+	      String value = parameterMap.get(key);
+	      if (value.equals(IWSProfileConstants.URI)) {
+	    	  parameterString.append("/").append(key); //$NON-NLS-1$
+	      }
+	      if (value.equals(IWSProfileConstants.QUERY_STRING)) {
+	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
+	    		  parameterString.append("?");   //$NON-NLS-1$
+	    	  }else{
+	    		  parameterString.append("&");   //$NON-NLS-1$  
+	    	  }
+	    	  parameterString.append(key).append("=value"); //$NON-NLS-1$
+	      }
+	    }
+
+		return parameterString;
+	}
 
     /* (non-Javadoc)
 	 * @see org.eclipse.datatools.connectivity.ui.wizards.ProfilePropertyPage#performOk()
@@ -291,6 +396,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void initControls() {
         IConnectionProfile profile = getConnectionProfile();
         Properties props = profile.getBaseProperties();
+        if (null != props.get(IWSProfileConstants.PARAMETER_MAP) &! props.get(IWSProfileConstants.PARAMETER_MAP).equals(StringUtilities.EMPTY_STRING)) {
+        	this.parameterMap = ((Map)props.get(IWSProfileConstants.PARAMETER_MAP));
+        }
         if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
             usernameText.setText((String)props.get(ICredentialsCommon.USERNAME_PROP_ID));
         }
