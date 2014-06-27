@@ -9,7 +9,10 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,9 +37,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
@@ -52,10 +59,16 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     private CLabel profileText;
     private Label descriptionLabel;
     private Text descriptionText;
+    private Label urlPreviewLabel;
+    Text urlPreviewText;
     private Label urlLabel;
     private Text urlText;
     private CredentialsComposite credentialsComposite;
-    private Properties profileProperties;
+    private Map<String, String> parameterMap = new LinkedHashMap<String, String>();
+
+	private TabItem parametersTab;
+    private TabItem headerPropertiesTab;
+    ParameterPanel parameterPanel;
 
     /**
      * @param wizardPageName
@@ -116,11 +129,37 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         credentialsComposite.setLayoutData(gd);
+        this.profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        this.parameterMap = (Map) profileProperties.get(IWSProfileConstants.PARAMETER_MAP);
+        
+        urlPreviewLabel = new Label(scrolled, SWT.NONE);
+        urlPreviewLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.urlPreviewLabel")); //$NON-NLS-1$
+        gd = new GridData();
+        urlPreviewLabel.setLayoutData(gd);
 
+        urlPreviewText = new Text(scrolled, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.grabExcessHorizontalSpace = true;
+		gd.heightHint = 40;
+        gd.horizontalSpan = 3;
+        urlPreviewText.setLayoutData(gd);
+        urlPreviewText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
         
-        profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        TabFolder tabFolder = new TabFolder(scrolled, SWT.TOP | SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
         
-        new HeaderPropertiesPanel(scrolled, profileProperties, 6);
+		Composite parameterPanel = WidgetFactory.createPanel(tabFolder);
+		this.parametersTab = new TabItem(tabFolder, SWT.FILL);
+		this.parametersTab.setControl(parameterPanel);
+		this.parametersTab.setText(UTIL.getString("ParametersPanel_groupTitle")); //$NON-NLS-1$
+		this.parameterPanel = new ParameterPanel(this, parameterPanel, parameterMap, 6);
+		this.urlPreviewText.setText(updateUrlPreview().toString());
+		
+		Composite headerPropertiesPanel = WidgetFactory.createPanel(tabFolder);
+		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL);
+		this.headerPropertiesTab.setControl(headerPropertiesPanel);
+		this.headerPropertiesTab.setText(UTIL.getString("HeaderPropertiesPanel_groupTitle")); //$NON-NLS-1$
+        new HeaderPropertiesPanel(headerPropertiesPanel, profileProperties, 6);
         
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
@@ -132,8 +171,78 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         addListeners();
 
 	}
+	
+	/**
+	 * @return the parameterMap
+	 */
+	public Map<String, String> getParameterMap() {
+		return this.parameterMap;
+	}
 
-    /* (non-Javadoc)
+	/**
+	 * @param parameterMap the parameterMap to set
+	 */
+	public void setParameterMap(Map<String, String> parameterMap) {
+		this.parameterMap = parameterMap;
+	}
+
+	private Properties profileProperties;
+    /**
+	 * @return the profileProperties
+	 */
+	public Properties getProfileProperties() {
+		return this.profileProperties;
+	}
+
+	/**
+	 * @param profileProperties the profileProperties to set
+	 */
+	public void setProfileProperties(Properties profileProperties) {
+		this.profileProperties = profileProperties;
+	}
+	 
+	/**
+	 * @return
+	 */
+	StringBuilder updateUrlPreview() {
+		StringBuilder previewUrl = new StringBuilder();
+		String urlText = this.urlText.getText();
+		if (urlText == null || urlText.trim().equals(StringUtilities.EMPTY_STRING)){
+			urlText = "{base URL}"; //$NON-NLS-1$
+		}
+		StringBuilder parameters = buildParameterString();
+		previewUrl.append(urlText).append(parameters);
+		return previewUrl;
+	}
+
+	/**
+	 * @return
+	 */
+	private StringBuilder buildParameterString() {
+		
+		StringBuilder parameterString = new StringBuilder();
+		if (this.parameterMap==null) return parameterString;
+		Map<String, String> parameterMap = this.parameterMap;
+
+		for (String key : parameterMap.keySet()) {
+	      String value = parameterMap.get(key);
+	      if (value.equals(IWSProfileConstants.URI)) {
+	    	  parameterString.append("/").append(key); //$NON-NLS-1$
+	      }
+	      if (value.equals(IWSProfileConstants.QUERY_STRING)) {
+	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
+	    		  parameterString.append("?");   //$NON-NLS-1$
+	    	  }else{
+	    		  parameterString.append("&");   //$NON-NLS-1$  
+	    	  }
+	    	  parameterString.append(key).append("=value"); //$NON-NLS-1$
+	      }
+	    }
+
+		return parameterString;
+	}
+
+	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.DialogPage#setVisible(boolean)
 	 */
 	@Override
@@ -208,11 +317,16 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
 
-        profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
-        descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
-
+        this.profileText.setText(((NewConnectionProfileWizard)getWizard()).getProfileName());
+        this.descriptionText.setText(((NewConnectionProfileWizard)getWizard()).getProfileDescription());
+        this.urlPreviewText.setText(updateUrlPreview().toString());
+        
         if( this.profileProperties ==  null ) {
         	this.profileProperties = ((NewConnectionProfileWizard)getWizard()).getProfileProperties();
+        }
+        
+        if( this.profileProperties !=  null && this.parameterMap !=null) {
+        	profileProperties.put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
         }
         
         if (null == profileProperties.get(IWSProfileConstants.END_POINT_URI_PROP_ID)

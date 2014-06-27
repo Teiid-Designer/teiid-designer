@@ -9,7 +9,9 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -39,6 +41,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -58,25 +61,45 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 /**
  *
  */
-public class HeaderPropertiesPanel implements DatatoolsUiConstants {
-	static final String PREFIX = I18nUtil.getPropertyPrefix(HeaderPropertiesPanel.class);
+public class ParameterPanel implements DatatoolsUiConstants {
+	static final String PREFIX = I18nUtil.getPropertyPrefix(ParameterPanel.class);
 	
     TableViewer propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
-	private Properties profileProperties;
+	private Map parameterMap;
 	private int visibleTableRows;
+	private WSProfileDetailsWizardPage wsProfileDetailsWizardPage;
+	private PropertyPage propertyPage;
 	
 	/**
 	 * Constructor
+	 * @param wsProfileDetailsWizardPage 
      * @param parent the parent Composite
+	 * @param parameterMap 
      * @param propertiesManager the TeiidpropertiesManager
      * @param visibleTableRows the number of visible rows to be shown in the table
      */
-    public HeaderPropertiesPanel(Composite parent, Properties profileProperties, int visibleTableRows) {
+    public ParameterPanel(WSProfileDetailsWizardPage wsProfileDetailsWizardPage, Composite parent, Map<String, String> parameterMap, int visibleTableRows) {
     	super();
-    	this.profileProperties = profileProperties;
+    	this.parameterMap = parameterMap;
     	this.visibleTableRows = visibleTableRows;
+    	this.wsProfileDetailsWizardPage = wsProfileDetailsWizardPage;
+    	createPanel(parent);
+    }
+    /**
+	 * Constructor
+     * @param propertyPage 
+     * @param parent the parent Composite
+     * @param parameterMap 
+     * @param propertiesManager the TeiidpropertiesManager
+     * @param visibleTableRows the number of visible rows to be shown in the table
+     */
+    public ParameterPanel(PropertyPage propertyPage, Composite parent, Map<String, String> parameterMap, int visibleTableRows) {
+    	super();
+    	this.parameterMap = parameterMap;
+    	this.visibleTableRows = visibleTableRows;
+    	this.propertyPage = propertyPage;
     	createPanel(parent);
     }
     
@@ -85,7 +108,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
      * @param parent the parent composite
      */
 	private void createPanel(Composite parent) {
-    	Composite panel = WidgetFactory.createGroup(parent, StringUtilities.EMPTY_STRING, SWT.FILL, 2, 1); 
+		
+    	Composite panel = WidgetFactory.createGroup(parent, StringUtilities.EMPTY_STRING, SWT.FILL, 2, 1);  //$NON-NLS-1$
     	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
     	gd.horizontalSpan = 2;
     	panel.setLayoutData(gd);
@@ -110,26 +134,16 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-            	Properties props = profileProperties;
+            	Map parameters = parameterMap;
 
-                if (props.isEmpty()) {
+                if (parameters == null || parameters.isEmpty()) {
                     return new Object[0];
                 }
                 
                 List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
-                for( Object key : props.keySet() ) {
+                for( Object key : parameters.keySet() ) {
                 	String keyStr = (String)key;
-                	if( ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
-                		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		IWSProfileConstants.PARAMETER_MAP.equalsIgnoreCase(keyStr) ||
-                		props.get(key).equals(IWSProfileConstants.URI) ||
-                        props.get(key).equals(IWSProfileConstants.QUERY_STRING)) {
-                		// do nothing;
-                	} else {
-                		properties.add(new SimpleProperty(keyStr, (String)props.get(key)));
-                	}
+                	properties.add(new SimpleProperty(keyStr, (String)parameters.get(key)));
                 }
                 return properties.toArray(new SimpleProperty[0]);
             }
@@ -160,10 +174,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             public int compare( Viewer viewer,
                                 Object e1,
                                 Object e2 ) {
-            	SimpleProperty prop1 = (SimpleProperty)e1;
-                SimpleProperty prop2 = (SimpleProperty)e2;
 
-                return super.compare(viewer, prop1.getName(), prop2.getName());
+                return 0;
             }
         });
 
@@ -177,13 +189,13 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(UTIL.getString("HeaderPropertiesPanel_name") + "                   ");  //$NON-NLS-1$ //$NON-NLS-2$
+        column.getColumn().setText(UTIL.getString("ParametersPanel_name") + "                   ");  //$NON-NLS-1$ //$NON-NLS-2$
         column.setLabelProvider(new PropertyLabelProvider(0));
         //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 0));
         column.getColumn().pack();
 
         column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(UTIL.getString("HeaderPropertiesPanel_value"));  //$NON-NLS-1$
+        column.getColumn().setText(UTIL.getString("ParametersPanel_value"));  //$NON-NLS-1$
         column.setLabelProvider(new PropertyLabelProvider(1));
         column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
         column.getColumn().pack();
@@ -208,7 +220,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         
         this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
         this.addPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.ADD_PROPERTY_ICON)); 
-        this.addPropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_addNewPropertyButton_tooltip")); //$NON-NLS-1$
+        this.addPropertyButton.setToolTipText(UTIL.getString("ParametersPanel_addNewParameterButton_tooltip")); //$NON-NLS-1$
         this.addPropertyButton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -223,7 +235,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         
         this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
         this.removePropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.REMOVE_PROPERTY_ICON));
-        this.removePropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_removePropertyButton_tooltip"));  //$NON-NLS-1$
+        this.removePropertyButton.setToolTipText(UTIL.getString("ParametersPanel_removeParameterButton_tooltip"));  //$NON-NLS-1$
         this.removePropertyButton.addSelectionListener(new SelectionListener() {
 			
 			@Override
@@ -257,20 +269,20 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 	
     void handleAddProperty() {
         assert (!this.propertiesViewer.getSelection().isEmpty());
-        
+        if (this.parameterMap == null) this.parameterMap = new LinkedHashMap();
         Set<String> keys = new HashSet<String>();
-        for( Object key : profileProperties.keySet() ) {
+        for( Object key : parameterMap.keySet() ) {
         	keys.add((String)key);
         }
 
 
-        AddHeaderPropertyDialog dialog = new AddHeaderPropertyDialog(propertiesViewer.getControl().getShell(), keys);
+        AddParameterDialog dialog = new AddParameterDialog(propertiesViewer.getControl().getShell(), keys);
 
         if (dialog.open() == Window.OK) {
             // update model
             String name = dialog.getName();
-            String value = dialog.getValue();
-            profileProperties.put(name, value);
+            String value = dialog.getValue() != null ? dialog.getValue() : IWSProfileConstants.QUERY_STRING;
+            parameterMap.put(name, value);
 
             // update UI from model
             this.propertiesViewer.refresh();
@@ -290,6 +302,16 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             if( prop != null ) {
                 this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
             }
+            
+            if (this.wsProfileDetailsWizardPage!=null){
+            	wsProfileDetailsWizardPage.getProfileProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+            	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
+            	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+            }else{
+            	propertyPage.getExtraProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+            	propertyPage.setParameterMap(this.parameterMap);
+            	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
+            }
         }
     }
     
@@ -298,10 +320,16 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         assert (selectedProperty != null);
 
         // update model
-        profileProperties.remove(selectedProperty.getName());
+        parameterMap.remove(selectedProperty.getName());
 
         // update UI
         this.propertiesViewer.refresh();
+        
+        if (this.wsProfileDetailsWizardPage!=null){
+        	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+        }else{
+        	propertyPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+        }
     }
 	
 	class PropertyLabelProvider extends ColumnLabelProvider {
@@ -396,8 +424,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newKey = (String)value;
 					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						profileProperties.remove(oldKey);
-						profileProperties.put(newKey,oldValue);
+						parameterMap.remove(oldKey);
+						parameterMap.put(newKey,oldValue);
 						propertiesViewer.refresh();
 					}
 				} else if( columnID == 1 ) {
@@ -405,7 +433,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						profileProperties.put(key,newValue);
+						parameterMap.put(key,newValue);
 						propertiesViewer.refresh();
 					}
 				}
@@ -414,7 +442,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		}
 
 	}
-    class AddHeaderPropertyDialog  extends MessageDialog {
+    class AddParameterDialog  extends MessageDialog {
 
         private Button btnOk;
         private final Set<String> existingNames;
@@ -425,10 +453,10 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
          * @param parentShell the parent shell (may be <code>null</code>)
          * @param existingPropertyNames the existing property names (can be <code>null</code>)
          */
-        public AddHeaderPropertyDialog( Shell parentShell,
+        public AddParameterDialog( Shell parentShell,
                                   Set<String> existingPropertyNames ) {
-            super(parentShell, UTIL.getString("AddHeaderPropertyDialog_title"), null,   //$NON-NLS-1$
-            		UTIL.getString("AddHeaderPropertyDialog_message"), MessageDialog.INFORMATION,  //$NON-NLS-1$
+            super(parentShell, UTIL.getString("AddParameterDialog_title"), null,   //$NON-NLS-1$
+            		UTIL.getString("AddParameterDialog_message"), MessageDialog.INFORMATION,  //$NON-NLS-1$
                     new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
             if( existingPropertyNames == null ) {
@@ -472,11 +500,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 
             Label lblName = new Label(pnl, SWT.NONE);
             lblName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblName.setText(UTIL.getString("AddHeaderPropertyDialog_lblName_text"));  //$NON-NLS-1$
+            lblName.setText(UTIL.getString("AddParameterDialog_lblName_text"));  //$NON-NLS-1$
 
             Text txtName = new Text(pnl, SWT.BORDER);
             txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            txtName.setToolTipText(UTIL.getString("AddHeaderPropertyDialog_txtName_toolTip")); //$NON-NLS-1$
+            txtName.setToolTipText(UTIL.getString("AddParameterDialog_txtName_toolTip")); //$NON-NLS-1$
             txtName.addModifyListener(new ModifyListener() {
                 /**
                  * {@inheritDoc}
@@ -491,25 +519,36 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 
             Label lblValue = new Label(pnl, SWT.NONE);
             lblValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-            lblValue.setText(UTIL.getString("AddHeaderPropertyDialog_lblValue_text"));  //$NON-NLS-1$
+            lblValue.setText(UTIL.getString("AddParameterDialog_lblType_text"));  //$NON-NLS-1$
 
-            Text txtValue = new Text(pnl, SWT.BORDER);
+            Combo txtValue = WidgetFactory.createCombo(pnl,
+                    SWT.SIMPLE,
+                    GridData.FILL_HORIZONTAL);
+            GridData gd = new GridData();
+            gd.horizontalAlignment = GridData.FILL;
+            gd.verticalAlignment = GridData.BEGINNING;
+            gd.grabExcessHorizontalSpace = true;
+            txtValue.setLayoutData(gd);
+            txtValue.add(IWSProfileConstants.QUERY_STRING);
+            txtValue.add(IWSProfileConstants.URI);
+            txtValue.select(0);
             txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-            txtValue.setToolTipText(UTIL.getString("AddHeaderPropertyDialog_txtValue_toolTip"));  //$NON-NLS-1$
-            txtValue.addModifyListener(new ModifyListener() {
-                /**
-                 * {@inheritDoc}
-                 * 
-                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-                 */
-                @Override
-                public void modifyText( ModifyEvent e ) {
-                    handleValueChanged(((Text)e.widget).getText());
-                }
-            });
+            txtValue.setToolTipText(UTIL.getString("AddParameterDialog_txtType_toolTip"));  //$NON-NLS-1$
+            txtValue.addSelectionListener(new SelectionListener() {
 
-            return pnl;
-        }
+    			@Override
+    			public void widgetSelected(SelectionEvent e) {
+    				handleValueChanged();
+    			}
+
+    			@Override
+    			public void widgetDefaultSelected(SelectionEvent e) {
+    			}
+    		});
+
+            txtValue.setVisibleItemCount(2);
+			return pnl;
+    	}
 
         /**
          * @return the new property name (never <code>null</code>)
@@ -544,20 +583,14 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             updateState();
         }
 
-        void handleValueChanged( String newValue ) {
-            this.value = newValue.trim();
+        void handleValueChanged(  ) {
+     //       this.value = this.
             updateState();
         }
 
         private void updateState() {
             // check to see if new name is valid
             String msg = validateName();
-
-            // empty message means field is valid
-            if (StringUtilities.isEmpty(msg)) {
-                // if name is valid check value
-                msg = validateValue();
-            }
 
             // update UI controls
             if (StringUtilities.isEmpty(msg)) {
@@ -570,7 +603,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 }
 
                 this.imageLabel.setImage(getInfoImage());
-                msg = UTIL.getString("AddHeaderPropertyDialog_message"); //$NON-NLS-1$
+                msg = UTIL.getString("AddParameterDialog_message"); //$NON-NLS-1$
             } else {
                 // value is not valid
                 if (this.btnOk.isEnabled()) {
@@ -591,7 +624,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 // make sure property ID doesn't already exist
                 for (String existingName : this.existingNames) {
                     if (existingName.equals(this.name)) {
-                        errorMsg = UTIL.getString("AddHeaderPropertyDialog_customPropertyAlreadyExists", this.name); //$NON-NLS-1$
+                        errorMsg = UTIL.getString("AddParameterDialog_customParameterAlreadyExists", this.name); //$NON-NLS-1$
                         break;
                     }
                 }
@@ -611,13 +644,13 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         public String validateName( String proposedName ) {
             // must have a name
             if (StringUtilities.isEmpty(proposedName)) {
-                return UTIL.getString("AddHeaderPropertyDialog_emptyPropertyName");  //$NON-NLS-1$
+                return UTIL.getString("AddParameterDialog_emptyParameterName");  //$NON-NLS-1$
             }
 
             // make sure only letters
             for (char c : proposedName.toCharArray()) {
                 if ( ! isValidChar(c)) {
-                    return UTIL.getString("AddHeaderPropertyDialog_invalidPropertyName");  //$NON-NLS-1$
+                    return UTIL.getString("AddParameterDialog_invalidParametersName");  //$NON-NLS-1$
                 }
             }
 
@@ -626,7 +659,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         }
         
         private boolean isValidChar(char c) {
-        	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-' || c == '_' || c=='.') return true;
+        	if((Character.isLetter(c) || Character.isDigit(c))) return true;
         	
         	return false;
         }
@@ -638,7 +671,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
         public String validateValue( String proposedValue ) {
             // must have a value
             if (StringUtilities.isEmpty(proposedValue)) {
-                return UTIL.getString("AddHeaderPropertyDialog_emptyPropertyValue"); //$NON-NLS-1$
+                return UTIL.getString("AddParameterDialog_emptyParameterValue"); //$NON-NLS-1$
             }
 
             // valid

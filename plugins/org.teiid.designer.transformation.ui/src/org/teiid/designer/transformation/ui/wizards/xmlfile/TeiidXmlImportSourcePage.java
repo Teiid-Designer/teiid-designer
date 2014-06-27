@@ -633,7 +633,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
             		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
             		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
             		IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
-            		IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr) ) {
+            		IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
+            		props.get(key).equals(IWSProfileConstants.URI) ||
+                    props.get(key).equals(IWSProfileConstants.QUERY_STRING)) {
             		// do nothing;
             	} else {
             		httpConn.setRequestProperty(keyStr, props.getProperty(keyStr));
