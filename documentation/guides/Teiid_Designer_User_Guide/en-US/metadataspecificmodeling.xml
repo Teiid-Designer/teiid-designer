@@ -7,23 +7,20 @@
 		<title>Relational Source Modeling</title>
 		<section id="source-function-section">
 			<title>Source Function</title>
-			<para>The ability to utilize functions within your transformations can be a powerful 
-				tool for manipulating and managing the structure and content of your virtual data. 
-				Teiid Designer exposes a wealth of system functions through the Expression Builder 
-				wizard to select and define function calls within your SQL.
-			</para>
-
-			<para>Teiid Designer also provides features for defining source functions to 
-				represent functions for your target relational data base, as well as 
-				user-defined functions coded in java.
-			</para>
-
-			<para>If you define a source function in a source model or user-defined function 
-				in a view model, that new function will be available to use in your transformations.
-			</para>
-
-			<para>See <xref linkend="create-relational-procedure-wizard-section" /> for details.</para>
-
+			<para>The ability to utilize functions within your transformations 
+			can be a powerful tool for manipulating and managing the structure 
+			and content of your virtual data. Teiid Designer exposes a wealth of 
+			system functions through the Expression Builder wizard to select and 
+			define function calls within your SQL.</para>
+			<para>Teiid Designer also provides features for defining source 
+			functions to represent functions for your target relational data 
+			base, as well as user-defined functions coded in java.</para>
+			<para>If you define a source function in a source model or 
+			user-defined function in a view model, that new function will be 
+			available to use in your transformations.</para>
+			<para>See 
+			<xref linkend="create-relational-procedure-wizard-section"/> for 
+			details.</para>
 		</section>
 	</section>
 	<section id="relational-view-modeling-section">
@@ -214,8 +211,8 @@
 			on models within your VDBs. This section describes these wizards in 
 			detail.</para>
 			<section id="generate-jbossws-cxf-war-section">
-				<title>Generating a JBossWS-CXF War</title>
-				<para>The Teiid Designer provides web service generation 
+				<title>Generating a SOAP War</title>
+				<para>The Teiid Designer provides SOAP web service generation 
 				capabilities in the form of a JBossWS-CXF war. Once you have added 
 				your <emphasis role="bold">Web Service Models</emphasis> as 
 				described in <xref linkend="new-web-service-view-model"/> to your 
@@ -226,7 +223,7 @@
 				<itemizedlist>
 					<listitem>
 						<para>
-							To generate a new JBossWS-CXF war using the VDB:
+							To generate a new SOAP war using the VDB:
 							<itemizedlist>
 								<listitem>
 									<para><emphasis role="bold">Step 1</emphasis> - Right-click on 
@@ -242,7 +239,7 @@
 									missing properties in <emphasis role="bold">Web Service War 
 									Generation Wizard</emphasis> shown below.</para>
 									<figure>
-										<title>Generate a JBossWS-CXF War Web Service Dialog</title>
+										<title>Generate a SOAP War Web Service Dialog</title>
 										<mediaobject><imageobject>
 										<imagedata fileref="images/screencaps/create-web-service-war.png"/>
 										</imageobject></mediaobject>
@@ -365,7 +362,7 @@
 				</itemizedlist>
 			</section>
 			<section id="generate-resteasy-war-section">
-				<title>Generating a RESTEasy War</title>
+				<title>Generating a REST War</title>
 				<para>In Teiid Designer, it is also possible to expose your VDBs 
 				over REST using a generated RESTEasy war. Also, if your target 
 				virtual model has update, insert and delete SQL defined, you can 
@@ -421,16 +418,20 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 2</emphasis> - Now we need to 
-						identify our procedure as REST eligible. To do this, select the 
-						procedure and note the REST properties in the property panel. The REST 
-						Method and URI are the only required properties to make the procedure REST
-						eligible. All of the properties are defined in the table below:
+						<para>
+							<emphasis role="bold">Step 2</emphasis>
+							 - Now we need to identify our procedure as REST eligible. To do 
+							this, select the procedure and note the REST properties in the 
+							property panel. The REST Method and URI are the only required 
+							properties to make the procedure REST eligible. All of the 
+							properties are defined in the table below:
 							<table frame="all">
 								<title>Properties for RESTful Procedures</title>
 								<tgroup cols="3">
 									<colspec colname="c1" colnum="1" colwidth="1.0*"/>
+									 
 									<colspec colname="c2" colnum="2" colwidth="1.0*"/>
+									 
 									<colspec colname="c3" colnum="3" colwidth="1.0*"/>
 									<thead>
 										<row>
@@ -465,9 +466,10 @@
 										</row>
 										<row>
 											<entry>HEADERS</entry>
-											<entry>Semi-colon delimited list of HTTP Header parameters to
-											pass into the REST service operation. Ex. header1;header2;etc. 
-											These value will be passed into the procedure first.</entry>
+											<entry>Semi-colon delimited list of HTTP Header parameters 
+											to pass into the REST service operation. Ex. 
+											header1;header2;etc. These value will be passed into the 
+											procedure first.</entry>
 											<entry>No</entry>
 										</row>
 									</tbody>
@@ -687,20 +689,22 @@
 			</section>
 			<section id="autogenerate-war-section">
 				<title>Auto-generate a REST WAR</title>
-				<para>Instead of generating the REST WAR in Designer, you can also set a property
-				on your VDB containing a REST eligible procedure to auto-generate a REST war
-				at VDB deployment time. In the VDB Editor, the properties tab has a checkbox
-				to tell the Teiid engine to generate a REST WAR upon deployment. In addition
-				to checking the <emphasis role="bold">Generate REST WAR</emphasis> checkbox, a role of 
-				<emphasis role="bold">rest</emphasis> is required for the user accessing the REST URL. Please
-				see the Teiid documentation for more information about the auto-generated REST WAR.</para>
+				<para>Instead of generating the REST WAR in Designer, you can also 
+				set a property on your VDB containing a REST eligible procedure to 
+				auto-generate a REST war at VDB deployment time. In the VDB Editor, 
+				the properties tab has a checkbox to tell the Teiid engine to 
+				generate a REST WAR upon deployment. In addition to checking the 
+				<emphasis role="bold">Generate REST WAR</emphasis> checkbox, a role 
+				of <emphasis role="bold">rest</emphasis> is required for the user 
+				accessing the REST URL. Please see the Teiid documentation for more 
+				information about the auto-generated REST WAR.</para>
 				<figure>
 					<title>REST WAR Auto-generation Option</title>
 					<mediaobject><imageobject>
-						<imagedata fileref="images/screencaps/vdb-autogenerate-rest-war.png"/>
-						</imageobject></mediaobject>
+					<imagedata fileref="images/screencaps/vdb-autogenerate-rest-war.png"/>
+					</imageobject></mediaobject>
 				</figure>
-			</section> 
+			</section>
 		</section>
 	</section>
 </chapter>
