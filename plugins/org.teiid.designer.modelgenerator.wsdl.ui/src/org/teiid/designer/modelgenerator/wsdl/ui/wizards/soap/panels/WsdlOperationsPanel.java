@@ -368,7 +368,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	/**
 	 * Populate the UI based on the wsdl in the connection profile
 	 */
-	public void notifyWsdlChanged() {
+	public void notifyWsdlChanged(final boolean profileChanged) {
         /*
          * Depending on the size of the WSDL selected in the connection profile,
          * this can take a little while so indicate the user should wait.
@@ -413,10 +413,12 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                 operationsViewer.setInput(new OperationsContainer(operations));
                 operationsViewer.refresh(true);
 
-                importManager.setSelectedOperations(new ArrayList());
-
-                
-                setAllNodesSelected(true);
+                if( profileChanged || importManager.getSelectedOperations().isEmpty()) {
+                	importManager.setSelectedOperations(new ArrayList());
+                	setAllNodesSelected(true);
+                } else {
+                	selectNodesFromImportManager();
+                }
                 updateImportManager();
             }
         });
@@ -438,6 +440,16 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	 */
 	public IStatus getStatus() {
 		return panelStatus;
+	}
+	
+	private void selectNodesFromImportManager() {
+		for( Operation oper : importManager.getSelectedOperations() ) {
+			for( TableItem item : operationsViewer.getTable().getItems()) {
+				if( oper == item.getData() ) {
+					item.setChecked(true);
+				}
+			}
+		}
 	}
 
 	private void setAllNodesSelected(boolean bSelected) {

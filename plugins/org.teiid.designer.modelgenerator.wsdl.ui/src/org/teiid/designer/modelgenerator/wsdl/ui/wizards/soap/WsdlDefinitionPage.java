@@ -331,7 +331,15 @@ public class WsdlDefinitionPage extends WizardPage
 
 		if (selIndex >= 0) {
 			String name = connectionProfilesCombo.getItem(selIndex);
-			if (name != null) {
+			if (name != null ) {
+				// Check for same name
+				if( this.importManager.getConnectionProfile() != null) {
+					if(this.importManager.getConnectionProfile().getName().equals(name) ) {
+						this.operationsPanel.notifyWsdlChanged(false);
+						return;
+					}
+				}
+				
 				IConnectionProfile currentProfile = importManager.getConnectionProfile();
 				IConnectionProfile profile = profileWorker.getProfile(name);
 				boolean profileChanged = true;
@@ -345,7 +353,7 @@ public class WsdlDefinitionPage extends WizardPage
 					this.wsdlStatus = null;
 				}
 				
-				this.operationsPanel.notifyWsdlChanged();
+				this.operationsPanel.notifyWsdlChanged(true);
 			}
 		}
 		
@@ -686,7 +694,7 @@ public class WsdlDefinitionPage extends WizardPage
 		 * Want to revalidate the operations even if the connection
 		 * profile is the same since its properties may have been edited
 		 */
-		this.operationsPanel.notifyWsdlChanged();
+		this.operationsPanel.notifyWsdlChanged(profileChanged);
 		return profileChanged;
 	}
 	

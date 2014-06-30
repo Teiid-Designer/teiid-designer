@@ -70,7 +70,7 @@ public class WSDLImportWizardManager implements IChangeNotifier {
 	
 	private boolean generateDefaultProcedures;
 	
-    private List selectedOperations;
+    private List<Operation> selectedOperations;
     private int uriSource = URL_SOURCE;
     private IConnectionProfile connectionProfile;
 
