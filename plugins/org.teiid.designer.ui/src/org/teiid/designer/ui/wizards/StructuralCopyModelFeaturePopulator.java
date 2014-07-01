@@ -9,10 +9,13 @@ package org.teiid.designer.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.tree.DefaultMutableTreeNode;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -222,6 +225,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
 
         // Need to re-set the model type here.
         targetModelResource.getModelAnnotation().setModelType(targetModelType);
+        
         // Now we need to check if virtual, then call the NewModelObjectHelper .....
         if (targetIsVirtual) {
             try {

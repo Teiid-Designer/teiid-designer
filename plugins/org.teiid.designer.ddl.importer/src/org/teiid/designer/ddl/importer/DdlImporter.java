@@ -9,7 +9,11 @@ package org.teiid.designer.ddl.importer;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -21,17 +25,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EObject;
 import org.modeshape.common.text.ParsingException;
 import org.modeshape.common.text.Position;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.exception.EmptyArgumentException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.DdlImporterManager;
@@ -39,7 +46,10 @@ import org.teiid.designer.ddl.DdlNodeImporter;
 import org.teiid.designer.ddl.registry.DdlNodeImporterRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.BaseTable;
+import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
@@ -62,6 +72,7 @@ public class DdlImporter {
     private ModelResource model;
     private String ddlString;
     private IStatus importStatus;
+    private boolean generateDefaultSQL;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
 
@@ -289,6 +300,29 @@ public class DdlImporter {
         // Update the model, based on difference report
         importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
 
+        // If Virtual Model, then find all created Tables, Procedures and Views and call help create to get the transformations set correctly
+        if(importManager.getModelType() == ModelType.VIRTUAL_LITERAL ) {
+        	Properties props = new Properties();
+        	if( doGenerateDefaultSQL() ) {
+	        	props.put("generateDefaultSQL", generateDefaultSQL); //$NON-NLS-1$
+	        	props.put("validate", generateDefaultSQL); //$NON-NLS-1$
+        	}
+        	
+        	Collection<EObject> targets = new ArrayList<EObject>();
+        	
+        	for( Object nextObj : model.getEObjects() ) {
+        		if( nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
+		            try {
+		                NewModelObjectHelperManager.helpCreate(nextObj, props);
+		                targets.add((EObject)nextObj);
+		            } catch (ModelerCoreException err) {
+		                DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
+		            }
+        		}
+        	}
+        }
+
+
         // Save model
         model.save(monitor, false);
 
@@ -407,6 +441,20 @@ public class DdlImporter {
      */
     public void setOptToSetModelEntityDescription(boolean optToSetModelEntityDescription ) {
     	importManager.setOptToSetModelEntityDescription(optToSetModelEntityDescription);
+    }
+    
+    /**
+     * @param value
+     */
+    public void setGenerateDefaultSQL(boolean value) {
+    	this.generateDefaultSQL = value;
+    }
+    
+    /**
+     * @return generateDefaultSQL
+     */
+    public boolean doGenerateDefaultSQL() {
+    	return this.generateDefaultSQL;
     }
 
     /**

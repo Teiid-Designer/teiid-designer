@@ -10,6 +10,7 @@ package org.teiid.designer.ddl.importer.ui;
 import static org.teiid.designer.ddl.importer.ui.DdlImporterUiPlugin.i18n;
 
 class DdlImporterUiI18n {
+	static final String FILE_GROUP_LABEL = i18n("fileGroupLabel"); //$NON-NLS-1$
     static final String CHOOSE_BUTTON = i18n("chooseButton"); //$NON-NLS-1$
     static final String CHOOSE_DDL_FILE_DIALOG_MSG = i18n("chooseDdlFileDialogMsg"); //$NON-NLS-1$
     static final String CHOOSE_DDL_FILE_DIALOG_TITLE = i18n("chooseDdlFileDialogTitle"); //$NON-NLS-1$
@@ -17,6 +18,7 @@ class DdlImporterUiI18n {
     static final String CHOOSE_FROM_WORKSPACE_BUTTON = i18n("chooseFromWorkspaceButton"); //$NON-NLS-1$
     static final String DIALECT_LABEL = i18n("dialectLabel"); //$NON-NLS-1$
     static final String AUTO_SELECT_DIALECT_CHECKBOX = i18n("autoSelectDialectCheckBox"); //$NON-NLS-1$
+    static final String GENERATE_DEFAULT_SQL_CHECKBOX = i18n("generateDefaultSQLCheckBox"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FOLDER_DIALOG_MSG = i18n("chooseModelFolderDialogMsg"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FOLDER_DIALOG_TITLE = i18n("chooseModelFolderDialogTitle"); //$NON-NLS-1$
     static final String CHOOSE_MODEL_FILE_DIALOG_MSG = i18n("chooseModelFileDialogMsg"); //$NON-NLS-1$
@@ -44,6 +46,8 @@ class DdlImporterUiI18n {
     static final String WIZARD_TITLE = i18n("wizardTitle"); //$NON-NLS-1$
     static final String IMPORT_COMPLETED_WITH_WARNINGS_TITLE = i18n("importCompletedWithWarningsTitle"); //$NON-NLS-1$
     static final String IMPORT_COMPLETED_WITH_WARNINGS_MESSAGE = i18n("importCompletedWithWarningsMessage"); //$NON-NLS-1$
+    static final String MODEL_GROUP_LABEL = i18n("modelGroupLabel"); //$NON-NLS-1$
+    static final String OPTIONS_GROUP_LABEL = i18n("optionsGroupLabel"); //$NON-NLS-1$
 
     static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$

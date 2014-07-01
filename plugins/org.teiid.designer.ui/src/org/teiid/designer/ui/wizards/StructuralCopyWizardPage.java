@@ -155,5 +155,9 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
     public boolean isCopyAllDescriptions() {
         return panel.isCopyAllDescriptions();
     }
+    
+    public boolean doGenerateDefaultSQL() {
+        return panel.doGenerateDefaultSQL();
+    }
 
 }//end StructuralCopyWizardPage

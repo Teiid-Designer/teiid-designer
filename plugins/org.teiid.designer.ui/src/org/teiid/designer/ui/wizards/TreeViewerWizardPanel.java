@@ -49,11 +49,13 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
     private final static String SELECT_MODEL_TITLE = Util.getString("StructuralCopyWizardPage.selectModelTitle"); //$NON-NLS-1$
     private final static String SELECT_MODEL_MSG = Util.getString("StructuralCopyWizardPage.selectModelMsg"); //$NON-NLS-1$
     private final static String COPY_ALL_DESCRIPTIONS = Util.getString("StructuralCopyWizardPage.copyAllDescriptions"); //$NON-NLS-1$
+    private final static String GENERATE_DEFAULT_SQL = Util.getString("StructuralCopyWizardPage.generateDefaultSQL"); //$NON-NLS-1$
 
     private WizardPage wizardPage;
     private Text fileNameText;
     private Button browseButton;
     private Button copyAllDescriptions;
+    private Button generateDefaultSQLCheckBox;
     private IStructuralCopyTreePopulator populator = null;
     private Tree tree;
     private TreeViewer treeViewer;
@@ -142,6 +144,13 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
         copyAllDescriptions.setSelection(true);
         copyAllDescriptions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
         copyAllDescriptions.setText(COPY_ALL_DESCRIPTIONS);
+        
+        if( targetIsVirtual ) {
+	        generateDefaultSQLCheckBox = new Button(this, SWT.CHECK);
+	        generateDefaultSQLCheckBox.setSelection(false);
+	        generateDefaultSQLCheckBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+	        generateDefaultSQLCheckBox.setText(GENERATE_DEFAULT_SQL);
+        }
     }
 
     /**
@@ -165,6 +174,10 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
      */
     public boolean isCopyAllDescriptions() {
         return copyAllDescriptions.getSelection();
+    }
+    
+    public boolean doGenerateDefaultSQL() {
+    	return generateDefaultSQLCheckBox.getSelection();
     }
 
     /**

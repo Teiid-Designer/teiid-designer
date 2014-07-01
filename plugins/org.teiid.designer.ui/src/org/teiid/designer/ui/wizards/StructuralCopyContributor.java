@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.ui.wizards;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -17,7 +20,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.ui.common.UiConstants;
+import org.teiid.designer.ui.UiConstants;
 
 
 /**
@@ -78,6 +81,12 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
      */
     @Override
 	public void doFinish(ModelResource modelResource, IProgressMonitor monitor) {
+        Map<String, Boolean> extraProps = new HashMap<String, Boolean>();
+        if( structuralCopyPage.doGenerateDefaultSQL() ) {
+        	extraProps.put("generateDefaultSQL", true); //$NON-NLS-1$
+        	extraProps.put("validate", true); //$NON-NLS-1$
+        }
+
     	String transactionName = Util.getString("StructuralCopyContributor.copyExistingModelTransactionName"); //$NON-NLS-1$
     	boolean started = ModelerCore.startTxn(transactionName,this);
         boolean succeeded = false;
@@ -87,7 +96,7 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
 			if ((populator != null) && (viewer != null)) {
 				try {
                     // tree was disabled; copy everything:
-                    populator.copyModel((ModelResource) viewer.getInput(), modelResource, null, structuralCopyPage.isCopyAllDescriptions(), monitor);
+                    populator.copyModel((ModelResource) viewer.getInput(), modelResource, extraProps, structuralCopyPage.isCopyAllDescriptions(), monitor);
 				} catch (Exception ex) {
                     UiConstants.Util.log(IStatus.ERROR, ex, ex.getMessage());
 				}
