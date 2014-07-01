@@ -41,6 +41,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public static final int FILE_MODE_FLAT_FILE_URL = 1;
 	public static final int FILE_MODE_TEIID_XML_FILE = 2;
 	public static final int FILE_MODE_TEIID_XML_URL = 3;
+	public static final int REST_MODE_URL = 4;
 	
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportInfo.class);
 	

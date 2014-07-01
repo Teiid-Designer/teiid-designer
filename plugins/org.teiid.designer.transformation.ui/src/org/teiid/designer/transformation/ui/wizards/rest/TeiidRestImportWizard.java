@@ -5,9 +5,10 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.transformation.ui.wizards.xmlfile;
+package org.teiid.designer.transformation.ui.wizards.rest;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -17,6 +18,11 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportViewModelPage;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportWizard;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileImportProcessor;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportOptionsPage;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportSourcePage;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -25,9 +31,9 @@ import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 /**
  * @since 8.0
  */
-public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
+public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
     
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlImportWizard.class);
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidRestImportWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
     private static final ImageDescriptor IMAGE = UiPlugin.getDefault().getImageDescriptor(Images.IMPORT_TEIID_METADATA);
@@ -45,7 +51,7 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	/**
 	 * 
 	 */
-	public TeiidXmlImportWizard() {
+	public TeiidRestImportWizard() {
         super(UiPlugin.getDefault(), TITLE, IMAGE);
 	}
 	
@@ -53,14 +59,13 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
         super.init(workbench, inputSelection);
         
-        getFileInfo().setFileMode(TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE);
+        getFileInfo().setFileMode(TeiidMetadataImportInfo.REST_MODE_URL);
 	}
 	
 	@Override
 	public void addPages() {
-		
-		this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
-		addPage(optionsPage);
+	//	this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
+	//	addPage(optionsPage);
 		
         this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
         addPage(sourcePage);
@@ -138,6 +143,8 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
             // Set properties - needs later to determine the connection profile
             sourcePage.setDesignerProperties(desProps);
 		}
+		
+		this.optionsPage.setDesignerProperties(desProps);
 		
     	if( !openProjectExists()) {
 			DesignerPropertiesUtil.setProjectStatus(desProps, IPropertiesContext.NO_OPEN_PROJECT);
