@@ -303,6 +303,21 @@
       </wizard>
   </extension>
   
+    <extension
+         point="org.eclipse.ui.importWizards">
+<!-- Teiid REST Metadata Import Wizard -->
+      <wizard
+            name="%teiidRestImportWizard.name"
+            icon="icons/full/ctool16/import_wsdl.gif"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.transformation.ui.wizards.rest.TeiidRestImportWizard"
+            id="teiidRestImportWizard">
+         <description>
+            %teiidRestImportWizard.description
+         </description>
+      </wizard>
+  </extension>
+  
    <extension
          id="newChildViewTableAction"
          name="%newChildViewTableAction"

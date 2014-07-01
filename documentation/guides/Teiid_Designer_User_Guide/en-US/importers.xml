@@ -401,7 +401,7 @@
 						<figure>
 							<title>Import from Flat File Source</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
+							<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
@@ -667,7 +667,7 @@
 						<figure>
 							<title>Import from XML File Source</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
+							<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
@@ -1326,32 +1326,18 @@
 					</listitem>
 					<listitem>
 						<para><emphasis role="bold">Step 2</emphasis> - Select the import 
-						option <emphasis role="bold">Teiid Designer &gt; File Source 
-						(XML) &gt;&gt; Source and View Model</emphasis> and click 
+						option <emphasis role="bold">Teiid Designer &gt; Web Service Source
+						&gt;&gt; Source and View Model (REST)</emphasis> and click 
 						<emphasis role="bold">Next&gt;</emphasis></para>
 						<figure>
-							<title>Import from XML File Source</title>
+							<title>Import from REST Web Service Source</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-data-file-import-options.png"/>
+							<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 3</emphasis> - The next page of 
-						the wizard allows selection of the XML Import mode that specifies 
-						whether the XML file is local or remote. The description at the 
-						top describes what operations this wizard will perform. Select 
-						<guilabel>XML file via remote URL</guilabel> and click 
-						<emphasis role="bold">Next&gt;</emphasis></para>
-						<figure>
-							<title>XML Import File Options Page</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/import-xml-rest-options.png"/>
-							</imageobject></mediaobject>
-						</figure>
-					</listitem>
-					<listitem>
-						<para><emphasis role="bold">Step 4</emphasis> - Select existing 
+						<para><emphasis role="bold">Step 3</emphasis> - Select existing 
 						or previous connection profile from the drop-down selector or 
 						press <guibutton>New...</guibutton> button to launch the 
 						<guilabel>New Connection Profile</guilabel> dialog or <guibutton>
@@ -1359,17 +1345,6 @@
 						profile prior to selection.</para>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Creating a new REST Connection 
-						Profile</emphasis></para>
-						<para>If creating a new Connection Profile, choose the REST Web 
-						Services URL option when prompted and then click the <guibutton>
-						OK</guibutton> button</para>
-						<figure>
-							<title>XML Connection Profile Options</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/xml-connection-profile-options.png"/>
-							</imageobject></mediaobject>
-						</figure>
 						<para>Name your new REST Connection Profile and click the 
 						<guibutton>Next &gt;</guibutton></para>
 						<figure>
@@ -1380,24 +1355,19 @@
 						</figure>
 						<para>Set your REST URL in the Connection URL text field and your 
 						Security Type and credentials, if applicable. There is also an 
-						option to add Request Header parameters. The importer assumes an 
+						option to add URL and Request Header parameters. The importer assumes an 
 						<emphasis role="bold">Accept</emphasis> header value of 
 						<emphasis role="bold">application/xml</emphasis> and a 
 						<emphasis role="bold">Content-Type</emphasis> header value of 
 						<emphasis role="bold">application/xml</emphasis>. These defaults 
 						can be overriden in the <emphasis role="bold">Optional Request 
 						Header Properties</emphasis> section. You can also add any other 
-						header properties required for the service. Click the <guibutton>
+						header properties required for the service. When adding a parameter you can specify
+						URI or Query String, depending on what the target service is expecting. Click the <guibutton>
 						Test Connection</guibutton> button to validate your connection 
 						properties are correct. Click <guibutton>Next &gt;</guibutton> to 
 						see a summary of your properties or click <guibutton>
 						Finish</guibutton>.</para>
-						<figure>
-							<title>REST Service Connection Properties</title>
-							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/web-service-connection-properties.png"/>
-							</imageobject></mediaobject>
-						</figure>
 						<para>After selecting or creating a new <emphasis role="bold">
 						Connection Profile</emphasis>, the REST XML result from the 
 						connection profile will be displayed in the <emphasis role="bold">
@@ -1427,7 +1397,7 @@
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 5</emphasis> - The primary 
+						<para><emphasis role="bold">Step 4</emphasis> - The primary 
 						purpose of this importer is to help you create a view procedure 
 						containing the transformations required to query the user-defined 
 						data file. The panel contains an XML tree view of your result 

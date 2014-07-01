@@ -785,38 +785,29 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		INewWizard wiz = null;
 
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
-			// We need to create a Dialog to ask user to choose either a XML File URL CP or a WS REST CP
-			TeiidXmlConnectionOptionsDialog dialog = new TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
-			if (dialog.open() == Window.OK) {
-				boolean isRestProfile = dialog.isRestProfile();
-				if( isRestProfile ) {
-					wiz = new NewTeiidFilteredCPWizard(TEIID_WS_ID);
-				} else {
-					wiz = new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
-				}
-			}
-			
-			
-		} else {
+			wiz = new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
+		} else if(this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE) {
 			wiz = new NewTeiidFilteredCPWizard(XML_FILE_ID);
+		} else {
+			wiz = new NewTeiidFilteredCPWizard(TEIID_WS_ID);
 		}
+		// We need to create a Dialog to ask user to choose either a XML File URL CP or a WS REST CP
+		//TeiidXmlConnectionOptionsDialog dialog = new TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
 		
-		if( wiz != null ) {
-			WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
-			wizardDialog.setBlockOnOpen(true);
-	
-			CPListener listener = new CPListener();
-			ProfileManager.getInstance().addProfileListener(listener);
-			if (wizardDialog.open() == Window.OK) {
-	
-				refreshConnectionProfiles();
-	
-				resetCPComboItems();
-				setConnectionProfile(listener.getChangedProfile());
-	
-				selectProfile(listener.getChangedProfile());
-	
-			}
+		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+		wizardDialog.setBlockOnOpen(true);
+
+		CPListener listener = new CPListener();
+		ProfileManager.getInstance().addProfileListener(listener);
+		if (wizardDialog.open() == Window.OK) {
+
+			refreshConnectionProfiles();
+
+			resetCPComboItems();
+			setConnectionProfile(listener.getChangedProfile());
+
+			selectProfile(listener.getChangedProfile());
+
 			ProfileManager.getInstance().removeProfileListener(listener);
 		}
 	}
