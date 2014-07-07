@@ -95,7 +95,7 @@
                 </xs:annotation>
             </xs:element>
 		</xs:sequence>
-        <xs:attribute name="name" type="xs:NCName" use="required">
+        <xs:attribute name="name" type="xs:token" use="required">
             <xs:annotation>
                 <xs:documentation>A unique name, within the metaclass, for this extended property.</xs:documentation>
             </xs:annotation>
