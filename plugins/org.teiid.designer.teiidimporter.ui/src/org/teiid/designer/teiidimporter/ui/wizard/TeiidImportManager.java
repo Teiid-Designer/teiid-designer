@@ -336,7 +336,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         	IConnectionInfoProvider connInfoProvider = manager.getProviderFromProfileID("org.teiid.designer.datatools.profiles.jbossds.JBossDsConnectionProfile");  //$NON-NLS-1$
             ProfileManager pm = ProfileManager.getInstance();
             Properties props = new Properties();
-            props.put(IJBossDsProfileConstants.JNDI_PROP_ID, getDataSourceName()); 
+            props.put(IJBossDsProfileConstants.JNDI_PROP_ID, getDataSourceJndiName()); 
             props.put(IJBossDsProfileConstants.TRANSLATOR_PROP_ID, getTranslatorName());
             try {
             	String dsName = getDataSourceName();
