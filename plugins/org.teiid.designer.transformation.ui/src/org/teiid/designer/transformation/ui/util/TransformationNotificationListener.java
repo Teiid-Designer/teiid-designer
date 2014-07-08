@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -48,6 +49,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceNotificationListener;
 import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.function.ScalarFunction;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.transformation.SqlAlias;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
@@ -271,6 +273,13 @@ public class TransformationNotificationListener implements INotifyChangedListene
             Collection resultSetAdds = getTargetProcedureResultSetOrParamAddNotifications(validNotifications);
             if (!resultSetAdds.isEmpty()) {
                 handleTargetProcedureResultSetOrParamAddNotifications(resultSetAdds, source);
+            }
+            
+            // Procedure Parameter Changed
+            // ---------------------------------------------
+            Collection procedParamChanges = getTargetProcedureParamChangeNotifications(validNotifications);
+            if (!procedParamChanges.isEmpty()) {
+                handleTargetProcedureParamChangeNotifications(procedParamChanges, source);
             }
             // ---------------------------------------------
             // Procedure ResultSet Removed
@@ -864,7 +873,7 @@ public class TransformationNotificationListener implements INotifyChangedListene
         Iterator iter = notifications.iterator();
         while (iter.hasNext()) {
             Notification notification = (Notification)iter.next();
-            if (NotificationUtilities.isAdded(notification)) {
+            if (NotificationUtilities.isAdded(notification) ) {
                 // Get the object that was added to - Procedure in this case
                 Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
                 if (TransformationHelper.isSqlVirtualProcedure(changedObj)
@@ -877,6 +886,40 @@ public class TransformationNotificationListener implements INotifyChangedListene
                     iter.remove();
                 }
             }
+        }
+        if (result == null) {
+            result = Collections.EMPTY_LIST;
+        }
+        return result;
+    }
+    
+    /* 
+     * Get all Procedure Parameter Change Notifications. (When Parameters are changed (i.e. datatype, name, etc))
+     * 
+     * @param notifications the collection of all notifications
+     * @return the Procedure ResultSet Add Notifications
+     */
+    private Collection getTargetProcedureParamChangeNotifications( Collection notifications ) {
+        Collection result = null;
+        Iterator iter = notifications.iterator();
+        while (iter.hasNext()) {
+            Notification notification = (Notification)iter.next();
+
+            if( NotificationUtilities.isChanged(notification)) {
+        		 Object changedObj = ModelerCore.getModelEditor().getChangedObject(notification);
+        		 if( changedObj instanceof ProcedureParameter ) {
+        			 Object procedure = ((ProcedureParameter)changedObj).getProcedure();
+        			 if (TransformationHelper.isSqlVirtualProcedure(procedure)
+	                    && TransformationHelper.isValidSqlTransformationTarget(procedure)) {
+	                    if (result == null) {
+	                        result = new ArrayList(notifications.size());
+	                    }
+	                    result.add(notification);
+	                    // Remove from notifications collection
+	                    iter.remove();
+	                }
+        		 }
+        	}
         }
         if (result == null) {
             result = Collections.EMPTY_LIST;
@@ -1705,6 +1748,40 @@ public class TransformationNotificationListener implements INotifyChangedListene
 
         }
     }
+    
+    /* 
+     * Handler method for Procedure Parameter Change notifications.
+     * 
+     * @param notifications the collection of notifications
+     * @param txnSource the source for the transaction
+     */
+    private void handleTargetProcedureParamChangeNotifications( Collection notifications,
+                                                                        Object txnSource ) {
+        if (!notifications.isEmpty()) {
+            // Get mapping root for the SqlTransformation
+            EObject mappingRoot = getMappingRootFromProcParamNotifications(notifications);
+            // start txn if not already in txn
+            boolean requiredStart = ModelerCore.startTxn(NOT_SIGNIFICANT, IS_UNDOABLE, "Update attr mappings", this); //$NON-NLS-1$
+            boolean succeeded = false;
+            try {
+                // Invalidate cached Status regardless of resultSet or parameter addition
+                SqlMappingRootCache.invalidateSelectStatus(mappingRoot, true, txnSource);
+                // Update attribute mappings
+                AttributeMappingHelper.updateAttributeMappings(mappingRoot, txnSource);
+                succeeded = true;
+            } finally {
+                // If we start txn, commit it
+                if (requiredStart) {
+                    if (succeeded) {
+                        ModelerCore.commitTxn();
+                    } else {
+                        ModelerCore.rollbackTxn();
+                    }
+                }
+            }
+
+        }
+    }
 
     /* 
      * Handler method for Procedure ResultSet or Parameter Remove notifications.  The removed objects
@@ -1890,6 +1967,26 @@ public class TransformationNotificationListener implements INotifyChangedListene
             if (TransformationHelper.isSqlProcedure(procedure)) {
                 // Mapping root for the SqlTransformation
                 mappingRoot = TransformationHelper.getTransformationMappingRoot((EObject)procedure);
+            }
+        }
+        return mappingRoot;
+    }
+    
+    /* 
+     * Get MappingRoot from Procedure Parameter Notifications
+     * @param parameterNotifications the Procedure Parameter Notifications
+     * @return the mappingRoot EObject
+     */
+    private EObject getMappingRootFromProcParamNotifications( Collection parameterNotifications ) {
+        EObject mappingRoot = null;
+        Iterator iter = parameterNotifications.iterator();
+        Notification firstNotification = (Notification)iter.next();
+        if (firstNotification != null) {
+            // The changed Object is the Procedure
+            Object parameter = ModelerCore.getModelEditor().getChangedObject(firstNotification);
+            if (TransformationHelper.isSqlProcedureParameter(parameter)) {
+                // Mapping root for the SqlTransformation
+                mappingRoot = TransformationHelper.getTransformationMappingRoot((EObject)((ProcedureParameter)parameter).getProcedure());
             }
         }
         return mappingRoot;
