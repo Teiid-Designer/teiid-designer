@@ -72,7 +72,6 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  */
 public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 
-    private static final String IMPORT_VDB_NAME = Messages.TeiidImportManager_ImportVDBName;
     private static final String PREVIEW_DATASOURCE_PREFIX = "PREVIEW_";  //$NON-NLS-1$
     
     private IPath targetModelLocation = null;
@@ -90,6 +89,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private ConnectionInfoHelper connectionInfoHelper = new ConnectionInfoHelper();
     private DdlImporter ddlImporter;
     private File ddlFile;
+    private String uniqueImportVdbName;
     
     /**
      * Set the data source name
@@ -263,7 +263,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
                         monitor.beginTask(NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs()), 100); 
-                        vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(IMPORT_VDB_NAME,dataSourceName,translatorName,optionalImportPropMap,monitor); 
+                        vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(),dataSourceName,translatorName,optionalImportPropMap,monitor); 
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
                     } finally {
@@ -292,7 +292,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      * @return the xml string
      */
     public String getDynamicVdbString() {
-        return getServerImportManager().createDynamicVdbString(IMPORT_VDB_NAME, dataSourceName, translatorName, getOptionalImportProps());
+        return getServerImportManager().createDynamicVdbString(getCurrentImportVdbName(), dataSourceName, translatorName, getOptionalImportProps());
     }
 
     private String getTimeoutPrefSecs() {
@@ -311,7 +311,9 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
      */
     public IStatus undeployDynamicVdb() {
         this.vdbDeploymentStatus = null;
-        return getServerImportManager().undeployVdb(IMPORT_VDB_NAME);
+        String undeployVdbName = getCurrentImportVdbName();
+        this.uniqueImportVdbName = null;
+        return getServerImportManager().undeployVdb(undeployVdbName);
     }
     
     /**
@@ -372,7 +374,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     	
         String ddl = null;
         try {
-            ddl = getServerImportManager().getSchema(IMPORT_VDB_NAME);
+            ddl = getServerImportManager().getSchema(getCurrentImportVdbName());
         } catch (Exception ex) {
             UTIL.log(ex);
         	ddl = Messages.TeiidImportManager_getDdlErrorMsg;
@@ -386,7 +388,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 // TEIIDDES-2127 - With 8.7, teiid started to schema-qualify the constraint references.
                 // Now we must modify the DDL to remove qualifiers - since we will never have cross-schema references with this import.
         		if(ddl!=null) {
-        			String importVdbSourceModel = IMPORT_VDB_NAME + ImportManager.IMPORT_SRC_MODEL + "."; //$NON-NLS-1$
+        			String importVdbSourceModel = getCurrentImportVdbName() + ImportManager.IMPORT_SRC_MODEL + "."; //$NON-NLS-1$
         			modifiedDdl = ddl.replaceAll(importVdbSourceModel, ""); //$NON-NLS-1$
         		}
                 
@@ -883,6 +885,32 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 		}
         
         return override;
+    }
+    
+    /*
+     * This method provides a means to check the server for existing import VDB's that may exist due to other users importing through Designer/Teiid
+     * 
+     * It checks for default name, then appends a numeric value to the name
+     */
+    private String getCurrentImportVdbName() {
+    	if( uniqueImportVdbName == null ) {
+    		String importVdbName = Messages.TeiidImportManager_ImportVDBName;
+    		// Does it exist on the server?
+    		int count = 1;
+    		boolean vdbExists = getServerImportManager().vdbExists(importVdbName);
+    		while (vdbExists ) {
+    			importVdbName = Messages.TeiidImportManager_ImportVDBName + count;
+    		
+    			vdbExists = getServerImportManager().vdbExists(importVdbName);
+    			if( count > 100 ) { // SHOULD NEVER EVER HAVE MORE THAN A COUPLE ON A SERVER.. so 100 should be enough
+    				break;
+    			}
+    			count++;
+    		}
+    		uniqueImportVdbName = importVdbName;
+    	}
+    	
+    	return uniqueImportVdbName;
     }
     
 }
