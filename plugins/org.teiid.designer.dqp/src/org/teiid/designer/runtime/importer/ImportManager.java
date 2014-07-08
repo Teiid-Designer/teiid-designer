@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -105,6 +106,14 @@ public final class ImportManager implements IExecutionConfigurationListener {
         }
         
         return true;
+    }
+    
+    public boolean vdbExists(String vdbName) {
+    	try {
+			return getImportServer().getVdb(vdbName) != null;
+		} catch (Exception e) {
+			return false;
+		}
     }
     
     /**
