@@ -777,8 +777,13 @@ public class TeiidDdlImporter extends StandardImporter {
 	private void resolveColumnDatatype(RelationalColumn column, String nativeType) {
 		if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) && nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
 			column.setDatatype(nativeType);
-		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.STRING) && nativeType.equalsIgnoreCase(TYPES_UPPER.CHAR ) ) {
-			column.setDatatype(nativeType);
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.STRING) && nativeType.equalsIgnoreCase(TYPES_UPPER.CHAR) ) {
+			// Some DB's have columns of type "char(10)" and need to be converted to String type
+			if( column.getLength() > 1 ) {
+				column.setDatatype(TYPES_UPPER.STRING);
+			} else {
+				column.setDatatype(nativeType);
+			}
 		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.VARBINARY) && nativeType.equalsIgnoreCase(TYPES_UPPER.BINARY ) ) {
 			column.setDatatype(TYPES_UPPER.OBJECT.toLowerCase());
 		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.TIMESTAMP) && nativeType.equalsIgnoreCase(TYPES_UPPER.DATETIME ) ) {
@@ -799,7 +804,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		
 		
 		// Not enough info in DDL to determine if fixed length data type so calling it here
-		column.setLengthFixed(isFixedLength(column.getDatatype()));
+		column.setLengthFixed(isFixedLength(column.getNativeType()));
 		
 		// From RelationalModelProcessor....
         if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.ALL_EXCEPT_LIKE) ) {
