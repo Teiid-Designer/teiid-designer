@@ -1264,10 +1264,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 // final int position = results.getInt(row,16);
                 // final String isNullable = results.getString(row,17);
                 
-                if (type == Types.CHAR && columnSize > 1 ) {
-                	type = Types.VARCHAR;
-                	typeName = "varchar"; //$NON-NLS-1$
-                }
 
                 final Column column = this.factory.createColumn();
                 // Add the column to the table
@@ -1322,7 +1318,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         // Set the type information ...
         column.setFixedLength(isFixedLength(type, typeName));
         column.setNativeType(typeName);
-        final EObject datatype = findType(type, typeName, columnSize, columnSize, numDecDigits, problems);
+        
+        // Need to check if native type CHAR (Oracle, etc...) has length > 1, then treat as String and FIXED LENGTH
+        String delegateNativeTypeName = typeName;
+        // To find STRING, need to use VARCHAR instead of CHAR
+	    if (type == Types.CHAR && columnSize > 1 ) {
+	    	delegateNativeTypeName = "varchar"; //$NON-NLS-1$
+	    }
+	    
+        final EObject datatype = findType(type, delegateNativeTypeName, columnSize, columnSize, numDecDigits, problems);
         if (datatype != null) {
             column.setType(datatype);
         }
@@ -2201,7 +2205,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 String name = results.getString(row, 3); // COLUMN_NAME
                 final short columnType = results.getShort(row, 4); // COLUMN_TYPE
                 short type = results.getShort(row, 5); // DATA_TYPE
-                String typeName = results.getString(row, 6); // TYPE_NAME
+                final String typeName = results.getString(row, 6); // TYPE_NAME
                 final int precision = results.getInt(row, 7); // PRECISION
                 final int length = results.getInt(row, 8); // LENGTH
                 final int scale = results.getInt(row, 9); // SCALE
@@ -2209,11 +2213,6 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 final short nullable = results.getShort(row, 11); // NULLABLE
                 final String remarks = results.getString(row, 12); // REMARKS
                 
-                
-                if (type == Types.CHAR && length > 1 ) {
-                	type = Types.VARCHAR;
-                	typeName = "varchar"; //$NON-NLS-1$
-                }
 
                 final boolean resultSetColumn = isProcedureResultColumn(columnType, type, typeName);
                 if (!resultSetColumn) {
@@ -2308,39 +2307,46 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                             annotation.setDescription(remarks);
                         }
                     } else {
-                        final Column param = this.factory.createColumn();
-                        param.setOwner(procResult);
-                        setNameAndNameInSource(param, name, procNode, context, true, problems);
+                        final Column column = this.factory.createColumn();
+                        column.setOwner(procResult);
+                        setNameAndNameInSource(column, name, procNode, context, true, problems);
 
                         // Set the type information ...
-                        param.setNativeType(typeName);
-                        final EObject datatype = findType(type, typeName, length, precision, scale, problems);
+                        column.setNativeType(typeName);
+                        // Need to check if native type CHAR (Oracle, etc...) has length > 1, then treat as String and FIXED LENGTH
+                        String delegateNativeTypeName = typeName;
+                        // To find STRING, need to use VARCHAR instead of CHAR
+                	    if (type == Types.CHAR && length > 1 ) {
+                	    	delegateNativeTypeName = "varchar"; //$NON-NLS-1$
+                	    }
+                	    
+                        final EObject datatype = findType(type, delegateNativeTypeName, length, length, scale, problems);
                         if (datatype != null) {
-                            param.setType(datatype);
+                            column.setType(datatype);
                         }
 
                         // Set the length, precision and scale ...
-                        param.setLength(length);
-                        param.setPrecision(precision);
-                        param.setScale(scale);
-                        param.setRadix(radix);
+                        column.setLength(length);
+                        column.setPrecision(precision);
+                        column.setScale(scale);
+                        column.setRadix(radix);
 
                         // Set the nullability
                         switch (nullable) {
                             case DatabaseMetaData.procedureNoNulls:
-                                param.setNullable(NullableType.NO_NULLS_LITERAL);
+                            	column.setNullable(NullableType.NO_NULLS_LITERAL);
                                 break;
                             case DatabaseMetaData.procedureNullable:
-                                param.setNullable(NullableType.NULLABLE_LITERAL);
+                            	column.setNullable(NullableType.NULLABLE_LITERAL);
                                 break;
                             default:
-                                param.setNullable(NullableType.NULLABLE_UNKNOWN_LITERAL);
+                            	column.setNullable(NullableType.NULLABLE_UNKNOWN_LITERAL);
                                 break;
                         }
 
                         // Set the description (after adding column to table)...
                         if (remarks != null && remarks.trim().length() != 0) {
-                            final Annotation annotation = ModelResourceContainerFactory.createNewAnnotation(param,
+                            final Annotation annotation = ModelResourceContainerFactory.createNewAnnotation(column,
                                                                                                             contents.getAnnotationContainer(true));
                             annotation.setDescription(remarks);
                         }
