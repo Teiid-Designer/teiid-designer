@@ -59,7 +59,15 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
                            boolean secure ) {
         super(port, username, secureStorageProvider, password, secure);
         CoreArgCheck.isNotEmpty(vdbname, "vdbname"); //$NON-NLS-1$
+
         this.vdbname = vdbname;
+
+        /*
+         * Need to set the password again given 'vdbname' forms part of the url
+         * which is required in the formation of the passToken and the reference
+         * to the password in secure storage
+         */
+        initPassword(password);
     }
 
     /**

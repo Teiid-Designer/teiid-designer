@@ -120,15 +120,21 @@ public class TeiidServer implements ITeiidServer {
         CoreArgCheck.isTrue(! parentServer.getClass().getSimpleName().equals("ServerWorkingCopy"), "TeiidServer parent should not be a working copy");  //$NON-NLS-1$//$NON-NLS-2$
         
         this.serverVersion = serverVersion;
-        
+        this.eventManager = eventManager;
+        this.parentServer = parentServer;
+
+        /*
+         * All fields must be set prior to calling setHostProvider
+         * on TeiidConnectionInfo sub-classes since this calls
+         * setPassword which relies on all facets of getUrl to be
+         * complete.
+         */
+
         this.teiidAdminInfo = adminInfo;
         this.teiidAdminInfo.setHostProvider(this);
         
         this.teiidJdbcInfo = jdbcInfo;
         this.teiidJdbcInfo.setHostProvider(this);
-        
-        this.eventManager = eventManager;
-        this.parentServer = parentServer;
 
         this.id = getUrl() + "-" + getServerVersion() + "-" + getParent().getId();  //$NON-NLS-1$//$NON-NLS-2$
         
