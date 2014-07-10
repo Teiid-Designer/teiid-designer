@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.vdb;
 import java.util.Properties;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -191,14 +192,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 				TeiidCPWizardDialog wizardDialog = new TeiidCPWizardDialog(Display.getCurrent().getActiveShell(), wiz);
 				wizardDialog.setProperties(cpProps);
 				wizardDialog.setBlockOnOpen(true);
-				if (wizardDialog.open() == Window.OK) {
-					profile = wiz.getParentProfile();
-					try {
-						PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE,DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());
-					} catch (Throwable e) {
-						DqpUiConstants.UTIL.log(e);
-					}
-				} else {
+				if (wizardDialog.open() != Window.OK) {
 					return;
 				}
 				// if we have all the info we create it w/o user interaction
@@ -212,7 +206,11 @@ public class ExecuteVdbWorker implements VdbConstants {
 				                                                 profileName);
 			}
 		}
-		IStatus connectionStatus = profile.connectWithoutJob();
+
+		IStatus connectionStatus = Status.OK_STATUS;
+		if( profile != null) {
+		    connectionStatus = profile.connectWithoutJob();
+		}
 		try {
 			PlatformUI.getWorkbench().showPerspective(DTP_PERSPECTIVE,
 					DqpUiPlugin.getDefault().getCurrentWorkbenchWindow());

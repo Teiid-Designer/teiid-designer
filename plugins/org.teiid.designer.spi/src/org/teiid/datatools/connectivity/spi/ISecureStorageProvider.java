@@ -16,7 +16,16 @@ package org.teiid.datatools.connectivity.spi;
  * @since 8.0
  */
 public interface ISecureStorageProvider {
-    
+
+    /**
+     * @param nodeKey
+     * @param key
+     * @return node with given nodeKey exists in secure storage
+     *
+     * @throws Exception
+     */
+    boolean existsInSecureStorage(String nodeKey, String key) throws Exception;
+
     /**
      * Retrieve the value stored against the given key from 
      * the secure storage.
@@ -38,4 +47,5 @@ public interface ISecureStorageProvider {
      * @throws Exception
      */
     void storeInSecureStorage(String nodeKey, String key, String value) throws Exception;
+
 }
