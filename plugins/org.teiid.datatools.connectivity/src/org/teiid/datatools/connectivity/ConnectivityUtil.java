@@ -7,8 +7,10 @@
  */
 package org.teiid.datatools.connectivity;
 
+import java.security.MessageDigest;
 import java.sql.Driver;
 import java.util.Properties;
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -64,6 +66,11 @@ public class ConnectivityUtil {
     public static final String JDBC_PASSWORD = "jdbc_password"; //$NON-NLS-1$
 
     /**
+     * Prefix for identifying a hash token
+     */
+    public static final String TOKEN_PREFIX = "TOK##!"; //$NON-NLS-1$
+
+    /**
      * Tries to find the most appropriate driver definition id for the given teiid version.
      * <p>
      * Since teiid driver definition's are version specific, it attempts to find the driver
@@ -108,7 +115,7 @@ public class ConnectivityUtil {
     }
 
     private static String createTeiidDriverInstance( ITeiidServerVersion serverVersion, String jarList,
-                                                            String driverURL, String username ) {
+                                                            String driverURL, String username, String passToken ) {
           /* Create an ad-hoc version to avoid clashing ids with any built-in teiid runtime drivers */
           String driverId = TEIID_ADHOC_DRIVER_ID_SKELETON
                                                       .replaceAll("MAJOR", serverVersion.getMajor()) //$NON-NLS-1$
@@ -127,6 +134,9 @@ public class ConnectivityUtil {
           }
           if (null != username) {
               baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
+          }
+          if (null != passToken) {
+              baseProperties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, passToken);
           }
 
           baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
@@ -147,11 +157,16 @@ public class ConnectivityUtil {
      * @param url
      * @param password
      */
-    private static void storeJDBCPassword(String url, String password) {
+    private static void storeJDBCPassword(String url, String passToken, String password) {
         if (password == null)
             return;
 
-        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url);
+        String urlStorageKey;
+        if (passToken == null)
+            urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url);
+        else
+            urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url, passToken);
+
         try {
             getSecureStorageProvider().storeInSecureStorage(urlStorageKey, ConnectivityUtil.JDBC_PASSWORD, password);
         } catch (Exception ex) {
@@ -160,12 +175,12 @@ public class ConnectivityUtil {
     }
 
     private static String acquireDriverDefinition(ITeiidServerVersion serverVersion, String driverPath,
-                                                                            String connectionURL, String username, String password)
+                                                                            String connectionURL, String username, String passToken, String password)
                                                                             throws Exception {
         String driverDefinitionId = getTeiidDriverDefinitionId(serverVersion);
         DriverInstance mDriver = DriverManager.getInstance().getDriverInstanceByID(driverDefinitionId);
         if (mDriver == null) {
-            driverDefinitionId = createTeiidDriverInstance(serverVersion, driverPath, connectionURL, username);
+            driverDefinitionId = createTeiidDriverInstance(serverVersion, driverPath, connectionURL, username, passToken);
         } else {
             // JBIDE-7493 Eclipse updates can break profiles because the driverPath is plugin version specific.
             String jarList = mDriver.getJarList();
@@ -173,12 +188,13 @@ public class ConnectivityUtil {
                 mDriver.getPropertySet().getBaseProperties().put(IDriverMgmtConstants.PROP_DEFN_JARLIST, driverPath);
             }
             mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.URL_PROP_ID, connectionURL);
+            mDriver.getPropertySet().getBaseProperties().put(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, passToken);
         }
 
         if (driverDefinitionId == null)
             throw new Exception(Messages.getString(Messages.ConnectivityUtil.noTeiidDriverDefinitionFound, serverVersion));
 
-        storeJDBCPassword(connectionURL, password);
+        storeJDBCPassword(connectionURL, passToken, password);
         return driverDefinitionId;
     }
 
@@ -186,6 +202,7 @@ public class ConnectivityUtil {
                                                 String jarList,
                                                 String driverURL,
                                                 String username,
+                                                String passToken,
                                                 String vdbName ) {
         Properties baseProperties = new Properties();
         baseProperties.setProperty(IDriverMgmtConstants.PROP_DEFN_JARLIST, jarList);
@@ -193,6 +210,9 @@ public class ConnectivityUtil {
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID, driverURL);
         if(null != username) { 
         	baseProperties.setProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID, username);
+        }
+        if (null != passToken) {
+            baseProperties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, passToken);
         }
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VENDOR_PROP_ID, TEIID_DATABASE_VENDOR_NAME);
         baseProperties.setProperty(IJDBCDriverDefinitionConstants.DATABASE_VERSION_PROP_ID, serverVersion.toString());
@@ -224,12 +244,14 @@ public class ConnectivityUtil {
         ProfileManager pm = ProfileManager.getInstance();
 
         try {
-            String driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, password);
+            String passToken = ConnectivityUtil.generateHashToken(connectionURL, password);
+            String driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, passToken, password);
             return pm.createTransientProfile(TEIID_PROFILE_PROVIDER_ID, createDriverProps(serverVersion,
                                                                                           driverDefinitionId,
                                                                                           driverPath,
                                                                                           connectionURL,
                                                                                           username,
+                                                                                          passToken,
                                                                                           vdbName));
         } catch (Exception e) {
             Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
@@ -268,8 +290,9 @@ public class ConnectivityUtil {
 
         String driverDefinitionId;
         try {
-            driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, password);
-            return createDriverProps(serverVersion, driverDefinitionId, driverPath, connectionURL, username, vdbName);
+            String passToken = ConnectivityUtil.generateHashToken(connectionURL, password);
+            driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, passToken, password);
+            return createDriverProps(serverVersion, driverDefinitionId, driverPath, connectionURL, username, passToken, vdbName);
         } catch (Exception ex) {
             Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
                                        Messages.getString(Messages.ConnectivityUtil.errorGettingProfileProperties), ex);
@@ -297,7 +320,8 @@ public class ConnectivityUtil {
     		String profileName) throws CoreException {
         ProfileManager pm = ProfileManager.getInstance();
         try {
-            String driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, password);
+            String passToken = ConnectivityUtil.generateHashToken(connectionURL, password);
+            String driverDefinitionId = acquireDriverDefinition(serverVersion, driverPath, connectionURL, username, passToken, password);
 
             IConnectionProfile existingCP = pm.getProfileByName(profileName);
             if (existingCP != null) {
@@ -311,6 +335,7 @@ public class ConnectivityUtil {
                                                       driverPath,
                                                       connectionURL,
                                                       username,
+                                                      passToken,
                                                       vdbName));
         } catch (Exception e) {
             Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, 0,
@@ -321,22 +346,58 @@ public class ConnectivityUtil {
 
     /**
      * Assemble the secure storage node key based 
-     * upon the given class and connection url
+     * upon the given class and the set of arguments.
      * 
      * @param klazz
-     * @param connectURL
+     * @param args
      * 
      * @return fully qualified key used in secure storage
      */
-    public static String buildSecureStorageKey(Class<?> klazz, String connectURL) {
-        String secureKey = new StringBuilder(SECURE_STORAGE_BASEKEY)
+    public static String buildSecureStorageKey(Class<?> klazz, String... args) {
+        StringBuilder secureKeyBuilder = new StringBuilder(SECURE_STORAGE_BASEKEY)
         .append(IPath.SEPARATOR)
         .append(klazz.getSimpleName())
-        .append(IPath.SEPARATOR)
-        .append(connectURL)
-        .append(IPath.SEPARATOR).toString();
+        .append(IPath.SEPARATOR);
+
+        if (args != null) {
+            for (String arg : args) {
+                if (arg == null)
+                    continue;
+
+                secureKeyBuilder.append(arg).append(IPath.SEPARATOR);
+            }
+        }
+
+        return secureKeyBuilder.toString();
+    }
+
+    /**
+     * @param args
+     * @return the hash of the given string
+     * @throws Exception
+     */
+    public static String generateHashToken(String... args) throws Exception {
         
-        return secureKey;
+        StringBuilder builder = new StringBuilder();
+        for (String arg : args) {
+            builder.append(arg);
+            builder.append(IPath.SEPARATOR);
+        }
+
+        MessageDigest sha = MessageDigest.getInstance("SHA-512"); //$NON-NLS-1$
+        sha.update(builder.toString().getBytes("UTF-8")); //$NON-NLS-1$
+        byte[] hashedByteArray = sha.digest();
+
+        // Use Base64 encoding here -->
+        return TOKEN_PREFIX + Base64.encodeBase64URLSafeString(hashedByteArray);
+    }
+
+    /**
+     * @param arg
+     * @return true if this given arg is a generated hash token
+     */
+    public static boolean isPasswordToken(String arg) {
+        return arg != null && arg.startsWith(TOKEN_PREFIX);
     }
 
     /**
@@ -368,4 +429,5 @@ public class ConnectivityUtil {
         String msg = Messages.getString(Messages.ConnectivityUtil.noTeiidDriverFound, driverClass, teiidServerVersion);
         throw new IllegalStateException(msg);
     }
+
 }
