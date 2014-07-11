@@ -24,12 +24,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -53,7 +55,9 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb.Xml;
+import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -236,6 +240,28 @@ public class VdbUtil implements VdbConstants {
         }
 
         return 0;
+    }
+    
+    /**
+     * Simple method that peeks inside a VDB manifest to check if the VDB was built with Teiid 8.0 or greater
+     * The vdb version property value was added in Teiid Designer 8.2. So it's relatively safe to do this check.
+     * 
+     * @param file
+     * @return vdb is based on Teiid 7
+     */
+    public static boolean isVdbTeiidVersion8orGreater( final IFile file) {
+        if (file.exists()) {
+            VdbElement manifest = VdbUtil.getVdbManifest(file);
+            if (manifest != null) {
+            	for( PropertyElement pElement : manifest.getProperties()) {
+            		if( Vdb.Xml.VALIDATION_VERSION.equalsIgnoreCase(pElement.getName())) {
+            			return true;
+            		}
+            	}
+            }
+        }
+
+        return false;
     }
     
     /**

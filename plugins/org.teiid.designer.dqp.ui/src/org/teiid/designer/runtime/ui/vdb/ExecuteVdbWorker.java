@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -91,7 +92,8 @@ public class ExecuteVdbWorker implements VdbConstants {
 		try {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
-				if (connectStatus.isOK()) {
+				if (connectStatus.isOK() )  {
+					if(  !VdbAgeChecker.doDeploy(selectedVdb, teiidServer.getServerVersion())) return;
 					// Deploy the VDB
                     deployed = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
                     

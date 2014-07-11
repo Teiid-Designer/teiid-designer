@@ -9,11 +9,13 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,12 +39,14 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.connection.CreateVdbDataSourceAction;
 import org.teiid.designer.runtime.ui.vdb.DeployVdbDialog;
+import org.teiid.designer.runtime.ui.vdb.VdbAgeChecker;
 import org.teiid.designer.runtime.ui.vdb.VdbDeployer;
 import org.teiid.designer.runtime.ui.vdb.VdbRequiresSaveChecker;
 import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbUtil;
 
 
 /**
@@ -135,6 +139,11 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
         
         for (IFile nextVDB : this.selectedVDBs) {
             boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
+
+            if( doDeploy ) {
+            	doDeploy = VdbAgeChecker.doDeploy(nextVDB, teiidServer.getServerVersion());
+            }
+            
             if (doDeploy) {
             	boolean deploySuccess = deployVdb(teiidServer, nextVDB);
 
@@ -288,6 +297,8 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 	    		String msg = UTIL.getString("VdbNotSyncdDialog.msg"); //$NON-NLS-1$
 	        	if (!MessageDialog.openQuestion(shell,title,msg)) return false;
 	     	}
+			
+			if( !VdbAgeChecker.doDeploy(vdb.getFile(), teiidServer.getServerVersion()) ) return false;
 			
 			final VdbDeployer deployer = new VdbDeployer(shell, vdb, teiidServer, doCreateDataSource);
 			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
