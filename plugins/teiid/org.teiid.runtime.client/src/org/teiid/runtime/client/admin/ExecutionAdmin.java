@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,10 +49,10 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
+import org.teiid.designer.runtime.spi.ITeiidTranslator.TranslatorPropertyType;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
-import org.teiid.designer.runtime.spi.ITeiidTranslator.TranslatorPropertyType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.TeiidDriver;
@@ -884,8 +883,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
         String url = "jdbc:teiid:ping@" + protocol + host + ':' + teiidJdbcInfo.getPort(); //$NON-NLS-1$
         
         try {
-
-            admin.deploy(PING_VDB, new ByteArrayInputStream(adminSpec.getTestVDB().getBytes()));
+            adminSpec.deploy(admin, PING_VDB, new ByteArrayInputStream(adminSpec.getTestVDB().getBytes()));
             
             try{
                 String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
