@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -58,8 +59,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.datatools.connectivity.model.Parameter;
+import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
@@ -84,7 +86,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	Text urlPreviewText;
 	private Text securityText;
 	private Label securityLabel;
-	private Map<String, String> parameterMap = new LinkedHashMap<String, String>();
+	private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
@@ -249,14 +251,14 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	/**
 	 * @return the parameterMap
 	 */
-	public Map<String, String> getParameterMap() {
+	public Map<String, Parameter> getParameterMap() {
 		return this.parameterMap;
 	}
 
 	/**
 	 * @param parameterMap the parameterMap to set
 	 */
-	public void setParameterMap(Map<String, String> parameterMap) {
+	public void setParameterMap(Map<String, Parameter> parameterMap) {
 		this.parameterMap = parameterMap;
 	}
 	
@@ -277,24 +279,27 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	/**
 	 * @return
 	 */
+	/**
+	 * @return
+	 */
 	private StringBuilder buildParameterString() {
 		
 		StringBuilder parameterString = new StringBuilder();
-		if (parameterPanel==null) return parameterString;
-		Map<String, String> parameterMap = this.parameterMap;
+		if (this.parameterMap==null) return parameterString;
+		Map<String, Parameter> parameterMap = this.parameterMap;
 
 		for (String key : parameterMap.keySet()) {
-	      String value = parameterMap.get(key);
-	      if (value.equals(IWSProfileConstants.URI)) {
+	      Parameter value = parameterMap.get(key);
+	      if (value.getType().equals(IWSProfileConstants.URI)) {
 	    	  parameterString.append("/").append(key); //$NON-NLS-1$
 	      }
-	      if (value.equals(IWSProfileConstants.QUERY_STRING)) {
+	      if (value.getType().equals(IWSProfileConstants.QUERY_STRING)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
 	    		  parameterString.append("?");   //$NON-NLS-1$
 	    	  }else{
 	    		  parameterString.append("&");   //$NON-NLS-1$  
 	    	  }
-	    	  parameterString.append(key).append("=value"); //$NON-NLS-1$
+	    	  parameterString.append(key).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
 	    }
 

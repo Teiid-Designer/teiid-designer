@@ -28,6 +28,18 @@ public interface IProcedureService {
      * @return SQL statement based on the given metadata information
      */
     String getSQLStatement(ITeiidMetadataFileInfo metadataFileInfo, String relationalModelName);
+    
+    /**
+     * Prepare an SQL statement for the given XML-based metadata
+     * 
+     * @param metadataFileInfo
+     * @param relationalSourceModelName 
+     * @param relationalViewModelName 
+     * @param virtualProcedureName 
+     * 
+     * @return SQL statement based on the given metadata information
+     */
+    String getSQLStatement(ITeiidXmlFileInfo metadataFileInfo, String relationalSourceModelName, String relationalViewModelName, String virtualProcedureName);
 
     /**
      * Prepare an SQL statement for the given xml-based metdata

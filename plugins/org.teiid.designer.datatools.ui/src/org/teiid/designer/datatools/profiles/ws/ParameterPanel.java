@@ -7,13 +7,11 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -51,15 +49,14 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
-import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
- *
+ * @since 8.6
  */
 public class ParameterPanel implements DatatoolsUiConstants {
 	static final String PREFIX = I18nUtil.getPropertyPrefix(ParameterPanel.class);
@@ -80,7 +77,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
      * @param propertiesManager the TeiidpropertiesManager
      * @param visibleTableRows the number of visible rows to be shown in the table
      */
-    public ParameterPanel(WSProfileDetailsWizardPage wsProfileDetailsWizardPage, Composite parent, Map<String, String> parameterMap, int visibleTableRows) {
+    public ParameterPanel(WSProfileDetailsWizardPage wsProfileDetailsWizardPage, Composite parent, Map<String, Parameter> parameterMap, int visibleTableRows) {
     	super();
     	this.parameterMap = parameterMap;
     	this.visibleTableRows = visibleTableRows;
@@ -95,7 +92,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
      * @param propertiesManager the TeiidpropertiesManager
      * @param visibleTableRows the number of visible rows to be shown in the table
      */
-    public ParameterPanel(PropertyPage propertyPage, Composite parent, Map<String, String> parameterMap, int visibleTableRows) {
+    public ParameterPanel(PropertyPage propertyPage, Composite parent, Map<String, Parameter> parameterMap, int visibleTableRows) {
     	super();
     	this.parameterMap = parameterMap;
     	this.visibleTableRows = visibleTableRows;
@@ -139,13 +136,8 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 if (parameters == null || parameters.isEmpty()) {
                     return new Object[0];
                 }
-                
-                List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
-                for( Object key : parameters.keySet() ) {
-                	String keyStr = (String)key;
-                	properties.add(new SimpleProperty(keyStr, (String)parameters.get(key)));
-                }
-                return properties.toArray(new SimpleProperty[0]);
+          
+                return parameters.values().toArray();
             }
 
             /**
@@ -184,7 +176,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).horizontalSpan = 2;
+        ((GridData)table.getLayoutData()).horizontalSpan = 3;
         ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * this.visibleTableRows;
 
         // create columns
@@ -195,10 +187,19 @@ public class ParameterPanel implements DatatoolsUiConstants {
         column.getColumn().pack();
 
         column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(UTIL.getString("ParametersPanel_value"));  //$NON-NLS-1$
+        column.getColumn().setText(UTIL.getString("ParametersPanel_type"));  //$NON-NLS-1$
+        column.getColumn().setToolTipText(UTIL.getString("AddParameterDialog_txtType_toolTip"));
         column.setLabelProvider(new PropertyLabelProvider(1));
         column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
         column.getColumn().pack();
+        
+        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        column.getColumn().setText(UTIL.getString("ParametersPanel_default_value"));  //$NON-NLS-1$
+        column.getColumn().setToolTipText(UTIL.getString("AddParameterDialog_txtDefaultValue_toolTip"));
+        column.setLabelProvider(new PropertyLabelProvider(2));
+        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 2));
+        column.getColumn().pack();
+        
 
         this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
@@ -257,14 +258,14 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
-    private SimpleProperty getSelectedProperty() {
+    private Parameter getSelectedProperty() {
         IStructuredSelection selection = (IStructuredSelection)this.propertiesViewer.getSelection();
 
         if (selection.isEmpty()) {
             return null;
         }
 
-        return (SimpleProperty)selection.getFirstElement();
+        return (Parameter)selection.getFirstElement();
     }
 	
     void handleAddProperty() {
@@ -281,20 +282,23 @@ public class ParameterPanel implements DatatoolsUiConstants {
         if (dialog.open() == Window.OK) {
             // update model
             String name = dialog.getName();
-            String value = dialog.getValue() != null ? dialog.getValue() : IWSProfileConstants.QUERY_STRING;
-            parameterMap.put(name, value);
+            String type = dialog.getType() != null ? dialog.getType() : IWSProfileConstants.QUERY_STRING;
+            String defaultValue = dialog.getDefaultValue();
+            Parameter parameter = new Parameter(name, defaultValue, Parameter.Type.fromValue(type));
 
+            this.parameterMap.put(name, parameter);
+            
             // update UI from model
             this.propertiesViewer.refresh();
 
             // select the new property
             
             
-            SimpleProperty prop = null;
+            Parameter prop = null;
             
             for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
-            	if( item.getData() instanceof SimpleProperty && ((SimpleProperty)item.getData()).getName().equals(name) ) {
-            		prop = (SimpleProperty)item.getData();
+            	if( item.getData() instanceof Parameter && ((Parameter)item.getData()).getName().equals(name) ) {
+            		prop = (Parameter)item.getData();
             		break;
             	}
             }
@@ -316,7 +320,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
     }
     
     void handleRemoveProperty() {
-        SimpleProperty selectedProperty = getSelectedProperty();
+    	Parameter selectedProperty = getSelectedProperty();
         assert (selectedProperty != null);
 
         // update model
@@ -345,11 +349,13 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof SimpleProperty ) {
+			if( element instanceof Parameter ) {
 				if( columnID == 0 ) {
-					return ((SimpleProperty)element).getName();
+					return ((Parameter)element).getName();
 				} else if( columnID == 1 ) {
-					return ((SimpleProperty)element).getValue();
+					return ((Parameter)element).getType().toString();
+				} else if( columnID == 2 ) {
+					return ((Parameter)element).getDefaultValue();
 				}
 			}
 			return super.getText(element);
@@ -400,11 +406,13 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof SimpleProperty ) {
+			if( element instanceof Parameter ) {
 				if( columnID == 0 ) {
-					return ((SimpleProperty)element).getName();
+					return ((Parameter)element).getName();
 				} else if( columnID == 1 ) {
-					return ((SimpleProperty)element).getValue();
+					return ((Parameter)element).getType().toString();
+				} else if( columnID == 2 ) {
+					return ((Parameter)element).getDefaultValue();
 				}
 			}
 			return 0;
@@ -418,26 +426,25 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof SimpleProperty ) {
-				if( columnID == 0 ) {
-					String oldKey = ((SimpleProperty)element).getName();
-					String oldValue = ((SimpleProperty)element).getValue();
-					String newKey = (String)value;
-					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						parameterMap.remove(oldKey);
-						parameterMap.put(newKey,oldValue);
+			if( element instanceof Parameter ) {
+				String key = ((Parameter)element).getName();
+				if( columnID == 1 ) {
+					String oldType = ((Parameter)element).getType().toString();
+					String newType = (String)value;
+					if( newType != null && newType.length() > 0 && !newType.equalsIgnoreCase(oldType)) {
+						((Parameter)element).setType(Parameter.Type.fromValue(newType));
+						parameterMap.put(key,element);
 						propertiesViewer.refresh();
 					}
-				} else if( columnID == 1 ) {
-					String key = ((SimpleProperty)element).getName();
-					String oldValue = ((SimpleProperty)element).getValue();
-					String newValue = (String)value;
-					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						parameterMap.put(key,newValue);
-						propertiesViewer.refresh();
+				} else if( columnID == 2 ) {
+						String oldDefaultValue = ((Parameter)element).getDefaultValue();
+						String newDefaultValue = (String)value;
+						if( newDefaultValue != null && newDefaultValue.length() > 0 && !newDefaultValue.equalsIgnoreCase(oldDefaultValue)) {
+							((Parameter)element).setDefaultValue(newDefaultValue);
+							parameterMap.put(key,element);
+							propertiesViewer.refresh();
+						}
 					}
-				}
-
 			}
 		}
 
@@ -447,7 +454,8 @@ public class ParameterPanel implements DatatoolsUiConstants {
         private Button btnOk;
         private final Set<String> existingNames;
         private String name;
-        private String value;
+        private String type;
+        private String defaultValue;
 
         /**
          * @param parentShell the parent shell (may be <code>null</code>)
@@ -538,7 +546,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 
     			@Override
     			public void widgetSelected(SelectionEvent e) {
-    				handleValueChanged();
+    				handleTypeChanged(((Text)e.widget).getText());
     			}
 
     			@Override
@@ -547,8 +555,29 @@ public class ParameterPanel implements DatatoolsUiConstants {
     		});
 
             txtValue.setVisibleItemCount(2);
+            
+            Label lblDefaultValue = new Label(pnl, SWT.NONE);
+            lblDefaultValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+            lblDefaultValue.setText(UTIL.getString("AddParameterDialog_lblDefaultValue_text"));  //$NON-NLS-1$
+
+            Text txtDefaultValue = new Text(pnl, SWT.BORDER);
+            txtDefaultValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+            txtDefaultValue.setToolTipText(UTIL.getString("AddParameterDialog_txtDefaultValue_toolTip")); //$NON-NLS-1$
+            txtDefaultValue.addModifyListener(new ModifyListener() {
+                /**
+                 * {@inheritDoc}
+                 * 
+                 * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+                 */
+                @Override
+                public void modifyText( ModifyEvent e ) {
+                    handleDefaultValueChanged((((Text)e.widget).getText()));
+                }
+            });
+            
 			return pnl;
     	}
+        
 
         /**
          * @return the new property name (never <code>null</code>)
@@ -563,12 +592,26 @@ public class ParameterPanel implements DatatoolsUiConstants {
          * @return the new property value (never <code>null</code>)
          * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
          */
-        public String getValue() {
+        public String getType() {
             CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-            return value;
+            return type;
         }
 
         /**
+		 * @return the defaultValue
+		 */
+		public String getDefaultValue() {
+			return defaultValue;
+		}
+
+		/**
+		 * @param defaultValue the defaultValue to set
+		 */
+		public void setDefaultValue(String defaultValue) {
+			this.defaultValue = defaultValue;
+		}
+
+		/**
          * {@inheritDoc}
          * 
          * @see org.eclipse.jface.window.Window#getShellStyle()
@@ -582,9 +625,14 @@ public class ParameterPanel implements DatatoolsUiConstants {
             this.name = newName;
             updateState();
         }
+        
+        void handleDefaultValueChanged( String newDefaultValue ) {
+            this.setDefaultValue(newDefaultValue);
+            updateState();
+        }
 
-        void handleValueChanged(  ) {
-     //       this.value = this.
+        void handleTypeChanged(String type) {
+            this.type = Parameter.Type.Query.toString();
             updateState();
         }
 
@@ -633,10 +681,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
             return errorMsg;
         }
 
-        private String validateValue() {
-            return validateValue(this.value);
-        }
-        
         /**
          * @param proposedName the proposed property name
          * @return an error message or <code>null</code> if name is valid

@@ -9,7 +9,10 @@ package org.teiid.runtime.client.proc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
@@ -188,6 +191,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         ## XMLNAMESPACES('http://www.kaptest.com/schema/1.0/party' AS pty)
         
         */
+    	
         List<String> tokens = new ArrayList<String>();
         List<ITeiidXmlColumnInfo> columnInfoList = xmlFileInfo.getColumnInfoList();
         
@@ -273,6 +277,119 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         return finalSQLString;
     }
     
+    /* (non-Javadoc)
+	 * @see org.teiid.designer.query.IProcedureService#getSQLStatement(org.teiid.designer.query.proc.ITeiidMetadataFileInfo, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public String getSQLStatement(ITeiidXmlFileInfo xmlFileInfo,
+			String relationalSourceModelName, String relationalViewModelName, String virtualProcedureName) {
+//    	CREATE VIRTUAL PROCEDURE
+//    	BEGIN
+//    		DECLARE STRING VARIABLES.qp = QUERYSTRING('http://ws.cdyne.com/delayedstockquote/delayedstockquote.asmx/GetQuickQuote', ViewModel.getStockPrice.symbol AS StockSymbol, 0 AS LicenseKey);
+//    		SELECT A.price AS price FROM (EXEC SourceModel.invokeHttp('GET', null, VARIABLES.qp, 'TRUE')) AS f, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://ws.cdyne.com/'), '/decimal' PASSING XMLPARSE(DOCUMENT f.result) COLUMNS price double PATH 'text()') AS A;
+//    	END
+//    	
+    	
+    	 List<String> tokens = new ArrayList<String>();
+         List<ITeiidXmlColumnInfo> columnInfoList = xmlFileInfo.getColumnInfoList();
+         
+         Map<String, Parameter> parameters = xmlFileInfo.getParameterMap();
+
+         tokens.add(xmlFileInfo.getXmlFileUrl());
+         
+         StringBuffer sb = new StringBuffer();
+         int c = 1;
+         for (Parameter param: parameters.values() ){
+        	 if (param.getType().equals(Parameter.Type.Query)) {
+        		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName()).append(SPACE).append(AS).append(SPACE).append(param.getName());
+        		 if(c < (parameters.size())) {
+                     sb.append(COMMA).append(SPACE);
+                 }
+        		 c++;
+        	 }
+         }
+         
+         tokens.add(sb.toString());
+         sb = new StringBuffer();
+              
+         String alias = "A"; //$NON-NLS-1$
+         int i=0;
+         int nColumns = columnInfoList.size();
+         for( ITeiidXmlColumnInfo columnInfo : columnInfoList) {
+             String name = columnInfo.getSymbolName();
+             sb.append(alias).append(DOT).append(name).append(SPACE).append(AS).append(SPACE).append(name);
+             
+             if(i < (nColumns-1)) {
+                 sb.append(COMMA).append(SPACE);
+             }
+             i++;
+         }
+         tokens.add(sb.toString());
+         tokens.add(relationalSourceModelName);
+         
+         String proc = S_QUOTE + xmlFileInfo.getDataFile().getName() + S_QUOTE;
+         if( xmlFileInfo.isUrl() ) {
+             proc = S_QUOTE + GET + S_QUOTE
+                     + COMMA + SPACE + NULL.toLowerCase()
+                     + COMMA + SPACE +  "VARIABLES.qp"  //$NON-NLS-1$
+                     + COMMA + SPACE + S_QUOTE + TRUE + S_QUOTE;
+         }
+         tokens.add(proc);
+         
+         String namespaceStr = xmlFileInfo.getNamespaceString();
+         sb = new StringBuffer();
+         
+         if( namespaceStr != null ) {
+             sb.append(namespaceStr);
+         }
+         
+         String xQueryExp = DEFAULT_XQUERY;
+         String rootPath = xmlFileInfo.getRootPath();
+         if( rootPath != null && rootPath.length() > 0 ) {
+             xQueryExp = rootPath;
+         }
+         sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
+         
+         tokens.add(sb.toString());
+         
+         sb = new StringBuffer();
+         i=0;
+         for( ITeiidXmlColumnInfo columnInfo : columnInfoList) {
+             if( columnInfo.getOrdinality() ) {
+                 sb.append(columnInfo.getSymbolName()).append(SPACE).append(FOR_ORDINALITY);
+             } else {
+                 sb.append(columnInfo.getSymbolName()).append(SPACE).append(columnInfo.getDatatype());
+                 
+                 String defValue = columnInfo.getDefaultValue();
+                 if( defValue != null && defValue.length() > 0) {
+                     sb.append(SPACE).append(DEFAULT).append(SPACE).append(S_QUOTE).append(defValue).append(S_QUOTE);
+                 }
+                 
+                 String relPath = columnInfo.getRelativePath();
+                 if( relPath != null && relPath.length() > 1 ) {
+                     sb.append(SPACE).append(PATH).append(SPACE).append(S_QUOTE).append(relPath).append(S_QUOTE);
+                 }
+                 
+                 
+             }
+             if(i < (nColumns-1)) {
+                 sb.append(COMMA).append(SPACE);
+             }
+
+             i++;
+         }
+
+         tokens.add(sb.toString());
+         tokens.add(alias);
+
+         String finalSQLString = null;
+         
+         // SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
+         finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+         
+         return finalSQLString;
+	}
+	
     @Override
     public String getSQLStatement(IWsdlWrapperInfo wrapperInfo) {
         WsdlWrapperHelper helper = new WsdlWrapperHelper(teiidVersion, wrapperInfo);
@@ -296,4 +413,5 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         WsdlResponseProcedureHelper helper = new WsdlResponseProcedureHelper(teiidVersion, responseInfo, properties);
         return helper.getSQLStatement();
     }
+
 }

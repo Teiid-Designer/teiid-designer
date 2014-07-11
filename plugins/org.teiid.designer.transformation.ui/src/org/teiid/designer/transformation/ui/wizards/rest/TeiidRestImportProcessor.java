@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.transformation.ui.wizards.xmlfile;
+package org.teiid.designer.transformation.ui.wizards.rest;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -27,15 +27,17 @@ import org.teiid.designer.datatools.profiles.xml.XmlUrlConnectionInfoProvider;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportProcessor;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlFileViewModelFactory;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 
 /**
- * @since 8.0
+ * @since 8.6
  */
-public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
+public class TeiidRestImportProcessor extends TeiidMetadataImportProcessor {
 	
-	public TeiidXmlFileImportProcessor(TeiidMetadataImportInfo info, Shell shell) {
+	public TeiidRestImportProcessor(TeiidMetadataImportInfo info, Shell shell) {
 		super(info, shell);
 	}
 
@@ -55,11 +57,8 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
                 
                 for( TeiidXmlFileInfo info : this.getInfo().getXmlFileInfos()) {
                 	if( info.doProcess() ) {
-                		if (info.getViewProcedureName() != null &! info.getViewProcedureName().equals(StringConstants.EMPTY_STRING)) {
                 			factory.createViewProcedure(editor.getModelResource(), info, relationalModelName);
-                		}else{
-                			factory.createViewTable(editor.getModelResource(), info, relationalModelName);
-                		}
+                		
                 	}
                 }
                 
@@ -96,10 +95,10 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
         // Create the View Model, at the specified location
         ModelResource modelResource = factory.createViewRelationalModel(this.getInfo().getViewModelLocation(), viewModelName);
     	
-    	// Create View Tables in the model
+    	// Create View Procedure in the model
         for( TeiidXmlFileInfo info : this.getInfo().getXmlFileInfos()) {
         	if( info.doProcess() ) {
-        		factory.createViewTable(modelResource, info, sourceModelName);
+        		factory.createViewProcedure(modelResource, info, sourceModelName);
         	}
         }
 

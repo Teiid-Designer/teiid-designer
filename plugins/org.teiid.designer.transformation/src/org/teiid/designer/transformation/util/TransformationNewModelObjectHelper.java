@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.transformation.util;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +78,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	public boolean helpCreate( Object newObject,
                                Map properties ) {
         CoreArgCheck.isNotNull(newObject);
-        
+        if (properties==null) properties = new HashMap();
         boolean defineDefaultTableSQL = properties.get("generateDefaultSQL") != null;
         boolean doValidate = properties.get("validate") != null;
 
