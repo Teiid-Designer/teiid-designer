@@ -8,11 +8,13 @@
 package org.teiid.designer.runtime.ui.server.editor;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,6 +51,7 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
+import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
 import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -77,6 +80,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
      * Identifier of this editor
      */
     public static final String EDITOR_ID = TeiidServerEditor.class.getCanonicalName();
+    
+    private static final String EMPTY_STRING = CoreStringUtil.Constants.EMPTY_STRING;
 
     /**
      * Flag indicating editor's dirty status
@@ -563,7 +568,6 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         if (teiidServer == null || form.isDisposed())
             return;
 
-        customNameText.setText(teiidServer.getCustomLabel() != null ? teiidServer.getCustomLabel() : ""); //$NON-NLS-1$
         hostNameLabel.setText(teiidServer.getHost());
         versionValueCombo.setText(teiidServer.getServerVersion().toString());
         // Can only edit if teiid server has been stopped
@@ -573,31 +577,35 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
 
-        if (adminUserNameText != null) {
-            adminUserNameText.setText(teiidAdminInfo.getUsername());
+        if( isSevenServer() ) {
+	        if (adminUserNameText != null) {
+	            adminUserNameText.setText(teiidAdminInfo.getUsername() != null ? teiidAdminInfo.getUsername() : EMPTY_STRING);
+	        }
+	
+	        if (adminPasswdText != null) {
+	            adminPasswdText.setText(teiidAdminInfo.getPassword() != null ? teiidAdminInfo.getPassword() : EMPTY_STRING);
+	        }
+	        
+	        String portValue = teiidAdminInfo.getPort() != null ? teiidAdminInfo.getPort() : EMPTY_STRING;
+	        if (adminPort instanceof Text) {
+	            ((Text) adminPort).setText(portValue);
+	        } else if (adminPort instanceof Label) {
+	            ((Label) adminPort).setText(portValue);
+	        }
+	
+	        if (adminSSLCheckbox != null) {
+	            adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
+	        }
         }
 
-        if (adminPasswdText != null) {
-            adminPasswdText.setText(teiidAdminInfo.getPassword());
-        }
-
-        if (adminPort instanceof Text) {
-            ((Text) adminPort).setText(teiidAdminInfo.getPort());
-        } else if (adminPort instanceof Label) {
-            ((Label) adminPort).setText(teiidAdminInfo.getPort());
-        }
-
-        if (adminSSLCheckbox != null) {
-            adminSSLCheckbox.setSelection(teiidAdminInfo.isSecure());
-        }
-
-        jdbcUserNameText.setText(teiidJdbcInfo.getUsername());
-        jdbcPasswdText.setText(teiidJdbcInfo.getPassword());
-                
+        jdbcUserNameText.setText(teiidJdbcInfo.getUsername() != null ? teiidJdbcInfo.getUsername() : EMPTY_STRING); //teiidJdbcInfo.getUsername());
+        jdbcPasswdText.setText(teiidJdbcInfo.getPassword() != null ? teiidJdbcInfo.getPassword() : EMPTY_STRING); //teiidJdbcInfo.getPassword());
+        
+        String portValue = teiidJdbcInfo.getPort() != null ? teiidJdbcInfo.getPort() : EMPTY_STRING;
         if (jdbcPort instanceof Text) {
-            ((Text) jdbcPort).setText(teiidJdbcInfo.getPort());
+            ((Text) jdbcPort).setText(portValue);
         } else if (jdbcPort instanceof Label) {
-            ((Label) jdbcPort).setText(teiidJdbcInfo.getPort());
+            ((Label) jdbcPort).setText(portValue);
         }
 
         jdbcSSLCheckbox.setSelection(teiidJdbcInfo.isSecure());
