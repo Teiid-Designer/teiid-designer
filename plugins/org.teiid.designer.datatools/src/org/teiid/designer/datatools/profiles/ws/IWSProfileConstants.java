@@ -90,6 +90,6 @@ public interface IWSProfileConstants extends ICredentialsCommon {
       * Properties used for REST parameter info
       */
      String URI = "URI"; //$NON-NLS-1$
-     String QUERY_STRING = "Query String"; //$NON-NLS-1$
+     String QUERY_STRING = "Query"; //$NON-NLS-1$
      String PARAMETER_MAP = "Parameter map"; //$NON-NLS-1$
 }

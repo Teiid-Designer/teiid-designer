@@ -7,12 +7,15 @@
 */
 package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -24,6 +27,9 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
@@ -91,6 +97,59 @@ public class XmlFileViewModelFactory  extends FlatFileRelationalModelFactory {
         validator.validateSql(sqlString, QueryValidator.SELECT_TRNS, true);
     	
     }
+    
+ /**
+ * @since 8.6
+ */
+public void createViewProcedure(ModelResource modelResource, TeiidXmlFileInfo info, String relationalModelName) throws ModelerCoreException {
+    	
+	// Create a Procedure using the view procedure name in TeiidXmlFileInfo
+ 	Procedure procedure = factory.createProcedure();
+ 	procedure.setName(info.getViewProcedureName());
+ 	
+ 	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
+ 	
+ 	for (String parameterKey : info.getParameterMap().keySet()) {
+ 		ProcedureParameter parameter = factory.createProcedureParameter();
+ 		parameter.setName(parameterKey);
+ 		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
+ 		parameter.setType(stringType);
+ 		parameter.setProcedure(procedure);
+ 	}
+	
+ 	ProcedureResult result = factory.createProcedureResult();
+ 	result.setName("Result"); //$NON-NLS-1$
+ 	result.setProcedure(procedure);
+ 	
+ 	for(TeiidXmlColumnInfo columnInfo : info.getColumnInfoList() ) {
+     	Column column = factory.createColumn();
+     	column.setName(columnInfo.getName());
+     	EObject type = datatypeManager.findDatatype(columnInfo.getDatatype());
+     	if( type != null) {
+     		column.setType(type);
+     		if( columnInfo.getDatatype().equalsIgnoreCase("string")) { //$NON-NLS-1$
+     			column.setLength(DEFAULT_STRING_LENGTH);
+     		}
+     	}
+     	addValue(result, column, result.getColumns());
+ 	}
+
+ 	NewModelObjectHelperManager.helpCreate(procedure, null);
+ 	String sqlString = info.getSqlString(relationalModelName, info.getModelNameWithoutExtension(modelResource.getItemName()), info.getViewProcedureName());
+ 	
+ 	SqlTransformationMappingRoot tRoot = (SqlTransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
+ 	
+ 	TransformationHelper.setSelectSqlString(tRoot, sqlString, false, this);
+
+     TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, this);
+     
+     QueryValidator validator = new TransformationValidator(tRoot);
+     
+     validator.validateSql(sqlString, QueryValidator.SELECT_TRNS, true);
+    	
+    }
+
+ 
     
     @SuppressWarnings("unchecked")
     private void createColumns(TeiidXmlFileInfo info, BaseTable baseTable) throws ModelerCoreException {

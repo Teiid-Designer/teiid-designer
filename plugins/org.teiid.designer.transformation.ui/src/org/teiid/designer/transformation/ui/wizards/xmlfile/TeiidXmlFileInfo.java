@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
@@ -90,8 +91,9 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 	 * The  <code>List</code> of <code>TeiidXmlColumnInfo</code> objects parsed from the defined header information.
 	 */
 	private List<TeiidXmlColumnInfo> columnInfoList;
- 	
 	
+	private Map<String, Object> parameterMap;
+ 	
 	private XmlElement rootNode;
 	
 	private Map<String, String> namespaceMap;
@@ -134,6 +136,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.rootPath = info.getRootPath(); 
+		this.parameterMap = info.parameterMap;
 		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
 		for( ITeiidXmlColumnInfo iColInfo : info.getColumnInfoList() ) {
 		    TeiidXmlColumnInfo colInfo = (TeiidXmlColumnInfo) iColInfo;
@@ -154,6 +157,12 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 			setViewTableName(info.getViewTableName());
 		} else {
 			setViewTableName(StringUtilities.EMPTY_STRING);
+		}
+		
+		if( info.getViewProcedureName() != null ) {
+			setViewProcedureName(info.getViewProcedureName());
+		} else {
+			setViewProcedureName(StringUtilities.EMPTY_STRING);
 		}
 		
 		validate();
@@ -507,6 +516,21 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
         return procedureService.getSQLStatement(this, relationalModelName);
     }
     
+    /**
+	 * Returns the current generated SQL string based on an unknown relational model name
+     * @param relationalModelName 
+     * @param relationalViewModelName 
+     * @param virtualProcedureName 
+	 * @return the generated SQL string based on the values stored on this instance
+     * @since 8.6
+	 */
+    public String getSqlString(String relationalModelName, String relationalViewModelName, String virtualProcedureName) {
+        IQueryService queryService = ModelerCore.getTeiidQueryService();
+        IProcedureService procedureService = queryService.getProcedureService();
+        return procedureService.getSQLStatement(this, relationalModelName, relationalViewModelName, virtualProcedureName);
+    }
+    
+    
     public XmlElement getRootNode() {
     	return this.rootNode;
     }
@@ -641,5 +665,20 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		for( Object node : element.getChildrenDTDElements() ) {
 			addChildPaths((XmlElement)node, segmentList);
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.teiid.designer.query.proc.ITeiidXmlFileInfo#getParameterMap()
+	 */
+	@Override
+	public Map<String, Object> getParameterMap() {
+		return this.parameterMap;
+	}
+
+	/**
+	 * @param parameterMap
+	 */
+	public void setParameterMap(Map parameterMap) {
+		this.parameterMap=parameterMap;
 	}
 }

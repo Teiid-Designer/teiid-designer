@@ -221,8 +221,13 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     void updateSqlText() {
     	if( this.fileInfo != null ) {
     		if( this.info.getSourceModelName() != null ) {
-    			String modelName = this.fileInfo.getModelNameWithoutExtension(this.info.getSourceModelName());
-    			sqlTextViewer.getDocument().set(fileInfo.getSqlString(modelName));
+    			String sourceModelName = this.fileInfo.getModelNameWithoutExtension(this.info.getSourceModelName());
+    			if (this.info.getViewModelName() != null) {
+        			String viewModelName = this.fileInfo.getModelNameWithoutExtension(this.info.getViewModelName());
+    				sqlTextViewer.getDocument().set(fileInfo.getSqlString(sourceModelName, viewModelName, this.fileInfo.getViewProcedureName()));
+    			} else {
+	    			sqlTextViewer.getDocument().set(fileInfo.getSqlString(sourceModelName));
+    			}
     		} else {
     			sqlTextViewer.getDocument().set(fileInfo.getSqlStringTemplate());
     		}

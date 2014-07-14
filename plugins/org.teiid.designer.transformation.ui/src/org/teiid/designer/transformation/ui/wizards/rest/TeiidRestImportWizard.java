@@ -44,7 +44,7 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
 
     TeiidXmlImportOptionsPage optionsPage;
     
-    TeiidXmlImportSourcePage sourcePage;
+    TeiidRestImportSourcePage sourcePage;
 //    
 //    private Properties designerProperties;
     
@@ -64,22 +64,18 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
 	
 	@Override
 	public void addPages() {
-	//	this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
-	//	addPage(optionsPage);
 		
-        this.sourcePage = new TeiidXmlImportSourcePage(getFileInfo());
+        this.sourcePage = new TeiidRestImportSourcePage(getFileInfo());
         addPage(sourcePage);
         
         TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
         addPage(sqlPage);
         
-        TeiidMetadataImportViewModelPage viewModelPage = new TeiidMetadataImportViewModelPage(getFileInfo());
-        addPage(viewModelPage);
 	}
 
 	@Override
 	public boolean finish() {
-		final TeiidXmlFileImportProcessor processor = new TeiidXmlFileImportProcessor(getFileInfo(), this.getShell());
+		final TeiidRestImportProcessor processor = new TeiidRestImportProcessor(getFileInfo(), this.getShell());
 		
 		UiUtil.runInSwtThread(new Runnable() {
 			@Override
@@ -96,7 +92,7 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
             if( ! getFileInfo().getXmlFileInfos().isEmpty() && getFileInfo().getXmlFileInfos().size() == 1 ) {
 	            TeiidXmlFileInfo info = this.getFileInfo().getXmlFileInfos().iterator().next();
 	            DesignerPropertiesUtil.setPreviewTargetModelName(getDesignerProperties(), getFileInfo().getViewModelName());
-	            DesignerPropertiesUtil.setPreviewTargetObjectName(getDesignerProperties(), info.getViewTableName());
+	            DesignerPropertiesUtil.setPreviewTargetObjectName(getDesignerProperties(), info.getViewProcedureName());
             }
 		}
 

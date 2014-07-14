@@ -50,6 +50,12 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	private String viewTableName;
 	
 	/**
+     * The unique view procedure name containing the generated SELECT SQL statement that converts REST response data into
+     * relational columns (never <code>null</code> or empty).
+     */
+	private String viewProcedureName;
+	
+	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
 	 * <code>TeiidMetadataFileInfo</code>
 	 */
@@ -95,6 +101,25 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 		CoreArgCheck.isNotNull(viewTableName, "viewTableName is null"); //$NON-NLS-1$
 		
 		this.viewTableName = viewTableName;
+		validate();
+	}
+	
+	/**
+	 * 
+	 * @return viewProcedureName the view precedure name (never <code>null</code> or empty).
+	 */
+	public String getViewProcedureName() {
+		return this.viewProcedureName;
+	}
+
+	/**
+	 * 
+	 * @param viewProcedureName (never <code>null</code> or empty).
+	 */
+	public void setViewProcedureName(String viewProcedureName) {
+		CoreArgCheck.isNotNull(viewProcedureName, "viewProcedureName is null"); //$NON-NLS-1$
+		
+		this.viewProcedureName = viewProcedureName;
 		validate();
 	}
 	

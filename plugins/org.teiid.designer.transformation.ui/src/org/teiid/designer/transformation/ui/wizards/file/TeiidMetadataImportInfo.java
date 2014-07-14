@@ -453,6 +453,10 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		return fileMode == FILE_MODE_TEIID_XML_URL;
 	}
 	
+	public boolean isRestUrlFileMode() {
+		return fileMode == REST_MODE_URL;
+	}
+	
 	public void setFileMode(int mode) {
 		this.fileMode = mode;
 	}

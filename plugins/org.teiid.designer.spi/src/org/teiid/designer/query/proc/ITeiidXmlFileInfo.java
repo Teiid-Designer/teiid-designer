@@ -8,6 +8,8 @@
 package org.teiid.designer.query.proc;
 
 import java.util.List;
+import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.query.sql.ISQLConstants;
 
@@ -45,6 +47,18 @@ public interface ITeiidXmlFileInfo<T extends ITeiidXmlColumnInfo> extends ITeiid
      * @return columnInfoList the <code>TeiidXmlColumnInfo[]</code> array parsed from the header in the data file
      */
     List<T> getColumnInfoList();
+    
+    /**
+     * 
+     * @return parameterMap the <code>Parameter</code> map from the connection profile
+     */
+    Map<String, Object> getParameterMap();
+    
+    /**
+     * Sets the <code>Parameter</code> map from the connection profile
+     * @param parameterMap 
+     */
+    void setParameterMap(Map<String, Object> parameterMap);
     
     /**
      * 

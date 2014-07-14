@@ -9,7 +9,6 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +38,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
@@ -64,7 +63,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     private Label urlLabel;
     private Text urlText;
     private CredentialsComposite credentialsComposite;
-    private Map<String, String> parameterMap = new LinkedHashMap<String, String>();
+    private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
@@ -175,14 +174,14 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	/**
 	 * @return the parameterMap
 	 */
-	public Map<String, String> getParameterMap() {
+	public Map<String, Parameter> getParameterMap() {
 		return this.parameterMap;
 	}
 
 	/**
 	 * @param parameterMap the parameterMap to set
 	 */
-	public void setParameterMap(Map<String, String> parameterMap) {
+	public void setParameterMap(Map<String, Parameter> parameterMap) {
 		this.parameterMap = parameterMap;
 	}
 
@@ -222,20 +221,20 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 		
 		StringBuilder parameterString = new StringBuilder();
 		if (this.parameterMap==null) return parameterString;
-		Map<String, String> parameterMap = this.parameterMap;
+		Map<String, Parameter> parameterMap = this.parameterMap;
 
 		for (String key : parameterMap.keySet()) {
-	      String value = parameterMap.get(key);
-	      if (value.equals(IWSProfileConstants.URI)) {
+	      Parameter value = parameterMap.get(key);
+	      if (value.getType().equals(IWSProfileConstants.URI)) {
 	    	  parameterString.append("/").append(key); //$NON-NLS-1$
 	      }
-	      if (value.equals(IWSProfileConstants.QUERY_STRING)) {
+	      if (value.getType().equals(Parameter.Type.Query)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
 	    		  parameterString.append("?");   //$NON-NLS-1$
 	    	  }else{
 	    		  parameterString.append("&");   //$NON-NLS-1$  
 	    	  }
-	    	  parameterString.append(key).append("=value"); //$NON-NLS-1$
+	    	  parameterString.append(key).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
 	    }
 
