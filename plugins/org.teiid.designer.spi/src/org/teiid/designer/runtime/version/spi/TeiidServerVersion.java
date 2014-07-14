@@ -231,6 +231,30 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     public boolean isSevenServer() {
         return ITeiidServerVersion.SEVEN.equals(getMajor());
     }
+    
+    @Override
+    public ITeiidServerVersion getMinimumVersion() {
+        if (! this.hasWildCards())
+            return this;
+
+        String major = getMajor().equals(WILDCARD) ? SEVEN : getMajor();
+        String minor = getMinor().equals(WILDCARD) ? ZERO : getMinor();
+        String micro = getMicro().equals(WILDCARD) ? ZERO : getMicro();
+
+        return new TeiidServerVersion(major, minor, micro);
+    }
+
+    @Override
+    public ITeiidServerVersion getMaximumVersion() {
+        if (! this.hasWildCards())
+            return this;
+
+        String major = getMajor().equals(WILDCARD) ? NINE : getMajor();
+        String minor = getMinor().equals(WILDCARD) ? NINE : getMinor();
+        String micro = getMicro().equals(WILDCARD) ? NINE : getMicro();
+
+        return new TeiidServerVersion(major, minor, micro);
+    }
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {

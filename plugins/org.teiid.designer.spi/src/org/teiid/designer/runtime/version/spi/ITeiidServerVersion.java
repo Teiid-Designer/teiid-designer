@@ -82,7 +82,20 @@ public interface ITeiidServerVersion {
      * @return true is version is 7
      */
     boolean isSevenServer();
+    
+    /**
+	* @return the minimum version that this version could be,
+	* eg. 8.x.x will be 8.0.0 while 8.1.x will be 8.1.0 and
+	* 8.2.1 will always be 8.2.1
+	*/
+    ITeiidServerVersion getMinimumVersion();
 
+    /**
+	* @return the maximum version that this version could be,
+	* eg. 8.x.x will be 8.9.9 while 8.1.x will be 8.1.9 and
+	* 8.2.1 will always be 8.2.1
+	*/
+    ITeiidServerVersion getMaximumVersion();
     /**
      * Is this version greater than the given version
      *
