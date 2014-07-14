@@ -18,7 +18,16 @@ import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 public class DefaultStorageProvider implements ISecureStorageProvider {
 
     private Map<String, Map<String, String>> storageMap = new HashMap<String, Map<String, String>>();
-    
+
+    @Override
+    public boolean existsInSecureStorage(String nodeKey, String key) throws Exception {
+        if (! storageMap.containsKey(nodeKey))
+            return false;
+
+        Map<String, String> nodeMap = storageMap.get(nodeKey);
+        return nodeMap.containsKey(key);
+    }
+
     @Override
     public String getFromSecureStorage(String nodeKey, String key) {
         Map<String, String> nodeMap = storageMap.get(nodeKey);
@@ -37,5 +46,9 @@ public class DefaultStorageProvider implements ISecureStorageProvider {
         }
         
         nodeMap .put(key, value);
+    }
+
+    public void clear() {
+        storageMap.clear();
     }
 }

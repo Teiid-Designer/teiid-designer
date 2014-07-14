@@ -8,13 +8,11 @@
 package org.teiid.designer.runtime.ui.server.editor;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -277,6 +275,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             @Override
             public void run() {
                 progressBar.dispose();
+
+                if (form.getBody().isDisposed())
+                    return;
 
                 contentsPanel = toolkit.createComposite(form.getBody());
                 GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);

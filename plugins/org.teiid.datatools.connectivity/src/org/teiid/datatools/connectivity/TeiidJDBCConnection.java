@@ -61,7 +61,12 @@ public class TeiidJDBCConnection extends JDBCConnection {
         String connectURL = props.getProperty(IJDBCDriverDefinitionConstants.URL_PROP_ID);
         String uid = props.getProperty(IJDBCDriverDefinitionConstants.USERNAME_PROP_ID);
 
-        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(getClass(), connectURL);
+        /*
+         * The pass token not the actual password is provided by the PASSWORD property. This provides a
+         * reference to a node key made from a hash of the url and original password.
+         */
+        String passToken = props.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(getClass(), connectURL, passToken);
         String pwd = ConnectivityUtil.getSecureStorageProvider()
                                     .getFromSecureStorage(urlStorageKey, ConnectivityUtil.JDBC_PASSWORD);
 

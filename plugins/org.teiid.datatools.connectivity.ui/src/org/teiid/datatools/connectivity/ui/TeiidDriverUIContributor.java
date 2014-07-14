@@ -230,10 +230,13 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         
         /* 
          * Avoid placing the password into properties that are persisted in the clear
-         * by securely storing the password against the connection's url 
+         * by securely storing the password against the connection's url and a 1-way hash of the url and password
          */
-        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url);
         try {
+            String passToken = ConnectivityUtil.generateHashToken(url, this.passwordText.getText());
+            properties.setProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID, passToken);
+            String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, url, passToken);
+
             ConnectivityUtil.getSecureStorageProvider().storeInSecureStorage(
                                                                              urlStorageKey, 
                                                                              ConnectivityUtil.JDBC_PASSWORD, 
@@ -381,7 +384,12 @@ public class TeiidDriverUIContributor implements IDriverUIContributor, Listener 
         updateURL();
         
         String urlString = urlText.getText().trim();
-        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, urlString);
+        /*
+         * The pass token not the actual password is provided by the PASSWORD property. This provides a
+         * reference to a node key made from a hash of the url and original password.
+         */
+        String passToken = this.properties.getProperty(IJDBCDriverDefinitionConstants.PASSWORD_PROP_ID);
+        String urlStorageKey = ConnectivityUtil.buildSecureStorageKey(TeiidJDBCConnection.class, urlString, passToken);
         String password = null;
         
         /* Retrieve the password from the secure storage */

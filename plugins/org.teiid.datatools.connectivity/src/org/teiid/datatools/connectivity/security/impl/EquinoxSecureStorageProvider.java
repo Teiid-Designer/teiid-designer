@@ -9,6 +9,8 @@ package org.teiid.datatools.connectivity.security.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
@@ -39,6 +41,23 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
         
         return instance;
     }
+
+    @Override
+    public boolean existsInSecureStorage(String nodeKey, String key) throws Exception {
+        ISecurePreferences root = getRoot();
+        String encoded = encode(nodeKey);
+
+        if (! root.nodeExists(encoded))
+            return false;
+
+        ISecurePreferences node = root.node(encoded);
+        String[] keys = node.keys();
+        if (keys == null)
+            return false;
+
+        List<String> keyList = Arrays.asList(keys);
+        return keyList.contains(key);
+    }
     
     @Override
     public String getFromSecureStorage(String nodeKey, String key) throws Exception {
@@ -53,8 +72,19 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
     @Override
     public void storeInSecureStorage(String nodeKey, String key, String value) throws Exception {
         ISecurePreferences node = getNode(nodeKey);
-        if (value == null) node.put(key, value, true);
-        else node.put(key, EncodingUtils.encodeBase64(value.getBytes()), true /* encrypt */);
+        if (value == null)
+            node.put(key, value, true);
+        else
+            node.put(key, EncodingUtils.encodeBase64(value.getBytes()), true /* encrypt */);
+    }
+
+    private ISecurePreferences getRoot() {
+        return SecurePreferencesFactory.getDefault();
+    }
+
+    private String encode(String nodeKey) throws UnsupportedEncodingException {
+        String encoded = URLEncoder.encode(nodeKey, "UTF-8"); //$NON-NLS-1$
+        return encoded;
     }
 
     /**
@@ -68,8 +98,9 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
      * @throws UnsupportedEncodingException
      */
     private ISecurePreferences getNode(String nodeKey) throws Exception {
-        ISecurePreferences root = SecurePreferencesFactory.getDefault();
-        String encoded = URLEncoder.encode(nodeKey, "UTF-8"); //$NON-NLS-1$
+        ISecurePreferences root = getRoot();
+        String encoded = encode(nodeKey);
+
         return root.node(encoded);
     }
 }

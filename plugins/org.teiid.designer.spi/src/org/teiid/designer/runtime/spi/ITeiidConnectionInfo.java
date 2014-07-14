@@ -110,4 +110,14 @@ public interface ITeiidConnectionInfo {
      */
     IStatus validate();
 
+    /**
+     * @return the id referencing the password in secure storage
+     */
+    String getPassToken();
+
+    /**
+     * Set the pass token for this connection info
+     * @param passToken
+     */
+    void setPassToken(String passToken);
 }
