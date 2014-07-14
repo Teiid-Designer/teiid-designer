@@ -308,7 +308,8 @@ public class Messages {
         procedureServiceTextInvokeHttpTableSqlTemplate,
         procedureServiceXmlGetTextFilesTableSqlTemplate,
         procedureServiceXmlInvokeHttpTableSqlTemplate,
-        procedureServiceXmlInvokeHttpWithParametersTableSqlTemplate;
+        procedureServiceXmlInvokeHttpWithQueryParametersTableSqlTemplate,
+        procedureServiceXmlInvokeHttpWithURIParametersTableSqlTemplate;
 
         @Override
         public String toString() {

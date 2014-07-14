@@ -238,6 +238,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @return the extraProperties
 	 */
 	public Properties getExtraProperties() {
+		this.extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
 		return this.extraProperties;
 	}
 
@@ -245,6 +246,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @param extraProperties the extraProperties to set
 	 */
 	public void setExtraProperties(Properties extraProperties) {
+		extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
 		this.extraProperties = extraProperties;
 	}
 	
