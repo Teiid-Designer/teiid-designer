@@ -169,7 +169,7 @@ public class TeiidDataSourceFactory {
              }
          }
 
-         if (!requiresPassword || (pwd != null)) {
+         if (!requiresPassword &! (pwd == null)) {
              ITeiidDataSource tds = teiidServer.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
              tds.setPreview(previewVdb);
              return tds;
