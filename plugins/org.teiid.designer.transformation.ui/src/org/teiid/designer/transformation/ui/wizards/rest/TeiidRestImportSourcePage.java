@@ -754,20 +754,20 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			MessageDialog.openError(
 							this.getShell(),
 							getString("malformedUrlErrorTitle"), //$NON-NLS-1$
-							UiConstants.Util.getString("malformedUrlErrorMessage", endpoint, ex.getMessage())); //$NON-NLS-1$
+							getString("malformedUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (ProtocolException ex) {
 			Util.log(ex);
 			MessageDialog.openError(
 							this.getShell(),
 							getString("protocolErrorTitle"), //$NON-NLS-1$
-							UiConstants.Util.getString("protocolUrlErrorMessage", endpoint, ex.getMessage())); //$NON-NLS-1$
+							getString("protocolUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 	
 		} catch (IOException ex) {
 			Util.log(ex);
 			MessageDialog.openError(
 							this.getShell(),
 							getString("ioErrorTitle"), //$NON-NLS-1$
-							UiConstants.Util.getString("ioErrorMessage", endpoint, ex.getMessage())); //$NON-NLS-1$
+							getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 	
 		} finally {
 			try {
@@ -1186,8 +1186,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			this.xmlFileInfo.setViewProcedureName(StringUtilities.EMPTY_STRING);
 		}
 
-		//synchronizeUI();
-
+		int caret = this.viewProcedureNameText.getCaretPosition();
+		synchronizeUI();
+		this.viewProcedureNameText.setSelection(caret);
 		validatePage();
 	}
 	
@@ -1373,13 +1374,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return false;
 		}
 		
-		// If File ConnectionProfile, make sure it references a file
-		File theXmlFile = getFileForConnectionProfile(connProfile); 
-		if (theXmlFile!=null && theXmlFile.exists() && !theXmlFile.isFile()) {
-			setThisPageComplete(getString("invalidXmlFileConnProfileMesage"), ERROR);//$NON-NLS-1$
-			return false;
-		}
-		
 		setSourceHelpMessage();
 		setViewHelpMessage();
 		
@@ -1472,14 +1466,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		String viewFileText = viewModelFileText.getText().trim();
 
-		if (fileText.length() == 0) {
+		if (viewFileText.length() == 0) {
 			setThisPageComplete(getString("viewFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
         status = ModelNameUtil.validate(viewFileText, ModelerCore.MODEL_FILE_EXTENSION, null,
         		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
         if( status.getSeverity() == IStatus.ERROR ) {
-			setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_SOURCE_MODEL_NAME + status.getMessage(), ERROR);
+			setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME + status.getMessage(), ERROR);
 			return false;
 		}
         
@@ -1503,7 +1497,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		}
 		
 		if( this.xmlFileInfo.getViewProcedureName() == null || this.xmlFileInfo.getViewProcedureName().length() == 0) {
-			setThisPageComplete(getString("viewTableNameNullOrEmpty"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(getString("viewProcedureNameNullOrEmpty"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 
@@ -1607,7 +1601,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		if (creatingControl)
 			return;
 		String procedureName = GET_TEXT_FILES;
-		if( info.isXmlUrlFileMode() ) {
+		if( info.isRestUrlFileMode() ) {
 			procedureName = INVOKE_HTTP;
 		}
 		if (info.sourceModelExists()) {
@@ -1638,9 +1632,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
 		ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);
 		if (smr != null) {
-			if( info.isXmlLocalFileMode() ) {
-				return FlatFileRelationalModelFactory.procedureExists(smr, FlatFileRelationalModelFactory.GET_TEXT_FILES);
-			} else if( info.isXmlUrlFileMode() ) {
+			if( info.isRestUrlFileMode() ) {
 				return FlatFileRelationalModelFactory.procedureExists(smr, FlatFileRelationalModelFactory.INVOKE_HTTP);
 			}
 		}
