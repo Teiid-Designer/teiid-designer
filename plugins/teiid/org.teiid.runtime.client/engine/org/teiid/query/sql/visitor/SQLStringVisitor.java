@@ -2098,6 +2098,9 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     private void registerNodes(List<? extends LanguageObject> objects, int begin) {
+        if (objects == null)
+            return;
+
         for (int i = begin; i < objects.size(); i++) {
             if (i > 0) {
                 append(", "); //$NON-NLS-1$

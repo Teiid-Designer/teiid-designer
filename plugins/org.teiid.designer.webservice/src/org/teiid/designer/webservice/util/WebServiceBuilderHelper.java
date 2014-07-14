@@ -914,7 +914,8 @@ public class WebServiceBuilderHelper {
      */
     String generateSQLUsingMessageElements( final XmlDocument outputDoc,
                                             final Operation operation ) {
-        if (HEADLESS) return generateDefaultSQL(outputDoc, operation);
+        if (HEADLESS)
+            return generateDefaultSQL(outputDoc, operation);
 
         final StringBuffer sbuffer = new StringBuffer();
 
@@ -922,36 +923,46 @@ public class WebServiceBuilderHelper {
         sbuffer.append("CREATE VIRTUAL PROCEDURE "); //$NON-NLS-1$
         sbuffer.append("BEGIN "); //$NON-NLS-1$
 
+        // Create Declarations if elements are available
+        List<String> declarationList = new ArrayList<String>();
+
+        // Create Declaration Assignments if elements are available
+        List<String> assignmentList = new ArrayList<String>();
+
+        // Create Criteria if elements are available
+        List<String> criteriaList = new ArrayList<String>();
+
         // Add variable declarations based on operation input elements
-        final List inputElems = WebServiceUtil.getInputElements(operation, true);
+        List inputElems = WebServiceUtil.getInputElements(operation, true);
+        Iterator inpIter = inputElems.iterator();
         if (!inputElems.isEmpty()) {
-            final Iterator inpIter = inputElems.iterator();
+            // Find the document element matching the operation output message element
+            XmlElement docElement = getDocElemMatchingOperationOutputElem(outputDoc, operation);
+
             while (inpIter.hasNext()) {
-                final String sqlDeclare = createSqlDeclaration((XSDElementDeclaration)inpIter.next());
-                sbuffer.append(sqlDeclare);
+                // Declarations
+                XSDElementDeclaration declaration = (XSDElementDeclaration) inpIter.next();
+                final String sqlDeclare = createSqlDeclaration(declaration);
+                declarationList.add(sqlDeclare);
+
+                // Variable Assignments
+                final String sqlAssign = createSqlAssignment(operation, declaration);
+                assignmentList.add(sqlAssign);
+
+                // Create the individual criteria
+                final String criteria = createSqlCriteria(docElement, declaration);
+                criteriaList.add(criteria);
             }
-        } else {
-            sbuffer.append("DECLARE string "); //$NON-NLS-1$
-            sbuffer.append(WebServiceUtil.INPUT_VARIABLE_PREFIX);
-            sbuffer.append("exampleVar ;"); //$NON-NLS-1$
+        }
+
+        for (String sqlDeclare : declarationList) {
+            sbuffer.append(sqlDeclare);
         }
 
         // Add the variable assignments
         // InputElements supplied - build the assignments from them.
-        if (!inputElems.isEmpty()) {
-            final Iterator inpIter = inputElems.iterator();
-            while (inpIter.hasNext()) {
-                final String sqlAssign = createSqlAssignment(operation, (XSDElementDeclaration)inpIter.next());
-                sbuffer.append(sqlAssign);
-            }
-            // No InputElements supplied - use default example assignment
-        } else {
-            String operationInputName = "inputMessage"; //$NON-NLS-1$ 
-            if (operation != null) operationInputName = getSqlFullName(operation.getInput());
-            sbuffer.append(WebServiceUtil.INPUT_VARIABLE_PREFIX);
-            sbuffer.append("exampleVar = xPathValue("); //$NON-NLS-1$
-            sbuffer.append(operationInputName);
-            sbuffer.append(", '//*[local-name()=\"exampleName\"]');"); //$NON-NLS-1$
+        for (String sqlAssign : assignmentList) {
+            sbuffer.append(sqlAssign);
         }
 
         // Create the default SELECT * FROM query using the output document
@@ -961,20 +972,6 @@ public class WebServiceBuilderHelper {
         if (qry != null) {
             // append default query
             sbuffer.append(qry.toString());
-
-            // Create Criteria if elements are available
-            final List criteriaList = new ArrayList();
-            if (!inputElems.isEmpty()) {
-                // Find the document element matching the operation output message element
-                final XmlElement docElement = getDocElemMatchingOperationOutputElem(outputDoc, operation);
-
-                // create the individual criteria and add to list
-                final Iterator inpIter = inputElems.iterator();
-                while (inpIter.hasNext()) {
-                    final String criteria = createSqlCriteria(docElement, (XSDElementDeclaration)inpIter.next());
-                    criteriaList.add(criteria);
-                }
-            }
 
             // If criteria were created, create the compound where and add it to the query
             if (!criteriaList.isEmpty()) {
