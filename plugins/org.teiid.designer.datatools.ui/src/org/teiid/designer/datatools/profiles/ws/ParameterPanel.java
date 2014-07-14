@@ -310,10 +310,12 @@ public class ParameterPanel implements DatatoolsUiConstants {
             if (this.wsProfileDetailsWizardPage!=null){
             	wsProfileDetailsWizardPage.getProfileProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
+            	wsProfileDetailsWizardPage.getProfileProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
             }else{
             	propertyPage.getExtraProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	propertyPage.setParameterMap(this.parameterMap);
+            	propertyPage.getExtraProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
             }
         }
@@ -546,7 +548,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 
     			@Override
     			public void widgetSelected(SelectionEvent e) {
-    				handleTypeChanged(((Text)e.widget).getText());
+    				handleTypeChanged(((Combo)e.widget).getText());
     			}
 
     			@Override
@@ -631,8 +633,8 @@ public class ParameterPanel implements DatatoolsUiConstants {
             updateState();
         }
 
-        void handleTypeChanged(String type) {
-            this.type = Parameter.Type.Query.toString();
+        void handleTypeChanged(Object type) {
+            this.type = (String)type;
             updateState();
         }
 

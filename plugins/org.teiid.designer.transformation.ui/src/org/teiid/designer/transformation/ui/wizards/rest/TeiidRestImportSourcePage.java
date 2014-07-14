@@ -68,6 +68,7 @@ import org.eclipse.ui.INewWizard;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
@@ -840,8 +841,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		for (String key : parameterMap.keySet()) {
 	      Parameter value = parameterMap.get(key); 
-	      if (value.getType().equals(IWSProfileConstants.URI)) {
-	    	  parameterString.append("/").append(key); //$NON-NLS-1$
+	      if (value.getType().equals(Parameter.Type.URI)) {
+	    	  parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
 	      }
 	      if (value.getType().equals(Parameter.Type.Query)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$

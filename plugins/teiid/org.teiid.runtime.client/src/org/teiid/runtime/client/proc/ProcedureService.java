@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.text.StringContent;
+
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
@@ -295,18 +297,33 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          
          Map<String, Parameter> parameters = xmlFileInfo.getParameterMap();
 
-         tokens.add(xmlFileInfo.getXmlFileUrl());
-         
+         boolean isQueryParm = false;
          StringBuffer sb = new StringBuffer();
+         
          int c = 1;
          for (Parameter param: parameters.values() ){
         	 if (param.getType().equals(Parameter.Type.Query)) {
+        		 isQueryParm=true;
+        		 if (c==1) tokens.add(xmlFileInfo.getXmlFileUrl());
         		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName()).append(SPACE).append(AS).append(SPACE).append(param.getName());
         		 if(c < (parameters.size())) {
                      sb.append(COMMA).append(SPACE);
                  }
-        		 c++;
+        	 }else{
+        		 if (c==1){
+        			 String url = xmlFileInfo.getXmlFileUrl();
+        			 if (url.endsWith("/")){
+        				 url = url.substring(0, url.lastIndexOf("/"));
+        			 }
+        			 sb.append("'");
+        			 sb.append(url); 
+        			 sb.append("'");
+        		 }
+        		 
+        		 sb.append(" || \'/' || ");
+        		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName());
         	 }
+        	 c++;
          }
          
          tokens.add(sb.toString());
@@ -385,7 +402,11 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          String finalSQLString = null;
          
          // SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-         finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+         if (isQueryParm){
+        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithQueryParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+         }else{
+        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithURIParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+         }
          
          return finalSQLString;
 	}
