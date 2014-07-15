@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 /**
@@ -71,7 +71,7 @@ public final class ApplicationInfo implements Serializable {
     
 	private Properties props = new Properties();
 
-	private ITeiidServerVersion teiidVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+	private ITeiidServerVersion teiidVersion = Version.TEIID_DEFAULT.get();
 
     private ApplicationInfo() {
         props.setProperty(COPYRIGHT, "Copyright (C) 2008-2009 Red Hat, Inc"); //$NON-NLS-1$
