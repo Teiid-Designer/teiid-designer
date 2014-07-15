@@ -114,6 +114,7 @@ public final class NewVdbWizard extends AbstractWizard
     static final String ADD_FILE_DIALOG_NON_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogNonModelSelectedMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_VDB_SOURCE_MODEL_SELECTED_MESSAGE = VdbUiConstants.Util.getString("addFileDialogVdbSourceModelSelectedMessage");  //$NON-NLS-1$
     static final String SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES = VdbUiConstants.Util.getString("selectedModelsAndDependenciesContainDuplicateNamesMessage"); //$NON-NLS-1$
+    static final String ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE = VdbUiConstants.Util.getString("selectedModelsAreInDifferentProjectsMessage"); //$NON-NLS-1$
     
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                      StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
@@ -169,6 +170,20 @@ public final class NewVdbWizard extends AbstractWizard
                 }
             }
             
+            // Need to check if all selections in PROJECT
+            IProject targetProject = null;
+            for (int ndx = selection.length; --ndx >= 0;) {
+            	Object obj = selection[ndx];
+            	if( obj instanceof IFile ) {
+            		IProject proj = ((IFile)obj).getProject();
+            		
+            		if( targetProject == null ) {
+            			targetProject = proj;
+            		} else if( proj != targetProject ) {
+            			return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE, null);
+            		}
+            	}
+            }
             return new Status(IStatus.OK, VdbUiConstants.PLUGIN_ID, 0, EMPTY_STRING, null);
         }
     };
@@ -524,8 +539,12 @@ public final class NewVdbWizard extends AbstractWizard
             public boolean select( final Viewer viewer,
                                    final Object parent,
                                    final Object element ) {
-                if (element instanceof IContainer) 
-                	return true;
+                if (element instanceof IContainer) {
+                    if( folder != null ) {
+                    	return (folder.getProject() == element );
+                    }
+                    return true;
+                }
                 
                 final IFile file = (IFile)element;
 
@@ -551,6 +570,10 @@ public final class NewVdbWizard extends AbstractWizard
 	
 	void addModels(Object[] models) {
 		for( Object model : models) {
+			if( this.folder == null ) {
+				this.folder = ((IFile)model).getProject();
+				this.folderText.setText(folder.getFullPath().makeRelative().toString());
+			}
 			if( !modelsForVdb.contains(model) ) {
 				modelsForVdb.add((IResource)model);
 			}
