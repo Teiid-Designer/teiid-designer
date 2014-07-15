@@ -248,20 +248,36 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         if (null == urlText.getText() || urlText.getText().isEmpty()) {
             errorMessage = UTIL.getString("Common.URL.Error.Message"); //$NON-NLS-1$
             valid = false;
+            setErrorMessage(errorMessage);
+            setValid(valid);
+            return;
         }
-        if (!SecurityType.None.name().equals(securityText.getText()) &&
+        //An empty or null security type value is treated the same as "None"
+        String securityType = securityText.getText();
+        if (securityType!=null && (!securityType.trim().equals(StringUtilities.EMPTY_STRING) &&
+        	!SecurityType.None.name().equals(securityType)) &&
                 !SecurityType.HTTPBasic.name().equals(securityText.getText())) {
         	errorMessage = UTIL.getString("Common.Security.Error.Message"); //$NON-NLS-1$
     		valid = false;
+    		setErrorMessage(errorMessage);
+            setValid(valid);
+            return;
         }
-        if (!SecurityType.None.name().equals(securityText.getText())) {
+        if (securityType!=null && !securityType.trim().equals(StringUtilities.EMPTY_STRING) &&
+           (!SecurityType.None.name().equals(securityType))) {
         	if (null == passwordText.getText() || passwordText.getText().isEmpty()) {
         		errorMessage = UTIL.getString("Common.Password.Error.Message"); //$NON-NLS-1$
         		valid = false;
+        		setErrorMessage(errorMessage);
+                setValid(valid);
+                return;
         	}
         	if (null == usernameText.getText() || usernameText.getText().isEmpty()) {
         		errorMessage = UTIL.getString("Common.Username.Error.Message"); //$NON-NLS-1$
         		valid = false;
+        		setErrorMessage(errorMessage);
+                setValid(valid);
+                return;
         	}
         }
         setErrorMessage(errorMessage);
@@ -315,7 +331,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             result = new Properties();
         }
         result.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, urlText.getText());
-        result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText());
+        result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText().trim());
         result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, usernameText.getText());
         result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());
         
