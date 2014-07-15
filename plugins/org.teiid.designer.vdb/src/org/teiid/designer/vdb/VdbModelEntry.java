@@ -484,7 +484,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
-	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getName()) ) {
+	        		if( translatorName != null && translatorName.toString().equalsIgnoreCase(to.getType()) ) {
 	        			return to;
 	        		}
         		}
@@ -493,7 +493,6 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     	
     	return null;
     }
-    
     
     /*
      * Only called by synchronize method or vdb creation. Intent is to update the TO for a given model based on 
