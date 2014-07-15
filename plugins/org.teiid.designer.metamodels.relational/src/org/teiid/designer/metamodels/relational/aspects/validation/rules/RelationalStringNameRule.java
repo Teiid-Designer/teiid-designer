@@ -142,7 +142,7 @@ public class RelationalStringNameRule extends StringNameRule {
             CoreValidationRulesUtil.validateStringNameChars(result, name, validator, status);
         }
         
-        CoreValidationRulesUtil.validateForNonQuotedNameWithDelimeter(result, name);
+//        CoreValidationRulesUtil.validateForNonQuotedNameWithDelimeter(result, name);
         
         // add the result to the context
         context.addResult(result);
