@@ -228,7 +228,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     private boolean passwordExists() {
         try {
             String providerKey = getProviderKey();
-            System.out.println("Attempting to check exists password with " + providerKey);
             boolean exists = secureStorageProvider.existsInSecureStorage(providerKey, getPasswordKey());
             return exists;
         } catch (Exception ex) {
@@ -240,7 +239,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     private String retrievePassword() {
         try {
             String providerKey = getProviderKey();
-            System.out.println("Attempting to retrieve password with " + providerKey);
             return secureStorageProvider.getFromSecureStorage(providerKey, getPasswordKey());
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
@@ -252,7 +250,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
         try {
             this.passToken = ConnectivityUtil.generateHashToken(getUrl(), password);
             String providerKey = getProviderKey();
-            System.out.println("Generated provider key: " + providerKey);
             secureStorageProvider.storeInSecureStorage(providerKey, getPasswordKey(), password);
         } catch (Exception e) {
             DqpPlugin.Util.log(e);
@@ -406,7 +403,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setPassword( String password ) {
-        System.out.println("Setting password for connection " + getUrl() + " to " + password);
         /*
          * Real password being passed into this method so generate a token
          * and use it to store the real password in secure storage
