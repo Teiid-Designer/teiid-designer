@@ -27,6 +27,7 @@ import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
+import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -58,6 +59,45 @@ public class TeiidDdlImporter extends StandardImporter {
 	private static final String NS_DESIGNER_SALESFORCE = "salesforce"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_RELATIONAL = "relational"; //$NON-NLS-1$
 	
+	interface TYPES_UPPER {
+		String ARRAY = "ARRAY"; //$NON-NLS-1$
+		String BIGDECIMAL = "BIGDECIMAL"; //$NON-NLS-1$
+		String BINARY = "BINARY"; //$NON-NLS-1$
+		String BIT = "BIT"; //$NON-NLS-1$
+		String BLOB = "BLOB"; //$NON-NLS-1$
+		String BYTE = "BYTE"; //$NON-NLS-1$
+		String CHAR = "CHAR"; //$NON-NLS-1$
+		String CLOB = "CLOB"; //$NON-NLS-1$
+		String DATE = "DATE"; //$NON-NLS-1$
+		String DATETIME = "DATETIME"; //$NON-NLS-1$
+		String DECIMAL = "DECIMAL"; //$NON-NLS-1$
+		String DOUBLE = "DOUBLE"; //$NON-NLS-1$
+		String FLOAT = "FLOAT"; //$NON-NLS-1$
+		String INT = "INT"; //$NON-NLS-1$
+		String INTEGER = "INTEGER"; //$NON-NLS-1$
+		String LONGVARBINARY = "LONGVARBINARY"; //$NON-NLS-1$
+		String LONGVARCHAR = "LONGVARCHAR"; //$NON-NLS-1$
+		String NCHAR = "NCHAR"; //$NON-NLS-1$
+		String NUMERIC = "NUMERIC"; //$NON-NLS-1$
+		String OBJECT = "OBJECT"; //$NON-NLS-1$
+		String REAL = "REAL"; //$NON-NLS-1$
+		String REF = "REF"; //$NON-NLS-1$
+		String SHORT = "SHORT"; //$NON-NLS-1$
+		String STRING = "STRING"; //$NON-NLS-1$
+		String SMALLINT = "SMALLINT"; //$NON-NLS-1$
+		String TIMES = "TIME"; //$NON-NLS-1$
+		String TIMESTAMP = "TIMESTAMP"; //$NON-NLS-1$
+		String TINYINT = "TINYINT"; //$NON-NLS-1$
+		String VARBINARY = "VARBINARY"; //$NON-NLS-1$
+		String VARCHAR = "VARCHAR"; //$NON-NLS-1$
+	}
+	
+	static int DEFAULT_NULL_VALUE_COUNT = -1;
+	
+	/*
+	 *         return !(type == Types.LONGVARBINARY || type == Types.LONGVARCHAR || type == Types.VARBINARY || type == Types.VARCHAR
+                 || type == Types.ARRAY || type == Types.BLOB || type == Types.CLOB);
+	 */
 	private class TeiidInfo extends Info {
 
 		/**
@@ -668,6 +708,60 @@ public class TeiidDdlImporter extends StandardImporter {
 			}
 		}
 	}
+	
+	private void resolveColumnDatatype(RelationalColumn column, String nativeType) {
+		if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) && nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
+			column.setDatatype(nativeType);
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.STRING) && nativeType.equalsIgnoreCase(TYPES_UPPER.CHAR ) ) {
+			column.setDatatype(nativeType);
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.VARBINARY) && nativeType.equalsIgnoreCase(TYPES_UPPER.BINARY ) ) {
+			column.setDatatype(TYPES_UPPER.OBJECT.toLowerCase());
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.TIMESTAMP) && nativeType.equalsIgnoreCase(TYPES_UPPER.DATETIME ) ) {
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.DOUBLE) && nativeType.equalsIgnoreCase(TYPES_UPPER.FLOAT ) ) {
+			column.setDatatype(nativeType);
+			if( column.getPrecision() == 0 ) {
+				column.setPrecision(53);
+			}
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGDECIMAL) && nativeType.equalsIgnoreCase(TYPES_UPPER.DECIMAL ) ) {
+			column.setDatatype(nativeType);
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.SHORT) && nativeType.equalsIgnoreCase(TYPES_UPPER.TINYINT ) ) {
+			column.setDatatype(TYPES_UPPER.BYTE.toLowerCase());
+		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.FLOAT) && nativeType.equalsIgnoreCase(TYPES_UPPER.REAL ) ) {
+			if( column.getPrecision() == 0 ) {
+				column.setPrecision(24);
+			}
+		}
+		
+		
+		// Not enough info in DDL to determine if fixed length data type so calling it here
+		column.setLengthFixed(isFixedLength(column.getDatatype()));
+		
+		// From RelationalModelProcessor....
+        if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.ALL_EXCEPT_LIKE) ) {
+            column.setCaseSensitive(false);
+        } else if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.SEARCHABLE) ) {
+            column.setCaseSensitive(true);
+        } else {
+            column.setCaseSensitive(false);
+        }
+	}
+	
+    /**
+     * Method that can identify if a data type is fixed length or not
+     * (See <code>org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl</code> used for JDBC import)
+     * @param typeName 
+     * @return True if the specified type should be considered fixed-length.
+     * @since 4.2
+     */
+    protected boolean isFixedLength( final String typeName ) {
+        return !(TYPES_UPPER.LONGVARBINARY.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.LONGVARCHAR.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.VARBINARY.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.VARCHAR.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.ARRAY.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.BLOB.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.CLOB.equalsIgnoreCase(typeName));
+    }
 
 	/**
 	 * Get the deterministic boolean from the DETERMINISM option string
