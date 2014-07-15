@@ -56,6 +56,8 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Xml;
+import org.teiid.designer.vdb.file.ValidationVersionCallback;
+import org.teiid.designer.vdb.file.VdbFileProcessor;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -343,6 +345,33 @@ public class VdbUtil implements VdbConstants {
 		}
 		return false;
 	}
+
+    private static void validateVdbVersion(final IFile theVdbFile, Collection<IStatus> statuses) {
+        ITeiidServerVersion defaultTeiidVersion = ModelerCore.getTeiidServerVersion();
+        ITeiidServerVersion maxDesignerVersion = Version.TEIID_DEFAULT.get();
+
+        ValidationVersionCallback callback = new ValidationVersionCallback(theVdbFile);
+        VdbFileProcessor processor = new VdbFileProcessor(callback);
+        processor.process();
+
+        ITeiidServerVersion validationVersion = callback.getValidationVersion();
+        if (validationVersion == null) {
+            /* No Validation version so probably pre-8.2 */
+            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationWarning_noValidationVersionInVdb")) ); //$NON-NLS-1$
+            return;
+        }
+
+        if (! validationVersion.compareTo(defaultTeiidVersion) && (validationVersion.isGreaterThan(defaultTeiidVersion) || validationVersion.isLessThan(defaultTeiidVersion)))
+            /* Vdb version does not match teiid server version selected so may not deploy */
+            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, defaultTeiidVersion)) ); //$NON-NLS-1$    
+
+        if (validationVersion.isGreaterThan(maxDesignerVersion))
+            /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
+            statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$
+    }
 	
 	/**
 	 * Simple check to see if the model file is in the vdb
@@ -357,6 +386,8 @@ public class VdbUtil implements VdbConstants {
 		
 		if (theVdbFile.exists()) {
 
+		    validateVdbVersion(theVdbFile, statuses);
+
             Vdb theVdb = null;
             VdbElement manifest = null;
             try {
@@ -367,19 +398,6 @@ public class VdbUtil implements VdbConstants {
             }
 
 			if (theVdb != null && manifest != null) {
-				// Check the validation version of the VDB against current Default teiid instance
-
-				String serverVersion = ModelerCore.getTeiidServerVersion().toString();
-				if( serverVersion != null ) {
-					String validationVersion = theVdb.getValidationVersion();
-					if( validationVersion != null ) {
-						if( !validationVersion.equals(serverVersion) ) {
-							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
-									VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, serverVersion)) ); //$NON-NLS-1$
-						}
-					}
-				}
-				
 				// Check Security settings
 				String securityDomain = theVdb.getSecurityDomain();
 				if( securityDomain != null ) {

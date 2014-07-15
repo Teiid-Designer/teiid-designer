@@ -52,7 +52,11 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
 	@SuppressWarnings("javadoc")
 	public static final String TOO_MANY_SOURCES = "tooManySources"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
+    public static final String NO_VALIDATION_VERSION = "noValidationVersion"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
 	public static final String DIFFERENT_VALIDATION_VERSION = "differentValidationVersion"; //$NON-NLS-1$
+	@SuppressWarnings("javadoc")
+    public static final String VALIDATION_VERSION_NEWER_THAN_DESIGNER = "validationVersionNewerThanDesigner"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
 	public static final String MISSING_TRANSLATOR_TYPE = "missingTranslatorType"; //$NON-NLS-1$
 	@SuppressWarnings("javadoc")
@@ -72,7 +76,9 @@ public class VdbBuilder extends AbstractTeiidProjectBuilder {
     	MISSING_UUID,
     	MISSING_MODEL,
     	TOO_MANY_SOURCES,
+    	NO_VALIDATION_VERSION,
     	DIFFERENT_VALIDATION_VERSION,
+    	VALIDATION_VERSION_NEWER_THAN_DESIGNER,
     	MISSING_TRANSLATOR_TYPE,
     	MISSING_JNDI_NAME,
     	MODEL_WITH_ERRORS,
@@ -182,7 +188,10 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("multiple sources defined") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.TOO_MANY_SOURCES);
     				}
-    				if( iStatus.getMessage().indexOf("runtime validation version") > 0 ) { //$NON-NLS-1$
+    				if( iStatus.getMessage().indexOf("Teiid validation version of the VDB could not be found") > 0 ) { //$NON-NLS-1$
+                        createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.NO_VALIDATION_VERSION);
+                    }
+    				if( iStatus.getMessage().indexOf("different than the current default teiid instance") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DIFFERENT_VALIDATION_VERSION);
     				}
     				if( iStatus.getMessage().indexOf("no JNDI name defined") > 0 ) { //$NON-NLS-1$
@@ -194,7 +203,10 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				
     			} break;
     			case IStatus.ERROR: {
-    				if( iStatus.getMessage().indexOf("no translator type defined") > 0 ) { //$NON-NLS-1$
+    			    if( iStatus.getMessage().indexOf("VDB was created in a newer version of Designer") > 0 ) { //$NON-NLS-1$
+                        createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.VALIDATION_VERSION_NEWER_THAN_DESIGNER);
+                    }
+    			    else if( iStatus.getMessage().indexOf("no translator type defined") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MISSING_TRANSLATOR_TYPE);
     				} else if( iStatus.getMessage().indexOf("and will not be ACTIVE") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_ERROR, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.MODEL_WITH_ERRORS);
@@ -240,8 +252,12 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
 			attributes.put(MISSING_UUID, true);
 		} else if (markerType == MarkerType.MISSING_MODEL) {
 			attributes.put(MISSING_MODEL, true);
+		} else if (markerType == MarkerType.NO_VALIDATION_VERSION) {
+            attributes.put(NO_VALIDATION_VERSION, true);
 		} else if (markerType == MarkerType.DIFFERENT_VALIDATION_VERSION) {
 			attributes.put(DIFFERENT_VALIDATION_VERSION, true);
+		} else if (markerType == MarkerType.VALIDATION_VERSION_NEWER_THAN_DESIGNER) {
+            attributes.put(VALIDATION_VERSION_NEWER_THAN_DESIGNER, true);
 		} else if (markerType == MarkerType.DUPLICATE_MODEL_NAMES) {
 		    attributes.put(DUPLICATE_MODEL_NAMES, true);
 		}

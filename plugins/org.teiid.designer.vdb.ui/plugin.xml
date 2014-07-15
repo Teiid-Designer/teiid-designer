@@ -124,6 +124,14 @@
           <attribute name="differentValidationVersion" value="true"/>
        </markerResolutionGenerator>
     <markerResolutionGenerator
+          class="org.teiid.designer.vdb.ui.build.VdbNoTeiidServerVersionResolutionGenerator"
+          markerType="org.teiid.designer.vdb.ui.vdbMarker">
+       <attribute
+             name="noValidationVersion"
+             value="true">
+       </attribute>
+    </markerResolutionGenerator>
+    <markerResolutionGenerator
           class="org.teiid.designer.vdb.ui.build.VdbDuplicateNamesMarkerResolutionGenerator"
           markerType="org.teiid.designer.vdb.ui.vdbMarker">
        <attribute
