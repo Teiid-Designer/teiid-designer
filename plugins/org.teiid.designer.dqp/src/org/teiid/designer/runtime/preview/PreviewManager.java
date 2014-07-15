@@ -205,8 +205,9 @@ public final class PreviewManager extends JobChangeAdapter
     /**
      * @param pvdbFile the Preview VDB (may not be <code>null</code> and must be a VDB)
      * @return the version of the given Preview VDB
+     * @throws Exception
      */
-    public static int getPreviewVdbVersion( IFile pvdbFile ) {
+    public static int getPreviewVdbVersion( IFile pvdbFile ) throws Exception {
         assert (pvdbFile != null) : "PVDB is null"; //$NON-NLS-1$
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
 
@@ -253,7 +254,7 @@ public final class PreviewManager extends JobChangeAdapter
         return false;
     }
 
-    private static boolean isProjectPreviewVdb( IFile pvdbFile ) {
+    private static boolean isProjectPreviewVdb( IFile pvdbFile ) throws Exception {
         if (PreviewManager.isPreviewVdb(pvdbFile)) {
             return pvdbFile.getFullPath().removeFileExtension().toString().endsWith("tion"); //$NON-NLS-1$
         }
@@ -265,7 +266,7 @@ public final class PreviewManager extends JobChangeAdapter
      * @param resource the resource being checked
      * @return <code>true</code> if the resource is a Preview VDB
      */
-    private static boolean isPreviewVdb( IResource resource ) {
+    private static boolean isPreviewVdb( IResource resource ) throws Exception {
         if (ModelUtil.isVdbArchiveFile(resource)) {
         	return VdbUtil.isPreviewVdb((IFile)resource);
         }
@@ -417,7 +418,7 @@ public final class PreviewManager extends JobChangeAdapter
         IFile pvdbFile = getFile(pvdbPath);
         String jndiName = this.getPreviewVdbJndiName(pvdbPath);
         Job job = new DeleteDeployedPreviewVdbJob(this.getPreviewVdbDeployedName(pvdbPath),
-                                                  getPreviewVdbVersion(pvdbFile), jndiName, this, getPreviewServer());
+                                                  jndiName, this, getPreviewServer());
         return job;
     }
 
@@ -611,7 +612,7 @@ public final class PreviewManager extends JobChangeAdapter
                 } else {
                     // Preview VDB doesn't exist so user must've deleted a folder. Just delete the deployed PVDB.
                     Job job = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
-                                                              getPreviewVdbVersion(pvdbFile), getPreviewVdbJndiName(pvdbFile),
+                                                              getPreviewVdbJndiName(pvdbFile),
                                                               this, getPreviewServer());
                     job.schedule();
                 }
@@ -1675,7 +1676,6 @@ public final class PreviewManager extends JobChangeAdapter
             for (IProject project : DotProjectUtils.getOpenModelProjects()) {
                 for (IFile pvdbFile : findProjectPvdbs(project, false)) {
                     Job deleteDeployedPvdbJob = new DeleteDeployedPreviewVdbJob(getPreviewVdbDeployedName(pvdbFile),
-                                                                                    getPreviewVdbVersion(pvdbFile),
                                                                                     getPreviewVdbJndiName(pvdbFile), this,
                                                                                     oldServer);
                     jobs.add(deleteDeployedPvdbJob);
@@ -1746,7 +1746,6 @@ public final class PreviewManager extends JobChangeAdapter
             
             if( vdb.getName().contains(ModelerCore.workspaceUuid().toString())) {
 	            Job job = new DeleteDeployedPreviewVdbJob(vdb.getName(),
-	                                                      vdb.getVersion(),
 	                                                      getPreviewVdbJndiName(vdb.getName()),
 	                                                      this, instance);
 	            jobs.add(job);

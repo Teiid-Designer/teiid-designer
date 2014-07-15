@@ -12,6 +12,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -56,7 +57,10 @@ import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.file.ValidationVersionCallback;
+import org.teiid.designer.vdb.file.VdbFileProcessor;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -81,6 +85,10 @@ public class VdbTest implements VdbConstants {
     private ModelWorkspaceMock modelWorkspaceMock;
 
     private File booksVdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books.vdb");
+
+    private File books77VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-7.7.x.vdb");
+
+    private File books84VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-8.4.x.vdb");
 
     private File BOOK_DATATYPES_XSD = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "BookDatatypes.xsd");
     private File BOOKS_XMI = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "Books.xmi");
@@ -505,5 +513,33 @@ public class VdbTest implements VdbConstants {
         }
 
         archive.close();
+    }
+
+    @Test
+    public void testVdbVersionCallback() throws Exception {
+        MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
+        when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
+        ValidationVersionCallback callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
+        VdbFileProcessor processor = new VdbFileProcessor(callback);
+        processor.process();
+        /* Original books vdb pre-dates validation version */
+        assertFalse(callback.hasException());
+        assertNull(callback.getValidationVersion());
+
+        booksVdbBuilder = new MockFileBuilder(books77VdbFile);
+        when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
+        callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
+        processor = new VdbFileProcessor(callback);
+        processor.process();
+        assertFalse(callback.hasException());
+        assertEquals(Version.TEIID_7_7.get(), callback.getValidationVersion());
+
+        booksVdbBuilder = new MockFileBuilder(books84VdbFile);
+        when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
+        callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
+        processor = new VdbFileProcessor(callback);
+        processor.process();
+        assertFalse(callback.hasException());
+        assertEquals(Version.TEIID_8_4.get(), callback.getValidationVersion());
     }
 }

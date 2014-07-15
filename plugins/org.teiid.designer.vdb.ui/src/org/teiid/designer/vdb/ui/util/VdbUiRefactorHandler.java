@@ -28,6 +28,7 @@ import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.refactor.RefactorResourcesUtils;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 /**
  *
@@ -61,17 +62,23 @@ public class VdbUiRefactorHandler extends AbstractRefactorModelHandler {
                         preProcess(refactorType, members[i], monitor);
                     }
                 } catch (CoreException ex) {
-                    // Consider what TODO
+                    VdbUiConstants.Util.log(ex);
+                    return false;
                 }
 
     	    } else if (refactoredResource instanceof IFile) {
-    	        if( VdbUtil.modelInVdb(theVdb, (IFile)refactoredResource) ) {
-    	            targetVdbs.add(theVdb);
-    	            VdbEditor vdbEditor = getVdbEditorForFile(theVdb);
-    	            if( vdbEditor != null ) {
-    	                openVdbEditors.add(vdbEditor);
-    	            }
-    	        }
+    	        try {
+                    if( VdbUtil.modelInVdb(theVdb, (IFile)refactoredResource) ) {
+                        targetVdbs.add(theVdb);
+                        VdbEditor vdbEditor = getVdbEditorForFile(theVdb);
+                        if( vdbEditor != null ) {
+                            openVdbEditors.add(vdbEditor);
+                        }
+                    }
+                } catch (Exception ex) {
+                    VdbUiConstants.Util.log(ex);
+                    return false;
+                }
     	    }
     	}
 
