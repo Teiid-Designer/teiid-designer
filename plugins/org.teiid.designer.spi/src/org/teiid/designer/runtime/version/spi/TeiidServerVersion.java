@@ -72,7 +72,12 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         /**
          * Teiid 8.7
          */
-        TEIID_8_7(VersionID.TEIID_8_7);
+        TEIID_8_7(VersionID.TEIID_8_7),
+
+        /**
+         * Default Teiid for this Designer
+         */
+        TEIID_DEFAULT(VersionID.TEIID_8_7);
 
         private final ITeiidServerVersion version;
 
@@ -87,11 +92,6 @@ public class TeiidServerVersion implements ITeiidServerVersion {
             return version;
         }
     }
-
-    /**
-     * The default preferred server
-     */
-    public static final ITeiidServerVersion DEFAULT_TEIID_SERVER = Version.TEIID_8_6.get();
 
     private String versionString = ZERO + DOT + ZERO + DOT + ZERO;
 
@@ -168,7 +168,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
      * @return {@link ITeiidServerVersion} default version
      */
     public static ITeiidServerVersion deriveUltimateDefaultServerVersion() {
-        ITeiidServerVersion lastTestedDefault = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+        ITeiidServerVersion lastTestedDefault = Version.TEIID_DEFAULT.get();
 
         Collection<ITeiidServerVersion> serverVersions = null;
         try {

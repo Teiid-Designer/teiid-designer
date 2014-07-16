@@ -39,19 +39,12 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
     private final String pvdbName;
 
     /**
-     * The version of the Preview VDB.
-     */
-    private final int pvdbVersion;
-
-    /**
      * @param pvdbName the name of the Preview VDB (may not be <code>null</code> or empty)
-     * @param pvdbVersion the Preview VDB version
      * @param jndiName the data source name (may not be <code>null</code> or empty)
      * @param context the preview context (may not be <code>null</code>)
      * @param previewServer the preview server (may be <code>null</code>)
      */
     public DeleteDeployedPreviewVdbJob( String pvdbName,
-                                        int pvdbVersion,
                                         String jndiName,
                                         PreviewContext context,
                                         ITeiidServer previewServer ) {
@@ -61,7 +54,6 @@ public final class DeleteDeployedPreviewVdbJob extends TeiidPreviewVdbCleanupJob
         assert !StringUtilities.isEmpty(jndiName) : "JNDI name is null or empty"; //$NON-NLS-1$
 
         this.pvdbName = pvdbName;
-        this.pvdbVersion = pvdbVersion;
         this.jndiName = jndiName;
     }
 

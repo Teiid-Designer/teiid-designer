@@ -61,6 +61,7 @@ import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -681,7 +682,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 boolean previewServer = false;
 
                 // version attribute
-                ITeiidServerVersion teiidServerVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+                ITeiidServerVersion teiidServerVersion = Version.TEIID_DEFAULT.get();
                 Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
                 if (versionNode != null) teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
 

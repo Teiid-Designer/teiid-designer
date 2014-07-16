@@ -24,14 +24,12 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -56,8 +54,10 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Xml;
-import org.teiid.designer.vdb.manifest.DataRoleElement;
+import org.teiid.designer.vdb.file.ValidationVersionCallback;
+import org.teiid.designer.vdb.file.VdbFileProcessor;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -108,7 +108,7 @@ public class VdbUtil implements VdbConstants {
      * @param file
      * @return preview attribute value for VDB. true or false
      */
-    public static boolean isPreviewVdb( final IFile file ) {
+    public static boolean isPreviewVdb( final IFile file ) throws Exception {
         CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
 
         if (file.exists()) {
@@ -144,7 +144,7 @@ public class VdbUtil implements VdbConstants {
      * @param type
      * @return preview attribute value for VDB. true or false
      */
-	public static boolean hasModelClass(final IFile file, final String modelClass, final String type) {
+	public static boolean hasModelClass(final IFile file, final String modelClass, final String type) throws Exception {
         if (file.exists() && Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
             VdbElement manifest = VdbUtil.getVdbManifest(file);
             if (manifest != null) {
@@ -173,7 +173,7 @@ public class VdbUtil implements VdbConstants {
      * @param file
      * @return the root VdbElement
      */
-    public static VdbElement getVdbManifest( final IFile file ) {
+    public static VdbElement getVdbManifest( final IFile file ) throws Exception {
         final VdbElement[] manifest = new VdbElement[1];
 
         if (!file.exists()) {
@@ -230,7 +230,7 @@ public class VdbUtil implements VdbConstants {
      * @param file
      * @return version the vdb version number
      */
-    public static int getVdbVersion( final IFile file ) {
+    public static int getVdbVersion( final IFile file ) throws Exception {
 
         if (file.exists()) {
             VdbElement manifest = VdbUtil.getVdbManifest(file);
@@ -241,7 +241,7 @@ public class VdbUtil implements VdbConstants {
 
         return 0;
     }
-    
+
     /**
      * Simple method that peeks inside a VDB manifest to check if the VDB was built with Teiid 8.0 or greater
      * The vdb version property value was added in Teiid Designer 8.2. So it's relatively safe to do this check.
@@ -250,18 +250,18 @@ public class VdbUtil implements VdbConstants {
      * @return vdb is based on Teiid 7
      */
     public static boolean isVdbTeiidVersion8orGreater( final IFile file) {
-        if (file.exists()) {
-            VdbElement manifest = VdbUtil.getVdbManifest(file);
-            if (manifest != null) {
-            	for( PropertyElement pElement : manifest.getProperties()) {
-            		if( Vdb.Xml.VALIDATION_VERSION.equalsIgnoreCase(pElement.getName())) {
-            			return true;
-            		}
-            	}
-            }
-        }
+        if (! file.exists())
+            return false;
 
-        return false;
+        ValidationVersionCallback callback = new ValidationVersionCallback(file);
+        VdbFileProcessor processor = new VdbFileProcessor(callback);
+        processor.process();
+
+        ITeiidServerVersion validationVersion = callback.getValidationVersion();
+        if (callback.hasException() || validationVersion == null)
+            return false;
+
+        return validationVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0.get());
     }
     
     /**
@@ -330,7 +330,7 @@ public class VdbUtil implements VdbConstants {
 	 * @param theModelFile
 	 * @return true if model exists by name in vdb
 	 */
-	public static boolean modelInVdb(final IFile theVdb, final IFile theModelFile) {
+	public static boolean modelInVdb(final IFile theVdb, final IFile theModelFile) throws Exception {
 		if (theVdb.exists()) {
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
 			if (manifest != null) {
@@ -345,6 +345,33 @@ public class VdbUtil implements VdbConstants {
 		}
 		return false;
 	}
+
+    private static void validateVdbVersion(final IFile theVdbFile, Collection<IStatus> statuses) {
+        ITeiidServerVersion defaultTeiidVersion = ModelerCore.getTeiidServerVersion();
+        ITeiidServerVersion maxDesignerVersion = Version.TEIID_DEFAULT.get();
+
+        ValidationVersionCallback callback = new ValidationVersionCallback(theVdbFile);
+        VdbFileProcessor processor = new VdbFileProcessor(callback);
+        processor.process();
+
+        ITeiidServerVersion validationVersion = callback.getValidationVersion();
+        if (validationVersion == null) {
+            /* No Validation version so probably pre-8.2 */
+            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationWarning_noValidationVersionInVdb")) ); //$NON-NLS-1$
+            return;
+        }
+
+        if (! validationVersion.compareTo(defaultTeiidVersion) && (validationVersion.isGreaterThan(defaultTeiidVersion) || validationVersion.isLessThan(defaultTeiidVersion)))
+            /* Vdb version does not match teiid server version selected so may not deploy */
+            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, defaultTeiidVersion)) ); //$NON-NLS-1$    
+
+        if (validationVersion.isGreaterThan(maxDesignerVersion))
+            /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
+            statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+                                     VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$
+    }
 	
 	/**
 	 * Simple check to see if the model file is in the vdb
@@ -359,28 +386,18 @@ public class VdbUtil implements VdbConstants {
 		
 		if (theVdbFile.exists()) {
 
+		    validateVdbVersion(theVdbFile, statuses);
+
             Vdb theVdb = null;
+            VdbElement manifest = null;
             try {
                 theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
+                manifest = VdbUtil.getVdbManifest(theVdbFile);
             } catch (Exception ex) {
                 statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getLocalizedMessage(), ex));
             }
 
-			VdbElement manifest = VdbUtil.getVdbManifest(theVdbFile);
 			if (theVdb != null && manifest != null) {
-				// Check the validation version of the VDB against current Default teiid instance
-
-				String serverVersion = ModelerCore.getTeiidServerVersion().toString();
-				if( serverVersion != null ) {
-					String validationVersion = theVdb.getValidationVersion();
-					if( validationVersion != null ) {
-						if( !validationVersion.equals(serverVersion) ) {
-							statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, 
-									VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, serverVersion)) ); //$NON-NLS-1$
-						}
-					}
-				}
-				
 				// Check Security settings
 				String securityDomain = theVdb.getSecurityDomain();
 				if( securityDomain != null ) {
@@ -692,7 +709,7 @@ public class VdbUtil implements VdbConstants {
 	 * @param theVdb the vdb
 	 * @return the list of models with wrong paths in VDB
 	 */
-	public static Collection<IFile> getModelsWithWrongPaths(final IFile theVdb) {
+	public static Collection<IFile> getModelsWithWrongPaths(final IFile theVdb) throws Exception {
 		Collection<IFile> misMatchedResources = new ArrayList<IFile>();
 		
 		if (theVdb.exists()) {

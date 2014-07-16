@@ -316,7 +316,9 @@ public final class Vdb implements VdbConstants {
                         for (final DataRoleElement element : manifest.getDataPolicies()) {
                             dataPolicyEntries.add(new VdbDataRole(Vdb.this, element));
                         }
-                    } else FileUtils.copy(entryStream, new File(getFolder(), zipEntry.getName()));
+                    } else if (! zipEntry.isDirectory()) {
+                        FileUtils.copy(entryStream, new File(getFolder(), zipEntry.getName()));
+                    }
                 }
                 modified.set(false);
             }

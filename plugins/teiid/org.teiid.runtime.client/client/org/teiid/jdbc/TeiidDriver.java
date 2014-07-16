@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 import org.teiid.core.util.ApplicationInfo;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.JDBCURL.ConnectionType;
 import org.teiid.net.TeiidURL;
 import org.teiid.runtime.client.Messages;
@@ -73,7 +73,7 @@ public class TeiidDriver implements Driver {
     
     private ConnectionProfile socketProfile = new SocketProfile();
 
-    private ITeiidServerVersion teiidVersion = TeiidServerVersion.DEFAULT_TEIID_SERVER;
+    private ITeiidServerVersion teiidVersion = Version.TEIID_DEFAULT.get();
 
     public static TeiidDriver getInstance() {
         return INSTANCE;

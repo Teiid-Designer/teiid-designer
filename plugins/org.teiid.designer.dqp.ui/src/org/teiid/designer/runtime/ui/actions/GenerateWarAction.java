@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -152,9 +151,13 @@ public class GenerateWarAction extends Action implements ISelectionListener,
 				if (extension != null && extension.equals(VDB_EXTENSION)) {
 					this.selectedVDB = (IFile) obj;
 					
-					if( VdbUtil.hasModelClass(this.selectedVDB, ModelUtil.MODEL_CLASS_WEB_SERVICE, ModelType.VIRTUAL_LITERAL.getLiteral())) {
-						enable = true;
-					}
+					try {
+                        if( VdbUtil.hasModelClass(this.selectedVDB, ModelUtil.MODEL_CLASS_WEB_SERVICE, ModelType.VIRTUAL_LITERAL.getLiteral())) {
+                        	enable = true;
+                        }
+                    } catch (Exception ex) {
+                        DqpUiConstants.UTIL.log(ex);
+                    }
 				}
 			}
 		}
