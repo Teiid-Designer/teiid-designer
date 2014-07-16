@@ -1208,7 +1208,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
             return false;
         }
         
-		if( ! isKnownTextFileExtension(info.getCheckedFileInfo().getDataFile()) ) {
+		if( info.getCheckedFileInfo() != null && !isKnownTextFileExtension(info.getCheckedFileInfo().getDataFile()) ) {
 			setThisPageComplete(getString("nonStandardFileExtensionSelected"), WARNING);//$NON-NLS-1$
 		} else {
 			setThisPageComplete(EMPTY_STRING, NONE);
