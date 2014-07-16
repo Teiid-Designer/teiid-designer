@@ -87,11 +87,6 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
             connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
 
-        String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-        if (null != user) {
-            connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
-        }
-
         String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
         if (null != contextFactory) {
             connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, contextFactory);
@@ -100,7 +95,14 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
             connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
                     SecurityType.None.name());
         }
-
+        
+        if (!connectionProps.getProperty(ICredentialsCommon.SECURITY_TYPE_ID).equals(SecurityType.None.name())){
+        	 String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
+             if (null != user ) {
+                 connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
+             }
+        }
+       
         connectionProps.setProperty(WS_CLASSNAME, WS_CONNECTION_FACTORY);
         return connectionProps;
     }

@@ -168,15 +168,16 @@ public class TeiidDataSourceFactory {
                  props.setProperty(dsPasswordKey, pwd);
              }
          }
-
-         if (!requiresPassword || (pwd != null)) {
+         
+         if( requiresPassword && pwd == null )  {
+        	 return new FailedTeiidDataSource(
+        	 model.getFullPath().removeFileExtension().lastSegment(),
+             jndiName, ITeiidDataSource.ERROR_CODES.DATASOURCE_REQUIRED_PASSWORD_NOT_DEFINED); 
+    	 } else {
              ITeiidDataSource tds = teiidServer.getOrCreateDataSource(jndiName, jndiName, dataSourceType, props);
              tds.setPreview(previewVdb);
              return tds;
          }
 
-         return new FailedTeiidDataSource(
-    			 model.getFullPath().removeFileExtension().lastSegment(),
-    			 jndiName, ITeiidDataSource.ERROR_CODES.NO_TEIID_RELATED_PROPERTIES_IN_PROFILE);
      }
 }
