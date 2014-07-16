@@ -10,6 +10,7 @@ package org.teiid.designer.extension.ui.wizards;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -55,6 +56,8 @@ public class NewMedDetailsPage extends AbstractWizardPage {
     private TableViewer modelTypesViewer;
     private Set<String> supportedModelTypes = new HashSet<String>();
     private ModelExtensionDefinition initialMed;
+    
+    private static final String[] MODEL_TYPES = new String[] {"PHYSICAL", "VIRTUAL"}; //$NON-NLS-1$ //$NON-NLS-2$
 
     public NewMedDetailsPage( ModelExtensionDefinition initialMed ) {
         super(NewMedDetailsPage.class.getSimpleName(), Messages.newMedDetailsPageTitle);
@@ -299,6 +302,16 @@ public class NewMedDetailsPage extends AbstractWizardPage {
 
         return Activator.getDefault().getModelTypes(mmUri).toArray();
     }
+    
+    public static Set<String> getDefaultModelTypes() {
+        Set<String> modelTypes = new HashSet<String>(MODEL_TYPES.length);
+
+        for (String modelType : MODEL_TYPES) {
+            modelTypes.add(modelType);
+        }
+
+        return modelTypes;
+    }
 
     void handleModelTypeSelected() {
         supportedModelTypes.clear();
@@ -308,6 +321,7 @@ public class NewMedDetailsPage extends AbstractWizardPage {
         for (Object selectedModelType : selection.toArray()) {
             supportedModelTypes.add((String)selectedModelType);
         }
+        validatePage();
     }
 
     private void nsPrefixModified() {
@@ -377,29 +391,36 @@ public class NewMedDetailsPage extends AbstractWizardPage {
                                                                                               getRegistry().getExtendableMetamodelUris());
         MedStatus definitionStatus = ModelExtensionDefinitionValidator.validateDescription(getDescription());
         MedStatus versionStatus = ModelExtensionDefinitionValidator.validateVersion(getVersion());
-
+        MedStatus modelTypeStatus = ModelExtensionDefinitionValidator.validateModelTypes(supportedModelTypes, getDefaultModelTypes());
+        
+        boolean hasError = false;
         StringBuffer sb = new StringBuffer();
-        addStatusMessage(sb, nsPrefixStatus);
-        addStatusMessage(sb, nsUriStatus);
-        addStatusMessage(sb, metaModelUriStatus);
-        addStatusMessage(sb, versionStatus);
-        addStatusMessage(sb, definitionStatus);
+        hasError = addStatusMessage(sb, nsPrefixStatus, hasError);
+        hasError = addStatusMessage(sb, nsUriStatus, hasError);
+        hasError = addStatusMessage(sb, metaModelUriStatus, hasError);
+        hasError = addStatusMessage(sb, versionStatus, hasError);
+        hasError = addStatusMessage(sb, definitionStatus, hasError);
+        hasError = addStatusMessage(sb, modelTypeStatus, hasError);
 
         this.statusTextBox.setText(sb.toString());
 
         setMessage(Messages.newMedDetailsPageMsg);
-        setPageComplete(true);
+        setPageComplete(!hasError);
     }
 
-    private void addStatusMessage( final StringBuffer sb,
-                                   final MedStatus status ) {
-        if (status.isError()) {
+    private boolean addStatusMessage( final StringBuffer sb,
+                                   final MedStatus status,
+                                   boolean hasErrors) {
+        boolean result = hasErrors;
+    	if (status.isError()) {
+    		result = true;
             sb.append(TOKEN_ERROR + status.getMessage() + CR);
         } else if (status.isWarning()) {
             sb.append(TOKEN_WARNING + status.getMessage() + CR);
         } else if (status.isInfo()) {
             sb.append(TOKEN_INFO + status.getMessage() + CR);
         }
+    	return result;
     }
 
     /**

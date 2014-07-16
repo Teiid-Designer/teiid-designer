@@ -88,6 +88,7 @@ public class Messages extends NLS {
     public static String missingRuntimeTypeValidationMsg;
     public static String namespacePrefixExistsValidationMsg;
     public static String namespaceUriExistsValidationMsg;
+    public static String noModelTypeDefinedMsg;
     public static String propertyIsEmptyValidationMsg;
     public static String translationMissingValidationMsg;
     public static String valueContainsSpacesValidationMsg;
