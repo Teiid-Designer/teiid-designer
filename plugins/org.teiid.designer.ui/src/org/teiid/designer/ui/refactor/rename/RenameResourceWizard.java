@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.validation.ValidationProblem;
 import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
@@ -49,7 +50,10 @@ public class RenameResourceWizard extends RefactoringWizard {
     }
 
     private static class RenameResourceDestinationPage extends UserInputWizardPage {
-
+    	
+    	static final String STAR_DOT = "*."; //$NON-NLS-1$
+    	private String initialFileExtension;
+    	
         private final IResource resource;
         
         private Text nameField;
@@ -59,6 +63,8 @@ public class RenameResourceWizard extends RefactoringWizard {
 
             CoreArgCheck.isNotNull(resource);
             this.resource = resource;
+            
+            initialFileExtension = this.resource.getFileExtension();
         }
 
         @Override
@@ -124,6 +130,15 @@ public class RenameResourceWizard extends RefactoringWizard {
             if (siblingNameClash(newName)) {
                 setPageComplete(createErrorStatus("RenameRefactoring.invalidNameClash")); //$NON-NLS-1$
                 return;
+            }
+            
+            // Check for proper File extension
+            if( initialFileExtension != null ) {
+            	if( !newName.toUpperCase().endsWith(StringConstants.DOT + initialFileExtension.toUpperCase())) {
+            		String extString = STAR_DOT + initialFileExtension;
+            		setPageComplete(createErrorStatus("RenameRefactoring.invalidFileExtension", extString )); //$NON-NLS-1$
+                    return;
+            	}
             }
 
             getRefactoring().setNewResourceName(newName);
