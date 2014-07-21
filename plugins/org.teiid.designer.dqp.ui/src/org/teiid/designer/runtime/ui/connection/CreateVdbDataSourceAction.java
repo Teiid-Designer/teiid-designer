@@ -22,6 +22,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -48,6 +49,10 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
                                      final Object value ) {
         return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value);
     }
+    
+    private static String getString( final String id, final Object value, final Object value2) {
+    	return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value, value2);
+	}
 
     private ITeiidServer cachedServer;
     
@@ -166,6 +171,15 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
         
         info.setPassword(teiidServer.getTeiidJdbcInfo().getPassword());
         info.setUsername(teiidServer.getTeiidJdbcInfo().getUsername());
+        
+        // 1) Check to see if Data Source exists for this VDB
+        
+        ITeiidDataSource vdbDS = teiidServer.getDataSource(info.getJndiName());
+        if( vdbDS != null ) {
+        	boolean overwrite = MessageDialog.openQuestion(iww.getShell(), getString("dsExists.title"), 
+        			getString("dsExists.message", info.getJndiName(), vdbName));
+        	if( !overwrite ) return;
+        }
 
         final CreateVdbDataSourceDialog dialog = new CreateVdbDataSourceDialog(iww.getShell(), info, teiidServer);
 
