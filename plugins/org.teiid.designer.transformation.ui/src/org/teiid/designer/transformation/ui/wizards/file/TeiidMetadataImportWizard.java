@@ -128,7 +128,7 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         
         // Construct the business object
         this.filesInfo = new TeiidMetadataImportInfo();
-        this.filesInfo.setFileMode(TeiidMetadataImportInfo.REST_MODE_URL);
+        this.filesInfo.setFileMode(TeiidMetadataImportInfo.FILE_MODE_FLAT_FILE_LOCAL);
         
         // Set initial view model and view model location values if present from selection
         if( isViewRelationalModel ) {
