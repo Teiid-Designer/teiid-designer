@@ -575,5 +575,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 		}
 		return StringUtilities.EMPTY_STRING;
 	}
+	
+	public void handlePermissionChanged(Permission permission) {
+		this.handler.handlePermissionChanged(permission);
+	}
 
 }
