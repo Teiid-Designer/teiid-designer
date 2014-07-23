@@ -8,6 +8,7 @@
 package org.teiid.designer.roles.ui.wizard.panels;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -48,6 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -604,7 +606,7 @@ public class ColumnMaskingPanel extends DataRolePanel {
     	            }
     	        });
     	        
-    	        final Group group = WidgetFactory.createGroup(outerPanel, Messages.columnMasking, GridData.FILL_HORIZONTAL, 1);
+    	        final Group group = WidgetFactory.createGroup(outerPanel, Messages.columnExpression, GridData.FILL_HORIZONTAL, 1);
     	        {
 	    			textEditor = new StyledTextEditor(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 	    			GridDataFactory.fillDefaults().grab(true,  true).span(3,  1).applyTo(textEditor.getTextWidget());
@@ -627,6 +629,17 @@ public class ColumnMaskingPanel extends DataRolePanel {
 	    	                // NO OP
 	    	            }
 	    	        });
+    	        }
+    	        
+    	        { // Column Expression will be used in place of masked column in executed query
+    				Composite thePanel = WidgetFactory.createPanel(outerPanel, SWT.NONE, 1, 1);
+    				GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+    				GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
+    				
+    				Text helpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+    				helpText.setBackground(thePanel.getBackground());
+    				helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+    				helpText.setText(Messages.columnExpressionHelpText);
     	        }
 
     	        
@@ -734,7 +747,7 @@ public class ColumnMaskingPanel extends DataRolePanel {
             GridData panelData = new GridData(GridData.FILL_BOTH);
             panel.setLayoutData(panelData);
 
-            Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Column", GridData.FILL_HORIZONTAL, 1, 2); //$NON-NLS-1$
+            Group selectedGroup = WidgetFactory.createGroup(panel, Messages.selectedColumn, GridData.FILL_HORIZONTAL, 1, 2);
 
             this.columnNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
             GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -836,21 +849,16 @@ public class ColumnMaskingPanel extends DataRolePanel {
 
         private void updateOnSelection( Object selectedObject ) {
             IStatus status = new Status(IStatus.INFO,
-            		RolesUiPlugin.PLUGIN_ID,
-                                        "Valid column selected. Click OK to finish."); //$NON-NLS-1$
+            		RolesUiPlugin.PLUGIN_ID, Messages.columnMaskingOkMessage);
             if (selectedObject != null) {
                 if (!(selectedObject instanceof Column)) {
-                    status = new Status(IStatus.ERROR,
-                    		RolesUiPlugin.PLUGIN_ID,
-                                        "Selected object is not a column"); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, RolesUiPlugin.PLUGIN_ID, Messages.invalidSelectionColumnMaskingMessage);
                     getOkButton().setEnabled(false);
                 } else {
                     getOkButton().setEnabled(true);
                 }
             } else {
-                status = new Status(IStatus.ERROR,
-                		RolesUiPlugin.PLUGIN_ID,
-                                    "No column selected"); //$NON-NLS-1$
+                status = new Status(IStatus.ERROR, RolesUiPlugin.PLUGIN_ID, Messages.noColumnSelected);                
                 getOkButton().setEnabled(false);
             }
 

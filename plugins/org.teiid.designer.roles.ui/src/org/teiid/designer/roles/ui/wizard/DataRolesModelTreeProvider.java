@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
@@ -33,6 +34,7 @@ import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
+import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.View;
@@ -62,9 +64,9 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private static final Image GRAY_CHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_CHECKED_BOX_ICON);
     private static final Image GRAY_UNCHECKED_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_UNCHECKED_BOX_ICON);
     
-    private static final Image GRAY_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_BOX_ICON);
-    private static final Image WHITE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.WHITE_BOX_ICON);
-    private static final Image BLUE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.BLUE_BOX_ICON);
+    private static final Image GRAY_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.GRAY_BALL_ICON);
+    private static final Image WHITE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.WHITE_BALL_ICON);
+    private static final Image BLUE_STATUS_BOX = RolesUiPlugin.getInstance().getAnImage(RolesUiConstants.Images.BLUE_BALL_ICON);
     
     private static final int CHECKED = 0;
     private static final int UNCHECKED = 1;
@@ -228,6 +230,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 			if( eObj instanceof Table || 
 				eObj instanceof View ||
 				eObj instanceof Procedure ||
+				eObj instanceof ProcedureResult ||
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||
@@ -252,6 +255,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 			if( eObj instanceof Table || 
 				eObj instanceof View ||
 				eObj instanceof Procedure ||
+				eObj instanceof ProcedureResult ||
 				eObj instanceof Schema ||
 				eObj instanceof Catalog ||
 				eObj instanceof Column ||
@@ -556,7 +560,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 	}
 	
 	public boolean allowsCondition(Object target) {
-		return target instanceof Column || target instanceof Table || target instanceof View || target instanceof Procedure;
+		return (target instanceof Table || target instanceof View || target instanceof Procedure);
 	}
 	
 	public String getSecurityDialogMessage(Object target) {

@@ -51,7 +51,6 @@ public class PermissionHandler {
 			cleanUpPermissions(targetObject);
 		}
 	}
-
     /*
      * Because child permission values can default to parent Crud values there may be instances where a permission's CRUD
      * either exactly matches values from parents, or the CRUD is all NULL. In both cases we need to remove these Permissions

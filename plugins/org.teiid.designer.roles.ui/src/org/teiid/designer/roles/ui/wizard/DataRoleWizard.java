@@ -10,6 +10,7 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
@@ -30,6 +31,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -46,6 +48,7 @@ import org.teiid.designer.roles.ui.wizard.panels.ColumnMaskingPanel;
 import org.teiid.designer.roles.ui.wizard.panels.CrudPanel;
 import org.teiid.designer.roles.ui.wizard.panels.RowBasedSecurityPanel;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
@@ -79,6 +82,12 @@ public class DataRoleWizard extends AbstractWizard {
 
     private boolean isEdit = false;
     private WizardPage wizardPage;
+    
+    private CTabItem descTabItem;
+    private CTabItem permissionsTabItem;
+    private CTabItem roleNamesTabItem;
+    private CTabItem optionsTabItem;
+    
     private Text dataRoleNameText;
     private StyledTextEditor descriptionTextEditor;
     
@@ -193,12 +202,43 @@ public class DataRoleWizard extends AbstractWizard {
                 validateInputs();
             }
         });
+        
+        new Label(mainPanel, SWT.NONE);
+        
+        
+        CTabFolder mainTabFolder = WidgetFactory.createTabFolder(mainPanel, SWT.NONE);
+        mainTabFolder.setLayout(new GridLayout(1, false));
+        mainTabFolder.setBorderVisible(true);
+        final GridData folderGD = new GridData(GridData.FILL_BOTH);
+        folderGD.horizontalSpan = 2;
+        mainTabFolder.setLayoutData(folderGD);
+
+        createPermissionsTab(mainTabFolder);
+        
+        createOptionsTab(mainTabFolder);
+        
+        createRoleNamesTab(mainTabFolder);
+        
+        createDesciptionTab(mainTabFolder);
+        
+        mainTabFolder.setSelection(this.permissionsTabItem);
+
+        // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
+        if (isEdit) {
+            loadExistingPermissions();
+        }
+
+        return mainPanel;
+    }
+    
+    void createDesciptionTab(CTabFolder mainTabFolder) {
+    	descTabItem = new CTabItem(mainTabFolder, SWT.NONE);
+    	descTabItem.setText(Messages.desciption);
 
         // ===========>>>> Create Description Group
-        final Group descGroup = WidgetFactory.createGroup(mainPanel, Messages.desciption, GridData.FILL_HORIZONTAL, 2);
-        descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+        descriptionTextEditor = new StyledTextEditor(mainTabFolder, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
         final GridData descGridData = new GridData(GridData.FILL_BOTH);
-        descGridData.horizontalSpan = 1;
+        descGridData.horizontalSpan = 2;
         descGridData.heightHint = 50;
         descGridData.minimumHeight = 30;
         descGridData.grabExcessVerticalSpace = true;
@@ -222,110 +262,35 @@ public class DataRoleWizard extends AbstractWizard {
             }
         });
 
-        allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(mainPanel,
-                                                                     getString("allowCreateTempTablesCheckBox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
-        allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
-            }
-        });
-
-        anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(mainPanel,
-                                                                getString("anyAuthenticatedCheckbox.label"), 0, 2, anyAuthentication); //$NON-NLS-1$
-        anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                anyAuthentication = anyAuthenticatedCheckBox.getSelection();
-                if (mappedRolesPanel != null) {
-                	mappedRolesPanel.setEnabled(!anyAuthentication);
-                }
-            }
-        });
-
-        { // Role Names panel
-	        // ===========>>>> Create Roles List Panel Editor
-	        final IListPanelController ctrlr = new ListPanelAdapter() {
-	            @Override
-	            public Object[] addButtonSelected() {
-	                String title = getString("roleInputDialog.title"); //$NON-NLS-1$
-	                String label = getString("roleInputDialog.label"); //$NON-NLS-1$
-	                String textEntry = showTextEntryDialog(title, label, null);
-	                if (textEntry != null && textEntry.length() > 0) {
-	                    mappedRoleNames.add(textEntry);
-	                    handleMappedRoleNameChanged();
-	                } else {
-	                    return Collections.EMPTY_LIST.toArray();
-	                }
-	                return new String[] {textEntry};
-	            }
-	
-	            @Override
-	            public Object[] removeButtonSelected( IStructuredSelection selection ) {
-	                Object[] objArray = selection.toArray();
-	                for (Object obj : objArray) {
-	                    mappedRoleNames.remove(obj);
-	                }
-	                handleMappedRoleNameChanged();
-	                return objArray;
-	            }
-	
-	            @Override
-	            public Object editButtonSelected( IStructuredSelection selection ) {
-	                Object[] objArray = selection.toArray();
-	                String title = getString("roleInputDialog.title"); //$NON-NLS-1$
-	                String label = getString("roleInputDialog.label"); //$NON-NLS-1$
-	                String textEntry = showTextEntryDialog(title, label, (String)objArray[0]);
-	                if (textEntry != null && textEntry.length() > 0) {
-	                    mappedRoleNames.add(textEntry);
-	                    handleMappedRoleNameChanged();
-	                } else {
-	                    return null;
-	                }
-	
-	                return textEntry;
-	            }
-	
-	            @Override
-	            public void itemsSelected( final IStructuredSelection selection ) {
-	                Object[] objArray = selection.toArray();
-	                boolean enableEdit = true;
-	                if (objArray == null) {
-	                    enableEdit = false;
-	                } else if (objArray.length == 1) {
-	                    enableEdit = false;
-	                } else {
-	                    enableEdit = true;
-	                }
-	                mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(enableEdit);
-	            }
-	        };
-	        mappedRolesPanel = new ListPanel(mainPanel, getString("dataRolesGroupLabel"), ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2); //$NON-NLS-1$
-	
-	        final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
-	        rolesGridData.horizontalSpan = 2;
-	        rolesGridData.heightHint = 120;
-	        rolesGridData.minimumHeight = 120;
-	        rolesGridData.grabExcessVerticalSpace = true;
-	        mappedRolesPanel.setLayoutData(rolesGridData);
-	        mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(false);
-	        mappedRolesPanel.getButton(Widgets.REMOVE_BUTTON).setEnabled(false);
-	
-	        mappedRolesPanel.setEnabled(!anyAuthentication);
-        }
-
+        descTabItem.setControl(descriptionTextEditor.getTextWidget());
+    }
+    
+    void createPermissionsTab(CTabFolder mainTabFolder) {
+    	permissionsTabItem = new CTabItem(mainTabFolder, SWT.NONE);
+    	permissionsTabItem.setText(Messages.permissions);
         // ===========>>>> Create Relational Models Tree Viewer/Editor
-        Group group = WidgetFactory.createGroup(mainPanel, Messages.permissions,
-        		GridData.FILL_BOTH, 2, 2);
+    	
+        Composite permissionsPanel = WidgetFactory.createPanel(mainTabFolder, GridData.FILL_BOTH, 2, 2);
 
         final GridData modelsGridData = new GridData(GridData.FILL_BOTH);
         modelsGridData.horizontalSpan = 2;
         modelsGridData.heightHint = 220;
         modelsGridData.minimumHeight = 220;
         modelsGridData.grabExcessVerticalSpace = true;
-        group.setLayoutData(modelsGridData);
+        modelsGridData.horizontalIndent = 5;
+        modelsGridData.verticalIndent = 5;
+        permissionsPanel.setLayoutData(modelsGridData);
         
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(group);
+        Label infoLabel = new Label(permissionsPanel, SWT.NONE);
+        infoLabel.setText(Messages.permissionsTabHelpText);
+        infoLabel.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+        GridData gd_1 = new GridData();
+        gd_1.horizontalSpan = 2;
+        infoLabel.setLayoutData(gd_1);
+        new Label(permissionsPanel, SWT.NONE);
+        
+        CTabFolder tabFolder = WidgetFactory.createTabFolder(permissionsPanel);
+        tabFolder.setBorderVisible(true);
         
         { // Models Tab
         	crudTabItem = new CTabItem(tabFolder, SWT.NONE);
@@ -364,67 +329,167 @@ public class DataRoleWizard extends AbstractWizard {
 		}
 		
 		tabFolder.setSelection(crudTabItem);
+		
+		permissionsTabItem.setControl(permissionsPanel);
+    }
+    
+    void createRoleNamesTab(CTabFolder mainTabFolder) {
+    	roleNamesTabItem = new CTabItem(mainTabFolder, SWT.NONE);
+    	roleNamesTabItem.setText(Messages.mappedRoleNames);
+    	
+        Composite roleNamespanel = WidgetFactory.createPanel(mainTabFolder, 0, GridData.FILL_HORIZONTAL, 2);
+		anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(roleNamespanel,
+						getString("anyAuthenticatedCheckbox.label"), 0, 1, anyAuthentication); //$NON-NLS-1$
+		anyAuthenticatedCheckBox.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				anyAuthentication = anyAuthenticatedCheckBox.getSelection();
+				if (mappedRolesPanel != null) {
+					mappedRolesPanel.setEnabled(!anyAuthentication);
+				}
+			}
+		});
+    	
+        // ===========>>>> Create Roles List Panel Editor
+        final IListPanelController ctrlr = new ListPanelAdapter() {
+            @Override
+            public Object[] addButtonSelected() {
+                String title = getString("roleInputDialog.title"); //$NON-NLS-1$
+                String label = getString("roleInputDialog.label"); //$NON-NLS-1$
+                String textEntry = showTextEntryDialog(title, label, null);
+                if (textEntry != null && textEntry.length() > 0) {
+                    mappedRoleNames.add(textEntry);
+                    handleMappedRoleNameChanged();
+                } else {
+                    return Collections.EMPTY_LIST.toArray();
+                }
+                return new String[] {textEntry};
+            }
 
-        final Group sysTablesGroup = WidgetFactory.createGroup(mainPanel,
-                                                               getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
+            @Override
+            public Object[] removeButtonSelected( IStructuredSelection selection ) {
+                Object[] objArray = selection.toArray();
+                for (Object obj : objArray) {
+                    mappedRoleNames.remove(obj);
+                }
+                handleMappedRoleNameChanged();
+                return objArray;
+            }
 
-        // ===========>>>>
-        allowSystemTablesCheckBox = WidgetFactory.createCheckBox(sysTablesGroup,
-                                                                 getString("systemTablesCheckbox.label"), 0, 2, allowSystemTables); //$NON-NLS-1$
-        allowSystemTablesCheckBox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public Object editButtonSelected( IStructuredSelection selection ) {
+                Object[] objArray = selection.toArray();
+                String title = getString("roleInputDialog.title"); //$NON-NLS-1$
+                String label = getString("roleInputDialog.label"); //$NON-NLS-1$
+                String textEntry = showTextEntryDialog(title, label, (String)objArray[0]);
+                if (textEntry != null && textEntry.length() > 0) {
+                    mappedRoleNames.add(textEntry);
+                    handleMappedRoleNameChanged();
+                } else {
+                    return null;
+                }
+
+                return textEntry;
+            }
+
+            @Override
+            public void itemsSelected( final IStructuredSelection selection ) {
+                Object[] objArray = selection.toArray();
+                boolean enableEdit = true;
+                if (objArray == null) {
+                    enableEdit = false;
+                } else if (objArray.length == 1) {
+                    enableEdit = false;
+                } else {
+                    enableEdit = true;
+                }
+                mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(enableEdit);
+            }
+        };
+        mappedRolesPanel = new ListPanel(roleNamespanel, " ", ctrlr, SWT.H_SCROLL | SWT.V_SCROLL, 2); //$NON-NLS-1$
+
+        final GridData rolesGridData = new GridData(GridData.FILL_BOTH);
+        rolesGridData.horizontalSpan = 2;
+        rolesGridData.heightHint = 80;
+        rolesGridData.minimumHeight = 80;
+        rolesGridData.grabExcessVerticalSpace = true;
+        mappedRolesPanel.setLayoutData(rolesGridData);
+        mappedRolesPanel.getButton(Widgets.EDIT_BUTTON).setEnabled(false);
+        mappedRolesPanel.getButton(Widgets.REMOVE_BUTTON).setEnabled(false);
+
+        mappedRolesPanel.setEnabled(!anyAuthentication);
+        roleNamesTabItem.setControl(roleNamespanel);
+    }
+    
+    void createOptionsTab(CTabFolder mainTabFolder) {
+    	optionsTabItem = new CTabItem(mainTabFolder, SWT.NONE);
+    	optionsTabItem.setText(Messages.options);
+    	final Composite miscOptionsGroup = WidgetFactory.createPanel(mainTabFolder, GridData.FILL_HORIZONTAL, 2, 3);
+        allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(miscOptionsGroup,
+                                                                     getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, anyAuthentication); //$NON-NLS-1$
+        allowCreateTempTablesCheckBox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( final SelectionEvent event ) {
-                allowSystemTables = allowSystemTablesCheckBox.getSelection();
-                readSysCB.setEnabled(allowSystemTables);
-                executeSysCB.setEnabled(allowSystemTables);
-                // If turned ON (checked) then auto-select READ
-                if( allowSystemTables ) {
-                	readSysCB.setSelection(true);
-                	allowSystemRead = true;
-                }
+                allowCreateTempTables = allowCreateTempTablesCheckBox.getSelection();
             }
         });
         
-        final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup,
-                StringUtilities.EMPTY_STRING, GridData.FILL_HORIZONTAL, 2, 6);
+        final Group sysTablesGroup = WidgetFactory.createGroup(miscOptionsGroup,
+                getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
+
+		// ===========>>>>
+		allowSystemTablesCheckBox = WidgetFactory.createCheckBox(sysTablesGroup,
+						getString("systemTablesCheckbox.label"), 0, 2, allowSystemTables); //$NON-NLS-1$
+		allowSystemTablesCheckBox.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(final SelectionEvent event) {
+						allowSystemTables = allowSystemTablesCheckBox
+								.getSelection();
+						readSysCB.setEnabled(allowSystemTables);
+						executeSysCB.setEnabled(allowSystemTables);
+						// If turned ON (checked) then auto-select READ
+						if (allowSystemTables) {
+							readSysCB.setSelection(true);
+							allowSystemRead = true;
+						}
+					}
+				});
+
+		final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup, StringUtilities.EMPTY_STRING,
+				GridData.FILL_HORIZONTAL, 2, 1);
+
+		readSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.read.toUpperCase(), 0, 1, false);
+		readSysCB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				allowSystemRead = readSysCB.getSelection();
+				if (!allowSystemRead && !allowSystemExecute) {
+					allowSystemTables = false;
+					allowSystemTablesCheckBox.setSelection(false);
+					allowSystemTables = false;
+				} else {
+					allowSystemTablesCheckBox.setSelection(true);
+					allowSystemTables = true;
+				}
+			}
+		});
+		executeSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.execute.toUpperCase(), 0, 1, false);
+		executeSysCB.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent event) {
+				allowSystemExecute = executeSysCB.getSelection();
+				if (!allowSystemRead && !allowSystemExecute) {
+					allowSystemTables = false;
+					allowSystemTablesCheckBox.setSelection(false);
+					allowSystemTables = false;
+				} else {
+					allowSystemTablesCheckBox.setSelection(true);
+					allowSystemTables = true;
+				}
+			}
+		});
         
-        readSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.read.toUpperCase(), 0, 1, false);
-        readSysCB.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                allowSystemRead = readSysCB.getSelection();
-                if( !allowSystemRead && !allowSystemExecute ) {
-                	allowSystemTables = false;
-                	allowSystemTablesCheckBox.setSelection(false);
-                	allowSystemTables = false;
-                } else {
-                	allowSystemTablesCheckBox.setSelection(true);
-                	allowSystemTables = true;
-                }
-            }
-        });
-        executeSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.execute.toUpperCase(), 0, 1, false);
-        executeSysCB.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                allowSystemExecute = executeSysCB.getSelection();
-                if( !allowSystemRead && !allowSystemExecute ) {
-                	allowSystemTables = false;
-                	allowSystemTablesCheckBox.setSelection(false);
-                	allowSystemTables = false;
-                } else {
-                	allowSystemTablesCheckBox.setSelection(true);
-                	allowSystemTables = true;
-                }
-            }
-        });
-
-        // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
-        if (isEdit) {
-            loadExistingPermissions();
-        }
-
-        return mainPanel;
+        optionsTabItem.setControl(miscOptionsGroup);
     }
     
     public void refreshAllTabs() {
