@@ -107,9 +107,9 @@ public class CredentialsComposite extends Composite implements UiConstants, List
     public void handleEvent(Event event) {
         if (event.widget == securityCombo) {
             if (securityCombo.getText().equals(SecurityType.None.name())) {
-                usernameText.setText(""); //$NON-NLS-1$
+                usernameText.setText(null); //$NON-NLS-1$
                 usernameText.setEnabled(false);
-                passwordText.setText(""); //$NON-NLS-1$
+                passwordText.setText(null); //$NON-NLS-1$
                 passwordText.setEnabled(false);
             } else {
                 usernameText.setEnabled(true);

@@ -22,6 +22,7 @@ import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -47,6 +48,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -68,6 +70,7 @@ import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -87,7 +90,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	private Text securityText;
 	private Label securityLabel;
 	private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
-
+	private Label responseTypeLabel;
+    private Combo responseTypeCombo; 
+	
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
     ParameterPanel parameterPanel;
@@ -200,6 +205,40 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalSpan = 1;
         passwordText.setLayoutData(gd);
+        
+        responseTypeLabel = new Label(scrolled, SWT.NONE);
+        responseTypeLabel.setText(UTIL.getString("Common.ResponseType.Label")); //$NON-NLS-1$
+        responseTypeLabel.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        responseTypeLabel.setLayoutData(gd);
+
+        responseTypeCombo = WidgetFactory.createCombo(scrolled,
+        		SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        responseTypeCombo.setLayoutData(gd);
+        responseTypeCombo.setItems(new String[] { IWSProfileConstants.XML,
+        		IWSProfileConstants.JSON });
+        responseTypeCombo.select(0);
+        responseTypeCombo.setText(IWSProfileConstants.XML);
+        responseTypeCombo.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip"));  //$NON-NLS-1$
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(responseTypeCombo);
+        responseTypeCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleResponseTypeChanged(((Combo)e.widget).getText());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+        responseTypeCombo.setVisibleItemCount(2);
+        
         urlPreviewLabel = new Label(scrolled, SWT.NONE);
         urlPreviewLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.urlPreviewLabel")); //$NON-NLS-1$
         gd = new GridData();
@@ -246,9 +285,13 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @param extraProperties the extraProperties to set
 	 */
 	public void setExtraProperties(Properties extraProperties) {
-		extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
+		this.extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
 		this.extraProperties = extraProperties;
 	}
+	
+	 void handleResponseTypeChanged(String type) {
+		 this.extraProperties.put(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, type);
+     }
 	
 	/**
 	 * @return the parameterMap
@@ -292,8 +335,8 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 
 		for (String key : parameterMap.keySet()) {
 	      Parameter value = parameterMap.get(key);
-	      if (value.getType().equals(IWSProfileConstants.URI)) {
-	    	  parameterString.append("/").append(key); //$NON-NLS-1$
+	      if (value.getType().equals(IWSProfileConstants.QUERY_STRING)) {
+	    	  parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
 	      if (value.getType().equals(IWSProfileConstants.QUERY_STRING)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
@@ -403,7 +446,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void initControls() {
         IConnectionProfile profile = getConnectionProfile();
         Properties props = profile.getBaseProperties();
-        if (null != props.get(IWSProfileConstants.PARAMETER_MAP) &! props.get(IWSProfileConstants.PARAMETER_MAP).equals(StringUtilities.EMPTY_STRING)) {
+        if (props.get(IWSProfileConstants.PARAMETER_MAP) != null) {
         	this.parameterMap = ((Map)props.get(IWSProfileConstants.PARAMETER_MAP));
         }
         if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
@@ -418,6 +461,12 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         }
         if (null != props.get(ICredentialsCommon.SECURITY_TYPE_ID)) {
             securityText.setText((String)props.get(ICredentialsCommon.SECURITY_TYPE_ID));
+        }
+        
+        if (null != props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY)) {
+        	responseTypeCombo.setText((String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
+        }else{
+        	props.put(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, IWSProfileConstants.XML);
         }
         
         for( Object key : props.keySet() ) {
@@ -449,6 +498,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         result.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityText.getText().trim());
         result.setProperty(ICredentialsCommon.USERNAME_PROP_ID, usernameText.getText());
         result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());
+        result.setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, responseTypeCombo.getText());
         
         for( Object key : extraProperties.keySet() ) {
         	result.put(key, extraProperties.get(key));

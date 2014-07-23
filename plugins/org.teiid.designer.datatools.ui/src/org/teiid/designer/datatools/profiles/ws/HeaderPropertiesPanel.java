@@ -124,8 +124,9 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
                 		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
                 		IWSProfileConstants.PARAMETER_MAP.equalsIgnoreCase(keyStr) ||
-                		props.get(key).equals(IWSProfileConstants.URI) ||
-                        props.get(key).equals(IWSProfileConstants.QUERY_STRING)) {
+                		IWSProfileConstants.URI.equalsIgnoreCase(keyStr) ||
+                        IWSProfileConstants.QUERY_STRING.equalsIgnoreCase(keyStr) ||
+                        IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr)) {
                 		// do nothing;
                 	} else {
                 		properties.add(new SimpleProperty(keyStr, (String)props.get(key)));

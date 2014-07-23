@@ -84,6 +84,7 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      String ACCEPT_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
      String CONTENT_TYPE_PROPERTY_KEY = "Content-Type"; //$NON-NLS-1$
      String CONTENT_TYPE_DEFAULT_VALUE = "application/xml"; //$NON-NLS-1$
+     String CONTENT_TYPE_JSON_VALUE = "application/json"; //$NON-NLS-1$
      
      
      /**
@@ -92,4 +93,11 @@ public interface IWSProfileConstants extends ICredentialsCommon {
      String URI = "URI"; //$NON-NLS-1$
      String QUERY_STRING = "Query"; //$NON-NLS-1$
      String PARAMETER_MAP = "Parameter map"; //$NON-NLS-1$
+     
+     /**
+      * Properties used for response content type
+      */
+     String RESPONSE_TYPE_PROPERTY_KEY = "responseType"; //$NON-NLS-1$
+     String XML = "XML"; //$NON-NLS-1$
+     String JSON = "JSON"; //$NON-NLS-1$
 }

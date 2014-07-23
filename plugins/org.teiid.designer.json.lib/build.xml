@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!--
+==
+== Script to resolve the plugin's lib directory dependencies
+== and generate the SQLParser sources using javacc
+==
+== Note. This has to build both the target platform and the
+==       spi plugin in order to satisfy the dependencies of
+==       this plugin (even though we are not actually
+==       compiling it!)
+==
+-->
+
+<project name="generate-libs" default="generate">
+
+	<property name="GIT-HOME" location="../.." />
+
+	<import file="${GIT-HOME}/scripts/build-common.xml" />
+
+	<!-- Comma-separated list of required libraries -->
+	<property name="libs" value="org.json.jar"/>
+
+	<!--
+	   Test whether all the required libraries are present
+	-->
+	<target name="check-libs">
+
+		<filelist id="my.libs" dir="lib" files="${libs}" />
+		<restrict id="missing.libs">
+			<filelist refid="my.libs" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
+		<property name="missing.libs" refid="missing.libs" />
+		<condition property="libs-present" value="true">
+			<length string="${missing.libs}" length="0" />
+		</condition>
+	</target>
+
+	<!--
+	   Check whether the libraries have already been downloaded and whether the
+	   parser classes have beeen generated. If either is not present then the
+	   'should-generate' property be set to the 'true'
+	-->
+	<target name="check-work" depends="check-libs">
+		<condition property="should-generate" value="true">
+			<or>
+				<isfalse value="${libs-present}" />
+			</or>
+		</condition>
+	</target>
+
+	<target name="nothing-todo" unless="should-generate">
+		<echo message="Project source generation is up-to-date" />
+	</target>
+
+	<target name="generate" depends="init-ant-contrib, check-work, nothing-todo" if="should-generate">
+
+		<echo message="Generating from maven ..." />
+
+		<!-- Build the target platform and install it -->
+		<echo message="=== Installing target platform ===" />
+		<mvn dir="${GIT-HOME}/target-platform" args="install" />
+
+		<!-- Call the process sources goal and generate using javacc -->
+		<echo message="=== Generating external libraries ===" />
+		<mvn dir="." args="process-sources -P download-sources" />
+
+	</target>
+</project>
