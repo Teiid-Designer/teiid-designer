@@ -34,7 +34,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-        if (null != user) {
+        if (null != user &! user.isEmpty()) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + ICredentialsCommon.USERNAME_PROP_ID, user);
         }
 
@@ -88,7 +88,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-        if (null != user) {
+        if (null != user &! user.equals("")) { //$NON-NLS-1$
             connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
         }
 
@@ -111,6 +111,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		
 		String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
 		if( contextFactory != null && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
+			props.remove(ICredentialsCommon.USERNAME_PROP_ID);
 			return true;
 		}
 		

@@ -7,8 +7,10 @@
  */
 package org.teiid.designer.transformation.ui.wizards.rest;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,8 +67,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
@@ -113,16 +119,16 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 /**
- * @since 8.0
+ * @since 8.6
  */
-public class TeiidRestImportSourcePage extends AbstractWizardPage
-		implements UiConstants, InternalUiConstants.Widgets,
-		CoreStringUtil.Constants {
+public class TeiidRestImportSourcePage extends AbstractWizardPage implements
+		UiConstants, InternalUiConstants.Widgets, CoreStringUtil.Constants {
 
 	// ===========================================================================================================================
 	// Constants
 
-	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
+	private static final String I18N_PREFIX = I18nUtil
+			.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
 
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 	private static final String XML_TITLE = getString("xmlTitle"); //$NON-NLS-1$
@@ -148,12 +154,13 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	//private static final String SCHEMA_LIST_PROPERTY_KEY = "SCHEMAFILELIST";  //$NON-NLS-1$
 	private static final String LOCAL_FILE_NAME_KEY = IXmlProfileConstants.LOCAL_FILE_PATH_PROP_ID;
 	private static final String FILE_URL_NAME_KEY = IXmlProfileConstants.URL_PROP_ID;
-	
+
 	//private static final String CONTENT_TYPE_XML = "application/xml"; //$NON-NLS-1$
-	RelationalStringNameValidator validator = new RelationalStringNameValidator(true);
+	RelationalStringNameValidator validator = new RelationalStringNameValidator(
+			true);
 
 	private static final int DEFAULT_READING_SIZE = 8192;
-	
+
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
@@ -175,7 +182,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	private Text viewHelpText;
 	private IPath viewModelFilePath;
 	private Text viewProcedureNameText;
-	
+
 	private Map parameterMap;
 
 	private Text selectedFileText;
@@ -184,7 +191,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	private Collection<IConnectionProfile> connectionProfiles;
 
 	private TeiidMetadataImportInfo info;
-	
+
 	private TeiidXmlFileInfo xmlFileInfo;
 
 	boolean creatingControl = false;
@@ -197,12 +204,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 	IConnectionInfoHelper connectionInfoHelper;
 
-    Properties designerProperties;
+	Properties designerProperties;
 
 	/**
 	 * Constructor
+	 * 
 	 * @since 4.0
-	 * @param info the import info object
+	 * @param info
+	 *            the import info object
 	 */
 	public TeiidRestImportSourcePage(TeiidMetadataImportInfo info) {
 		this(null, info);
@@ -323,9 +332,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		dataFileFolderText = new Text(folderContentsGroup, SWT.BORDER
 				| SWT.SINGLE);
-		dataFileFolderText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+		dataFileFolderText.setBackground(WidgetUtil
+				.getReadOnlyBackgroundColor());
 		dataFileFolderText.setForeground(WidgetUtil.getDarkBlueColor());
-		dataFileFolderText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		dataFileFolderText
+				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		dataFileFolderText.setEditable(false);
 
 		createFileTableViewer(folderContentsGroup);
@@ -333,7 +344,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		Label selectedFileLabel = new Label(folderContentsGroup, SWT.NONE);
 		selectedFileLabel.setText(getString("selectedXmlFile")); //$NON-NLS-1$
 
-		selectedFileText = new Text(folderContentsGroup, SWT.BORDER | SWT.SINGLE);
+		selectedFileText = new Text(folderContentsGroup, SWT.BORDER
+				| SWT.SINGLE);
 		selectedFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 		selectedFileText.setForeground(WidgetUtil.getDarkBlueColor());
 		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -377,16 +389,19 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 							boolean wasChecked = tableItem.getChecked();
 
 							if (tableItem.getData() instanceof File) {
-								fileViewer.getTable().setSelection(new TableItem[] { tableItem });
+								fileViewer.getTable().setSelection(
+										new TableItem[] { tableItem });
 								if (wasChecked) {
-									for (TableItem item : fileViewer.getTable().getItems()) {
+									for (TableItem item : fileViewer.getTable()
+											.getItems()) {
 										if (item != tableItem) {
 											item.setChecked(false);
 										}
 									}
 								}
 
-								info.setDoProcessXml((File) tableItem.getData(), wasChecked);
+								info.setDoProcessXml(
+										(File) tableItem.getData(), wasChecked);
 							}
 						}
 						processingChecks = false;
@@ -402,27 +417,32 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		// create columns
 		fileNameColumn = new TableViewerColumn(this.fileViewer, SWT.LEFT);
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
-			fileNameColumn.getColumn().setText("XML Data File URL" ); //getString("dataFileNameColumn")); //$NON-NLS-1$
+			fileNameColumn.getColumn().setText("XML Data File URL"); //getString("dataFileNameColumn")); //$NON-NLS-1$
 		} else {
-			fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+			fileNameColumn.getColumn().setText(
+					getString("xmlDataFileNameColumn")); //$NON-NLS-1$
 		}
-		fileNameColumn.setLabelProvider(new DataFileContentColumnLabelProvider());
+		fileNameColumn
+				.setLabelProvider(new DataFileContentColumnLabelProvider());
 		fileNameColumn.getColumn().pack();
 	}
 
 	private void createModelGroup(Composite parent) {
-		//SOURCE
-		Group sourceGroup = WidgetFactory.createGroup(parent,getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
+		// SOURCE
+		Group sourceGroup = WidgetFactory.createGroup(parent,
+				getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
 		locationLabel.setText(getString("location")); //$NON-NLS-1$
 
-		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
+		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER
+				| SWT.SINGLE);
 
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		sourceModelContainerText.setLayoutData(gridData);
-		sourceModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		sourceModelContainerText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		sourceModelContainerText.setEditable(false);
 
 		Button browseButton = new Button(sourceGroup, SWT.PUSH);
@@ -466,100 +486,104 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		{
 			sourceHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
-			sourceHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+			sourceHelpText.setBackground(WidgetUtil
+					.getReadOnlyBackgroundColor());
 			sourceHelpText.setForeground(WidgetUtil.getDarkBlueColor());
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.heightHint = 40;
 			gd.horizontalSpan = 3;
 			sourceHelpText.setLayoutData(gd);
 		}
-		
-	//VIEW
-	Group viewGroup = WidgetFactory.createGroup(parent,getString("viewModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
-	viewGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-	Label viewLocationLabel = new Label(viewGroup, SWT.NULL);
-	viewLocationLabel.setText(getString("location")); //$NON-NLS-1$
+		// VIEW
+		Group viewGroup = WidgetFactory.createGroup(parent,
+				getString("viewModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
+		viewGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-	viewModelContainerText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
+		Label viewLocationLabel = new Label(viewGroup, SWT.NULL);
+		viewLocationLabel.setText(getString("location")); //$NON-NLS-1$
 
-	GridData viewGridData = new GridData(GridData.FILL_HORIZONTAL);
-	viewModelContainerText.setLayoutData(viewGridData);
-	viewModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-	viewModelContainerText.setEditable(false);
+		viewModelContainerText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
 
-	Button viewBrowseButton = new Button(viewGroup, SWT.PUSH);
-	gridData = new GridData();
-	viewBrowseButton.setLayoutData(gridData);
-	viewBrowseButton.setText(getString("browse")); //$NON-NLS-1$
-	viewBrowseButton.addSelectionListener(new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			handleViewModelLocationBrowse();
+		GridData viewGridData = new GridData(GridData.FILL_HORIZONTAL);
+		viewModelContainerText.setLayoutData(viewGridData);
+		viewModelContainerText.setBackground(Display.getCurrent()
+				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		viewModelContainerText.setEditable(false);
+
+		Button viewBrowseButton = new Button(viewGroup, SWT.PUSH);
+		gridData = new GridData();
+		viewBrowseButton.setLayoutData(gridData);
+		viewBrowseButton.setText(getString("browse")); //$NON-NLS-1$
+		viewBrowseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleViewModelLocationBrowse();
+			}
+		});
+
+		Label viewFileLabel = new Label(viewGroup, SWT.NULL);
+		viewFileLabel.setText(getString("name")); //$NON-NLS-1$
+
+		viewModelFileText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
+		viewGridData = new GridData(GridData.FILL_HORIZONTAL);
+		viewModelFileText.setLayoutData(viewGridData);
+		viewModelFileText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				handleViewModelTextChanged();
+			}
+		});
+
+		browseButton = new Button(viewGroup, SWT.PUSH);
+		viewGridData = new GridData();
+		browseButton.setLayoutData(viewGridData);
+		browseButton.setText(getString("browse")); //$NON-NLS-1$
+		browseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleViewModelBrowse();
+			}
+		});
+
+		// View Table Definition
+		Label viewProcedureLabel = new Label(viewGroup, SWT.NULL);
+		viewProcedureLabel.setText(getString("newViewProcedureName")); //$NON-NLS-1$
+
+		viewProcedureNameText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
+		gridData = new GridData(GridData.FILL_HORIZONTAL);
+		viewProcedureNameText.setLayoutData(gridData);
+		viewProcedureNameText.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(ModifyEvent e) {
+				// Check view file name for existing if "location" is already
+				// set
+				handleViewProcedureTextChanged();
+			}
+		});
+
+		new Label(viewGroup, SWT.NONE);
+
+		Group viewHelpGroup = WidgetFactory.createGroup(parent,
+				getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH, 1); //$NON-NLS-1$
+		viewHelpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		{
+			viewHelpText = new Text(viewHelpGroup, SWT.WRAP | SWT.READ_ONLY);
+			viewHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
+			viewHelpText.setForeground(WidgetUtil.getDarkBlueColor());
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.heightHint = 40;
+			gd.horizontalSpan = 3;
+			viewHelpText.setLayoutData(gd);
 		}
-	});
 
-	Label viewFileLabel = new Label(viewGroup, SWT.NULL);
-	viewFileLabel.setText(getString("name")); //$NON-NLS-1$
-
-	viewModelFileText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
-	viewGridData = new GridData(GridData.FILL_HORIZONTAL);
-	viewModelFileText.setLayoutData(viewGridData);
-	viewModelFileText.addModifyListener(new ModifyListener() {
-		@Override
-		public void modifyText(ModifyEvent e) {
-			handleViewModelTextChanged();
-		}
-	});
-
-	browseButton = new Button(viewGroup, SWT.PUSH);
-	viewGridData = new GridData();
-	browseButton.setLayoutData(viewGridData);
-	browseButton.setText(getString("browse")); //$NON-NLS-1$
-	browseButton.addSelectionListener(new SelectionAdapter() {
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			handleViewModelBrowse();
-		}
-	});
-	
-	// View Table Definition
-	Label viewProcedureLabel = new Label(viewGroup, SWT.NULL);
-	viewProcedureLabel.setText(getString("newViewProcedureName")); //$NON-NLS-1$
-
-	viewProcedureNameText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
-	gridData = new GridData(GridData.FILL_HORIZONTAL);
-	viewProcedureNameText.setLayoutData(gridData);
-	viewProcedureNameText.addModifyListener(new ModifyListener() {
-		@Override
-		public void modifyText(ModifyEvent e) {
-			// Check view file name for existing if "location" is already
-			// set
-			handleViewProcedureTextChanged();
-		}
-	});
-
-	new Label(viewGroup, SWT.NONE);
-
-	Group viewHelpGroup = WidgetFactory.createGroup(parent,
-			getString("modelStatus"), SWT.NONE | SWT.BORDER_DASH, 1); //$NON-NLS-1$
-	viewHelpGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-	{
-		viewHelpText = new Text(viewHelpGroup, SWT.WRAP | SWT.READ_ONLY);
-		viewHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-		viewHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.heightHint = 40;
-		gd.horizontalSpan = 3;
-		viewHelpText.setLayoutData(gd);
 	}
-
-}
 
 	void profileComboSelectionChanged() {
 		if (this.srcCombo.getSelectionIndex() > -1) {
-			String cpName = this.srcCombo.getItem(this.srcCombo.getSelectionIndex());
+			String cpName = this.srcCombo.getItem(this.srcCombo
+					.getSelectionIndex());
 			for (IConnectionProfile profile : this.connectionProfiles) {
 				if (profile.getName().equalsIgnoreCase(cpName)) {
 					setConnectionProfile(profile);
@@ -581,46 +605,49 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		this.editCPButton.setEnabled(getConnectionProfile() != null);
 	}
 
-    public void setDesignerProperties( Properties properties ) {
-        this.designerProperties = properties;
-    }
+	public void setDesignerProperties(Properties properties) {
+		this.designerProperties = properties;
+	}
 
 	private void setConnectionProfile(IConnectionProfile profile) {
-		if(profile==null || isInvalidXmlFileProfile(profile)) {
+		if (profile == null || isInvalidXmlFileProfile(profile)) {
 			this.fileViewer.setInput(null);
 			clearFileListViewer();
 		}
-		
+
 		this.info.setConnectionProfile(profile);
 	}
 
 	private IConnectionProfile getConnectionProfile() {
 		return this.info.getConnectionProfile();
 	}
-	
+
 	private boolean isRestConnectionProfile() {
 		IConnectionProfile profile = this.info.getConnectionProfile();
-		if( profile != null ) {
+		if (profile != null) {
 			return profile.getProviderId().equals(TEIID_WS_ID);
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean isValidProfileForPage(IConnectionProfile profile) {
 		boolean isValid = false;
-		if( this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
-			isValid=true;
-		} else if( this.info.isXmlUrlFileMode() && (profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) || profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) ) {
-			isValid=true;
+		if (this.info.isXmlLocalFileMode()
+				&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
+			isValid = true;
+		} else if (this.info.isXmlUrlFileMode()
+				&& (profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) || profile
+						.getProviderId().equalsIgnoreCase(TEIID_WS_ID))) {
+			isValid = true;
 		}
 		return isValid;
 	}
-	
+
 	private boolean isInvalidXmlFileProfile(IConnectionProfile profile) {
 		// If File ConnectionProfile, make sure it references a file
-		File theXmlFile = getFileForConnectionProfile(profile); 
-		if (theXmlFile!=null && theXmlFile.exists() && !theXmlFile.isFile()) {
+		File theXmlFile = getFileForConnectionProfile(profile);
+		if (theXmlFile != null && theXmlFile.exists() && !theXmlFile.isFile()) {
 			return true;
 		}
 		return false;
@@ -637,8 +664,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			File theXmlFile = getFileForConnectionProfile(getConnectionProfile());
 			String urlString = getUrlStringForConnectionProfile();
 
-			if (theXmlFile!=null) {
-				if(theXmlFile.exists() && theXmlFile.isFile()) {
+			if (theXmlFile != null) {
+				if (theXmlFile.exists() && theXmlFile.isFile()) {
 					setXmlFile(theXmlFile, false, null);
 				}
 			} else if (urlString != null && urlString.trim().length() > 0) {
@@ -647,8 +674,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				// This will be the case if No XML is defined and URL
 				// version exists OR if nothing is defined in CP
 				fileViewer.setInput("no input"); //$NON-NLS-1$
-				
-				if( isRestConnectionProfile() ) {
+
+				if (isRestConnectionProfile()) {
 					xmlFile = getXmlFileFromRestUrl(getConnectionProfile());
 				} else {
 					xmlFile = getXmlFileFromUrl(urlString);
@@ -664,112 +691,148 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			}
 		}
 	}
-	
-	private int write(final OutputStream out, final InputStream is) throws IOException {
-	    byte[] l_buffer = new byte[DEFAULT_READING_SIZE];
-	    int writen = 0;
-        try {
-            int l_nbytes = 0;  // Number of bytes read
-            int readLength = l_buffer.length;
-            
-            while ((l_nbytes = is.read(l_buffer, 0, readLength)) != -1) {
-                out.write(l_buffer,0,l_nbytes); 
-                writen += l_nbytes;
-            }
-            return writen;
-        } finally {
-            try {
-                is.close();
-            } finally {
-                out.close();
-            }
-        }
-    }
-	
+
+	private int write(final OutputStream out, final InputStream is)
+			throws IOException {
+		byte[] l_buffer = new byte[DEFAULT_READING_SIZE];
+		int writen = 0;
+		try {
+			int l_nbytes = 0; // Number of bytes read
+			int readLength = l_buffer.length;
+
+			while ((l_nbytes = is.read(l_buffer, 0, readLength)) != -1) {
+				out.write(l_buffer, 0, l_nbytes);
+				writen += l_nbytes;
+			}
+			return writen;
+		} finally {
+			try {
+				is.close();
+			} finally {
+				out.close();
+			}
+		}
+	}
+
 	private File getXmlFileFromRestUrl(IConnectionProfile profile) {
 		Properties props = profile.getBaseProperties();
 		String endpoint = ConnectionInfoHelper.readEndPointProperty(props);
-		String username = (String) props.get(ICredentialsCommon.USERNAME_PROP_ID);
-		String password = (String) props.get(ICredentialsCommon.PASSWORD_PROP_ID);
+		String username = (String) props
+				.get(ICredentialsCommon.USERNAME_PROP_ID);
+		String password = (String) props
+				.get(ICredentialsCommon.PASSWORD_PROP_ID);
 		File xmlFile = null;
+		File jsonFile = null;
 		FileOutputStream fos = null;
-		if (props.get(IWSProfileConstants.PARAMETER_MAP)!= null && 
-			!(props.get(IWSProfileConstants.PARAMETER_MAP) instanceof String)) {
-			this.parameterMap = (Map) props.get(IWSProfileConstants.PARAMETER_MAP);
+		if (props.get(IWSProfileConstants.PARAMETER_MAP) != null
+				&& !(props.get(IWSProfileConstants.PARAMETER_MAP) instanceof String)) {
+			this.parameterMap = (Map) props
+					.get(IWSProfileConstants.PARAMETER_MAP);
 		}
-		
+
 		try {
-			
+
 			endpoint = getUrl(endpoint, parameterMap);
 			final URL url = new URL(endpoint);
-			final HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+			final HttpURLConnection httpConn = (HttpURLConnection) url
+					.openConnection();
 			String filePath = formatPath(url);
-			
-			//TODO Validate content is XML
-//			if( !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
-//				return null;
-//			}
-			
+
+			// TODO Validate content is XML
+			// if(
+			// !CONTENT_TYPE_XML.equalsIgnoreCase(httpConn.getContentType())) {
+			// return null;
+			// }
+
 			if (username != null && !username.isEmpty()) {
-				httpConn.setRequestProperty(IWSProfileConstants.AUTHORIZATION_KEY, 
+				httpConn.setRequestProperty(
+						IWSProfileConstants.AUTHORIZATION_KEY,
 						"Basic " + Base64.encodeBytes((username + ':' + password).getBytes())); //$NON-NLS-1$
 			}
-			
+
 			httpConn.setDoOutput(false);
-			if( props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null ) {
-				httpConn.setRequestProperty(IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String)props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
+			if (props.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null) {
+				httpConn.setRequestProperty(
+						IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String) props
+								.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
 			} else {
-				httpConn.setRequestProperty(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				httpConn.setRequestProperty(
+						IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+						IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
 			}
-			
-			if( props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null ) {
-				httpConn.setRequestProperty(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, (String)props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
+
+			if (props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null) {
+				httpConn.setRequestProperty(
+						IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
+						(String) props
+								.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY));
 			} else {
-				httpConn.setRequestProperty(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY, IWSProfileConstants.CONTENT_TYPE_DEFAULT_VALUE);
+				httpConn.setRequestProperty(
+						IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY,
+						IWSProfileConstants.CONTENT_TYPE_DEFAULT_VALUE);
 			}
-			
-			
-			for( Object key : props.keySet() ) {
-				String keyStr = (String)key;
-				if( IWSProfileConstants.AUTHORIZATION_KEY.equalsIgnoreCase(keyStr) ||
-					ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
-            		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
-            		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
-            		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
-            		IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
-            		IWSProfileConstants.ACCEPT_PROPERTY_KEY.equalsIgnoreCase(keyStr) ||
-            		IWSProfileConstants.PARAMETER_MAP.equalsIgnoreCase(keyStr)) {
-            		// do nothing;
-            	} else {
-            		httpConn.setRequestProperty(keyStr, props.getProperty(keyStr));
-            	}
+
+			for (Object key : props.keySet()) {
+				String keyStr = (String) key;
+				if (IWSProfileConstants.AUTHORIZATION_KEY
+						.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.PASSWORD_PROP_ID
+								.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.SECURITY_TYPE_ID
+								.equalsIgnoreCase(keyStr)
+						|| ICredentialsCommon.USERNAME_PROP_ID
+								.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.END_POINT_URI_PROP_ID
+								.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY
+								.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.ACCEPT_PROPERTY_KEY
+								.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY
+								.equalsIgnoreCase(keyStr)
+						|| IWSProfileConstants.PARAMETER_MAP
+								.equalsIgnoreCase(keyStr)) {
+					// do nothing;
+				} else {
+					httpConn.setRequestProperty(keyStr,
+							props.getProperty(keyStr));
+				}
 			}
 
 			InputStream is = httpConn.getInputStream();
-			xmlFile = File.createTempFile(CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
-			fos = new FileOutputStream(xmlFile);
-			write(fos, is);
-			
+			if (props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY)==null || IWSProfileConstants.XML.equals(props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY))) {
+				xmlFile = File.createTempFile(
+						CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
+				fos = new FileOutputStream(xmlFile);
+				write(fos, is);
+			} else {
+				jsonFile = File
+						.createTempFile(
+								CoreStringUtil.createFileName(filePath),
+								DOT_XML_LOWER);
+				fos = new FileOutputStream(jsonFile);
+				write(fos, is);
+				xmlFile = convertJsonToXml(jsonFile, CoreStringUtil.createFileName(filePath));
+			}
+
 		} catch (MalformedURLException ex) {
 			Util.log(ex);
-			MessageDialog.openError(
-							this.getShell(),
-							getString("malformedUrlErrorTitle"), //$NON-NLS-1$
-							getString("malformedUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(this.getShell(),
+					getString("malformedUrlErrorTitle"), //$NON-NLS-1$
+					getString("malformedUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (ProtocolException ex) {
 			Util.log(ex);
-			MessageDialog.openError(
-							this.getShell(),
-							getString("protocolErrorTitle"), //$NON-NLS-1$
-							getString("protocolUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
-	
+			MessageDialog.openError(this.getShell(),
+					getString("protocolErrorTitle"), //$NON-NLS-1$
+					getString("protocolUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
+
 		} catch (IOException ex) {
 			Util.log(ex);
-			MessageDialog.openError(
-							this.getShell(),
-							getString("ioErrorTitle"), //$NON-NLS-1$
-							getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
-	
+			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
+					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
+		} catch (Exception ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
 		} finally {
 			try {
 				if (fos != null) {
@@ -779,10 +842,47 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				e.printStackTrace();
 			}
 		}
-		
+
 		return xmlFile;
 	}
-	
+
+	/**
+	 * @param jsonFile
+	 * @return
+	 * @throws IOException 
+	 * @throws JSONException 
+	 */
+	private File convertJsonToXml(File jsonFile, String name) throws IOException, Exception {
+
+		String jsonText = null;
+		try {
+			jsonText = readFile(jsonFile);
+		} catch (IOException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
+		JSONObject jsonObject = new JSONObject(jsonText);
+		
+		jsonFile = File.createTempFile(
+				CoreStringUtil.createFileName(jsonFile.getName()), DOT_XML_LOWER);
+		String xml = XML.toString(jsonObject);
+		FileUtils.write(xml.getBytes(), jsonFile);
+		return jsonFile;
+
+	}
+
+	private String readFile(File f) throws IOException {
+		final BufferedReader r = new BufferedReader(new FileReader(f));
+		final StringBuilder buf = new StringBuilder();
+		String line;
+		while ((line = r.readLine()) != null) {
+			buf.append(line);
+			buf.append("\n"); //$NON-NLS-1$
+		}
+		r.close();
+		return buf.toString();
+	}
+
 	private File getXmlFileFromUrl(String urlString) {
 		File xmlFile = null;
 		URL newUrl = null;
@@ -790,10 +890,13 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			newUrl = URLHelper.buildURL(urlString);
 		} catch (MalformedURLException e) {
 			Util.log(e);
-			MessageDialog.openError(
+			MessageDialog
+					.openError(
 							this.getShell(),
 							getString("malformedUrlErrorTitle"), //$NON-NLS-1$
-							UiConstants.Util.getString("malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
+							UiConstants.Util
+									.getString(
+											"malformedUrlErrorMessage", urlString, e.getMessage())); //$NON-NLS-1$
 		}
 
 		if (newUrl != null) {
@@ -808,7 +911,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			if (resolved) {
 				try {
 					String filePath = formatPath(newUrl);
-					xmlFile = URLHelper.createFileFromUrl(newUrl,CoreStringUtil.createFileName(filePath),DOT_XML_LOWER);
+					xmlFile = URLHelper.createFileFromUrl(newUrl,
+							CoreStringUtil.createFileName(filePath),
+							DOT_XML_LOWER);
 				} catch (MalformedURLException theException) {
 					Util.log(theException);
 				} catch (IOException theException) {
@@ -816,10 +921,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				}
 			}
 		}
-		
+
 		return xmlFile;
 	}
-	
+
 	/**
 	 * @return
 	 */
@@ -834,38 +939,45 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	/**
 	 * @return
 	 */
-	private StringBuilder buildParameterString(String url, Map<String, Parameter> parameterMap) {
-		
+	private StringBuilder buildParameterString(String url,
+			Map<String, Parameter> parameterMap) {
+
 		StringBuilder parameterString = new StringBuilder();
-		if (parameterMap==null) return parameterString;
+		if (parameterMap == null)
+			return parameterString;
 
 		for (String key : parameterMap.keySet()) {
-	      Parameter value = parameterMap.get(key); 
-	      if (value.getType().equals(Parameter.Type.URI)) {
-	    	  parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
-	      }
-	      if (value.getType().equals(Parameter.Type.Query)) {
-	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
-	    		  parameterString.append("?");   //$NON-NLS-1$
-	    	  }else{
-	    		  parameterString.append("&");   //$NON-NLS-1$  
-	    	  }
-	    	  parameterString.append(key).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
-	      }
-	    }
+			Parameter value = parameterMap.get(key);
+			if (value.getType().equals(Parameter.Type.URI)) {
+				parameterString
+						.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if (value.getType().equals(Parameter.Type.Query)) {
+				if (parameterString.length() == 0
+						|| !parameterString.toString().contains("?")) { //$NON-NLS-1$
+					parameterString.append("?"); //$NON-NLS-1$
+				} else {
+					parameterString.append("&"); //$NON-NLS-1$  
+				}
+				parameterString.append(key)
+						.append("=").append(value.getDefaultValue()); //$NON-NLS-1$
+			}
+		}
 
 		return parameterString;
 	}
-	
+
 	private void setXmlFile(File xmlFile, boolean isUrl, String urlString) {
 		fileViewer.setInput(xmlFile);
 		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
 		if (fileInfo == null) {
 			fileInfo = new TeiidXmlFileInfo(xmlFile);
 			fileInfo.setIsUrl(isUrl);
-			if( isUrl ) {
+			if (isUrl) {
 				fileInfo.setParameterMap(this.parameterMap);
 				fileInfo.setXmlFileUrl(urlString);
+				Properties props = getConnectionProfile().getBaseProperties();
+				fileInfo.setResponseType((String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
 			}
 			this.info.addXmlFileInfo(fileInfo);
 		}
@@ -921,8 +1033,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	private String getUrlStringForConnectionProfile() {
 		if (getConnectionProfile() != null) {
 			Properties props = getConnectionProfile().getBaseProperties();
-			if(isRestConnectionProfile()) {
-				String fileListValue = ConnectionInfoHelper.readEndPointProperty(props);
+			if (isRestConnectionProfile()) {
+				String fileListValue = ConnectionInfoHelper
+						.readEndPointProperty(props);
 				if (fileListValue != null) {
 					return fileListValue;
 				}
@@ -942,15 +1055,18 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
 			wiz = new NewTeiidFilteredCPWizard(XML_URL_FILE_ID);
-		} else if(this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE) {
+		} else if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE) {
 			wiz = new NewTeiidFilteredCPWizard(XML_FILE_ID);
 		} else {
 			wiz = new NewTeiidFilteredCPWizard(TEIID_WS_ID);
 		}
-		// We need to create a Dialog to ask user to choose either a XML File URL CP or a WS REST CP
-		//TeiidXmlConnectionOptionsDialog dialog = new TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
-		
-		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+		// We need to create a Dialog to ask user to choose either a XML File
+		// URL CP or a WS REST CP
+		// TeiidXmlConnectionOptionsDialog dialog = new
+		// TeiidXmlConnectionOptionsDialog(Display.getCurrent().getActiveShell());
+
+		WizardDialog wizardDialog = new WizardDialog(Display.getCurrent()
+				.getActiveShell(), wiz);
 		wizardDialog.setBlockOnOpen(true);
 
 		CPListener listener = new CPListener();
@@ -982,16 +1098,16 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 	void resetCPComboItems() {
 		if (this.srcCombo != null) {
-			WidgetUtil.setComboItems(this.srcCombo,
-					this.connectionProfiles, this.srcLabelProvider,
-					true);
+			WidgetUtil.setComboItems(this.srcCombo, this.connectionProfiles,
+					this.srcLabelProvider, true);
 		}
 	}
 
 	void editConnectionProfile() {
 		if (getConnectionProfile() != null) {
 			IConnectionProfile currentProfile = getConnectionProfile();
-			EditConnectionProfileAction action = new EditConnectionProfileAction(getShell(), currentProfile);
+			EditConnectionProfileAction action = new EditConnectionProfileAction(
+					getShell(), currentProfile);
 
 			CPListener listener = new CPListener();
 			ProfileManager.getInstance().addProfileListener(listener);
@@ -1003,10 +1119,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				setConnectionProfile(listener.getChangedProfile());
 				this.refreshConnectionProfiles();
 				WidgetUtil.setComboItems(this.srcCombo,
-						this.connectionProfiles,
-						this.srcLabelProvider, true);
+						this.connectionProfiles, this.srcLabelProvider, true);
 
-				WidgetUtil.setComboText(this.srcCombo, getConnectionProfile(),this.srcLabelProvider);
+				WidgetUtil.setComboText(this.srcCombo, getConnectionProfile(),
+						this.srcLabelProvider);
 
 				selectConnectionProfile(currentProfile.getName());
 
@@ -1031,17 +1147,21 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
-			this.info.setSourceModelLocation(folder.getFullPath().makeRelative());
-            this.sourceModelFilePath = this.info.getSourceModelLocation();
-            this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
+			this.info.setSourceModelLocation(folder.getFullPath()
+					.makeRelative());
+			this.sourceModelFilePath = this.info.getSourceModelLocation();
+			this.sourceModelContainerText.setText(this.info
+					.getSourceModelLocation().makeRelative().toString());
 		} else {
-        	this.info.setSourceModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
-        }
-        
-    	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
-    		this.info.setSourceModelExists(sourceModelExists());
-    	}
+			this.info.setSourceModelLocation(new Path(
+					StringUtilities.EMPTY_STRING));
+			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+		}
+
+		if (this.sourceModelFileText.getText() != null
+				&& this.sourceModelFileText.getText().length() > -1) {
+			this.info.setSourceModelExists(sourceModelExists());
+		}
 
 		validatePage();
 	}
@@ -1060,7 +1180,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				&& sourceModelFileText != null) {
 			if (selections[0] instanceof IFile) {
 				IFile modelFile = (IFile) selections[0];
-				IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
+				IPath folderPath = modelFile.getFullPath()
+						.removeLastSegments(1);
 				String modelName = modelFile.getFullPath().lastSegment();
 				info.setSourceModelExists(true);
 				info.setSourceModelLocation(folderPath);
@@ -1068,16 +1189,17 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			}
 		}
 
-        if( this.info.getSourceModelName() != null ) {
-        	this.sourceModelFilePath = this.info.getSourceModelLocation();
-        	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
-        	this.sourceModelFileText.setText(this.info.getSourceModelName());
-        } else {
-        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
-        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
-        }
-        
-        this.info.setSourceModelExists(sourceModelExists());
+		if (this.info.getSourceModelName() != null) {
+			this.sourceModelFilePath = this.info.getSourceModelLocation();
+			this.sourceModelContainerText.setText(this.info
+					.getSourceModelLocation().makeRelative().toString());
+			this.sourceModelFileText.setText(this.info.getSourceModelName());
+		} else {
+			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+		}
+
+		this.info.setSourceModelExists(sourceModelExists());
 
 		validatePage();
 	}
@@ -1087,7 +1209,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return;
 
 		String newName = ""; //$NON-NLS-1$
-		if (this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1) {
+		if (this.sourceModelFileText.getText() != null
+				&& this.sourceModelFileText.getText().length() > -1) {
 			newName = this.sourceModelFileText.getText();
 			this.info.setSourceModelName(newName);
 			this.info.setSourceModelExists(sourceModelExists());
@@ -1096,8 +1219,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		validatePage();
 	}
-	
-	
+
 	/**
 	 * Uses the standard container selection dialog to choose the new value for
 	 * the container field.
@@ -1110,16 +1232,19 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		if (folder != null && viewModelContainerText != null) {
 			this.info.setViewModelLocation(folder.getFullPath().makeRelative());
-            this.viewModelFilePath = this.info.getViewModelLocation();
-            this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+			this.viewModelFilePath = this.info.getViewModelLocation();
+			this.viewModelContainerText.setText(this.info
+					.getViewModelLocation().makeRelative().toString());
 		} else {
-        	this.info.setViewModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
-        }
-        
-    	if( this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > -1 ) {
-    		this.info.setViewModelExists(sourceModelExists());
-    	}
+			this.info.setViewModelLocation(new Path(
+					StringUtilities.EMPTY_STRING));
+			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+		}
+
+		if (this.viewModelFileText.getText() != null
+				&& this.viewModelFileText.getText().length() > -1) {
+			this.info.setViewModelExists(sourceModelExists());
+		}
 
 		validatePage();
 	}
@@ -1138,7 +1263,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				&& viewModelFileText != null) {
 			if (selections[0] instanceof IFile) {
 				IFile modelFile = (IFile) selections[0];
-				IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
+				IPath folderPath = modelFile.getFullPath()
+						.removeLastSegments(1);
 				String modelName = modelFile.getFullPath().lastSegment();
 				info.setViewModelExists(true);
 				info.setViewModelLocation(folderPath);
@@ -1146,16 +1272,17 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			}
 		}
 
-        if( this.info.getViewModelName() != null ) {
-        	this.viewModelFilePath = this.info.getViewModelLocation();
-        	this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
-        	this.viewModelFileText.setText(this.info.getViewModelName());
-        } else {
-        	this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
-        	this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
-        }
-        
-        this.info.setViewModelExists(viewModelExists());
+		if (this.info.getViewModelName() != null) {
+			this.viewModelFilePath = this.info.getViewModelLocation();
+			this.viewModelContainerText.setText(this.info
+					.getViewModelLocation().makeRelative().toString());
+			this.viewModelFileText.setText(this.info.getViewModelName());
+		} else {
+			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+		}
+
+		this.info.setViewModelExists(viewModelExists());
 
 		validatePage();
 	}
@@ -1165,7 +1292,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return;
 
 		String newName = ""; //$NON-NLS-1$
-		if (this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > -1) {
+		if (this.viewModelFileText.getText() != null
+				&& this.viewModelFileText.getText().length() > -1) {
 			newName = this.viewModelFileText.getText();
 			this.info.setViewModelName(newName);
 			this.info.setViewModelExists(viewModelExists());
@@ -1174,13 +1302,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		validatePage();
 	}
-	
+
 	void handleViewProcedureTextChanged() {
 		if (synchronizing)
 			return;
 
 		String newName = ""; //$NON-NLS-1$
-		if (this.viewProcedureNameText.getText() != null && this.viewProcedureNameText.getText().length() > -1) {
+		if (this.viewProcedureNameText.getText() != null
+				&& this.viewProcedureNameText.getText().length() > -1) {
 			newName = this.viewProcedureNameText.getText();
 			this.xmlFileInfo.setViewProcedureName(newName);
 		} else {
@@ -1192,13 +1321,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		this.viewProcedureNameText.setSelection(caret);
 		validatePage();
 	}
-	
+
 	void synchronizeUI() {
 		synchronizing = true;
 
 		if (this.info.getSourceModelLocation() != null) {
 			this.sourceModelFilePath = this.info.getSourceModelLocation();
-			this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
+			this.sourceModelContainerText.setText(this.info
+					.getSourceModelLocation().makeRelative().toString());
 		} else {
 			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
 		}
@@ -1216,7 +1346,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			if (fileInfo.doProcess()) {
 				xmlFileInfo = fileInfo;
 				fileName = xmlFileInfo.getDataFile().getName();
-				if( this.info.getSourceModelName() != null ) {
+				if (this.info.getSourceModelName() != null) {
 					sourceFileName = this.info.getSourceModelName();
 				} else {
 					sourceFileName = "SourceProcedures"; //$NON-NLS-1$
@@ -1227,10 +1357,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		}
 		this.selectedFileText.setText(fileName);
 		this.sourceModelFileText.setText(sourceFileName);
-		
+
 		if (this.info.getViewModelLocation() != null) {
 			this.viewModelFilePath = this.info.getViewModelLocation();
-			this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+			this.viewModelContainerText.setText(this.info
+					.getViewModelLocation().makeRelative().toString());
 		} else {
 			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
 		}
@@ -1240,12 +1371,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		} else {
 			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
 		}
-		
-		if (this.xmlFileInfo!=null){
+
+		if (this.xmlFileInfo != null) {
 			if (this.xmlFileInfo.getViewProcedureName() != null) {
-				this.viewProcedureNameText.setText(this.xmlFileInfo.getViewProcedureName());
+				this.viewProcedureNameText.setText(this.xmlFileInfo
+						.getViewProcedureName());
 			} else {
-				this.viewProcedureNameText.setText(StringUtilities.EMPTY_STRING);
+				this.viewProcedureNameText
+						.setText(StringUtilities.EMPTY_STRING);
 			}
 		}
 
@@ -1256,7 +1389,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			if (fileInfo.doProcess()) {
 				xmlFileInfo = fileInfo;
 				fileName = xmlFileInfo.getDataFile().getName();
-				if( this.info.getViewModelName() != null ) {
+				if (this.info.getViewModelName() != null) {
 					viewFileName = this.info.getViewModelName();
 				} else {
 					viewFileName = "ViewProcedures"; //$NON-NLS-1$
@@ -1276,31 +1409,36 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return false;
 		}
 
-		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		IPath modelPath = new Path(sourceModelFilePath.toOSString())
+				.append(this.sourceModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,IResource.FILE);
+		ModelWorkspaceItem item = ModelWorkspaceManager
+				.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,
+						IResource.FILE);
 		if (item != null) {
 			return true;
 		}
 
 		return false;
 	}
-	
 
 	private boolean viewModelExists() {
 		if (this.viewModelFilePath == null) {
 			return false;
 		}
 
-		IPath modelPath = new Path(viewModelFilePath.toOSString()).append(this.viewModelFileText.getText());
+		IPath modelPath = new Path(viewModelFilePath.toOSString())
+				.append(this.viewModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,IResource.FILE);
+		ModelWorkspaceItem item = ModelWorkspaceManager
+				.getModelWorkspaceManager().findModelWorkspaceItem(modelPath,
+						IResource.FILE);
 		if (item != null) {
 			return true;
 		}
@@ -1330,54 +1468,60 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		}
 	}
 
-    private void setProfileFromProperties() {
-        // Check for Connection Profile in properties
-    	if( this.designerProperties != null ) {
-            String profileName = DesignerPropertiesUtil.getConnectionProfileName(this.designerProperties);
-            if (profileName != null && !profileName.isEmpty()) {
-                // Select profile
-                selectConnectionProfile(profileName);
-            }
-    	}
-    }
+	private void setProfileFromProperties() {
+		// Check for Connection Profile in properties
+		if (this.designerProperties != null) {
+			String profileName = DesignerPropertiesUtil
+					.getConnectionProfileName(this.designerProperties);
+			if (profileName != null && !profileName.isEmpty()) {
+				// Select profile
+				selectConnectionProfile(profileName);
+			}
+		}
+	}
 
 	private void refreshConnectionProfiles() {
 		this.connectionProfiles = new ArrayList<IConnectionProfile>();
-		
-		
-			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(IXmlProfileConstants.TEIID_CATEGORY);
-			for (final IConnectionProfile profile : tempProfiles) {
-				if( this.info.isXmlLocalFileMode() && profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
-					connectionProfiles.add(profile);
-				} else if( this.info.isXmlUrlFileMode() && profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) ) {
-					connectionProfiles.add(profile);
-				} else if( this.info.isRestUrlFileMode() && profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID) ) {
-					connectionProfiles.add(profile);
-				}
-			}
 
-			return;
-//		}
-	
-//		if( this.info.isXmlUrlFileMode() ) {
-//			final IConnectionProfile[] tempProfiles = profileManager.getProfilesByCategory(XML_URL_FILE_ID);
-//			for (final IConnectionProfile profile : tempProfiles) {
-//				connectionProfiles.add(profile);
-//			}
-//			return;
-//		}
+		final IConnectionProfile[] tempProfiles = profileManager
+				.getProfilesByCategory(IXmlProfileConstants.TEIID_CATEGORY);
+		for (final IConnectionProfile profile : tempProfiles) {
+			if (this.info.isXmlLocalFileMode()
+					&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
+				connectionProfiles.add(profile);
+			} else if (this.info.isXmlUrlFileMode()
+					&& profile.getProviderId()
+							.equalsIgnoreCase(XML_URL_FILE_ID)) {
+				connectionProfiles.add(profile);
+			} else if (this.info.isRestUrlFileMode()
+					&& profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
+				connectionProfiles.add(profile);
+			}
+		}
+
+		return;
+		// }
+
+		// if( this.info.isXmlUrlFileMode() ) {
+		// final IConnectionProfile[] tempProfiles =
+		// profileManager.getProfilesByCategory(XML_URL_FILE_ID);
+		// for (final IConnectionProfile profile : tempProfiles) {
+		// connectionProfiles.add(profile);
+		// }
+		// return;
+		// }
 	}
 
 	private boolean validatePage() {
 		IConnectionProfile connProfile = getConnectionProfile();
-		if(connProfile==null) {
+		if (connProfile == null) {
 			setThisPageComplete(getString("noConnectionProfileSelected"), ERROR);//$NON-NLS-1$
 			return false;
 		}
-		
+
 		setSourceHelpMessage();
 		setViewHelpMessage();
-		
+
 		// Check for model file selected
 		boolean fileSelected = false;
 		for (TableItem item : this.fileViewer.getTable().getItems()) {
@@ -1398,8 +1542,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		// Check for at least ONE open non-hidden Model Project
 		boolean validProj = false;
-		for (IProject proj : ModelerCore.getWorkspace().getRoot()
-				.getProjects()) {
+		for (IProject proj : ModelerCore.getWorkspace().getRoot().getProjects()) {
 			try {
 				boolean result = proj.isOpen()
 						&& !proj.hasNature(ModelerCore.HIDDEN_PROJECT_NATURE_ID)
@@ -1424,44 +1567,55 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 		// =============== SOURCE MODEL INFO CHECKS ==================
 		String container = sourceModelContainerText.getText();
 		if (CoreStringUtil.isEmpty(container)) {
-			setThisPageComplete( getString("sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 		IProject project = getTargetProject();
 		if (project == null) {
-			setThisPageComplete(getString("sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 
 		String fileText = sourceModelFileText.getText().trim();
 
 		if (fileText.length() == 0) {
-			setThisPageComplete(getString("sourceFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("sourceFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
-        IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
-        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
-        if( status.getSeverity() == IStatus.ERROR ) {
-			setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_SOURCE_MODEL_NAME + status.getMessage(), ERROR);
+		IStatus status = ModelNameUtil.validate(fileText,
+				ModelerCore.MODEL_FILE_EXTENSION, null,
+				ModelNameUtil.IGNORE_CASE
+						| ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+		if (status.getSeverity() == IStatus.ERROR) {
+			setThisPageComplete(
+					ModelNameUtil.MESSAGES.INVALID_SOURCE_MODEL_NAME
+							+ status.getMessage(), ERROR);
 			return false;
 		}
 
 		// We've got a valid source model
 		// If Existing, need to check for the wrong connection profile
 		if (info.sourceModelExists() && !sourceModelHasSameConnectionProfile()) {
-			setThisPageComplete(Util.getString(I18N_PREFIX + "connectionProfileForModelIsDifferent", fileText), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					Util.getString(I18N_PREFIX
+							+ "connectionProfileForModelIsDifferent", fileText), ERROR); //$NON-NLS-1$
 			return false;
 		}
-		
+
 		// =============== VIEW MODEL INFO CHECKS ==================
 		String viewContainer = viewModelContainerText.getText();
 		if (CoreStringUtil.isEmpty(viewContainer)) {
-			setThisPageComplete( getString("viewFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("viewFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 		project = getViewTargetProject();
 		if (project == null) {
-			setThisPageComplete(getString("viewFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("viewFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 
@@ -1471,48 +1625,55 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			setThisPageComplete(getString("viewFileNameMustBeSpecified"), ERROR); //$NON-NLS-1$
 			return false;
 		}
-        status = ModelNameUtil.validate(viewFileText, ModelerCore.MODEL_FILE_EXTENSION, null,
-        		ModelNameUtil.IGNORE_CASE | ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
-        if( status.getSeverity() == IStatus.ERROR ) {
-			setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME + status.getMessage(), ERROR);
+		status = ModelNameUtil.validate(viewFileText,
+				ModelerCore.MODEL_FILE_EXTENSION, null,
+				ModelNameUtil.IGNORE_CASE
+						| ModelNameUtil.NO_DUPLICATE_MODEL_NAMES);
+		if (status.getSeverity() == IStatus.ERROR) {
+			setThisPageComplete(ModelNameUtil.MESSAGES.INVALID_VIEW_MODEL_NAME
+					+ status.getMessage(), ERROR);
 			return false;
 		}
-        
-        String viewFileName = getViewFileName();
+
+		String viewFileName = getViewFileName();
 		String sourceFilename = getSourceFileName();
 		if (viewFileName.equalsIgnoreCase(sourceFilename)) {
-			setThisPageComplete(getString("sourceAndViewFilesCannotHaveSameName"), ERROR); //$NON-NLS-1$
+			setThisPageComplete(
+					getString("sourceAndViewFilesCannotHaveSameName"), ERROR); //$NON-NLS-1$
 			return false;
 		}
-		
+
 		// Check if View Name is valid
-		String invalidMessage = validator.checkValidName(this.xmlFileInfo.getViewTableName());
-		if( invalidMessage != null) {
+		String invalidMessage = validator.checkValidName(this.xmlFileInfo
+				.getViewTableName());
+		if (invalidMessage != null) {
 			setThisPageComplete(getString("viewProcedureNameInvalid"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 		// Check if view table already exists
-		if( viewAlreadyExists() ) {
+		if (viewAlreadyExists()) {
 			setThisPageComplete(getString("viewProcedureAlreadyExists"), ERROR); //$NON-NLS-1$
 			return false;
 		}
-		
-		if( this.xmlFileInfo.getViewProcedureName() == null || this.xmlFileInfo.getViewProcedureName().length() == 0) {
-			setThisPageComplete(getString("viewProcedureNameNullOrEmpty"), ERROR); //$NON-NLS-1$
+
+		if (this.xmlFileInfo.getViewProcedureName() == null
+				|| this.xmlFileInfo.getViewProcedureName().length() == 0) {
+			setThisPageComplete(
+					getString("viewProcedureNameNullOrEmpty"), ERROR); //$NON-NLS-1$
 			return false;
 		}
 
 		// We've got a valid view model
-	
+
 		setThisPageComplete(EMPTY_STRING, NONE);
 
 		return validProj;
 	}
-	
+
 	private String getViewFileName() {
 		return this.viewModelFileText.getText().trim();
 	}
-	
+
 	private String getSourceFileName() {
 		return this.sourceModelFileText.getText().trim();
 	}
@@ -1536,7 +1697,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		return result;
 	}
-	
+
 	public IProject getViewTargetProject() {
 		IProject result = null;
 		String containerName = getViewContainerName();
@@ -1556,7 +1717,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	public String getSourceContainerName() {
 		String result = null;
 
-		if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
+		if (ProductCustomizerMgr.getInstance().getProductCharacteristics()
+				.isHiddenProjectCentric()) {
 			result = getHiddenProjectPath();
 		} else {
 			result = sourceModelContainerText.getText().trim();
@@ -1564,11 +1726,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		return result;
 	}
-	
+
 	public String getViewContainerName() {
 		String result = null;
 
-		if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
+		if (ProductCustomizerMgr.getInstance().getProductCharacteristics()
+				.isHiddenProjectCentric()) {
 			result = getHiddenProjectPath();
 		} else {
 			result = viewModelContainerText.getText().trim();
@@ -1579,7 +1742,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 	private String getHiddenProjectPath() {
 		String result = null;
-		IProject hiddenProj = ProductCustomizerMgr.getInstance().getProductCharacteristics().getHiddenProject(false);
+		IProject hiddenProj = ProductCustomizerMgr.getInstance()
+				.getProductCharacteristics().getHiddenProject(false);
 
 		if (hiddenProj != null) {
 			result = hiddenProj.getFullPath().makeRelative().toString();
@@ -1591,31 +1755,52 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 	private void setViewHelpMessage() {
 		if (creatingControl)
 			return;
-		if (xmlFileInfo == null || !xmlFileInfo.doProcess() || info.getViewModelName() == null || info.getViewModelName().length() == 0) {
-			this.viewHelpText.setText(Util.getString(I18N_PREFIX + "viewModelUndefined")); //$NON-NLS-1$
+		if (xmlFileInfo == null || !xmlFileInfo.doProcess()
+				|| info.getViewModelName() == null
+				|| info.getViewModelName().length() == 0) {
+			this.viewHelpText.setText(Util.getString(I18N_PREFIX
+					+ "viewModelUndefined")); //$NON-NLS-1$
 		} else {
-			this.viewHelpText.setText(Util.getString(I18N_PREFIX + "viewModelWillBeCreated", info.getViewModelName(), info.getViewModelName())); //$NON-NLS-1$
+			this.viewHelpText
+					.setText(Util
+							.getString(
+									I18N_PREFIX + "viewModelWillBeCreated", info.getViewModelName(), info.getViewModelName())); //$NON-NLS-1$
 		}
 	}
-	
+
 	private void setSourceHelpMessage() {
 		if (creatingControl)
 			return;
 		String procedureName = GET_TEXT_FILES;
-		if( info.isRestUrlFileMode() ) {
+		if (info.isRestUrlFileMode()) {
 			procedureName = INVOKE_HTTP;
 		}
 		if (info.sourceModelExists()) {
 			if (sourceHasProcedure()) {
-				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
+				this.sourceHelpText
+						.setText(Util
+								.getString(
+										I18N_PREFIX
+												+ "existingSourceModelHasProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			} else {
-				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "existingSourceModelHasNoProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
+				this.sourceHelpText
+						.setText(Util
+								.getString(
+										I18N_PREFIX
+												+ "existingSourceModelHasNoProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			}
 		} else {
-			if (xmlFileInfo == null || !xmlFileInfo.doProcess() || info.getSourceModelName() == null || info.getSourceModelName().length() == 0) {
-				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelUndefined")); //$NON-NLS-1$
+			if (xmlFileInfo == null || !xmlFileInfo.doProcess()
+					|| info.getSourceModelName() == null
+					|| info.getSourceModelName().length() == 0) {
+				this.sourceHelpText.setText(Util.getString(I18N_PREFIX
+						+ "sourceModelUndefined")); //$NON-NLS-1$
 			} else {
-				this.sourceHelpText.setText(Util.getString(I18N_PREFIX + "sourceModelWillBeCreated", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
+				this.sourceHelpText
+						.setText(Util
+								.getString(
+										I18N_PREFIX
+												+ "sourceModelWillBeCreated", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			}
 		}
 	}
@@ -1625,16 +1810,20 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return false;
 		}
 
-		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		IPath modelPath = new Path(sourceModelFilePath.toOSString())
+				.append(this.sourceModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
-		ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) sourceModel, false);
+		IResource sourceModel = ModelerCore.getWorkspace().getRoot()
+				.getFile(modelPath);
+		ModelResource smr = ModelUtilities.getModelResourceForIFile(
+				(IFile) sourceModel, false);
 		if (smr != null) {
-			if( info.isRestUrlFileMode() ) {
-				return FlatFileRelationalModelFactory.procedureExists(smr, FlatFileRelationalModelFactory.INVOKE_HTTP);
+			if (info.isRestUrlFileMode()) {
+				return FlatFileRelationalModelFactory.procedureExists(smr,
+						FlatFileRelationalModelFactory.INVOKE_HTTP);
 			}
 		}
 
@@ -1646,16 +1835,19 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return false;
 		}
 
-		IPath modelPath = new Path(sourceModelFilePath.toOSString()).append(this.sourceModelFileText.getText());
+		IPath modelPath = new Path(sourceModelFilePath.toOSString())
+				.append(this.sourceModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
 			modelPath = modelPath.addFileExtension("xmi"); //$NON-NLS-1$
 		}
 
-		IResource sourceModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
+		IResource sourceModel = ModelerCore.getWorkspace().getRoot()
+				.getFile(modelPath);
 		ModelResource smr = ModelUtilities.getModelResourceForIFile(
 				(IFile) sourceModel, false);
 		if (smr != null) {
-			IConnectionProfile profile = connectionInfoHelper.getConnectionProfile(smr);
+			IConnectionProfile profile = connectionInfoHelper
+					.getConnectionProfile(smr);
 			if (profile == null || this.info.getConnectionProfile() == null) {
 				return false;
 			}
@@ -1668,45 +1860,51 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		return false;
 	}
-	
+
 	private boolean viewAlreadyExists() {
-		if( !info.viewModelExists() ) {
+		if (!info.viewModelExists()) {
 			return false;
 		}
-		
-		IPath modelPath = new Path(viewModelFilePath.toOSString()).append(this.viewModelFileText.getText());
+
+		IPath modelPath = new Path(viewModelFilePath.toOSString())
+				.append(this.viewModelFileText.getText());
 		if (!modelPath.toString().toUpperCase().endsWith(".XMI")) { //$NON-NLS-1$
 			modelPath = modelPath.addFileExtension(".xmi"); //$NON-NLS-1$
 		}
 
-    	IResource viewModel = ModelerCore.getWorkspace().getRoot().getFile(modelPath);
-    	ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile)viewModel, false);
-    	if( smr != null ) {
-    		try {
-    			if (this.xmlFileInfo.getViewProcedureName()==null){
-    				return false;
-    			}
-    			String existingName = this.xmlFileInfo.getViewProcedureName();
-    			
-    			for( Object obj : smr.getAllRootEObjects() ) {
+		IResource viewModel = ModelerCore.getWorkspace().getRoot()
+				.getFile(modelPath);
+		ModelResource smr = ModelUtilities.getModelResourceForIFile(
+				(IFile) viewModel, false);
+		if (smr != null) {
+			try {
+				if (this.xmlFileInfo.getViewProcedureName() == null) {
+					return false;
+				}
+				String existingName = this.xmlFileInfo.getViewProcedureName();
 
-                    EObject eObj = (EObject)obj;
-                    if (eObj instanceof Procedure  && existingName.equalsIgnoreCase(ModelObjectUtilities.getName(eObj)) ) {
-                        return true;
-                    }
-                }
-            } catch (ModelWorkspaceException err) {
-                Util.log(err);
-            }
+				for (Object obj : smr.getAllRootEObjects()) {
 
-    	}
-    	
-    	return false;
+					EObject eObj = (EObject) obj;
+					if (eObj instanceof Procedure
+							&& existingName
+									.equalsIgnoreCase(ModelObjectUtilities
+											.getName(eObj))) {
+						return true;
+					}
+				}
+			} catch (ModelWorkspaceException err) {
+				Util.log(err);
+			}
+
+		}
+
+		return false;
 	}
 
-/**
- * @since 8.0
- */
+	/**
+	 * @since 8.0
+	 */
 	public class CPListener implements IProfileListener {
 
 		IConnectionProfile latestProfile;
@@ -1876,28 +2074,33 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			boolean doSelect = false;
 			if (element instanceof IResource) {
 				// If the project is closed, dont show
-				boolean projectOpen = ((IResource) element).getProject().isOpen();
-				
+				boolean projectOpen = ((IResource) element).getProject()
+						.isOpen();
+
 				if (projectOpen) {
 					// Show open projects
 					if (element instanceof IProject) {
-		                try {
-		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
-		                } catch (CoreException e) {
-		                    UiConstants.Util.log(e);
-		                }
+						try {
+							doSelect = ((IProject) element)
+									.hasNature(ModelerCore.NATURE_ID);
+						} catch (CoreException e) {
+							UiConstants.Util.log(e);
+						}
 					} else if (element instanceof IContainer) {
 						doSelect = true;
 						// Show webservice model files, and not .xsd files
-					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+					} else if (element instanceof IFile
+							&& ModelUtil.isModelFile((IFile) element)) {
 						ModelResource theModel = null;
 						try {
-							theModel = ModelUtil.getModelResource((IFile) element, true);
+							theModel = ModelUtil.getModelResource(
+									(IFile) element, true);
 						} catch (Exception ex) {
 							ModelerCore.Util.log(ex);
 						}
 						if (theModel != null
-								&& ModelIdentifier.isRelationalSourceModel(theModel)) {
+								&& ModelIdentifier
+										.isRelationalSourceModel(theModel)) {
 							doSelect = true;
 						}
 					}
@@ -1909,7 +2112,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			return doSelect;
 		}
 	};
-	
+
 	final ViewerFilter viewModelFilter = new ModelWorkspaceViewerFilter(true) {
 
 		@Override
@@ -1918,28 +2121,33 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			boolean doSelect = false;
 			if (element instanceof IResource) {
 				// If the project is closed, dont show
-				boolean projectOpen = ((IResource) element).getProject().isOpen();
-				
+				boolean projectOpen = ((IResource) element).getProject()
+						.isOpen();
+
 				if (projectOpen) {
 					// Show open projects
 					if (element instanceof IProject) {
-		                try {
-		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
-		                } catch (CoreException e) {
-		                    UiConstants.Util.log(e);
-		                }
+						try {
+							doSelect = ((IProject) element)
+									.hasNature(ModelerCore.NATURE_ID);
+						} catch (CoreException e) {
+							UiConstants.Util.log(e);
+						}
 					} else if (element instanceof IContainer) {
 						doSelect = true;
 						// Show webservice model files, and not .xsd files
-					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+					} else if (element instanceof IFile
+							&& ModelUtil.isModelFile((IFile) element)) {
 						ModelResource theModel = null;
 						try {
-							theModel = ModelUtil.getModelResource((IFile) element, true);
+							theModel = ModelUtil.getModelResource(
+									(IFile) element, true);
 						} catch (Exception ex) {
 							ModelerCore.Util.log(ex);
 						}
 						if (theModel != null
-								&& ModelIdentifier.isRelationalViewModel(theModel)) {
+								&& ModelIdentifier
+										.isRelationalViewModel(theModel)) {
 							doSelect = true;
 						}
 					}
@@ -1958,54 +2166,56 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 
 		if (visible) {
 			this.setTitle(XML_TITLE);
-			this.fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+			this.fileNameColumn.getColumn().setText(
+					getString("xmlDataFileNameColumn")); //$NON-NLS-1$
 
 			// If current profile is invalid for this page, it is reset.
 			// this may happen if user toggle between local and remote xml...
 			IConnectionProfile currentProfile = getConnectionProfile();
-			if(currentProfile==null) {
+			if (currentProfile == null) {
 				this.fileViewer.setInput(null);
-	    		this.info.setViewModelName(null);
-	    		setViewHelpMessage();
-	    		this.info.setSourceModelName(null);
-	    		setSourceHelpMessage();
-			} else if(!isValidProfileForPage(currentProfile)) {
+				this.info.setViewModelName(null);
+				setViewHelpMessage();
+				this.info.setSourceModelName(null);
+				setSourceHelpMessage();
+			} else if (!isValidProfileForPage(currentProfile)) {
 				setConnectionProfile(null);
 				this.fileViewer.setInput(null);
 				this.info.setViewModelName(null);
-	    		setViewHelpMessage();
-	    		this.info.setSourceModelName(null);
-	    		setSourceHelpMessage();
-			} else if(isInvalidXmlFileProfile(currentProfile)) {
+				setViewHelpMessage();
+				this.info.setSourceModelName(null);
+				setSourceHelpMessage();
+			} else if (isInvalidXmlFileProfile(currentProfile)) {
 				this.fileViewer.setInput(null);
 				this.info.setViewModelName(null);
-	    		setViewHelpMessage();
-	    		this.info.setSourceModelName(null);
-	    		setSourceHelpMessage();
+				setViewHelpMessage();
+				this.info.setSourceModelName(null);
+				setSourceHelpMessage();
 			}
-			
+
 			setDataFolderLocation();
-			
+
 			refreshConnectionProfiles();
-			
+
 			resetCPComboItems();
-			
+
 			loadFileListViewer();
-			
+
 			fileNameColumn.getColumn().pack();
-			
+
 			synchronizeUI();
 
-            setProfileFromProperties();
-            validatePage();
+			setProfileFromProperties();
+			validatePage();
 		}
 	}
-	
+
 	private void setDataFolderLocation() {
 		IConnectionProfile profile = getConnectionProfile();
-		if(profile!=null) {
+		if (profile != null) {
 			Properties props = profile.getBaseProperties();
-			String home = (String) props.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
+			String home = (String) props
+					.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
 			if (home != null) {
 				String location = home;
 				if (location.length() > 60) {
@@ -2015,8 +2225,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 				this.dataFileFolderText.setText(location);
 				this.dataFileFolderText.setToolTipText(home);
 			} else {
-				String URL = (String) props.get(IXmlProfileConstants.URL_PROP_ID);
-				if( URL != null ) {
+				String URL = (String) props
+						.get(IXmlProfileConstants.URL_PROP_ID);
+				if (URL != null) {
 					String location = URL;
 					if (location.length() > 60) {
 						int len = location.length();
@@ -2034,5 +2245,5 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage
 			this.dataFileFolderText.setToolTipText(EMPTY_STRING);
 		}
 	}
-	
+
 }
