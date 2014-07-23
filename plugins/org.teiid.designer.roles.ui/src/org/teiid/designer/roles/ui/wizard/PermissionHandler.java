@@ -38,6 +38,19 @@ public class PermissionHandler {
         this.tree = tree;
         this.objectsToPermissionsMap = new HashMap<Object, Permission>();
     }
+	
+	public void handlePermissionChanged(Permission permission) {
+		Object targetObject = null;
+		for (Object obj : objectsToPermissionsMap.keySet()) {
+			Permission perm = objectsToPermissionsMap.get(obj);
+			if (perm == permission) {
+				targetObject = obj;
+			}
+		}
+		if (targetObject != null) {
+			cleanUpPermissions(targetObject);
+		}
+	}
 
     /*
      * Because child permission values can default to parent Crud values there may be instances where a permission's CRUD
