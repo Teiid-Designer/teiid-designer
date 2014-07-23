@@ -56,6 +56,11 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	private String viewProcedureName;
 	
 	/**
+     * The response type. Can be either XML or JSON. (never <code>null</code> or empty).
+     */
+	private String responseType;
+	
+	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
 	 * <code>TeiidMetadataFileInfo</code>
 	 */
@@ -107,6 +112,7 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	/**
 	 * 
 	 * @return viewProcedureName the view precedure name (never <code>null</code> or empty).
+	 * @since 8.6
 	 */
 	public String getViewProcedureName() {
 		return this.viewProcedureName;
@@ -115,6 +121,7 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 	/**
 	 * 
 	 * @param viewProcedureName (never <code>null</code> or empty).
+	 * @since 8.6
 	 */
 	public void setViewProcedureName(String viewProcedureName) {
 		CoreArgCheck.isNotNull(viewProcedureName, "viewProcedureName is null"); //$NON-NLS-1$
@@ -123,6 +130,22 @@ public abstract class TeiidFileInfo implements ITeiidFileInfo {
 		validate();
 	}
 	
+	/**
+	 * @return the responseType
+	 * @since 8.6
+	 */
+	public String getResponseType() {
+		return responseType;
+	}
+
+	/**
+	 * @param responseType the responseType to set
+	 * @since 8.6
+	 */
+	public void setResponseType(String responseType) {
+		this.responseType = responseType;
+	}
+
 	/**
 	 * 
 	 * @return status the <code>IStatus</code> representing the validity of the data in this info object

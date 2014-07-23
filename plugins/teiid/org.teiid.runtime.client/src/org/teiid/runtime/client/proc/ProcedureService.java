@@ -36,6 +36,7 @@ import org.teiid.runtime.client.Messages;
 public class ProcedureService implements IProcedureService, ISQLConstants {
 
     private final ITeiidServerVersion teiidVersion;
+    private final static String JSON = "JSON";
 
     /**
      * @param teiidVersion
@@ -295,6 +296,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
     	 List<String> tokens = new ArrayList<String>();
          List<ITeiidXmlColumnInfo> columnInfoList = xmlFileInfo.getColumnInfoList();
          
+         boolean isJson = xmlFileInfo.getResponseType().toUpperCase().equals(JSON);
          Map<String, Parameter> parameters = xmlFileInfo.getParameterMap();
 
          boolean isQueryParm = false;
@@ -402,10 +404,18 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          String finalSQLString = null;
          
          // SELECT {0} FROM (EXEC {1}.getTextFiles({2})) AS f, XMLTABLE('{3}' PASSING XMLPARSE(DOCUMENT f.file) AS d COLUMNS {4}) AS {5}
-         if (isQueryParm){
-        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithQueryParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+         if (isJson) {
+	         if (isQueryParm){
+	        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithQueryParametersJSONTableSqlTemplate, tokens.toArray(new Object[0])); 
+	         }else{
+	        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithURIParametersJSONTableSqlTemplate, tokens.toArray(new Object[0])); 
+	         }
          }else{
-        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithURIParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+        	 if (isQueryParm){
+	        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithQueryParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+	         }else{
+	        	 finalSQLString = Messages.getString(Messages.ProcedureService.procedureServiceXmlInvokeHttpWithURIParametersTableSqlTemplate, tokens.toArray(new Object[0])); 
+	         }
          }
          
          return finalSQLString;

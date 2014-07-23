@@ -50,6 +50,18 @@ public interface ITeiidXmlFileInfo<T extends ITeiidXmlColumnInfo> extends ITeiid
     
     /**
      * 
+     * @return responseType the response type from the connection profile. Can be XML or JSON.
+     */
+    String getResponseType();
+    
+    /**
+     * 
+     * @param responseType the response type from the connection profile. Can be XML or JSON.
+     */
+    void setResponseType(String responseType);
+    
+    /**
+     * 
      * @return parameterMap the <code>Parameter</code> map from the connection profile
      */
     Map<String, Object> getParameterMap();
