@@ -329,6 +329,8 @@ public class ColumnMaskingPanel extends DataRolePanel {
         // update model
         getWizard().getTreeProvider().removeColumnMask(selection);
         
+        getWizard().getTreeProvider().handlePermissionChanged(selection);
+        
         // update UI
         getWizard().refreshAllTabs();
     }

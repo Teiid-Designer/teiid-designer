@@ -329,6 +329,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
         // update model
         getWizard().getTreeProvider().removeRowBasedSecurity(selection);
         
+        getWizard().getTreeProvider().handlePermissionChanged(selection);
+        
         // update UI
         getWizard().refreshAllTabs();
     }
