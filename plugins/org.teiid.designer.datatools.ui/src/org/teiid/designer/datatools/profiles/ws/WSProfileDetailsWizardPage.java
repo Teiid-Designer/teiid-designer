@@ -25,10 +25,14 @@ import org.eclipse.datatools.connectivity.internal.ui.dialogs.ExceptionHandler;
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -62,7 +66,9 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     Text urlPreviewText;
     private Label urlLabel;
     private Text urlText;
+    private Label responseTypeLabel;
     private CredentialsComposite credentialsComposite;
+    private Combo responseTypeCombo; 
     private Map<String, Parameter> parameterMap = new LinkedHashMap<String, Parameter>();
 
 	private TabItem parametersTab;
@@ -124,6 +130,40 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         gd.widthHint = 500;
         urlText.setLayoutData(gd);
         
+        responseTypeLabel = new Label(scrolled, SWT.NONE);
+        responseTypeLabel.setText(UTIL.getString("Common.ResponseType.Label")); //$NON-NLS-1$
+        responseTypeLabel.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip")); //$NON-NLS-1$
+        gd = new GridData();
+        responseTypeLabel.setLayoutData(gd);
+
+        responseTypeCombo = WidgetFactory.createCombo(scrolled,
+        		SWT.SINGLE | SWT.BORDER | SWT.READ_ONLY);
+        gd = new GridData();
+        gd.horizontalAlignment = GridData.FILL;
+        gd.verticalAlignment = GridData.BEGINNING;
+        gd.grabExcessHorizontalSpace = true;
+        responseTypeCombo.setLayoutData(gd);
+        responseTypeCombo.setItems(new String[] { IWSProfileConstants.XML,
+        		IWSProfileConstants.JSON });
+        responseTypeCombo.select(0);
+        responseTypeCombo.setText(IWSProfileConstants.XML);
+    //    setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, IWSProfileConstants.XML);
+        responseTypeCombo.setToolTipText(UTIL.getString("Common.ResponseType.ToolTip"));  //$NON-NLS-1$
+        GridDataFactory.swtDefaults().grab(false, false).applyTo(responseTypeCombo);
+        responseTypeCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleResponseTypeChanged(((Combo)e.widget).getText());
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+
+        responseTypeCombo.setVisibleItemCount(2);
+        
         credentialsComposite = new CredentialsComposite(scrolled, SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
@@ -170,6 +210,10 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         addListeners();
 
 	}
+	
+	 void handleResponseTypeChanged(String type) {
+		 setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, type);
+     }
 	
 	/**
 	 * @return the parameterMap
@@ -225,8 +269,8 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 
 		for (String key : parameterMap.keySet()) {
 	      Parameter value = parameterMap.get(key);
-	      if (value.getType().equals(IWSProfileConstants.URI)) {
-	    	  parameterString.append("/").append(key); //$NON-NLS-1$
+	      if (value.getType().equals(Parameter.Type.URI)) {
+	    	  parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
 	      if (value.getType().equals(Parameter.Type.Query)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
@@ -296,7 +340,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
     }
 
     private void setProperty(String propertyId, String value) {
-        //Properties properties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
+        if (null == profileProperties) profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
         profileProperties.setProperty(propertyId, value);
         updateState();
     }
@@ -326,6 +370,10 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         
         if( this.profileProperties !=  null && this.parameterMap !=null) {
         	profileProperties.put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+        }
+        
+        if (null != profileProperties) {
+        	profileProperties.put(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY,responseTypeCombo.getText());
         }
         
         if (null == profileProperties.get(IWSProfileConstants.END_POINT_URI_PROP_ID)
