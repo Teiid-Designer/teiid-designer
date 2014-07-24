@@ -32,7 +32,6 @@ import org.teiid.core.util.ApplicationInfo;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 /**
@@ -57,18 +56,6 @@ public class Handshake implements Externalizable {
     private ITeiidServerVersion getTeiidVersion() {
         ITeiidServerVersion version = new TeiidServerVersion(getVersion());
         return version;
-    }
-
-    private AuthenticationType getAuthenticationType() {
-        if (authType == null) {
-            ITeiidServerVersion version = getTeiidVersion();
-            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_7.get()))
-                authType = AuthenticationType.USERPASSWORD;
-
-            authType = AuthenticationType.CLEARTEXT;
-        }
-
-        return authType;
     }
 
     /** 
@@ -116,8 +103,12 @@ public class Handshake implements Externalizable {
     }
     
     public AuthenticationType getAuthType() {
-		return getAuthenticationType();
+		return authType;
 	}
+
+    public void setAuthType(AuthenticationType authType) {
+        this.authType = authType;
+    }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException,
@@ -125,7 +116,7 @@ public class Handshake implements Externalizable {
     	version = (String)in.readObject();
     	publicKey = (byte[])in.readObject();
     	try {
-    		authType = AuthenticationType.value(getTeiidVersion(), in.readByte());
+    		authType = AuthenticationType.values()[in.readByte()];
     	} catch (EOFException e) {
     		
     	}
@@ -135,7 +126,7 @@ public class Handshake implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
     	out.writeObject(version);
     	out.writeObject(publicKey);
-    	out.writeByte(authType.index(getTeiidVersion()));
+    	out.writeByte(authType.ordinal());
     }
     
 }
