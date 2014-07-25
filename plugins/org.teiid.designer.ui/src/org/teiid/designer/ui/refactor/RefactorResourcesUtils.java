@@ -218,9 +218,10 @@ public class RefactorResourcesUtils {
         String source = absPair.getSourcePath();
         String target = absPair.getTargetPath();
 
-        String[] barr = baseDirectory.split(File.separator);
-        String[] sarr = source.split(File.separator);
-        String[] tarr = target.split(File.separator);
+        String separator = java.util.regex.Pattern.quote(File.separator);
+        String[] barr = baseDirectory.split(separator);
+        String[] sarr = source.split(separator);
+        String[] tarr = target.split(separator);
 
         if (barr[0].equals(sarr[0]) && sarr[0].equals(tarr[0])) {
             StringBuffer baseBuffer = createPathBuffer(barr, 1);
