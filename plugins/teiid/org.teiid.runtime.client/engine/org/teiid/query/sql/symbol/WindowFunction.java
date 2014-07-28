@@ -8,6 +8,7 @@
 package org.teiid.query.sql.symbol;
 
 import org.teiid.designer.annotation.Removed;
+import org.teiid.designer.query.sql.symbol.IWindowFunction;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Node;
@@ -17,7 +18,7 @@ import org.teiid.query.sql.lang.SingleElementSymbol;
  *
  */
 @SuppressWarnings( "unused" )
-public interface WindowFunction extends Node, SingleElementSymbol, Expression {
+public interface WindowFunction extends Node, SingleElementSymbol, Expression, IWindowFunction<LanguageVisitor> {
 
     /**
      * @return the function
