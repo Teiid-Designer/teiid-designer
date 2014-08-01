@@ -332,7 +332,7 @@ public final class Vdb implements VdbConstants {
         this.passwordPattern = pwdPatt[0];
         this.authenticationType = authType[0];
         if( valDateTime[0] != null ) {
-            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy"); //$NON-NLS-1$
+        	SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
             this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
         }
         this.validationVersion = valVersion[0];
