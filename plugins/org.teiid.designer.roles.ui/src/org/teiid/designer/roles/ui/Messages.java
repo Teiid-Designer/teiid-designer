@@ -69,11 +69,11 @@ public class Messages  extends NLS {
 	public static String browseVdbForTargetColumn;
 	public static String constraintButtonTooltip;
 	public static String clickOkToFinish;
-	public static String targetColumnIsUndefined;
+	public static String targetIsUndefined;
 	public static String conditionIsUndefined;
 	public static String noMaskOrConditionDefined;
-	public static String columnSelection;
-	public static String selectColumnForCondition;
+	public static String targetSelection;
+	public static String selectTargetForCondition;
 	public static String orderMustBeAnInteger;
 	public static String orderMustNotBeNull;
 	public static String maskIsUndefined;

@@ -555,7 +555,8 @@ public class ColumnMaskingPanel extends DataRolePanel {
     	        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(innerPanel);
     	        GridDataFactory.fillDefaults().grab(true, false).applyTo(innerPanel);        
     	        
-    	        WidgetFactory.createLabel(innerPanel, Messages.targetColumn);
+    	        Label theLabel = WidgetFactory.createLabel(innerPanel, Messages.targetColumn);
+    	        GridDataFactory.fillDefaults().align(GridData.BEGINNING, GridData.CENTER).applyTo(theLabel);
 
     	        this.targetColumnText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
     	        if( isEdit ) {
@@ -591,6 +592,7 @@ public class ColumnMaskingPanel extends DataRolePanel {
     	        
     	        Label label = WidgetFactory.createLabel(innerPanel, Messages.order);
     	        label.setToolTipText(Messages.orderTooltip);
+    	        GridDataFactory.fillDefaults().align(GridData.BEGINNING, GridData.CENTER).applyTo(label);
 
     	        this.orderText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 2, StringUtilities.EMPTY_STRING);
     	        if( isEdit ) {
@@ -699,7 +701,7 @@ public class ColumnMaskingPanel extends DataRolePanel {
             targetColumn = targetColumnText.getText();
             if( targetColumn == null || targetColumn.trim().isEmpty() ) {
             	enable = false;
-        		setErrorMessage(Messages.targetColumnIsUndefined);
+        		setErrorMessage(Messages.targetIsUndefined);
         		return;
             }
             
@@ -734,8 +736,8 @@ public class ColumnMaskingPanel extends DataRolePanel {
 
         public SelectColumnDialog( Shell parent ) {
             super(parent, getPermissionTreeProvider(), getPermissionTreeProvider());
-            setTitle(Messages.columnSelection);
-            setMessage(Messages.selectColumnForCondition);
+            setTitle(Messages.targetSelection);
+            setMessage(Messages.selectTargetForCondition);
             setInput(getWizard().getTempContainer());
             setAllowMultiple(false);
         }
