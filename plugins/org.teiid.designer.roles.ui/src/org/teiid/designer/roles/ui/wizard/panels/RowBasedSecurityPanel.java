@@ -516,7 +516,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     	        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(innerPanel);
     	        GridDataFactory.fillDefaults().grab(true, false).applyTo(innerPanel);        
     	        
-    	        WidgetFactory.createLabel(innerPanel, Messages.target);
+    	        Label theLabel = WidgetFactory.createLabel(innerPanel, Messages.target);
+    	        GridDataFactory.fillDefaults().align(GridData.BEGINNING, GridData.CENTER).applyTo(theLabel);
 
     	        this.targetTableOrViewText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
     	        if( isEdit ) {
@@ -551,9 +552,6 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 					}
 				});
     	        button.setEnabled(!isEdit);
-    	        
-    	        Label label = WidgetFactory.createLabel(innerPanel, Messages.constraint);
-    	        label.setToolTipText(Messages.constraintButtonTooltip);
 
     	        this.constraintButton = new Button(innerPanel, SWT.CHECK);
     	        this.constraintButton.setText(Messages.constraint);
@@ -562,6 +560,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     	        } else {
     	        	this.constraintButton.setSelection(true);
     	        }
+    	        this.constraintButton.setToolTipText(Messages.constraintButtonTooltip);
     	        
     	        this.constraintButton.addSelectionListener(new SelectionListener() {
 					
@@ -662,7 +661,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             targetTableOrView = targetTableOrViewText.getText();
             if( targetTableOrView == null || targetTableOrView.trim().isEmpty() ) {
             	enable = false;
-        		setErrorMessage(Messages.targetColumnIsUndefined);
+        		setErrorMessage(Messages.targetIsUndefined);
         		return;
             }
         	
@@ -683,8 +682,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 
         public SelectTableOrViewDialog( Shell parent ) {
             super(parent, getPermissionTreeProvider(), getPermissionTreeProvider());
-            setTitle(Messages.columnSelection);
-            setMessage(Messages.selectColumnForCondition);
+            setTitle(Messages.targetSelection);
+            setMessage(Messages.selectTargetForCondition);
             setInput(getWizard().getTempContainer());
             setAllowMultiple(false);
         }
@@ -701,6 +700,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             this.nameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
             GridData data = new GridData(GridData.FILL_HORIZONTAL);
             data.heightHint = convertHeightInCharsToPixels(1);
+            data.verticalAlignment=GridData.CENTER;
             this.nameText.setLayoutData(data);
             this.nameText.setEditable(false);
             this.nameText.setBackground(panel.getBackground());

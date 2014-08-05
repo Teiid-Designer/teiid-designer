@@ -33,6 +33,9 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.RolesUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -45,8 +48,8 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
     private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
     private static final char B_SLASH = '/';
     
-    private Text columnNameText;
-    private String columnName;
+    private Text targetNameText;
+    private String targetName;
     private MessageLabel statusMessageLabel;
     private Object input;
     private ILabelProvider labelProvider;
@@ -60,8 +63,8 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
         this.labelProvider = labelProvider;
         this.contentProvider = contentProvider;
         this.input = input;
-        setTitle(Messages.columnSelection);
-        setMessage(Messages.selectColumnForCondition);
+        setTitle(Messages.targetSelection);
+        setMessage(Messages.selectTargetForCondition);
         setInput(input);
         setAllowMultiple(false);
     }
@@ -73,15 +76,16 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
         GridData panelData = new GridData(GridData.FILL_BOTH);
         panel.setLayoutData(panelData);
 
-        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Column", GridData.FILL_HORIZONTAL, 1, 2); //$NON-NLS-1$
+        Group selectedGroup = WidgetFactory.createGroup(panel, "Selected Target", GridData.FILL_HORIZONTAL, 1, 2); //$NON-NLS-1$
 
-        this.columnNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
+        this.targetNameText = WidgetFactory.createTextField(selectedGroup, GridData.FILL_HORIZONTAL, Messages.undefined);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         data.heightHint = convertHeightInCharsToPixels(1);
-        this.columnNameText.setLayoutData(data);
-        this.columnNameText.setEditable(false);
-        this.columnNameText.setBackground(panel.getBackground());
-        this.columnNameText.setText(Messages.undefined);
+        data.verticalAlignment=GridData.CENTER;
+        this.targetNameText.setLayoutData(data);
+        this.targetNameText.setEditable(false);
+        this.targetNameText.setBackground(panel.getBackground());
+        this.targetNameText.setText(Messages.undefined);
 
         super.createDialogArea(panel);
 
@@ -133,28 +137,28 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
     public void selectionChanged( SelectionChangedEvent event ) {
         TreeSelection selection = (TreeSelection)event.getSelection();
         if (selection.isEmpty()) {
-            this.columnNameText.setText(Messages.undefined);
-            this.columnName = null;
+            this.targetNameText.setText(Messages.undefined);
+            this.targetName = null;
             updateOnSelection(null);
             return;
         }
 
         Object firstElement = selection.getFirstElement();
-
-        if (!(firstElement instanceof Column)) {
-            this.columnNameText.setText(Messages.undefined);
-            this.columnName = null;
+        
+        if (!(firstElement instanceof Table || firstElement instanceof View || firstElement instanceof Procedure )) {
+            this.targetNameText.setText(Messages.undefined);
+            this.targetName = null;
         } else {
-            Column column = (Column)selection.getFirstElement();
-            columnName = getFullColumnName(column);
-            this.columnNameText.setText(column.getName());
+            EObject target = (EObject)selection.getFirstElement();
+            targetName = getFullName(target);
+            this.targetNameText.setText(ModelerCore.getModelEditor().getName(target));
         }
 
         updateOnSelection(firstElement);
     }
     
-    private String getFullColumnName(Column column) {
-    	String targetName = getResourceName(column.eResource()) + '/' + ModelerCore.getModelEditor().getModelRelativePath(column);
+    private String getFullName(EObject target) {
+    	String targetName = getResourceName(target.eResource()) + '/' + ModelerCore.getModelEditor().getModelRelativePath(target);
 
         targetName = targetName.replace(B_SLASH, DELIM);
         
@@ -202,7 +206,7 @@ public class SelectObjectDialog extends ElementTreeSelectionDialog implements IS
      * @return the TeiidTranslator. may return null
      */
     public String getColumnName() {
-        return this.columnName;
+        return this.targetName;
     }
 
 }

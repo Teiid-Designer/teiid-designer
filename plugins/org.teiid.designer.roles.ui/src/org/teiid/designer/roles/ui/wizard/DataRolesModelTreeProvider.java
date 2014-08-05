@@ -560,7 +560,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 	}
 	
 	public boolean allowsCondition(Object target) {
-		return (target instanceof Table || target instanceof View || target instanceof Procedure);
+		return (target instanceof Table || target instanceof View || target instanceof Procedure || target instanceof Column);
 	}
 	
 	public String getSecurityDialogMessage(Object target) {
