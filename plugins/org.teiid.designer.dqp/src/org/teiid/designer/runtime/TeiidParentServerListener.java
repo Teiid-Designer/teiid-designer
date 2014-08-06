@@ -15,6 +15,7 @@ import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 
 /**
  * Singleton listener for monitoring both the {@link IServer}s'
@@ -77,8 +78,14 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                  * and references in editor will thus hang on to the old defunct version.
                  *
                  * Only update the settings which may have been queried from the server.
+                 *
+                 * The admin settings were changed in version 8+ to use the admin connection
+                 * of the jboss parent server. Thus, version 7 should not try and change these
+                 * while version 8+ should.
                  */
-                teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+                if (teiidServer.getServerVersion().isGreaterThan(TeiidServerVersion.DEFAULT_TEIID_7_SERVER)) {
+                    teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+                }
                 teiidServer.getTeiidJdbcInfo().setPort(newTeiidServer.getTeiidJdbcInfo().getPort());
 
                 teiidServer.notifyRefresh();
