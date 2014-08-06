@@ -279,6 +279,9 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             public void run() {
                 progressBar.dispose();
 
+                if (form.getBody().isDisposed())
+                    return;
+
                 contentsPanel = toolkit.createComposite(form.getBody());
                 GridLayoutFactory.fillDefaults().numColumns(1).spacing(10, 0).applyTo(contentsPanel);
                 GridDataFactory.fillDefaults().grab(true, true).applyTo(contentsPanel);
