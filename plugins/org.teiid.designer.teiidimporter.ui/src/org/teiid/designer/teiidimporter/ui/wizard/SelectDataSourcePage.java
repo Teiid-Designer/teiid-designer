@@ -60,6 +60,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     	BUILTIN_TYPES.add("modeshape"); //$NON-NLS-1$
     	BUILTIN_TYPES.add("mongodb"); //$NON-NLS-1$
     	BUILTIN_TYPES.add("salesforce");  //$NON-NLS-1$
+    	BUILTIN_TYPES.add("solr");  //$NON-NLS-1$
     	BUILTIN_TYPES.add("teiid"); //$NON-NLS-1$
     	BUILTIN_TYPES.add("teiid-local"); //$NON-NLS-1$
     	BUILTIN_TYPES.add("webservice"); //$NON-NLS-1$
