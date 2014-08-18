@@ -748,7 +748,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         	// Use the importer to process the difference report, generating the model
             if (ddlImporter.getDifferenceReport() == null) return false;
 
-            final Exception[] saveException = new Exception[0];
+            final Exception[] saveException = new Exception[1];
             new ProgressMonitorDialog(shell).run(false, false, new IRunnableWithProgress() {
 
                 @Override

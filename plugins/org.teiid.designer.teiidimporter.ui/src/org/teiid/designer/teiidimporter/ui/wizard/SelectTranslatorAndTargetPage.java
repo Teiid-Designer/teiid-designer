@@ -9,13 +9,13 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -57,12 +57,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
-import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
-import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
@@ -361,18 +358,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
             }
         });
         
-        // Browse button for Model selection
-        browseButton = new Button(sourceGroup, SWT.PUSH);
-        gridData = new GridData();
-        browseButton.setLayoutData(gridData);
-        browseButton.setText(Messages.SelectTranslatorPage_Browse); 
-        browseButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleTargetModelBrowse();
-            }
-        });
-        
+        new Label(sourceGroup, SWT.NONE);  // For spacing
         new Label(sourceGroup, SWT.NONE);  // For spacing
         
         // Info area - shows model selection status
@@ -414,44 +400,7 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         
         validatePage();
     }
-    
-    /**
-     * Handler for choosing the Target Model
-     */
-    void handleTargetModelBrowse() {
-        final Object[] selections = WidgetUtil.
-                showWorkspaceObjectSelectionDialog(Messages.SelectTranslatorPage_SelectTargetModelTitle,
-                     Messages.SelectTranslatorPage_SelectTargetModelMsg,
-                     false,
-                     null,
-                     sourceModelFilter,
-                     new ModelResourceSelectionValidator(false),
-                     new ModelExplorerLabelProvider(),
-                     new ModelExplorerContentProvider() ); 
 
-        // Update importManager with selections
-        if (selections != null && selections.length == 1 && targetModelFileText != null) {
-            if( selections[0] instanceof IFile) {
-                IFile modelFile = (IFile)selections[0];
-                IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
-                String modelName = modelFile.getFullPath().lastSegment();
-                importManager.setTargetModelLocation(folderPath);
-                importManager.setTargetModelName(modelName);
-            }
-        }
-        
-        // Update UI widgets
-        if( this.importManager.getTargetModelName() != null ) {
-            this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
-            this.targetModelFileText.setText(this.importManager.getTargetModelName());
-        } else {
-            this.targetModelFileText.setText(StringUtilities.EMPTY_STRING);
-        }
-        
-        // Validate the page
-        validatePage();
-    }
-    
     // Handler for ModelText changes
     void handleTargetModelTextChanged() {
         if( !CoreStringUtil.isEmpty(this.targetModelFileText.getText()) ) {
@@ -548,8 +497,8 @@ public class SelectTranslatorAndTargetPage extends AbstractWizardPage implements
         }
         
         // Valid target model - now compare it's connection profile vs the selected profile
-        if( importManager.targetModelExists() && !importManager.isTargetModelConnectionProfileCompatible() ) {
-            setThisPageComplete(Messages.SelectTranslatorPage_ConnProfileInTargetIncompatible, ERROR);
+        if( importManager.targetModelExists() ) {
+        	setThisPageComplete(Messages.bind(Messages.SelectTranslatorPage_ModelExistsWithThisNameMsg, fileText), ERROR);
             return false;
         }
 
