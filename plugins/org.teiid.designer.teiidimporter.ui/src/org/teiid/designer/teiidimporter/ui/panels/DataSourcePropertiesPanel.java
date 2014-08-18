@@ -12,8 +12,11 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -93,17 +96,15 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         this.isReadOnly = isReadOnly;
         this.dataSourceOrDriverName = initialSelection;
         this.dataSourceMgr = new DataSourceManager(this.teiidImportServer);
-        
-        Composite outerPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 2);
-        GridLayout bpGL = new GridLayout(2, false);
-        bpGL.marginHeight = 1;
-        outerPanel.setLayout(bpGL);        
+         
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(2, 1).applyTo(this);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(this);
         
         if(!isReadOnly) {
-            createButtonsPanel(outerPanel);
+            createButtonsPanel(this);
         }
 
-        createTablePanel(outerPanel,isReadOnly);
+        createTablePanel(this,isReadOnly);
     }
     
     /*
@@ -217,6 +218,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         table.setLayoutData(gridData);
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
+        ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
         
         // create columns
         TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);

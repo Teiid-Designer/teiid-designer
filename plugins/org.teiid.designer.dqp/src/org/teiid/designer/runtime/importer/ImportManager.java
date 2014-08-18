@@ -227,7 +227,7 @@ public final class ImportManager implements IExecutionConfigurationListener {
                 resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbInactiveStateError, vdbName));
             }
         } else {
-            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, vdbName, timeoutSec));
+            resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingNotCompleteError, timeoutSec));
         }
 
         return resultStatus;

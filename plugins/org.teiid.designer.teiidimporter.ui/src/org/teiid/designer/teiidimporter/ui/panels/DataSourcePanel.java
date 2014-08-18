@@ -12,9 +12,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -63,7 +66,7 @@ public final class DataSourcePanel extends Composite implements UiConstants {
     private DataSourceManager dataSourceManager;
     private List<DataSourceItem> dataSourceObjList = new ArrayList<DataSourceItem>();
     private int visibleTableRows = 4;
-    private final int GROUP_HEIGHT_160 = 160;
+    private final int GROUP_HEIGHT_160 = 120;
     
     private List<DataSourcePanelListener> listeners = new ArrayList<DataSourcePanelListener>();
 
@@ -87,14 +90,14 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         setLayout(new GridLayout());
         setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        Composite outerPanel = new Composite(parent, SWT.NONE);
-        outerPanel.setLayout(new GridLayout(2, false));
-        outerPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).applyTo(this);
 
-        // Create the Buttons panel
-        createButtonsPanel(outerPanel);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(this);
         
-        this.dataSourcesViewer = new TableViewer(outerPanel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        // Create the Buttons panel
+        createButtonsPanel(this);
+        
+        this.dataSourcesViewer = new TableViewer(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
         ColumnViewerToolTipSupport.enableFor(this.dataSourcesViewer);
         this.dataSourcesViewer.setContentProvider(new IStructuredContentProvider() {
             /**

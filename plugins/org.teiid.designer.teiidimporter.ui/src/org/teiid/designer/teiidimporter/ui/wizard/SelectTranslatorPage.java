@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -22,6 +23,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
@@ -55,7 +57,7 @@ import org.teiid.designer.ui.viewsupport.TranslatorPropertyLabelProvider;
 public class SelectTranslatorPage extends AbstractWizardPage implements UiConstants {
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
-    private static final String SERVER_PREFIX = "Server: "; //$NON-NLS-1$
+    private static final String SERVER_PREFIX = "Default Server: "; //$NON-NLS-1$
 
     private TeiidImportManager importManager;
 
@@ -97,7 +99,10 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         } catch (Exception ex) {
             serverString = "Unknown"; //$NON-NLS-1$
         }
-        serverNameLabel.setText(SERVER_PREFIX+serverString);
+        serverNameLabel.setText(SERVER_PREFIX + serverString);
+        serverNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        Font bannerFont = JFaceResources.getBannerFont();
+        serverNameLabel.setFont(bannerFont);
 
         // Group for selection of the Connections
         createDataSourceAndTranslatorPanel(mainPanel);

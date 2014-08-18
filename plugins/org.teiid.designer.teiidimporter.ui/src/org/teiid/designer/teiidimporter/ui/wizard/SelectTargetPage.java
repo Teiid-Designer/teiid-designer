@@ -1,6 +1,7 @@
 package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.Collection;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -11,6 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -19,6 +21,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -60,7 +63,7 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 public class SelectTargetPage extends AbstractWizardPage implements UiConstants {
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
-    private static final String SERVER_PREFIX = "Server: "; //$NON-NLS-1$
+    private static final String SERVER_PREFIX = "Default Server: "; //$NON-NLS-1$
 
     private TeiidImportManager importManager;
 
@@ -93,7 +96,10 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         } catch (Exception ex) {
             serverString = "Unknown"; //$NON-NLS-1$
         }
-        serverNameLabel.setText(SERVER_PREFIX+serverString);
+        serverNameLabel.setText(SERVER_PREFIX + serverString);
+        serverNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        Font bannerFont = JFaceResources.getBannerFont();
+        serverNameLabel.setFont(bannerFont);
                 
         // Group for Selection of target Source Model
         createTargetModelGroup(pnl);

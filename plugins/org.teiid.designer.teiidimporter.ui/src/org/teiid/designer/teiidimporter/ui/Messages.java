@@ -88,6 +88,7 @@ public class Messages extends NLS {
 
     public static String selectDataSourcePage_InvalidServerMsg;
     public static String selectDataSourcePage_title;
+    public static String selectDataSourcePage_help;
     public static String selectDataSourcePage_dataSourceGroupText;
     public static String selectDataSourcePage_dataSourcePropertiesGroupText;
     public static String selectDataSourcePage_NoSourceSelectedMsg;

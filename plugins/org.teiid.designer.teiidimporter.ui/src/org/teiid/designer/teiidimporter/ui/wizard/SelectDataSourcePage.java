@@ -10,19 +10,25 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePanel;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePanelListener;
 import org.teiid.designer.teiidimporter.ui.panels.DataSourcePropertiesPanel;
+//import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
@@ -38,7 +44,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     implements UiConstants, DataSourcePanelListener {
 
     private static final String EMPTY_STR = ""; //$NON-NLS-1$
-    private static final String SERVER_PREFIX = "Server: "; //$NON-NLS-1$
+    private static final String SERVER_PREFIX = "Default Server: "; //$NON-NLS-1$
     
     // Source types that cannot be imported with this wizard
     private static final List<String> DISALLOWED_SOURCES;
@@ -94,6 +100,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
             return;
         }
         
+        
         Label serverNameLabel = new Label(pnl,SWT.NONE);
         String serverString;
         try {
@@ -101,7 +108,25 @@ public class SelectDataSourcePage extends AbstractWizardPage
         } catch (Exception ex) {
             serverString = "Unknown"; //$NON-NLS-1$
         }
-        serverNameLabel.setText(SERVER_PREFIX+serverString);
+        serverNameLabel.setText(SERVER_PREFIX + serverString);
+        serverNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        Font bannerFont = JFaceResources.getBannerFont();
+        serverNameLabel.setFont(bannerFont);
+        
+        // Info area - shows model selection status
+        Group infoGroup = WidgetFactory.createGroup(pnl, "Importer Description", SWT.NONE | SWT.BORDER_DASH,2);
+        GridLayoutFactory.fillDefaults().margins(3, 2).applyTo(infoGroup);
+        infoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        // Text box for info message
+        Text infoText = new Text(infoGroup, SWT.WRAP | SWT.READ_ONLY);
+        infoText.setText(Messages.selectDataSourcePage_help);
+        infoText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        infoText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+        gd.heightHint = 39;
+        gd.horizontalSpan=1;
+        infoText.setLayoutData(gd);
                 
         // Create Panel containing Connection name and translator combo
         createDataSourcesGroup(pnl);
@@ -111,6 +136,8 @@ public class SelectDataSourcePage extends AbstractWizardPage
                 
         this.dataSourcePanel.addListener(this.propertiesPanel);
         this.dataSourcePanel.addListener(this);
+        
+        //LayoutDebugger.debugLayout(pnl);
         
         // Validate the page
         validatePage();
@@ -126,8 +153,6 @@ public class SelectDataSourcePage extends AbstractWizardPage
         
         int visibleRows = 5;
         this.dataSourcePanel = new DataSourcePanel(dataSourcesGroup, visibleRows, importManager);
-        this.dataSourcePanel.setLayout(new GridLayout(1, false));
-        this.dataSourcePanel.setLayoutData(new GridData(SWT.BEGINNING,SWT.BEGINNING,true,true));
     }
     
     /*
@@ -139,10 +164,6 @@ public class SelectDataSourcePage extends AbstractWizardPage
         dsPropertiesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         this.propertiesPanel = new DataSourcePropertiesPanel(dsPropertiesGroup,importManager,true,false,null);
-        this.propertiesPanel.setLayout(new GridLayout(1, false));
-        final GridData gData = new GridData(GridData.BEGINNING);
-        gData.horizontalSpan = 1;
-        this.propertiesPanel.setLayoutData(gData);
     }
     
     private String getSelectedDataSourceName() {
