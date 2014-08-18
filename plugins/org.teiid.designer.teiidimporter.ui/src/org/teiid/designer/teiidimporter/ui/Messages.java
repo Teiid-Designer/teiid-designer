@@ -106,12 +106,9 @@ public class Messages extends NLS {
     public static String SelectTargetPage_ModelStatus;
     public static String SelectTargetPage_SrcModelUndefined;
     public static String SelectTargetPage_SrcModelSelected;
-    public static String SelectTargetPage_SelectTargetModelTitle;
-    public static String SelectTargetPage_SelectTargetModelMsg;
     public static String SelectTargetPage_NoOpenProjMsg;
     public static String SelectTargetPage_SrcLocationNotSpecified;
-    public static String SelectTargetPage_ModelExistsWithThisNameButWrongTypeMsg;
-    public static String SelectTargetPage_ConnProfileInTargetIncompatible;
+    public static String SelectTargetPage_ModelExistsWithThisNameMsg;
     public static String SelectTranslatorPage_ConfirmDeleteTitle;
     public static String SelectTranslatorPage_ConfirmDeleteMsg;
     

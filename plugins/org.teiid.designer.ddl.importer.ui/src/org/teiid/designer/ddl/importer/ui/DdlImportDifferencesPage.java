@@ -320,8 +320,9 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         if(diffReport==null) {
         	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG);
         } else {
-        	// DifferenceReport has no operations
-        	if(!diffReport.hasOperations()) {
+        	if( importer.noDdlImported() ) {
+        		// do nothing
+        	} else if(!diffReport.hasOperations()) { // DifferenceReport has no operations
             	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG);
             // DifferenceReport has nothing selected
         	} else if(!diffReport.hasSelectedOperations()) {
@@ -340,7 +341,11 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         	setMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_COMPLETED_WITH_MESSAGES_MSG);
         // Set description to finish
         } else {
-        	setMessage(null);
+        	if( importer.noDdlImported() ) {
+        		setMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DDL_IMPORTED_MSG);
+        	} else {
+        		setMessage(null);
+        	}
             setDescription(DdlImporterUiI18n.DIFFERENCE_PAGE_DESCRIPTION);
         }
     }

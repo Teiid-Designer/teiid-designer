@@ -73,6 +73,7 @@ public class DdlImporter {
     private String ddlString;
     private IStatus importStatus;
     private boolean generateDefaultSQL;
+    private boolean noDdlImported;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
 
@@ -139,6 +140,12 @@ public class DdlImporter {
         AstNode rootNode = null;
         DdlParsers parsers = new DdlParsers();
         ddlString = builder.toString();
+        
+        if( CoreStringUtil.isEmpty(ddlString) ) {
+        	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
+        	this.noDdlImported = true;
+        }
+        
         try {
         	if(!CoreStringUtil.isEmpty(specifiedParser)) {
         		rootNode = parsers.parseUsing(ddlString,specifiedParser);
@@ -254,6 +261,13 @@ public class DdlImporter {
     public String getDdlString() {
     	return ddlString;
     }
+    
+    /**
+     * @return no DDL imported
+     */
+	public boolean noDdlImported() {
+    	return this.noDdlImported;
+	}
     
     /**
      * @return differenceReport
