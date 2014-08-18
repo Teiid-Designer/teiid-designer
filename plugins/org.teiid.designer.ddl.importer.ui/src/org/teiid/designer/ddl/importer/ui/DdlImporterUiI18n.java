@@ -47,6 +47,7 @@ class DdlImporterUiI18n {
 
     static final String DIFFERENCE_PAGE_TITLE = i18n("differencePage.title"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_DESCRIPTION = i18n("differencePage.description"); //$NON-NLS-1$
+    static final String DIFFERENCE_PAGE_NO_DDL_IMPORTED_MSG = i18n("differencePage.noDdlImportedMsg"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_IMPORT_TREE_GROUP_TITLE = i18n("differencePage.importTreeGroupTitle"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_IMPORT_MESSAGES_GROUP_TITLE = i18n("differencePage.importMessagesGroupTitle"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_PARSE_ERROR_DDL_GROUP_TITLE = i18n("differencePage.parseErrorDDLGroupTitle"); //$NON-NLS-1$

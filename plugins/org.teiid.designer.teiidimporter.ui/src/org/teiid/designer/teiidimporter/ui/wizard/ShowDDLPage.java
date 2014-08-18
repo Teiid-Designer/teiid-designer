@@ -329,12 +329,12 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
             } else {
                 errorMsg = Messages.ShowDDLPage_vdbDeploymentErrorMsg;
             }
-            setThisPageComplete(errorMsg, ERROR);
+            setThisPageComplete(errorMsg, WARNING);
             return false;
         }
         String ddlStr = getDDL();
         if(ddlStr==null || ddlStr.trim().equals(Messages.TeiidImportManager_getDdlErrorMsg)) {
-        	setThisPageComplete(Messages.TeiidImportManager_getDdlErrorMsg,ERROR);
+        	setThisPageComplete(Messages.TeiidImportManager_getDdlErrorMsg,WARNING);
         	return false;
         }
 

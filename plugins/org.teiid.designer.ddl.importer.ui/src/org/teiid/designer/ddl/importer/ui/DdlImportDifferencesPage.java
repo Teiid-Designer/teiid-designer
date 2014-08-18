@@ -222,7 +222,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
                     try {
-                        importer.importDdl(monitor, 100);
+                    	importer.importDdl(monitor, 100);
                     } catch (Exception ex) {
                         importException[0] = ex;
                     }
@@ -321,7 +321,9 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_REPORT_MSG);
         } else {
         	// DifferenceReport has no operations
-        	if(!diffReport.hasOperations()) {
+        	if( importer.noDdlImported() ) {
+        		// do nothing
+        	} else if(!diffReport.hasOperations()) {
             	errMessageBuffer.append(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DIFFERENCE_OPERATIONS_MSG);
             // DifferenceReport has nothing selected
         	} else if(!diffReport.hasSelectedOperations()) {
@@ -340,7 +342,11 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         	setMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_IMPORT_COMPLETED_WITH_MESSAGES_MSG);
         // Set description to finish
         } else {
-        	setMessage(null);
+        	if( importer.noDdlImported() ) {
+        		setMessage(DdlImporterUiI18n.DIFFERENCE_PAGE_NO_DDL_IMPORTED_MSG);
+        	} else {
+        		setMessage(null);
+        	}
             setDescription(DdlImporterUiI18n.DIFFERENCE_PAGE_DESCRIPTION);
         }
     }

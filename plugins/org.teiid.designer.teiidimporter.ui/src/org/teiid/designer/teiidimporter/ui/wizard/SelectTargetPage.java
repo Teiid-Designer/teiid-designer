@@ -45,12 +45,9 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
-import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
-import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
@@ -197,8 +194,8 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
 
         // Name Text box
         targetModelFileText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
-        String targetModelName = this.importManager.getTargetModelName();
-        if(targetModelName!=null) targetModelFileText.setText(targetModelName);
+//        String targetModelName = this.importManager.getTargetModelName();
+//        if(targetModelName!=null) targetModelFileText.setText(targetModelName);
         
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         targetModelFileText.setLayoutData(gridData);
@@ -209,18 +206,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             }
         });
         
-        // Browse button for Model selection
-        browseButton = new Button(sourceGroup, SWT.PUSH);
-        gridData = new GridData();
-        browseButton.setLayoutData(gridData);
-        browseButton.setText(Messages.SelectTargetPage_Browse); 
-        browseButton.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleTargetModelBrowse();
-            }
-        });
-        
+        new Label(sourceGroup, SWT.NONE);  // For spacing
         new Label(sourceGroup, SWT.NONE);  // For spacing
         
         // Info area - shows model selection status
@@ -260,43 +246,6 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             this.targetModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
-        validatePage();
-    }
-    
-    /**
-     * Handler for choosing the Target Model
-     */
-    void handleTargetModelBrowse() {
-        final Object[] selections = WidgetUtil.
-                showWorkspaceObjectSelectionDialog(Messages.SelectTargetPage_SelectTargetModelTitle,
-                     Messages.SelectTargetPage_SelectTargetModelMsg,
-                     false,
-                     null,
-                     sourceModelFilter,
-                     new ModelResourceSelectionValidator(false),
-                     new ModelExplorerLabelProvider(),
-                     new ModelExplorerContentProvider() ); 
-
-        // Update importManager with selections
-        if (selections != null && selections.length == 1 && targetModelFileText != null) {
-            if( selections[0] instanceof IFile) {
-                IFile modelFile = (IFile)selections[0];
-                IPath folderPath = modelFile.getFullPath().removeLastSegments(1);
-                String modelName = modelFile.getFullPath().lastSegment();
-                importManager.setTargetModelLocation(folderPath);
-                importManager.setTargetModelName(modelName);
-            }
-        }
-        
-        // Update UI widgets
-        if( this.importManager.getTargetModelName() != null ) {
-            this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
-            this.targetModelFileText.setText(this.importManager.getTargetModelName());
-        } else {
-            this.targetModelFileText.setText(StringConstants.EMPTY_STRING);
-        }
-        
-        // Validate the page
         validatePage();
     }
     
@@ -399,15 +348,9 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             return false;
         }
         
-        // Check if a model exists but wrong type
-        if(matchingModelOfWrongTypeExists(targetModelFileText.getText().trim())) {
-            setThisPageComplete(Messages.SelectTargetPage_ModelExistsWithThisNameButWrongTypeMsg, ERROR);
-            return false;
-        }
-        
         // Valid target model - now compare it's connection profile vs the selected profile
-        if( importManager.targetModelExists() && !importManager.isTargetModelConnectionProfileCompatible() ) {
-            setThisPageComplete(Messages.SelectTargetPage_ConnProfileInTargetIncompatible, ERROR);
+        if( importManager.targetModelExists() ) {
+            setThisPageComplete(Messages.bind(Messages.SelectTargetPage_ModelExistsWithThisNameMsg, fileText), ERROR);
             return false;
         }
 
