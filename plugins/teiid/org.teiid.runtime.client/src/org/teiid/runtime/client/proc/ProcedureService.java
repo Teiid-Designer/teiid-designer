@@ -296,7 +296,10 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
     	 List<String> tokens = new ArrayList<String>();
          List<ITeiidXmlColumnInfo> columnInfoList = xmlFileInfo.getColumnInfoList();
          
-         boolean isJson = xmlFileInfo.getResponseType().toUpperCase().equals(JSON);
+         boolean isJson = false;
+         if(xmlFileInfo.getResponseType()!=null && xmlFileInfo.getResponseType().toUpperCase().equals(JSON)) {
+        	 isJson = true;
+         }
          Map<String, Parameter> parameters = xmlFileInfo.getParameterMap();
 
          boolean isQueryParm = false;

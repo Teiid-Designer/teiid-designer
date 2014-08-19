@@ -92,7 +92,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 	 */
 	private List<TeiidXmlColumnInfo> columnInfoList;
 	
-	private Map<String, Object> parameterMap;
+	private Map<String, Object> parameterMap = new HashMap<String,Object>();
  	
 	private XmlElement rootNode;
 	
