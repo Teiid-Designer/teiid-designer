@@ -127,7 +127,7 @@
       <definition
           allowsConnections="true"
           description="Definition of the Teiid Database"
-          file="src/org/teiid/runtime/client/database/teiidDB.xmi"
+          file="teiidDB.xmi"
           product="Teiid"
           productDisplayString="%PRODUCT_DISPLAY_STRING"
           version="x.x.x"
