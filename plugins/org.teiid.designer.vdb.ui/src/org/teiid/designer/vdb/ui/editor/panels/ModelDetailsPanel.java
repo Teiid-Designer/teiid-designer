@@ -241,7 +241,7 @@ public class ModelDetailsPanel {
 			// Table containing Source  binding NAME, TRANSLATOR NAME, JNDI NAME
 			BINDING_TABLE : {
 		        // Create Table Viewer
-		        int tableStyle = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
+		        int tableStyle = SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
 		        bindingsViewer = new TableViewer(lowerPanel, tableStyle);
 
 		        Table table = bindingsViewer.getTable();
