@@ -50,7 +50,7 @@ public class CrudPanel extends DataRolePanel {
 	 */
 	@Override
 	void createControl() {
-        treeViewer = new TreeViewer(getPrimaryPanel(), SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        treeViewer = new TreeViewer(getPrimaryPanel(), SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
         Tree tree = treeViewer.getTree();
 
         final GridData gridData = new GridData(GridData.FILL_BOTH);
