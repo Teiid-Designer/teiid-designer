@@ -7,13 +7,15 @@
 */
 package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
-import org.eclipse.core.runtime.IPath;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
@@ -28,8 +30,9 @@ import org.teiid.designer.transformation.ui.UiConstants;
  */
 public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	
-	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
 	private static final String TEXT_SEGMENT = "text()"; //$NON-NLS-1$
+	private static final String AT_SIGN = "@"; //$NON-NLS-1$ 
+	private static final String DOT_DOT = ".."; //$NON-NLS-1$ 
 	
     /**
      * The unique column name (never <code>null</code> or empty).
@@ -55,17 +58,17 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
      */
-	private String defaultValue = StringUtilities.EMPTY_STRING;
+	private String defaultValue = StringConstants.EMPTY_STRING;
 	
 	 /**
      * The full xml path
      */
-	private IPath relativePath = EMPTY_PATH;
+	private String relativePath = StringConstants.EMPTY_STRING;
 	
 	 /**
      * The root xml path
      */
-	private IPath rootXmlPath = EMPTY_PATH;
+	private String rootXmlPath = StringConstants.EMPTY_STRING;
 	
 	 /**
      * The xml element
@@ -120,7 +123,7 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 		initNameSymbol(xmlAttribute.getName());
 		setRelativePathInternal(attribute);
 		this.datatype = datatype;
-		this.defaultValue = StringUtilities.EMPTY_STRING;
+		this.defaultValue = StringConstants.EMPTY_STRING;
 		validate();
 		initializing = false;
 	}
@@ -141,7 +144,7 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
         setRelativePathInternal(element);
 		initNameSymbol(element.getName());
 		this.datatype = datatype;
-		this.defaultValue = StringUtilities.EMPTY_STRING;
+		this.defaultValue = StringConstants.EMPTY_STRING;
 		validate();
 		initializing = false;
 	}
@@ -171,7 +174,7 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 		this.datatype = datatype;
         this.forOrdinality = ordinality;
         if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -274,7 +277,7 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	 */
 	public void setDefaultValue(String defaultValue) {
 		if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -286,18 +289,22 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	 * @param xmlPath the column xmlPath
 	 */
 	public void setRelativePath(String relativePath) {
-        this.relativePath = new Path(relativePath);
+        this.relativePath = relativePath;
         validate();
 	}
 	
 	
 	private void setRelativePathInternal(Object obj) {
-		IPath rootPath = this.rootXmlPath;
+		String rootPath = this.rootXmlPath;
 		if( obj instanceof XmlElement ) {
 			XmlElement element = (XmlElement)obj;
-			IPath fullPath = new Path(element.getFullPath());
-			IPath relativePath = fullPath.makeRelativeTo(rootPath).append(TEXT_SEGMENT);
-			setRelativePath(relativePath.toString());
+			String fullPath = element.getFullPath();
+			StringBuffer relativePathBuff = new StringBuffer(getRelativePath(fullPath,rootPath));
+			if(!relativePathBuff.toString().isEmpty() && !relativePathBuff.toString().endsWith(XmlElement.SEPARATOR)) {
+				relativePathBuff.append(XmlElement.SEPARATOR);
+			}
+			relativePathBuff.append(TEXT_SEGMENT);
+			setRelativePath(relativePathBuff.toString());
 			return;
 		}
 		
@@ -305,9 +312,13 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 			XmlAttribute attr = (XmlAttribute)obj;
 			XmlElement element = attr.getElement();
 			
-			IPath fullPath = new Path(element.getFullPath());
-			IPath relativePath = fullPath.makeRelativeTo(rootPath).append('@' + attr.getName());
-			setRelativePath(relativePath.toString());
+			String fullPath = element.getFullPath();			
+			StringBuffer relativePathBuff = new StringBuffer(getRelativePath(fullPath,rootPath));
+			if(!relativePathBuff.toString().isEmpty() && !relativePathBuff.toString().endsWith(XmlElement.SEPARATOR)) {
+				relativePathBuff.append(XmlElement.SEPARATOR);
+			}
+			relativePathBuff.append( AT_SIGN + attr.getName());
+			setRelativePath(relativePathBuff.toString());
 			return;
 		}
 	}
@@ -335,22 +346,21 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	 */
 	public String getFullXmlPath() {
 		// Return ROOT PATH + relative path
-		return this.rootXmlPath.append(this.relativePath).toString();
+		return this.rootXmlPath + XmlElement.SEPARATOR + this.relativePath;
 	}
 	
 	public void setRootPath(String thePath) {
 		boolean rootPathChanged = false;
-		IPath newRootPath = null;
+		String newRootPath = null;
 		
 		
 		if( thePath != null && thePath.length() > 0 ) {
-			newRootPath = new Path(thePath);
-
+			newRootPath = thePath;
 		} else {
-			newRootPath = EMPTY_PATH;
+			newRootPath = StringConstants.EMPTY_STRING;
 		}
 		
-		if( !this.rootXmlPath.equals(newRootPath) ) {
+		if( !this.rootXmlPath.equalsIgnoreCase(newRootPath) ) {
 			rootPathChanged = true;
 		}
 		
@@ -360,22 +370,20 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 				// Recalculate the relative path?
 				// ROOT PATH should always be VALID and be a part of the backing XmlElement.getFullXmlPath() value
 				if( isXmlAttribute() ) {
-					String lastSegment = this.relativePath.lastSegment().toString();
-					
-					IPath fullPath = new Path(this.xmlElement.getFullPath());
-					IPath relativePath = fullPath.makeRelativeTo(newRootPath).append(lastSegment);
-					setRelativePath(relativePath.toString());
+					String fullPath = this.xmlElement.getFullPath() + XmlElement.SEPARATOR + AT_SIGN + getXmlAttribute().getName();
+					String relativePath = getRelativePath(fullPath,newRootPath);
+					setRelativePath(relativePath);
 				} else {
-					IPath fullPath = new Path(this.xmlElement.getFullPath());
-					if( this.relativePath != null && !this.relativePath.isEmpty() && this.relativePath.lastSegment().equalsIgnoreCase(TEXT_SEGMENT)) {
-						IPath shortPath = fullPath;
-						IPath newFullPath = shortPath.append(TEXT_SEGMENT);
-						IPath relativePath = newFullPath.makeRelativeTo(newRootPath);
-						setRelativePath(relativePath.toString());
+					String fullPath = this.xmlElement.getFullPath();
+					if( this.relativePath != null && !this.relativePath.isEmpty() && TEXT_SEGMENT.equalsIgnoreCase(getLastSegment(this.relativePath))) {
+						String shortPath = fullPath;
+						String newFullPath = shortPath + XmlElement.SEPARATOR + TEXT_SEGMENT;
+						String relativePath = getRelativePath(newFullPath,newRootPath);
+						setRelativePath(relativePath);
 					} else {
-						IPath theFullPath = new Path(this.xmlElement.getFullPath());
-						IPath relativePath = theFullPath.makeRelativeTo(newRootPath);
-						setRelativePath(relativePath.toString());
+						String theFullPath = this.xmlElement.getFullPath();
+						String relativePath = getRelativePath(theFullPath,newRootPath);
+						setRelativePath(relativePath);
 					}
 				}
 			}
@@ -472,21 +480,23 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 	
 	private boolean fullPathExists() {
         // Validate that the relative path exists in the full xml path
-		IPath fullXmlElementPath = new Path(this.xmlElement.getFullPath());
+		String fullXmlElementPath = this.xmlElement.getFullPath();
 		boolean pathOK = true;
 		if( isXmlAttribute() ) {
-			IPath thisFullPath = new Path(getFullXmlPath());
-			IPath shortPath = thisFullPath.removeLastSegments(1);
-			int nSegs = shortPath.segmentCount();
-			if( fullXmlElementPath.matchingFirstSegments(shortPath) != nSegs ) {
+			String thisFullPath = getFullXmlPath();
+			thisFullPath = collapseDotDots(thisFullPath);
+			String shortPath = removeLastSegment(thisFullPath);
+			int nSegs = getPathSegments(shortPath).size();
+			if( getMatchingSegmentCount(fullXmlElementPath,shortPath) != nSegs ) {
 				pathOK = false;
 			}
 		} else {
-			IPath thisFullPath = new Path(getFullXmlPath());
-			if( thisFullPath.lastSegment().equalsIgnoreCase(TEXT_SEGMENT)) {
-				IPath shortPath = thisFullPath.removeLastSegments(1);
-				int nSegs = shortPath.segmentCount();
-				if( fullXmlElementPath.matchingFirstSegments(shortPath) != nSegs ) {
+			String thisFullPath = getFullXmlPath();
+			if( TEXT_SEGMENT.equalsIgnoreCase(getLastSegment(thisFullPath))) {
+				thisFullPath = collapseDotDots(thisFullPath);
+				String shortPath = removeLastSegment(thisFullPath);
+				int nSegs = getPathSegments(shortPath).size();
+				if( getMatchingSegmentCount(fullXmlElementPath,shortPath) != nSegs ) {
 					pathOK = false;
 				}
 			} else {
@@ -495,6 +505,137 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
 		}
 		
 		return pathOK;
+	}
+	
+	/**
+	 * Form the relative path from the full path and the root path
+	 * @param fullPath the full path
+	 * @param rootPath the root path
+	 * @return the relative path
+	 */
+	private String getRelativePath(String fullPath, String rootPath) {
+		StringBuffer resultBuff = new StringBuffer();
+		
+		// Get number of matching segments
+		int nMatch = getMatchingSegmentCount(fullPath,rootPath);
+		// Extra segments (may need '..')
+		int extraSegs = getPathSegments(rootPath).size()-nMatch;
+				
+		List<String> segments = getPathSegments(fullPath);
+		for(int i=0; i<segments.size(); i++) {
+			if(i>=nMatch) {
+				// add separator after first matching segment
+				if(i!=nMatch) resultBuff.append(XmlElement.SEPARATOR);
+				// add segment
+				resultBuff.append( segments.get(i) );
+			}
+		}
+		// Add ../ for extra segments
+		for(int i=0; i<extraSegs; i++) {
+			resultBuff.insert(0, DOT_DOT+XmlElement.SEPARATOR);
+		}
+		
+		return resultBuff.toString();
+	}
+	
+	/**
+	 * Remove the last segment from the supplied path
+	 * @param path the path
+	 * @return the path, minus last segment
+	 */
+	private String removeLastSegment(String path) {
+		StringBuffer resultBuff = new StringBuffer();
+		List<String> segments = getPathSegments(path);
+		for(int i=0; i<segments.size()-1; i++) {
+			resultBuff.append(XmlElement.SEPARATOR+segments.get(i));
+		}
+		return resultBuff.toString();
+	}
+
+	/**
+	 * Get the last segment of the supplied path
+	 * @param path the path
+	 * @return the last path segment
+	 */
+	private String getLastSegment(String path) {
+		String lastSegment = StringConstants.EMPTY_STRING;
+		List<String> segments = getPathSegments(path);
+		if(segments.size()>0) {
+			lastSegment = segments.get(segments.size()-1);
+		}
+		return lastSegment;
+	}
+	
+	/**
+	 * Get the list of path segments (separated by XmlElement.SEPARATOR)
+	 * @param path the path
+	 * @return the list of segments
+	 */
+	private List<String> getPathSegments(String path) {
+		List<String> segments = new ArrayList<String>();
+		StringTokenizer st = new StringTokenizer(path,XmlElement.SEPARATOR);
+		while(st.hasMoreTokens()) {
+			segments.add(st.nextToken());
+		}
+		return segments;
+	}
+	
+	/**
+	 * Get the number of segments of the two path strings that match
+	 * @param path1 the first path
+	 * @param path2 the second path
+	 * @return number of matching segments
+	 */
+	private int getMatchingSegmentCount(String path1, String path2) {
+		int matchingSegs = 0;
+		List<String> path1Segs = getPathSegments(path1);
+		List<String> path2Segs = getPathSegments(path2);
+		int path1Size = path1Segs.size();
+		int path2Size = path2Segs.size();
+		if(path1Size<=path2Size) {
+			for(int i=0; i<path1Segs.size(); i++) {
+				String path1Seg = path1Segs.get(i);
+				String path2Seg = path2Segs.get(i);
+				if(path1Seg!=null && path1Seg.equalsIgnoreCase(path2Seg)) {
+					matchingSegs++;
+				}
+			}
+		} else {
+			for(int i=0; i<path2Segs.size(); i++) {
+				String path1Seg = path1Segs.get(i);
+				String path2Seg = path2Segs.get(i);
+				if(path2Seg!=null && path2Seg.equalsIgnoreCase(path1Seg)) {
+					matchingSegs++;
+				}
+			}
+		}
+		return matchingSegs;
+	}
+	
+	/**
+	 * Removes .. in relative path by removing the .. and the segment preceding it.
+	 * Used to compare a relative path to full path in validation
+	 * @param originalStr the original string
+	 * @return the string after collapsing ..
+	 */
+	private String collapseDotDots(String originalStr) {
+		String theString = originalStr;
+		
+		while(theString.indexOf(XmlElement.SEPARATOR+DOT_DOT)!=-1) {
+			int dotdotIndex = theString.indexOf(XmlElement.SEPARATOR+DOT_DOT);
+			String leadingStr = theString.substring(0, dotdotIndex);
+			String trailingStr = theString.substring(dotdotIndex+3);
+
+			int lastDelim = leadingStr.lastIndexOf(XmlElement.SEPARATOR);
+			if(lastDelim!=-1) {
+				String newLeading = leadingStr.substring(0,lastDelim);
+				theString = newLeading+trailingStr;
+			} else {
+				theString = leadingStr+trailingStr;
+			}
+		}
+		
+		return theString;		
 	}
 	
     /**
