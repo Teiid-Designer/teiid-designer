@@ -164,6 +164,10 @@ public class SelectDataSourcePage extends AbstractWizardPage
         dsPropertiesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         this.propertiesPanel = new DataSourcePropertiesPanel(dsPropertiesGroup,importManager,true,false,null);
+        this.propertiesPanel.setLayout(new GridLayout(1, false));
+        final GridData gData = new GridData(GridData.BEGINNING);
+        gData.horizontalSpan = 1;
+        this.propertiesPanel.setLayoutData(gData);
     }
     
     private String getSelectedDataSourceName() {

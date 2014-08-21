@@ -96,15 +96,17 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         this.isReadOnly = isReadOnly;
         this.dataSourceOrDriverName = initialSelection;
         this.dataSourceMgr = new DataSourceManager(this.teiidImportServer);
-         
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(2, 1).applyTo(this);
-        GridDataFactory.fillDefaults().grab(true,  true).applyTo(this);
+        
+        Composite outerPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 2);
+        GridLayout bpGL = new GridLayout(2, false);
+        bpGL.marginHeight = 1;
+        outerPanel.setLayout(bpGL);        
         
         if(!isReadOnly) {
-            createButtonsPanel(this);
+            createButtonsPanel(outerPanel);
         }
 
-        createTablePanel(this,isReadOnly);
+        createTablePanel(outerPanel,isReadOnly);
     }
     
     /*

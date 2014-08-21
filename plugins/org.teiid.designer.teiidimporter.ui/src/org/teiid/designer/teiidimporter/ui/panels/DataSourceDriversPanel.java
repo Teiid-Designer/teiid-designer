@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -48,6 +49,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
 
@@ -83,13 +85,13 @@ public final class DataSourceDriversPanel extends Composite implements UiConstan
         setLayout(new GridLayout());
         setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        Composite outerPanel = new Composite(parent, SWT.NONE);
-        outerPanel.setLayout(new GridLayout(1, false));
-        outerPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//        Composite outerPanel = new Composite(parent, SWT.NONE);
+        this.setLayout(new GridLayout(1, false));
+        this.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
-        createAddHyperlink(outerPanel);
+        createAddHyperlink(this);
         
-        this.driversViewer = new TableViewer(outerPanel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        this.driversViewer = new TableViewer(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
         
         ColumnViewerToolTipSupport.enableFor(this.driversViewer);
         this.driversViewer.setContentProvider(new IStructuredContentProvider() {
