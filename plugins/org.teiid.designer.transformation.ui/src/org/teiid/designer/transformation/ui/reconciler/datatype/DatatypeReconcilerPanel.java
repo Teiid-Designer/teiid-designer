@@ -247,7 +247,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         }
         
         BINDING_TABLE : {
-	    	table = new Table(tablePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+        	this.bindingTableViewer = new TableViewer(tablePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        	table = this.bindingTableViewer.getTable();
 	        table.setHeaderVisible(true);
 	        table.setLinesVisible(true);
 	        table.setLayout(new TableLayout());
@@ -255,7 +256,6 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	    	gd.heightHint = 200;
 	    	table.setLayoutData(gd);
 	
-	        this.bindingTableViewer = new TableViewer(table);
 	        this.bindingTableViewer.getControl().setLayoutData(gd);
 	        
 	        this.bindingContentProvider = new BindingContentProvider();
