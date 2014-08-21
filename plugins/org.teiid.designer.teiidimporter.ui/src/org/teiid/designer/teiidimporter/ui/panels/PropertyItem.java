@@ -18,6 +18,15 @@ public class PropertyItem extends Object implements Serializable {
     @SuppressWarnings( "javadoc" )
     public static final String PASSWORD_PROP_DISPLAYNAME = "password";  //$NON-NLS-1$
 
+    @SuppressWarnings( "javadoc" )
+    private static final String PASSWORD_PROP_NAME = "password";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    private static final String AUTH_PASSWORD_PROP_NAME = "AuthPassword";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    private static final String RECOVERY_PASSWORD_PROP_NAME = "recovery-password";  //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    private static final String LDAP_PASSWORD_PROP_NAME = "LdapAdminUserPassword";  //$NON-NLS-1$
+    
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String displayName;
@@ -145,6 +154,23 @@ public class PropertyItem extends Object implements Serializable {
 	 */
 	public void setMasked(boolean isMasked) {
 		this.isMasked = isMasked;
+	}
+	
+	/**
+     * Determine if property name indicates that it is a password
+     * @return 'true' if password name, 'false' if not.
+	 */
+	public boolean isPassword( ) {
+		boolean isPassword = false;
+		String name = getName();
+		if(name!=null && 
+				name.equalsIgnoreCase(PASSWORD_PROP_NAME) ||
+				name.equalsIgnoreCase(AUTH_PASSWORD_PROP_NAME) ||
+				name.equalsIgnoreCase(RECOVERY_PASSWORD_PROP_NAME) ||
+				name.equalsIgnoreCase(LDAP_PASSWORD_PROP_NAME) ) {
+			isPassword = true;
+		}
+		return isPassword;
 	}
 	
 	/**

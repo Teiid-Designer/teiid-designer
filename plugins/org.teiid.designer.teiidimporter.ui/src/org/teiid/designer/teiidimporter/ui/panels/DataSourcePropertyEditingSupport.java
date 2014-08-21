@@ -87,8 +87,7 @@ public class DataSourcePropertyEditingSupport extends EditingSupport {
 
         if (this.allowedValues == null) {
             PropertyItem pItem = (PropertyItem)element;
-            boolean isPassword = pItem.getDisplayName().equalsIgnoreCase(PropertyItem.PASSWORD_PROP_DISPLAYNAME);
-            if(isPassword) {
+            if(pItem.isPassword()) {
                 this.currentEditor = new TextCellEditor((Composite)getViewer().getControl(), SWT.SINGLE | SWT.PASSWORD);
             } else {
                 this.currentEditor = new TextCellEditor((Composite)getViewer().getControl(), SWT.SINGLE);
