@@ -722,7 +722,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
                 return property.getDisplayName();
             } else {
                 String value = property.getValue();
-                if((property.isMasked() || property.getDisplayName().equalsIgnoreCase(PropertyItem.PASSWORD_PROP_DISPLAYNAME)) && !CoreStringUtil.isEmpty(value)) {
+                if((property.isMasked() || property.isPassword()) && !CoreStringUtil.isEmpty(value)) {
                     return "*****"; //$NON-NLS-1$
                 }
                 return value;
