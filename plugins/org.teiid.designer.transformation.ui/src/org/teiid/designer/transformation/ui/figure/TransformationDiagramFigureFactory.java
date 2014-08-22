@@ -17,6 +17,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
 import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.figure.AbstractDiagramFigureFactory;
+import org.teiid.designer.diagram.ui.figure.DiagramFigure;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.diagram.ui.notation.NotationFigureGenerator;
 import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
@@ -109,6 +110,16 @@ public class TransformationDiagramFigureFactory extends AbstractDiagramFigureFac
                 // Now let's find out if this is a union query
                 if( tNode.isUnion() ) {
                     ((TransformationFigure)newFigure).setSubscript("u"); //$NON-NLS-1$
+                }
+                
+                // Need to notify t-objects to update their error/warning status
+                if( newFigure != null && modelObject instanceof DiagramModelNode ) {
+                    DiagramModelNode node = (DiagramModelNode)modelObject;
+                    ((DiagramFigure)newFigure).setDiagramModelNode(node);
+                    if( node.hasErrors())
+                        ((DiagramFigure)newFigure).updateForError(true);
+                    else if( node.hasWarnings() )
+                        ((DiagramFigure)newFigure).updateForWarning(true);
                 }
             } break;
             

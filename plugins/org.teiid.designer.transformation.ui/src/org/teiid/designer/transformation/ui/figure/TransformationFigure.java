@@ -8,6 +8,8 @@
 package org.teiid.designer.transformation.ui.figure;
 
 import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
@@ -16,6 +18,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.graphics.Font;
+import org.teiid.designer.diagram.ui.DiagramUiPlugin;
 import org.teiid.designer.diagram.ui.figure.AbstractDiagramFigure;
 import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 import org.teiid.designer.diagram.ui.util.colors.ColorPalette;
@@ -37,13 +40,16 @@ import org.teiid.designer.transformation.ui.model.TransformationNode;
  */
 public class TransformationFigure extends AbstractDiagramFigure {
 //	private static final Font tFont = new Font(null, "Comic Sans MS", 16, 3); //$NON-NLS-1$
-//    private Polygon transformOutline;
+
     private ImageFigure transformationIcon;
-//    private Label nameLabel;
+
     private Label subscript = new Label("u"); //$NON-NLS-1$
     private TransformationNode tNode = null;
+    private ImageFigure errorIcon;
+    private ImageFigure warningIcon;
     
-//    private PointList transformPoints = new PointList();
+    private int status = IStatus.OK;
+    
     
     /**
      * 
@@ -73,33 +79,9 @@ public class TransformationFigure extends AbstractDiagramFigure {
         }
         this.add(transformationIcon);
         transformationIcon.setSize(transformationIcon.getPreferredSize());
-//        transformOutline = new Polygon();
-//        transformPoints.addPoint(0, 20);
-//        transformPoints.addPoint(20, 0);
-//        transformPoints.addPoint(40, 20);
-//        transformPoints.addPoint(20, 40);
-//        transformPoints.addPoint(0, 20);
-//        transformOutline.setPoints(transformPoints);
-//
-//        this.add(transformOutline);
 
-//        transformOutline.setLineWidth(2);
-//        transformOutline.setForegroundColor(ColorConstants.darkBlue);
-//        transformOutline.setBackgroundColor(getColor(ColorPalette.SECONDARY_BKGD_COLOR_ID));
-        
-//        if( name != null ) {
-//
-//            nameLabel = new Label(name);
-//            nameLabel.setFont(tFont);
-//            this.add(nameLabel);
-//
-//            nameLabel.setForegroundColor(ColorConstants.black);
-//            nameLabel.setBackgroundColor(this.getBackgroundColor());
-//            setLabelSize(nameLabel);
-//        }
         if( subscript != null ) {
             subscript.setFont(DiagramUiUtilities.getToolTipFont());
-//            this.add(subscript);
             subscript.setForegroundColor(ColorConstants.black);
             subscript.setBackgroundColor(this.getBackgroundColor());
             setLabelSize(subscript);
@@ -138,11 +120,6 @@ public class TransformationFigure extends AbstractDiagramFigure {
         int centerX = newSize.width/2;
         int centerY = newSize.height/2;
         
-//        if( nameLabel != null ) {
-//            nameLabel.setLocation( 
-//                new Point(centerX - nameLabel.getBounds().width/2,
-//                          centerY - nameLabel.getBounds().height/2) );
-//        }
         if( this.getChildren().contains(subscript)) {
             if( isOnDependencyDiagram() ) {
                 subscript.setLocation( new Point(centerX + 3, centerY - 2) );
@@ -151,23 +128,12 @@ public class TransformationFigure extends AbstractDiagramFigure {
             }
             
         }
-//                new Point(8 + centerX - nameLabel.getBounds().width/2,
-//                          12 + centerY - nameLabel.getBounds().height/2) );
 
     }
     
     @Override
     public void updateForSize(Dimension size){
-        
-//        int thisHeight = size.height;
-//        int thisWidth = size.width;
-//        replacePoint( 0, 0, thisHeight/2);
-//        replacePoint( 1, thisWidth/2, 0);
-//        replacePoint( 2, thisWidth, thisHeight/2);
-//        replacePoint( 3, thisWidth/2, thisHeight);
-//        replacePoint( 4, 0, thisHeight/2);
-//        transformOutline.setPoints(transformPoints);
-        
+
         this.layoutThisFigure(size);
         
         this.repaint();
@@ -182,16 +148,13 @@ public class TransformationFigure extends AbstractDiagramFigure {
        
     }
     
-//    private void replacePoint(int index, int newX, int newY ) {
-//        transformPoints.setPoint(new Point(newX, newY), index);
-//    }
     /** 
      * @see org.eclipse.draw2d.IFigure#getToolTip()
      * @since 4.2
      */
     @Override
     public IFigure getToolTip() {
-        List toolTips = tNode.getToolTipStrings();
+        List<String> toolTips = tNode.getToolTipStrings();
         if( toolTips != null && !toolTips.isEmpty() )
             super.setToolTip(super.createToolTip(toolTips));
         
@@ -229,6 +192,88 @@ public class TransformationFigure extends AbstractDiagramFigure {
         }
         
         return false;
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForError(boolean)
+     */
+    @Override
+    public void updateForError(boolean hasErrors) {
+        if( hasErrors ) {
+            if( errorIcon == null ) {
+            	updateTransformationIcon(IStatus.ERROR);
+            	
+                errorIcon = new ImageFigure(DiagramUiPlugin.getDefault().getImage(PluginConstants.Images.ERROR_ICON));
+                if( errorIcon != null ) {
+                    this.add(errorIcon);
+                    int centerX = this.getBounds().width/2;
+                    int centerY = this.getBounds().height/2;
+                    
+                    if( isOnDependencyDiagram() ) {
+                    	errorIcon.setLocation( new Point(centerX - 11, centerY -2 ) );
+                    } else {
+                    	errorIcon.setLocation( new Point(centerX - 7, centerY) );
+                    }
+                    errorIcon.setSize(errorIcon.getPreferredSize());
+                }
+            }
+            status = IStatus.ERROR;
+        } else if( errorIcon != null ) {
+        	updateTransformationIcon(IStatus.OK);
+            this.remove(errorIcon);
+            errorIcon = null;
+            status = IStatus.OK;
+        }
+    }
+    
+    /*
+     *  (non-Javadoc)
+     * @See org.teiid.designer.diagram.ui.figure.DiagramFigure#updateForWarning(boolean)
+     */
+    @Override
+    public void updateForWarning(boolean hasWarnings) {
+        if( hasWarnings ) {
+            if( warningIcon == null ) {
+            	updateTransformationIcon(IStatus.WARNING);
+            	
+                warningIcon = new ImageFigure(DiagramUiPlugin.getDefault().getImage(PluginConstants.Images.WARNING_ICON));
+                if( warningIcon != null ) {
+                    this.add(warningIcon);
+                    int centerX = this.getBounds().width/2;
+                    int centerY = this.getBounds().height/2;
+                    
+                    if( isOnDependencyDiagram() ) {
+                    	warningIcon.setLocation( new Point(centerX - 3, centerY + 2) );
+                    } else {
+                    	warningIcon.setLocation( new Point(centerX - 7, centerY) );
+                    }
+                    warningIcon.setSize(warningIcon.getPreferredSize());
+                }
+            }
+            status = IStatus.WARNING;
+        } else if( warningIcon != null ) {
+        	updateTransformationIcon(IStatus.OK);
+            this.remove(warningIcon);
+            warningIcon = null;
+            status = IStatus.OK;
+        }
+    }
+    
+    private void updateTransformationIcon(int newStatus) {
+    	if( newStatus == status ) return;
+    	
+    	this.remove(transformationIcon);
+
+        if( isOnDependencyDiagram() ) {
+        	if( newStatus > IStatus.INFO ) transformationIcon = new ImageFigure(UiPlugin.getDefault().getImage(PluginConstants.Images.TRANSFORMATION_NODE_ICON_ERROR));
+        	else transformationIcon = new ImageFigure(UiPlugin.getDefault().getImage(PluginConstants.Images.TRANSFORMATION_NODE_ICON));
+        } else {
+        	if( newStatus > IStatus.INFO ) transformationIcon = new ImageFigure(UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_TRANSFORMATION_NODE_ICON_ERROR));
+        	else transformationIcon = new ImageFigure(UiPlugin.getDefault().getImage(PluginConstants.Images.ARROW_TRANSFORMATION_NODE_ICON));
+        }
+        this.add(transformationIcon);
+        transformationIcon.setSize(transformationIcon.getPreferredSize());
     }
 }
 

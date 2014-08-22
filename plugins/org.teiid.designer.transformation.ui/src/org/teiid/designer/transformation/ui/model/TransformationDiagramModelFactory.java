@@ -8,8 +8,10 @@
 package org.teiid.designer.transformation.ui.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
@@ -1324,5 +1326,43 @@ public class TransformationDiagramModelFactory extends DiagramModelFactoryImpl i
      */
     protected void setHideLinksAlways( boolean theHideLinksAlways ) {
         this.hideLinksAlways = theHideLinksAlways;
+    }
+    
+    @Override
+	public void handleLabelProviderChanged(DiagramModelNode diagramModelNode, List eObjects) {
+        HashMap updateNodes = new HashMap(eObjects.size());
+        
+        Iterator iter = eObjects.iterator();
+        while( iter.hasNext() ) {
+            EObject nextEObject = (EObject)iter.next();
+            DiagramModelNode nextNode = getModelNode(diagramModelNode, nextEObject);
+            if( nextNode != null ) {
+                updateNodes.put(nextNode, "x");  //$NON-NLS-1$
+                DiagramModelNode parentClassNode = DiagramUiUtilities.getClassifierParentNode(nextNode);
+                if( parentClassNode != null ) {
+                    updateNodes.put(parentClassNode, "x");  //$NON-NLS-1$
+                }
+                
+                
+                // Need to check for Transformation Targets
+                if( TransformationHelper.isValidTransformationTarget(nextEObject) ) {
+	                EObject tRoot = TransformationHelper.getMappingRoot(nextEObject);
+	                if( tRoot != null ) {
+	                	DiagramModelNode tNode = getModelNode(diagramModelNode, tRoot);
+	                	if( tNode != null ) {
+	                		updateNodes.put(tNode, "x");  //$NON-NLS-1$
+	                	}
+	                }
+                }
+            }
+        }
+        
+        iter = updateNodes.keySet().iterator();
+        while( iter.hasNext() ) {
+            DiagramModelNode nextNode = (DiagramModelNode)iter.next();
+            if( nextNode != null ) {
+                nextNode.updateForErrorsAndWarnings();
+            }
+        }
     }
 }

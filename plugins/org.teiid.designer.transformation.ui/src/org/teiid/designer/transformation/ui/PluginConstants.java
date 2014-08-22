@@ -55,7 +55,9 @@ public interface PluginConstants {
         String EXPRESSION_BUILDER_ICON = "icons/full/cview20/launch_expression_builder.gif"; //$NON-NLS-1$
         String RECONCILER_ICON = "icons/full/cview16/tb_reconcile_sql.gif"; //$NON-NLS-1$; 
         String TRANSFORMATION_NODE_ICON = "icons/full/cview20/transformation_node.gif"; //$NON-NLS-1$
+        String TRANSFORMATION_NODE_ICON_ERROR = "icons/full/cview20/transformation_node_red.gif"; //$NON-NLS-1$
         String ARROW_TRANSFORMATION_NODE_ICON = "icons/full/cview20/arrow_transformation_node.gif"; //$NON-NLS-1$
+        String ARROW_TRANSFORMATION_NODE_ICON_ERROR = "icons/full/cview20/arrow_transformation_node_red.gif"; //$NON-NLS-1$
         String XTRANSFORMATION_NODE_ICON = "icons/full/cview20/Xtransformation_node.gif"; //$NON-NLS-1$
         String ARROW_XTRANSFORMATION_NODE_ICON = "icons/full/cview20/arrow_xtransformation_node.gif"; //$NON-NLS-1$
         String REVALIDATE_TRANSFORMATION_ICON = "icons/full/cview16/validate.gif"; //$NON-NLS-1$
