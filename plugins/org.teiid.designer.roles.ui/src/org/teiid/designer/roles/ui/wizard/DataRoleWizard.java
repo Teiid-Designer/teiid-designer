@@ -340,7 +340,7 @@ public class DataRoleWizard extends AbstractWizard {
     void createRoleNamesTab(CTabFolder mainTabFolder) {
     	roleNamesTabItem = new CTabItem(mainTabFolder, SWT.NONE);
     	roleNamesTabItem.setText(Messages.mappedRoleNames);
-    	
+    	roleNamesTabItem.setToolTipText(Messages.mappedRoleNamesTabDescription);
         Composite roleNamespanel = WidgetFactory.createPanel(mainTabFolder, 0, GridData.FILL_HORIZONTAL, 2);
 		anyAuthenticatedCheckBox = WidgetFactory.createCheckBox(roleNamespanel,
 						getString("anyAuthenticatedCheckbox.label"), 0, 1, anyAuthentication); //$NON-NLS-1$
@@ -428,6 +428,7 @@ public class DataRoleWizard extends AbstractWizard {
     void createOptionsTab(CTabFolder mainTabFolder) {
     	optionsTabItem = new CTabItem(mainTabFolder, SWT.NONE);
     	optionsTabItem.setText(Messages.options);
+    	optionsTabItem.setToolTipText(Messages.optionsTabDescription);
     	final Composite miscOptionsGroup = WidgetFactory.createPanel(mainTabFolder, GridData.FILL_HORIZONTAL, 2, 3);
         allowCreateTempTablesCheckBox = WidgetFactory.createCheckBox(miscOptionsGroup,
                                                                      getString("allowCreateTempTablesCheckBox.label"), GridData.FILL_HORIZONTAL, 1, anyAuthentication); //$NON-NLS-1$
