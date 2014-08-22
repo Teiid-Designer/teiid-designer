@@ -149,7 +149,7 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
             	if (! result ) return;
             }
             
-            doCreateDataSource(vdbName, teiidServer);
+            doCreateDataSource(vdbName, teiidServer, false);
 
         } catch (Exception e) {
             if (selectedVdb != null) {
@@ -164,7 +164,14 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
         }
     }
     
-    public static void doCreateDataSource(String vdbName, ITeiidServer teiidServer) throws Exception {
+    /**
+     * Creates Data Source for a VDB
+     * @param vdbName the VDB name
+     * @param teiidServer the TeiidServer
+     * @param withDeployment 'true' if dialog is shown during deployment, 'false' if not
+     * @throws Exception the exception
+     */
+    public static void doCreateDataSource(String vdbName, ITeiidServer teiidServer, boolean withDeployment) throws Exception {
     	final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
     	
         VdbDataSourceInfo info = new VdbDataSourceInfo(vdbName, vdbName, vdbName);
@@ -172,21 +179,19 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
         info.setPassword(teiidServer.getTeiidJdbcInfo().getPassword());
         info.setUsername(teiidServer.getTeiidJdbcInfo().getUsername());
         
-        // 1) Check to see if Data Source exists for this VDB
-        
-        ITeiidDataSource vdbDS = teiidServer.getDataSource(info.getJndiName());
-        if( vdbDS != null ) {
-        	boolean overwrite = MessageDialog.openQuestion(iww.getShell(), getString("dsExists.title"), 
-        			getString("dsExists.message", info.getJndiName(), vdbName));
-        	if( !overwrite ) return;
-        }
-
-        final CreateVdbDataSourceDialog dialog = new CreateVdbDataSourceDialog(iww.getShell(), info, teiidServer);
+        final CreateVdbDataSourceDialog dialog = new CreateVdbDataSourceDialog(iww.getShell(), info, teiidServer, withDeployment);
 
         final int rc = dialog.open();
         if (rc != Window.OK)
             return;
 
+        // if datasource already exists, user has 'OKd' the dialog and elected to replace it
+        ITeiidDataSource vdbDS = teiidServer.getDataSource(info.getJndiName());
+        if( vdbDS != null ) {
+        	teiidServer.deleteDataSource(info.getJndiName());
+        }
+
+        // creates the data source
         teiidServer.getOrCreateDataSource(info.getDisplayName(),
                                           info.getJndiName(),
                                           "teiid", //$NON-NLS-1$
