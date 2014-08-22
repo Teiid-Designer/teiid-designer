@@ -203,16 +203,6 @@ public class SelectDataSourcePage extends AbstractWizardPage
         String selectedDataSourceDriverName = getSelectedDataSourceDriverName();
         if(!CoreStringUtil.isEmpty(selectedDataSourceDriverName)) {
         	String driverNameLC = selectedDataSourceDriverName.toLowerCase();
-        	if(DISALLOWED_SOURCES.contains(driverNameLC)) {  
-        		if(driverNameLC.equals("modeshape")) {  //$NON-NLS-1$
-        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportModeshapeTypeMsg, driverNameLC) , ERROR);
-        		} else if(driverNameLC.equals("ldap")) { //$NON-NLS-1$
-        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportLdapTypeMsg, driverNameLC) , ERROR);
-        		}  else {
-        			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_CannotImportSourceTypeMsg, driverNameLC) , ERROR);
-        		}
-                return false;        		
-        	}
         	if(!BUILTIN_TYPES.contains(driverNameLC)) {
     			setThisPageComplete( NLS.bind(Messages.selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg, driverNameLC) , WARNING);
     			return true;

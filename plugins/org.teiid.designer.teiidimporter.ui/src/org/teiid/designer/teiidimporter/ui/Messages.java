@@ -92,9 +92,6 @@ public class Messages extends NLS {
     public static String selectDataSourcePage_dataSourceGroupText;
     public static String selectDataSourcePage_dataSourcePropertiesGroupText;
     public static String selectDataSourcePage_NoSourceSelectedMsg;
-    public static String selectDataSourcePage_CannotImportSourceTypeMsg;
-    public static String selectDataSourcePage_CannotImportModeshapeTypeMsg;
-    public static String selectDataSourcePage_CannotImportLdapTypeMsg;
     public static String selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg;
     
     public static String SelectTargetPage_title;
