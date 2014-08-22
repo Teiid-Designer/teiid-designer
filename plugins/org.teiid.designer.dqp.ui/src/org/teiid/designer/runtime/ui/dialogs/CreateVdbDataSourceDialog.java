@@ -53,20 +53,23 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
     private Text dataSourceNameText;
     private Button passThroughButton;
     private ITeiidServer server;
+    private boolean withDeployment = false;
 
     /**
      * CreateDataSourceDialog constructor
      * @param shell the shell
      * @param teiidImportServer the TeiidServer
      * @param editDSName if non-null, this is edit of an existing source.  Otherwise this is
+     * @param withDeployment 'true' if dialog is called as part of a deployment, 'false' if not.
      * creation of a new source.
      */
-    public CreateVdbDataSourceDialog(Shell shell, VdbDataSourceInfo vdbDataSourceInfo, ITeiidServer server) {
+    public CreateVdbDataSourceDialog(Shell shell, VdbDataSourceInfo vdbDataSourceInfo, ITeiidServer server, boolean withDeployment) {
         super(shell);
         this.vdbName = vdbDataSourceInfo.getVdbName();
         this.vdbDataSourceInfo = vdbDataSourceInfo;
         this.nameValidator = new StringNameValidator(new char[] {'_','-'});
         this.server = server;
+        this.withDeployment = withDeployment;
     }
         
     /**
@@ -86,6 +89,10 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
         Control buttonBar = super.createButtonBar(parent);
 
         getButton(OK).setEnabled(true);
+        if(this.withDeployment) {
+        	getButton(OK).setText(getString("createSourceButtonText")); //$NON-NLS-1$
+        	getButton(CANCEL).setText(getString("skipButtonText")); //$NON-NLS-1$
+        }
         
         validate();
 
@@ -124,11 +131,8 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
 			public void modifyText(ModifyEvent e) {
 				// Validate
 				String text = dataSourceNameText.getText();
-				if(text != null && text.trim().length() > 0 ) {
-					vdbDataSourceInfo.setJndiName(text);
-				}
+				vdbDataSourceInfo.setJndiName(text);
 				validate();
-				
 			}
 		});
         
@@ -174,7 +178,11 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
     	if(errorMessage == null ) {
     		try {
 				if( server.getDataSource(this.vdbDataSourceInfo.getJndiName()) != null ) {
-					warningMessage = getString("dataSourceExistsMessage", this.vdbDataSourceInfo.getJndiName()); //$NON-NLS-1$
+					if(this.withDeployment) {
+						warningMessage = getString("dataSourceExistsMessageWithDeployment", this.vdbDataSourceInfo.getJndiName()); //$NON-NLS-1$
+					} else {
+						warningMessage = getString("dataSourceExistsMessage", this.vdbDataSourceInfo.getJndiName()); //$NON-NLS-1$
+					}
 				}
 			} catch (Exception ex) {
 				// TODO Auto-generated catch block
@@ -187,7 +195,11 @@ public class CreateVdbDataSourceDialog extends TitleAreaDialog  {
     		if( warningMessage != null ) {
     			setMessage(warningMessage, IMessageProvider.WARNING);
     		} else {
-    			setMessage(getString("okMessage", this.vdbDataSourceInfo.getJndiName()), IMessageProvider.NONE); //$NON-NLS-1$
+    			if(this.withDeployment) {
+    				setMessage(getString("okMessageWithDeployment", this.vdbDataSourceInfo.getJndiName()), IMessageProvider.NONE); //$NON-NLS-1$
+    			} else {
+    				setMessage(getString("okMessage", this.vdbDataSourceInfo.getJndiName()), IMessageProvider.NONE); //$NON-NLS-1$
+    			}
     		}
     		
     		

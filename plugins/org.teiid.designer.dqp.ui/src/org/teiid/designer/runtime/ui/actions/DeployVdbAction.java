@@ -164,7 +164,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
                 
                 if( deploySuccess ) {
                 	try {
-						CreateVdbDataSourceAction.doCreateDataSource(vdbName, teiidServer);
+						CreateVdbDataSourceAction.doCreateDataSource(vdbName, teiidServer, true);
 					} catch (Exception ex) {
 						Shell shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
 		                MessageDialog.openError(shell,
