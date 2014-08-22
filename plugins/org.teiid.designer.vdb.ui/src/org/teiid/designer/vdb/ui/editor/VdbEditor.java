@@ -1862,7 +1862,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void createModelsSection( Composite parent ) {
-        modelsGroup = new TableAndToolBar(parent, 1,
+        modelsGroup = new TableAndToolBar(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER, 1,
                                           new DefaultTableProvider<VdbModelEntry>() {
                                               /**
                                                * {@inheritDoc}
