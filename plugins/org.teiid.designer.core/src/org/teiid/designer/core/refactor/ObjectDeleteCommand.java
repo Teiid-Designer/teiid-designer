@@ -221,7 +221,7 @@ public class ObjectDeleteCommand implements RefactorCommand {
         RelatedResourceFinder finder = new RelatedResourceFinder(getModelResource().getResource());
 
         // Determine dependent resource
-        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.ALL);
+        Collection<IFile> searchResults = finder.findRelatedResources(Relationship.DEPENDENT);
         ResourceStatusList statusList = new ResourceStatusList(searchResults);
         this.relatedResources = statusList.getResourceList();
         this.problems.addAll(statusList.getProblems());
