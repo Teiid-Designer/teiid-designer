@@ -447,7 +447,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         IConnectionProfile profile = getConnectionProfile();
         Properties props = profile.getBaseProperties();
         if (props.get(IWSProfileConstants.PARAMETER_MAP) != null) {
-        	this.parameterMap = ((Map)props.get(IWSProfileConstants.PARAMETER_MAP));
+        	if (props.get(IWSProfileConstants.PARAMETER_MAP) instanceof Map) {
+        		this.parameterMap = ((Map)props.get(IWSProfileConstants.PARAMETER_MAP));
+        	}
         }
         if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
             usernameText.setText((String)props.get(ICredentialsCommon.USERNAME_PROP_ID));
