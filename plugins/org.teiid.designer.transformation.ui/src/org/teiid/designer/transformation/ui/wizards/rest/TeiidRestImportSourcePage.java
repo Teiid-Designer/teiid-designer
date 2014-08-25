@@ -131,10 +131,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			.getPropertyPrefix(TeiidMetadataImportSourcePage.class);
 
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
-	private static final String XML_TITLE = getString("xmlTitle"); //$NON-NLS-1$
+	private static final String REST_TITLE = getString("restTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
-	private static final String FLAT_FILE_SOURCE_LABEL = getString("sourceLabel"); //$NON-NLS-1$
+	private static final String REST_SOURCE_LABEL = getString("restSourceLabel"); //$NON-NLS-1$
 	private static final String NEW_BUTTON = "New..."; //Util.getString("Widgets.newLabel"); //$NON-NLS-1$
 	private static final String EDIT_BUTTON = "Edit..."; //Util.getString("Widgets.editLabel"); //$NON-NLS-1$
 
@@ -259,7 +259,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		// ---------------------------------
 		// ---------------------------------------------------------------------------
 		Group profileGroup = WidgetFactory.createGroup(parent,
-				FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2, 3);
+				REST_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		this.srcLabelProvider = new LabelProvider() {
@@ -319,7 +319,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	 * @since 4.2
 	 */
 	private void createFolderContentsListGroup(Composite parent) {
-		String groupLabel = getString("folderXmlContentsGroup"); //$NON-NLS-1$
+		String groupLabel = getString("folderRestContentsGroup"); //$NON-NLS-1$
 
 		Group folderContentsGroup = WidgetFactory.createGroup(parent,
 				groupLabel, SWT.FILL, 3, 2);
@@ -342,7 +342,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		createFileTableViewer(folderContentsGroup);
 
 		Label selectedFileLabel = new Label(folderContentsGroup, SWT.NONE);
-		selectedFileLabel.setText(getString("selectedXmlFile")); //$NON-NLS-1$
+		selectedFileLabel.setText(getString("selectedRestFile")); //$NON-NLS-1$
 
 		selectedFileText = new Text(folderContentsGroup, SWT.BORDER
 				| SWT.SINGLE);
@@ -1515,7 +1515,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private boolean validatePage() {
 		IConnectionProfile connProfile = getConnectionProfile();
 		if (connProfile == null) {
-			setThisPageComplete(getString("noConnectionProfileSelected"), ERROR);//$NON-NLS-1$
+			setThisPageComplete(getString("noRestConnectionProfileSelected"), ERROR);//$NON-NLS-1$
 			return false;
 		}
 
@@ -1531,7 +1531,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			}
 		}
 		if (!fileSelected) {
-			setThisPageComplete(getString("noXmlDataFilesSelected"), ERROR);//$NON-NLS-1$
+			setThisPageComplete(getString("noRestResponseFilesSelected"), ERROR);//$NON-NLS-1$
 			return false;
 		}
 
@@ -2165,9 +2165,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		super.setVisible(visible);
 
 		if (visible) {
-			this.setTitle(XML_TITLE);
+			this.setTitle(REST_TITLE);
 			this.fileNameColumn.getColumn().setText(
-					getString("xmlDataFileNameColumn")); //$NON-NLS-1$
+					getString("restDataFileNameColumn")); //$NON-NLS-1$
 
 			// If current profile is invalid for this page, it is reset.
 			// this may happen if user toggle between local and remote xml...
