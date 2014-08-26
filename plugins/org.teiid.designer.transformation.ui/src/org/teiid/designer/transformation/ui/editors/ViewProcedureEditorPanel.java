@@ -401,12 +401,12 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		
 		});
 
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.columnsViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));
+    	Table columnTable = this.columnsViewer.getTable();
     	columnTable.setHeaderVisible(true);
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
 
-        this.columnsViewer = new TableViewer(columnTable);
         GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getControl());
 
         // create columns
@@ -875,12 +875,12 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		
 		});
     	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.columnsViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));
+    	Table columnTable = this.columnsViewer.getTable();
     	columnTable.setHeaderVisible(true);
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
-    	
-        this.parametersViewer = new TableViewer(columnTable);
+
         GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getControl());
 
         // create columns

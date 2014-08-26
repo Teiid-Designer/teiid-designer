@@ -47,8 +47,26 @@ public class Table<T> {
     public <V> Table( final Composite parent,
                       final TableProvider<T> tableProvider,
                       final ColumnProvider<T, V>... columnProviders ) {
+    	this(parent,-1,tableProvider,columnProviders);
+    }
+    
+    /**
+     * @param <V>
+     * @param parent parent composite
+     * @param tableStyle table style 
+     * @param tableProvider table provider
+     * @param columnProviders column providers
+     */
+    public <V> Table( final Composite parent,
+    				  final int tableStyle,
+                      final TableProvider<T> tableProvider,
+                      final ColumnProvider<T, V>... columnProviders ) {
         // Create table viewer
-        viewer = new TableViewer(parent);
+    	if(tableStyle==-1) {
+    		viewer = new TableViewer(parent);
+    	} else {
+    		viewer = new TableViewer(parent,tableStyle);
+    	}
         viewer.setContentProvider(new IStructuredContentProvider() {
 
             @Override

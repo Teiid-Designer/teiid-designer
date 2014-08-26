@@ -37,15 +37,35 @@ public final class TableAndToolBar<T> {
      * @param <V>
      * @param parent the parent panel (never <code>null</code>)
      * @param span the layout data horizontal span
-     * @param tableProvider
-     * @param columnProviders
+     * @param tableProvider the table provider
+     * @param columnProviders the column providers
      */
     public <V> TableAndToolBar( final Composite parent,
                                      final int span,
                                      final TableProvider<T> tableProvider,
                                      final ColumnProvider<T, V>... columnProviders ) {
+    	this(parent,-1,span,tableProvider,columnProviders);
+    }
+    
+    /**
+     * @param <V>
+     * @param parent the parent panel (never <code>null</code>)
+     * @param tableStyle the table style
+     * @param span the layout data horizontal span
+     * @param tableProvider the table provider
+     * @param columnProviders the column providers
+     */
+    public <V> TableAndToolBar( final Composite parent,
+    		                         final int tableStyle,
+                                     final int span,
+                                     final TableProvider<T> tableProvider,
+                                     final ColumnProvider<T, V>... columnProviders ) {
         // Create table
-        table = new Table<T>(parent, tableProvider, columnProviders);
+    	if(tableStyle==-1) {
+    		table = new Table<T>(parent, tableProvider, columnProviders);
+    	} else {
+    		table = new Table<T>(parent,tableStyle,tableProvider,columnProviders);
+    	}
 
         // Create button bar
         ToolBar toolBar = new ToolBar(parent, SWT.PUSH | SWT.BORDER);

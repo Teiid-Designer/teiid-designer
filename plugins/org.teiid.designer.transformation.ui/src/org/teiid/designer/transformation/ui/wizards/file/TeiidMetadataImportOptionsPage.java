@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -72,7 +72,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	private static final String FIXED_COLUMNS_WIDTH_TITLE = getString("fixedColumnsWidthTitle"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
-	private final String EMPTY = StringUtilities.EMPTY_STRING;
+	private final String EMPTY = StringConstants.EMPTY_STRING;
 	private final int GROUP_HEIGHT_190 = 190;
 	private final int GROUP_HEIGHT_160 = 160;
 
@@ -565,13 +565,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	groupGD.heightHint = 140;
     	theGroup.setLayoutData(groupGD);
     	
-    	Table table = new Table(theGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.delimitedColumnsViewer = new TableViewer(theGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    	Table table = this.delimitedColumnsViewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-        this.delimitedColumnsViewer = new TableViewer(table);
         
         GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan = 4;
@@ -981,13 +980,12 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	gd.heightHint = GROUP_HEIGHT_160;
     	columnInfoGroup.setLayoutData(gd);
     	
-    	Table table = new Table(columnInfoGroup, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.fixedColumnsViewer = new TableViewer(columnInfoGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    	Table table = this.fixedColumnsViewer.getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-        this.fixedColumnsViewer = new TableViewer(table);
         
         GridData data = new GridData(GridData.FILL_BOTH);
         this.fixedColumnsViewer.getControl().setLayoutData(data);
@@ -1261,7 +1259,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     private String getSpaces(int nSpaces) {
     	StringBuffer sb = new StringBuffer(nSpaces);
     	for( int i=0; i<nSpaces; i++ ) {
-    		sb.append(StringUtilities.SPACE);
+    		sb.append(StringConstants.SPACE);
     	}
     	return sb.toString();
     }

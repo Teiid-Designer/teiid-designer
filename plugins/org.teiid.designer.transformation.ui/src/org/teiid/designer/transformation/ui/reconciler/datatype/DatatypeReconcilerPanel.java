@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.reconciler.datatype;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -247,7 +248,8 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         }
         
         BINDING_TABLE : {
-	    	table = new Table(tablePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+        	this.bindingTableViewer = new TableViewer(tablePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        	table = this.bindingTableViewer.getTable();
 	        table.setHeaderVisible(true);
 	        table.setLinesVisible(true);
 	        table.setLayout(new TableLayout());
@@ -255,7 +257,6 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	    	gd.heightHint = 200;
 	    	table.setLayoutData(gd);
 	
-	        this.bindingTableViewer = new TableViewer(table);
 	        this.bindingTableViewer.getControl().setLayoutData(gd);
 	        
 	        this.bindingContentProvider = new BindingContentProvider();
@@ -541,7 +542,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
             Object o = SelectionUtilities.getSelectedObject(selection);
             binding = (Binding)o;
         } else if (SelectionUtilities.isMultiSelection(selection)) {
-            List objects = SelectionUtilities.getSelectedObjects(selection);
+            List<Object> objects = SelectionUtilities.getSelectedObjects(selection);
             if (objects.size() > 0) binding = (Binding)objects.get(0);
 
         }

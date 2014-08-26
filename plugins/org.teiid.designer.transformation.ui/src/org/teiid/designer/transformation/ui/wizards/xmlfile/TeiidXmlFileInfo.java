@@ -16,11 +16,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
@@ -69,12 +70,12 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
      * Usually of the form '$d/MedlineCitationSet/MedlineCitation'. In this case, the expression defines the initial path
      * inside the XML structure that the COLUMN PATH's are relative to
      */
-	private String rootPath = StringUtilities.EMPTY_STRING;
+	private String rootPath = StringConstants.EMPTY_STRING;
 	
 	/**
 	 * Common Root path
 	 */
-	private String commonRootPath = StringUtilities.EMPTY_STRING;
+	private String commonRootPath = StringConstants.EMPTY_STRING;
 	
 	/**
 	 * Indicator for the import processor to attempt to create a View Table given the info in this object.
@@ -153,7 +154,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		if( info.getViewTableName() != null ) {
 			setViewTableName(info.getViewTableName());
 		} else {
-			setViewTableName(StringUtilities.EMPTY_STRING);
+			setViewTableName(StringConstants.EMPTY_STRING);
 		}
 		
 		validate();
