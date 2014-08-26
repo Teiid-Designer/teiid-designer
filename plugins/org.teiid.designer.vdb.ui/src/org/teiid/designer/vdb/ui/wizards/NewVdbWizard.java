@@ -365,7 +365,7 @@ public final class NewVdbWizard extends AbstractWizard
             for (@SuppressWarnings("rawtypes")
 			Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
                 IResource res = (IResource)iter.next();
-                if (!ModelUtilities.isModelFile(res)) {
+                if (!ModelUtilities.isModelFile(res) || ModelUtilities.isVdbSourceModel((IFile)res)) {
                     result = false;
                     break;
                 }

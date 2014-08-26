@@ -149,6 +149,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     static final String VISIBLE_TOOLTIP = i18n("visibleTooltip"); //$NON-NLS-1$
     static final String NOT_VISIBLE_TOOLTIP = i18n("notVisibleTooltip"); //$NON-NLS-1$
 
+	static final String ADD_MODEL_DIALOG_TITLE = i18n("addModelDialogTitle"); //$NON-NLS-1$
+	static final String ADD_MODEL_DIALOG_MESSAGE = i18n("addModelDialogMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_TITLE = i18n("addFileDialogTitle"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_MESSAGE = i18n("addFileDialogMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_INVALID_SELECTION_MESSAGE = i18n("addFileDialogInvalidSelectionMessage"); //$NON-NLS-1$
@@ -2005,7 +2007,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             return false;
                         }
                         final IFile file = (IFile)element;
-                        if (!ModelUtilities.isModelFile(file)) {
+                        if (!ModelUtilities.isModelFile(file) || ModelUtilities.isVdbSourceModel(file)) {
                             return false;
                         }
 
