@@ -1246,12 +1246,12 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		
 		});
     	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.columnsViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));  	
+    	Table columnTable = this.columnsViewer.getTable();
     	columnTable.setHeaderVisible(true);
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
 
-        this.columnsViewer = new TableViewer(columnTable);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(columnsViewer.getControl());
 
         // create columns

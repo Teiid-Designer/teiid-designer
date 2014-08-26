@@ -860,12 +860,12 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
     		
 		});
     	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
+    	this.parametersViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));
+    	Table columnTable = this.parametersViewer.getTable();
     	columnTable.setHeaderVisible(true);
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
     	
-        this.parametersViewer = new TableViewer(columnTable);
         GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getControl());
         
         // create columns
