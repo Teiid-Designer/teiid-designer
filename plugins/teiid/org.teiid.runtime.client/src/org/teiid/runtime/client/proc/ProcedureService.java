@@ -306,6 +306,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          StringBuffer sb = new StringBuffer();
          
          int c = 1;
+         if (parameters.isEmpty()){sb.append("''");} //$NON-NLS-1$
          for (Parameter param: parameters.values() ){
         	 if (param.getType().equals(Parameter.Type.Query)) {
         		 isQueryParm=true;
@@ -370,7 +371,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          if( rootPath != null && rootPath.length() > 0 ) {
              xQueryExp = rootPath;
          }
-         sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
+         sb.append(xQueryExp).append(S_QUOTE);
          
          tokens.add(sb.toString());
          
