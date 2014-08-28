@@ -172,6 +172,7 @@ public class CrudPanel extends DataRolePanel {
     private void handleDoubleClick(int column, Object target) {
         if (column == 1 && getTreeProvider().allowsSecurity(target) ) {
         	Permission perm = getTreeProvider().getPermission(target);
+        	boolean existingPerm = perm != null;
         	if( perm == null ) {
         		perm = getTreeProvider().createPermission(target);
         	}
@@ -182,7 +183,7 @@ public class CrudPanel extends DataRolePanel {
         	SecurityDefinitionDialog dialog = 
         			new SecurityDefinitionDialog(getShell(), 
         					Messages.setSecurityValuesTitle, message, perm, 
-        					allowsCondition, allowsMask);
+        					allowsCondition, allowsMask, existingPerm);
         	
         	if( dialog.open() == Window.OK) {
         		if( allowsCondition) {
