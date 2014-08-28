@@ -64,8 +64,8 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
      * @param okEnabled
      */
     public SecurityDefinitionDialog( Shell parentShell, String title, String message, Permission permission, boolean allowsFilter,
-    		boolean allowsMasking ) {
-        super(parentShell, title, message, true);
+    		boolean allowsMasking, boolean existingSecurity) {
+        super(parentShell, title, message, existingSecurity);
 
     	this.targetName = permission.getTargetName();
     	isEdit = true;
@@ -277,11 +277,6 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
         this.maskString = maskTextEditor.getText();
         this.constraint = constraintButton.getSelection();
     	boolean conditionEmpty = (this.conditionString == null || this.conditionString.trim().isEmpty());
-    	
-        if( conditionEmpty && allowsFilter) {
-        	enable = false;
-    		setErrorMessage(Messages.conditionIsUndefined);
-        }
         
         if( this.allowsMasking ) {
         	boolean maskEmpty = (maskString == null || maskString.trim().isEmpty());
@@ -302,6 +297,9 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
 	    		setErrorMessage(Messages.orderMustNotBeNull);
 	    		return;
 	    	}
+        } else if( conditionEmpty && allowsFilter) {
+            enable = false;
+        	setErrorMessage(Messages.conditionIsUndefined);
         }
     	
     	getButton(IDialogConstants.OK_ID).setEnabled(enable);
