@@ -267,6 +267,20 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     	validate();
     }
     
+    /**
+     * @return true if condition is not null and not empty
+     */
+    public boolean hasCondition() {
+    	return getCondition() != null && !getCondition().isEmpty();
+    }
+    
+    /**
+     * @return true if condition is not null and not empty
+     */
+    public boolean hasMask() {
+    	return getMask() != null && !getMask().isEmpty();
+    }
+    
     @Override
     protected void validate() {
     	boolean enable = true;

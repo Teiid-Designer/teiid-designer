@@ -186,11 +186,11 @@ public class CrudPanel extends DataRolePanel {
         					allowsCondition, allowsMask, existingPerm);
         	
         	if( dialog.open() == Window.OK) {
-        		if( allowsCondition) {
+        		if( allowsCondition && dialog.hasCondition()) {
         			perm.setCondition(dialog.getCondition());
                     perm.setConstraint(dialog.getConstraintValue());
         		}
-        		if( allowsMask ) {
+        		if( allowsMask && dialog.hasMask()) {
 	                perm.setMask(dialog.getMask());
 	                perm.setOrder(dialog.getOrder());
         		}
