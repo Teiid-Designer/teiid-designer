@@ -9,7 +9,12 @@ package org.teiid.query.ui.builder.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -255,16 +260,31 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
                 functions = null;
                 functionForms = null;
                 selectedFunctionForm = null;
-                List forms = funcLib.getFunctionForms(category);
+                
+                @SuppressWarnings("deprecation")
+				List<IFunctionForm> forms = funcLib.getFunctionForms(category);
 
                 if ((forms != null) && !forms.isEmpty()) {
+                	// Create a SET of display strings to eliminate duplicate Method signatures 
+                	Set<String> filteredDisplayStrings = new HashSet<String>();
+                	for( IFunctionForm iForm : forms ) {
+                		String displayString = iForm.getDisplayString();
+                		filteredDisplayStrings.add(displayString);
+                	}
+                	List<String> filteredList = new ArrayList<String>(filteredDisplayStrings);
+                	
+                	// SORT the list
+                	Collections.sort(filteredList);
+                	
+                	// Set the functions list
+                	functions = filteredList.toArray(new String[filteredList.size()]);
+                	
+                	// Still create an array of IFunctionForms
                     int size = forms.size();
                     functionForms = new IFunctionForm[size];
-                    functions = new String[size];
 
                     for (int i = 0; i < size; i++) {
                         functionForms[i] = (IFunctionForm) forms.get(i);
-                        functions[i] = functionForms[i].getDisplayString();
                     }
                 } else {
                     functionForms = new IFunctionForm[1];
