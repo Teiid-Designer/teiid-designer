@@ -288,7 +288,9 @@ public abstract class AbstractUiPlugin extends org.eclipse.ui.plugin.AbstractUIP
         try {
             final URL url = new URL(viewsUrl + key);
             final ImageDescriptor descriptor = ImageDescriptor.createFromURL(url);
-            registry.put(key, descriptor);
+            if( registry.get(key) != null ) {
+            	registry.put(key, descriptor);
+            }
         } catch (final MalformedURLException err) {
             getPluginUtil().log(err);
         }
