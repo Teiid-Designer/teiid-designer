@@ -148,7 +148,7 @@ public final class Vdb implements VdbConstants {
     final AtomicBoolean modified = new AtomicBoolean();
     private final AtomicReference<String> description = new AtomicReference<String>();
     private final boolean preview;
-    private final int version;
+    private int version;
     private int queryTimeout = DEFAULT_TIMEOUT;
     private boolean autoGenerateRESTWAR;
     private Date validateDateTime;
@@ -1113,6 +1113,16 @@ public final class Vdb implements VdbConstants {
     	this.queryTimeout = valueInSeconds;
     	setModified(this, Event.QUERY_TIMEOUT, oldTimeout, valueInSeconds);
     }
+    
+    /**
+    * @param valueInSeconds Sets query time-out to the specified value.
+    */
+    public final void setVersion( int intVersion ) {
+    	final int oldVersion = this.version;
+    	if( oldVersion == intVersion ) return;
+    	this.version = intVersion;
+    	setModified(this, Event.VERSION, oldVersion, intVersion);
+    }
 
     /**
      * @param autoGenerateRESTWAR Sets autoGenerateRESTWAR to the specified value.
@@ -1353,6 +1363,13 @@ public final class Vdb implements VdbConstants {
          * 
          */
         public static final String QUERY_TIMEOUT = "queryTimeout"; //$NON-NLS-1$
+        
+        /**
+        * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the vdb version
+        * is changed.
+        *
+        */
+        public static final String VERSION = "version"; //$NON-NLS-1$
         
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when auto-generate REST WAR
