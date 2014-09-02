@@ -58,7 +58,7 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
      */
     public CreateVdbDataSourceAction() {
         super(label, SWT.DEFAULT);
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.CREATE_VDB_DATA_SOURCE_ICON));
     }
     
     /**
@@ -67,7 +67,7 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
     public CreateVdbDataSourceAction(String vdbName) {
     	super(label, SWT.DEFAULT);
     	this.cachedVdbName = vdbName;
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.SOURCE_BINDING_ICON));
+        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.CREATE_VDB_DATA_SOURCE_ICON));
     }
 
     public void setTeiidServer( ITeiidServer teiidServer ) {
