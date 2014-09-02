@@ -875,8 +875,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		
 		});
     	
-    	this.columnsViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));
-    	Table columnTable = this.columnsViewer.getTable();
+    	this.parametersViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));
+    	Table columnTable = this.parametersViewer.getTable();
     	columnTable.setHeaderVisible(true);
     	columnTable.setLinesVisible(true);
     	columnTable.setLayout(new TableLayout());
