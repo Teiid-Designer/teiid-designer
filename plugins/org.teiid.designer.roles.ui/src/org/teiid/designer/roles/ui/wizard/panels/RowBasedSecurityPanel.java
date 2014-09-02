@@ -799,7 +799,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
         private boolean isValidSelection(Object obj ) {
         	return (obj instanceof org.teiid.designer.metamodels.relational.Table || 
         			obj instanceof org.teiid.designer.metamodels.relational.View ||
-        			obj instanceof org.teiid.designer.metamodels.relational.Procedure);
+        			obj instanceof org.teiid.designer.metamodels.relational.Procedure ||
+        			obj instanceof org.teiid.designer.metamodels.relational.Column);
         }
 
         private void updateOnSelection( Object selectedObject ) {
