@@ -575,12 +575,17 @@ public class MetadataFactory implements Serializable {
     }
 
     public void addNamespace(String prefix, String uri) {
-        if (StringUtil.startsWithIgnoreCase(prefix, TEIID_RESERVED)) {
-            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60017, prefix));
-        }
         if (uri == null || uri.indexOf('}') != -1) {
             throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60018, uri));
         }
+
+        if (StringUtil.startsWithIgnoreCase(prefix, TEIID_RESERVED)) {
+            String validURI = BUILTIN_NAMESPACES.get(prefix);
+            if (validURI == null || !uri.equals(validURI)) {
+                throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60017, prefix));
+            }
+        }
+
         if (this.namespaces == null) {
              this.namespaces = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
         }

@@ -55,6 +55,9 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
     @Since(Version.TEIID_8_7)
 	private boolean grantAll;
 
+    @Since(Version.TEIID_8_7)
+    private Set<String> schemas;
+
 	@Override
     public String getName() {
         return name;
@@ -502,5 +505,14 @@ public class DataPolicyMetadata implements DataPolicy, Serializable {
     	clone.permissions.putAll(this.permissions);
     	return clone;
     }
-    
+
+    @Since(Version.TEIID_8_7)
+    public Set<String> getSchemas() {
+        return schemas;
+    }
+
+    @Since(Version.TEIID_8_7)
+    public void setSchemas(Set<String> schemas) {
+        this.schemas = schemas;
+    }
 }
