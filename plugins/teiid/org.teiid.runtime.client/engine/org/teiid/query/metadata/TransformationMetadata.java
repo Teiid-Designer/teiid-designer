@@ -56,7 +56,6 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn.NullType;
@@ -1184,7 +1183,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	}
 	
 	@Override
-	public Object getModelID(String modelName) throws Exception {
+	public Schema getModelID(String modelName) throws Exception {
 		Schema s = this.getMetadataStore().getSchema(modelName);
 		if (s == null) {
 			throw new TeiidClientException(modelName+TransformationMetadata.NOT_EXISTS_MESSAGE);
