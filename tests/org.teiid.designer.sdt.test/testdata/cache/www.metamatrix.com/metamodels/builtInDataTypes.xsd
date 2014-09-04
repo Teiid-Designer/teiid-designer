@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
   JBoss, Home of Professional Open Source.
 
@@ -6,7 +6,7 @@
 
   See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 -->
-<xs:schema targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance" xmlns:mmedt="http://www.metamatrix.com/2005/XmlSchema/EnterpriseDatatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema xmlns:mmedt="http://www.metamatrix.com/2005/XmlSchema/EnterpriseDatatypes" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.metamatrix.com/metamodels/SimpleDatatypes-instance">
     <xs:simpleType mmedt:UUID="mmuuid:4ca2ae00-3a95-1e20-921b-eeee28353879" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="NMTOKEN">
         <xs:annotation>
             <xs:appinfo/>
@@ -212,18 +212,17 @@
             <xs:minLength id="ENTITIES.minLength" value="1"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576" mmedt:runtimeDataType="biginteger" mmedt:runtimeDataTypeFixed="false" name="integer">
+    <xs:simpleType mmedt:UUID="mmuuid:45da3500-e78f-1e20-8c26-a038c6ed7576" mmedt:runtimeDataType="integer" mmedt:runtimeDataTypeFixed="false" name="integer">
         <xs:annotation>
             <xs:appinfo/>
-            <xs:documentation>[Definition:] integer is derived from
-                decimal by fixing the value of fractionDigits to be 0.
-                This results in the standard mathematical concept of the
-                integer numbers. The value space of integer is the
-                infinite set {...,-2,-1,0,1,2,...}. The base type of
-                integer is decimal.</xs:documentation>
+            <xs:documentation>[Definition:] int is derived from long by
+                setting the value of maxInclusive to be 2147483647 and
+                minInclusive to be -2147483648. The base type of int is long.</xs:documentation>
         </xs:annotation>
-        <xs:restriction base="xs:decimal">
+        <xs:restriction base="xs:long">
             <xs:whiteSpace fixed="true" value="collapse"/>
+            <xs:minInclusive value="-2147483648"/>
+            <xs:maxInclusive value="2147483647"/>
             <xs:fractionDigits fixed="true" value="0"/>
         </xs:restriction>
     </xs:simpleType>
@@ -572,8 +571,8 @@
                 YYYY-MM-DD HH:MM:SS[.xxxxxxxxx] Hours are 24-hour time.  
                 The nanoseconds are optional.</xs:documentation>
         </xs:annotation>
-        <xs:restriction base="xs:dateTime">
-            <xs:pattern value="20\d{2}(-|\/)((0[1-9])|(1[0-2]))(-|\/)((0[1-9])|([1-2][0-9])|(3[0-1]))(T|\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9])"/>
+        <xs:restriction base="xs:string">
+            <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType mmedt:UUID="mmuuid:051a0640-b4e8-1e26-9f33-b76fd9d5fa79" mmedt:runtimeDataType="object" mmedt:runtimeDataTypeFixed="false" name="object">
@@ -618,7 +617,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="dateTime">
+    <xs:simpleType mmedt:UUID="mmuuid:5c69dec0-b3ea-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="timestamp" mmedt:runtimeDataTypeFixed="false" name="dateTime">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] dateTime represents a
@@ -630,7 +629,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:17d08040-b3ed-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="gYearMonth">
+    <xs:simpleType mmedt:UUID="mmuuid:17d08040-b3ed-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="timestamp" mmedt:runtimeDataTypeFixed="false" name="gYearMonth">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] gYearMonth represents a
@@ -646,7 +645,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:b02c7600-b3f2-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="gYear">
+    <xs:simpleType mmedt:UUID="mmuuid:b02c7600-b3f2-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="biginteger" mmedt:runtimeDataTypeFixed="false" name="gYear">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] gYear represents a gregorian
@@ -661,7 +660,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:6e604140-b3f5-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="gMonthDay">
+    <xs:simpleType mmedt:UUID="mmuuid:6e604140-b3f5-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="timestamp" mmedt:runtimeDataTypeFixed="false" name="gMonthDay">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] gMonthDay is a gregorian
@@ -676,7 +675,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="gDay">
+    <xs:simpleType mmedt:UUID="mmuuid:860b7dc0-b3f8-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="biginteger" mmedt:runtimeDataTypeFixed="false" name="gDay">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] gDay is a gregorian day that
@@ -691,7 +690,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:187f5580-b3fb-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="gMonth">
+    <xs:simpleType mmedt:UUID="mmuuid:187f5580-b3fb-1e2a-9a03-beb8638ffd21" mmedt:runtimeDataType="biginteger" mmedt:runtimeDataTypeFixed="false" name="gMonth">
         <xs:annotation>
             <xs:appinfo/>
             <xs:documentation>[Definition:] gMonth is a gregorian month
@@ -775,5 +774,11 @@
         <xs:restriction base="xs:base64Binary">
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType mmedt:UUID="mmuuid:606b7f4f-08a2-4072-86e2-9915f3952c7d" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="varbinary">
+        <xs:annotation>
+            <xs:documentation> The runtime type is a byte[] wrapper called BinaryType</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:base64Binary"/>
     </xs:simpleType>
 </xs:schema>

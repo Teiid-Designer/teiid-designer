@@ -48,6 +48,7 @@ public class DatatypeProcessor {
     public static final String DATATYPE_BLOB = "blob"; //$NON-NLS-1$
     public static final String DATATYPE_CLOB = "clob"; //$NON-NLS-1$
     public static final String DATATYPE_XML = "xml"; //$NON-NLS-1$
+    public static final String DATATYPE_INT = "int"; //$NON-NLS-1$
     
     
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
@@ -88,6 +89,8 @@ public class DatatypeProcessor {
             convertedTypeName = DATATYPE_FLOAT;
         } else if( DATATYPE_XML.equalsIgnoreCase(identifier) ) {
             convertedTypeName = DATATYPE_OBJECT;
+        } else if( DATATYPE_INTEGER.equalsIgnoreCase(identifier) ) {
+        	convertedTypeName = DATATYPE_INT;
         }
         
         EObject result = null;

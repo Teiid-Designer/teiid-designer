@@ -7,6 +7,9 @@
  */
 package org.teiid.designer.ui.viewsupport;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
@@ -232,4 +235,30 @@ public abstract class DatatypeUtilities {
     	
     	return true;
     }
+    
+	/**
+	 * Utility method to return the name of the design-time datatype minus the namespace if it exists
+	 * @return design time datatype name
+	 */
+	public static String getDesignTimeTypeName(EObject eObject) {
+		String rawName = ModelUtilities.getEMFLabelProvider().getText(eObject);
+		int colonIndex = rawName.indexOf(':');
+		
+		if( colonIndex == -1 ) return rawName;
+		
+		return rawName.substring(0, colonIndex).trim();
+	}
+	
+	public static Collection<String> getAllDesignTimeTypeNames() throws ModelerCoreException {
+		EObject[] types = ModelerCore.getWorkspaceDatatypeManager().getBuiltInDatatypes();
+		Collection<String> names = new ArrayList<String>();
+		for( EObject type : types ) {
+			String name = getDesignTimeTypeName(type);
+			if( name != null && !name.equalsIgnoreCase("integer")) {
+				names.add(name);
+			}
+		}
+		
+		return names;
+	}
 }

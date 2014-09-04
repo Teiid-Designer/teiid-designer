@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,8 +49,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
@@ -59,6 +59,7 @@ import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedureResultSet;
+import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.transformation.model.RelationalViewProcedure;
@@ -66,7 +67,6 @@ import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
 import org.teiid.designer.transformation.util.SqlStringUtil;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
@@ -76,6 +76,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 
 /**
@@ -1478,11 +1479,16 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
+            
+            Collection<String> unsortedTypes = new ArrayList<String>();
+            try {
+				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
+			} catch (ModelerCoreException e) {
+				UiPlugin.Util.log(e);
+			}
     		Collection<String> dTypes = new ArrayList<String>();
     		
-    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
+    		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
     		Arrays.sort(sortedStrings);
     		for( String dType : sortedStrings ) {
     			dTypes.add(dType);

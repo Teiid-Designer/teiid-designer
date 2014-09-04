@@ -10,7 +10,7 @@ package org.teiid.designer.relational.ui.edit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.core.ModelerCore;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
@@ -55,7 +55,6 @@ import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
@@ -64,6 +63,7 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 
 /**
  *
@@ -1283,17 +1283,21 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
             if( getRelationalReference().isNativeQueryProcedure() ) {
             	datatypes = nativeQueryProcedureColumnDTypes;
             } else {
-	            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-	    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-	    		Collection<String> dTypes = new ArrayList<String>();
-	    		
-	    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
-	    		Arrays.sort(sortedStrings);
-	    		for( String dType : sortedStrings ) {
-	    			dTypes.add(dType);
-	    		}
-	    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
+                Collection<String> unsortedTypes = new ArrayList<String>();
+                try {
+    				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
+    			} catch (ModelerCoreException e) {
+    				UiPlugin.Util.log(e);
+    			}
+        		Collection<String> dTypes = new ArrayList<String>();
+        		
+        		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
+        		Arrays.sort(sortedStrings);
+        		for( String dType : sortedStrings ) {
+        			dTypes.add(dType);
+        		}
+        		
+        		datatypes = dTypes.toArray(new String[dTypes.size()]);
             }
     		
         }

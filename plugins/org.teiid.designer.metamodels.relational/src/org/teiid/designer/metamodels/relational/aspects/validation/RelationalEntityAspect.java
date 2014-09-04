@@ -16,7 +16,6 @@ import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.AccessPatternColumnsRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.CharDatatypeLengthRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnDatatypeRule;
-import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnIntegerDatatypeRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ColumnNativeTypeRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.ForeignKeyColumnsRule;
 import org.teiid.designer.metamodels.relational.aspects.validation.rules.IndexReferenceOneTableRule;
@@ -50,7 +49,6 @@ public abstract class RelationalEntityAspect extends AbstractValidationAspect {
     public static final ValidationRule MISSING_COLUMN_PRECISION_RULE = new MissingColumnPrecisionRule();
 	public static final ValidationRule SIBLING_NAME_IN_SOURCE_RULE = new SiblingNameInSourceRule();
 	public static final ValidationRule SIBLING_NAME_RULE = new RelationalChildrenNameValidationRule();
-	public static final ValidationRule COLUMN_INTEGER_DATATYPE_RULE = new ColumnIntegerDatatypeRule();
 	public static final ValidationRule FOREIGN_KEY_COLUMNS_RULE = new ForeignKeyColumnsRule();
 	public static final ValidationRule UNIQUE_KEY_COLUMNS_RULE = new UniqueKeyColumnsRule();
 	public static final ValidationRule ACCESS_PTTN_COLUMNS_RULE = new AccessPatternColumnsRule();

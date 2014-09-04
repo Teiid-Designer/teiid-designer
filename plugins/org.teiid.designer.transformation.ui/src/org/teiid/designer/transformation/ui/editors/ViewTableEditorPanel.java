@@ -58,8 +58,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -83,7 +83,6 @@ import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.transformation.ui.wizards.sqlbuilder.SQLTemplateDialog;
 import org.teiid.designer.transformation.util.SqlStringUtil;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
@@ -93,6 +92,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.SelectFromEObjectListDialog;
 
@@ -610,7 +610,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	        		if( !selectedColumns.isEmpty() ) {
 	        			getRelationalReference().getPrimaryKey().setColumns(selectedColumns);
 	        		} else {
-	        			getRelationalReference().getPrimaryKey().setColumns(Collections.EMPTY_LIST);
+	        			getRelationalReference().getPrimaryKey().setColumns(Collections.<RelationalColumn> emptyList());
 	        		}
 	        	}
 	        	handleInfoChanged();
@@ -736,7 +736,7 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
 	        		if( !selectedColumns.isEmpty() ) {
 	        			getRelationalReference().getUniqueContraint().setColumns(selectedColumns);
 	        		} else {
-	        			getRelationalReference().getUniqueContraint().setColumns(Collections.EMPTY_LIST);
+	        			getRelationalReference().getUniqueContraint().setColumns(Collections.<RelationalColumn> emptyList());
 	        		}
 	        	}
 	        	handleInfoChanged();
@@ -1542,11 +1542,16 @@ public class ViewTableEditorPanel extends RelationalEditorPanel implements Relat
          */
         public DatatypeEditingSupport( ColumnViewer viewer ) {
             super(viewer);
-            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
+            
+            Collection<String> unsortedTypes = new ArrayList<String>();
+            try {
+				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
+			} catch (ModelerCoreException e) {
+				UiPlugin.Util.log(e);
+			}
     		Collection<String> dTypes = new ArrayList<String>();
     		
-    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
+    		String[] sortedStrings = unsortedTypes.toArray(new String[unsortedTypes.size()]);
     		Arrays.sort(sortedStrings);
     		for( String dType : sortedStrings ) {
     			dTypes.add(dType);

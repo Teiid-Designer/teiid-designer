@@ -12,13 +12,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -26,6 +31,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -205,10 +211,16 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
                                 final DatatypeManager dtmgr ) {
         try {
             // Remove xs:anySimpleType or xs:anyType from the list
+        	// remove "integer" type
             for (Iterator i = types.iterator(); i.hasNext();) {
                 EObject eObj = (EObject)i.next();
                 if (dtmgr.getAnySimpleType() == eObj || dtmgr.getAnyType() == eObj) {
                     i.remove();
+                } else {
+                	String name = ModelerCore.getModelEditor().getName(eObj);
+                	if( name.equalsIgnoreCase("integer") ) {
+                		 i.remove();
+                	}
                 }
             }
         } catch (ModelerCoreException e) {
@@ -352,7 +364,7 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
         // add text filter:
         StructuredViewerFilterer textFilter = new StructuredViewerTextFilterer(StructuredViewerTextFilterer.DEFAULT_PROMPT,
                                                                                StructuredViewerTextFilterer.DEFAULT_CLEAR,
-                                                                               ModelUtilities.getEMFLabelProvider());
+                                                                               new DatatypeLabelProvider(0));
         textFilter.setDelayTime(50);
         Control filterCtrl = textFilter.addControl(composite);
         GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -367,10 +379,32 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
         layout = (GridLayout)superComp.getLayout();
         layout.marginHeight = 5;
         layout.marginWidth = 0;
+        
+        TableViewer tableViewer = getTableViewer();
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(tableViewer.getControl());
+
+        tableViewer.getTable().setHeaderVisible(true);
+        tableViewer.getTable().setLinesVisible(true);
+        
+        // create columns
+        TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
+        column.getColumn().setText("Design-time Type"); //$NON-NLS-1$
+        column.setLabelProvider(new DatatypeLabelProvider(0));
+        column.getColumn().pack();
+
+        column = new TableViewerColumn(tableViewer, SWT.LEFT);
+        column.getColumn().setText("Run-time Type" + "          "); //$NON-NLS-1$
+        column.setLabelProvider(new DatatypeLabelProvider(1));
+        column.getColumn().pack();
+        
+        column = new TableViewerColumn(tableViewer, SWT.LEFT);
+        column.getColumn().setText("Base Type" + "                        "); //$NON-NLS-1$
+        column.setLabelProvider(new DatatypeLabelProvider(2));
+        column.getColumn().pack();
 
         // attach the filters:
-        textFilter.attachToViewer(getTableViewer(), true);
-        entFilter.attachToViewer(getTableViewer(), true);
+        textFilter.attachToViewer(tableViewer, true);
+        entFilter.attachToViewer(tableViewer, true);
 
         // Added 9/27/04 to allow the SetDatatypeAction to retrieve a length value
         // for a datatype of 'string'.
@@ -386,7 +420,7 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
             WidgetFactory.createLabel(lengthGroup, GridData.FILL, getString("stringLengthLabel")); //$NON-NLS-1$
 
             // int spinner
-            ispin = new Spinner(lengthGroup, SWT.NONE);
+            ispin = new Spinner(lengthGroup, SWT.BORDER);
             ispin.setMinimum(MIN);
             ispin.setMaximum(MAX);
             ispin.setToolTipText(UiConstants.Util.getString(PREFIX + "lengthSpinner.toolTip", //$NON-NLS-1$
@@ -401,6 +435,7 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
 
             GridData gridData2 = new GridData();
             gridData2.horizontalAlignment = GridData.CENTER;
+            gridData2.widthHint = 100;
             ispin.setLayoutData(gridData2);
             ispin.setSelection(initialLength);
             ispin.setEnabled(true);
@@ -534,6 +569,98 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
      */
     public boolean overrideAllLengths() {
         return this.setLengthForAll;
+    }
+    
+    class DatatypeLabelProvider extends ColumnLabelProvider {
+    	private final DatatypeManager datatypeManager = ModelerCore.getBuiltInTypesManager();
+		private final int columnNumber;
+
+		public DatatypeLabelProvider(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+		 */
+		@Override
+		public String getText(Object element) {
+			if( element instanceof EObject ) {
+				switch (this.columnNumber) {
+					case 0: {
+						String name = getDesignTimeTypeName((EObject)element);
+						if( name.equalsIgnoreCase("integer")) {
+							name = name + " <deprecated>";
+						}
+						return name;
+					}
+					case 1: {
+						String name = ModelerCore.getModelEditor().getName((EObject)element);
+						EObject designTimeType = null;
+						
+						try {
+							designTimeType = datatypeManager.getBuiltInDatatype(name);
+						} catch (ModelerCoreException ex) {
+							
+						}
+						if( designTimeType != null ) {
+							String runtimeTypename = datatypeManager.getRuntimeTypeName(designTimeType);
+							return runtimeTypename;
+						}
+					}
+					case 2: {
+						return getBaseTypeName((EObject)element);
+					}
+				}
+			}
+			return EMPTY_STRING;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		@Override
+		public String getToolTipText(Object element) {
+			switch (this.columnNumber) {
+			case 0: {
+				return "Tooltip 1"; //getString("columnNameColumnTooltip"); //$NON-NLS-1$
+			}
+			case 1: {
+				return "Tooltip 2"; //getString("datatypeColumnTooltip"); //$NON-NLS-1$
+			}
+		}
+		return "unknown tooltip"; //$NON-NLS-1$
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if( this.columnNumber == 0 ) {
+				return ModelUtilities.getEMFLabelProvider().getImage(element);
+			}
+			return null;
+		}
+		
+		private String getDesignTimeTypeName(EObject eObject) {
+			String rawName = ModelUtilities.getEMFLabelProvider().getText(eObject);
+			int colonIndex = rawName.indexOf(':');
+			
+			if( colonIndex == -1 ) return rawName;
+			
+			return rawName.substring(0, colonIndex).trim();
+		}
+		
+		private String getBaseTypeName(EObject eObject) {
+			String rawName = ModelUtilities.getEMFLabelProvider().getText(eObject);
+			int colonIndex = rawName.indexOf(':');
+			int fullLength = rawName.length();
+			
+			if( colonIndex == -1 ) return rawName;
+			
+			return rawName.substring(colonIndex+1, fullLength).trim();
+		}
     }
 
 }
