@@ -23,7 +23,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -100,6 +102,19 @@ public class ColumnMaskingPanel extends DataRolePanel {
 	void createControl() {
 		GridLayoutFactory.fillDefaults().numColumns(1).applyTo(getPrimaryPanel());
 		GridDataFactory.fillDefaults().applyTo(getPrimaryPanel());
+		
+		
+		{ // Message/description Text
+			Composite thePanel = WidgetFactory.createPanel(getPrimaryPanel(), SWT.NONE, 1, 1);
+			GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
+			GridDataFactory.fillDefaults().grab(true, false).applyTo(thePanel);
+			
+			Text helpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
+			helpText.setBackground(thePanel.getBackground());
+			helpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+			helpText.setText(Messages.columnMaskingHelpText);
+
+		}
 		
 		{
 	        this.tableViewer = new TableViewer(getPrimaryPanel(), (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
@@ -178,16 +193,19 @@ public class ColumnMaskingPanel extends DataRolePanel {
 	        column.getColumn().pack();
 	        
 	        column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
-	        column.getColumn().setText(Messages.order);
+	        column.getColumn().setText(Messages.condition + getSpaces(70));
 	        column.setLabelProvider(new PermissionLabelProvider(1));
+	        column.getColumn().pack();
+	        
+	        column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
+	        column.getColumn().setText(Messages.order);
+	        column.setLabelProvider(new PermissionLabelProvider(2));
 	        column.setEditingSupport(new OrderEditingSupport(this.tableViewer));
 	        column.getColumn().pack();
 
 	        column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
 	        column.getColumn().setText(Messages.mask);
-	        column.setLabelProvider(new PermissionLabelProvider(2));
-	        // TODO: add editing support
-	        //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
+	        column.setLabelProvider(new PermissionLabelProvider(3));
 	        column.getColumn().pack();
 	        
 
@@ -206,6 +224,14 @@ public class ColumnMaskingPanel extends DataRolePanel {
 
 	            }
 	        });
+	        
+	        this.tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+				
+				@Override
+				public void doubleClick(DoubleClickEvent event) {
+					handleEdit();
+				}
+			});
 	        
 		}
         
@@ -276,10 +302,12 @@ public class ColumnMaskingPanel extends DataRolePanel {
 			if( element instanceof Permission ) {
 				if( columnID == 0 ) {
 					return ((Permission)element).getTargetName();
-				} else if( columnID == 2 ) {
+				} else if( columnID == 3 ) {
 					return ((Permission)element).getMask();
-				}  else if( columnID == 1 ) {
+				}  else if( columnID == 2 ) {
 					return Integer.toString(((Permission)element).getOrder());
+				} else if( columnID == 1 ) {
+					return ((Permission)element).getCondition();
 				}
 			}
 			return super.getText(element);
@@ -294,11 +322,12 @@ public class ColumnMaskingPanel extends DataRolePanel {
 
         if (dialog.open() == Window.OK) {
             // update model
+        	String condition = dialog.getCondition();
             String mask = dialog.getMask();
             int order = dialog.getOrder();
             String targetName = dialog.getTargetName();
 
-            getWizard().getTreeProvider().setColumnMask(targetName, mask, order);
+            getWizard().getTreeProvider().setColumnMask(targetName, condition, mask, order);
             
             getWizard().refreshAllTabs();
         }
@@ -316,9 +345,10 @@ public class ColumnMaskingPanel extends DataRolePanel {
             // update model
             String mask = dialog.getMask();
             int order = dialog.getOrder();
+            String condition = dialog.getCondition();
             String targetName = dialog.getTargetName();
 
-            getWizard().getTreeProvider().setColumnMask(targetName, mask, order);
+            getWizard().getTreeProvider().setColumnMask(targetName, condition, mask, order);
             
             getWizard().refreshAllTabs();
         }
@@ -521,6 +551,9 @@ public class ColumnMaskingPanel extends DataRolePanel {
         private String targetColumn;
         private Text targetColumnText;
         
+        private StyledTextEditor conditionTextEditor;
+        private String conditionString;
+        
         private StyledTextEditor textEditor;
         private String maskString;
         private int order = 0;
@@ -534,12 +567,16 @@ public class ColumnMaskingPanel extends DataRolePanel {
         public ColumnMaskDialog( Shell parentShell, String title, String message, Permission permission, boolean okEnabled ) {
             super(parentShell, title, message, okEnabled);
 
-            if( permission != null && permission.getMask() != null ) {
-            	this.maskString = permission.getMask();
-            	isEdit = true;
-            	this.order = permission.getOrder();
-            	this.targetColumn = permission.getTargetName();
+            if( permission != null ) {
+            	if( permission.getMask() != null || permission.getCondition() != null) {
+	                this.maskString = permission.getMask();
+	            	isEdit = true;
+	            	this.order = permission.getOrder();
+	            	this.targetColumn = permission.getTargetName();
+	                this.conditionString = permission.getCondition();
+            	}
             }
+
         }
 
         
@@ -590,6 +627,31 @@ public class ColumnMaskingPanel extends DataRolePanel {
 					}
 				});
     	        
+    	        final Group group = WidgetFactory.createGroup(innerPanel, Messages.condition, GridData.FILL_HORIZONTAL, 3);
+    	        {
+    	        	this.conditionTextEditor = new StyledTextEditor(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+        			GridDataFactory.fillDefaults().grab(true,  true).span(2,  1).applyTo(this.conditionTextEditor.getTextWidget());
+        			((GridData)this.conditionTextEditor.getTextWidget().getLayoutData()).heightHint = 50;
+        			
+        			if( isEdit ) {
+        				this.conditionTextEditor.setText(this.conditionString);
+        			} else {
+        				this.conditionTextEditor.setText(""); //$NON-NLS-1$
+        			}
+        			this.conditionTextEditor.getDocument().addDocumentListener(new IDocumentListener() {
+
+        	            @Override
+        	            public void documentChanged( DocumentEvent event ) {
+        	            	handleInputChanged();
+        	            }
+
+        	            @Override
+        	            public void documentAboutToBeChanged( DocumentEvent event ) {
+        	                // NO OP
+        	            }
+        	        });
+    	        }
+    	        
     	        Label label = WidgetFactory.createLabel(innerPanel, Messages.order);
     	        label.setToolTipText(Messages.orderTooltip);
     	        GridDataFactory.fillDefaults().align(GridData.BEGINNING, GridData.CENTER).applyTo(label);
@@ -608,9 +670,9 @@ public class ColumnMaskingPanel extends DataRolePanel {
     	            }
     	        });
     	        
-    	        final Group group = WidgetFactory.createGroup(outerPanel, Messages.columnExpression, GridData.FILL_HORIZONTAL, 1);
+    	        final Group maskGroup = WidgetFactory.createGroup(outerPanel, Messages.columnExpression, GridData.FILL_HORIZONTAL, 1);
     	        {
-	    			textEditor = new StyledTextEditor(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+	    			textEditor = new StyledTextEditor(maskGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 	    			GridDataFactory.fillDefaults().grab(true,  true).span(3,  1).applyTo(textEditor.getTextWidget());
 	    			((GridData)textEditor.getTextWidget().getLayoutData()).heightHint = 50;
 	    			
@@ -675,6 +737,16 @@ public class ColumnMaskingPanel extends DataRolePanel {
             return order;
         }
         
+        /**
+         * @return the new condition value (never <code>null</code>)
+         * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
+         */
+        public String getCondition() {
+            CoreArgCheck.isEqual(getReturnCode(), Window.OK);
+            return this.conditionString;
+        }
+        
+        
         private void handleBrowseForColumn() {
         	SelectColumnDialog dialog = new SelectColumnDialog(getShell());
         	
@@ -699,9 +771,23 @@ public class ColumnMaskingPanel extends DataRolePanel {
         	
             maskString = textEditor.getText();
             targetColumn = targetColumnText.getText();
+            conditionString = conditionTextEditor.getText();
+            
+        	boolean conditionEmpty = (this.conditionString == null || this.conditionString.trim().isEmpty());
+
+            boolean maskEmpty = (maskString == null || maskString.trim().isEmpty());
+            
             if( targetColumn == null || targetColumn.trim().isEmpty() ) {
             	enable = false;
-        		setErrorMessage(Messages.targetIsUndefined);
+        		setErrorMessage(Messages.targetColumnUndefined);
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+        		return;
+            }
+            
+            if( maskEmpty && conditionEmpty) {
+            	enable = false;
+        		setErrorMessage(Messages.noMaskOrConditionDefined);
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
         		return;
             }
             
@@ -711,18 +797,23 @@ public class ColumnMaskingPanel extends DataRolePanel {
 				} catch (NumberFormatException ex) {
 					enable = false;
 	        		setErrorMessage(Messages.orderMustBeAnInteger);
+	        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
 	        		return;
 				}
         	} else {
         		enable = false;
         		setErrorMessage(Messages.orderMustNotBeNull);
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
         		return;
         	}
         	
-            if( maskString == null || maskString.trim().isEmpty() ) {
-            	enable = false;
+        	// Assume that if order is > 0 (non-default), then the mask cannot be empty
+        	if( maskEmpty ) {
+        		enable = false;
         		setErrorMessage(Messages.maskIsUndefined);
-            }
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+        		return;
+        	}
         	
         	getButton(IDialogConstants.OK_ID).setEnabled(enable);
         }
@@ -737,7 +828,7 @@ public class ColumnMaskingPanel extends DataRolePanel {
         public SelectColumnDialog( Shell parent ) {
             super(parent, getPermissionTreeProvider(), getPermissionTreeProvider());
             setTitle(Messages.targetSelection);
-            setMessage(Messages.selectTargetForCondition);
+            setMessage(Messages.selectTargetColumn);
             setInput(getWizard().getTempContainer());
             setAllowMultiple(false);
         }

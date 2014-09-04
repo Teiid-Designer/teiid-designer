@@ -28,7 +28,8 @@ import org.teiid.designer.roles.Crud;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
-import org.teiid.designer.roles.ui.wizard.dialogs.SecurityDefinitionDialog;
+import org.teiid.designer.roles.ui.wizard.dialogs.ColumnMaskingDialog;
+import org.teiid.designer.roles.ui.wizard.dialogs.RowBasedSecurityDialog;
 import org.teiid.designer.ui.UiPlugin;
 
 /**
@@ -170,34 +171,54 @@ public class CrudPanel extends DataRolePanel {
      * This method tells the Tree Provider that 
      */
     private void handleDoubleClick(int column, Object target) {
-        if (column == 1 && getTreeProvider().allowsSecurity(target) ) {
-        	Permission perm = getTreeProvider().getPermission(target);
-        	boolean existingPerm = perm != null;
-        	if( perm == null ) {
-        		perm = getTreeProvider().createPermission(target);
-        	}
-        	boolean allowsCondition = getTreeProvider().allowsCondition(target);
-        	boolean allowsMask = getTreeProvider().allowsMasking(target);
-        	
-        	String message = getTreeProvider().getSecurityDialogMessage(target);
-        	SecurityDefinitionDialog dialog = 
-        			new SecurityDefinitionDialog(getShell(), 
-        					Messages.setSecurityValuesTitle, message, perm, 
-        					allowsCondition, allowsMask, existingPerm);
-        	
-        	if( dialog.open() == Window.OK) {
-        		if( allowsCondition && dialog.hasCondition()) {
-        			perm.setCondition(dialog.getCondition());
-                    perm.setConstraint(dialog.getConstraintValue());
-        		}
-        		if( allowsMask && dialog.hasMask()) {
-	                perm.setMask(dialog.getMask());
-	                perm.setOrder(dialog.getOrder());
-        		}
-        		
-    	        getWizard().refreshAllTabs();
-    	    	
-    	        validateInputs();
+        if (column == 1 ) {
+        	if( getTreeProvider().allowsRowFilter(target) ) {
+	        	Permission perm = getTreeProvider().getPermission(target);
+	        	boolean existingPerm = perm != null;
+	        	if( perm == null ) {
+	        		perm = getTreeProvider().createPermission(target);
+	        	}
+	        	
+	        	String message = getTreeProvider().getSecurityDialogMessage(target);
+	        	RowBasedSecurityDialog dialog = 
+	        			new RowBasedSecurityDialog(getShell(), 
+	        					Messages.setSecurityValuesTitle, message, perm, existingPerm);
+	        	
+	        	if( dialog.open() == Window.OK) {
+	        		if( dialog.hasCondition()) {
+	        			perm.setCondition(dialog.getCondition());
+	                    perm.setConstraint(dialog.getConstraintValue());
+	        		}
+	        		
+	    	        getWizard().refreshAllTabs();
+	    	    	
+	    	        validateInputs();
+	        	}
+        	} else if( getTreeProvider().allowsColumnMask(target) ) {
+	        	Permission perm = getTreeProvider().getPermission(target);
+	        	boolean existingPerm = perm != null;
+	        	if( perm == null ) {
+	        		perm = getTreeProvider().createPermission(target);
+	        	}
+	        	
+	        	String message = getTreeProvider().getSecurityDialogMessage(target);
+	        	ColumnMaskingDialog dialog = 
+	        			new ColumnMaskingDialog(getShell(), 
+	        					Messages.setSecurityValuesTitle, message, perm, existingPerm);
+	        	
+	        	if( dialog.open() == Window.OK) {
+	        		if( dialog.hasCondition()) {
+	        			perm.setCondition(dialog.getCondition());
+	        		}
+	        		if( dialog.hasMask()) {
+		                perm.setMask(dialog.getMask());
+		                perm.setOrder(dialog.getOrder());
+	        		}
+	        		
+	    	        getWizard().refreshAllTabs();
+	    	    	
+	    	        validateInputs();
+	        	}
         	}
         }
     }

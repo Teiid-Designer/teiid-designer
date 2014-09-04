@@ -1,10 +1,10 @@
 /*
  * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.designer.roles.ui.wizard.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -16,10 +16,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
@@ -32,25 +29,18 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
 
-/**
- *
- */
-public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
+public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
 	
     private String targetName;
     private Text targetNameText;
     
     private StyledTextEditor conditionTextEditor;
     private String conditionString;
-    private boolean constraint = true;
-    private Button constraintButton;
     
     private StyledTextEditor maskTextEditor;
     private String maskString;
     private int order = 0;
     private Text orderText;
-    private boolean allowsFilter;
-    private boolean allowsMasking;
     
     private boolean isEdit;
 
@@ -63,23 +53,19 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
      * @param permission
      * @param okEnabled
      */
-    public SecurityDefinitionDialog( Shell parentShell, String title, String message, Permission permission, boolean allowsFilter,
-    		boolean allowsMasking, boolean existingSecurity) {
-        super(parentShell, title, message, existingSecurity);
+    public ColumnMaskingDialog( Shell parentShell, String title, String message, Permission permission, boolean existingMask) {
+        super(parentShell, Messages.columnMaskingDialogTitle, Messages.setConditionOrMaskingMessage, existingMask);
 
     	this.targetName = permission.getTargetName();
     	isEdit = true;
     	if( permission.getCondition() != null ) {
         	this.conditionString = permission.getCondition();
-        	this.constraint = permission.isConstraint();
     	}
     	
         if(permission.getMask() != null ) {
         	this.maskString = permission.getMask();
         	this.order = permission.getOrder();
         }
-        this.allowsFilter = allowsFilter;
-        this.allowsMasking = allowsMasking;
     }
 
     
@@ -94,7 +80,8 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
         GridDataFactory.fillDefaults().grab(true, false).applyTo(innerPanel);
         
 		{
-	        WidgetFactory.createLabel(innerPanel, Messages.target);
+	        Label columnLabel = WidgetFactory.createLabel(innerPanel, Messages.column);
+	        GridDataFactory.swtDefaults().align(GridData.CENTER, GridData.CENTER).applyTo(columnLabel);;
 
 	        this.targetNameText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
 	        if( isEdit ) {
@@ -109,32 +96,6 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
 	        });
 	        this.targetNameText.setEditable(false);
 	        this.targetNameText.setBackground(innerPanel.getBackground());
-
-	        Label label = WidgetFactory.createLabel(innerPanel, Messages.constraint);
-	        label.setToolTipText(Messages.constraintButtonTooltip);
-
-	        this.constraintButton = new Button(innerPanel, SWT.CHECK);
-//	        this.constraintButton.setText(Messages.constraint);
-	        if( isEdit ) {
-	        	this.constraintButton.setSelection(this.constraint);
-	        } else {
-	        	this.constraintButton.setSelection(true);
-	        }
-	        
-	        this.constraintButton.addSelectionListener(new SelectionListener() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					// Open dialog to display models tree so user can select a column object
-					handleInputChanged();
-				}
-				
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
 	        
 	        final Group group = WidgetFactory.createGroup(innerPanel, Messages.condition, GridData.FILL_HORIZONTAL, 2);
 	        {
@@ -160,15 +121,10 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     	            }
     	        });
 	        }
-	        this.constraintButton.setEnabled(allowsFilter);
-	        this.conditionTextEditor.getTextWidget().setEnabled(allowsFilter);
-	        if( !allowsFilter ) {
-	        	this.conditionTextEditor.getTextWidget().setBackground(innerPanel.getBackground());
-	        }
-	        
-	        label = WidgetFactory.createLabel(innerPanel, Messages.order);
-	        label.setToolTipText(Messages.orderTooltip);
 
+	        
+	        WidgetFactory.createLabel(innerPanel, Messages.order);
+	        
 	        this.orderText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
 	        if( isEdit ) {
 	        	this.orderText.setText(Integer.toString(this.order));
@@ -208,12 +164,8 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     	        });
 	        }
 
-	        this.orderText.setEnabled(allowsMasking);
-	        this.maskTextEditor.getTextWidget().setEnabled(allowsMasking);
-	        if( !allowsMasking ) {
-	        	this.orderText.setBackground(innerPanel.getBackground());
-	        	this.maskTextEditor.getTextWidget().setBackground(innerPanel.getBackground());
-	        }
+	        this.orderText.setEnabled(true);
+	        this.maskTextEditor.getTextWidget().setEnabled(true);
 		}
     }
     
@@ -234,16 +186,7 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
         CoreArgCheck.isEqual(getReturnCode(), Window.OK);
         return this.conditionString;
     }
-    
-    /**
-     * @return the new constraint (never <code>null</code>)
-     * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
-     */
-    public boolean getConstraintValue() {
-        CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-        return constraint;
-    }
-    
+
     /**
      * @return the new mask value (never <code>null</code>)
      * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
@@ -283,39 +226,41 @@ public class SecurityDefinitionDialog extends AbstractAddOrEditTitleDialog {
     
     @Override
     protected void validate() {
-    	boolean enable = true;
+    	getButton(IDialogConstants.OK_ID).setEnabled(true);
     	setErrorMessage(null);
     	setMessage(Messages.clickOkToFinish); //Messages.clickOKToFinish);
     	
     	this.conditionString = conditionTextEditor.getText();
         this.maskString = maskTextEditor.getText();
-        this.constraint = constraintButton.getSelection();
+
     	boolean conditionEmpty = (this.conditionString == null || this.conditionString.trim().isEmpty());
+
+        boolean maskEmpty = (maskString == null || maskString.trim().isEmpty());
         
-        if( this.allowsMasking ) {
-        	boolean maskEmpty = (maskString == null || maskString.trim().isEmpty());
-            if( maskEmpty && conditionEmpty) {
-            	enable = false;
-        		setErrorMessage(Messages.noMaskOrConditionDefined);
-            }
-	    	if( this.orderText.getText() != null ) {
-	    		try {
-					order = Integer.parseInt(orderText.getText());
-				} catch (NumberFormatException ex) {
-					enable = false;
-	        		setErrorMessage(Messages.orderMustBeAnInteger);
-	        		return;
-				}
-	    	} else {
-	    		enable = false;
-	    		setErrorMessage(Messages.orderMustNotBeNull);
-	    		return;
-	    	}
-        } else if( conditionEmpty && allowsFilter) {
-            enable = false;
-        	setErrorMessage(Messages.conditionIsUndefined);
+        if( maskEmpty && conditionEmpty) {
+    		setErrorMessage(Messages.noMaskOrConditionDefined);
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
+    		return;
         }
+        
+    	if( this.orderText.getText() != null ) {
+    		try {
+				order = Integer.parseInt(orderText.getText());
+			} catch (NumberFormatException ex) {
+        		setErrorMessage(Messages.orderMustBeAnInteger);
+        		getButton(IDialogConstants.OK_ID).setEnabled(false);
+        		return;
+			}
+    	} else {
+    		setErrorMessage(Messages.orderMustNotBeNull);
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
+    		return;
+    	}
     	
-    	getButton(IDialogConstants.OK_ID).setEnabled(enable);
+    	// Assume that if order is > 0 (non-default), then the mask cannot be empty
+    	if( maskEmpty ) {
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
+    		return;
+    	}
     }
 }

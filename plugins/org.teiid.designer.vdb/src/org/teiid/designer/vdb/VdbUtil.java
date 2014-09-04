@@ -24,12 +24,14 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -58,6 +60,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
 import org.teiid.designer.vdb.file.VdbFileProcessor;
+import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -888,6 +891,29 @@ public class VdbUtil implements VdbConstants {
                 result = true;
             }
         }
+        
+        for (EntryElement nextRes : manifest.getEntries()) {
+
+            // Find my resource (schema? jar?)
+        	IPath path = new Path(nextRes.getPath());
+            IFile resource = WorkspaceResourceFinderUtil.findIResourceByPath(path);
+
+
+            // Check if resource is found or not.
+            if (resource == null) {
+                // Note that we have a View model that is in a VDB and it's source is removed (VDB.removeEntry())
+                // then that action will remove the View Model as well.
+                // We need to prevent this OR need to tell the user we can't do anything about this and maybe
+                // bail from this method.
+
+                // Construct model path
+                IPath targetPath = getProjectRelativeModelPath(nextRes.getPath(), theVdb.getProject());
+                //extractModelFromVdb(theVdb, model, targetPath);
+                extractFileFromVdbToSameProject(theVdb, nextRes.getPath(), targetPath);
+
+                result = true;
+            }
+        }
 
         return result;
     }
@@ -1042,5 +1068,24 @@ public class VdbUtil implements VdbConstants {
 
         actualVDB.save(new NullProgressMonitor());
         theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+    }
+    
+    /**
+     * @param theVdb
+     * @param targetName
+     * @return the set of data role names for a VDB
+     */
+    public static Set<String> getDataRoleNames(Vdb theVdb, String targetName) {
+    	Set<String> names = new HashSet<String>();
+    	Set<VdbDataRole> entries = theVdb.getDataPolicyEntries();
+    	for( VdbDataRole role : entries) {
+    		names.add(role.getName());
+    	}
+    	
+    	if( targetName != null && !targetName.isEmpty() ) {
+    		names.remove(targetName);
+    	}
+    	
+    	return names;
     }
 }

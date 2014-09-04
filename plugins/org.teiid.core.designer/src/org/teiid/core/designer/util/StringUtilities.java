@@ -12,8 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -143,7 +146,7 @@ public class StringUtilities implements StringConstants {
     public static String[] getLines( final String value ) {
         final StringReader stringReader = new StringReader(value);
         final BufferedReader reader = new BufferedReader(stringReader);
-        final ArrayList result = new ArrayList();
+        final ArrayList<String> result = new ArrayList<String>();
         try {
             String line = reader.readLine();
             while (line != null) {
@@ -302,6 +305,63 @@ public class StringUtilities implements StringConstants {
         }
 
         return sb.toString();
+    }
+    
+    public static String getUniqueName(String baseName, Set<String> otherNames, boolean appendInteger, boolean appendWithSpace, int countLimit) {
+		int count = 1;
+		// Set the newName to baseName
+		String newName = baseName;
+		
+		// append count to baseName
+		if( appendWithSpace ) {
+			 newName = baseName + StringConstants.SPACE + count;
+		} else {
+			newName = baseName + count;
+		}
+		
+		
+		if( otherNames.contains(newName)) {
+			if( appendWithSpace ) {
+				newName = baseName + StringConstants.SPACE + count;
+			} else {
+				newName = baseName + count;
+			}
+			
+			while( count < countLimit) {
+				if(!otherNames.contains(newName)){
+					return newName;
+				} else {
+					count++;
+					newName = baseName + StringConstants.SPACE + count;
+				}
+			}
+		} else {
+			return newName;
+		}
+		
+		return baseName;
+    }
+    
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+    	String startName = "XXXXX";
+    	Set<String> otherNames = new HashSet<String>();
+    	otherNames.add("XXXXX");
+    	otherNames.add("YYYYY");
+    	
+    	String newName = StringUtilities.getUniqueName(startName, otherNames, true, true, 1000);
+    	System.out.println("  START NAME = " + startName + " UNIQUE NAME = " + newName);
+    	
+    	otherNames.add("XXXXX 1");
+    	
+    	newName = StringUtilities.getUniqueName(startName, otherNames, true, true, 1000);
+    	System.out.println("  START NAME = " + startName + " UNIQUE NAME = " + newName);
+    	
+    	otherNames.add("XXXXX 2");
+    	
+    	newName = StringUtilities.getUniqueName(startName, otherNames, true, true, 1000);
+    	System.out.println("  START NAME = " + startName + " UNIQUE NAME = " + newName);
     }
 
     private StringUtilities() {

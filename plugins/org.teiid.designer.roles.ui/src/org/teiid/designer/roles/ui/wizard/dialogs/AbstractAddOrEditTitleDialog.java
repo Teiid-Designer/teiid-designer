@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.roles.ui.wizard.dialogs;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -23,7 +22,6 @@ public abstract class AbstractAddOrEditTitleDialog extends TitleAreaDialog {
 
 	private String title;
 	private String initialMessage;
-	private boolean okEnabled;
 	
 
     /**
@@ -34,7 +32,6 @@ public abstract class AbstractAddOrEditTitleDialog extends TitleAreaDialog {
         super(parentShell);
         this.title = title;
         this.initialMessage = message;
-        this.okEnabled = okEnabled;
     }
     
     /*
@@ -83,6 +80,6 @@ public abstract class AbstractAddOrEditTitleDialog extends TitleAreaDialog {
     @Override
     public void create() {
         super.create();
-        getButton(IDialogConstants.OK_ID).setEnabled(this.okEnabled);
+        validate();
     }
 }

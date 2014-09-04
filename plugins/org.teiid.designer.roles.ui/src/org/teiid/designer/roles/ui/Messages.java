@@ -61,6 +61,10 @@ public class Messages  extends NLS {
 	public static String addColumnMaskMessage;
 	public static String editColumnMaskTitle;
 	public static String editColumnMaskMessage;
+	public static String columnMaskingDialogTitle;
+	public static String setConditionOrMaskingMessage;
+	public static String rowFilterDialogTitle;
+	public static String setConditionForTargetsMessage;
 	public static String addColumnRowBasedSecurityTitle;
 	public static String addColumnRowBasedSecurityMessage;
 	public static String editColumnRowBasedSecurityTitle;
@@ -72,6 +76,8 @@ public class Messages  extends NLS {
 	public static String constraintButtonTooltip;
 	public static String clickOkToFinish;
 	public static String targetIsUndefined;
+	public static String targetColumnUndefined;
+	public static String selectTargetColumn;
 	public static String conditionIsUndefined;
 	public static String noMaskOrConditionDefined;
 	public static String targetSelection;
@@ -81,6 +87,7 @@ public class Messages  extends NLS {
 	public static String maskIsUndefined;
 	public static String orderTooltip;
 	public static String column;
+	public static String columnLabel;
 	public static String table;
 	public static String view;
 	public static String procedure;
@@ -90,6 +97,7 @@ public class Messages  extends NLS {
 	public static String security;
 	public static String securityTooltip;
 	public static String rowBasedSecurityHelpText;
+	public static String columnMaskingHelpText;
 	public static String selectedTableViewOrProcedure;
 	public static String rowBasedSecurityOkMessage;
 	public static String invalidSelectionRowBasedSecurityMessage;
@@ -100,13 +108,11 @@ public class Messages  extends NLS {
 	public static String invalidSelectionColumnMaskingMessage;
 	public static String noColumnSelected;
 	public static String permissionsTabHelpText;
-	//public static String xxxxx;
-	//public static String xxxxx;
-	//public static String xxxxx;
-	
+	public static String dataRoleExists_0_Message;
 	
     static {
         NLS.initializeMessages("org.teiid.designer.roles.ui.messages", Messages.class); //$NON-NLS-1$
     }
+
 
 }
