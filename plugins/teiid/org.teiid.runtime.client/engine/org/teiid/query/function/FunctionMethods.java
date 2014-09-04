@@ -1474,7 +1474,7 @@ public final class FunctionMethods {
 	}
 
 	private enum ErrorAction {THROW_EXCEPTION, IGNORE, WAIT}
-	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism=Determinism.NONDETERMINISTIC)
+	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism = Determinism.COMMAND_DETERMINISTIC)
 	@Since(Version.TEIID_8_6)	
 	public static int mvstatus(CommandContext context, String schemaName, String viewName, Boolean validity, String status, String action) throws Exception {
 		if (!validity) {
