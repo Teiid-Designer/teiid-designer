@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
+
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -143,7 +145,7 @@ public class StringUtilities implements StringConstants {
     public static String[] getLines( final String value ) {
         final StringReader stringReader = new StringReader(value);
         final BufferedReader reader = new BufferedReader(stringReader);
-        final ArrayList result = new ArrayList();
+        final ArrayList<String> result = new ArrayList<String>();
         try {
             String line = reader.readLine();
             while (line != null) {
@@ -302,6 +304,45 @@ public class StringUtilities implements StringConstants {
         }
 
         return sb.toString();
+    }
+    
+    public static String getUniqueName( String baseName, 
+							    		Set<String> otherNames, 
+							    		boolean appendInteger, 
+							    		boolean appendWithSpace, 
+							    		int countLimit) {
+		int count = 1;
+		// Set the newName to baseName
+		String newName = baseName;
+		
+		// append count to baseName
+		if( appendWithSpace ) {
+			 newName = baseName + StringConstants.SPACE + count;
+		} else {
+			newName = baseName + count;
+		}
+		
+		
+		if( otherNames.contains(newName)) {
+			if( appendWithSpace ) {
+				newName = baseName + StringConstants.SPACE + count;
+			} else {
+				newName = baseName + count;
+			}
+			
+			while( count < countLimit) {
+				if(!otherNames.contains(newName)){
+					return newName;
+				} else {
+					count++;
+					newName = baseName + StringConstants.SPACE + count;
+				}
+			}
+		} else {
+			return newName;
+		}
+		
+		return baseName;
     }
 
     private StringUtilities() {

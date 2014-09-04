@@ -29,6 +29,8 @@ public class Permission {
 	private int order;
 	private String mask;
 	private boolean allowLanguage;
+	private boolean canFilter;
+	private boolean canMask;
 
 	public Permission(String targetName) {
 		super();
@@ -44,6 +46,8 @@ public class Permission {
 		this.allowLanguage = permission.isAllowLanguage();
 		this.condition = permission.getCondition();
 		this.mask = permission.getMask();
+		setCanFilter(permission.canFilter());
+		setCanMask(permission.canMask());
 	}
 	
 	public Permission(
@@ -309,15 +313,20 @@ public class Permission {
 		this.allowLanguage = allowLanguage;
 	}
 	
-	public boolean hasSecurity() {
-		if( this.condition != null && !this.condition.isEmpty() ) {
-			return true;
-		}
-		
-		if( this.mask != null && !this.mask.isEmpty() ) {
-			return true;
-		}
-		
-		return false;
+	public boolean canMask() {
+		return canMask;
 	}
+	
+	public void setCanMask(boolean canMask) {
+		this.canMask = canMask;
+	}
+	
+	public boolean canFilter() {
+		return canFilter;
+	}
+	
+	public void setCanFilter(boolean canFilter) {
+		this.canFilter = canFilter;
+	}
+	
 }

@@ -10,6 +10,7 @@ package org.teiid.designer.vdb.ui.editor.panels;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
@@ -43,6 +44,7 @@ import org.teiid.designer.ui.common.table.TextColumnProvider;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.VdbDataRole;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -173,8 +175,8 @@ public class DataRolesPanel {
                                                    vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                //final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, dataPolicy);
-                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataPolicy, vdbEditor.getVdb().getAllowedLanguages());
+                Set<String> roleNames = VdbUtil.getDataRoleNames(vdbEditor.getVdb(), vdbDataRole.getName());
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataPolicy, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
@@ -397,8 +399,8 @@ public class DataRolesPanel {
                 }
 
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                //final NewDataRoleWizard wizard = new NewDataRoleWizard(tempContainer, null);
-                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, null, vdbEditor.getVdb().getAllowedLanguages());
+                Set<String> roleNames = VdbUtil.getDataRoleNames(vdbEditor.getVdb(), null);
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, null, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);

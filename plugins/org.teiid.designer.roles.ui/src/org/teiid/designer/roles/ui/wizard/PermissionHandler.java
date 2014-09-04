@@ -646,6 +646,8 @@ public class PermissionHandler {
 	                    perm.setPrimary(true);
 	                }
 	                // load the actual object to permission into map
+	                perm.setCanFilter(tree.allowsRowFilter(obj));
+	                perm.setCanMask(tree.allowsColumnMask(obj));
 	                this.objectsToPermissionsMap.put(obj, perm);
 	            }
         	}
@@ -660,7 +662,7 @@ public class PermissionHandler {
 		List<Permission> perms = new ArrayList<Permission>(10);
 		
 		for( Permission perm : getPermissions()) {
-			if( perm.getCondition() != null ) {
+			if( perm.canFilter() && perm.getCondition() != null ) {
 				perms.add(perm);
 			}
 		}
@@ -681,7 +683,7 @@ public class PermissionHandler {
 		List<Permission> perms = new ArrayList<Permission>(10);
 		
 		for( Permission perm : getPermissions()) {
-			if( perm.getMask() != null ) {
+			if( perm.canMask() && (perm.getMask() != null || perm.getCondition() != null) ) {
 				perms.add(perm);
 			}
 		}
@@ -697,6 +699,7 @@ public class PermissionHandler {
 	public void removeColumnMask(Permission permission) {
 		permission.setMask(null);
 		permission.setOrder(0);
+		permission.setCondition(null);
 	}
 	
 	public void removeColumnMask(String targetName) {
@@ -704,24 +707,27 @@ public class PermissionHandler {
 		if( existingPerm != null ) {
 			existingPerm.setMask(null);
 			existingPerm.setOrder(0);
+			existingPerm.setCondition(null);
 		}
 	}
 	
-	public void setColumnMask(String targetName, String mask, int order) {
+	public void setColumnMask(String targetName, String condition, String mask, int order) {
 		Permission existingPerm = getPermission(targetName);
 		if( existingPerm == null ) {
 			existingPerm = new Permission(targetName, new Crud(null, null, null, null, null, null));
+			existingPerm.setCanMask(true);
 			this.objectsToPermissionsMap.put(targetName, existingPerm);
 		}
 		existingPerm.setMask(mask);
 		existingPerm.setOrder(order);
+		existingPerm.setCondition(condition);
 	}
 	
 	public void setRowsBasedSecurity(String targetName, String condition, boolean constraint) {
 		Permission existingPerm = getPermission(targetName);
 		if( existingPerm == null ) {
 			existingPerm = new Permission(targetName, new Crud(null, null, null, null, null, null));
-
+			existingPerm.setCanFilter(true);
 			this.objectsToPermissionsMap.put(targetName, existingPerm);
 		}
 		existingPerm.setCondition(condition);

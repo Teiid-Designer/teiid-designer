@@ -317,17 +317,15 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
     private Image getSecurityStatusImage(Object target) {
     	Permission perm = this.handler.getPermission(target);
     	if( perm != null ) {
-	    	if( perm.getCondition() != null || perm.getMask() != null ) {
-	    		// Has security
-	    		return BLUE_STATUS_BOX;
-	    	}
-	    	if( allowsSecurity(target) ) {
-	    		// Has basic CRUD
+    		if( allowsRowFilter(target) || allowsColumnMask(target) ) {
+    			if( perm.getCondition() != null || perm.getMask() != null ) {
+    				return BLUE_STATUS_BOX;
+    			}
 	    		return WHITE_STATUS_BOX;
 	    	} else {
 	    		return GRAY_STATUS_BOX;
 	    	}
-    	} else if( allowsSecurity(target) ){
+    	} else if( allowsRowFilter(target) || allowsColumnMask(target) ){
     		return WHITE_STATUS_BOX;
     	}
     	
@@ -528,8 +526,8 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 		this.handler.removeColumnMask(targetName);
 	}
 	
-	public void setColumnMask(String targetName, String mask, int order) {
-		this.handler.setColumnMask(targetName, mask, order);
+	public void setColumnMask(String targetName, String condition, String mask, int order) {
+		this.handler.setColumnMask(targetName, condition, mask, order);
 	}
 	
 	public List<String> getAllowedLanguages() {
@@ -547,20 +545,22 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 	public Permission createPermission(Object target) {
 		String targetName = getTargetName(target);
 		Permission perm = new Permission(targetName, new Crud(null, null, null, null, null, null));
+		perm.setCanFilter(allowsRowFilter(target));
+		perm.setCanMask(allowsColumnMask(target));
 		this.handler.addPermission(target, perm);
 		return perm;
 	}
 	
-	public boolean allowsSecurity(Object target) {
-		return allowsMasking(target) || allowsCondition(target);
+	public boolean allowsRowFilter(Object target) {
+		return (target instanceof Table || target instanceof View || target instanceof Procedure);
 	}
 	
-	public boolean allowsMasking(Object target) {
+	public boolean allowsColumnMask(Object target) {
 		return target instanceof Column;
 	}
 	
 	public boolean allowsCondition(Object target) {
-		return (target instanceof Table || target instanceof View || target instanceof Procedure || target instanceof Column);
+		return allowsColumnMask(target) || allowsRowFilter(target);
 	}
 	
 	public String getSecurityDialogMessage(Object target) {

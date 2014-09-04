@@ -18,6 +18,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud.Type;
@@ -69,6 +71,7 @@ public class DataRoleWizard extends AbstractWizard {
     private static final ImageDescriptor IMAGE = RolesUiPlugin.getInstance().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
 
     private static final String DEFAULT_NAME = "Data Role 1"; //getString("undefinedName"); //$NON-NLS-1$
+    private static final String GENERATED_DEFAULT_NAME = "Data Role"; //getString("undefinedName"); //$NON-NLS-1$
     private static final String SYS_ADMIN_TABLE_TARGET = "sysadmin"; //$NON-NLS-1$
     private static final String SYS_TABLE_TARGET = "sys"; //$NON-NLS-1$
 
@@ -122,18 +125,20 @@ public class DataRoleWizard extends AbstractWizard {
     String roleNameTextEntry;
     
     private Set<String> allowedLanguages;
+    private Set<String> otherDataRoleNames;
 
     /**
      * @since 4.0
      */
-    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, Set<String> allowedLanguages) {
+    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, Set<String> allowedLanguages, Set<String> otherDataRoleNames) {
         super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
         this.tempContainer = tempContainer;
         this.allowedLanguages = allowedLanguages;
+        this.otherDataRoleNames = otherDataRoleNames;
         this.existingDataRole = existingDataRole;
         
         if (existingDataRole == null) {
-            this.dataRoleName = DEFAULT_NAME;
+            this.dataRoleName = StringUtilities.getUniqueName(GENERATED_DEFAULT_NAME, otherDataRoleNames, true, true, 1000);
             this.isEdit = false;
             this.allowSystemTables = true;
             this.anyAuthentication = false;
@@ -193,7 +198,7 @@ public class DataRoleWizard extends AbstractWizard {
         // Add widgets to page
         WidgetFactory.createLabel(mainPanel, Messages.name);
 
-        this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, DEFAULT_NAME);
+        this.dataRoleNameText = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL, 1, this.dataRoleName);
 
         this.dataRoleNameText.addModifyListener(new ModifyListener() {
             @Override
@@ -632,11 +637,19 @@ public class DataRoleWizard extends AbstractWizard {
         if (this.dataRoleName == null || this.dataRoleName.length() == 0) {
             wizardPage.setErrorMessage(getString("nullNameMessage")); //$NON-NLS-1$
             wizardPage.setPageComplete(false);
-        } else {
-            wizardPage.setErrorMessage(null);
-            wizardPage.setMessage(getString("okToFinishMessage")); //$NON-NLS-1$
-            wizardPage.setPageComplete(true);
+            return;
         }
+
+        // Check if data role already exists
+        if( otherDataRoleNames.contains(this.dataRoleName)) {
+            wizardPage.setErrorMessage(NLS.bind(Messages.dataRoleExists_0_Message, this.dataRoleName));
+            wizardPage.setPageComplete(false);
+            return;
+        }
+        
+        wizardPage.setErrorMessage(null);
+        wizardPage.setMessage(getString("okToFinishMessage")); //$NON-NLS-1$
+        wizardPage.setPageComplete(true);
 
     }
 

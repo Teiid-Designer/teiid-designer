@@ -986,4 +986,27 @@ public class VdbUtil implements VdbConstants {
         actualVDB.save(new NullProgressMonitor());
         theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
+    
+    /**
+     * Provides a means to obtain a current <code>Set</code> of data role names in a VDB.
+     * 
+     * If the target name is provided, then that name is removed from the list.
+     * 
+     * @param theVdb
+     * @param targetName
+     * @return the set of data role names for a VDB
+     */
+    public static Set<String> getDataRoleNames(Vdb theVdb, String targetName) {
+    	Set<String> names = new HashSet<String>();
+    	Set<VdbDataRole> entries = theVdb.getDataPolicyEntries();
+    	for( VdbDataRole role : entries) {
+    		names.add(role.getName());
+    	}
+    	
+    	if( targetName != null && !targetName.isEmpty() ) {
+    		names.remove(targetName);
+    	}
+    	
+    	return names;
+    }
 }

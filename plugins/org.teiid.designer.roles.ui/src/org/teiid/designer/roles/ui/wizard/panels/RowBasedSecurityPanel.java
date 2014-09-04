@@ -23,7 +23,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -218,6 +220,14 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	            }
 	        });
 	        
+	        this.tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+				
+				@Override
+				public void doubleClick(DoubleClickEvent event) {
+					handleEdit();
+				}
+			});
+	        
 		}
         
         Composite toolbarPanel = WidgetFactory.createPanel(getPrimaryPanel(), SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 3);
@@ -268,6 +278,8 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 			}
 		});
         this.removeButton.setEnabled(false);
+        
+        
 		
 	}
 	
@@ -662,12 +674,15 @@ public class RowBasedSecurityPanel extends DataRolePanel {
             if( targetTableOrView == null || targetTableOrView.trim().isEmpty() ) {
             	enable = false;
         		setErrorMessage(Messages.targetIsUndefined);
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
         		return;
             }
         	
             if( conditionString == null || conditionString.trim().isEmpty() ) {
             	enable = false;
         		setErrorMessage(Messages.conditionIsUndefined);
+        		getButton(IDialogConstants.OK_ID).setEnabled(enable);
+        		return;
             }
         	
         	getButton(IDialogConstants.OK_ID).setEnabled(enable);
