@@ -226,7 +226,7 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
     
     @Override
     protected void validate() {
-    	boolean enable = true;
+    	getButton(IDialogConstants.OK_ID).setEnabled(true);
     	setErrorMessage(null);
     	setMessage(Messages.clickOkToFinish); //Messages.clickOKToFinish);
     	
@@ -238,8 +238,8 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
         boolean maskEmpty = (maskString == null || maskString.trim().isEmpty());
         
         if( maskEmpty && conditionEmpty) {
-        	enable = false;
     		setErrorMessage(Messages.noMaskOrConditionDefined);
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
     		return;
         }
         
@@ -247,23 +247,20 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
     		try {
 				order = Integer.parseInt(orderText.getText());
 			} catch (NumberFormatException ex) {
-				enable = false;
         		setErrorMessage(Messages.orderMustBeAnInteger);
+        		getButton(IDialogConstants.OK_ID).setEnabled(false);
         		return;
 			}
     	} else {
-    		enable = false;
     		setErrorMessage(Messages.orderMustNotBeNull);
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
     		return;
     	}
     	
     	// Assume that if order is > 0 (non-default), then the mask cannot be empty
     	if( maskEmpty ) {
-    		enable = false;
-    		setErrorMessage(Messages.maskIsUndefined);
+    		getButton(IDialogConstants.OK_ID).setEnabled(false);
     		return;
     	}
-    	
-    	getButton(IDialogConstants.OK_ID).setEnabled(enable);
     }
 }
