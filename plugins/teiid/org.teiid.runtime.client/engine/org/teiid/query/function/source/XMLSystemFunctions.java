@@ -95,6 +95,8 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.core.util.ReaderInputStream;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.json.simple.ContentHandler;
 import org.teiid.json.simple.JSONParser;
 import org.teiid.json.simple.ParseException;
@@ -427,10 +429,7 @@ public class XMLSystemFunctions {
 	}
 	
 	public static XMLOutputFactory getOutputFactory() throws FactoryConfigurationError {
-		if (XMLType.isThreadSafeXmlFactories()) {
-			return xmlOutputFactory;
-		}
-		return threadLocalOutputFactory.get();
+	    return getOutputFactory(false);
 	}
 	
 	public static ClobType xslTransform(CommandContext context, Object xml, Object styleSheet) throws Exception {
@@ -1115,5 +1114,19 @@ public class XMLSystemFunctions {
 		}
 		return new BlobType(new BlobImpl(isf));
 	}
+
+	@Since(Version.TEIID_8_7)
+    public static XMLOutputFactory getOutputFactory(boolean repairing) {
+        if (XMLType.isThreadSafeXmlFactories() && !repairing) {
+            return xmlOutputFactory;
+        }
+        XMLOutputFactory f = threadLocalOutputFactory.get();
+        if (repairing && f.isPropertySupported(XMLOutputFactory.IS_REPAIRING_NAMESPACES)) {
+            f.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, true);
+        } else {
+            f.setProperty(XMLOutputFactory.IS_REPAIRING_NAMESPACES, false);
+        }
+        return f;
+    }
     
 }
