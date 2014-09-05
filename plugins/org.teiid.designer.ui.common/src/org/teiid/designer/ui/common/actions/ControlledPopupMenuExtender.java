@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.common.actions;
 
 
+import java.util.HashSet;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -17,6 +18,7 @@ import org.eclipse.jface.action.SubMenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.internal.IObjectActionContributor;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.internal.ViewerActionBuilder;
 
@@ -65,7 +67,7 @@ public class ControlledPopupMenuExtender implements IMenuListener {
      */
     private void addObjectActions(IMenuManager mgr) {
         if (selProvider != null) {
-            if (ObjectActionContributorManager.getManager().contributeObjectActions(part, mgr, selProvider)) {
+            if (ObjectActionContributorManager.getManager().contributeObjectActions(part, mgr, selProvider, new HashSet<IObjectActionContributor>())) {
                 mgr.add(new Separator());
             }
         }
