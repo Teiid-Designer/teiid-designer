@@ -7,8 +7,12 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,18 +257,24 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 		if (urlText == null || urlText.trim().equals(StringUtilities.EMPTY_STRING)){
 			urlText = "{base URL}"; //$NON-NLS-1$
 		}
-		StringBuilder parameters = buildParameterString();
+		String parameters = null;
+		try {
+			parameters = buildParameterString();
+		} catch (UnsupportedEncodingException ex) {
+		  	setErrorMessage(UTIL.getString("Common.URL.Invalid.Message") + ex.getMessage()); //$NON-NLS-1$
+		}
 		previewUrl.append(urlText).append(parameters);
 		return previewUrl;
 	}
 
 	/**
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	private StringBuilder buildParameterString() {
+	private String buildParameterString() throws UnsupportedEncodingException {
 		
 		StringBuilder parameterString = new StringBuilder();
-		if (this.parameterMap==null) return parameterString;
+		if (this.parameterMap==null) return parameterString.toString();
 		Map<String, Parameter> parameterMap = this.parameterMap;
 
 		for (String key : parameterMap.keySet()) {
@@ -282,7 +292,7 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	      }
 	    }
 
-		return parameterString;
+		return URLEncoder.encode(parameterString.toString(), Charset.defaultCharset().displayName());
 	}
 
 	/* (non-Javadoc)

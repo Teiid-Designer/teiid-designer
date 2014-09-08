@@ -14,10 +14,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -931,20 +934,26 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	String getUrl(String url, Map parameterMap) {
 		StringBuilder previewUrl = new StringBuilder();
 		String urlText = url;
-		StringBuilder parameters = buildParameterString(url, parameterMap);
+		String parameters = null;
+		try {
+			parameters = buildParameterString(url, parameterMap);
+		} catch (UnsupportedEncodingException ex) {
+			UiConstants.Util.log(ex);
+		}
 		previewUrl.append(urlText).append(parameters);
 		return previewUrl.toString();
 	}
 
 	/**
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-	private StringBuilder buildParameterString(String url,
-			Map<String, Parameter> parameterMap) {
+	private String buildParameterString(String url,
+			Map<String, Parameter> parameterMap) throws UnsupportedEncodingException {
 
 		StringBuilder parameterString = new StringBuilder();
 		if (parameterMap == null)
-			return parameterString;
+			return parameterString.toString();
 
 		for (String key : parameterMap.keySet()) {
 			Parameter value = parameterMap.get(key);
@@ -964,8 +973,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			}
 		}
 
-		return parameterString;
+		return URLEncoder.encode(parameterString.toString(), Charset.defaultCharset().displayName());
 	}
+	
 
 	private void setXmlFile(File xmlFile, boolean isUrl, String urlString) {
 		fileViewer.setInput(xmlFile);
