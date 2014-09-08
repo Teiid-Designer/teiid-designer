@@ -1,13 +1,14 @@
 <?xml version='1.0'?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="importers-chapter">
 	<title>Importers</title>
 	<!-- 
-		&amp;amp;amp;amp;amp;lt;para&amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;lt;emphasis 
-		role=&amp;amp;amp;amp;amp;quot;bold&amp;amp;amp;amp;amp;quot;&amp;amp;amp;amp;amp;gt;Go 
-		To: &amp;amp;amp;amp;amp;lt;ulink 
-		url=&amp;amp;amp;amp;amp;quot;index.html&amp;amp;amp;amp;amp;quot;&amp;amp;amp;amp;amp;gt;Table 
+		&amp;amp;amp;amp;amp;amp;amp;amp;lt;para&amp;amp;amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;amp;amp;amp;lt;emphasis 
+		role=&amp;amp;amp;amp;amp;amp;amp;amp;quot;bold&amp;amp;amp;amp;amp;amp;amp;amp;quot;&amp;amp;amp;amp;amp;amp;amp;amp;gt;Go 
+		To: &amp;amp;amp;amp;amp;amp;amp;amp;lt;ulink 
+		url=&amp;amp;amp;amp;amp;amp;amp;amp;quot;index.html&amp;amp;amp;amp;amp;amp;amp;amp;quot;&amp;amp;amp;amp;amp;amp;amp;amp;gt;Table 
 		of 
-		Contents&amp;amp;amp;amp;amp;lt;/ulink&amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;lt;/emphasis&amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;lt;/para&amp;amp;amp;amp;amp;gt;
+		Contents&amp;amp;amp;amp;amp;amp;amp;amp;lt;/ulink&amp;amp;amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;amp;amp;amp;lt;/emphasis&amp;amp;amp;amp;amp;amp;amp;amp;gt;&amp;amp;amp;amp;amp;amp;amp;amp;lt;/para&amp;amp;amp;amp;amp;amp;amp;amp;gt;
 	 -->
 	<para>The <emphasis role="bold">Import Wizard</emphasis> provides a 
 	means to create a model based on the structure of a data source, to 
@@ -132,14 +133,14 @@
 							<imagedata fileref="images/screencaps/jdbc-importer-page-2A.png"/>
 							</imageobject></mediaobject>
 						</figure>
-						<para>Because relational databases are different, special processing of 
-						your metadata to be required in order to convert datatypes or to 
-						interpret your metadata. The <emphasis role="bold">JDBC Metadata 
-						Processor</emphasis> drop-down selector will be auto-selected 
-						based on your selected connection profile. Special processors are 
-						available for DB2, Modeshape, ODBC, Oracle, PostgeSQL, SQL Server 
-						and Sybase. For all other DB&apos;s ajdefault JDBC processor is 
-						available.</para>
+						<para>Because relational databases are different, special 
+						processing of your metadata to be required in order to convert 
+						datatypes or to interpret your metadata. The 
+						<emphasis role="bold">JDBC Metadata Processor</emphasis> 
+						drop-down selector will be auto-selected based on your selected 
+						connection profile. Special processors are available for DB2, 
+						Modeshape, ODBC, Oracle, PostgeSQL, SQL Server and Sybase. For 
+						all other DB&apos;s ajdefault JDBC processor is available.</para>
 					</listitem>
 					<listitem>
 						<para><emphasis role="bold">Step 4</emphasis> - After selecting a 
@@ -207,23 +208,26 @@
 			</imageobject></mediaobject>
 		</figure>
 		<!-- 
-			####### RELATIONAL MODEL COSTING
+			####### RELATIONAL MODEL COSTING 
 			#########################################
 		 -->
 		<section id="relational-import-model-costing-section">
 			<title>Relational Model Costing</title>
-		    <para>On the final page of import, you are presented with a checkbox option to 
-		    <emphasis role="bold">Include Cost Statistics</emphasis>.  If this option is selected,
-		    the table cardinalities will be determined and the table cardinality properties will be set.
-		    Later, during query execution, if the table cardinalities are available they are used by the
-		    Teiid query engine to optimize the query plan.</para>
-		    
-		    <para>After import, you can update the cardinalities at any time.  If you would like to
-		    update the Cost Statistics for the entire model, select the model - then use the Modeling
-		    Context menu action <emphasis role="bold">Update Source Data Statistics</emphasis>.  
-		    Likewise, you can update the cardinality for a specific table or tables, by selecting the
-		    table(s) in ModelExplorer then using the same 
-		    <emphasis role="bold">Update Source Data Statistics</emphasis> action.</para>
+			<para>On the final page of import, you are presented with a checkbox 
+			option to <emphasis role="bold">Include Cost Statistics</emphasis>. 
+			If this option is selected, the table cardinalities will be 
+			determined and the table cardinality properties will be set. Later, 
+			during query execution, if the table cardinalities are available 
+			they are used by the Teiid query engine to optimize the query 
+			plan.</para>
+			<para>After import, you can update the cardinalities at any time. If 
+			you would like to update the Cost Statistics for the entire model, 
+			select the model - then use the Modeling Context menu action 
+			<emphasis role="bold">Update Source Data Statistics</emphasis>. 
+			Likewise, you can update the cardinality for a specific table or 
+			tables, by selecting the table(s) in ModelExplorer then using the 
+			same <emphasis role="bold">Update Source Data Statistics</emphasis> 
+			action.</para>
 		</section>
 	</section>
 	<!-- 
@@ -234,8 +238,8 @@
 		<title>Import From Teiid Data Source Connection</title>
 		<para>The <emphasis role="bold">Teiid Connection &gt;&gt; Source 
 		Model</emphasis> import option provides a means to create relational 
-		source models from relational and other deployed data sources that are not 
-		supported by other Teiid Designer importers.</para>
+		source models from relational and other deployed data sources that 
+		are not supported by other Teiid Designer importers.</para>
 		<para>NOTE: To launch this importer, you must have at minimum a Teiid 
 		8.x server running in Designer. The Teiid importer deploys a dynamic 
 		VDB to Teiid containing the selected source type, then the schema (as 
@@ -279,9 +283,10 @@
 						<para><emphasis role="bold">Step 4</emphasis> - On the next page 
 						select the appropriate translator for your data source type as 
 						well as defined the target relational model that you wish to 
-						create or update. You can also specify value for any built-in import properties in order
-						to fine-tune the schema data you wish to have returned. 
-						Click <emphasis role="bold">NEXT&gt;</emphasis> to continue.</para>
+						create or update. You can also specify value for any built-in 
+						import properties in order to fine-tune the schema data you wish 
+						to have returned. Click <emphasis role="bold">NEXT&gt;</emphasis> 
+						to continue.</para>
 						<figure>
 							<title>Translator and Model Definition</title>
 							<mediaobject><imageobject>
@@ -289,14 +294,15 @@
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
-					 <listitem>
+					<listitem>
 						<para><emphasis role="bold">Step 5</emphasis> - On the next page 
-						define your target relational model that you wish to 
-						create or update. Either enter a new unique name, or select an existing source
-						model. At this point you can click on the <emphasis>Show Dynamic VDB Content...</emphasis> button 
-						to display the vdb.xml that will be temporarily deployed to Teiid in order to return
-						the requested database schema/DDL.  Click <emphasis role="bold">NEXT&gt;</emphasis> 
-						to continue.</para>
+						define your target relational model that you wish to create or 
+						update. Either enter a new unique name, or select an existing 
+						source model. At this point you can click on the <emphasis>Show 
+						Dynamic VDB Content...</emphasis> button to display the vdb.xml 
+						that will be temporarily deployed to Teiid in order to return the 
+						requested database schema/DDL. Click <emphasis role="bold">
+						NEXT&gt;</emphasis> to continue.</para>
 						<figure>
 							<title>Target Model Definition</title>
 							<mediaobject><imageobject>
@@ -634,7 +640,6 @@
 				the SQL/XML 2006 specification.</para>
 				<synopsis>XMLTABLE([&lt;NSP&gt;,] xquery-expression 
 				[&lt;PASSING&gt;] [COLUMNS &lt;COLUMN&gt;, ... )] AS name</synopsis>
-				 
 				<synopsis>COLUMN := name (FOR ORDINALITY | (datatype [DEFAULT 
 				expression] [PATH string]))</synopsis>
 				<para>Teiid Designer will construct the full SQL statement for each 
@@ -1326,8 +1331,8 @@
 					</listitem>
 					<listitem>
 						<para><emphasis role="bold">Step 2</emphasis> - Select the import 
-						option <emphasis role="bold">Teiid Designer &gt; Web Service Source
-						&gt;&gt; Source and View Model (REST)</emphasis> and click 
+						option <emphasis role="bold">Teiid Designer &gt; Web Service 
+						Source &gt;&gt; Source and View Model (REST)</emphasis> and click 
 						<emphasis role="bold">Next&gt;</emphasis></para>
 						<figure>
 							<title>Import from REST Web Service Source</title>
@@ -1353,18 +1358,21 @@
 							<imagedata fileref="images/screencaps/rest-connection-profile.png"/>
 							</imageobject></mediaobject>
 						</figure>
-						<para>Set your REST URL in the Connection URL text field and your 
-						Security Type and credentials, if applicable. There is also an 
-						option to add URL and Request Header parameters. The importer assumes an 
+						<para>Set your REST URL in the Connection URL text field, the 
+						Response Type to either XML or JSON (depending upon what your 
+						target service is returning), and your Security Type and 
+						credentials, if applicable. There is also an option to add URL 
+						and Request Header parameters. The importer assumes an 
 						<emphasis role="bold">Accept</emphasis> header value of 
 						<emphasis role="bold">application/xml</emphasis> and a 
 						<emphasis role="bold">Content-Type</emphasis> header value of 
 						<emphasis role="bold">application/xml</emphasis>. These defaults 
 						can be overriden in the <emphasis role="bold">Optional Request 
 						Header Properties</emphasis> section. You can also add any other 
-						header properties required for the service. When adding a parameter you can specify
-						URI or Query String, depending on what the target service is expecting. Click the <guibutton>
-						Test Connection</guibutton> button to validate your connection 
+						header properties required for the service. When adding a 
+						parameter you can specify URI or Query String, depending on what 
+						the target service is expecting. Click the <guibutton>Test 
+						Connection</guibutton> button to validate your connection 
 						properties are correct. Click <guibutton>Next &gt;</guibutton> to 
 						see a summary of your properties or click <guibutton>
 						Finish</guibutton>.</para>
