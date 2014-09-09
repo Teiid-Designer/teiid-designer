@@ -407,7 +407,7 @@
 			<para>The <emphasis role="bold">Create Relational Procedure Wizard</emphasis>, shown below, 
 				allows creating a complete relational Procedure including columns, unique keys, foreign keys definition and indexes.
 				The relational procedure object can represent different types of procedures, including a standard 
-				procedure and source function (pushdown function). When the 
+				procedure, source function (pushdown function) and native query procedures. When the 
 				<emphasis role="bold">New Child > Procedure...</emphasis>  action is launched the first dialog gives 
 				you the option of selecting the procedure type. Note that user defined functions can be modeled in a view model.
 			</para>
@@ -439,6 +439,22 @@
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="images/screencaps/new-procedure-wizard-source-function-option.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<para>Native query procedures are procedures that are already deployed and accessable on your database. By
+				defining source functions in your relational model, you can call these functions from within your
+				transformation SQL and the functions will be pushed down to your database for execution.
+			</para>
+			<para>The resulting Create Relational Native Query Procedure dialog defaults to the following procedure structure including
+				0 or more input parameters (defined by the user) and a result set with a single output column with object data 
+				type (user can edit/change the column name).
+			</para>
+			<figure>
+				<title>Create Relational Native Query Procedure Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/new-procedure-wizard-native-query-procedure-option.png" />
 					</imageobject>
 				</mediaobject>
 			</figure>

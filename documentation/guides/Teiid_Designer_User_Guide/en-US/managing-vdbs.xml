@@ -274,38 +274,69 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>Double-clicking the <emphasis role="bold">Security</emphasis> box for a table or column will launch the 
-			<emphasis role="bold">Model Object Security Definition</emphasis> dialog where you can define applicable values. 
-			In order to edit or remove security, select the <emphasis role="bold">Conditions</emphasis> or 
-			<emphasis role="bold">Masking</emphasis> tabs and use the <emphasis role="bold">Edit</emphasis> or 
-			<emphasis role="bold">Remove</emphasis> buttons.
+		<para>Teiid provides 2 security concepts for object level permissions: (see <ulink url="https://docs.jboss.org/author/display/teiid88final/Permissions"><citetitle>Permissions</citetitle></ulink>)
+			<itemizedlist>
+				<listitem>
+					<para>Row-Based Security is a permission against a fully qualified table/view/procedure may also specify a condition.</para>
+					<itemizedlist>
+						<listitem><para>Unlike the allow CRUD actions defined above, a condition is always applied - not just at the user 
+							query level. The condition can be any valid SQL referencing the columns of the table/view/procedure. 
+							Procedure result set columns may be referenced as proc.col. The condition will act as a row-based 
+							filter and as a checked constraint for insert/update operations.</para>
+						</listitem><listitem><para>
+							An example of a condition might be:   <emphasis role="bold">column1=user()</emphasis>
+						</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+				<listitem><para>Column Masking is "a permission against a fully qualified table/view/procedure column may 
+					also specify a mask and optionally a condition."</para>
+					<itemizedlist>
+						<listitem><para>When the query is submitted the roles are consulted and the relevant mask/condition information 
+							are combined to form a searched case expression to mask the values that would have been returned by the access. 
+							Unlike the CRUD allow actions defined above, the resulting masking effect is always applied - not just at the user query level. 
+							The condition and expression can be any valid SQL referencing the columns of the table/view/procedure. 
+							Procedure result set columns may be referenced as proc.col.</para>
+						</listitem><listitem><para>
+							An example of a mask might be: <emphasis role="bold">CASE WHEN column1=user() THEN column1 END   </emphasis>
+						</para>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>You can define Row and Column Based security in Designer's Data Row Wizard.  By double-clicking a target table, 
+			view, procedure or column in the Models table, the appropriate editor dialog will be displayed. 
+			Note those objects that already have existing security defined are highlighted in blue.
+		</para>
+		<para>If a table, view or procedure is double-clicked, the Row Filter Definition dialog is displayed. 
+			Enter a valid SQL condition and specify whether or not this filter should be treated as a constraint or not.
 		</para>
 		<figure>
-			<title>Security Definition Dialog</title>
+			<title>Row Filter Definition Dialog</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/model-object-security-definition-dialog.png"/>
+					<imagedata fileref="images/screencaps/row-filter-definition-dialog-d-click.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>The <emphasis role="bold">Conditions</emphasis> and <emphasis role="bold">Masks</emphasis> tabs in the
-			 <emphasis role="bold">Permissions</emphasis> section allow management (add, remove and edit) of these values
-			for your model objects.
+		<para>If a column is double-clicked, the Row Filter Definition dialog is displayed. 
+			Enter valid column masking SQL expression, an optional order (see Teiid documentation) and an option condition expression.
 		</para>
 		<figure>
-			<title>Row Filter Tab</title>
+			<title>Column Masking Definition Dialog</title>
 			<mediaobject>
 				<imageobject>
-					<imagedata fileref="images/screencaps/row-based-security-tab.png"/>
+					<imagedata fileref="images/screencaps/column-masking-definition-dialog-d-click.png"/>
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>Clicking the <emphasis>Add</emphasis> button bring up the following dialog.
+		<para>You can also edit these these values via the <emphasis role="bold">Add, Edit and Remove</emphasis> buttons on the respective Row Filter and Column Masking tabs
 			<figure>
-				<title>Add Row Security Filter</title>
+				<title>Row Filter Tab</title>
 				<mediaobject>
 					<imageobject>
-						<imagedata fileref="images/screencaps/add-row-based-security-filter-dialog.png"/>
+						<imagedata fileref="images/screencaps/row-based-security-tab.png"/>
 					</imageobject>
 				</mediaobject>
 			</figure>
@@ -318,19 +349,6 @@
 				</imageobject>
 			</mediaobject>
 		</figure>
-		<para>Clicking the <emphasis>Add</emphasis> button bring up the following dialog.
-			<figure>
-				<title>Add Column Masking</title>
-				<mediaobject>
-					<imageobject>
-						<imagedata fileref="images/screencaps/add-column-mask-dialog.png"/>
-					</imageobject>
-				</mediaobject>
-			</figure>
-		</para>
-		<note>
-			<para>For more details and examples of data roles and permissions, see the Teiid documentation.</para>
-        </note>
 	</section>
 	
 </chapter>
