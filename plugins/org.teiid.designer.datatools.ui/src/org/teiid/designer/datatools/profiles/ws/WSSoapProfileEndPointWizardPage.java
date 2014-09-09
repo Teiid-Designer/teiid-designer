@@ -10,6 +10,7 @@ package org.teiid.designer.datatools.profiles.ws;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPage;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -45,7 +46,7 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
     private CLabel profileText;
     private Label descriptionLabel;
     private Text descriptionText;
-    
+	private Text defaultBindingText;
 	private Combo endPointCombo;
 
 	private WSSoapConnectionProfileWizard wizard;
@@ -133,6 +134,18 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
 		});
 
 		endPointCombo.setVisibleItemCount(10);
+		
+		label = WidgetFactory.createLabel(scrolled, UTIL.getString("WSSoapProfileEndPointWizardPage.EndPointBindingLabel"));
+		GridData gd = new GridData();
+		gd.verticalAlignment=SWT.CENTER;
+		label.setLayoutData(gd);
+		label.setToolTipText(UTIL.getString("WSSoapProfileEndPointWizardPage.EndPointBindingTooltip"));
+		
+		defaultBindingText = new Text(scrolled, SWT.BORDER | SWT.SINGLE);
+		defaultBindingText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		defaultBindingText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+		GridDataFactory.fillDefaults().applyTo(defaultBindingText);
+		defaultBindingText.setToolTipText(UTIL.getString("WSSoapProfileEndPointWizardPage.EndPointBindingTooltip"));
 	}
 	
 	@Override
@@ -156,6 +169,23 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
 	                } catch (ModelGenerationException ex) {
 	                    setErrorMessage(ex.getLocalizedMessage());
 	                }
+	                String endPointName = profileProperties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
+			        if (null != endPointName && !endPointName.isEmpty()) {
+			        	if( endPointCombo.getItemCount() == 1 ) {
+			        		endPointCombo.select(0);
+			        	} else if( endPointCombo.getItemCount() > 0 ) {
+			        		String[] endPoints = endPointCombo.getItems();
+			        		int i=0;
+			        		for( String next : endPoints) {
+			        			if( next.equals(endPointName)) {
+			        				endPointCombo.select(i);
+			        				break;
+			        			}
+			        			i++;
+			        		}
+			        	}
+			            
+			        }
 	            }
 	        });
 	    }
@@ -199,9 +229,12 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
         try {
             Port port = wsdlModel.getPort(endPointName);
             new URL(port.getLocationURI());
-            
+            String bindingType = port.getBindingType();
             profileProperties.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, port.getLocationURI());
-            profileProperties.setProperty(IWSProfileConstants.SOAP_BINDING, port.getBindingType());
+            if( bindingType != null ) {
+	            profileProperties.setProperty(IWSProfileConstants.SOAP_BINDING, bindingType);
+	            defaultBindingText.setText(bindingType);
+            }
             
         } catch(Exception e) {
             setErrorMessage(UTIL.getString("Common.EndPoint.Invalid.Message")); //$NON-NLS-1$
@@ -226,8 +259,9 @@ public class WSSoapProfileEndPointWizardPage extends ConnectionProfileDetailsPag
 	}
 	
 	@Override
-    public List getSummaryData() {
-        List result = super.getSummaryData();
+    public List<String[]> getSummaryData() {
+        @SuppressWarnings("unchecked")
+		List<String[]> result = super.getSummaryData();
     
         String endPointName = profileProperties.getProperty(IWSProfileConstants.END_POINT_NAME_PROP_ID);
         result.add(new String[] { UTIL.getString("WSSoapProfileEndPointWizardPage.EndPointLabel"), endPointName }); //$NON-NLS-1$
