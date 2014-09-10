@@ -225,16 +225,13 @@ public class ImportWsdlProcessor {
     			} else {
     				props.put(IWSProfileConstants.SOAP_SERVICE_MODE, WSDLImportWizardManager.PAYLOAD);
     			}
+    			//The CP doesn't allow changing the BINDING, so the default will always return SOAP11
+    			// If this wizard returns SOAP12, then we need to replace the binding
     			String defaultBinding = this.importManager.getTranslatorDefaultBinding();
     			if( defaultBinding.equalsIgnoreCase(Port.SOAP12) ) {
     				props.put(IWSProfileConstants.SOAP_BINDING, Port.SOAP12);
-    			} else {
-    				// remove MESSAGE property if it exists
-    				String theProp = props.getProperty(IWSProfileConstants.SOAP_BINDING);
-    				if( theProp != null ) {
-    					props.remove(IWSProfileConstants.SOAP_BINDING);
-    				}
     			}
+    			
     			profile.setBaseProperties(props);
     			IConnectionInfoProvider provider = new WSSoapConnectionInfoProvider();
     			provider.setConnectionInfo(sourceModel, profile);
