@@ -286,8 +286,13 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
         	if(differencesPage instanceof DdlImportDifferencesPage) {
         		((DdlImportDifferencesPage)differencesPage).setPageComplete(false);
         	}
-        	
-            if(importManager.isVdbDeployed()) {
+            if(importManager.isVdbDeployed() && importManager.shouldRedeploy()) {
+                importManager.undeployDynamicVdb();
+                importManager.deleteDdlTempFile();
+        		importManager.setRedeploy(false);
+            }
+            
+            if(importManager.isVdbDeployed() ) {
                 String ddl = importManager.getDdl();
                 if(ddl==null) ddl=EMPTY;
                 this.ddlContentsBox.setText(ddl);

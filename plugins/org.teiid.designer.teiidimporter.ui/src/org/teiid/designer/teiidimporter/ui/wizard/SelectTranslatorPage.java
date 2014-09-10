@@ -15,6 +15,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -421,6 +423,58 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
     }
     
     class ImportPropertyEditingSupport extends TranslatorOverridePropertyEditingSupport {
+
+    	/*
+    	 * Overriding super method to determine wither or not a property was changed so we can force the redeployment of a dynamic VDB
+    	 * Without this knowledge, clicking back in the wizard and changing import properties would have no effect.
+    	 * 
+    	 * (non-Javadoc)
+    	 * @see org.teiid.designer.ui.viewsupport.TranslatorOverridePropertyEditingSupport#setElementValue(java.lang.Object, java.lang.String)
+    	 */
+		@Override
+		protected void setElementValue(Object element, String newValue) {
+	        TranslatorOverrideProperty property = (TranslatorOverrideProperty)element;
+	        String currentValue = property.getOverriddenValue();
+	        boolean doIt = false;
+
+	        if (StringUtilities.isEmpty(newValue)) {
+	            if (!StringUtilities.isEmpty(currentValue)) {
+	                doIt = true;
+	            }
+	        } else {
+	            String defaultValue = property.getDefinition().getDefaultValue();
+
+	            // new value is not empty
+	            // current value is empty
+	            // set value if new value is not the default value
+	            if (StringUtilities.isEmpty(currentValue)) {
+	                if (StringUtilities.isEmpty(defaultValue) || !defaultValue.equals(newValue)) {
+	                    doIt = true;
+	                }
+	            } else {
+	                // new value is not empty
+	                // current value is not empty
+	                // set if new value != current value
+	                // set if new value != default value
+	                // if new value == default value set to null
+	                if (!newValue.equals(currentValue)) {
+	                    doIt = true;
+
+	                    if (!StringUtilities.isEmpty(defaultValue) && defaultValue.equals(newValue)) {
+	                        newValue = null;
+	                    }
+	                }
+	            }
+	        }
+
+	        if (doIt) {
+	            property.setValue(newValue);
+	            // cause a selection event to be fired so that actions can set their enablement
+	            getViewer().setSelection(new StructuredSelection(element));
+	        }
+	        
+	        importManager.setRedeploy(doIt);
+		}
 
 		public ImportPropertyEditingSupport(ColumnViewer viewer) {
 			super(viewer, null);
