@@ -14,9 +14,9 @@
   <packaging>eclipse-repository</packaging>
   <properties>
     <update.site.name>Teiid Designer</update.site.name>
-    <update.site.description>Nightly Build</update.site.description>
-    <!--
     <update.site.description>Development Milestone</update.site.description>
+    <!--
+    <update.site.description>Nightly Build</update.site.description>
     <update.site.description>Stable Release</update.site.description>
     -->
     <target.eclipse.version>4.3 (Kepler)</target.eclipse.version>
@@ -35,12 +35,13 @@
               <goal>generate-repository-facade</goal>
             </goals>
             <configuration>
-              <!--
               <associateSites>
-                <site>http://download.jboss.org/jbosstools/updates/kepler/</site>
+		<associateSite>http://download.jboss.org/jbosstools/updates/development/luna/</associateSite>
+		<associateSite>http://download.jboss.org/jbosstools/targetplatforms/jbtistarget/luna/</associateSite>
               </associateSites>
-              -->
+
               <siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
+
               <symbols>
                 <update.site.name>${update.site.name}</update.site.name>
                 <update.site.description>${update.site.description}</update.site.description>

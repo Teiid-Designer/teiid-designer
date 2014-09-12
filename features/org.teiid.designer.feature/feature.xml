@@ -38,7 +38,7 @@
          ws="gtk"/>
 
    <requires>
-      <import feature="org.jboss.ide.eclipse.as.feature" version="2.4.100" match="compatible"/>
+      <import feature="org.jboss.ide.eclipse.as.feature" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.ui.ide" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.ui.views" version="3.6.100" match="compatible"/>
