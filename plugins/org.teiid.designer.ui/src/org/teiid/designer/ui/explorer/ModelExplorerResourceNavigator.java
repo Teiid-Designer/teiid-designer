@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -45,7 +44,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.layout.RowDataFactory;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -65,13 +63,10 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -98,6 +93,7 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
@@ -246,6 +242,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             }
         }
     }
+
+    private static Image changeServerImage = UiPlugin.getDefault().getImage(PluginConstants.Images.CONFIGURE_ICON);
 
     private ModelObjectPropertySourceProvider propertySourceProvider;
     private ISelectionListener selectionListener;
@@ -671,17 +669,13 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      * Create the Default Server Section toolbar
      */
 	private void createDefaultServerSectionToolbar() {
-        Image changeServerImage = UiPlugin.getDefault().getImage(PluginConstants.Images.EDIT_DOCUMENT_ICON);
-        
         // configure section toolbar
-        Button[] buttons = FormUtil.createSectionToolBar(this.defaultServerSection, toolkit,
-                                                         new String[] { "Change..." } );
+        Composite toolbar = FormUtil.createSectionToolBar(this.defaultServerSection, toolkit);
 
-        Button changeServerButton = buttons[0];        
-        changeServerButton.setEnabled(true);
-        
-        RowDataFactory.swtDefaults().hint(65, 21).applyTo(changeServerButton);
-        changeServerButton.addSelectionListener(new SelectionAdapter() {
+        ImageHyperlink changeDefaultServerLink = toolkit.createImageHyperlink(toolbar, SWT.NONE);
+        changeDefaultServerLink.setImage(changeServerImage);
+        changeDefaultServerLink.setToolTipText(getString("changeServerLinkTooltip")); //$NON-NLS-1$
+        changeDefaultServerLink.addHyperlinkListener(new HyperlinkAdapter() {
 
             /**
              * {@inheritDoc}
@@ -689,7 +683,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
-            public void widgetSelected( SelectionEvent e ) {
+            public void linkActivated(HyperlinkEvent e) {
                 try {
                     // Set the default server
                     IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
@@ -699,7 +693,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
                 }
             }
         });
-        changeServerButton.setToolTipText(getString("changeServerLinkTooltip")); //$NON-NLS-1$
 	}
 
     /**

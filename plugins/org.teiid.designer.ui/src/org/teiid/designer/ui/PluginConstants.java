@@ -116,7 +116,9 @@ public interface PluginConstants {
         String ENUM_OVERLAY_ICON = OVR16 + "enum_co.gif"; //$NON-NLS-1$
 
         String CREATE_WEB_SERVICE_ICON = CTOOL16 + "create_web_service.png"; //$NON-NLS-1$
-        
+
+        String CONFIGURE_ICON = CVIEW16 + "configure.png";  //$NON-NLS-1$
+
         String EDIT_DOCUMENT_ICON = CVIEW16 + "edit-document.png";  //$NON-NLS-1$
         String CLEAR_DOCUMENT_ICON = CVIEW16 + "clear-document.png";  //$NON-NLS-1$
         String EDIT_EXTENSION_PROPERTIES_ICON = CVIEW16 + "edit-extension-properties.png"; //$NON-NLS-1$

@@ -89,15 +89,7 @@ public class FormUtil {
                                                  FormToolkit toolkit,
                                                  Image[] buttonImages ) {
 
-        Composite toolBar = toolkit.createComposite(section, SWT.NONE);
-        RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-        layout.marginLeft = 0;
-        layout.marginRight = 0;
-        layout.spacing = 0;
-        layout.marginTop = 0;
-        layout.marginBottom = 0;
-        toolBar.setLayout(layout);
-        section.setTextClient(toolBar);
+        Composite toolBar = createSectionToolBar(section, toolkit);
 
         final Image backgroundImage = section.getBackgroundImage();
         final Button[] buttons = new Button[buttonImages.length];
@@ -154,18 +146,23 @@ public class FormUtil {
 		return buttons;
 	}
     
-	public static Button[] createSectionToolBar(Section section,
+    public static Composite createSectionToolBar(Section section, FormToolkit toolkit) {
+        Composite toolBar = toolkit.createComposite(section, SWT.NONE);
+        RowLayout layout = new RowLayout(SWT.HORIZONTAL);
+        layout.marginLeft = 0;
+        layout.marginRight = 0;
+        layout.spacing = 0;
+        layout.marginTop = 0;
+        layout.marginBottom = 0;
+        toolBar.setLayout(layout);
+        section.setTextClient(toolBar);
+        return toolBar;
+    }
+
+    public static Button[] createSectionToolBar(Section section,
 			FormToolkit toolkit, String[] actions) {
 
-		Composite toolBar = toolkit.createComposite(section, SWT.NONE);
-		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-		layout.marginLeft = 0;
-		layout.marginRight = 0;
-		layout.spacing = 0;
-		layout.marginTop = 0;
-		layout.marginBottom = 0;
-		toolBar.setLayout(layout);
-		section.setTextClient(toolBar);
+		Composite toolBar = createSectionToolBar(section, toolkit);
 
 		//final Image backgroundImage = section.getBackgroundImage();
 		final Button[] buttons = new Button[actions.length];
