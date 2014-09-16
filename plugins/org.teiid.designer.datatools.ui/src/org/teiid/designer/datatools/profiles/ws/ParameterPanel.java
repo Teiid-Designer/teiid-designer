@@ -11,9 +11,9 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -24,8 +24,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -49,10 +47,12 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -61,7 +61,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 public class ParameterPanel implements DatatoolsUiConstants {
 	static final String PREFIX = I18nUtil.getPropertyPrefix(ParameterPanel.class);
 	
-    TableViewer propertiesViewer;
+    TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
 	private Map parameterMap;
@@ -106,13 +106,15 @@ public class ParameterPanel implements DatatoolsUiConstants {
      */
 	private void createPanel(Composite parent) {
 		
-    	Composite panel = WidgetFactory.createGroup(parent, StringUtilities.EMPTY_STRING, SWT.FILL, 2, 1);  //$NON-NLS-1$
+    	Composite panel = WidgetFactory.createGroup(parent, StringConstants.EMPTY_STRING, SWT.FILL, 2, 1);  //$NON-NLS-1$
     	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
     	gd.horizontalSpan = 2;
     	panel.setLayoutData(gd);
 
-        this.propertiesViewer = new TableViewer(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
+        this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
+        GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(propertiesViewer.getTableComposite());
+
+        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer.getTableViewer());
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
             /**
              * {@inheritDoc}
@@ -172,33 +174,25 @@ public class ParameterPanel implements DatatoolsUiConstants {
         });
 
         Table table = this.propertiesViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).horizontalSpan = 3;
         ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * this.visibleTableRows;
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        TableViewerColumn column = propertiesViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(UTIL.getString("ParametersPanel_name") + "                   ");  //$NON-NLS-1$ //$NON-NLS-2$
         column.setLabelProvider(new PropertyLabelProvider(0));
         //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        column = propertiesViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(UTIL.getString("ParametersPanel_type"));  //$NON-NLS-1$
         column.getColumn().setToolTipText(UTIL.getString("AddParameterDialog_txtType_toolTip"));
         column.setLabelProvider(new PropertyLabelProvider(1));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
-        column.getColumn().pack();
+        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer.getTableViewer(), 1));
         
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        column = propertiesViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(UTIL.getString("ParametersPanel_default_value"));  //$NON-NLS-1$
         column.getColumn().setToolTipText(UTIL.getString("AddParameterDialog_txtDefaultValue_toolTip"));
         column.setLabelProvider(new PropertyLabelProvider(2));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 2));
-        column.getColumn().pack();
+        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer.getTableViewer(), 2));
         
 
         this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {

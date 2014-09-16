@@ -529,19 +529,6 @@ public final class WidgetUtil implements
     }
 
     /**
-     * @param table the table whose columns are being packed
-     * @param columnWidthAddition an additional size to add to each column width
-     * @since 5.5.3
-     */
-    public static void pack( Table table,
-                             int columnWidthAddition ) {
-        for (TableColumn column : table.getColumns()) {
-            column.pack();
-            column.setWidth(column.getWidth() + columnWidthAddition);
-        }
-    }
-
-    /**
      * Removes any missing filesystem resources from the specified <code>IDialogSettings</code> for the given key. All item
      * values found for the specified key will be considered to be a resource name. If that name does not represent a current
      * filesystem resource it is removed from the list. Ideally this method should be called prior to using the settings in a

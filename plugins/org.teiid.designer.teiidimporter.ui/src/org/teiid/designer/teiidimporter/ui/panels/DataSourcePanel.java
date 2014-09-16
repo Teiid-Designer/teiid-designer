@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -25,7 +24,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -49,6 +47,7 @@ import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.CopyDataSourceDialog;
 import org.teiid.designer.teiidimporter.ui.wizard.CreateDataSourceDialog;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -61,7 +60,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  */
 public final class DataSourcePanel extends Composite implements UiConstants {
 
-    private final TableViewer dataSourcesViewer;
+    private final TableViewerBuilder dataSourcesViewer;
     private ITeiidImportServer teiidImportServer;
     private DataSourceManager dataSourceManager;
     private List<DataSourceItem> dataSourceObjList = new ArrayList<DataSourceItem>();
@@ -97,8 +96,8 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         // Create the Buttons panel
         createButtonsPanel(this);
         
-        this.dataSourcesViewer = new TableViewer(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
-        ColumnViewerToolTipSupport.enableFor(this.dataSourcesViewer);
+        this.dataSourcesViewer = new TableViewerBuilder(this, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        ColumnViewerToolTipSupport.enableFor(this.dataSourcesViewer.getTableViewer());
         this.dataSourcesViewer.setContentProvider(new IStructuredContentProvider() {
             /**
              * {@inheritDoc}
@@ -161,20 +160,20 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * this.visibleTableRows;
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
+        TableViewerColumn column = dataSourcesViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.dataSourcePanel_nameColText);
         column.setLabelProvider(new DataSourceLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
+
+        column = dataSourcesViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.dataSourcePanel_jndiNameColText);
         column.setLabelProvider(new DataSourceLabelProvider(1));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.dataSourcesViewer, SWT.LEFT);
+
+        column = dataSourcesViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.dataSourcePanel_typeColText);
         column.setLabelProvider(new DataSourceLabelProvider(2));
-        column.getColumn().pack();
+
 
         this.dataSourcesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**

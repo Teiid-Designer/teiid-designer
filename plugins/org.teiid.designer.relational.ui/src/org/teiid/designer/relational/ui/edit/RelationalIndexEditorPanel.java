@@ -9,7 +9,6 @@ package org.teiid.designer.relational.ui.edit;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
@@ -17,8 +16,6 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
@@ -35,7 +32,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -55,6 +51,7 @@ import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
@@ -74,7 +71,7 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
 	private Text tableReferenceText;
 	private Button browseForTableButton;
 
-	private TableViewer columnsViewer;
+	private TableViewerBuilder columnsViewer;
 
 	/**
 	 * @param parent the parent panel
@@ -246,19 +243,14 @@ public class RelationalIndexEditorPanel  extends RelationalEditorPanel implement
         	}
         });
 
-    	Table columnTable = new Table(thePanel, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-    	
-        this.columnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).hint(SWT.DEFAULT, 150).applyTo(this.columnsViewer.getControl());
-        
+        this.columnsViewer = new TableViewerBuilder(thePanel, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
+        GridDataFactory.fillDefaults().grab(true, false).span(3, 1).hint(SWT.DEFAULT, 150).applyTo(this.columnsViewer.getTableComposite());
+
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        TableViewerColumn column = this.columnsViewer.createColumn(SWT.LEFT, 100, 40, false);
         column.getColumn().setText(Messages.columnNameLabel + "          "); //$NON-NLS-1$
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
+
         
         this.columnsViewer.setContentProvider(new ITreeContentProvider() {
 			

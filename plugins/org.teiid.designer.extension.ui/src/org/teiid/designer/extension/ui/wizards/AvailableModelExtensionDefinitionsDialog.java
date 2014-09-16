@@ -10,7 +10,6 @@ package org.teiid.designer.extension.ui.wizards;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -20,8 +19,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -34,7 +31,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -46,8 +42,8 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinitionHeader;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 
 
@@ -60,10 +56,14 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     private ModelExtensionRegistry registry;
     private List<ModelExtensionDefinition> availableMedsList;
     private List<ModelExtensionDefinition> selectedMedsList;
-    private TableViewer tableViewer;
+    private TableViewerBuilder tableViewerBuilder;
 
     /**
      * Construct an instance of AvailableModelExtensionDefinitionsDialog.
+     *
+     * @param shell
+     * @param resource
+     * @param currentModelHeaders
      */
     public AvailableModelExtensionDefinitionsDialog( Shell shell,
                                                      ModelResource resource,
@@ -105,7 +105,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         // -----------------------------------------------
         Group tableGroup = WidgetFactory.createGroup(composite, Messages.availableMedsDialogTableLabel);
         tableGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        this.tableViewer = createTableViewer(tableGroup);
+        createTableViewer(tableGroup);
 
         return composite;
     }
@@ -121,6 +121,9 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         updateDialogMessage(Messages.availableMedsDialogNotDoneMsg, true);
     }
 
+    /**
+     * @return selected model extension definitions
+     */
     public List<ModelExtensionDefinition> getSelectedModelExtensionDefinitions() {
         return this.selectedMedsList;
     }
@@ -132,7 +135,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
      */
     @Override
     protected void computeResult() {
-        setResult(((IStructuredSelection)this.tableViewer.getSelection()).toList());
+        setResult(((IStructuredSelection)this.tableViewerBuilder.getSelection()).toList());
     }
 
     /*
@@ -197,22 +200,14 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
     /**
      * Create a TableViewer for the available ModelExtensionDefinitions
      */
-    private TableViewer createTableViewer( Composite composite ) {
-        TableViewer viewer = new TableViewer(composite, (SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
-        ColumnViewerToolTipSupport.enableFor(viewer);
-
-        // configure table
-        Table table = viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
+    private void createTableViewer( Composite parent ) {
+        tableViewerBuilder = new TableViewerBuilder(parent, (SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        ColumnViewerToolTipSupport.enableFor(tableViewerBuilder.getTableViewer());
 
         // create columns
-        createColumns(viewer, table);
+        createColumns();
 
-        viewer.setComparator(new ViewerComparator() {
+        tableViewerBuilder.setComparator(new ViewerComparator() {
             /**
              * {@inheritDoc}
              * 
@@ -232,7 +227,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
             }
         });
 
-        viewer.setContentProvider(new IStructuredContentProvider() {
+        tableViewerBuilder.setContentProvider(new IStructuredContentProvider() {
 
             /**
              * {@inheritDoc}
@@ -268,7 +263,7 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
             }
         });
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        tableViewerBuilder.addSelectionChangedListener(new ISelectionChangedListener() {
 
             /**
              * {@inheritDoc}
@@ -282,16 +277,13 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         });
 
         // populate the view
-        viewer.setInput(this.availableMedsList);
-        WidgetUtil.pack(viewer);
-
-        return viewer;
+        tableViewerBuilder.setInput(this.availableMedsList);
     }
 
     void handleMedSelectionChanged() {
         this.selectedMedsList.clear();
         // Update the selected Meds List
-        int[] selectedMedIndices = this.tableViewer.getTable().getSelectionIndices();
+        int[] selectedMedIndices = this.tableViewerBuilder.getTable().getSelectionIndices();
         if (selectedMedIndices.length > 0) {
             for (int i = 0; i < selectedMedIndices.length; i++) {
                 this.selectedMedsList.add(this.availableMedsList.get(selectedMedIndices[i]));
@@ -302,16 +294,15 @@ public class AvailableModelExtensionDefinitionsDialog extends SelectionStatusDia
         }
     }
 
-    private void createColumns( final TableViewer viewer,
-                                final Table table ) {
+    private void createColumns() {
         // NOTE: create in the order in ColumnIndexes
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.LEFT);
+        TableViewerColumn column = tableViewerBuilder.createColumn(SWT.LEFT, 40, 30, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, true);
 
-        column = new TableViewerColumn(viewer, SWT.RIGHT);
+        column = tableViewerBuilder.createColumn(SWT.RIGHT, 10, 20, true);
         configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, true);
 
-        final TableViewerColumn lastColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        final TableViewerColumn lastColumn = tableViewerBuilder.createColumn(SWT.LEFT, 50, 100, true);
         configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, true);
     }
 

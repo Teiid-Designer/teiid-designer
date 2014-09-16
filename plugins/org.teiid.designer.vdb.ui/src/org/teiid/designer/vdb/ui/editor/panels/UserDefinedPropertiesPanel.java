@@ -2,11 +2,10 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -17,8 +16,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -30,10 +27,10 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.translators.SimpleProperty;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -49,7 +46,7 @@ public class UserDefinedPropertiesPanel {
     
 	VdbEditor vdbEditor;
 	
-    TableViewer propertiesViewer;
+    TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
 
@@ -77,8 +74,8 @@ public class UserDefinedPropertiesPanel {
         Composite pnlUserProperties = WidgetFactory.createGroup(parent, null, SWT.FILL, 1, 1);
         pnlUserProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        this.propertiesViewer = new TableViewer(pnlUserProperties, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
+        this.propertiesViewer = new TableViewerBuilder(pnlUserProperties, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
+        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer.getTableViewer());
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
             /**
              * {@inheritDoc}
@@ -143,25 +140,20 @@ public class UserDefinedPropertiesPanel {
             }
         });
 
-        Table table = this.propertiesViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).horizontalSpan = 2;
+        GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(propertiesViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        TableViewerColumn column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(prefixedI18n("name") + "                                                ");  //$NON-NLS-1$//$NON-NLS-2$
         column.setLabelProvider(new PropertyLabelProvider(0));
         //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+
+        column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(prefixedI18n("value")); //$NON-NLS-1$
         column.setLabelProvider(new PropertyLabelProvider(1));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
-        column.getColumn().pack();
+        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer.getTableViewer(), 1));
+
 
         this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -18,15 +19,11 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
@@ -40,6 +37,7 @@ import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlCon
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 
 
 /**
@@ -52,7 +50,7 @@ public class EditColumnsPanel {
     private final int XML_PATH_PROP = 2;
     
 	
-	TableViewer columnsViewer;
+	TableViewerBuilder columnsViewer;
 	final TeiidXmlImportXmlConfigurationPage configPage;
 	
 	public EditColumnsPanel(Composite parent, TeiidXmlImportXmlConfigurationPage configPage) {
@@ -61,48 +59,40 @@ public class EditColumnsPanel {
 		createPanel(parent);
 	}
 	
-	private void createPanel(Composite parent) {	      
-    	Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-    	gd.heightHint = 80;
-    	table.setLayoutData(gd);
-
-        this.columnsViewer = new TableViewer(table);
-        this.columnsViewer.getControl().setLayoutData(gd);
+	private void createPanel(Composite parent) {
+        this.columnsViewer = new TableViewerBuilder(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 80).applyTo(this.columnsViewer.getControl());
         
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        TableViewerColumn column = columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.ColumnName + getSpaces(25));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, NAME_PROP));
+        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), NAME_PROP));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
+
         
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        column = columnsViewer.createColumn(SWT.LEFT, 10, 20, true);
         column.getColumn().setText(Messages.ForOrdinality);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new OrdinalityEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new OrdinalityEditingSupport(this.columnsViewer.getTableViewer()));
 
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+
+        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.dataTypeLabel + getSpaces(2));
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new DatatypeComboEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DatatypeComboEditingSupport(this.columnsViewer.getTableViewer()));
+
         
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.DefaultValue + getSpaces(2));
         column.setLabelProvider(new ColumnDataLabelProvider(3));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, DEFAULT_VALUE_PROP));
-        column.getColumn().pack();
+        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), DEFAULT_VALUE_PROP));
+
         
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.Path);
         column.setLabelProvider(new ColumnDataLabelProvider(4));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer, XML_PATH_PROP));
-        column.getColumn().pack();
+        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), XML_PATH_PROP));
+
         
         if( getFileInfo() != null ) {
 	        for( ITeiidXmlColumnInfo row : getFileInfo().getColumnInfoList() ) {

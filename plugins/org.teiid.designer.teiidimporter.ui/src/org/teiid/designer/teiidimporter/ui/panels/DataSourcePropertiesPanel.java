@@ -12,11 +12,8 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
@@ -27,7 +24,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TableViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -54,6 +50,7 @@ import org.teiid.designer.teiidimporter.ui.Activator;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -67,7 +64,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
 
     private static int GROUP_HEIGHT_100 = 100;
     private String dataSourceOrDriverName;
-    private TableViewer propertiesViewer;
+    private TableViewerBuilder propertiesViewer;
     private ITeiidImportServer teiidImportServer;
     private DataSourceManager dataSourceMgr;
     private List<PropertyItem> propertyItemList = new ArrayList<PropertyItem>();
@@ -160,7 +157,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
 
         // Create Table Viewer
         int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;
-        this.propertiesViewer = new TableViewer(panel, tableStyle);
+        this.propertiesViewer = new TableViewerBuilder(panel, tableStyle);
         
         // Create 'Required' label below table 
         Label reqdLabel = new Label(panel,SWT.NONE);
@@ -175,7 +172,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         descriptionLabelGridData.heightHint = (2 * propDescriptionText.getLineHeight());
         propDescriptionText.setLayoutData(descriptionLabelGridData);
 
-        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
+        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer.getTableViewer());
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
             /**
              * {@inheritDoc}
@@ -223,21 +220,21 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
         
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        TableViewerColumn column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(Messages.dataSourcePropertiesPanel_nameColText);
         namePropLabelProvider = new PropertyLabelProvider(true,this.propertyItemList);
         column.setLabelProvider(namePropLabelProvider);
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+
+        column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(Messages.dataSourcePropertiesPanel_valueColText);
         valuePropLabelProvider = new PropertyLabelProvider(false,this.propertyItemList);
         column.setLabelProvider(valuePropLabelProvider);
         // Add editing support if its not readonly
         if(!isReadOnly) {
-            column.setEditingSupport(new DataSourcePropertyEditingSupport(this.propertiesViewer,this));
+            column.setEditingSupport(new DataSourcePropertyEditingSupport(this.propertiesViewer.getTableViewer(),this));
             
-            ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy(this.propertiesViewer) {
+            ColumnViewerEditorActivationStrategy activationSupport = new ColumnViewerEditorActivationStrategy(this.propertiesViewer.getTableViewer()) {
                 @Override
 				protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
                     // Enable editor with single mouse click
@@ -257,9 +254,9 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
                     return false;
                 }
             };
-            TableViewerEditor.create(this.propertiesViewer, activationSupport, ColumnViewerEditor.DEFAULT);
+            TableViewerEditor.create(this.propertiesViewer.getTableViewer(), activationSupport, ColumnViewerEditor.DEFAULT);
         }
-        column.getColumn().pack();
+
 
         this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**

@@ -9,14 +9,11 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -31,7 +28,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
@@ -41,6 +37,7 @@ import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.ImportPropertiesPanel;
 import org.teiid.designer.teiidimporter.ui.panels.TranslatorHelper;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
@@ -67,7 +64,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
     private Collection<String> translatorNames = new ArrayList<String>();
     private Combo translatorNameCombo;
     
-    private TableViewer propertiesViewer;
+    private TableViewerBuilder propertiesViewerBuilder;
 
     /**
      * SelectedTranslatorAndTargetPage Constructor
@@ -110,7 +107,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         createImportPropertiesPanel(mainPanel);
         
         // Panel for Optional Properties
-        new ImportPropertiesPanel(mainPanel, importManager, 4);
+        new ImportPropertiesPanel(mainPanel, importManager);
         
         
         // Validate the page
@@ -192,10 +189,10 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
             pnlOverrides.setLayout(new GridLayout(2, false));
             pnlOverrides.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-            this.propertiesViewer = new TableViewer(pnlOverrides, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
+            propertiesViewerBuilder = new TableViewerBuilder(pnlOverrides, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
-            ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
-            this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
+            ColumnViewerToolTipSupport.enableFor(this.propertiesViewerBuilder.getTableViewer());
+            this.propertiesViewerBuilder.setContentProvider(new IStructuredContentProvider() {
                 /**
                  * {@inheritDoc}
                  * 
@@ -231,7 +228,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
             });
 
             // sort the table rows by display name
-            this.propertiesViewer.setComparator(new ViewerComparator() {
+            this.propertiesViewerBuilder.setComparator(new ViewerComparator() {
                 /**
                  * {@inheritDoc}
                  * 
@@ -249,26 +246,15 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
                 }
             });
 
-            Table table = this.propertiesViewer.getTable();
-            table.setHeaderVisible(true);
-            table.setLinesVisible(true);
-            table.setLayout(new TableLayout());
-            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            ((GridData)table.getLayoutData()).horizontalSpan = 2;
-
             // create columns
-            TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+            TableViewerColumn column = propertiesViewerBuilder.createColumn(SWT.LEFT, 70, 100, true);
             column.getColumn().setText("Property"); //$NON-NLS-1$
             column.setLabelProvider(new TranslatorPropertyLabelProvider(true));
-            column.getColumn().pack();
-            column.getColumn().setWidth(400);
 
-            column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+            column = propertiesViewerBuilder.createColumn(SWT.LEFT, 30, 100, true);
             column.getColumn().setText("Value"); //$NON-NLS-1$
             column.setLabelProvider(new TranslatorPropertyLabelProvider(false));
-            column.setEditingSupport(new ImportPropertyEditingSupport(this.propertiesViewer));
-            column.getColumn().pack();
-            column.getColumn().setWidth(150);
+            column.setEditingSupport(new ImportPropertyEditingSupport(this.propertiesViewerBuilder.getTableViewer()));
 
             //
             // add note below the table
@@ -336,7 +322,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
 	        
 	        importManager.getOptionalImportProps().clear();
 	        
-	        this.propertiesViewer.setInput(this);
+	        this.propertiesViewerBuilder.setInput(this);
 	        
 	        // Validate the page
 	        validatePage();
@@ -358,7 +344,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
                     this.translatorNameCombo.select(indx);
                     this.importManager.setTranslatorName(initialTranslatorSelection);
 
-                    this.propertiesViewer.setInput(this);
+                    this.propertiesViewerBuilder.setInput(this);
                     
         	        // TODO: Get Import Properties and add to importManager
                     

@@ -24,8 +24,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -43,12 +41,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.table.ResourceEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.TranslatorOverride;
@@ -77,8 +75,8 @@ public class ModelDetailsPanel {
     Button multiSourceCB, addColumnCB, addButton, deleteButton;
     Text columnAliasText;
     Label columnAliaslabel;
-    TableViewer bindingsViewer;
-    TableViewer problemsViewer;
+    TableViewerBuilder bindingsViewer;
+    TableViewerBuilder problemsViewer;
     VdbModelEntry selectedVdbModelEntry;
     
     VdbEditor vdbEditor;
@@ -242,36 +240,26 @@ public class ModelDetailsPanel {
 			BINDING_TABLE : {
 		        // Create Table Viewer
 		        int tableStyle = SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
-		        bindingsViewer = new TableViewer(lowerPanel, tableStyle);
-
-		        Table table = bindingsViewer.getTable();
-		        table.setLayout(new TableLayout());
-
-		        final GridData tblGD = new GridData(GridData.FILL_BOTH); 
-		        tblGD.grabExcessHorizontalSpace = true;
-		        tblGD.grabExcessVerticalSpace = true;
-		        table.setLayoutData(tblGD);
-		        table.setHeaderVisible(true);
-		        table.setLinesVisible(true);		        
+		        bindingsViewer = new TableViewerBuilder(lowerPanel, tableStyle);        
 
 		        // create columns
-		        TableViewerColumn column = new TableViewerColumn(bindingsViewer, SWT.LEFT);
+		        TableViewerColumn column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_sourceNameLabel + "                      "); //$NON-NLS-1$
-		        column.setEditingSupport(new SourceNameTextEditingSupport(bindingsViewer));
+		        column.setEditingSupport(new SourceNameTextEditingSupport(bindingsViewer.getTableViewer()));
 		        column.setLabelProvider(new BindingDataLabelProvider(0));
-		        column.getColumn().pack();
-		        
-		        column = new TableViewerColumn(bindingsViewer, SWT.LEFT);
-		        column.getColumn().setText(Messages.modelDetailsPanel_translatorNameLabel + "            "); //$NON-NLS-1$
-		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer, vdbEditor.getVdb().getFile()));
-		        column.setLabelProvider(new BindingDataLabelProvider(1));
-		        column.getColumn().pack();
 
-		        column = new TableViewerColumn(bindingsViewer, SWT.LEFT);
+		        
+		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
+		        column.getColumn().setText(Messages.modelDetailsPanel_translatorNameLabel + "            "); //$NON-NLS-1$
+		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer.getTableViewer(), vdbEditor.getVdb().getFile()));
+		        column.setLabelProvider(new BindingDataLabelProvider(1));
+
+
+		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_jndiNameLabel + "          "); //$NON-NLS-1$
-		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer, vdbEditor.getVdb().getFile()));
+		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer.getTableViewer(), vdbEditor.getVdb().getFile()));
 		        column.setLabelProvider(new BindingDataLabelProvider(2));
-		        column.getColumn().pack();
+
 		        
 		        bindingsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 					
@@ -375,33 +363,23 @@ public class ModelDetailsPanel {
 			PROBLEMS_TABLE : {
 		        // Create Table Viewer
 		        int tableStyle = SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
-		        problemsViewer = new TableViewer(subPanel_1, tableStyle);
-
-		        Table table = problemsViewer.getTable();
-		        table.setLayout(new TableLayout());
-
-		        final GridData tblGD = new GridData(GridData.FILL_BOTH); 
-		        tblGD.grabExcessHorizontalSpace = true;
-		        tblGD.grabExcessVerticalSpace = true;
-		        table.setLayoutData(tblGD);
-		        table.setHeaderVisible(true);
-		        table.setLinesVisible(true);		        
+		        problemsViewer = new TableViewerBuilder(subPanel_1, tableStyle);
 
 		        // create columns
-		        TableViewerColumn column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        TableViewerColumn column = problemsViewer.createColumn(SWT.LEFT, 30, 40, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_problemPathLabel + "                                    "); //$NON-NLS-1$
 		        column.setLabelProvider(new ProblemMarkerLabelProvider(0));
-		        column.getColumn().pack();
+
 		        
-		        column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        column = problemsViewer.createColumn(SWT.LEFT, 30, 40, true);
 		        column.getColumn().setText("      "); //$NON-NLS-1$
 		        column.setLabelProvider(new ProblemMarkerLabelProvider(1));
-		        column.getColumn().pack();
+
 		        
-		        column = new TableViewerColumn(problemsViewer, SWT.LEFT);
+		        column = problemsViewer.createColumn(SWT.LEFT, 30, 40, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_problemDescriptionLabel + "            "); //$NON-NLS-1$
 		        column.setLabelProvider(new ProblemMarkerLabelProvider(2));
-		        column.getColumn().pack();
+
 			}
 
 		}

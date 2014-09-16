@@ -33,12 +33,11 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -59,13 +58,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
+import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
@@ -88,6 +86,7 @@ import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportSour
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -153,7 +152,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private Combo srcCombo;
 	private Text dataFileFolderText;
 	private Button editCPButton;
-	private TableViewer fileViewer;
+	private TableViewerBuilder fileViewer;
 	private DataFolderContentProvider fileContentProvider;
 	private TableViewerColumn fileNameColumn;
 
@@ -327,19 +326,9 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	}
 
 	private void createFileTableViewer(Composite parent) {
+		this.fileViewer = new TableViewerBuilder(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
+		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 160).span(2, SWT.DEFAULT).applyTo(fileViewer.getTableComposite());
 
-		Table table = new Table(parent, SWT.SINGLE | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayout(new TableLayout());
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		this.fileViewer = new TableViewer(table);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.heightHint = 160;
-		gd.horizontalSpan = 2;
-		this.fileViewer.getControl().setLayoutData(gd);
 		fileContentProvider = new DataFolderContentProvider();
 		this.fileViewer.setContentProvider(fileContentProvider);
 		this.fileViewer.setLabelProvider(new FileSystemLabelProvider());
@@ -385,14 +374,14 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 				});
 
 		// create columns
-		fileNameColumn = new TableViewerColumn(this.fileViewer, SWT.LEFT);
+		fileNameColumn = this.fileViewer.createColumn(SWT.LEFT, 100, 40, false);
 		if (this.info.getFileMode() == TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_URL) {
 			fileNameColumn.getColumn().setText("XML Data File URL" ); //getString("dataFileNameColumn")); //$NON-NLS-1$
 		} else {
 			fileNameColumn.getColumn().setText(getString("xmlDataFileNameColumn")); //$NON-NLS-1$
 		}
 		fileNameColumn.setLabelProvider(new DataFileContentColumnLabelProvider());
-		fileNameColumn.getColumn().pack();
+
 	}
 
 	private void createSourceModelGroup(Composite parent) {
@@ -1570,7 +1559,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			
 			loadFileListViewer();
 			
-			fileNameColumn.getColumn().pack();
+
 			
 			synchronizeUI();
 

@@ -16,8 +16,6 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -33,7 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -51,6 +48,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.WsdlDefinitionPage;
 import org.teiid.designer.query.proc.wsdl.model.IPort;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
@@ -69,7 +67,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	Combo defaultServiceModeCombo;
 	
 	/** The checkbox table viewer */
-	TableViewer operationsViewer;
+	TableViewerBuilder operationsViewerBuilder;
 	TableViewerColumn operationNameColumn;
 
 	/** Buttons for tree selection */
@@ -157,7 +155,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 
 
 	void updateTreeSelectionDetails() {
-		TableItem[] selections = this.operationsViewer.getTable().getSelection();
+		TableItem[] selections = this.operationsViewerBuilder.getTable().getSelection();
 		if (selections != null && selections.length > 0) {
 			if( selections.length == 1 ) {
     			TableItem selectedItem = selections[0];
@@ -248,24 +246,15 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 		// ----------------------------
 		// TableViewer
 		// ----------------------------
-		Table table = new Table(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
-		table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-		table.setLayout(new TableLayout());
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.grabExcessVerticalSpace = true;
-		table.setLayoutData(gd);
-		
-		this.operationsViewer = new TableViewer(table);
+		this.operationsViewerBuilder = new TableViewerBuilder(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK);
 
-
-		this.operationsViewer.setContentProvider(new CheckboxTreeContentProvider());
-		this.operationsViewer.setLabelProvider(new CheckboxTreeLabelProvider());
+		this.operationsViewerBuilder.setContentProvider(new CheckboxTreeContentProvider());
+		this.operationsViewerBuilder.setLabelProvider(new CheckboxTreeLabelProvider());
 
 		// Check events can occur separate from selection events.
 		// In this case move the selected node.
 		// Also trigger selection of node in model.
-		this.operationsViewer.getTable().addSelectionListener(
+		this.operationsViewerBuilder.getTable().addSelectionListener(
 			new SelectionListener() {
 
 				@Override
@@ -283,11 +272,9 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 			});
 
 		// create columns
-		operationNameColumn = new TableViewerColumn(this.operationsViewer, SWT.LEFT);
+		operationNameColumn = this.operationsViewerBuilder.createColumn(SWT.LEFT, 100, 50, false);
 		operationNameColumn.getColumn().setText(Messages.Operation);
 		operationNameColumn.setLabelProvider(new OperationsColumnLabelProvider());
-		operationNameColumn.getColumn().pack();
-		
 		
 		CLabel theLabel = new CLabel(group, SWT.NONE);
 		theLabel.setText(Messages.WsdlOperationsPage_detailsTextbox_title);
@@ -356,7 +343,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	
 	private List<Operation> getSelectedOperations() {
 		List<Operation> ops = new ArrayList<Operation>();
-		for( TableItem item : operationsViewer.getTable().getItems()) {
+		for( TableItem item : operationsViewerBuilder.getTable().getItems()) {
 			if( item.getChecked() ) {
 				ops.add((Operation)item.getData());
 			}
@@ -367,6 +354,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	
 	/**
 	 * Populate the UI based on the wsdl in the connection profile
+	 *
+	 * @param profileChanged
 	 */
 	public void notifyWsdlChanged(final boolean profileChanged) {
         /*
@@ -387,8 +376,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                     Shell shell = parentComposite.getShell();
                     ErrorDialog.openError(shell, null, Messages.WsdlOperationsPage_dialog_wsdlParseError_title, exStatus);
                     panelStatus = exStatus;
-                    operationsViewer.getTable().clearAll();
-                    operationsViewer.setInput(new Object());
+                    operationsViewerBuilder.getTable().clearAll();
+                    operationsViewerBuilder.setInput(new Object());
                 }
 
                 // Set the default binding label
@@ -396,7 +385,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                 
                 if( importManager.getConnectionProfile() != null ) {
 	                properties = importManager.getConnectionProfile().getBaseProperties();
-                } else System.out.println(" >>> NO CONNECTION PROFILE");
+                }
                 
                 String binding = properties.getProperty(IWSProfileConstants.SOAP_BINDING);
                 if (binding == null)
@@ -410,8 +399,8 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
                 if (wsdlModel != null && portName != null) {
                     operations = wsdlModel.getModelableOperations(portName);
                 }
-                operationsViewer.setInput(new OperationsContainer(operations));
-                operationsViewer.refresh(true);
+                operationsViewerBuilder.setInput(new OperationsContainer(operations));
+                operationsViewerBuilder.getTableViewer().refresh(true);
 
                 if( profileChanged || importManager.getSelectedOperations().isEmpty()) {
                 	importManager.setSelectedOperations(new ArrayList());
@@ -444,7 +433,7 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 	
 	private void selectNodesFromImportManager() {
 		for( Operation oper : importManager.getSelectedOperations() ) {
-			for( TableItem item : operationsViewer.getTable().getItems()) {
+			for( TableItem item : operationsViewerBuilder.getTable().getItems()) {
 				if( oper == item.getData() ) {
 					item.setChecked(true);
 				}
@@ -454,16 +443,16 @@ public class WsdlOperationsPanel implements FileUtils.Constants, CoreStringUtil.
 
 	private void setAllNodesSelected(boolean bSelected) {
 		if( bSelected ) {
-			for( TableItem item : operationsViewer.getTable().getItems()) {
+			for( TableItem item : operationsViewerBuilder.getTable().getItems()) {
 				item.setChecked(true);
 			}
 		} else {
-			for( TableItem item : operationsViewer.getTable().getItems()) {
+			for( TableItem item : operationsViewerBuilder.getTable().getItems()) {
 				item.setChecked(false);
 			}
 		}
 		
-		this.operationsViewer.refresh();
+		this.operationsViewerBuilder.getTableViewer().refresh();
 	}
 
 	class CheckboxTreeLabelProvider extends LabelProvider {

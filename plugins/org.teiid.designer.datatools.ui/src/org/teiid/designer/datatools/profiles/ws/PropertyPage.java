@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -33,8 +32,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -57,7 +54,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -69,8 +65,8 @@ import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.widget.CredentialsComposite;
 
 public class PropertyPage extends ProfileDetailsPropertyPage implements
 		IContextProvider, DatatoolsUiConstants {
@@ -97,7 +93,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private TabItem headerPropertiesTab;
     ParameterPanel parameterPanel;
 	
-	private TableViewer propertiesViewer;
+	private TableViewerBuilder propertiesViewer;
 	
 	private Properties extraProperties;
 
@@ -536,8 +532,8 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         	gd.horizontalSpan = 2;
         	panel.setLayoutData(gd);
 
-            propertiesViewer = new TableViewer(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-            ColumnViewerToolTipSupport.enableFor(propertiesViewer);
+            propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
+            ColumnViewerToolTipSupport.enableFor(propertiesViewer.getTableViewer());
             propertiesViewer.setContentProvider(new IStructuredContentProvider() {
                 /**
                  * {@inheritDoc}
@@ -604,27 +600,19 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
                 }
             });
 
-            Table table = propertiesViewer.getTable();
-            table.setHeaderVisible(true);
-            table.setLinesVisible(true);
-            table.setLayout(new TableLayout());
-            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-            ((GridData)table.getLayoutData()).horizontalSpan = 2;
-            ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 6;
+            GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(propertiesViewer.getTableComposite());
+            ((GridData)propertiesViewer.getTable().getLayoutData()).heightHint = propertiesViewer.getTable().getItemHeight() * 6;
 
             // create columns
-            TableViewerColumn column = new TableViewerColumn(propertiesViewer, SWT.LEFT);
+            TableViewerColumn column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
             column.getColumn().setText(UTIL.getString("ExtraPropertiesPanel_name") + "                   ");  //$NON-NLS-1$ //$NON-NLS-2$
             column.setLabelProvider(new PropertyLabelProvider(0));
-            //column.setEditingSupport(new PropertyNameEditingSupport(propertiesViewer, 0));
-            column.getColumn().pack();
 
-            column = new TableViewerColumn(propertiesViewer, SWT.LEFT);
+            column = propertiesViewer.createColumn(SWT.LEFT, 50, 40, true);
             column.getColumn().setText(UTIL.getString("ExtraPropertiesPanel_value"));  //$NON-NLS-1$
             column.setLabelProvider(new PropertyLabelProvider(1));
-            column.setEditingSupport(new PropertyNameEditingSupport(propertiesViewer, 1));
-            column.getColumn().pack();
-            
+            column.setEditingSupport(new PropertyNameEditingSupport(propertiesViewer.getTableViewer(), 1));
+
             propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
                 /**
                  * {@inheritDoc}

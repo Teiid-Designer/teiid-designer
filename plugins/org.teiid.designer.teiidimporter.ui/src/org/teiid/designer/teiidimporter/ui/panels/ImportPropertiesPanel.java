@@ -10,7 +10,6 @@ package org.teiid.designer.teiidimporter.ui.panels;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -21,8 +20,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
@@ -34,7 +31,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.translators.SimpleProperty;
@@ -42,6 +38,7 @@ import org.teiid.designer.teiidimporter.ui.Activator;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.TeiidImportManager;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -50,22 +47,19 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 public class ImportPropertiesPanel {
 	static final String PREFIX = I18nUtil.getPropertyPrefix(ImportPropertiesPanel.class);
 	
-    TableViewer propertiesViewer;
+    TableViewerBuilder propertiesViewerBuilder;
 	Button addPropertyButton;
 	Button removePropertyButton;
 	TeiidImportManager importManager;
-	private int visibleTableRows;
 	
 	/**
 	 * Constructor
      * @param parent the parent Composite
      * @param importManager the TeiidImportManager
-     * @param visibleTableRows the number of visible rows to be shown in the table
      */
-    public ImportPropertiesPanel(Composite parent, TeiidImportManager importManager, int visibleTableRows) {
+    public ImportPropertiesPanel(Composite parent, TeiidImportManager importManager) {
     	super();
     	this.importManager = importManager;
-    	this.visibleTableRows = visibleTableRows;
     	createPanel(parent);
     }
     
@@ -77,9 +71,10 @@ public class ImportPropertiesPanel {
     	Composite panel = WidgetFactory.createGroup(parent, Messages.ImportPropertiesPanel_groupTitle, SWT.FILL, 1, 1); 
     	panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-        this.propertiesViewer = new TableViewer(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        ColumnViewerToolTipSupport.enableFor(this.propertiesViewer);
-        this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
+    	this.propertiesViewerBuilder = new TableViewerBuilder(panel, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+
+        ColumnViewerToolTipSupport.enableFor(this.propertiesViewerBuilder.getTableViewer());
+        this.propertiesViewerBuilder.setContentProvider(new IStructuredContentProvider() {
             /**
              * {@inheritDoc}
              * 
@@ -125,7 +120,7 @@ public class ImportPropertiesPanel {
         });
 
         // sort the table rows by display name
-        this.propertiesViewer.setComparator(new ViewerComparator() {
+        this.propertiesViewerBuilder.setComparator(new ViewerComparator() {
             /**
              * {@inheritDoc}
              * 
@@ -143,28 +138,17 @@ public class ImportPropertiesPanel {
             }
         });
 
-        Table table = this.propertiesViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).horizontalSpan = 2;
-        ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * this.visibleTableRows;
-
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
-        column.getColumn().setText(Messages.ImportPropertiesPanel_name + "                   ");  //$NON-NLS-1$
+        TableViewerColumn column = this.propertiesViewerBuilder.createColumn(SWT.LEFT, 50, 50, true);
+        column.getColumn().setText(Messages.ImportPropertiesPanel_name);
         column.setLabelProvider(new PropertyLabelProvider(0));
-        //column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
+        column = this.propertiesViewerBuilder.createColumn(SWT.LEFT, 50, 50, true);
         column.getColumn().setText(Messages.ImportPropertiesPanel_value); 
         column.setLabelProvider(new PropertyLabelProvider(1));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer, 1));
-        column.getColumn().pack();
+        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewerBuilder.getTableViewer(), 1));
 
-        this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        this.propertiesViewerBuilder.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
              * 
@@ -213,16 +197,16 @@ public class ImportPropertiesPanel {
 		});
         this.removePropertyButton.setEnabled(false);
         
-        this.propertiesViewer.setInput(this);
+        this.propertiesViewerBuilder.setInput(this);
 	}
 	
 	void handlePropertySelected() {
-		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
+		boolean hasSelection = !this.propertiesViewerBuilder.getSelection().isEmpty();
 		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
     private SimpleProperty getSelectedProperty() {
-        IStructuredSelection selection = (IStructuredSelection)this.propertiesViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)this.propertiesViewerBuilder.getSelection();
 
         if (selection.isEmpty()) {
             return null;
@@ -232,10 +216,10 @@ public class ImportPropertiesPanel {
     }
 	
     void handleAddProperty() {
-        assert (!this.propertiesViewer.getSelection().isEmpty());
+        assert (!this.propertiesViewerBuilder.getSelection().isEmpty());
 
         AddGeneralPropertyDialog dialog = 
-        		new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), 
+        		new AddGeneralPropertyDialog(propertiesViewerBuilder.getControl().getShell(), 
         				importManager.getOptionalImportProps().keySet());
 
         if (dialog.open() == Window.OK) {
@@ -245,14 +229,14 @@ public class ImportPropertiesPanel {
             importManager.addOptionalImportProperty(name, value);
 
             // update UI from model
-            this.propertiesViewer.refresh();
+            this.propertiesViewerBuilder.getTableViewer().refresh();
 
             // select the new property
             
             
             SimpleProperty prop = null;
             
-            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
+            for(TableItem item : this.propertiesViewerBuilder.getTable().getItems() ) {
             	if( item.getData() instanceof SimpleProperty && ((SimpleProperty)item.getData()).getName().equals(name) ) {
             		prop = (SimpleProperty)item.getData();
             		break;
@@ -260,7 +244,7 @@ public class ImportPropertiesPanel {
             }
 
             if( prop != null ) {
-                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+                this.propertiesViewerBuilder.getTableViewer().setSelection(new StructuredSelection(prop), true);
             }
         }
     }
@@ -273,7 +257,7 @@ public class ImportPropertiesPanel {
         importManager.removeOptionalImportProperty(selectedProperty.getName());
 
         // update UI
-        this.propertiesViewer.refresh();
+        this.propertiesViewerBuilder.getTableViewer().refresh();
     }
 	
 	class PropertyLabelProvider extends ColumnLabelProvider {
@@ -370,7 +354,7 @@ public class ImportPropertiesPanel {
 					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
 				        importManager.removeOptionalImportProperty(oldKey);
 				        importManager.addOptionalImportProperty(newKey,oldValue);
-						propertiesViewer.refresh();
+						propertiesViewerBuilder.getTableViewer().refresh();
 					}
 				} else if( columnID == 1 ) {
 					String key = ((SimpleProperty)element).getName();
@@ -378,7 +362,7 @@ public class ImportPropertiesPanel {
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 				        importManager.addOptionalImportProperty(key,newValue);
-						propertiesViewer.refresh();
+						propertiesViewerBuilder.getTableViewer().refresh();
 					}
 				}
 

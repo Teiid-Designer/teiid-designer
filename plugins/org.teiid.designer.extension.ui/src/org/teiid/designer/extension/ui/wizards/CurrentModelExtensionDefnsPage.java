@@ -8,12 +8,10 @@
 package org.teiid.designer.extension.ui.wizards;
 
 import static org.teiid.designer.extension.ui.UiConstants.ImageIds.CHECK_MARK;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -28,8 +26,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -49,7 +45,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -67,8 +62,8 @@ import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 /**
@@ -87,7 +82,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
 
     Text modelNameText;
 
-    private TableViewer tableViewer;
+    private TableViewerBuilder tableViewerBuilder;
     private MedHeadersEditManager editManager;
     private Collection<ModelExtensionDefinition> modelMeds;
 
@@ -260,7 +255,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         bottomComposite.setLayout(bottomLayout);
 
         // Table and Buttons
-        this.tableViewer = createTableViewer(bottomComposite);
+        createTableViewer(bottomComposite);
         createTableButtonComposite(bottomComposite);
 
         setControl(parent);
@@ -373,23 +368,17 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
     /*
      * Create a TableViewer for the models current ModelExtensionDefinitions
      */
-    private TableViewer createTableViewer( Composite composite ) {
-        Group tableGroup = WidgetFactory.createGroup(composite, Messages.currentMedsPageTableLabel);
+    private void createTableViewer( Composite parent ) {
+        Group tableGroup = WidgetFactory.createGroup(parent, Messages.currentMedsPageTableLabel);
         tableGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        TableViewer viewer = new TableViewer(tableGroup, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER));
-        ColumnViewerToolTipSupport.enableFor(viewer);
 
-        // configure table
-        Table table = viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        tableViewerBuilder = new TableViewerBuilder(tableGroup, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.BORDER));
+        ColumnViewerToolTipSupport.enableFor(tableViewerBuilder.getTableViewer());
 
         // create columns
-        createColumns(viewer, table);
+        createColumns();
 
-        viewer.setComparator(new ViewerComparator() {
+        tableViewerBuilder.setComparator(new ViewerComparator() {
             /**
              * {@inheritDoc}
              * 
@@ -409,7 +398,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             }
         });
 
-        viewer.setContentProvider(new IStructuredContentProvider() {
+        tableViewerBuilder.setContentProvider(new IStructuredContentProvider() {
 
             /**
              * {@inheritDoc}
@@ -445,7 +434,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             }
         });
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        tableViewerBuilder.addSelectionChangedListener(new ISelectionChangedListener() {
 
             /**
              * {@inheritDoc}
@@ -459,33 +448,29 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         });
 
         // populate the view
-        viewer.setInput(this.editManager.getCurrentHeaders());
-        WidgetUtil.pack(viewer);
-
-        return viewer;
+        tableViewerBuilder.setInput(this.editManager.getCurrentHeaders());
     }
 
     void handleMedSelectionChanged() {
         setButtonStates();
     }
 
-    private void createColumns( final TableViewer viewer,
-                                final Table table ) {
+    private void createColumns() {
         // NOTE: create in the order in ColumnIndexes
-        TableViewerColumn column = new TableViewerColumn(viewer, SWT.RIGHT);
+        TableViewerColumn column = tableViewerBuilder.createColumn(SWT.RIGHT, 5, 20, true);
         configureColumn(column, ColumnIndexes.REGISTERED, ColumnHeaders.REGISTERED, ColumnToolTips.REGISTERED, false);
 
-        column = new TableViewerColumn(viewer, SWT.RIGHT);
+        column = tableViewerBuilder.createColumn(SWT.RIGHT, 5, 20, true);
         configureColumn(column, ColumnIndexes.DIFFERENT, ColumnHeaders.DIFFERENT, ColumnToolTips.DIFFERENT, false);
 
-        column = new TableViewerColumn(viewer, SWT.LEFT);
+        column = tableViewerBuilder.createColumn(SWT.LEFT, 30, 50, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, ColumnHeaders.NAMESPACE_PREFIX, ColumnToolTips.NAMESPACE_PREFIX,
                         true);
 
-        column = new TableViewerColumn(viewer, SWT.RIGHT);
+        column = tableViewerBuilder.createColumn(SWT.RIGHT, 5, 20, true);
         configureColumn(column, ColumnIndexes.VERSION, ColumnHeaders.VERSION, ColumnToolTips.VERSION, true);
 
-        final TableViewerColumn lastColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        final TableViewerColumn lastColumn = tableViewerBuilder.createColumn(SWT.LEFT, 30, 50, true);
         configureColumn(lastColumn, ColumnIndexes.DESCRIPTION, ColumnHeaders.DESCRIPTION, ColumnToolTips.DESCRIPTION, true);
     }
 
@@ -666,7 +651,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * Set the Add/Remove MED buttons states based on the current table selection
      */
     private void setButtonStates() {
-        final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)this.tableViewerBuilder.getSelection();
         final boolean medSelected = !selection.isEmpty();
         boolean enableRemove = false;
         boolean enableSave = false;
@@ -770,7 +755,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
             this.editManager.addModelExtensionDefinitions(dialogMeds);
 
             // Update the table
-            this.tableViewer.refresh();
+            this.tableViewerBuilder.getTableViewer().refresh();
         }
     }
 
@@ -778,7 +763,7 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * handler for Remove Med Button
      */
     void handleRemoveMed() {
-        assert !this.tableViewer.getSelection().isEmpty() : "remove MED handler called when no MED is selected"; //$NON-NLS-1$
+        assert !this.tableViewerBuilder.getSelection().isEmpty() : "remove MED handler called when no MED is selected"; //$NON-NLS-1$
 
         // Warn user that removal will remove all properties
         boolean confirmed = MessageDialog.openConfirm(getShell(),
@@ -788,11 +773,11 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         // If user confirms, proceed
         if (confirmed) {
             // put selected prefix in the remove list
-            final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+            final IStructuredSelection selection = (IStructuredSelection)this.tableViewerBuilder.getSelection();
             final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
             String namespacePrefix = medHeader.getNamespacePrefix();
             this.editManager.removeModelExtensionDefinition(namespacePrefix);
-            this.tableViewer.refresh();
+            this.tableViewerBuilder.getTableViewer().refresh();
         }
     }
 
@@ -801,10 +786,10 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
      * needs to be saved.
      */
     void handleSaveMed() {
-        assert !this.tableViewer.getSelection().isEmpty() : "save MED handler called when no MED is selected"; //$NON-NLS-1$
+        assert !this.tableViewerBuilder.getSelection().isEmpty() : "save MED handler called when no MED is selected"; //$NON-NLS-1$
 
         // Get the selected Med Header
-        final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)this.tableViewerBuilder.getSelection();
         final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
 
         // Create DefaultMedAssistant
@@ -827,16 +812,16 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
         wizardDialog.open();
 
         // Deselect the original med
-        this.tableViewer.getTable().deselectAll();
+        this.tableViewerBuilder.getTable().deselectAll();
         setButtonStates();
 
         // Reset manager to update states
         this.editManager = new MedHeadersEditManager(getModelExtensionDefnHeaders(this.modelResource));
-        this.tableViewer.refresh();
+        this.tableViewerBuilder.getTableViewer().refresh();
     }
 
     void handleUpdateMed() {
-        assert !this.tableViewer.getSelection().isEmpty() : "update MED handler called when no MED is selected"; //$NON-NLS-1$
+        assert !this.tableViewerBuilder.getSelection().isEmpty() : "update MED handler called when no MED is selected"; //$NON-NLS-1$
 
         // get confirmation from user
         boolean confirmed = MessageDialog.openConfirm(getShell(),
@@ -844,11 +829,11 @@ public class CurrentModelExtensionDefnsPage extends WizardPage implements Intern
                                                       Messages.currentMedsPageUpdateMedDialogMsg);
 
         if (confirmed) {
-            final IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+            final IStructuredSelection selection = (IStructuredSelection)this.tableViewerBuilder.getSelection();
             final ModelExtensionDefinitionHeader medHeader = (ModelExtensionDefinitionHeader)selection.getFirstElement();
             String namespacePrefix = medHeader.getNamespacePrefix();
             this.editManager.updateModelExtensionDefinition(this.registry.getDefinition(namespacePrefix));
-            this.tableViewer.refresh();
+            this.tableViewerBuilder.getTableViewer().refresh();
         }
     }
 }

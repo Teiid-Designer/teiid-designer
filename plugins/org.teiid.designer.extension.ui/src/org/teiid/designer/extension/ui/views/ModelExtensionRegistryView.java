@@ -43,8 +43,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -62,7 +60,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IActionBars;
@@ -90,6 +87,7 @@ import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.actions.RegistryDeploymentValidator;
 import org.teiid.designer.extension.ui.wizards.NewMedWizard;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
@@ -115,7 +113,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
 
     private IAction unregisterMedAction;
 
-    private TableViewer viewer;
+    private TableViewerBuilder viewerBuilder;
 
     private RegistryListener registryListener = new RegistryListener() {
 
@@ -251,33 +249,33 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         this.unregisterMedAction.setImageDescriptor(Activator.getDefault().getImageDescriptor(UNREGISTER_MED));
     }
 
-    private void createColumns( final Table table ) {
+    private void createColumns() {
         // NOTE: create in the order in ColumnIndexes
-        TableViewerColumn column = new TableViewerColumn(this.viewer, SWT.CENTER);
+        TableViewerColumn column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, true);
         configureColumn(column, ColumnIndexes.BUILT_IN, Messages.builtInColumnText, Messages.builtInColumnToolTip, false);
 
-        column = new TableViewerColumn(this.viewer, SWT.CENTER);
+        column = viewerBuilder.createColumn(SWT.CENTER, 5, 25, true);
         configureColumn(column, ColumnIndexes.IMPORTED, Messages.importedColumnText, Messages.importedColumnToolTip, false);
 
-        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_PREFIX, Messages.namespacePrefixColumnText,
                         Messages.namespacePrefixColumnToolTip, true);
 
-        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
         configureColumn(column, ColumnIndexes.NAMESPACE_URI, Messages.namespaceUriColumnText, Messages.namespaceUriColumnToolTip,
                         true);
 
-        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
         configureColumn(column, ColumnIndexes.METAMODEL_URI, Messages.extendedMetamodelUriColumnText,
                         Messages.metamodelUriColumnToolTip, true);
 
-        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        column = viewerBuilder.createColumn(SWT.LEFT, 14, 30, true);
         configureColumn(column, ColumnIndexes.MODEL_TYPES, Messages.modelTypeColumnText, Messages.modelTypesColumnToolTip, true);
 
-        column = new TableViewerColumn(this.viewer, SWT.RIGHT);
+        column = viewerBuilder.createColumn(SWT.RIGHT, 5, 10, true);
         configureColumn(column, ColumnIndexes.VERSION, Messages.versionColumnText, Messages.versionColumnToolTip, true);
 
-        column = new TableViewerColumn(this.viewer, SWT.LEFT);
+        column = viewerBuilder.createColumn(SWT.LEFT, 22, 40, true);
         configureColumn(column, ColumnIndexes.DESCRIPTION, Messages.descriptionColumnText, Messages.descriptionColumnToolTip, true);
     }
 
@@ -302,20 +300,13 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         pnlMain.setLayout(new GridLayout());
         pnlMain.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        this.viewer = new TableViewer(pnlMain, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
-        ColumnViewerToolTipSupport.enableFor(this.viewer);
-
-        // configure table
-        Table table = this.viewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        this.viewerBuilder = new TableViewerBuilder(pnlMain, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION));
+        ColumnViewerToolTipSupport.enableFor(this.viewerBuilder.getTableViewer());
 
         // create columns
-        createColumns(table);
+        createColumns();
 
-        this.viewer.setComparator(new ViewerComparator() {
+        this.viewerBuilder.setComparator(new ViewerComparator() {
 
             /**
              * {@inheritDoc}
@@ -335,8 +326,8 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
             }
         });
 
-        this.viewer.setLabelProvider(new MedLabelProvider());
-        this.viewer.setContentProvider(new IStructuredContentProvider() {
+        this.viewerBuilder.setLabelProvider(new MedLabelProvider());
+        this.viewerBuilder.setContentProvider(new IStructuredContentProvider() {
 
             /**
              * {@inheritDoc}
@@ -380,7 +371,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
             }
         });
 
-        this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        this.viewerBuilder.addSelectionChangedListener(new ISelectionChangedListener() {
 
             /**
              * {@inheritDoc}
@@ -394,14 +385,13 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
         });
 
         // populate the view
-        this.viewer.setInput(this);
-        WidgetUtil.pack(this.viewer);
+        this.viewerBuilder.setInput(this);
 
         createActions();
 
         MenuManager mgr = createContextMenu();
-        Menu menu = mgr.createContextMenu(this.viewer.getControl());
-        this.viewer.getControl().setMenu(menu);
+        Menu menu = mgr.createContextMenu(this.viewerBuilder.getControl());
+        this.viewerBuilder.getControl().setMenu(menu);
 
         IActionBars actionBars = getViewSite().getActionBars();
         configureMenu(actionBars.getMenuManager());
@@ -419,7 +409,7 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
     }
 
     private ModelExtensionDefinition getSelectedMed() {
-        IStructuredSelection selection = (IStructuredSelection)this.viewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)this.viewerBuilder.getSelection();
 
         if (selection.isEmpty()) {
             return null;
@@ -839,11 +829,11 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
             @Override
             public void run() {
                 if (event.isAdd()) {
-                    viewer.add(med);
+                    viewerBuilder.add(med);
                 } else if (event.isChange()) {
-                    viewer.refresh(med);
+                    viewerBuilder.getTableViewer().refresh(med);
                 } else if (event.isRemove()) {
-                    viewer.remove(med);
+                    viewerBuilder.getTableViewer().remove(med);
                 }
             }
         }, true);
@@ -894,8 +884,8 @@ public final class ModelExtensionRegistryView extends ViewPart implements Extens
      */
     @Override
     public void setFocus() {
-        if ((this.viewer != null) && !this.viewer.getControl().isDisposed()) {
-            this.viewer.getControl().setFocus();
+        if ((this.viewerBuilder != null) && !this.viewerBuilder.getControl().isDisposed()) {
+            this.viewerBuilder.getControl().setFocus();
         }
     }
 

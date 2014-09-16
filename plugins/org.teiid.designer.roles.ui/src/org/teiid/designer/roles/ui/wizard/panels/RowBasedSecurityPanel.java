@@ -8,7 +8,6 @@
 package org.teiid.designer.roles.ui.wizard.panels;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -30,8 +29,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -54,12 +51,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
@@ -68,6 +64,7 @@ import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.roles.ui.wizard.PermissionTreeProvider;
 import org.teiid.designer.roles.ui.wizard.dialogs.AbstractAddOrEditTitleDialog;
 import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
@@ -79,8 +76,9 @@ import org.teiid.designer.ui.common.widget.MessageLabel;
 public class RowBasedSecurityPanel extends DataRolePanel {
     private static final char DELIM = CoreStringUtil.Constants.DOT_CHAR;
     private static final char B_SLASH = '/';
-    
-	TableViewer tableViewer;
+
+//	TableViewer tableViewer;
+    TableViewerBuilder tableBuilder;
 	Button addButton;
 	Button removeButton;
 	Button editButton;
@@ -117,9 +115,10 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 		}
 		
 		{
-	        this.tableViewer = new TableViewer(getPrimaryPanel(), (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-	        ColumnViewerToolTipSupport.enableFor(this.tableViewer);
-	        this.tableViewer.setContentProvider(new IStructuredContentProvider() {
+		    tableBuilder = new TableViewerBuilder(getPrimaryPanel(), SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+
+	        ColumnViewerToolTipSupport.enableFor(tableBuilder.getTableViewer());
+	        tableBuilder.setContentProvider(new IStructuredContentProvider() {
 	            /**
 	             * {@inheritDoc}
 	             * 
@@ -161,7 +160,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	        });
 
 	        // sort the table rows by display name
-	        this.tableViewer.setComparator(new ViewerComparator() {
+	        tableBuilder.setComparator(new ViewerComparator() {
 	            /**
 	             * {@inheritDoc}
 	             * 
@@ -179,34 +178,22 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	            }
 	        });
 
-	        Table table = this.tableViewer.getTable();
-	        table.setHeaderVisible(true);
-	        table.setLinesVisible(true);
-	        table.setLayout(new TableLayout());
-	        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-	        ((GridData)table.getLayoutData()).horizontalSpan = 2;
-
 	        // create columns
-	        TableViewerColumn column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
+	        TableViewerColumn column = tableBuilder.createColumn(SWT.LEFT, 40, 100, true);
 	        column.getColumn().setText(Messages.name + getSpaces(70));
 	        column.setLabelProvider(new PermissionLabelProvider(0));
-	        column.getColumn().pack();
 	        
-	        column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
+	        column = tableBuilder.createColumn(SWT.LEFT, 30, 100, true);
 	        column.getColumn().setText(Messages.constraint);
 	        column.setLabelProvider(new PermissionLabelProvider(1));
-	        // TODO: add editing support
-	        column.setEditingSupport(new ContraintEditingSupport(this.tableViewer));
-	        column.getColumn().pack();
-	        
-	        column = new TableViewerColumn(this.tableViewer, SWT.LEFT);
+	        column.setEditingSupport(new ContraintEditingSupport(tableBuilder.getTableViewer()));
+
+	        column = tableBuilder.createColumn(SWT.LEFT, 30, 100, true);
 	        column.getColumn().setText(Messages.condition);
 	        column.setLabelProvider(new PermissionLabelProvider(2));
-	        column.setEditingSupport(new ConditionEditingSupport(this.tableViewer));
-	        column.getColumn().pack();
+	        column.setEditingSupport(new ConditionEditingSupport(tableBuilder.getTableViewer()));
 
-
-	        this.tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+	        tableBuilder.addSelectionChangedListener(new ISelectionChangedListener() {
 	            /**
 	             * {@inheritDoc}
 	             * 
@@ -214,13 +201,13 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	             */
 	            @Override
 	            public void selectionChanged( SelectionChangedEvent event ) {
-	                boolean enable = !tableViewer.getSelection().isEmpty();
+	                boolean enable = !tableBuilder.getSelection().isEmpty();
 	                editButton.setEnabled(enable);
 	                removeButton.setEnabled(enable);
 	            }
 	        });
 	        
-	        this.tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+	        tableBuilder.addDoubleClickListener(new IDoubleClickListener() {
 				
 				@Override
 				public void doubleClick(DoubleClickEvent event) {
@@ -361,7 +348,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     }
     
     private Permission getSelectedPermission() {
-        IStructuredSelection selection = (IStructuredSelection)this.tableViewer.getSelection();
+        IStructuredSelection selection = (IStructuredSelection)this.tableBuilder.getSelection();
 
         if (selection.isEmpty()) {
             return null;
@@ -372,13 +359,13 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     
     @Override
     public void refresh() {
-    	this.tableViewer.getTable().removeAll();
+    	this.tableBuilder.getTable().removeAll();
     	
         for( Permission perm : getWizard().getTreeProvider().getPermissionsWithRowBasedSecurity() ) {
-        	this.tableViewer.add(perm);
+        	this.tableBuilder.add(perm);
         }
         
-        if( this.tableViewer.getSelection().isEmpty() ) {
+        if( this.tableBuilder.getSelection().isEmpty() ) {
         	this.editButton.setEnabled(false);
         	this.removeButton.setEnabled(false);
         }
@@ -465,7 +452,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					((Permission)element).setCondition(newValue);
-					tableViewer.refresh(element);
+					tableBuilder.getTableViewer().refresh(element);
 					handleInfoChanged();
 				}
 			}
@@ -502,7 +489,10 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 
         /**
          * @param parentShell the parent shell (may be <code>null</code>)
-         * @param existingPropertyNames the existing property names (can be <code>null</code>)
+         * @param title
+         * @param message 
+         * @param permission 
+         * @param okEnabled 
          */
         public RowBasedSecurityDialog( Shell parentShell, String title, String message, Permission permission, boolean okEnabled ) {
             super(parentShell, title, message, okEnabled);
@@ -531,7 +521,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     	        Label theLabel = WidgetFactory.createLabel(innerPanel, Messages.target);
     	        GridDataFactory.fillDefaults().align(GridData.BEGINNING, GridData.CENTER).applyTo(theLabel);
 
-    	        this.targetTableOrViewText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
+    	        this.targetTableOrViewText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringConstants.EMPTY_STRING);
     	        if( isEdit ) {
     	        	this.targetTableOrViewText.setText(this.targetTableOrView);
     	        	this.targetTableOrViewText.setEditable(false);

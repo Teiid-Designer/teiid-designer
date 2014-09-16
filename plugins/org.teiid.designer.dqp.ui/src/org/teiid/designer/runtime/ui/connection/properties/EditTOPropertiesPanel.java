@@ -1,14 +1,12 @@
 package org.teiid.designer.runtime.ui.connection.properties;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -115,7 +113,6 @@ public class EditTOPropertiesPanel {
             Table table = this.propertiesViewer.getTable();
             table.setHeaderVisible(true);
             table.setLinesVisible(true);
-            table.setLayout(new TableLayout());
             table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).horizontalSpan = 2;
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * visibleTableRows;
@@ -124,14 +121,12 @@ public class EditTOPropertiesPanel {
             TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(DqpUiConstants.UTIL.getString(PREFIX + "propertyColumn.text")); //$NON-NLS-1$
             column.setLabelProvider(new TranslatorPropertyLabelProvider(true)); // PropertyLabelProvider(false));
-            column.getColumn().pack();
             column.getColumn().setWidth(400);
 
             column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(DqpUiConstants.UTIL.getString(PREFIX + "valueColumn.text")); //$NON-NLS-1$
             column.setLabelProvider(new TranslatorPropertyLabelProvider(false)); // PropertyLabelProvider(false));
             column.setEditingSupport(new TOPropertyEditingSupport(this.propertiesViewer));
-            column.getColumn().pack();
             column.getColumn().setWidth(150);
             if( override.getProperties().length == 0 ) {
             	((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 4;

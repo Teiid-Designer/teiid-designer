@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -74,6 +73,7 @@ import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -108,9 +108,9 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
 	private Button changePkColumnsButton, changeUcColumnsButton, addFKButton, editFKButton, deleteFKButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
-	private TableViewer columnsViewer;
-	private TableViewer pkColumnsViewer, ucColumnsViewer, fkViewer;
-	private TableViewer indexesViewer;
+	private TableViewerBuilder columnsViewer;
+	private TableViewerBuilder pkColumnsViewer, ucColumnsViewer, fkViewer;
+	private TableViewerBuilder indexesViewer;
 
 	private boolean finishedStartup = false;
 	private boolean validationPerformed = false;
@@ -713,28 +713,21 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
-    	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
 
-        this.pkColumnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getControl());        
-        
+        this.pkColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getTableComposite());
+
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.pkColumnsViewer, SWT.LEFT);
+        TableViewerColumn column = pkColumnsViewer.createColumn(SWT.LEFT, 100, 40, true);
         column.getColumn().setText(Messages.columnNameLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
-        
+
         if( getRelationalReference() != null && getRelationalReference().getPrimaryKey() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getPrimaryKey().getColumns() ) {
 	        	this.columnsViewer.add(row);
 	        }
         }
-        //LayoutDebugger.debugLayout(theGroup);
-    	
+
     	return thePanel;
 	}
 	
@@ -848,21 +841,15 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
-    	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
 
-        this.ucColumnsViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getControl());        
-        
+        this.ucColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getTableComposite());        
+
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.ucColumnsViewer, SWT.LEFT);
+        TableViewerColumn column = this.ucColumnsViewer.createColumn(SWT.LEFT, 100, 40, false);
         column.getColumn().setText(Messages.columnNameLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
-        
+
         if( getRelationalReference() != null && getRelationalReference().getUniqueContraint() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getUniqueContraint().getColumns() ) {
 	        	this.ucColumnsViewer.add(row);
@@ -969,20 +956,14 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		
 		});
 
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-
-        this.fkViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getControl());
+        this.fkViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.fkViewer, SWT.LEFT);
+        TableViewerColumn column = fkViewer.createColumn(SWT.LEFT, 100, 40, false);
         column.getColumn().setText(Messages.fkNameLabel);
         column.setLabelProvider(new FKDataLabelProvider(0));
-        column.getColumn().pack();
-        
+
         if( getRelationalReference() != null) {
 	        for( RelationalForeignKey row : getRelationalReference().getForeignKeys()) {
 	        	this.fkViewer.add(row);
@@ -1083,21 +1064,15 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 			}
     		
 		});
-    	
-    	Table columnTable = new Table(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-    	
-        this.indexesViewer = new TableViewer(columnTable);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getControl());
+
+        this.indexesViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.indexesViewer, SWT.LEFT);
+        TableViewerColumn column = indexesViewer.createColumn(SWT.LEFT, 100, 40, false);
         column.getColumn().setText(Messages.indexLabel);
         column.setLabelProvider(new IndexDataLabelProvider(0));
-        column.getColumn().pack();
-        
+
         if( getRelationalReference() != null && getRelationalReference().getIndexes() != null ) {
 	        for( RelationalIndex row : getRelationalReference().getIndexes() ) {
 	        	this.indexesViewer.add(row);
@@ -1247,34 +1222,24 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
     		
 		});
     	
-    	this.columnsViewer = new TableViewer(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));  	
-    	Table columnTable = this.columnsViewer.getTable();
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(columnsViewer.getControl());
+    	this.columnsViewer = new TableViewerBuilder(thePanel, (SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER));  	
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-        column.getColumn().setText(Messages.columnNameLabel + "          "); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer));
+        TableViewerColumn column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
+        column.getColumn().setText(Messages.columnNameLabel);
+        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
-        column.getColumn().setText(Messages.dataTypeLabel + "          "); //$NON-NLS-1$
+        column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
+        column.getColumn().setText(Messages.dataTypeLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
         
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        column = this.columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
-        
-    	
+        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
+
         if( getRelationalReference() != null ) {
 	        for( RelationalColumn row : getRelationalReference().getColumns() ) {
 	        	this.columnsViewer.add(row);
@@ -1467,7 +1432,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					((RelationalColumn)element).setName(newValue);
-					columnsViewer.refresh(element);
+					columnsViewer.getTableViewer().refresh(element);
 					handleInfoChanged();
 				}
 			}
@@ -1540,7 +1505,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 				}
 				if( newValue != oldValue ) {
 					((RelationalColumn)element).setLength(newValue);
-					columnsViewer.refresh(element);
+					columnsViewer.getTableViewer().refresh(element);
 				}
 			}
 		}
@@ -1560,7 +1525,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             try {
 				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
 			} catch (ModelerCoreException e) {
-				UiPlugin.Util.log(e);
+				UiConstants.Util.log(e);
 			}
     		Collection<String> dTypes = new ArrayList<String>();
     		

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,8 +25,6 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.window.Window;
@@ -47,7 +44,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -59,7 +55,7 @@ import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalParameter;
 import org.teiid.designer.relational.model.RelationalProcedureResultSet;
-import org.teiid.designer.relational.ui.UiPlugin;
+import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.relational.ui.util.RelationalUiUtil;
 import org.teiid.designer.transformation.model.RelationalViewProcedure;
@@ -72,6 +68,7 @@ import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -97,8 +94,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     private Button addParameterButton, deleteParameterButton, upParameterButton, downParameterButton;
     private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
     private Combo updateCountCombo;
-    private TableViewer parametersViewer;
-    private TableViewer columnsViewer;
+    private TableViewerBuilder parametersViewer;
+    private TableViewerBuilder columnsViewer;
     // Table SQL Text Tab Controls
     private SqlTextViewer sqlTextViewer;
     private Document sqlDocument;
@@ -421,32 +418,27 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		
 		});
 
-        this.columnsViewer = new TableViewer(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    	Table columnTable = this.columnsViewer.getTable();
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getControl());
+        this.columnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        TableViewerColumn column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.columnNameLabel + "          "); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer));
+        column.setEditingSupport(new ColumnNameEditingSupport(this.columnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+
+        column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.dataTypeLabel + "          "); //$NON-NLS-1$
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DatatypeEditingSupport(this.columnsViewer.getTableViewer()));
+
         
-        column = new TableViewerColumn(this.columnsViewer, SWT.LEFT);
+        column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new ColumnWidthEditingSupport(this.columnsViewer.getTableViewer()));
+
         
     	
         if( this.getRelationalReference().getResultSet() != null ) {
@@ -1007,38 +999,33 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		
 		});
     	
-    	this.parametersViewer = new TableViewer(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    	Table columnTable = this.parametersViewer.getTable();
-    	columnTable.setHeaderVisible(true);
-    	columnTable.setLinesVisible(true);
-    	columnTable.setLayout(new TableLayout());
-    	
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getControl());
+    	this.parametersViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.parametersViewer, SWT.LEFT);
+        TableViewerColumn column = parametersViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.parameterNameLabel + "        "); //$NON-NLS-1$
-        column.setEditingSupport(new ParameterNameEditingSupport(this.parametersViewer));
+        column.setEditingSupport(new ParameterNameEditingSupport(this.parametersViewer.getTableViewer()));
         column.setLabelProvider(new ParameterDataLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.parametersViewer, SWT.LEFT);
+
+        column = parametersViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.dataTypeLabel + "          "); //$NON-NLS-1$
         column.setLabelProvider(new ParameterDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.parametersViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DatatypeEditingSupport(this.parametersViewer.getTableViewer()));
+
         
-        column = new TableViewerColumn(this.parametersViewer, SWT.LEFT);
+        column = parametersViewer.createColumn(SWT.LEFT, 20, 30, true);
         column.getColumn().setText(Messages.lengthLabel);
         column.setLabelProvider(new ParameterDataLabelProvider(2));
-        column.setEditingSupport(new ParameterWidthEditingSupport(this.parametersViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new ParameterWidthEditingSupport(this.parametersViewer.getTableViewer()));
+
         
-        column = new TableViewerColumn(this.parametersViewer, SWT.LEFT);
+        column = parametersViewer.createColumn(SWT.LEFT, 30, 30, true);
         column.getColumn().setText(Messages.directionLabel);
         column.setLabelProvider(new ParameterDataLabelProvider(3));
-        column.setEditingSupport(new DirectionEditingSupport(this.parametersViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DirectionEditingSupport(this.parametersViewer.getTableViewer()));
+
         
     	
         if( getRelationalReference() != null ) {
@@ -1484,7 +1471,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
             try {
 				unsortedTypes = DatatypeUtilities.getAllDesignTimeTypeNames();
 			} catch (ModelerCoreException e) {
-				UiPlugin.Util.log(e);
+				UiConstants.Util.log(e);
 			}
     		Collection<String> dTypes = new ArrayList<String>();
     		

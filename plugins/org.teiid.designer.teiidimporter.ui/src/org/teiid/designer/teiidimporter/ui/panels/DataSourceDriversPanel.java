@@ -158,7 +158,7 @@ public final class DataSourceDriversPanel extends Composite implements UiConstan
         TableViewerColumn column = new TableViewerColumn(this.driversViewer, SWT.LEFT);
         column.getColumn().setText(Messages.dataSourceDriversPanel_colText);
         column.setLabelProvider(new DriverLabelProvider());
-        column.getColumn().pack();
+
 
         this.driversViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**

@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
@@ -71,7 +70,7 @@ import org.teiid.designer.extension.properties.Translation;
 import org.teiid.designer.extension.ui.Activator;
 import org.teiid.designer.extension.ui.Messages;
 import org.teiid.designer.extension.ui.UiConstants.ImageIds;
-import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.forms.FormUtil;
 import org.teiid.designer.ui.forms.MessageFormDialog;
 
@@ -98,8 +97,8 @@ final class EditPropertyDialog extends FormDialog {
     private Text txtInitialValue;
     private Button btnFixedValue;
 
-    private TableViewer descriptionViewer;
-    private TableViewer displayNameViewer;
+    private TableViewerBuilder descriptionViewer;
+    private TableViewerBuilder displayNameViewer;
 
     private final Collection<String> existingPropIds;
 
@@ -209,7 +208,6 @@ final class EditPropertyDialog extends FormDialog {
         column.setToolTipText(headerToolTip);
         column.setMoveable(false);
         column.setResizable(resizable);
-        column.pack();
     }
 
     /**
@@ -329,18 +327,13 @@ final class EditPropertyDialog extends FormDialog {
         }
 
         VIEWER: {
-            Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
+            this.descriptionViewer = new TableViewerBuilder(finalContainer, VIEWER_STYLE);
+            Table table = descriptionViewer.getTable();
+            toolkit.adapt(table);
             this.descriptionError.setControl(table);
-            table.setHeaderVisible(true);
-            table.setLinesVisible(true);
-            table.setHeaderVisible(true);
-            table.setLinesVisible(true);
-            table.setLayout(new GridLayout());
-            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
             ((GridData)table.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * .4);
 
-            this.descriptionViewer = new TableViewer(table);
             this.descriptionViewer.setContentProvider(new IStructuredContentProvider() {
 
                 /**
@@ -403,18 +396,17 @@ final class EditPropertyDialog extends FormDialog {
             });
 
             COLUMNS: {
-                final TableViewerColumn firstColumn = new TableViewerColumn(this.descriptionViewer, SWT.LEFT);
+                final TableViewerColumn firstColumn = descriptionViewer.createColumn(SWT.LEFT, 50, 50, true);
                 configureColumn(firstColumn, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
                 firstColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.LOCALE));
 
-                final TableViewerColumn lastColumn = new TableViewerColumn(this.descriptionViewer, SWT.LEFT);
+                final TableViewerColumn lastColumn = descriptionViewer.createColumn(SWT.LEFT, 50, 50, true);
                 lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
                 configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
             }
 
             // populate table
             this.descriptionViewer.setInput(this);
-            WidgetUtil.pack(this.descriptionViewer);
         }
 
         return finalSection;
@@ -500,17 +492,14 @@ final class EditPropertyDialog extends FormDialog {
             finalSection.setClient(container);
         }
 
-        VIEWER: {
-            Table table = toolkit.createTable(finalContainer, VIEWER_STYLE);
+        VIEWER: {            
+            this.displayNameViewer = new TableViewerBuilder(finalContainer, VIEWER_STYLE);
+            Table table = displayNameViewer.getTable();
+            toolkit.adapt(table);
             this.displayNameError.setControl(table);
-            table.setHeaderVisible(true);
-            table.setLinesVisible(true);
-            table.setLayout(new GridLayout());
-            table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * 5;
             ((GridData)table.getLayoutData()).widthHint = (int)(getParentShell().getSize().x * .4);
 
-            this.displayNameViewer = new TableViewer(table);
             this.displayNameViewer.setContentProvider(new IStructuredContentProvider() {
 
                 /**
@@ -573,18 +562,17 @@ final class EditPropertyDialog extends FormDialog {
             });
 
             COLUMNS: {
-                final TableViewerColumn firstColumn = new TableViewerColumn(this.displayNameViewer, SWT.LEFT);
+                final TableViewerColumn firstColumn = displayNameViewer.createColumn(SWT.LEFT, 50, 50, true);
                 firstColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.LOCALE));
                 configureColumn(firstColumn, ColumnHeaders.LOCALE, ColumnToolTips.LOCALE, true);
 
-                final TableViewerColumn lastColumn = new TableViewerColumn(this.displayNameViewer, SWT.LEFT);
+                final TableViewerColumn lastColumn = displayNameViewer.createColumn(SWT.LEFT, 50, 50, true);
                 lastColumn.setLabelProvider(new TranslationLabelProvider(ColumnIndexes.TRANSLATION));
                 configureColumn(lastColumn, ColumnHeaders.TRANSLATION, ColumnToolTips.TRANSLATION, true);
             }
 
             // populate table
             this.displayNameViewer.setInput(this);
-            WidgetUtil.pack(this.displayNameViewer);
         }
 
         return finalSection;

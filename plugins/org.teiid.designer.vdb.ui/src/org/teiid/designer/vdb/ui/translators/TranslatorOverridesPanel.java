@@ -213,7 +213,7 @@ public final class TranslatorOverridesPanel extends Composite {
                     return translator.getName();
                 }
             });
-            column.getColumn().pack();
+
 
             table.addControlListener(new ControlAdapter() {
                 /**
@@ -403,13 +403,13 @@ public final class TranslatorOverridesPanel extends Composite {
             TableViewerColumn column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(Util.getString(PREFIX + "propertyColumn.text") + "        "); //$NON-NLS-1$ //$NON-NLS-2$
             column.setLabelProvider(new PropertyLabelProvider(true));
-            column.getColumn().pack();
+
 
             column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(Util.getString(PREFIX + "valueColumn.text")); //$NON-NLS-1$
             column.setLabelProvider(new PropertyLabelProvider(false));
             column.setEditingSupport(new TranslatorOverridePropertyEditingSupport(this.propertiesViewer, this.vdb.getFile()));
-            column.getColumn().pack();
+
 
             this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
                 /**

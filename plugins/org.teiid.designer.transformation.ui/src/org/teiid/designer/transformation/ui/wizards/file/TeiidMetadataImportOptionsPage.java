@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -30,8 +30,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -48,7 +46,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -62,6 +59,7 @@ import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
@@ -112,7 +110,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	// DELIMITED OPTION WIDGETS
 	Composite delimitedColumnsPanel;
 	ListViewer delimitedFileContentsViewer;
-	TableViewer delimitedColumnsViewer;
+	TableViewerBuilder delimitedColumnsViewer;
 	Label headerLineNumberLabel;
 	Text headerLineNumberText, delimitedFirstDataRowText;
 	Button useHeaderForColumnNamesCB;
@@ -124,7 +122,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	// FIXED COLUMN WIDTH OPTION WIDGETS
 	Composite fixedWidthColumnsPanel;
 	TextViewer fixedFileContentsViewer;
-	TableViewer fixedColumnsViewer;
+	TableViewerBuilder fixedColumnsViewer;
 	Text fixedFirstDataRowText, cursorPositionText, selectedTextLengthText;
 	Button addColumnFixedButton, deleteColumnFixedButton, upColumnFixedButton, downColumnFixedButton;
 	
@@ -574,30 +572,20 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	groupGD.heightHint = 140;
     	theGroup.setLayoutData(groupGD);
     	
-    	this.delimitedColumnsViewer = new TableViewer(theGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    	Table table = this.delimitedColumnsViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    	this.delimitedColumnsViewer = new TableViewerBuilder(theGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    	GridDataFactory.fillDefaults().grab(true, true).span(4, SWT.DEFAULT).applyTo(delimitedColumnsViewer.getTableComposite());
 
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan = 4;
-        this.delimitedColumnsViewer.getControl().setLayoutData(data);
-        
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.delimitedColumnsViewer, SWT.LEFT);
+        TableViewerColumn column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.delimitedColumnsViewer));
+        column.setEditingSupport(new ColumnNameEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.delimitedColumnsViewer, SWT.LEFT);
+        column = delimitedColumnsViewer.createColumn(SWT.LEFT, 50, 40, true);
         column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.delimitedColumnsViewer));
-        column.getColumn().pack();
-    	
+        column.setEditingSupport(new DatatypeEditingSupport(this.delimitedColumnsViewer.getTableViewer()));
+
         if( this.dataFileInfo != null ) {
 	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
 	        	this.delimitedColumnsViewer.add(row);
@@ -989,42 +977,30 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	gd.heightHint = GROUP_HEIGHT_160;
     	columnInfoGroup.setLayoutData(gd);
     	
-    	this.fixedColumnsViewer = new TableViewer(columnInfoGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    	Table table = this.fixedColumnsViewer.getTable();
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        table.setLayout(new TableLayout());
-        table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+    	this.fixedColumnsViewer = new TableViewerBuilder(columnInfoGroup, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
-        GridData data = new GridData(GridData.FILL_BOTH);
-        this.fixedColumnsViewer.getControl().setLayoutData(data);
-        
         // create columns
-        TableViewerColumn column = new TableViewerColumn(this.fixedColumnsViewer, SWT.LEFT);
+        TableViewerColumn column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("columnName") + getSpaces(36)); //$NON-NLS-1$
-        column.setEditingSupport(new ColumnNameEditingSupport(this.fixedColumnsViewer));
+        column.setEditingSupport(new ColumnNameEditingSupport(this.fixedColumnsViewer.getTableViewer()));
         column.setLabelProvider(new ColumnDataLabelProvider(0));
-        column.getColumn().pack();
 
-        column = new TableViewerColumn(this.fixedColumnsViewer, SWT.LEFT);
+        column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("datatype") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new DatatypeEditingSupport(this.fixedColumnsViewer));
-        column.getColumn().pack();
+        column.setEditingSupport(new DatatypeEditingSupport(this.fixedColumnsViewer.getTableViewer()));
         
-        column = new TableViewerColumn(this.fixedColumnsViewer, SWT.LEFT);
+        column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
         column.getColumn().setText(getString("width") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new ColumnWidthEditingSupport(this.fixedColumnsViewer));
-        column.getColumn().pack();
-        
+        column.setEditingSupport(new ColumnWidthEditingSupport(this.fixedColumnsViewer.getTableViewer()));
     	
         if( this.dataFileInfo != null ) {
 	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
 	        	this.fixedColumnsViewer.add(row);
 	        }
         }
-        
+
         this.fixedColumnsViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -1450,9 +1426,9 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					((TeiidColumnInfo)element).setName(newValue);
-					delimitedColumnsViewer.refresh(element);
-					fixedColumnsViewer.refresh(element);
-					
+					delimitedColumnsViewer.getTableViewer().refresh(element);
+					fixedColumnsViewer.getTableViewer().refresh(element);
+
 					handleInfoChanged(false);
 				}
 			}
@@ -1525,8 +1501,8 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 				}
 				if( newValue != oldValue ) {
 					((TeiidColumnInfo)element).setWidth(newValue);
-					fixedColumnsViewer.refresh(element);
-					
+					fixedColumnsViewer.getTableViewer().refresh(element);
+
 					handleInfoChanged(false);
 				}
 			}

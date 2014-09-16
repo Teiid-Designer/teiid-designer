@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -19,8 +20,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
@@ -36,11 +35,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -51,6 +49,7 @@ import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
+import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.DatatypeSelectionDialog;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -77,8 +76,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     private boolean targetLocked;
 
     ColorManager colorManager;
-    Table table;
-    TableViewer bindingTableViewer;
+    TableViewerBuilder bindingTableViewer;
     Label symbolConversionLabel;
     Label symbolWarningLabel;
 
@@ -247,17 +245,9 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         }
         
         BINDING_TABLE : {
-        	this.bindingTableViewer = new TableViewer(tablePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        	table = this.bindingTableViewer.getTable();
-	        table.setHeaderVisible(true);
-	        table.setLinesVisible(true);
-	        table.setLayout(new TableLayout());
-	    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-	    	gd.heightHint = 200;
-	    	table.setLayoutData(gd);
-	
-	        this.bindingTableViewer.getControl().setLayoutData(gd);
-	        
+        	this.bindingTableViewer = new TableViewerBuilder(tablePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+	        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(bindingTableViewer.getTableComposite());
+
 	        this.bindingContentProvider = new BindingContentProvider();
 	        
 	        // create columns
@@ -265,48 +255,48 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
 	        // | status icon | Source SQL Symbol | <-- | Matched Datatype | ->  | Target Column
 	        
 	        // COLUMN 0 :  STATUS ICON Button
-	        TableViewerColumn column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        TableViewerColumn column = bindingTableViewer.createColumn(SWT.LEFT, 20, 30, true);
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(0));
 	        column.getColumn().setText(getSpaces(8));
-	        column.getColumn().pack();
+
 	        
 	        // COLUMN 1 : SOURCE SQL SYMBOL
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column = bindingTableViewer.createColumn(SWT.LEFT, 20, 30, true);
 	        column.getColumn().setText(Messages.datatypeReconciler_sourceSqlSymbolLabel + getSpaces(100));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(1));
-	        column.getColumn().pack();
+
 	        
 	        // COLUMN 2 :  LEFT ARROW Button
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column = bindingTableViewer.createColumn(SWT.LEFT, 15, 30, true);
 	        column.getColumn().setText(getSpaces(8));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(2));
-	        column.setEditingSupport(new ConvertSymbolEditingSupport(this.bindingTableViewer));
-	        column.getColumn().pack();
+	        column.setEditingSupport(new ConvertSymbolEditingSupport(this.bindingTableViewer.getTableViewer()));
+
 	        column.getColumn().setToolTipText(Messages.datatypeReconciler_convertSourceDatatypeTooltip);
 	        
 	        // COLUMN 3 : Matched datatype
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column = bindingTableViewer.createColumn(SWT.LEFT, 15, 30, true);
 	        column.getColumn().setText(Messages.datatypeReconciler_matchedTypeLabel + getSpaces(60));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(3));
-	        column.setEditingSupport(new ChangeProposedDatatypeEditingSupport(this.bindingTableViewer));
-	        column.getColumn().pack();
+	        column.setEditingSupport(new ChangeProposedDatatypeEditingSupport(this.bindingTableViewer.getTableViewer()));
+
 	        column.getColumn().setToolTipText(Messages.datatypeReconciler_matchedDatatypeTooltip);
 	        
 	        // COLUMN 4 : RIGHT ARROW Button
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column = bindingTableViewer.createColumn(SWT.LEFT, 15, 30, true);
 	        column.getColumn().setText(getSpaces(8));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(4));
-	        column.setEditingSupport(new ChangeDatatypeEditingSupport(this.bindingTableViewer));
-	        column.getColumn().pack();
+	        column.setEditingSupport(new ChangeDatatypeEditingSupport(this.bindingTableViewer.getTableViewer()));
+
 	        column.getColumn().setToolTipText(Messages.datatypeReconciler_changeTargetDatatypeTooltip);
 
 	        // COLUMN 5 :  Target Column Definition
-	        column = new TableViewerColumn(this.bindingTableViewer, SWT.LEFT);
+	        column = bindingTableViewer.createColumn(SWT.LEFT, 15, 30, true);
 	        column.getColumn().setText(Messages.datatypeReconciler_targetColumnLabel + getSpaces(25));
 	        column.setLabelProvider(new TheBindingColumnLabelProvider(5));
-	        column.getColumn().pack();
-	        
-	        bindingTableViewer.setUseHashlookup(true);
+
+
+	        bindingTableViewer.getTableViewer().setUseHashlookup(true);
 	        bindingTableViewer.setContentProvider(this.bindingContentProvider);
 	        bindingTableViewer.setInput(this.bindingListInput);
 
@@ -426,9 +416,9 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
      * update Row background colors, based on binding and type conflict status.
      */
     public void updateRowColors() {
-        int rows = table.getItemCount();
+        int rows = bindingTableViewer.getTable().getItemCount();
         for (int i = 0; i < rows; i++) {
-            TableItem item = table.getItem(i);
+            TableItem item = bindingTableViewer.getTable().getItem(i);
             Binding binding = bindingListInput.getBindingList().get(i);
             if (!binding.isBound() || binding.hasTypeConflict()) {
                 item.setBackground(colorManager.getColor(ColorManager.UNBOUND_BACKGROUND));
@@ -686,7 +676,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
     private String getSpaces(int nSpaces) {
     	StringBuffer sb = new StringBuffer(nSpaces);
     	for( int i=0; i<nSpaces; i++ ) {
-    		sb.append(StringUtilities.SPACE);
+    		sb.append(StringConstants.SPACE);
     	}
     	return sb.toString();
     }
