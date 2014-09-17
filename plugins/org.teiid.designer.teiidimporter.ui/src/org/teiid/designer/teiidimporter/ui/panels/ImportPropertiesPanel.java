@@ -69,7 +69,9 @@ public class ImportPropertiesPanel {
      */
 	private void createPanel(Composite parent) {
     	Composite panel = WidgetFactory.createGroup(parent, Messages.ImportPropertiesPanel_groupTitle, SWT.FILL, 1, 1); 
-    	panel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+    	gd.heightHint = 150;
+    	panel.setLayoutData(gd);
 
     	this.propertiesViewerBuilder = new TableViewerBuilder(panel, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 

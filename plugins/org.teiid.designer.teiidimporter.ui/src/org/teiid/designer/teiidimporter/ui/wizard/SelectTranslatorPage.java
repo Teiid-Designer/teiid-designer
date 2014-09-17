@@ -186,7 +186,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
 
         { // right-side is an override description and table with the selected translator's properties
             Composite pnlOverrides = new Composite(mainPanel, SWT.FILL);
-            pnlOverrides.setLayout(new GridLayout(2, false));
+            pnlOverrides.setLayout(new GridLayout(1, false));
             pnlOverrides.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
             propertiesViewerBuilder = new TableViewerBuilder(pnlOverrides, SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
