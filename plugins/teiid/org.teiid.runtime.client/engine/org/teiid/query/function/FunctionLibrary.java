@@ -58,6 +58,14 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	
 	public static final String MVSTATUS = "mvstatus"; //$NON-NLS-1$
 
+	public static final Set<String> INTERNAL_SCHEMAS = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        INTERNAL_SCHEMAS.add(CoreConstants.SYSTEM_MODEL);
+        INTERNAL_SCHEMAS.add(CoreConstants.SYSTEM_ADMIN_MODEL);
+        INTERNAL_SCHEMAS.add(CoreConstants.ODBC_MODEL);
+    }
+
     // Function tree for system functions (never reloaded)
     private FunctionTree systemFunctions;
 
@@ -239,8 +247,15 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                     //pushdown function takes presedence 
                     //TODO: there may be multiple translators contributing functions with the same name / types
                     //need "conformed" logic so that the right pushdown can occur
-                    if (descriptor.getMethod().getParent() == null || CoreConstants.SYSTEM_MODEL.equals(descriptor.getMethod().getParent().getName())) {
-                        return Arrays.asList(descriptor);
+                    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_7.get())) {
+                        // Teiid 8.7 +
+                        if (CoreConstants.SYSTEM_MODEL.equals(descriptor.getSchema()))
+                            return Arrays.asList(descriptor);
+                    } else {
+                        // Teiid 8.6 and below
+                        if (descriptor.getMethod().getParent() == null || CoreConstants.SYSTEM_MODEL.equals(descriptor.getMethod().getParent().getName())) {
+                            return Arrays.asList(descriptor);
+                        }
                     }
                     result.add(descriptor);
                 }
@@ -293,6 +308,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         int bestScore = Integer.MAX_VALUE;
         boolean ambiguous = false;
         FunctionMethod result = null;
+        boolean isSystem = false;
                 
         outer: for (FunctionMethod nextMethod : functionMethods) {
             int currentScore = 0; 
@@ -365,6 +381,23 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
             }
 
             boolean useNext = false;
+
+            boolean isSystemNext = nextMethod.getParent() == null || INTERNAL_SCHEMAS.contains(nextMethod.getParent().getName());
+            if ((isSystem && isSystemNext) || (!isSystem && !isSystemNext && result != null)) {
+                int partCount = partCount(result.getName());
+                int nextPartCount = partCount(nextMethod.getName());
+                if (partCount < nextPartCount) {
+                    //the current is more specific
+                    //this makes us more consistent with the table resolving logic
+                    continue outer;
+                }
+                if (nextPartCount < partCount) {
+                    useNext = true;
+                }
+            } else if (isSystemNext) {
+                useNext = true;
+            }
+
             if (currentScore == bestScore) {
                 ambiguous = true;
                 boolean useCurrent = false;
@@ -402,13 +435,14 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
             
             if (currentScore < bestScore || useNext) {
                 ambiguous = false;
-                if (currentScore == 0) {
+                if (currentScore == 0 && isSystemNext) {
                     //this must be an exact match
                     return null;
-                }    
+                }
                 
                 bestScore = currentScore;
                 result = nextMethod;
+                isSystem = isSystemNext;
             }            
         }
         
@@ -418,7 +452,21 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         
 		return getConverts(result, types);
 	}
-	
+
+	private int partCount(String name) {
+        int result = 0;
+        int index = 0;
+        while (true) {
+            index = name.indexOf('.', index+1);
+            if (index > 0) {
+                result++;
+            } else {
+                break;
+            }
+        }
+        return result;
+    }
+
 	private FunctionDescriptor[] getConverts(FunctionMethod method, Class<?>[] types) {
         final List<FunctionParameter> methodTypes = method.getInputParameters();
         FunctionDescriptor[] result = new FunctionDescriptor[types.length];
