@@ -376,11 +376,11 @@
 				function itself defines what columns it projects. The TEXTTABLE 
 				function is implicitly a nested table and may be correlated to 
 				preceeding FROM clause entries.</para>
-				<synopsis>TEXTTABLE(expression COLUMNS &lt;COLUMN&gt;, ... 
+				<synopsis format="TEXTTABLE">TEXTTABLE(expression COLUMNS &lt;COLUMN&gt;, ... 
 				[DELIMITER char] [(QUOTE|ESCAPE) char] [HEADER [integer]] [SKIP 
 				integer]) AS name</synopsis>
 				<para>Teiid Designer will construct the full SQL statement for each 
-				view table in the form: <synopsis>SELECT A.Name, A.Sport, 
+				view table in the form: <synopsis format="SELECT">SELECT A.Name, A.Sport, 
 				A.Position, A.Team, A.City, A.StateCode, A.AnnualSalary FROM (EXEC 
 				PlayerDataSource.getTextFiles(&apos;PlayerData.txt&apos;)) AS f, 
 				TEXTTABLE(f.file COLUMNS Name string, Sport string, Position 
@@ -638,12 +638,12 @@
 				The XMLTABLE function is implicitly a nested table and may be 
 				correlated to preceeding FROM clause entries. XMLTABLE is part of 
 				the SQL/XML 2006 specification.</para>
-				<synopsis>XMLTABLE([&lt;NSP&gt;,] xquery-expression 
+				<synopsis format="XMLTABLE">XMLTABLE([&lt;NSP&gt;,] xquery-expression 
 				[&lt;PASSING&gt;] [COLUMNS &lt;COLUMN&gt;, ... )] AS name</synopsis>
-				<synopsis>COLUMN := name (FOR ORDINALITY | (datatype [DEFAULT 
+				<synopsis format="COLUMN">COLUMN := name (FOR ORDINALITY | (datatype [DEFAULT 
 				expression] [PATH string]))</synopsis>
 				<para>Teiid Designer will construct the full SQL statement for each 
-				view table in the form: <synopsis>SELECT A.entryDate AS entryDate, 
+				view table in the form: <synopsis format="SELECT">SELECT A.entryDate AS entryDate, 
 				A.internalAudit AS internalAudit FROM (EXEC 
 				CCC.getTextFiles(&apos;sample.xml&apos;)) AS f, 
 				XMLTABLE(XMLNAMESPACES(&apos;http://www.kaptest.com/schema/1.0/party&apos; 
@@ -2328,14 +2328,14 @@
 			A selection of example queries:
 			<itemizedlist>
 				<listitem>SELECT * FROM LdapModel.People</listitem>
-				<listitem><literallayout>INSERT INTO LdapModel.People (dn, sn, 
+				<listitem><literallayout format="INSERT">INSERT INTO LdapModel.People (dn, sn, 
 				objectclass, Name) VALUES 
 				(&apos;cn=JoeYoung,ou=people,dc=example,dc=org&apos;,&apos;Young&apos;,&apos;person&apos;, 
 				&apos;Joe Young&apos;)</literallayout></listitem>
-				<listitem><literallayout>UPDATE LdapModel.People SET 
+				<listitem><literallayout format="UPDATE">UPDATE LdapModel.People SET 
 				PhoneNumber=&apos;(314) 299-2999&apos; WHERE 
 				DN=&apos;cn=JoeYoung,ou=people,dc=example,dc=org&apos;</literallayout></listitem>
-				<listitem><literallayout>DELETE FROM LdapModel.People WHERE 
+				<listitem><literallayout format="DELETE">DELETE FROM LdapModel.People WHERE 
 				DN=&apos;cn=JoeYoung,ou=people,dc=example,dc=org&apos;</literallayout></listitem>
 			</itemizedlist>
 		</para>
