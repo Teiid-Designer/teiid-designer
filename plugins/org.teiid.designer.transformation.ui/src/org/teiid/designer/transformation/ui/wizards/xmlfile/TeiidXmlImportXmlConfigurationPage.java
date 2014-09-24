@@ -222,7 +222,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
     	if( this.fileInfo != null ) {
     		if( this.info.getSourceModelName() != null ) {
     			String sourceModelName = this.fileInfo.getModelNameWithoutExtension(this.info.getSourceModelName());
-    			if (this.info.getViewModelName() != null) {
+    			if (this.fileInfo.getViewProcedureName() != null) {
         			String viewModelName = this.fileInfo.getModelNameWithoutExtension(this.info.getViewModelName());
     				sqlTextViewer.getDocument().set(fileInfo.getSqlString(sourceModelName, viewModelName, this.fileInfo.getViewProcedureName()));
     			} else {

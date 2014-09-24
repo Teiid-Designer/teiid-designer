@@ -90,6 +90,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private DdlImporter ddlImporter;
     private File ddlFile;
     private String uniqueImportVdbName;
+    private boolean redeploy = false;
     
     /**
      * Set the data source name
@@ -911,6 +912,14 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     	}
     	
     	return uniqueImportVdbName;
+    }
+    
+    public boolean shouldRedeploy() {
+    	return redeploy;
+    }
+    
+    public void setRedeploy(boolean changed) {
+    	redeploy = changed;
     }
     
 }
