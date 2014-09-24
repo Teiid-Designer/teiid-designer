@@ -78,13 +78,22 @@
          label="%previewTableDataContextAction.label">
       </specialAction>
    </extension>
-      <extension
+   <extension
         id="DeployVdbAction"
         name="%deployVdbAction.name"
         point="org.teiid.designer.ui.modelResourceAction">
       <resourceAction
          name="org.teiid.designer.runtime.ui.actions.DeployVdbAction"
          label="%deployVdbAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="DeployDynamicVdbAction"
+        name="%deployVdbAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.actions.DeployDynamicVdbAction"
+         label="%deployDynamicVdbAction.label">
       </resourceAction>
    </extension>
      <extension
