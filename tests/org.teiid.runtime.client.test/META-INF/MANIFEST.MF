@@ -4,7 +4,7 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.runtime.client.test;singleton:=true
 Bundle-Version: 8.7.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
-Fragment-Host: org.teiid.runtime.client;bundle-version="[8.6.0,8.7.0)"
+Fragment-Host: org.teiid.runtime.client;bundle-version="[8.7.0,8.8.0)"
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.11.0"

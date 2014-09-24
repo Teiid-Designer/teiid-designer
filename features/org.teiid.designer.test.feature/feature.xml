@@ -69,7 +69,7 @@
       <import plugin="org.teiid.runtime.client" version="8.4.0" match="compatible"/>
       <import plugin="org.apache.ant" version="1.8.4" match="compatible"/>
       <import plugin="org.junit" version="4.11.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.runtime.client" version="8.6.0" match="equivalent"/>
+      <import plugin="org.teiid.runtime.client" version="8.7.0" match="equivalent"/>
    </requires>
 
    <plugin
