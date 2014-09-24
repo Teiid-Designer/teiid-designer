@@ -12,17 +12,33 @@ With Teiid Designer, not only do you create source data models and map your sour
 
 Visit the project home page at:  http://www.teiid.org  for details.
    </description>
+
    <feature id="org.teiid.designer.feature">
    	<category name="DataTools"/>
    </feature>
+   <feature id="org.teiid.designer.feature.source">
+    <category name="DataToolsSources"/>
+   </feature>
+
    <feature id="org.teiid.designer.runtime.feature">
    	<category name="DataTools"/>
    </feature>
+   <feature id="org.teiid.designer.runtime.feature.source">
+    <category name="DataToolsSources"/>
+   </feature>
+
    <feature id="org.teiid.datatools.connectivity.feature">
     <category name="DataTools"/>
    </feature>
+   <feature id="org.teiid.datatools.connectivity.feature.source">
+    <category name="DataToolsSources"/>
+   </feature>
+
    <feature id="org.teiid.designer.teiid.client.feature">
     <category name="DataTools"/>
+   </feature>
+   <feature id="org.teiid.designer.teiid.client.feature.source">
+    <category name="DataToolsSources"/>
    </feature>
    <!--
    <feature id="org.teiid.designer.test.feature">
@@ -31,5 +47,8 @@ Visit the project home page at:  http://www.teiid.org  for details.
    -->
    <category-def name="DataTools" label="Data Virtualization">
     <description>Tools related to data virtualization that enable federation, transformation, abstraction and persistance.</description>
+   </category-def>
+   <category-def name="DataToolsSources" label="Data Virtualization">
+    <description>Data Virtualization: contains all feature sources in this build.</description>
    </category-def>
 </site>
