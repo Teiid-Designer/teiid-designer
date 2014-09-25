@@ -185,7 +185,10 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                                                           });
         final IResource choice = showChooseDialog(dlg);
         if (choice == null) return;
-        ddlFileCombo.setText(choice.getFullPath().removeFileExtension().toString());
+        
+        // Convert the IFile object to a File object
+        final File realFile = choice.getLocation().toFile();
+        ddlFileCombo.setText(realFile.toString());
         tabFromDdlFileCombo();
     }
 
