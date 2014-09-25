@@ -371,7 +371,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          if( rootPath != null && rootPath.length() > 0 ) {
              xQueryExp = rootPath;
          }
-         sb.append(xQueryExp).append(S_QUOTE);
+         sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
          
          tokens.add(sb.toString());
          
