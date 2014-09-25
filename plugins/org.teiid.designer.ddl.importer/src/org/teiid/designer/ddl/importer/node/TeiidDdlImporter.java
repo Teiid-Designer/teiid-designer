@@ -285,6 +285,18 @@ public class TeiidDdlImporter extends StandardImporter {
 				addProgressMessage(error.getMessage());
 			}
 		}
+		
+		// Find all the Option properties
+		List<AstNode> optionNodes = new ArrayList<AstNode>();
+		List<AstNode> children = constraintNode.getChildren();
+		for(AstNode child: children) {
+			if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				optionNodes.add(child);
+			}
+		}
+
+		// process the Column Options
+		processOptions(optionNodes,key);
 	}
 
 	@Override
