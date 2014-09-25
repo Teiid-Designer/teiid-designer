@@ -78,7 +78,8 @@ public class Messages {
         source_mappings_describe,
         validity_errors_describe,
         data_permissions_describe,
-        mapped_role_names_describe;
+        mapped_role_names_describe,
+        cannotUndeployVdbNoDeploymentName;
 
         @Override
         public String toString() {
