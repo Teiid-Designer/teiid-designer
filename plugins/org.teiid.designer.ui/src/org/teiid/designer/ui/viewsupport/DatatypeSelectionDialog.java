@@ -390,17 +390,17 @@ public class DatatypeSelectionDialog extends ListDialog implements UiConstants {
         TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.LEFT);
         column.getColumn().setText("Design-time Type"); //$NON-NLS-1$
         column.setLabelProvider(new DatatypeLabelProvider(0));
-        column.getColumn().pack();
+        column.getColumn().setWidth(140);
 
         column = new TableViewerColumn(tableViewer, SWT.LEFT);
         column.getColumn().setText("Run-time Type" + "          "); //$NON-NLS-1$
         column.setLabelProvider(new DatatypeLabelProvider(1));
-        column.getColumn().pack();
+        column.getColumn().setWidth(140);
         
         column = new TableViewerColumn(tableViewer, SWT.LEFT);
         column.getColumn().setText("Base Type" + "                        "); //$NON-NLS-1$
         column.setLabelProvider(new DatatypeLabelProvider(2));
-        column.getColumn().pack();
+        column.getColumn().setWidth(140);
 
         // attach the filters:
         textFilter.attachToViewer(tableViewer, true);
