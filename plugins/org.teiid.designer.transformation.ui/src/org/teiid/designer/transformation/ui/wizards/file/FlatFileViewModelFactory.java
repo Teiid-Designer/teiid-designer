@@ -7,9 +7,6 @@
  */
 package org.teiid.designer.transformation.ui.wizards.file;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
@@ -19,8 +16,6 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceItem;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
@@ -33,6 +28,7 @@ import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
@@ -74,7 +70,15 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     		column.setDefaultValue(columnInfo.getDefaultValue());
     		column.setFixedLength(info.isFixedWidthColumns());
     		
-    		EObject datatype = datatypeManager.findDatatype(columnInfo.getDatatype());
+    		// Datatype may be defined as "integer" here but we need to covert to "int" to insure that the SQL resolves
+    		// correctly
+    		
+    		String finalDType = columnInfo.getDatatype();
+    		if( INTEGER_STR.equalsIgnoreCase(finalDType) ) {
+    			finalDType = INT_STR;
+    		}
+    		
+    		EObject datatype = datatypeManager.findDatatype(finalDType);
     		if (datatype != null) {
     			column.setType(datatype);
     			if( stringType != null && stringType == datatype) {
@@ -83,7 +87,9 @@ public class FlatFileViewModelFactory extends FlatFileRelationalModelFactory {
     				} else {
     					column.setLength(DEFAULT_STRING_LENGTH);
     				}
-    			}
+    			} else if( DatatypeUtilities.isNumeric(finalDType)) {
+					column.setPrecision(DEFAULT_PRECISION);
+				}
     		}
     		
     		baseTable.getColumns().add(column);

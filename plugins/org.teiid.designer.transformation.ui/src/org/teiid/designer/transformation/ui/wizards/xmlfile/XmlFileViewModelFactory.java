@@ -7,23 +7,15 @@
 */
 package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
-import java.util.Properties;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceItem;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
@@ -39,6 +31,7 @@ import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModel
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.transformation.util.TransformationMappingHelper;
 import org.teiid.designer.transformation.validation.TransformationValidator;
+import org.teiid.designer.ui.viewsupport.DatatypeUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
@@ -162,12 +155,19 @@ public void createViewProcedure(ModelResource modelResource, TeiidXmlFileInfo in
     		column.setLength(columnInfo.getWidth());
     		column.setDefaultValue(columnInfo.getDefaultValue());
     		
-    		EObject datatype = datatypeManager.findDatatype(columnInfo.getDatatype());
+    		String finalDType = columnInfo.getDatatype();
+    		if( INTEGER_STR.equalsIgnoreCase(finalDType) ) {
+    			finalDType = INT_STR;
+    		}
+    		
+    		EObject datatype = datatypeManager.findDatatype(finalDType);
     		if (datatype != null) {
     			column.setType(datatype);
     			if( stringType != null && stringType == datatype) {
     				column.setLength(DEFAULT_STRING_LENGTH);
-    			}
+    			} else if( DatatypeUtilities.isNumeric(finalDType)) {
+					column.setPrecision(DEFAULT_PRECISION);
+				}
     		}
     		
     		baseTable.getColumns().add(column);
