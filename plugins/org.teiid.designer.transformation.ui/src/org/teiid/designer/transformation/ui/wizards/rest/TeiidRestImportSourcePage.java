@@ -644,9 +644,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (this.info.isXmlLocalFileMode()
 				&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
 			isValid = true;
-		} else if (this.info.isXmlUrlFileMode()
-				&& (profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) || profile
-						.getProviderId().equalsIgnoreCase(TEIID_WS_ID))) {
+		} else if (this.info.isRestUrlFileMode() 
+				&& profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
 			isValid = true;
 		}
 		return isValid;
@@ -688,8 +687,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				} else {
 					xmlFile = getXmlFileFromUrl(urlString);
 				}
-				if (xmlFile != null && xmlFile.exists()) {
-					setXmlFile(xmlFile, true, urlString);
+				if( this.xmlFileInfo == null ) {
+					if (xmlFile != null && xmlFile.exists()) {
+						setXmlFile(xmlFile, true, urlString);
+					}
+				} else if (xmlFile != null && xmlFile.exists() ) {
+					resetXmlFile(xmlFile);
 				}
 			} else {
 				fileViewer.setInput(null);
@@ -1025,6 +1028,23 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 					fileParsingStatus.getMessage());
 		}
 	}
+	
+	private void resetXmlFile(File xmlFile) {
+		fileViewer.setInput(xmlFile);
+		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
+		
+		fileViewer.getTable().select(0);
+		fileViewer.getTable().getItem(0).setChecked(true);
+		if( fileInfo != null ) {
+			info.setDoProcessXml(fileInfo.getDataFile(), true);
+			fileParsingStatus = fileInfo.getParsingStatus();
+			if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
+				MessageDialog.openError(this.getShell(),
+						getString("parsingErrorTitle"), //$NON-NLS-1$
+						fileParsingStatus.getMessage());
+			}
+		}
+	}
 
 	/**
 	 * If the path begins with a "/", we need to strip off since this will be
@@ -1350,7 +1370,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		}
 
 		int caret = this.viewProcedureNameText.getCaretPosition();
-		synchronizeUI();
+
 		this.viewProcedureNameText.setSelection(caret);
 		validatePage();
 	}
