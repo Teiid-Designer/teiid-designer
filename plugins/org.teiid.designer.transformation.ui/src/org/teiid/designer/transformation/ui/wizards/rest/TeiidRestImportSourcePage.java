@@ -167,6 +167,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
+	
+	private static String getString(final String id, String arg) {
+		return Util.getString(I18N_PREFIX + id, arg);
+	}
+
 
 	private ILabelProvider srcLabelProvider;
 	private Combo srcCombo;
@@ -689,8 +694,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			} else {
 				fileViewer.setInput(null);
 				MessageDialog.openError(this.getShell(),
-						getString("invalidXmlConnectionProfileTitle"), //$NON-NLS-1$
-						getString("invalidXmlConnectionProfileMessage")); //$NON-NLS-1$
+						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						getString("invalidRESTConnectionProfileMessage")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -732,6 +737,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			this.parameterMap = (Map) props
 					.get(IWSProfileConstants.PARAMETER_MAP);
 		}
+		
+		String responseType = IWSProfileConstants.XML;
+		if(  props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) != null) {
+			responseType = (String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY);
+		}
 
 		try {
 
@@ -759,9 +769,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 						IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String) props
 								.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
 			} else {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.ACCEPT_PROPERTY_KEY,
-						IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				if( responseType.equalsIgnoreCase(IWSProfileConstants.JSON) ) {
+					httpConn.setRequestProperty(
+							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+							IWSProfileConstants.CONTENT_TYPE_JSON_VALUE);
+				} else {
+					httpConn.setRequestProperty(
+							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+							IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				}
 			}
 
 			if (props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null) {
@@ -834,8 +850,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
 					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (Exception ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			if( ex instanceof JSONException && ex.getMessage().contains("A JSONObject text must begin with") ) {
+				
+				String message = getString("invalidRESTResponseTypeMessage", responseType);
+				MessageDialog.openError(this.getShell(),
+						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						message); //$NON-NLS-1$
+			} else {
+				ex.printStackTrace();
+			}
 		} finally {
 			try {
 				if (fos != null) {
