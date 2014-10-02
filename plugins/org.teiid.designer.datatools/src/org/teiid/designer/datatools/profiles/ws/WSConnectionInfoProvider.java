@@ -34,7 +34,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-        if (null != user &! user.isEmpty()) {
+        if (null != user && user.isEmpty()) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + ICredentialsCommon.USERNAME_PROP_ID, user);
         }
 
