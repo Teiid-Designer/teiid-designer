@@ -25,6 +25,7 @@ import org.teiid.designer.query.proc.wsdl.IWsdlResponseInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlWrapperInfo;
 import org.teiid.designer.query.sql.ISQLConstants;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.language.SQLConstants;
 import org.teiid.query.proc.wsdl.WsdlRequestProcedureHelper;
 import org.teiid.query.proc.wsdl.WsdlResponseProcedureHelper;
 import org.teiid.query.proc.wsdl.WsdlWrapperHelper;
@@ -311,7 +312,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         	 if (param.getType().equals(Parameter.Type.Query)) {
         		 isQueryParm=true;
         		 if (c==1) tokens.add(xmlFileInfo.getXmlFileUrl());
-        		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName()).append(SPACE).append(AS).append(SPACE).append(param.getName());
+        		 // Check for Reserved Word
+        		 String paramName = param.getName();
+        		 if( SQLConstants.isReservedWord(teiidVersion, paramName) ) {
+        			 paramName = D_QUOTE + paramName + D_QUOTE;
+        		 }
+        		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(paramName).append(SPACE).append(AS).append(SPACE).append(paramName);
         		 if(c < (parameters.size())) {
                      sb.append(COMMA).append(SPACE);
                  }
