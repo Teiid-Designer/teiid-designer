@@ -984,22 +984,23 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		for (String key : parameterMap.keySet()) {
 			Parameter value = parameterMap.get(key);
 			if (value.getType().equals(Parameter.Type.URI)) {
-				parameterString
-						.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
+				parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (value.getType().equals(Parameter.Type.Query)) {
-				if (parameterString.length() == 0
-						|| !parameterString.toString().contains("?")) { //$NON-NLS-1$
+				if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
 					parameterString.append("?"); //$NON-NLS-1$
 				} else {
 					parameterString.append("&"); //$NON-NLS-1$  
 				}
-				parameterString.append(key)
-						.append("=").append(value.getDefaultValue()); //$NON-NLS-1$
+				parameterString.append(encodeString(key)).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
 			}
 		}
 
-		return URLEncoder.encode(parameterString.toString(), Charset.defaultCharset().displayName());
+		return parameterString.toString();
+	}
+	
+	private String encodeString(String str) throws UnsupportedEncodingException {
+		return  URLEncoder.encode(str, Charset.defaultCharset().displayName());
 	}
 	
 
