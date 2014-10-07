@@ -165,6 +165,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
+	
+	private static String getString(final String id, String arg) {
+		return Util.getString(I18N_PREFIX + id, arg);
+	}
+
 
 	private ILabelProvider srcLabelProvider;
 	private Combo srcCombo;
@@ -629,9 +634,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (this.info.isXmlLocalFileMode()
 				&& profile.getProviderId().equalsIgnoreCase(XML_FILE_ID)) {
 			isValid = true;
-		} else if (this.info.isXmlUrlFileMode()
-				&& (profile.getProviderId().equalsIgnoreCase(XML_URL_FILE_ID) || profile
-						.getProviderId().equalsIgnoreCase(TEIID_WS_ID))) {
+		} else if (this.info.isRestUrlFileMode() 
+				&& profile.getProviderId().equalsIgnoreCase(TEIID_WS_ID)) {
 			isValid = true;
 		}
 		return isValid;
@@ -673,14 +677,18 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				} else {
 					xmlFile = getXmlFileFromUrl(urlString);
 				}
-				if (xmlFile != null && xmlFile.exists()) {
-					setXmlFile(xmlFile, true, urlString);
+				if( this.xmlFileInfo == null ) {
+					if (xmlFile != null && xmlFile.exists()) {
+						setXmlFile(xmlFile, true, urlString);
+					}
+				} else if (xmlFile != null && xmlFile.exists() ) {
+					resetXmlFile(xmlFile);
 				}
 			} else {
 				fileViewer.setInput(null);
 				MessageDialog.openError(this.getShell(),
-						getString("invalidXmlConnectionProfileTitle"), //$NON-NLS-1$
-						getString("invalidXmlConnectionProfileMessage")); //$NON-NLS-1$
+						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						getString("invalidRESTConnectionProfileMessage")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -722,6 +730,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			this.parameterMap = (Map) props
 					.get(IWSProfileConstants.PARAMETER_MAP);
 		}
+		
+		String responseType = IWSProfileConstants.XML;
+		if(  props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) != null) {
+			responseType = (String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY);
+		}
 
 		try {
 
@@ -749,9 +762,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 						IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String) props
 								.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
 			} else {
-				httpConn.setRequestProperty(
-						IWSProfileConstants.ACCEPT_PROPERTY_KEY,
-						IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				if( responseType.equalsIgnoreCase(IWSProfileConstants.JSON) ) {
+					httpConn.setRequestProperty(
+							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+							IWSProfileConstants.CONTENT_TYPE_JSON_VALUE);
+				} else {
+					httpConn.setRequestProperty(
+							IWSProfileConstants.ACCEPT_PROPERTY_KEY,
+							IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				}
 			}
 
 			if (props.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null) {
@@ -824,8 +843,15 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
 					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (Exception ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+			if( ex instanceof JSONException && ex.getMessage().contains("A JSONObject text must begin with") ) {
+				
+				String message = getString("invalidRESTResponseTypeMessage", responseType);
+				MessageDialog.openError(this.getShell(),
+						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						message); //$NON-NLS-1$
+			} else {
+				ex.printStackTrace();
+			}
 		} finally {
 			try {
 				if (fos != null) {
@@ -948,22 +974,23 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		for (String key : parameterMap.keySet()) {
 			Parameter value = parameterMap.get(key);
 			if (value.getType().equals(Parameter.Type.URI)) {
-				parameterString
-						.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
+				parameterString.append(url.endsWith("/") ? StringConstants.EMPTY_STRING : "/").append(value.getDefaultValue()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			if (value.getType().equals(Parameter.Type.Query)) {
-				if (parameterString.length() == 0
-						|| !parameterString.toString().contains("?")) { //$NON-NLS-1$
+				if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
 					parameterString.append("?"); //$NON-NLS-1$
 				} else {
 					parameterString.append("&"); //$NON-NLS-1$  
 				}
-				parameterString.append(key)
-						.append("=").append(value.getDefaultValue()); //$NON-NLS-1$
+				parameterString.append(encodeString(key)).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
 			}
 		}
 
-		return URLEncoder.encode(parameterString.toString(), Charset.defaultCharset().displayName());
+		return parameterString.toString();
+	}
+	
+	private String encodeString(String str) throws UnsupportedEncodingException {
+		return  URLEncoder.encode(str, Charset.defaultCharset().displayName());
 	}
 	
 
@@ -990,6 +1017,23 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			MessageDialog.openError(this.getShell(),
 					getString("parsingErrorTitle"), //$NON-NLS-1$
 					fileParsingStatus.getMessage());
+		}
+	}
+	
+	private void resetXmlFile(File xmlFile) {
+		fileViewer.setInput(xmlFile);
+		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
+		
+		fileViewer.getTable().select(0);
+		fileViewer.getTable().getItem(0).setChecked(true);
+		if( fileInfo != null ) {
+			info.setDoProcessXml(fileInfo.getDataFile(), true);
+			fileParsingStatus = fileInfo.getParsingStatus();
+			if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
+				MessageDialog.openError(this.getShell(),
+						getString("parsingErrorTitle"), //$NON-NLS-1$
+						fileParsingStatus.getMessage());
+			}
 		}
 	}
 
@@ -1317,7 +1361,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		}
 
 		int caret = this.viewProcedureNameText.getCaretPosition();
-		synchronizeUI();
+
 		this.viewProcedureNameText.setSelection(caret);
 		validatePage();
 	}

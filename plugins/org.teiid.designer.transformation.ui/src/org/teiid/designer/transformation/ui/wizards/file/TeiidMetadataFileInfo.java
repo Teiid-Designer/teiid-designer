@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -155,6 +156,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
  
 	private String charset = "UTF-8";  //$NON-NLS-1$
 	
+	private boolean includeTypeLine = false;
+	
 	private boolean loaded = false;
 	
 	/**
@@ -217,6 +220,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		this.useHeaderForColumnNames = info.doUseHeaderForColumnNames();
 
 		this.firstDataRow = info.getFirstDataRow();
+		this.includeTypeLine = info.getIncludeTypeLine();
 		
 		this.includeEscape = info.doIncludeEscape();
 		this.includeHeader = info.doIncludeHeader();
@@ -474,6 +478,19 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		return this.cachedFirstLines;
 	}
 	
+	private String getDataTypeString() {
+		if( this.includeTypeLine ) {
+			if( cachedFirstLines.length == 0 ) {
+				return null;
+			}
+			if( headerLineNumber <= this.cachedFirstLines.length) {
+				return this.cachedFirstLines[this.headerLineNumber];
+			}
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * 
 	 * @return columnInfoList the <code>TeiidColumnInfo[]</code> array parsed from the header in the data file
@@ -510,6 +527,10 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		this.columnInfoList.clear();
 		
 		if( this.useHeaderForColumnNames && getHeaderString() != null && getHeaderString().length() > 0 ) {
+			List<String> names = new ArrayList<String>();
+			List<String> datatypes = new ArrayList<String>();
+			
+			// Parse Column Names
 			String delim = "" + getDelimiter(); //$NON-NLS-1$
 			StringTokenizer strTokeniser = new StringTokenizer(getHeaderString(), delim);
 			while( strTokeniser.hasMoreTokens() ) {
@@ -519,9 +540,39 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 					nextTok = nextTok.substring(1, nextTok.length()-1);
 				}
 				if( nextTok != null && nextTok.length() > 0 ) {
-					this.columnInfoList.add(new TeiidColumnInfo(nextTok));
+					names.add(nextTok);
 				}
 			}
+			
+			if( this.includeTypeLine ) {
+				String dataTypeString = getDataTypeString();
+				if( dataTypeString != null ) {
+					int nextCol = 0;
+					StringTokenizer tokenizer = new StringTokenizer(dataTypeString, delim);
+					while( tokenizer.hasMoreTokens() ) {
+						String nextTok = tokenizer.nextToken().trim();
+
+						if( nextTok != null && nextTok.length() > 0 ) {
+							if( nextTok.equalsIgnoreCase("integer" )) {
+								nextTok = "int";
+							}
+							datatypes.add(nextTok);
+						}
+					}
+				}
+			}
+			
+			int count = 0;
+			for( String name : names ) {
+				TeiidColumnInfo colInfo = new TeiidColumnInfo(name);
+
+				if( !datatypes.isEmpty() && datatypes.size() == names.size() ) {
+					colInfo.setDatatype(datatypes.get(count++));
+				}
+				this.columnInfoList.add(colInfo);
+			}
+			
+			// Parse data type names
 		} else {
 //			for( int i=0; i<this.numberOfFixedWidthColumns; i++ ) {
 //				String colName = "col" + (i+1); //$NON-NLS-1$
@@ -975,6 +1026,14 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	@Override
     public String getCharSet() {
 		return this.charSet;
+	}
+	
+	public boolean getIncludeTypeLine() {
+		return this.includeTypeLine;
+	}
+	
+	public void setIncludeTypeLine(boolean value) {
+		this.includeTypeLine = value;
 	}
     
 }

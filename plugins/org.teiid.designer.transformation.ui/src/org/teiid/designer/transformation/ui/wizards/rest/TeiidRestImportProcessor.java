@@ -112,7 +112,7 @@ public class TeiidRestImportProcessor extends TeiidMetadataImportProcessor {
     		IConnectionInfoProvider provider = null;
     		if( getInfo().isXmlLocalFileMode() ) {
     			provider = new XmlFileConnectionInfoProvider();
-    		} else if( getInfo().isXmlUrlFileMode() ) {
+    		} else if( getInfo().isRestUrlFileMode() ) {
     			if( IWSProfileConstants.TEIID_WS_CONNECTION_PROFILE_ID.equalsIgnoreCase(profile.getProviderId()) ) {
     				provider = new WSConnectionInfoProvider();
     			} else {

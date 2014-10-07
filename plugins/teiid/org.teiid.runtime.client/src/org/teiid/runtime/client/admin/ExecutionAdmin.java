@@ -770,16 +770,19 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public void undeployVdb( String vdbName) throws Exception {
         ITeiidVdb vdb = getVdb(vdbName);
         if(vdb!=null) {
-        	adminSpec.undeploy(admin, appendVdbExtension(vdbName), vdb.getVersion());
+        	String deploymentName = vdb.getPropertyValue("deployment-name"); //$NON-NLS-1$
+        	if( deploymentName != null ) {
+        		adminSpec.undeploy(admin, deploymentName, vdb.getVersion());
+        	} else {
+        		throw new Exception(Messages.getString(Messages.ExecutionAdmin.cannotUndeployVdbNoDeploymentName, vdbName));
+            }
         }
         vdb = getVdb(vdbName);
 
         refreshVDBs();
 
-        if (vdb == null) {
-
-        } else {
-            this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb.getName()));
+        if (vdb != null) {
+        	this.eventManager.notifyListeners(ExecutionConfigurationEvent.createUnDeployVDBEvent(vdb.getName()));
         }
     }
     

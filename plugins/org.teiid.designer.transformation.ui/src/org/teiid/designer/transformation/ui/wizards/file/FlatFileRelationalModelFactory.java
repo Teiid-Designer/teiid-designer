@@ -7,9 +7,6 @@
  */
 package org.teiid.designer.transformation.ui.wizards.file;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -18,8 +15,6 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceItem;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.DirectionKind;
@@ -52,6 +47,10 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String ALL_INVOKE_PROCEDURES = "allInvokeProcedures"; //$NON-NLS-1$
     
     public static final int DEFAULT_STRING_LENGTH = 4000;
+    public static final int DEFAULT_PRECISION = 10;
+    
+    public static final String INT_STR = "int";
+    public static final String INTEGER_STR = "integer";
     
     private static boolean isTransactionable = ModelerCore.getPlugin() != null;
     

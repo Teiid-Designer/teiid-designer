@@ -261,4 +261,28 @@ public abstract class DatatypeUtilities {
 		
 		return names;
 	}
+	
+	/**
+	 * Helper method to identify if a datatype is numeric or not.
+	 * The initial use-case is needing to define a default precision since a 0 precision
+	 * will result in a validation warning
+	 * 
+	 * @param type the datatype
+	 * @return true if datataype is a numeric type
+	 */
+	public static boolean isNumeric(String type) {
+		if( DatatypeConstants.BuiltInNames.BIG_DECIMAL.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.BIG_INTEGER.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.FLOAT.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.LONG.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.SHORT.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.DOUBLE.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.INTEGER.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.INT.equalsIgnoreCase(type) ||
+			DatatypeConstants.BuiltInNames.DECIMAL.equalsIgnoreCase(type) ) {
+			return true;
+		}
+		
+		return false;
+	}
 }

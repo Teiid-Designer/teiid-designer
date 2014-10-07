@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -448,7 +449,11 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 								TeiidMetadataFileInfo fileInfo = info.getCheckedFileInfo();
 								if( fileInfo != null ) {
 									if( profileInfo.columnsInFirstLine ) {
-										fileInfo.setFirstDataRow(1);
+										if( profileInfo.includeTypeLine ) {
+											fileInfo.setFirstDataRow(3);
+										} else {
+											fileInfo.setFirstDataRow(2);
+										}
 									}
 								}
 							}
@@ -552,7 +557,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 					clearFileListViewer();
 					loadFileListViewer();
 					
-					if( this.info.getFileInfos().isEmpty() ) {
+					if( !this.info.getFileInfos().isEmpty() ) {
 						// Check for FIRST LINE FOR COLUMNS
 						String firstLineHasColumns = (String) props.get(INCLCOLUMNNAME);
 						if( firstLineHasColumns != null ) {
@@ -566,7 +571,14 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 						if( delimiterType != null ) {
 							this.profileInfo.delimiterType = delimiterType;
 						}
+						
+						for( TeiidMetadataFileInfo nextInfo : this.info.getFileInfos() ) {
+							nextInfo.setCharSet(this.profileInfo.charset);
+							nextInfo.setIncludeTypeLine(this.profileInfo.includeTypeLine);
+						}
 					}
+					
+
 					break;
 				}
 			}
