@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.ui.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -26,8 +25,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
 import org.teiid.designer.diagram.ui.actions.RefreshAction;
@@ -47,15 +44,13 @@ import org.teiid.designer.ui.actions.CopyNameAction;
 import org.teiid.designer.ui.actions.EditAction;
 import org.teiid.designer.ui.actions.IModelObjectActionContributor;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
+import org.teiid.designer.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import org.teiid.designer.ui.actions.ModelerActionBarIdManager;
 import org.teiid.designer.ui.actions.ModelerActionService;
-import org.teiid.designer.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import org.teiid.designer.ui.common.actions.AbstractAction;
-import org.teiid.designer.ui.common.actions.ControlledPopupMenuExtender;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 import org.teiid.designer.ui.common.actions.IActionConstants.EclipseGlobalActions;
 import org.teiid.designer.ui.editors.ModelEditorPage;
-import org.teiid.designer.ui.editors.ModelEditorSite;
 
 
 /**
@@ -76,7 +71,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
     // ============================================================================================================================
     // Variables
 
-    private List modelObjectContributors;
+    private List<Object> modelObjectContributors;
 
     // our specific actions
     private AddTransformationSourceAction addSourcesAction;
@@ -451,7 +446,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                             theMenuMgr.add(copyMenu);
                             theMenuMgr.add(new Separator());
                         }
-                        addExtendedActions(theMenuMgr);
                     }
                         break;
 
@@ -483,7 +477,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                             theMenuMgr.add(copyMenu);
                             theMenuMgr.add(new Separator());
                         }
-                        addExtendedActions(theMenuMgr);
                     }
                         break;
 
@@ -596,7 +589,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                         IAction existingAction = getAction(ModelerGlobalActions.OPEN);
                         if (existingAction != null) theMenuMgr.add(existingAction);
                         theMenuMgr.add(new Separator(ContextMenu.TRANS_END));
-                        addExtendedActions(theMenuMgr);
                     }
                         break;
                     case TransformationSelectionHelper.TYPE_SOURCE_TABLE: {
@@ -609,7 +601,6 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                             addExternalExportedActions(theMenuMgr, selection);
                         }
                         theMenuMgr.add(new Separator(ContextMenu.TRANS_END));
-                        addExtendedActions(theMenuMgr);
                     }
                         break;
                     case TransformationSelectionHelper.TYPE_SQL_TRANSFORMATION_ROOT: {
@@ -643,25 +634,9 @@ public class TransformationActionAdapter extends DiagramActionAdapter
 
     }
 
-    private void addExtendedActions( IMenuManager theMenuMgr ) {
-        ISelectionProvider selProvider = getEditorPage().getModelObjectSelectionProvider();
-        if (selProvider != null) {
-            if (theMenuMgr.find(IModelerActionConstants.ContextMenu.ADDITIONS) == null) {
-                theMenuMgr.add(new Separator(IModelerActionConstants.ContextMenu.ADDITIONS));
-            }
-            // Need to create a PopupMenuExtender to include any external actions here
-            IEditorPart editor = ((ModelEditorSite)getEditorPage().getEditorSite()).getEditor();
-            ControlledPopupMenuExtender popupMenuExtender = new ControlledPopupMenuExtender(ContextMenu.DIAGRAM_EDITOR_PAGE,
-                                                                                            (MenuManager)theMenuMgr, selProvider,
-                                                                                            editor);
-            popupMenuExtender.menuAboutToShow(theMenuMgr);
-        }
-
-    }
-
     private void addExternalExportedActions( IMenuManager theMenuMgr,
                                              ISelection selection ) {
-        List contributors = getModelObjectActionContributors();
+        List<Object> contributors = getModelObjectActionContributors();
 
         for (int size = contributors.size(), i = 0; i < size; i++) {
             IModelObjectActionContributor contributor = (IModelObjectActionContributor)contributors.get(i);
@@ -901,7 +876,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
      * 
      * @return the list of <code>IModelObjectActionContributor</code> implementations
      */
-    private List getModelObjectActionContributors() {
+    private List<Object> getModelObjectActionContributors() {
         if (modelObjectContributors == null) {
             String ID = org.teiid.designer.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.ID;
             String CLASSNAME = org.teiid.designer.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.CLASSNAME;
@@ -913,7 +888,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
             IExtension[] extensions = extensionPoint.getExtensions();
 
             if (extensions.length > 0) {
-                modelObjectContributors = new ArrayList(extensions.length);
+                modelObjectContributors = new ArrayList<Object>(extensions.length);
 
                 // for each extension get their contributor
                 for (int i = 0; i < extensions.length; i++) {
@@ -942,7 +917,7 @@ public class TransformationActionAdapter extends DiagramActionAdapter
                     }
                 }
             } else {
-                modelObjectContributors = Collections.EMPTY_LIST;
+                modelObjectContributors = Collections.emptyList();
             }
         }
 
