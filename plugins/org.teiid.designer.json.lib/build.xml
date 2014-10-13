@@ -19,7 +19,7 @@
 	<import file="${GIT-HOME}/scripts/build-common.xml" />
 
 	<!-- Comma-separated list of required libraries -->
-	<property name="libs" value="org.json.jar"/>
+	<property name="libs" value="json.jar"/>
 
 	<!--
 	   Test whether all the required libraries are present
