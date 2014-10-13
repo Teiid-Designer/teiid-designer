@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -31,9 +30,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IEditorPart;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.transaction.SourcedNotification;
 import org.teiid.designer.diagram.ui.actions.DiagramGlobalActionsMap;
@@ -72,15 +69,13 @@ import org.teiid.designer.ui.actions.CopyFullNameAction;
 import org.teiid.designer.ui.actions.CopyNameAction;
 import org.teiid.designer.ui.actions.IModelObjectActionContributor;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
+import org.teiid.designer.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import org.teiid.designer.ui.actions.ModelerActionBarIdManager;
 import org.teiid.designer.ui.actions.ModelerGlobalActionsMap;
-import org.teiid.designer.ui.actions.IModelerActionConstants.ModelerGlobalActions;
 import org.teiid.designer.ui.common.actions.AbstractAction;
-import org.teiid.designer.ui.common.actions.ControlledPopupMenuExtender;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 import org.teiid.designer.ui.common.actions.IActionConstants.EclipseGlobalActions;
 import org.teiid.designer.ui.editors.ModelEditorPage;
-import org.teiid.designer.ui.editors.ModelEditorSite;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -98,7 +93,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
     static final String PARAM_BASE_NAME = UiConstants.Util.getString("MappingDiagramActionAdapter.inputParamBaseName.text"); //$NON-NLS-1$
     static final String NEW_INPUT_PARAMETER_TITLE = UiConstants.Util.getString("MappingDiagramActionAdapter.inputParameterTitle.text"); //$NON-NLS-1$
 
-    private List modelObjectContributors;
+    private List<Object> modelObjectContributors;
 
     private AbstractAction showDetailedMappingAction;
     private MappingAction newMappingClassAction;
@@ -167,23 +162,9 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         }
     }
 
-    private void addExtendedActions( final IMenuManager theMenuMgr ) {
-        final ISelectionProvider selProvider = getEditorPage().getModelObjectSelectionProvider();
-        if (selProvider != null) {
-            // Need to create a PopupMenuExtender to include any external actions here
-            final IEditorPart editor = ((ModelEditorSite)getEditorPage().getEditorSite()).getEditor();
-            final ControlledPopupMenuExtender popupMenuExtender = new ControlledPopupMenuExtender(
-                                                                                                  ContextMenu.DIAGRAM_EDITOR_PAGE,
-                                                                                                  (MenuManager)theMenuMgr,
-                                                                                                  selProvider, editor);
-            popupMenuExtender.menuAboutToShow(theMenuMgr);
-        }
-
-    }
-
     private void addExternalExportedActions( final IMenuManager theMenuMgr,
                                              final ISelection selection ) {
-        final List contributors = getModelObjectActionContributors();
+        final List<Object> contributors = getModelObjectActionContributors();
 
         for (int size = contributors.size(), i = 0; i < size; i++) {
             final IModelObjectActionContributor contributor = (IModelObjectActionContributor)contributors.get(i);
@@ -367,7 +348,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
                         theMenuMgr.add(copyMenu);
                         theMenuMgr.add(new Separator());
                     }
-                    addExtendedActions(theMenuMgr);
                 }
                     break;
                 case MappingSelectionHelper.TYPE_STAGING_TABLE:
@@ -388,7 +368,6 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
                         theMenuMgr.add(copyMenu);
                         theMenuMgr.add(new Separator());
                     }
-                    addExtendedActions(theMenuMgr);
                 }
                     break;
 
@@ -707,7 +686,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
      * 
      * @return the list of <code>IModelObjectActionContributor</code> implementations
      */
-    private List getModelObjectActionContributors() {
+    private List<Object> getModelObjectActionContributors() {
         if (modelObjectContributors == null) {
             final String ID = org.teiid.designer.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.ID;
             final String CLASSNAME = org.teiid.designer.ui.UiConstants.ExtensionPoints.ModelObjectActionContributor.CLASSNAME;
@@ -719,7 +698,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
             final IExtension[] extensions = extensionPoint.getExtensions();
 
             if (extensions.length > 0) {
-                modelObjectContributors = new ArrayList(extensions.length);
+                modelObjectContributors = new ArrayList<Object>(extensions.length);
 
                 // for each extension get their contributor
                 for (final IExtension extension2 : extensions) {
@@ -741,7 +720,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
                                                                                                                                 new Object[] {element.getAttribute(CLASSNAME)}));
                         }
                 }
-            } else modelObjectContributors = Collections.EMPTY_LIST;
+            } else modelObjectContributors = Collections.emptyList();
         }
 
         return modelObjectContributors;

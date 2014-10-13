@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.ActionContributionItem;
@@ -27,7 +26,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.diagram.ui.DiagramUiConstants;
@@ -47,11 +45,9 @@ import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.actions.ModelerActionBarIdManager;
 import org.teiid.designer.ui.common.actions.AbstractAction;
 import org.teiid.designer.ui.common.actions.ActionService;
-import org.teiid.designer.ui.common.actions.ControlledPopupMenuExtender;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
 import org.teiid.designer.ui.editors.AbstractModelEditorPageActionBarContributor;
 import org.teiid.designer.ui.editors.ModelEditorPage;
-import org.teiid.designer.ui.editors.ModelEditorSite;
 
 
 /**
@@ -86,8 +82,6 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
     private IDiagramActionAdapter cachedAdapter;
 
     private boolean firstTime = true;
-
-    private ControlledPopupMenuExtender popupMenuExtender = null;
 
     private boolean contributed = false;
 
@@ -389,12 +383,6 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
             if (theMenuMgr.find(IModelerActionConstants.ContextMenu.ADDITIONS) == null) {
                 theMenuMgr.add(new Separator(IModelerActionConstants.ContextMenu.ADDITIONS));
             }
-            if (popupMenuExtender == null) {
-                // Need to create a PopupMenuExtender to include any external actions here
-                IEditorPart editor = ((ModelEditorSite)getEditorPage().getEditorSite()).getEditor();
-                popupMenuExtender = new ControlledPopupMenuExtender(CONTEXT_MENU_ID, (MenuManager)theMenuMgr, selProvider, editor);
-            }
-            popupMenuExtender.menuAboutToShow(theMenuMgr);
         }
     }
 
@@ -558,10 +546,6 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
      */
     @Override
     public void dispose() {
-        if (this.popupMenuExtender != null) {
-            this.popupMenuExtender.dispose();
-        }
-
         for (Iterator<AbstractAction> iter = allRegisteredActions.keySet().iterator(); iter.hasNext();) {
             AbstractAction theAction = iter.next();
             unregisterAction(theAction);
@@ -588,14 +572,15 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
     public List<IAction> getAdditionalModelingActions( ISelection theSelection ) {
         MenuManager menu = new MenuManager("TempMenu", "TempMenuID"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        List theActions = new ArrayList();
+        List<IAction> theActions = new ArrayList<IAction>();
 
         contributeExportedActions(menu);
 
-        Object[] theItems = menu.getItems();
+        IContributionItem[] theItems = menu.getItems();
         if (theItems != null && theItems.length > 0) {
             for (int i = 0; i < theItems.length; i++) {
-                theActions.add(theItems[i]);
+                if (theItems[i] instanceof IAction)
+                    theActions.add((IAction) theItems[i]);
             }
         }
 
