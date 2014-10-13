@@ -35,10 +35,6 @@
               <goal>generate-repository-facade</goal>
             </goals>
             <configuration>
-              <associateSites>
-		<associateSite>http://download.jboss.org/jbosstools/updates/development/luna/</associateSite>
-		<associateSite>http://download.jboss.org/jbosstools/targetplatforms/jbtistarget/luna/</associateSite>
-              </associateSites>
 
               <siteTemplateFolder>${siteTemplateFolder}</siteTemplateFolder>
 
