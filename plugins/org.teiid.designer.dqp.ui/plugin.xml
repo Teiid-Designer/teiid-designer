@@ -87,6 +87,7 @@
          label="%deployVdbAction.label">
       </resourceAction>
    </extension>
+<!--
    <extension
         id="DeployDynamicVdbAction"
         name="%deployVdbAction.name"
@@ -96,6 +97,7 @@
          label="%deployDynamicVdbAction.label">
       </resourceAction>
    </extension>
+-->
      <extension
         id="ExecuteVdbAction"
         name="%executeVdbAction.name"
