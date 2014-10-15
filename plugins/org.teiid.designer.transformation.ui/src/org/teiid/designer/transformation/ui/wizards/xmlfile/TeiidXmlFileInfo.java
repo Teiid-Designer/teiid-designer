@@ -137,7 +137,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		this.cachedFirstLines = info.cachedFirstLines;
 		this.numberOfLinesInFile = info.getNumberOfLinesInFile();
 		this.rootPath = info.getRootPath(); 
-		this.parameterMap = info.parameterMap;
+		this.parameterMap = new HashMap<String, Object>(parameterMap);
 		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
 		for( ITeiidXmlColumnInfo iColInfo : info.getColumnInfoList() ) {
 		    TeiidXmlColumnInfo colInfo = (TeiidXmlColumnInfo) iColInfo;
@@ -620,7 +620,7 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 	private void determineCommonRootPath(){
 		StringBuilder commonRoot = new StringBuilder();
 		
-		List<String> segmentList = new ArrayList();
+		List<String> segmentList = new ArrayList<String>();
 		segmentList.add(rootNode.getFullPath());
 		for( Object node : rootNode.getChildrenDTDElements() ) {
 			addChildPaths((XmlElement)node, segmentList);
@@ -673,13 +673,17 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 	 */
 	@Override
 	public Map<String, Object> getParameterMap() {
-		return this.parameterMap==null ? Collections.EMPTY_MAP : this.parameterMap;
+		return this.parameterMap;
 	}
 
 	/**
 	 * @param parameterMap
 	 */
-	public void setParameterMap(Map parameterMap) {
-		this.parameterMap=parameterMap;
+	public void setParameterMap(Map<String, Object> parameterMap) {
+		if( parameterMap == null ) {
+			parameterMap = Collections.emptyMap();
+		} else {
+			this.parameterMap=parameterMap;
+		}
 	}
 }
