@@ -10,6 +10,8 @@ package org.teiid.designer.ui.common.dialog;
 import java.io.File;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.ui.common.UiConstants;
@@ -81,6 +83,14 @@ public class FileUiUtils implements UiConstants {
      */
     public String getExistingCaseVariantFileName( IPath path ) {
         return getExistingCaseVariantFileName(path.toOSString());
+    }
+    
+    public void showFileContents(Shell shell, File file, String title, String displayedFileName) {
+    	if( file.exists() ) {
+    		new FileContentsDialog(shell, title, file, displayedFileName).open();
+    	} else {
+    		MessageDialog.openError(shell,  "File Not Found", "The file: " + displayedFileName + " does not exist");
+    	}
     }
 
 }
