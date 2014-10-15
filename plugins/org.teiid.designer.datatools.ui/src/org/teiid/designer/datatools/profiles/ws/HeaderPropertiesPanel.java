@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -49,6 +50,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
@@ -126,7 +128,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
                 		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
                 		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		IWSProfileConstants.PARAMETER_MAP.equalsIgnoreCase(keyStr) ||
+                		keyStr.toLowerCase().startsWith(Parameter.PREFIX) ||
                 		IWSProfileConstants.URI.equalsIgnoreCase(keyStr) ||
                         IWSProfileConstants.QUERY_STRING.equalsIgnoreCase(keyStr) ||
                         IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr)) {
