@@ -116,7 +116,8 @@ public final class NewVdbWizard extends AbstractWizard
     static final String SELECTED_MODELS_CONTAIN_DUPLICATE_NAMES = VdbUiConstants.Util.getString("selectedModelsAndDependenciesContainDuplicateNamesMessage"); //$NON-NLS-1$
     static final String ADD_FILE_DIALOG_MODELS_IN_DIFFERENT_PROJECTS_MESSAGE = VdbUiConstants.Util.getString("selectedModelsAreInDifferentProjectsMessage"); //$NON-NLS-1$
     private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-                                                                                     StringNameValidator.DEFAULT_MAXIMUM_LENGTH);
+                                                                                     StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
+                                                                                     new char[] {'_', '-', '.'});
 
     static String getString( final String id ) {
         return VdbUiConstants.Util.getString(I18N_PREFIX + id);

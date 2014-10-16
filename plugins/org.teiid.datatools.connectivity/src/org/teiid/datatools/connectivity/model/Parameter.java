@@ -11,6 +11,10 @@ package org.teiid.datatools.connectivity.model;
  * 
  */
 public class Parameter {
+	private char COLON = ':';
+	
+	
+	public static final String PREFIX = "rest_param:"; //$NON-NLS-N$
 	
 	private String name;
 	private String defaultValue;
@@ -40,6 +44,17 @@ public class Parameter {
 		this.name = name;
 		this.defaultValue = defaultValue;
 		this.type = type;
+	}
+	
+	/**
+	 * @param name
+	 * @param defaultValue
+	 */
+	public Parameter(String keyName, String propertyValue) {
+		super();
+		this.name = extractName(keyName);
+		this.defaultValue = extractDefaultValue(propertyValue);
+		this.type = extractType(propertyValue);
 	}
 
 	/**
@@ -82,6 +97,35 @@ public class Parameter {
 	 */
 	public void setType(Type type) {
 		this.type = type;
+	}
+	
+	public String getPropertyKey() {
+		return PREFIX + getName();
+	}
+	
+	public String getPropertyValue() {
+		return getType().toString() + ':' + getDefaultValue();
+	}
+	
+	private String extractName(String keyName) {
+		if( keyName.indexOf(COLON) > -1 ) {
+			return keyName.substring(keyName.indexOf(COLON)+1);
+		}
+		return keyName;
+	}
+	
+	private Type extractType(String propertyValue) {
+		if( propertyValue.indexOf(COLON) > -1 ) {
+			return Type.fromValue(propertyValue.substring(0, propertyValue.indexOf(COLON)));
+		}
+		return Type.Query;
+	}
+	
+	private String extractDefaultValue(String propertyValue) {
+		if( propertyValue.indexOf(COLON) > -1 ) {
+			return propertyValue.substring(propertyValue.indexOf(COLON)+1);
+		}
+		return propertyValue;
 	}
 
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -257,7 +258,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
   		this.parametersTab = new TabItem(tabFolder, SWT.FILL);
   		this.parametersTab.setControl(parameterPanel);
   		this.parametersTab.setText(UTIL.getString("ParametersPanel_groupTitle")); //$NON-NLS-1$
-  		this.parameterPanel = new ParameterPanel(this, parameterPanel, parameterMap, 6);
+  		this.parameterPanel = new ParameterPanel(this, parameterPanel, parameterMap, 8);
   		this.urlPreviewText.setText(updateUrlPreview().toString());
   		
   		Composite headerPropertiesPanel = WidgetFactory.createPanel(tabFolder);
@@ -273,7 +274,11 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @return the extraProperties
 	 */
 	public Properties getExtraProperties() {
-		this.extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
+    	for( String key : this.getParameterMap().keySet() )  {
+    		Parameter para = this.getParameterMap().get(key);
+    		this.extraProperties.put(para.getPropertyKey(), para.getPropertyValue());
+    	}
+
 		return this.extraProperties;
 	}
 
@@ -281,7 +286,10 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @param extraProperties the extraProperties to set
 	 */
 	public void setExtraProperties(Properties extraProperties) {
-		this.extraProperties.put(IWSProfileConstants.PARAMETER_MAP, this.getParameterMap());
+    	for( String key : this.getParameterMap().keySet() )  {
+    		Parameter para = this.getParameterMap().get(key);
+    		this.extraProperties.put(para.getPropertyKey(), para.getPropertyValue());
+    	}
 		this.extraProperties = extraProperties;
 	}
 	
@@ -331,10 +339,10 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 
 		for (String key : parameterMap.keySet()) {
 	      Parameter value = parameterMap.get(key);
-	      if (value.getType().equals(IWSProfileConstants.QUERY_STRING)) {
+	      if (value.getType().equals(Parameter.Type.URI)) {
 	    	  parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
-	      if (value.getType().equals(IWSProfileConstants.QUERY_STRING)) {
+	      if (value.getType().equals(Parameter.Type.Query)) {
 	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
 	    		  parameterString.append("?");   //$NON-NLS-1$
 	    	  }else{
@@ -442,11 +450,10 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void initControls() {
         IConnectionProfile profile = getConnectionProfile();
         Properties props = profile.getBaseProperties();
-        if (props.get(IWSProfileConstants.PARAMETER_MAP) != null) {
-        	if (props.get(IWSProfileConstants.PARAMETER_MAP) instanceof Map) {
-        		this.parameterMap = ((Map)props.get(IWSProfileConstants.PARAMETER_MAP));
-        	}
-        }
+        
+        // Check properties and load any existing parameters into parametersMap
+        loadParameters(props);
+        
         if (null != props.get(ICredentialsCommon.USERNAME_PROP_ID)) {
             usernameText.setText((String)props.get(ICredentialsCommon.USERNAME_PROP_ID));
         }
@@ -479,6 +486,25 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         	}
         }
         
+    }
+    
+    /*
+    * Need to load the parameters map from general profile properties
+    *
+    * KEYS will look like:  "rest_param:myParam"
+    * VALUES will look like:  "Query:myDefaultValue"
+    * The Parameter class includes a constructor that will take these two values and extract the 
+    * appropriate parameter name, type and default value values
+    */
+    private void loadParameters(Properties props) {
+    	for( Object key : props.keySet() )  {
+    		String keyStr = (String)key;
+    		
+    		if( keyStr.startsWith(Parameter.PREFIX)) {
+    			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
+    			parameterMap.put(newParam.getName(), newParam);
+    		}
+    	}
     }
 
     /**

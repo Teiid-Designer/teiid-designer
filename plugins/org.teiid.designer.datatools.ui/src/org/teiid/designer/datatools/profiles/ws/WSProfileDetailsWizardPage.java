@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
@@ -173,7 +174,9 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         gd.horizontalSpan = 2;
         credentialsComposite.setLayoutData(gd);
         this.profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
-        this.parameterMap = (Map) profileProperties.get(IWSProfileConstants.PARAMETER_MAP);
+        
+        // Check properties and load any existing parameters into parametersMap
+        loadParameters(profileProperties);
         
         urlPreviewLabel = new Label(scrolled, SWT.NONE);
         urlPreviewLabel.setText(UTIL.getString("WSProfileDetailsWizardPage.urlPreviewLabel")); //$NON-NLS-1$
@@ -247,6 +250,25 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	public void setProfileProperties(Properties profileProperties) {
 		this.profileProperties = profileProperties;
 	}
+	
+    /*
+    * Need to load the parameters map from general profile properties
+    *
+    * KEYS will look like:  "rest_param:myParam"
+    * VALUES will look like:  "Query:myDefaultValue"
+    * The Parameter class includes a constructor that will take these two values and extract the 
+    * appropriate parameter name, type and default value values
+    */
+    private void loadParameters(Properties props) {
+    	for( Object key : props.keySet() )  {
+    		String keyStr = (String)key;
+    		
+    		if( keyStr.startsWith(Parameter.PREFIX)) {
+    			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
+    			parameterMap.put(newParam.getName(), newParam);
+    		}
+    	}
+    }
 	 
 	/**
 	 * @return
@@ -272,27 +294,32 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
 	 * @throws UnsupportedEncodingException 
 	 */
 	private String buildParameterString() throws UnsupportedEncodingException {
-		
+
 		StringBuilder parameterString = new StringBuilder();
-		if (this.parameterMap==null) return parameterString.toString();
+		if (this.parameterMap == null)
+			return parameterString.toString();
 		Map<String, Parameter> parameterMap = this.parameterMap;
 
 		for (String key : parameterMap.keySet()) {
-	      Parameter value = parameterMap.get(key);
-	      if (value.getType().equals(Parameter.Type.URI)) {
-	    	  parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
-	      }
-	      if (value.getType().equals(Parameter.Type.Query)) {
-	    	  if (parameterString.length()==0 || !parameterString.toString().contains("?")){ //$NON-NLS-1$
-	    		  parameterString.append("?");   //$NON-NLS-1$
-	    	  }else{
-	    		  parameterString.append("&");   //$NON-NLS-1$  
-	    	  }
-	    	  parameterString.append(key).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
-	      }
-	    }
+			Parameter value = parameterMap.get(key);
+			if (value.getType().equals(Parameter.Type.URI)) {
+				parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
+			}
+			if (value.getType() == Parameter.Type.Query) {
+				if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
+					parameterString.append("?"); //$NON-NLS-1$
+				} else {
+					parameterString.append("&"); //$NON-NLS-1$  
+				}
+				parameterString.append(encodeString(key)).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
+			}
+		}
 
-		return URLEncoder.encode(parameterString.toString(), Charset.defaultCharset().displayName());
+		return parameterString.toString();
+	}
+
+	private String encodeString(String str) throws UnsupportedEncodingException {
+		return URLEncoder.encode(str, Charset.defaultCharset().displayName());
 	}
 
 	/* (non-Javadoc)
@@ -379,7 +406,10 @@ public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage imp
         }
         
         if( this.profileProperties !=  null && this.parameterMap !=null) {
-        	profileProperties.put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+        	for( String key : this.parameterMap.keySet() )  {
+        		Parameter para = this.parameterMap.get(key);
+        		profileProperties.put(para.getPropertyKey(), para.getPropertyValue());
+        	}
         }
         
         if (null != profileProperties) {

@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -112,7 +113,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
     	panel.setLayoutData(gd);
 
         this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        GridDataFactory.fillDefaults().grab(true, true).span(3, 1).applyTo(propertiesViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).span(3, 1).hint(360,  160).applyTo(propertiesViewer.getTableComposite());
 
         ColumnViewerToolTipSupport.enableFor(this.propertiesViewer.getTableViewer());
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
@@ -194,7 +195,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
         column.setLabelProvider(new PropertyLabelProvider(2));
         column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer.getTableViewer(), 2));
         
-
         this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             /**
              * {@inheritDoc}
@@ -302,14 +302,18 @@ public class ParameterPanel implements DatatoolsUiConstants {
             }
             
             if (this.wsProfileDetailsWizardPage!=null){
-            	wsProfileDetailsWizardPage.getProfileProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+            	for( Object key : this.parameterMap.keySet() )  {
+            		Parameter para = (Parameter)this.parameterMap.get((String)key);
+            		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
             	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
-            	wsProfileDetailsWizardPage.getProfileProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
             }else{
-            	propertyPage.getExtraProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
+            	for( Object key : this.parameterMap.keySet() )  {
+            		Parameter para = (Parameter)this.parameterMap.get((String)key);
+            		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
             	propertyPage.setParameterMap(this.parameterMap);
-            	propertyPage.getExtraProperties().put(IWSProfileConstants.PARAMETER_MAP, this.parameterMap);
             	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
             }
         }
@@ -423,7 +427,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		@Override
 		protected void setValue(Object element, Object value) {
 			if( element instanceof Parameter ) {
-				String key = ((Parameter)element).getName();
+				String key = ((Parameter)element).getPropertyKey();
 				if( columnID == 1 ) {
 					String oldType = ((Parameter)element).getType().toString();
 					String newType = (String)value;

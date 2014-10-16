@@ -104,27 +104,21 @@ public abstract class ResourceNameUtil {
             return false;
         }
 
+        String nameToCheck = proposedName;
+        
         // Check the extension
-        if (proposedName.indexOf('.') != -1) {
-            // Check ends with
-            if (!proposedName.endsWith(DOT_VDB_FILE_EXTENSION)) {
-                throw new IllegalArgumentException(CoreModelerPlugin.Util.getString(INVALID_EXTENSION_ERROR_ID,
-                                                                             proposedName,
-                                                                             VDB_FILE_EXTENSION));
-            }
-
-            // So, let's take the extension off
-            proposedName = proposedName.substring(0, proposedName.lastIndexOf(DOT_VDB_FILE_EXTENSION));
-
-            // If the name still has a "." in it, then it will not be a reserved name
-            // Note
-            if (proposedName.indexOf('.') != -1) {
-                return false;
-            }
+        int lastIndexOfDot = proposedName.lastIndexOf('.');
+        if (lastIndexOfDot != -1) {
+        	
+        	String ext = proposedName.substring(lastIndexOfDot+1, proposedName.length());
+        	
+        	if( ext != null && VDB_FILE_EXTENSION.toUpperCase().equalsIgnoreCase(ext) ) {
+        		nameToCheck = proposedName.substring(0, lastIndexOfDot);
+        	}
         }
 
         for (int i = 0; i < RESERVED_VDB_NAMES.length; i++) {
-            if (proposedName.equalsIgnoreCase(RESERVED_VDB_NAMES[i])) {
+            if (nameToCheck.equalsIgnoreCase(RESERVED_VDB_NAMES[i])) {
                 return true;
             }
         }
