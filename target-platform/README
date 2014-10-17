@@ -1,0 +1,17 @@
+Creating a target platform for use in Eclipse Development
+
+The Teiid Designer target platform (TP) is now the JBossTools Integration Stack base target (JBT-IS TP)
+and as such is direclty referenced by maven when performing builds.
+
+Developers, on the Teiid Designer project seeking to develop the codebase, should in the target-platform
+directory, execute either
+
+ - build.sh
+ - build.bat
+
+which will in turn execute maven with the generate-target profile located in the target-platform/pom.xml.
+This will create the following:
+
+ - teiid-designer.target
+
+which can be opened in eclipse and set as its target platform. 

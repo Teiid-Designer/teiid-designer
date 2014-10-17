@@ -14,8 +14,15 @@
 	<packaging>pom</packaging>
 
 	<build>
+		<!--
+				Commented out as no longer required since we can build
+				directly from JBT-IS using the target-platform config
+				specified in our parent pom. The teiid-designer.target
+				will remain to serve as a platform easily available to
+				developers loading the TP into an eclipse IDE.
+		-->
 		<plugins>
-			<!-- Attach the designer target to the configuration -->
+			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -39,6 +46,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 
@@ -62,11 +70,11 @@
 								<configuration>
 									<artifactItems>
 										<artifactItem>
-											<groupId>org.jboss.tools.integration-stack</groupId>
-											<artifactId>target-platform</artifactId>
-											<version>4.1.8.Final</version>
-											<classifier>base</classifier>
-											<type>target</type>
+											<groupId>${td.tpc.groupId}</groupId>
+											<artifactId>${td.tpc.artifactId}</artifactId>
+											<version>${td.tpc.version}</version>
+											<type>${td.tpc.type}</type>
+											<classifier>${td.tpc.classifier}</classifier>
 											<overWrite>true</overWrite>
 											<outputDirectory>${basedir}</outputDirectory>
 											<destFileName>teiid-designer.target</destFileName>

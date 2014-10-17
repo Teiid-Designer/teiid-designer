@@ -19,6 +19,13 @@
 
 		<!-- Specify our own TP using the JBT-IS rather than using the definition in the parent pom -->
 		<no-target-platform>true</no-target-platform>
+
+		<td.tpc.groupId>org.jboss.tools.integration-stack</td.tpc.groupId>
+		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
+		<td.tpc.version>4.1.8.Final</td.tpc.version>
+		<td.tpc.type>target</td.tpc.type>
+		<td.tpc.classifier>base</td.tpc.classifier>
+
 	</properties>
 
 	<modules>
@@ -60,11 +67,12 @@
 								<echo>project.build.directory: ${project.build.directory}</echo>
 								<echo>eclipse.tycho.version: ${tychoVersion}</echo>
 								<echo>eclipse.target.version: ${targetEclipseVersion}</echo>
-								<echo>eclipse.target.platform.groupId: ${tpc.groupId}</echo>
-								<echo>eclipse.target.platform.group: ${tpc.group}</echo>
-								<echo>eclipse.target.platform.version: ${tpc.version}</echo>
-								<echo>eclipse.target.platform.kind: ${tpc.targetKind}</echo>
-								<echo>NOT.using.target.platform: ${no-target-platform}</echo>
+								<echo>not.using.jbt.parent.pom.tp: ${no-target-platform}</echo>
+								<echo>teiid.designer.tp.group.id: ${td.tpc.groupId}</echo>
+								<echo>teiid.designer.tp.artifact.id: ${td.tpc.artifactId}</echo>
+								<echo>teiid.designer.tp.version: ${td.tpc.version}</echo>
+								<echo>teiid.designer.tp.type: ${td.tpc.type}</echo>
+								<echo>teiid.designer.tp.classifier: ${td.tpc.classifier}</echo>
 							</target>
 						</configuration>
 					</execution>
@@ -80,11 +88,11 @@
 					<ignoreTychoRepositories>true</ignoreTychoRepositories>
 					<target>
 						<artifact>
-							<groupId>org.jboss.tools.integration-stack</groupId>
-							<artifactId>target-platform</artifactId>
-							<version>4.1.8.Final</version>
-							<type>target</type>
-							<classifier>base</classifier>
+							<groupId>${td.tpc.groupId}</groupId>
+							<artifactId>${td.tpc.artifactId}</artifactId>
+							<version>${td.tpc.version}</version>
+							<type>${td.tpc.type}</type>
+							<classifier>${td.tpc.classifier}</classifier>
 						</artifact>
 					</target>
 				</configuration>
