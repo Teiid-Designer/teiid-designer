@@ -18,7 +18,7 @@
          of the eclipse installation,
          eg. /opt/eclipse/plugins/org.apache.ant_1.8.4.v201303080030/lib/
       -->
-    <target name="download-ant-contrib" unless="ant-contrib-exists">
+    <target name="download-ant-contrib" if="ant.library.dir" unless="ant-contrib-exists">
         <echo message="Downloading ant-contrib library"/>
 
         <!-- Create the ant lib directory if not already exists -->
