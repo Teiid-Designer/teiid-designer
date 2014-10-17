@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.2.0.CR1-SNAPSHOT</version>
+		<version>4.1.2.Final-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
@@ -16,6 +16,9 @@
 	<properties>
 		<jboss-tycho-version>${tychoVersion}</jboss-tycho-version>
 		<tycho.scmUrl>scm:git:https://github.com/Teiid-Designer/teiid-designer.git</tycho.scmUrl>
+
+		<!-- Specify our own TP using the JBT-IS rather than using the definition in the parent pom -->
+		<no-target-platform>true</no-target-platform>
 	</properties>
 
 	<modules>
@@ -31,6 +34,44 @@
 		<plugins>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo>basedir: ${basedir}</echo>
+								<echo>project.basedir: ${project.basedir}</echo>
+								<echo>project.baseUri: ${project.baseUri}</echo>
+								<echo>project.version: ${project.version}</echo>
+								<echo>project.groupId: ${project.groupId}</echo>
+								<echo>project.artifactId: ${project.artifactId}</echo>
+								<echo>project.name: ${project.name}</echo>
+								<echo>project.build.sourceDirectory: ${project.build.sourceDirectory}</echo>
+								<echo>project.build.scriptSourceDirectory: ${project.build.scriptSourceDirectory}</echo>
+								<echo>project.build.testSourceDirectory: ${project.build.testSourceDirectory}</echo>
+								<echo>project.build.outputDirectory: ${project.build.outputDirectory}</echo>
+								<echo>project.build.testOutputDirectory: ${project.build.testOutputDirectory}</echo>
+								<echo>project.build.directory: ${project.build.directory}</echo>
+								<echo>eclipse.tycho.version: ${tychoVersion}</echo>
+								<echo>eclipse.target.version: ${targetEclipseVersion}</echo>
+								<echo>eclipse.target.platform.groupId: ${tpc.groupId}</echo>
+								<echo>eclipse.target.platform.group: ${tpc.group}</echo>
+								<echo>eclipse.target.platform.version: ${tpc.version}</echo>
+								<echo>eclipse.target.platform.kind: ${tpc.targetKind}</echo>
+								<echo>NOT.using.target.platform: ${no-target-platform}</echo>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
 				<version>${tychoVersion}</version>
@@ -39,14 +80,16 @@
 					<ignoreTychoRepositories>true</ignoreTychoRepositories>
 					<target>
 						<artifact>
-							<groupId>org.jboss.tools.target-platforms</groupId>
-							<artifactId>teiid.designer</artifactId>
-							<version>0.1.0-SNAPSHOT</version>
-							<classifier>teiid-designer</classifier>
+							<groupId>org.jboss.tools.integration-stack</groupId>
+							<artifactId>target-platform</artifactId>
+							<version>4.1.8.Final</version>
+							<type>target</type>
+							<classifier>base</classifier>
 						</artifact>
 					</target>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 
