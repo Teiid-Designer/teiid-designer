@@ -9,4 +9,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/json.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.apache.ant;bundle-version="1.8.4"
+Require-Bundle: org.apache.ant;bundle-version="[1.9.2,2.0.0)"
