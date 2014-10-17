@@ -29,7 +29,6 @@ Including: Connection management, VDB creation and management and Data Preview/V
          version="0.0.0"/>
 
    <requires>
-      <import feature="org.jboss.ide.eclipse.as.feature" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.8.0" match="compatible"/>
       <import plugin="org.eclipse.ui" version="3.103.0" match="compatible"/>
       <import plugin="org.jdom" version="1.1.1" match="compatible"/>
@@ -52,9 +51,9 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.teiid.designer.metamodels.function" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.extension" version="8.1.0" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.4.0" match="compatible"/>
-      <import plugin="org.jboss.ide.eclipse.as.core" version="3.0.0" match="compatible"/>
-      <import plugin="org.jboss.ide.eclipse.as.dmr" version="3.0.0" match="compatible"/>
-      <import plugin="org.jboss.ide.eclipse.as.management.core" version="3.0.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.core" version="2.4.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.dmr" version="2.4.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.management.core" version="2.4.0" match="compatible"/>
       <import plugin="org.teiid.designer.relational" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.datatools.connectivity" version="8.1.0" match="compatible"/>
       <import plugin="org.teiid.designer.spi" version="8.1.0" match="compatible"/>
@@ -89,7 +88,9 @@ Including: Connection management, VDB creation and management and Data Preview/V
       <import plugin="org.eclipse.datatools.sqltools.sqlscrapbook" version="1.0.2" match="compatible"/>
       <import plugin="org.eclipse.wst.server.ui" version="1.4.0" match="compatible"/>
       <import plugin="org.eclipse.ui.navigator" version="3.5.200" match="compatible"/>
-      <import plugin="org.jboss.ide.eclipse.as.ui" version="3.0.0" match="compatible"/>
+      <import plugin="org.jboss.ide.eclipse.as.ui" version="2.4.0"/>
+      <import plugin="org.jboss.ide.eclipse.as.core" version="2.4.0"/>
+      <import plugin="org.teiid.designer.webservice.lib" version="8.5.0" match="compatible"/>
       <import plugin="org.eclipse.ui.workbench" version="3.103.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.ui.dse" version="1.1.4" match="compatible"/>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
