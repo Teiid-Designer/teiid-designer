@@ -1015,7 +1015,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
                     String passToken = teiidServer.getTeiidAdminInfo().getPassToken();
                     if (passToken != null)
                         adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(passToken.getBytes("UTF-8"))); //$NON-NLS-1$
-                        
+
                     adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
                 }
                     
@@ -1026,12 +1026,13 @@ public final class TeiidServerManager implements ITeiidServerManager {
                     jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
                     jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
                         
-                    /* password is saved in the eclipse secure storage */
-                        
-//                 if( teiidServer.getTeiidJdbcInfo().getPassword() != null) {
-//                     	jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(teiidServer.getTeiidJdbcInfo().getPassword().getBytes()));
-//                 }
-                        
+                    /* The token of the password is saved to file while the password is saved in the eclipse secure storage
+                     * Saving the token ensures that its possible to find the password again.
+                     */
+                    String passToken = teiidServer.getTeiidJdbcInfo().getPassToken();
+                    if (passToken != null)
+                        jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(passToken.getBytes("UTF-8"))); //$NON-NLS-1$
+
                     jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
                 }
                     
