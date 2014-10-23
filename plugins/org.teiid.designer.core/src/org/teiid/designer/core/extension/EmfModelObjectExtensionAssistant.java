@@ -495,8 +495,8 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
             if (annotation != null) {
                 annotation.getTags().removeKey(propId);
 
-                // delete the model object annotation if no more properties
-                if (annotation.getTags().isEmpty()) {
+                // delete the model object annotation if no more properties AND there is no description
+                if (annotation.getTags().isEmpty() && annotation.getDescription() == null) {
                     ModelResourceContainerFactory.deleteAnnotation(annotation);
                 }
             }
