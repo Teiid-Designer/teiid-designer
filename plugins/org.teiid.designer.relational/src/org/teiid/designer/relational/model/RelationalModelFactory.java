@@ -213,7 +213,6 @@ public class RelationalModelFactory implements RelationalConstants {
         progressMonitor.worked(1);
         for( RelationalIndex indexRef : indexes ) {
             EObject index = createIndex(indexRef, modelResource);
-            modelResource.getEmfResource().getContents().add(index);
         }
     }
     
@@ -258,25 +257,20 @@ public class RelationalModelFactory implements RelationalConstants {
             } break;
             case TYPES.TABLE: {
                 newEObject = createBaseTable(relationalRef, modelResource);
-                //modelResource.getEmfResource().getContents().add(newEObject);
-                //applyTableExtensionProperties((RelationalTable)obj, (BaseTable)baseTable, false);
                 
                 // In the case of the new object wizards, users can create Indexes while creating a table
                 // So just walk these and add them to the model too
                 for( RelationalIndex index : ((RelationalTable)relationalRef).getIndexes() ) {
                 	EObject newIndex = createIndex(index, modelResource);
-                	modelResource.getEmfResource().getContents().add(newIndex);
                 }
 
             } break;
             case TYPES.VIEW: {
             	newEObject = createView(relationalRef, modelResource);
-                modelResource.getEmfResource().getContents().add(newEObject);
 
             } break;
             case TYPES.PROCEDURE: {
             	newEObject = createProcedure(relationalRef, modelResource);
-                modelResource.getEmfResource().getContents().add(newEObject);
 
             } break;
             case TYPES.INDEX: {
@@ -1014,6 +1008,7 @@ public class RelationalModelFactory implements RelationalConstants {
                     final Object next = contents.next();
                     if (next instanceof AnnotationContainer) {
                         annotations = (AnnotationContainer)next;
+                        break;
                     }
                 } // while
 
