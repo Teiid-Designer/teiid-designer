@@ -10,6 +10,7 @@ package org.teiid.designer.relational.ui.edit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -28,6 +29,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -469,6 +471,21 @@ public class RelationalProcedureEditorPanel extends RelationalEditorPanel implem
 	        }
 	
 	        this.updateCountCombo.setText(UPDATE_COUNT.AUTO);
+	        
+	        this.updateCountCombo.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					getRelationalReference().setUpdateCount(updateCountCombo.getText());
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 	        
 	        this.nonPreparedCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
 	        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(this.nonPreparedCB);
