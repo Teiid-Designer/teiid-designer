@@ -71,6 +71,9 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
     
     private EObject newViewProcedure;
     private RelationalViewProcedure relationalViewProcedure;
+    
+	Button procedureRB;
+	Button userDefinedFunctionRB;
 	 
 	/**
 	 * 
@@ -305,7 +308,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
     		setTitle(Messages.selectProcedureTypeDialogSubTitle);
     		
     		{ // simple procedure
-	        	final Button procedureRB = new Button(panel, SWT.RADIO);
+	        	procedureRB = new Button(panel, SWT.RADIO);
 	            procedureRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 	            procedureRB.setText(Messages.procedureLabel);
 	            procedureRB.addSelectionListener(new SelectionAdapter() {
@@ -315,7 +318,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged(false);
+	                	handleInfoChanged();
 	                }
 	            });
 	            procedureRB.setSelection(!relationalProcedure.isFunction());
@@ -330,7 +333,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
     		}
             
     		{ // user defined function
-	            final Button userDefinedFunctionRB = new Button(panel, SWT.RADIO);
+	            userDefinedFunctionRB = new Button(panel, SWT.RADIO);
 	            userDefinedFunctionRB.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
 	            userDefinedFunctionRB.setText(Messages.userDefinedFunctionLabel);
 	            userDefinedFunctionRB.addSelectionListener(new SelectionAdapter() {
@@ -340,7 +343,7 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
 	                 */
 	                @Override
 	                public void widgetSelected( SelectionEvent e ) {
-	                	handleInfoChanged(true);
+	                	handleInfoChanged();
 	                }
 	            });
 	    		
@@ -355,8 +358,12 @@ public class CreateViewProcedureAction extends Action implements INewChildAction
             return pnlOuter;
     	}
     	
-    	private void handleInfoChanged( final boolean isFunction ) {
-        	relationalProcedure.setFunction(isFunction);
+    	private void handleInfoChanged( ) {
+    		if( procedureRB.getSelection() ) {
+    			relationalProcedure.setProcedureType(RelationalProcedure.PROCEDURE_TYPE.PROCEDURE);
+    		} else {
+    			relationalProcedure.setProcedureType(RelationalProcedure.PROCEDURE_TYPE.FUNCTION);
+    		}
     	}
 
     }
