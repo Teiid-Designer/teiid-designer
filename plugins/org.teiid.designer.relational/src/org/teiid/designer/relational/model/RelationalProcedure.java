@@ -128,7 +128,7 @@ public class RelationalProcedure extends RelationalReference {
      * @return function
      */
     public boolean isFunction() {
-    	return this.procedureType == PROCEDURE_TYPE.FUNCTION;
+    	return this.procedureType == PROCEDURE_TYPE.FUNCTION || this.procedureType == PROCEDURE_TYPE.SOURCE_FUNCTION;
     }
     
     /**
