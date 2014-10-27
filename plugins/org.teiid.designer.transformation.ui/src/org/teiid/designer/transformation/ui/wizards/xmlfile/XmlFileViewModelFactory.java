@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
@@ -100,9 +101,7 @@ public void createViewProcedure(ModelResource modelResource, TeiidXmlFileInfo in
  	Procedure procedure = factory.createProcedure();
  	procedure.setName(info.getViewProcedureName());
  	
- 	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
- 	
- 	for (String parameterKey : info.getParameterMap().keySet()) {
+  	for (String parameterKey : info.getParameterMap().keySet()) {
  		ProcedureParameter parameter = factory.createProcedureParameter();
  		parameter.setName(parameterKey);
  		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$
@@ -126,7 +125,9 @@ public void createViewProcedure(ModelResource modelResource, TeiidXmlFileInfo in
      	}
      	addValue(result, column, result.getColumns());
  	}
-
+ 	
+	addValue(modelResource, procedure, modelResource.getEmfResource().getContents());
+    
  	NewModelObjectHelperManager.helpCreate(procedure, null);
  	String sqlString = info.getSqlString(relationalModelName, info.getModelNameWithoutExtension(modelResource.getItemName()), info.getViewProcedureName());
  	
