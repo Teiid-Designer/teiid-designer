@@ -819,22 +819,19 @@ public final class WidgetUtil implements
         CoreArgCheck.isNotNull(items);
 
         combo.removeAll();
-
-        for (final Iterator iter = items.iterator(); iter.hasNext();) {
-            final String text = (provider == null ? iter.next().toString() : provider.getText(iter.next()));
-            if (sort) {
-                int index = Collections.binarySearch(Arrays.asList(combo.getItems()), text);
-                if (index < 0) {
-                    // lt 0 means the item was not found in the list.
-                    combo.add(text, -(index + 1));
-                } else {
-                    // gt= 0 means the item was found in the list.
-                    combo.add(text, index);
-                }
-            } else {
-                combo.add(text);
-            }
+        
+        List<String> itemStrings = new ArrayList<String>(items.size());
+        for( Object item : items ) {
+        	final String text = (provider == null ? item.toString() : provider.getText(item));
+        	itemStrings.add(text);
         }
+        
+        List<String> sortedItems = new ArrayList<String>();
+        sortedItems.addAll(itemStrings);
+        Collections.sort(sortedItems);
+
+        combo.setItems((String[]) sortedItems.toArray(new String[0]));
+
 
         if ((selection != null) && (selection.length() > 0)) {
             combo.setText(selection);
