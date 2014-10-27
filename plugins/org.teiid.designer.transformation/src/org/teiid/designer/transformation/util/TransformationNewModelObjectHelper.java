@@ -158,8 +158,10 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
 	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
 
                 	}
-                	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
-                    TransformationHelper.setSelectSqlString(tRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
+                	if( defineDefaultTableSQL ) {
+	                	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
+	                    TransformationHelper.setSelectSqlString(tRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
+                	}
                     return true;
                 }
             }            
