@@ -9,13 +9,13 @@ package org.teiid.query.sql.v87;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.v85.Test85Cloning;
+import org.teiid.query.sql.v86.Test86Cloning;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test87Cloning extends Test85Cloning {
+public class Test87Cloning extends Test86Cloning {
 
     protected Test87Cloning(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

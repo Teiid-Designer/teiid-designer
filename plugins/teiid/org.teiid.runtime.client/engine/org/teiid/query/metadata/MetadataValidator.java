@@ -22,6 +22,7 @@
 package org.teiid.query.metadata;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class MetadataValidator {
 	}
 	
 	// At minimum the model must have table/view, procedure or function 
-	private class MinimalMetadata implements MetadataRule {
+	class MinimalMetadata implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			for (Schema schema:store.getSchemaList()) {
@@ -132,7 +133,10 @@ public class MetadataValidator {
 				for (Table t:schema.getTables().values()) {
 					if (t.getColumns() == null || t.getColumns().size() == 0) {
 						metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31071, t.getFullName()));
-					}					
+					}
+                    Set<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                    validateConstraintNames(metadataValidator, report, model, t.getAllKeys(), names);
+                    validateConstraintNames(metadataValidator, report, model, t.getFunctionBasedIndexes(), names);
 				}
 				
 				// procedure validation is handled in parsing routines.
@@ -146,7 +150,18 @@ public class MetadataValidator {
 				}
 			}
 		}
-	}
+
+        private void validateConstraintNames(MetadataValidator metadataValidator, ValidatorReport report, ModelMetaData model, Collection<KeyRecord> keys, Set<String> names) {
+            for (KeyRecord record : keys) {
+                if (record.getName() == null) {
+                    continue;
+                }
+                if (!names.add(record.getName())) {
+                    metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31152, record.getFullName()));
+                }
+            }
+        }
+    }
 	
 	// do not allow foreign tables, source functions in view model and vice versa 
 	static class SourceModelArtifacts implements MetadataRule {
@@ -201,7 +216,7 @@ public class MetadataValidator {
 	}	
 	
 	// Resolves metadata query plans to make sure they are accurate
-	private class ResolveQueryPlans implements MetadataRule {
+	class ResolveQueryPlans implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			IQueryMetadataInterface metadata = vdb.getAttachment(IQueryMetadataInterface.class);

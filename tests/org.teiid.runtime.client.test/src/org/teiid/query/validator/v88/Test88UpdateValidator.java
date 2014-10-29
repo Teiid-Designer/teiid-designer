@@ -5,23 +5,24 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.query.sql.v87;
+package org.teiid.query.validator.v88;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.v86.Test86Create;
+import org.teiid.query.validator.v87.Test87UpdateValidator;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test87Create extends Test86Create {
+public class Test88UpdateValidator extends Test87UpdateValidator {
 
-    protected Test87Create(ITeiidServerVersion teiidVersion) {
+    protected Test88UpdateValidator(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
     }
 
-    public Test87Create() {
-        this(Version.TEIID_8_7.get());
+    public Test88UpdateValidator() {
+        this(Version.TEIID_8_8.get());
     }
+
 }
