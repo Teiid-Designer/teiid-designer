@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
@@ -122,7 +123,8 @@ public abstract class AbstractTestFunctionResolving extends AbstractTest {
         throws Exception {
         Expression func = getQueryParser().parseExpression(sql);
         ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
-        visitor.resolveLanguageObject(func, getMetadataFactory().example1Cached());
+        TransformationMetadata tm = getMetadataFactory().example1Cached();
+        visitor.resolveLanguageObject(func, tm);
         return func;
     }
 

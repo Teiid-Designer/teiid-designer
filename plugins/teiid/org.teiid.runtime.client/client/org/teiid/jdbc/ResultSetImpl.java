@@ -188,6 +188,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
     @Override
     public void close() throws SQLException{
     	if(!isClosed) {
+    	    this.statement.checkStatement();
             // close the the server's statement object (if necessary)
     		if(this.requestID >= 0){
 	            try {
