@@ -17,6 +17,39 @@ CREATE FOREIGN TABLE VDBResources (
 	PRIMARY KEY (resourcePath)
 );
 
+CREATE FOREIGN TABLE Triggers (
+    VDBName string(255) NOT NULL,
+    SchemaName string(255) NOT NULL,
+    TableName string(255) NOT NULL,
+    Name string(255) NOT NULL,
+    TriggerType string(50) NOT NULL,
+    TriggerEvent string(50) NOT NULL,
+    Status string(50) NOT NULL,
+    Body clob(2097152),
+    TableUID string(50) NOT NULL,
+    PRIMARY KEY (VDBName, SchemaName, TableName, Name)
+);
+
+CREATE FOREIGN TABLE Views (
+    VDBName string(255) NOT NULL,
+    SchemaName string(255) NOT NULL,
+    Name string(255) NOT NULL,
+    Body clob(2097152) NOT NULL,
+    UID string(50) NOT NULL,
+    PRIMARY KEY (VDBName, SchemaName, Name),
+    UNIQUE(UID)
+);
+
+CREATE FOREIGN TABLE StoredProcedures (
+    VDBName string(255) NOT NULL,
+    SchemaName string(255) NOT NULL,
+    Name string(255) NOT NULL,
+    Body clob(2097152) NOT NULL,
+    UID string(50) NOT NULL,
+    PRIMARY KEY (VDBName, SchemaName, Name),
+    UNIQUE(UID)
+);
+
 CREATE FOREIGN PROCEDURE isLoggable(OUT loggable boolean NOT NULL RESULT, IN level string NOT NULL DEFAULT 'DEBUG', IN context string NOT NULL DEFAULT 'org.teiid.PROCESSOR')
 OPTIONS (UPDATECOUNT 0)
 
