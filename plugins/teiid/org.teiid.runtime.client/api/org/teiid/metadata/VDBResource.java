@@ -48,11 +48,5 @@ public interface VDBResource {
 	 * @return
 	 */
 	String getName();
-	
-	/**
-	 * If the resource if visible in system metadata
-	 * @return
-	 */
-	boolean isVisible();
 
 }
