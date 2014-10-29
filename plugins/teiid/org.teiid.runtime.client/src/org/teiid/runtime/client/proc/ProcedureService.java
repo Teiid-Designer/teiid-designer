@@ -37,7 +37,7 @@ import org.teiid.runtime.client.Messages;
 public class ProcedureService implements IProcedureService, ISQLConstants {
 
     private final ITeiidServerVersion teiidVersion;
-    private final static String JSON = "JSON";
+    private final static String JSON = "JSON"; //$NON-NLS-1$
 
     /**
      * @param teiidVersion
@@ -290,7 +290,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
 //    	CREATE VIRTUAL PROCEDURE
 //    	BEGIN
 //    		DECLARE STRING VARIABLES.qp = QUERYSTRING('http://ws.cdyne.com/delayedstockquote/delayedstockquote.asmx/GetQuickQuote', ViewModel.getStockPrice.symbol AS StockSymbol, 0 AS LicenseKey);
-//    		SELECT A.price AS price FROM (EXEC SourceModel.invokeHttp('GET', null, VARIABLES.qp, 'TRUE')) AS f, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://ws.cdyne.com/'), '/decimal' PASSING XMLPARSE(DOCUMENT f.result) COLUMNS price double PATH 'text()') AS A;
+//    		SELECT A.price AS price FROM (EXEC SourceModel.invokeHttp(action=>'GET', endpoint=>VARIABLES.qp, stream=>'TRUE')) AS f, XMLTABLE(XMLNAMESPACES(DEFAULT 'http://ws.cdyne.com/'), '/decimal' PASSING XMLPARSE(DOCUMENT f.result) COLUMNS price double PATH 'text()') AS A;
 //    	END
 //    	
     	
@@ -324,15 +324,15 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         	 }else{
         		 if (c==1){
         			 String url = xmlFileInfo.getXmlFileUrl();
-        			 if (url.endsWith("/")){
-        				 url = url.substring(0, url.lastIndexOf("/"));
+        			 if (url.endsWith("/")){ //$NON-NLS-1$
+        				 url = url.substring(0, url.lastIndexOf("/")); //$NON-NLS-1$
         			 }
-        			 sb.append("'");
+        			 sb.append("'"); //$NON-NLS-1$
         			 sb.append(url); 
-        			 sb.append("'");
+        			 sb.append("'"); //$NON-NLS-1$
         		 }
         		 
-        		 sb.append(" || \'/' || ");
+        		 sb.append(" || \'/' || "); //$NON-NLS-1$
         		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName());
         	 }
         	 c++;
@@ -358,10 +358,7 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          
          String proc = S_QUOTE + xmlFileInfo.getDataFile().getName() + S_QUOTE;
          if( xmlFileInfo.isUrl() ) {
-             proc = S_QUOTE + GET + S_QUOTE
-                     + COMMA + SPACE + NULL.toLowerCase()
-                     + COMMA + SPACE +  "VARIABLES.qp"  //$NON-NLS-1$
-                     + COMMA + SPACE + S_QUOTE + TRUE + S_QUOTE;
+             proc = "action=>" + S_QUOTE + GET + S_QUOTE + COMMA + "endpoint=>VARIABLES.qp" + COMMA + "stream=>" + S_QUOTE + TRUE + S_QUOTE;  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
          }
          tokens.add(proc);
          
