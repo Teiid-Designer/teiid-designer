@@ -14,13 +14,13 @@ import org.teiid.query.sql.lang.From;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryFromClause;
-import org.teiid.query.sql.v85.TestQuery85Parser;
+import org.teiid.query.sql.v86.TestQuery86Parser;
 
 /**
  *
  */
 @SuppressWarnings( {"nls", "javadoc"} )
-public class TestQuery87Parser extends TestQuery85Parser {
+public class TestQuery87Parser extends TestQuery86Parser {
 
     protected TestQuery87Parser(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

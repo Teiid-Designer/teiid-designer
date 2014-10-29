@@ -7,4 +7,5 @@ Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.runtime.client;bundle-version="[9.0.0,10.0.0)"
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.11.0"
+Require-Bundle: org.junit;bundle-version="4.11.0",
+ org.teiid.designer.spi

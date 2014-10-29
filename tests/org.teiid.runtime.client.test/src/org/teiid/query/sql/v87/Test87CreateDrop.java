@@ -9,13 +9,13 @@ package org.teiid.query.sql.v87;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.v85.Test85CreateDrop;
+import org.teiid.query.sql.v86.Test86CreateDrop;
 
 /**
  *
  */
 @SuppressWarnings( {"javadoc"} )
-public class Test87CreateDrop extends Test85CreateDrop {
+public class Test87CreateDrop extends Test86CreateDrop {
 
     protected Test87CreateDrop(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

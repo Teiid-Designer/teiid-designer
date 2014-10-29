@@ -93,7 +93,7 @@ public interface ITeiidServerVersion {
         TEIID_8_6(EIGHT + DOT + SIX + DOT + ZERO),
 
         TEIID_8_7(EIGHT + DOT + SEVEN + DOT + ZERO),
-        
+
         TEIID_8_8(EIGHT + DOT + EIGHT + DOT + ZERO);
 
         private final String id;

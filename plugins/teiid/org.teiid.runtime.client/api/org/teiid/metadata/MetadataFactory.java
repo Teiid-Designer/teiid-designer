@@ -22,6 +22,7 @@
 
 package org.teiid.metadata;
 
+import java.io.Reader;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.MetadataStore.Grant;
+import org.teiid.query.parser.QueryParser;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 
@@ -82,6 +84,7 @@ public class MetadataFactory implements Serializable {
     private Schema schema = new Schema();
     private String idPrefix;
     protected int count;
+    private transient QueryParser parser;
     private transient Model model;
     private transient Map<String, ? extends VDBResource> vdbResources;
     private List<Grant> grants;
@@ -747,14 +750,18 @@ public class MetadataFactory implements Serializable {
         return this.builtinDataTypes;
     }
 
-//    /**
-//     * Parses, but does not close, the given {@link Reader} into this {@link MetadataFactory}
-//     * @param ddl
-//     *
-//     */
-//    public void parse(Reader ddl) throws Exception {
-//        this.parser.parseDDL(this, ddl);
-//    }
+    /**
+     * Parses, but does not close, the given {@link Reader} into this {@link MetadataFactory}
+     * @param ddl
+     *
+     */
+    public void parse(Reader ddl) throws Exception {
+        this.parser.parseDDL(this, ddl);
+    }
+
+    public void setParser(QueryParser parser) {
+        this.parser = parser;
+    }
 
     public void setModel(Model model) {
         this.model = model;
