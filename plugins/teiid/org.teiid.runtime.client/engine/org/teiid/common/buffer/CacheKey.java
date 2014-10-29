@@ -24,9 +24,9 @@ package org.teiid.common.buffer;
 
 public class CacheKey implements Comparable<CacheKey> {
 
-	private Long id;
-	protected long lastAccess;
-	protected long orderingValue;
+	private final Long id;
+	protected final long lastAccess;
+	protected final long orderingValue;
 	
 	public CacheKey(Long id, long lastAccess, long orderingValue) {
 		this.id = id;
@@ -69,13 +69,13 @@ public class CacheKey implements Comparable<CacheKey> {
 	
 	@Override
 	public int compareTo(CacheKey o) {
-		int result = (int) Math.signum(orderingValue - o.orderingValue);
-		if (result == 0) {
-			result = (int)Math.signum(lastAccess - o.lastAccess);
-			if (result == 0) {
-				return Long.signum(id - o.id);
-			}
-		}
+	    int result = orderingValue < o.orderingValue ? -1 : (orderingValue == o.orderingValue ? 0 : 1);
+        if (result == 0) {
+            result = lastAccess < o.lastAccess ? -1 : (lastAccess == o.lastAccess ? 0 : 1);
+            if (result == 0) {
+                return id.compareTo(o.id);
+            }
+        }
 		return result;
 	}
 
