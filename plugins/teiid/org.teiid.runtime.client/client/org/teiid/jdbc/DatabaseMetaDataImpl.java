@@ -209,25 +209,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         .append(" AND UCASE(p.Name)").append(LIKE_ESCAPE) //$NON-NLS-1$
         .append(" ORDER BY PROCEDURE_SCHEM, PROCEDURE_NAME").toString(); //$NON-NLS-1$
 
-    private final static String QUERY_PROCEDURE_COLUMNS =
-      new StringBuffer("SELECT VDBName PROCEDURE_CAT, SchemaName AS PROCEDURE_SCHEM") //$NON-NLS-1$
-        .append(", ProcedureName AS PROCEDURE_NAME, p.Name AS COLUMN_NAME") //$NON-NLS-1$
-        .append(", convert(decodeString(TYPE, '").append(PARAM_DIRECTION_MAPPING).append("', ','), short) AS COLUMN_TYPE") //$NON-NLS-1$ //$NON-NLS-2$
-        .append(", 1 AS DATA_TYPE") //$NON-NLS-1$
-        .append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(Scale, short) AS SCALE") //$NON-NLS-1$
-        .append(", Radix AS RADIX, convert(decodeString(NullType, '") //$NON-NLS-1$
-        .append(PROC_COLUMN_NULLABILITY_MAPPING).append("', ','), integer) AS NULLABLE") //$NON-NLS-1$
-        .append(", p.Description AS REMARKS, NULL AS COLUMN_DEF") //$NON-NLS-1$
-        .append(", NULL AS SQL_DATA_TYPE, NULL AS SQL_DATETIME_SUB, NULL AS CHAR_OCTET_LENGTH, p.Position AS ORDINAL_POSITION") //$NON-NLS-1$
-        .append(", "+IS_NULLABLE+", p.ProcedureName as SPECIFIC_NAME FROM ") //$NON-NLS-1$ //$NON-NLS-2$
-        .append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME)
-        .append(".ProcedureParams as p") //$NON-NLS-1$
-        .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
-        .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
-        .append(" AND UCASE(ProcedureName)").append(LIKE_ESCAPE) //$NON-NLS-1$
-        .append(" AND UCASE(p.Name)").append(LIKE_ESCAPE) //$NON-NLS-1$
-        .append(" ORDER BY PROCEDURE_SCHEM, PROCEDURE_NAME, COLUMN_TYPE, POSITION").toString(); //$NON-NLS-1$
-
     private static final String QUERY_SCHEMAS =
       new StringBuffer("SELECT Name AS TABLE_SCHEM, VDBName AS TABLE_CATALOG") //$NON-NLS-1$
         .append(" FROM ").append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME).append(".Schemas") //$NON-NLS-1$ //$NON-NLS-2$
@@ -897,6 +878,35 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
            return buf.toString();
     }
 
+    private String getQueryProcedureColumns() {
+        StringBuffer buf = new StringBuffer();
+
+        buf.append("SELECT VDBName PROCEDURE_CAT, SchemaName AS PROCEDURE_SCHEM") //$NON-NLS-1$
+          .append(", ProcedureName AS PROCEDURE_NAME, p.Name AS COLUMN_NAME") //$NON-NLS-1$
+          .append(", convert(decodeString(TYPE, '").append(PARAM_DIRECTION_MAPPING).append("', ','), short) AS COLUMN_TYPE") //$NON-NLS-1$ //$NON-NLS-2$
+          .append(", 1 AS DATA_TYPE"); //$NON-NLS-1$
+
+        if (isTeiid87OrGreater())
+          buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(case when scale > 32767 then 32767 else Scale end, short) AS SCALE"); //$NON-NLS-1$
+        else
+          buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(Scale, short) AS SCALE"); //$NON-NLS-1$
+
+        buf.append(", Radix AS RADIX, convert(decodeString(NullType, '") //$NON-NLS-1$
+          .append(PROC_COLUMN_NULLABILITY_MAPPING).append("', ','), integer) AS NULLABLE") //$NON-NLS-1$
+          .append(", p.Description AS REMARKS, NULL AS COLUMN_DEF") //$NON-NLS-1$
+          .append(", NULL AS SQL_DATA_TYPE, NULL AS SQL_DATETIME_SUB, NULL AS CHAR_OCTET_LENGTH, p.Position AS ORDINAL_POSITION") //$NON-NLS-1$
+          .append(", "+IS_NULLABLE+", p.ProcedureName as SPECIFIC_NAME FROM ") //$NON-NLS-1$ //$NON-NLS-2$
+          .append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME)
+          .append(".ProcedureParams as p") //$NON-NLS-1$
+          .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+          .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+          .append(" AND UCASE(ProcedureName)").append(LIKE_ESCAPE) //$NON-NLS-1$
+          .append(" AND UCASE(p.Name)").append(LIKE_ESCAPE) //$NON-NLS-1$
+          .append(" ORDER BY PROCEDURE_SCHEM, PROCEDURE_NAME, COLUMN_TYPE, POSITION").toString(); //$NON-NLS-1$
+
+        return buf.toString();
+    }
+
     @Override
     public ResultSet getIndexInfo(String catalog, String schema, String table, boolean unique, boolean approximate) throws SQLException {
         if (catalog == null) {
@@ -1233,7 +1243,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         ResultSetImpl results = null;
         PreparedStatement prepareQuery = null;
         try {
-            prepareQuery = driverConnection.prepareStatement(QUERY_PROCEDURE_COLUMNS);
+            prepareQuery = driverConnection.prepareStatement(getQueryProcedureColumns());
             prepareQuery.setObject(1, catalog.toUpperCase());
             prepareQuery.setObject(2, schemaPattern.toUpperCase());
             prepareQuery.setObject(3, procedureNamePattern.toUpperCase());

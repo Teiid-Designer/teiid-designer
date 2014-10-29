@@ -47,11 +47,15 @@ public class ExceptionUtil {
 		boolean canThrowComponentException = false;
         Class<?>[] exceptionClasses = method.getExceptionTypes();
         for (int i = 0; i < exceptionClasses.length; i++) {
-			if (exception.getClass().isAssignableFrom(exceptionClasses[i])) {
-				return exception;
-			}
-			canThrowComponentException |= TeiidClientException.class.isAssignableFrom(exceptionClasses[i]);
-			canThrowXATransactionException |= XATransactionException.class.isAssignableFrom(exceptionClasses[i]);
+            if (exceptionClasses[i].isAssignableFrom(exception.getClass())) {
+                return exception;
+            }
+            if (!canThrowComponentException) {
+                canThrowComponentException = TeiidClientException.class.isAssignableFrom(exceptionClasses[i]);
+            }
+            if (!canThrowXATransactionException) {
+                canThrowXATransactionException = XATransactionException.class.isAssignableFrom(exceptionClasses[i]);
+            }
         }
         if (canThrowComponentException) {
         	return new TeiidClientException(exception);
