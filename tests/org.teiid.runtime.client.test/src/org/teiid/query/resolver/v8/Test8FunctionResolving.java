@@ -98,4 +98,15 @@ public class Test8FunctionResolving extends AbstractTestFunctionResolving {
         String sql = "string_agg(pm1.g1.e1)"; //$NON-NLS-1$
         getExpression(sql);
     }
+
+    /**
+     * e1 is of type string, so 1 should be converted to string
+     * @throws Exception
+     */
+    @Test
+    public void testNumericConversion() throws Exception {
+        String sql = "1.0/2"; //$NON-NLS-1$
+        Function f = (Function)getExpression(sql);
+        assertEquals(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getTypeClass(), f.getType());
+    }
 }
