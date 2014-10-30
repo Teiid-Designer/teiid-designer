@@ -9,8 +9,11 @@ package org.teiid.designer.runtime.ui.wizards.webservices;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.ModifyEvent;
@@ -23,13 +26,18 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.DqpUiStringUtil;
 import org.teiid.designer.ui.common.InternalUiConstants;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 
@@ -72,6 +80,10 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
     protected Button mtomButton;
     private Button warBrowseButton;
     private Button restoreDefaultButton;
+    
+	private TabItem generalSecurityTab;
+	private TabItem httpOptionsTab;
+	private TabItem wsSecurityTab;
 
     protected IFile theVdb;
 
@@ -278,18 +290,25 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
         text = getString("jndiTooltip"); //$NON-NLS-1$
         txfJNDIName.setToolTipText(text);
 
-        final Group securityOptionsGroup = WidgetFactory.createGroup(pnlContents,
-                                                                     SECURITY_OPTIONS_GROUP,
-                                                                     GridData.FILL_HORIZONTAL,
-                                                                     3);
+//        final Group securityOptionsGroup = WidgetFactory.createGroup(pnlContents,
+//                                                                     SECURITY_OPTIONS_GROUP,
+//                                                                     GridData.FILL_HORIZONTAL,
+//                                                                     3);
         {
-            CLabel label3 = new CLabel(securityOptionsGroup, SWT.WRAP);
+            TabFolder tabFolder = new TabFolder(pnlContents, SWT.TOP | SWT.BORDER);
+            GridDataFactory.fillDefaults().grab(true,  true).span(2, 1).applyTo(tabFolder);
+            
+        	// Let's make a 3 tab tab folder
+    		Composite generalPropertiesPanel = WidgetFactory.createPanel(tabFolder);
+
+        	
+            CLabel label3 = new CLabel(generalPropertiesPanel, SWT.WRAP);
             label3.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property."); //$NON-NLS-1$
             final GridData gridData3 = new GridData(GridData.FILL_HORIZONTAL);
             gridData3.horizontalSpan = 1;
             label3.setLayoutData(gridData3);
 
-            this.noSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, NOSECURITY);
+            this.noSecurityButton = WidgetFactory.createRadioButton(generalPropertiesPanel, NOSECURITY);
             this.noSecurityButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -298,7 +317,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
                 }
             });
             this.noSecurityButton.setSelection(true);
-            this.basicSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, BASIC);
+            this.basicSecurityButton = WidgetFactory.createRadioButton(generalPropertiesPanel, BASIC);
             this.basicSecurityButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -306,7 +325,7 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
                     basicSecurityButtonSelected();
                 }
             });
-            this.wsSecurityButton = WidgetFactory.createRadioButton(securityOptionsGroup, WSSE);
+            this.wsSecurityButton = WidgetFactory.createRadioButton(generalPropertiesPanel, WSSE);
             this.wsSecurityButton.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -314,60 +333,79 @@ public abstract class WarDeploymentInfoPanel extends Composite implements Intern
                     wsSecurityButtonSelected();
                 }
             });
+            
+
+            this.generalSecurityTab = new TabItem(tabFolder, SWT.NONE);
+            this.generalSecurityTab.setControl(generalPropertiesPanel);
+            this.generalSecurityTab.setText("General");
+//            this.generalSecurityTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.TABLE, ModelType.PHYSICAL, Status.OK_STATUS));
 
             // HTTPBasic Options
-            final Group httpBasicFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
-                                                                         BASIC_OPTIONS_GROUP,
-                                                                         GridData.FILL_HORIZONTAL,
-                                                                         3,
-                                                                         3);
+            Composite httpPropertiesPanel = WidgetFactory.createPanel(tabFolder);
+            GridLayoutFactory.fillDefaults().numColumns(3).applyTo(httpPropertiesPanel);
+//            final Group httpBasicFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
+//                                                                         BASIC_OPTIONS_GROUP,
+//                                                                         GridData.FILL_HORIZONTAL,
+//                                                                         3,
+//                                                                         3);
 
             // security realm Label
             this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
-            WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_REALM);
+            WidgetFactory.createLabel(httpPropertiesPanel, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_REALM);
 
             // security realm
-            this.txfSecurityRealm = WidgetFactory.createTextField(httpBasicFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            this.txfSecurityRealm = WidgetFactory.createTextField(httpPropertiesPanel, GridData.FILL_HORIZONTAL, 2);
             text = getString("securityRealmTooltip"); //$NON-NLS-1$;
             this.txfSecurityRealm.setToolTipText(text);
             this.txfSecurityRealm.setEnabled(false);
 
             // security role Label
             this.SECURITY_ROLE = getString("securityRoleLabel"); //$NON-NLS-1$       
-            WidgetFactory.createLabel(httpBasicFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_ROLE);
+            WidgetFactory.createLabel(httpPropertiesPanel, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_ROLE);
 
             // security role
-            this.txfSecurityRole = WidgetFactory.createTextField(httpBasicFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            this.txfSecurityRole = WidgetFactory.createTextField(httpPropertiesPanel, GridData.FILL_HORIZONTAL, 2);
             text = getString("securityRoleTooltip"); //$NON-NLS-1$;
             this.txfSecurityRole.setToolTipText(text);
             this.txfSecurityRole.setEnabled(false);
+            
+            this.httpOptionsTab = new TabItem(tabFolder, SWT.NONE);
+            this.httpOptionsTab.setControl(httpPropertiesPanel);
+            this.httpOptionsTab.setText(BASIC_OPTIONS_GROUP);
 
             // WS-Security Options
-            final Group wsSecurityFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
-                                                                          WS_SECURITY_OPTIONS_GROUP,
-                                                                          GridData.FILL_HORIZONTAL,
-                                                                          3,
-                                                                          3);
+            Composite wsSecurityPanel = WidgetFactory.createPanel(tabFolder);
+            GridLayoutFactory.fillDefaults().numColumns(3).applyTo(wsSecurityPanel);
+//            final Group wsSecurityFieldsGroup = WidgetFactory.createGroup(securityOptionsGroup,
+//                                                                          WS_SECURITY_OPTIONS_GROUP,
+//                                                                          GridData.FILL_HORIZONTAL,
+//                                                                          3,
+//                                                                          3);
 
             // security username Label
             this.SECURITY_USERNAME = getString("securityUsernameLabel"); //$NON-NLS-1$       
-            WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_USERNAME);
+            WidgetFactory.createLabel(wsSecurityPanel, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_USERNAME);
 
             // security username
-            this.txfSecurityUsername = WidgetFactory.createTextField(wsSecurityFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            this.txfSecurityUsername = WidgetFactory.createTextField(wsSecurityPanel, GridData.FILL_HORIZONTAL, 2);
             text = getString("securityUsernameTooltip"); //$NON-NLS-1$;
             this.txfSecurityUsername.setToolTipText(text);
             this.txfSecurityUsername.setEnabled(false);
 
             // security password Label
             this.SECURITY_PASSWORD = getString("securityPasswordLabel"); //$NON-NLS-1$       
-            WidgetFactory.createLabel(wsSecurityFieldsGroup, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_PASSWORD);
+            WidgetFactory.createLabel(wsSecurityPanel, GridData.HORIZONTAL_ALIGN_BEGINNING, 1, SECURITY_PASSWORD);
 
             // security password
-            this.txfSecurityPassword = WidgetFactory.createTextField(wsSecurityFieldsGroup, GridData.FILL_HORIZONTAL, 2);
+            this.txfSecurityPassword = WidgetFactory.createTextField(wsSecurityPanel, GridData.FILL_HORIZONTAL, 2);
             text = getString("securityPasswordTooltip"); //$NON-NLS-1$;
             this.txfSecurityPassword.setToolTipText(text);
             this.txfSecurityPassword.setEnabled(false);
+            
+            
+            this.wsSecurityTab = new TabItem(tabFolder, SWT.NONE);
+            this.wsSecurityTab.setControl(wsSecurityPanel);
+            this.wsSecurityTab.setText(WS_SECURITY_OPTIONS_GROUP);
         }
 
         final Group generalOptionsGroup = WidgetFactory.createGroup(pnlContents,
