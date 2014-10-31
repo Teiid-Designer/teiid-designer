@@ -39,7 +39,9 @@ import org.teiid.client.plan.PlanNode;
 import org.teiid.client.util.ExceptionHolder;
 import org.teiid.core.util.ExternalizeUtil;
 import org.teiid.core.util.MultiArrayOutputStream;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.StatementImpl;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.netty.handler.codec.serialization.CompactObjectInputStream;
@@ -96,6 +98,9 @@ public class ResultsMessage implements Externalizable {
     
     private boolean delayDeserialization;
     byte[] resultBytes;
+
+    @Since(Version.TEIID_8_9)
+    private MultiArrayOutputStream serializationBuffer;
 
     private transient ITeiidServerVersion teiidVersion;
 
@@ -332,12 +337,10 @@ public class ResultsMessage implements Externalizable {
         }
         
         if (delayDeserialization && results != null) {
-            MultiArrayOutputStream baos = new MultiArrayOutputStream(1 << 13);
-            CompactObjectOutputStream oos = new CompactObjectOutputStream(baos);
-            batchSerializer.writeBatch(oos, dataTypes, results, clientSerializationVersion);
-            oos.close();
-            out.writeInt(baos.getCount());
-            baos.writeTo(out);
+            serialize(batchSerializer, true);
+            out.writeInt(serializationBuffer.getCount());
+            serializationBuffer.writeTo(out);
+            serializationBuffer = null;
         }
         
         if (this.warnings != null) {
@@ -359,6 +362,25 @@ public class ResultsMessage implements Externalizable {
         if (isUpdateResult) {
         	out.writeInt(updateCount);
         }
+    }
+
+    /**
+     * Serialize the result data
+     * @return the size of the data bytes
+     * @throws IOException
+     */
+    public int serialize(BatchSerializer batchSerializer, boolean keepSerialization) throws IOException {
+        if (serializationBuffer == null) {
+            serializationBuffer = new MultiArrayOutputStream(1 << 13);
+            CompactObjectOutputStream oos = new CompactObjectOutputStream(serializationBuffer);
+            batchSerializer.writeBatch(oos, dataTypes, results, clientSerializationVersion);
+            oos.close();
+        }
+        int result = serializationBuffer.getCount();
+        if (!keepSerialization) {
+            serializationBuffer = null;
+        }
+        return result;
     }
 
     /**

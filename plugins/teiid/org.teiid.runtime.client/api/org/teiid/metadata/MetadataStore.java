@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
-import org.teiid.designer.annotation.Since;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 /**
@@ -62,10 +60,6 @@ public class MetadataStore implements Serializable {
 	protected List<Schema> schemaList = new ArrayList<Schema>(); //used for a stable ordering
 	protected NavigableMap<String, Datatype> datatypes = new TreeMap<String, Datatype>(String.CASE_INSENSITIVE_ORDER);
 	protected List<Grant> grants;
-	@Since(Version.TEIID_8_7)
-	private List<String> startTriggers;
-	@Since(Version.TEIID_8_7)
-    private List<String> shutdownTriggers;
 
 	public NavigableMap<String, Schema> getSchemas() {
 		return schemas;

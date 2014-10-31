@@ -66,6 +66,13 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
         this.teiidVersion = teiidVersion;
     }
 
+    /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
     public String getDefaultValue() {
         return defaultValue;
     }

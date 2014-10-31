@@ -24,16 +24,18 @@ package org.teiid.query.xquery.saxon;
 
 import java.io.IOException;
 import java.util.Map;
-
-import net.sf.saxon.AugmentedSource;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.event.ContentHandlerProxy;
-import net.sf.saxon.event.PipelineConfiguration;
+import net.sf.saxon.event.FilterFactory;
 import net.sf.saxon.event.ProxyReceiver;
 import net.sf.saxon.event.Receiver;
+import net.sf.saxon.lib.AugmentedSource;
 import net.sf.saxon.om.Name11Checker;
+import net.sf.saxon.om.NamespaceBinding;
+import net.sf.saxon.om.NodeName;
 import net.sf.saxon.trans.XPathException;
-
+import net.sf.saxon.type.SchemaType;
+import net.sf.saxon.type.SimpleType;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.EntityResolver;
@@ -161,15 +163,16 @@ final class SaxonReader implements XMLReader {
 
 	@Override
 	public void parse(InputSource input) throws IOException, SAXException {
-		ContentHandlerProxy chp = new ContentHandlerProxy();
-		chp.setLexicalHandler(lexicalHandler);
-		chp.setUnderlyingContentHandler(handler);
-		this.source.addFilter(new ContentHandlerProxyReceiver(chp));
-		try {
-			config.buildDocument(source);
-		} catch (XPathException e) {
-			throw new SAXException(e);
-		}
+	    final ContentHandlerProxy chp = new ContentHandlerProxy();
+        chp.setLexicalHandler(lexicalHandler);
+        chp.setUnderlyingContentHandler(handler);
+        this.source.addFilter(new FilterFactory() {
+            
+            @Override
+            public ProxyReceiver makeFilter(Receiver arg0) {
+                return new ContentHandlerProxyReceiver(chp, arg0);
+            }
+        });
 	}
 
 	@Override
@@ -213,15 +216,18 @@ final class ContentHandlerProxyReceiver extends ProxyReceiver {
 	
 	private Receiver reciever;
 	
-	public ContentHandlerProxyReceiver(Receiver reciever) {
-		this.reciever = reciever; 
-	}
-
-	public void attribute(int nameCode, int typeCode, CharSequence value,
-			int locationId, int properties) throws XPathException {
-		reciever.attribute(nameCode, typeCode, value, locationId,
-				properties);
-	}
+	public ContentHandlerProxyReceiver(Receiver receiver, Receiver next) {
+        super(next);
+        this.reciever = receiver; 
+        this.reciever.setPipelineConfiguration(next.getPipelineConfiguration());
+    }
+    
+    @Override
+    public void attribute(NodeName nameCode, SimpleType typeCode,
+            CharSequence value, int locationId, int properties)
+            throws XPathException {
+        reciever.attribute(nameCode, typeCode, value, locationId, properties);
+    }
 
 	public void characters(CharSequence chars, int locationId,
 			int properties) throws XPathException {
@@ -247,18 +253,15 @@ final class ContentHandlerProxyReceiver extends ProxyReceiver {
 		reciever.endElement();
 	}
 
-	public PipelineConfiguration getPipelineConfiguration() {
-		return reciever.getPipelineConfiguration();
-	}
-
 	public String getSystemId() {
 		return reciever.getSystemId();
 	}
 
-	public void namespace(int namespaceCode, int properties)
-			throws XPathException {
-		reciever.namespace(namespaceCode, properties);
-	}
+	@Override
+    public void namespace(NamespaceBinding namespaceBinding, int properties)
+            throws XPathException {
+        reciever.namespace(namespaceBinding, properties);
+    }
 
 	public void open() throws XPathException {
 		super.open();
@@ -268,11 +271,6 @@ final class ContentHandlerProxyReceiver extends ProxyReceiver {
 	public void processingInstruction(String name, CharSequence data,
 			int locationId, int properties) throws XPathException {
 		reciever.processingInstruction(name, data, locationId, properties);
-	}
-
-	public void setPipelineConfiguration(PipelineConfiguration config) {
-		reciever.setPipelineConfiguration(config);
-		super.setPipelineConfiguration(config);
 	}
 
 	public void setSystemId(String systemId) {
@@ -294,9 +292,10 @@ final class ContentHandlerProxyReceiver extends ProxyReceiver {
 		reciever.startDocument(properties);
 	}
 
-	public void startElement(int nameCode, int typeCode, int locationId,
-			int properties) throws XPathException {
-		reciever.startElement(nameCode, typeCode, locationId, properties);
-	}
+	@Override
+    public void startElement(NodeName elemName, SchemaType typeCode,
+            int locationId, int properties) throws XPathException {
+        reciever.startElement(elemName, typeCode, locationId, properties);
+    }
 	
 }

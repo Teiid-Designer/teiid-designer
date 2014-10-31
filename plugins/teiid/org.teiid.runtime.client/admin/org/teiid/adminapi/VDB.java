@@ -139,4 +139,12 @@ public interface VDB extends AdminObject, DomainAware {
      */
 	@Since(Version.TEIID_8_0)
     public List<? extends Entry> getEntries();
+
+	/**
+     * Whether the model is visible
+     * @param modelName
+     * @return
+     */
+	@Since(Version.TEIID_8_9)
+    boolean isVisible(String modelName);
 }

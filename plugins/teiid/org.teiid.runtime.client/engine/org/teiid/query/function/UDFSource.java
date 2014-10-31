@@ -23,6 +23,7 @@
 package org.teiid.query.function;
 
 import java.util.Collection;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod;
 
 public class UDFSource implements FunctionMetadataSource {
@@ -35,10 +36,12 @@ public class UDFSource implements FunctionMetadataSource {
         this.classLoader = classLoader;
     }    
     
-    public Collection<FunctionMethod> getFunctionMethods() {
+    @Override
+    public Collection<FunctionMethod> getFunctionMethods(ITeiidServerVersion teiidVersion) {
         return this.functions;
     }
 
+    @Override
     public Class<?> getInvocationClass(String className) throws ClassNotFoundException {
         return Class.forName(className, true, classLoader==null?Thread.currentThread().getContextClassLoader():classLoader);
     }

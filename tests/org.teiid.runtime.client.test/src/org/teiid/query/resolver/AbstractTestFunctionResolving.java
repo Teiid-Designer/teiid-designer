@@ -23,9 +23,11 @@
 package org.teiid.query.resolver;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.resolver.util.ResolverVisitor;
@@ -33,6 +35,7 @@ import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.symbol.XMLSerialize;
+import org.teiid.query.unittest.RealMetadataFactory.DDLHolder;
 
 @SuppressWarnings( {"javadoc"})
 public abstract class AbstractTestFunctionResolving extends AbstractTest {
@@ -151,5 +154,44 @@ public abstract class AbstractTestFunctionResolving extends AbstractTest {
         String sql = "xmlserialize(DOCUMENT 1 as clob)"; //$NON-NLS-1$
         XMLSerialize xs = (XMLSerialize)getExpression(sql);
         assertEquals(DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass(), xs.getType());
+    }
+
+    @Test
+    public void testImportedPushdown() throws Exception {     
+        getMetadataFactory().example1Cached();
+        IQueryMetadataInterface tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func(x object) returns object;"), new DDLHolder("z", "create foreign function func(x object) returns object;"));
+
+        String sql = "func('a')";
+
+        Function func = (Function) getQueryParser().parseExpression(sql);
+        try {
+            ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+            visitor.resolveLanguageObject(func, tm);
+            fail("should be ambiguous");
+        } catch (QueryResolverException e) {
+            
+        }
+
+        tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func(x object) returns object options (\"teiid_rel:system-name\" 'f');"), new DDLHolder("z", "create foreign function func(x object) returns object options (\"teiid_rel:system-name\" 'f');"));
+
+        func = (Function) getQueryParser().parseExpression(sql);
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+        visitor.resolveLanguageObject(func, tm);
+        
+        tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func() returns object options (\"teiid_rel:system-name\" 'f');"), new DDLHolder("z", "create foreign function func() returns object options (\"teiid_rel:system-name\" 'f');"));
+
+        func = (Function) getQueryParser().parseExpression("func()");
+        visitor = new ResolverVisitor(getTeiidVersion());
+        visitor.resolveLanguageObject(func, tm);
+    }
+    
+    /**
+     * e1 is of type string, so 1 should be converted to string
+     * @throws Exception
+     */
+    @Test public void testNumericConversion() throws Exception {
+        String sql = "1.0/2"; //$NON-NLS-1$
+        Function f = (Function)getExpression(sql);
+        assertEquals(DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getTypeClass(), f.getType());
     }
 }
