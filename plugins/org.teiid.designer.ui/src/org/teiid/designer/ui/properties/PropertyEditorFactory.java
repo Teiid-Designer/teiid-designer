@@ -276,9 +276,22 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                         } else {
 
                             boolean useComboBox = false;
-                            Collection choiceOfValues = null;
+                            Collection choiceOfValues = new ArrayList();
+                            System.out.println(" Target = " + ModelerCore.getModelEditor().getFullPathToParent((EObject)object) + " Name = " + ModelerCore.getModelEditor().getName((EObject)object));
                             if (!lazyLoadChoices) {
-                                choiceOfValues = itemPropertyDescriptor.getChoiceOfValues(object);
+                            	Collection allChoiceOfValues = itemPropertyDescriptor.getChoiceOfValues(object);
+                                // Note that some cases return choices that include the target object. Check choices and remove an item if it IS the target
+                                for( Object nextChoice : allChoiceOfValues) {
+                                	if( nextChoice != object ) {
+                                		if( nextChoice != null && nextChoice instanceof EObject) {
+                                			System.out.println("     added choice = " + ModelerCore.getModelEditor().getFullPathToParent((EObject)nextChoice) + " Name = " + ModelerCore.getModelEditor().getName((EObject)nextChoice));
+                                		}
+                                		choiceOfValues.add(nextChoice);
+                                	}
+                                }
+                                
+                                
+                                System.out.println(" # Choice items = " + choiceOfValues.size());
                                 // property is single-valued.
                                 if (choiceOfValues.size() < COMBO_BOX_CHOICE_LIMIT) {
                                     useComboBox = true;
@@ -287,7 +300,7 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
                             // property is single-valued.
                             if (useComboBox) {
-                                result = createComboEditor(composite, itemPropertyDescriptor, propertyDescriptor, object);
+                                result = createComboEditor(composite, (ArrayList)choiceOfValues, propertyDescriptor, object);
                             } else {
                                 result = createListEditor(composite,
                                                           propertyDescriptor,
@@ -319,6 +332,18 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                                                  final Object object ) {
 
         return new ExtendedComboBoxCellEditor(composite, new ArrayList(itemPropertyDescriptor.getChoiceOfValues(object)),
+                                              propertyDescriptor.getLabelProvider(), true);
+    }
+    
+    // ======================================
+    // Cell Editor factory methods
+
+    private static CellEditor createComboEditor( final Composite composite,
+                                                 final ArrayList items,
+                                                 final IPropertyDescriptor propertyDescriptor,
+                                                 final Object object ) {
+
+        return new ExtendedComboBoxCellEditor(composite, items,
                                               propertyDescriptor.getLabelProvider(), true);
     }
 
