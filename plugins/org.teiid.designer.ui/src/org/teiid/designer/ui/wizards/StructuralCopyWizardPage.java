@@ -7,8 +7,15 @@
  */
 package org.teiid.designer.ui.wizards;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogPage;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
@@ -18,6 +25,9 @@ import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.widget.INodeDescendantsDeselectionHandler;
@@ -95,6 +105,28 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 		setControl(panel);
 	}
 	
+	
+	private ModelResource getSelectedResource() {
+        ModelResource selectedResource = null;
+        if ( selection != null && SelectionUtilities.isSingleSelection(selection) ) {
+            Object obj = SelectionUtilities.getSelectedObject(selection);
+            if ( obj instanceof IFile ) {
+                if ( ModelUtilities.isModelFile((IFile) obj) ) {
+                    try {
+                        selectedResource = ModelUtil.getModelResource((IFile) obj, false);
+                        if ( ! selectedResource.getPrimaryMetamodelDescriptor().equals(this.metamodelDescriptor) ) {
+                            selectedResource = null;
+                        }
+                    } catch (ModelWorkspaceException e) {
+                        // no need to log, just launch the dialog empty
+                    } 
+                }
+            }
+        }
+        
+        return selectedResource;
+	}
+	
 	/**
 	 * Return CheckboxTreeViewer, which contains tree structure representing features of 
 	 * the existing model, along with indication of which are selected for copy
@@ -159,5 +191,61 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
     public boolean doGenerateDefaultSQL() {
         return panel.doGenerateDefaultSQL();
     }
+    
+    private void warnIfUnsupportedModelInfo() {
+        ModelResource mr = getSelectedResource();
+        if( mr == null ) return;
+        
+    	// Get assistants
+    	Collection<ModelObjectExtensionAssistant> assistants = new ArrayList<ModelObjectExtensionAssistant>();
+    	
+        for (String namespacePrefix : ExtensionPlugin.getInstance().getRegistry().getAllNamespacePrefixes()) {
+        	ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(namespacePrefix);
+            if (assistant instanceof ModelObjectExtensionAssistant) {
+            	assistants.add((ModelObjectExtensionAssistant)assistant);
+            }
+        }
+    	
+        boolean doWarn = false;
+		try {
+			// Iterate through model's eObjects and bail 
+			Iterator<?> iter = mr.getEmfResource().getAllContents();
+			doWarn = false;
+			
+			while (iter.hasNext()) {
+			    final EObject eObj = (EObject) iter.next();
+			    
+			    for( ModelObjectExtensionAssistant nextAss : assistants ) {
+			        if( nextAss.supportsMyNamespace(eObj)) {
+			        	Properties props = nextAss.getOverriddenValues(eObj);
+			        	if( props != null && !props.isEmpty() ) doWarn = true;;
+			        	
+			        	if( doWarn ) break;
+			        }
+			    }
+			    if( doWarn ) {
+			    	break;
+			    }
+			}
+		} catch (ModelWorkspaceException e) {
+			UiConstants.Util.log(e);
+		} catch (Exception e) {
+			UiConstants.Util.log(e);
+		}
+
+        if( doWarn ) {
+			MessageDialog.openWarning(this.getShell(), UiConstants.Util.getString("StructuralCopyWizardPage.modelContainsExtensionPropertiesWarningTitle"),  //$NON-NLS-1$
+					UiConstants.Util.getString("StructuralCopyWizardPage.modelContainsExtensionPropertiesWarningMsg", mr.getItemName()));  //$NON-NLS-1$
+        }
+    }
+
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		
+		if( visible ) {
+			warnIfUnsupportedModelInfo();
+		}
+	}
 
 }//end StructuralCopyWizardPage
