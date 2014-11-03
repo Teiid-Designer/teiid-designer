@@ -776,7 +776,7 @@ public class TransformationValidator implements QueryValidator {
                     case WARNING:
                         statusVal = IStatus.WARNING;
                 }
-                IStatus status = new Status(statusVal, TransformationPlugin.PLUGIN_ID, item.getStatus().toString(), null);
+                IStatus status = new Status(statusVal, TransformationPlugin.PLUGIN_ID, item.toString(), null);
                 statusList.add(status);
             }
             return statusList;
