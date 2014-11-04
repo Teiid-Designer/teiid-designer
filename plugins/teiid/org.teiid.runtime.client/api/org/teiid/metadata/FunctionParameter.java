@@ -22,8 +22,8 @@
 
 package org.teiid.metadata;
 
-import java.io.Serializable;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.function.metadata.FunctionMetadataValidator;
 
 /**
@@ -34,63 +34,67 @@ import org.teiid.query.function.metadata.FunctionMetadataValidator;
  * parameter should be one of the standard type names defined in 
  * {@link org.teiid.core.types.DataTypeManagerService.DefaultDataTypes}.
  */
-public class FunctionParameter implements Serializable {
+public class FunctionParameter extends BaseColumn {
 	private static final long serialVersionUID = -4696050948395485266L;
 
 	public static final String OUTPUT_PARAMETER_NAME = "result"; //$NON-NLS-1$
-	
-    private String name;  
-    private String type;
-    private String description;
+
     private boolean isVarArg;
 
     /**
      * Construct a function parameter with no attributes.
+     * @param version teiid version
      */
-    public FunctionParameter() {
+    public FunctionParameter(ITeiidServerVersion version) {
+        super(version);
     }
 
     /**
      * Construct a function parameter with no description.
+     * @param version teiid version
      * @param name Name
      * @param type Type from standard set of types
      */
-    public FunctionParameter(String name, String type) {
-        this(name, type, null);
+    public FunctionParameter(ITeiidServerVersion version, String name, String type) {
+        this(version, name, type, null);
     }
 
     /**
-     * Construct a function parameter with all attributes.  
-     * @param name Name
-     * @param type Type from standard set of types
-     * @param description Description
-     */
-    public FunctionParameter(String name, DefaultDataTypes type, String description) { 
-        this(name, type.getId(), description, false);
-    }
-
-    /**
-     * Construct a function parameter with all attributes.  
+     * Construct a function parameter with all attributes.
+     * @param version teiid version  
      * @param name Name
      * @param type Type from standard set of types
      * @param description Description
      */
-    public FunctionParameter(String name, String type, String description) { 
-        this(name, type, description, false);
+    public FunctionParameter(ITeiidServerVersion version, String name, DefaultDataTypes type, String description) { 
+        this(version, name, type.getId(), description, false);
+    }
+
+    /**
+     * Construct a function parameter with all attributes.
+     * @param version teiid version  
+     * @param name Name
+     * @param type Type from standard set of types
+     * @param description Description
+     */
+    public FunctionParameter(ITeiidServerVersion version, String name, String type, String description) { 
+        this(version, name, type, description, false);
     }
 
     /**
      * Construct a function parameter with all attributes.  
+     * @param version teiid version
      * @param name Name
      * @param type Type from standard set of types
      * @param description Description
      * @param vararg
      */
-    public FunctionParameter(String name, DefaultDataTypes type, String description, boolean vararg) { 
-        this(name, type.getId(), description, vararg);
+    public FunctionParameter(ITeiidServerVersion version, String name, DefaultDataTypes type, String description, boolean vararg) { 
+        this(version, name, type.getId(), description, vararg);
     }
 
-    public FunctionParameter(String name, String type, String description, boolean vararg) { 
+    public FunctionParameter(ITeiidServerVersion version, String name, String type, String description, boolean vararg) {
+        this(version);
         setName(name);
         setType(type);
         setDescription(description);
@@ -98,27 +102,11 @@ public class FunctionParameter implements Serializable {
     }
     
     /**
-     * Return name of parameter.
-     * @return Name
-     */
-    public String getName() {
-        return this.name;
-    }
-    
-    /**
-     * Set name
-     * @param name Name
-     */
-    public void setName(String name) { 
-        this.name = name;
-    }
-    
-    /**
      * Get description of parameter
      * @return Description
      */
     public String getDescription() { 
-        return this.description;
+        return this.getAnnotation();
     }        
     
     /**
@@ -126,7 +114,7 @@ public class FunctionParameter implements Serializable {
      * @param description Description
      */
     public void setDescription(String description) { 
-        this.description = description;
+        this.setAnnotation(description);
     }
        
     /**
@@ -135,7 +123,7 @@ public class FunctionParameter implements Serializable {
      * @see org.teiid.core.types.DataTypeManager.DefaultDataTypes
      */
     public String getType() { 
-        return this.type;
+        return this.getRuntimeType();
     }        
     
     /**
@@ -144,13 +132,9 @@ public class FunctionParameter implements Serializable {
      * @see org.teiid.core.types.DataTypeManager.DefaultDataTypes
      */
     public void setType(String type) {
-        if(type == null) { 
-            this.type = null;
-        } else {
-            this.type = type.toLowerCase();
-        }
+        this.setRuntimeType(type);
     }
-       
+
     /**
      * Return hash code for this parameter.  The hash code is based only 
      * on the type of the parameter.  Changing the type of the parameter 
@@ -159,10 +143,10 @@ public class FunctionParameter implements Serializable {
      * @return Hash code
      */   
     public int hashCode() { 
-        if(this.type == null) { 
+        if(this.getRuntimeType() == null) { 
             return 0;
         }
-        return this.type.hashCode();
+        return this.getRuntimeType().hashCode();
     }
     
     /**
@@ -189,7 +173,7 @@ public class FunctionParameter implements Serializable {
      * @return String representation of function parameter
      */ 
     public String toString() { 
-        return type + (isVarArg?"... ":" ") + name; //$NON-NLS-1$ //$NON-NLS-2$
+        return getRuntimeType() + (isVarArg?"... ":" ") + getName(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
 	public void setVarArg(boolean isVarArg) {

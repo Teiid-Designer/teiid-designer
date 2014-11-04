@@ -376,7 +376,7 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
     }
 
     void beginLocalTxnIfNeeded() throws SQLException {
-        if (this.transactionXid != null || inLocalTxn || this.autoCommitFlag) {
+        if (this.transactionXid != null || inLocalTxn || this.autoCommitFlag || isDisableLocalTxn()) {
             return;
         }
         String prop = this.propInfo.getProperty(ExecutionProperties.DISABLE_LOCAL_TRANSACTIONS);
@@ -688,9 +688,13 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         if (this.autoCommitFlag) {
             return ResultsFuture.NULL_FUTURE;
         }
-        
+
         this.autoCommitFlag = true;
-    	
+
+        if (isDisableLocalTxn()) {
+            return ResultsFuture.NULL_FUTURE;
+        }
+
         try {
 	        if (commit) {
 	        	return dqp.commit();

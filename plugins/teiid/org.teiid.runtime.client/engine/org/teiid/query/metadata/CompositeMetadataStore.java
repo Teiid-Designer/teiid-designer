@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import org.teiid.adminapi.impl.DataPolicyMetadata;
 import org.teiid.core.util.StringUtil;
 import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.KeyRecord;
 import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Procedure;
@@ -182,7 +183,11 @@ public class CompositeMetadataStore extends MetadataStore {
 				addOids(proc.getResultSet().getColumns(), map);
 			}
 		}
-		addOids(schema.getFunctions().values(), map);
+		for (FunctionMethod func : schema.getFunctions().values()) {
+            addOid(func, map);
+            addOids(func.getInputParameters(), map);
+            addOid(func.getOutputParameter(), map);
+        }
 	}
 	
 	private void addOid(AbstractMetadataRecord record, TreeMap<String, RecordHolder> map) {

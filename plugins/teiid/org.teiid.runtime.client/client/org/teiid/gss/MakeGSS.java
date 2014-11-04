@@ -45,6 +45,9 @@ import org.ietf.jgss.GSSName;
 import org.teiid.client.security.ILogon;
 import org.teiid.client.security.LogonException;
 import org.teiid.client.security.LogonResult;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.net.CommunicationException;
 import org.teiid.net.TeiidURL;
 import org.teiid.runtime.client.Messages;
@@ -56,11 +59,20 @@ public class MakeGSS {
 
 	private static Logger logger = Logger.getLogger("org.teiid.jdbc"); //$NON-NLS-1$
 
+	private static boolean isTeiid89OrGreater(ITeiidServerVersion teiidVersion) {
+	    return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9.get());
+	}
+
 	public static LogonResult authenticate(ILogon logon, Properties props) 
 			throws LogonException, TeiidClientException, CommunicationException   {
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("GSS Authentication Request"); //$NON-NLS-1$
         }
+
+        TeiidServerVersion teiidVersion = null;
+        String versionString = props.getProperty(ITeiidServerVersion.TEIID_VERSION_PROPERTY);
+        if (versionString != null)
+            teiidVersion = new TeiidServerVersion(versionString);
 
         Object result = null;
 
@@ -68,15 +80,32 @@ public class MakeGSS {
         String jaasApplicationName = props.getProperty(TeiidURL.CONNECTION.JAAS_NAME);
         String nl = System.getProperty("line.separator");//$NON-NLS-1$
         if (jaasApplicationName == null) {
-        	errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.JAAS_NAME));
-        	errors.append(nl);
+            if (isTeiid89OrGreater(teiidVersion))
+                jaasApplicationName = "Teiid"; //$NON-NLS-1$
+            else {
+                errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.JAAS_NAME));
+                errors.append(nl);
+            }
         }
-        
+
         String kerberosPrincipalName =  props.getProperty(TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME);
         if (kerberosPrincipalName == null) {
-        	//errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME)); 
-        	//errors.append(nl);
-        	kerberosPrincipalName="demo/host.example.com@EXAMPLE.COM"; //$NON-NLS-1$
+            if (isTeiid89OrGreater(teiidVersion)) {
+                try {
+                    TeiidURL url = new TeiidURL(props.getProperty(TeiidURL.CONNECTION.SERVER_URL));
+                    kerberosPrincipalName="TEIID/" +  url.getHostInfo().get(0).getHostName(); //$NON-NLS-1$
+                } catch (Exception e) {
+                    // Ignore exception
+                }
+
+                if (kerberosPrincipalName == null) {
+                    errors.append(Messages.getString(Messages.GSS.client_prop_missing, TeiidURL.CONNECTION.KERBEROS_SERVICE_PRINCIPLE_NAME));
+                    errors.append(nl);
+                }
+            }
+            else {
+                kerberosPrincipalName="demo/host.example.com@EXAMPLE.COM"; //$NON-NLS-1$
+            }
         }
         
         String krb5 = System.getProperty("java.security.krb5.conf"); //$NON-NLS-1$

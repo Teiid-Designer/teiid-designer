@@ -70,7 +70,12 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
      */
     @Override
     public void setSymbols(List<? extends Expression> symbols) {
-        this.symbols = new ArrayList<Expression>(symbols);
+        this.symbols.clear();
+        if (symbols != null) {
+            for (Expression expression : symbols) {
+                this.addSymbol(expression);
+            }
+        }
     }    
 
     /**

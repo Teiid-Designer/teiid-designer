@@ -134,6 +134,7 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
     private boolean autoIncrement;
     private boolean notNull;
     private boolean updatable;
+    private boolean accessed;
     
     /**
      * Constructor for group form of metadata ID.
@@ -429,5 +430,12 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
 		}
 		return this.name;
 	}
-	
+
+	public void setAccessed(boolean accessed) {
+        this.accessed = accessed;
+    }
+
+    public boolean isAccessed() {
+        return accessed;
+    }
 }

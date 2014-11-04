@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><!-- 
+   Mirrored third-party and Eclipse dependencies for the JBoss Tools Integration Stack.
+--><target name="target-platform-extras-4.2.0.Beta1b" sequenceNumber="7">
+  <locations>
+
+    <!-- New version of JBT Locus for testing saxon 9.5.1 -->
+    <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+      <unit id="org.jboss.tools.locus.sf.saxon" version="9.5.1.6j-Final-v20141030-1746-B1"/>
+      <repository location="http://download.jboss.org/jbosstools/updates/nightly/locus/provisional/"/>
+    </location>
+
+  </locations>
+</target>
