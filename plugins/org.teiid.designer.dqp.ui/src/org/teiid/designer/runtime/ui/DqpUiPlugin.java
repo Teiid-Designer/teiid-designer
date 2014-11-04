@@ -7,14 +7,10 @@
  */
 package org.teiid.designer.runtime.ui;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -23,13 +19,9 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
-import org.teiid.designer.runtime.DqpPlugin;
-import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
-import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
-import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
@@ -143,63 +135,5 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         super.start(context);
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-    }
-
-    @Override
-    public void stop( BundleContext context ) throws Exception {
-        try {
-            
-        	UiUtil.runInSwtThread(new Runnable() {
-    			@Override
-    			public void run() {
-    				shutDownServer();
-    			}
-    		}, false);
-        	
-        } finally {
-            super.stop(context);
-        }
-    }
-    
-    private void shutDownServer() {
-        // the server manager shutdown can take a bit of time because of the preview jobs so listen for cancel
-        // button selection in order to cancel any remaining cleanup jobs
-        ProgressMonitorDialog dialog = new ProgressMonitorDialog(null) {
-            @Override
-            protected void cancelPressed() {
-                super.cancelPressed();
-                cancelCleanupJobsRequested();
-            }
-        };
-
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            @Override
-            public void run( IProgressMonitor monitor ) throws InvocationTargetException, InterruptedException {
-                try {
-                    ITeiidServerManager serverManager = DqpPlugin.getInstance().getServerManager();
-                    if (serverManager != null) {
-                        serverManager.shutdown(monitor);
-                    }
-
-                    // shutdown PreviewManager
-                    PreviewManager.getInstance().shutdown(monitor);
-                } catch (InterruptedException e) {
-                    monitor.setCanceled(true);
-                    throw e;
-                } catch (Exception e) {
-                    monitor.setCanceled(true);
-                    throw new InvocationTargetException(e);
-                }
-            }
-        };
-
-        // show dialog if DqpPlugin is available to shutdown the server manager
-        if (DqpPlugin.getInstance() != null) {
-            try {
-                dialog.run(true, true, runnable);
-            } catch (Exception e) {
-                DqpUiConstants.UTIL.log(e);
-            }
-        }
     }
 }
