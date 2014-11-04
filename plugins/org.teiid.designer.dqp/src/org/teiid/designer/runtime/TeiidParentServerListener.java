@@ -24,7 +24,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 public class TeiidParentServerListener implements IServerLifecycleListener, IServerListener {
     
     private static TeiidParentServerListener instance;
-    
+
     /**
      * Get the singleton instance of of this class
      * 
@@ -40,7 +40,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
     private TeiidServerAdapterFactory factory = new TeiidServerAdapterFactory();
     
     private boolean sleep;
-    
+
+    private Thread startTeiidServerThread = null;
+
     private TeiidParentServerListener() {}
 
     @Override
@@ -144,38 +146,84 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
             
             } else if (state == IServer.STATE_STARTED) {
 
-                ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-                if (teiidServer != null && teiidServer.isParentConnected()) {
-                    /*
-                     * Update all the settings since the server has been started and a
-                     * proper set of queries can take place.
-                     */
-                    ITeiidServer queryServer = factory.adaptServer(parentServer,
-                                                               ServerOptions.NO_CHECK_SERVER_REGISTRY);
-
-                    if (queryServer != null) {
-                        /*
-                         * Updates those settings that may have been successfully queried from the
-                         * contacted server.
-                         */
-                        teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
-                        teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
-                    }
-                    else {
-                        // If the query server is null then this is not a Teiid-enabled JBoss Server but
-                        // a TeiidServer was cached in the registry, presumably due to an adaption
-                        // being made while the server was not started. Since we now know better, we
-                        // can correct the registry.
-                        DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
-                    }
-
-                    teiidServer.reconnect();
-                
-                }
+                teiidServerStarted(parentServer);
             }
         } catch (Exception ex) {
             DqpPlugin.handleException(ex);
         }
+    }
+
+    /**
+     * @param parentServer
+     * @throws Exception
+     */
+    private void teiidServerStarted(final IServer parentServer) {
+
+        if (startTeiidServerThread != null && startTeiidServerThread.isAlive())
+            return;
+
+        Runnable serverStartRunnable = new Runnable() {
+
+            private boolean connected = false;
+
+            @Override
+            public void run() {
+                int attempts = 0;
+
+                // Loop will try to connect the teiid server 10 times after receiving a server
+                // start signal from the server framework. Given the thread sleeps for 5 seconds
+                // then the server has 60 seconds to finish starting if not already started.
+                while (!connected && attempts < 10) {
+                    try {
+                        attempts++;
+                        connected = tryConnecting(parentServer);
+                        Thread.sleep(6000);
+                    } catch (Exception ex) {
+                        DqpPlugin.handleException(ex);
+                        break;
+                    }
+                }
+            }
+
+            /**
+             * @param parentServer
+             * @throws Exception
+             */
+            private boolean tryConnecting(final IServer parentServer) throws Exception {
+                ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+
+                boolean parentConnected = teiidServer != null && teiidServer.isParentConnected();
+                if (!parentConnected)
+                    return false;
+
+                /*
+                 * Update all the settings since the server has been started and a
+                 * proper set of queries can take place.
+                 */
+                ITeiidServer queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+
+                if (queryServer != null) {
+                    /*
+                     * Updates those settings that may have been successfully queried from the
+                     * contacted server.
+                     */
+                    teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
+                    teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
+                } else {
+                    // If the query server is null then this is not a Teiid-enabled JBoss Server but
+                    // a TeiidServer was cached in the registry, presumably due to an adaption
+                    // being made while the server was not started. Since we now know better, we
+                    // can correct the registry.
+                    DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
+                }
+
+                teiidServer.reconnect();
+                return teiidServer.isConnected();
+            }
+        };
+
+        startTeiidServerThread = new Thread(serverStartRunnable, "Teiid Server Starting Thread"); //$NON-NLS-1$
+        startTeiidServerThread.start();
     }
 
     /**
