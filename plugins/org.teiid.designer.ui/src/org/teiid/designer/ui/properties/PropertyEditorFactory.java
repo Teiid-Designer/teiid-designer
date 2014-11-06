@@ -277,21 +277,15 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
                             boolean useComboBox = false;
                             Collection choiceOfValues = new ArrayList();
-                            System.out.println(" Target = " + ModelerCore.getModelEditor().getFullPathToParent((EObject)object) + " Name = " + ModelerCore.getModelEditor().getName((EObject)object));
                             if (!lazyLoadChoices) {
                             	Collection allChoiceOfValues = itemPropertyDescriptor.getChoiceOfValues(object);
                                 // Note that some cases return choices that include the target object. Check choices and remove an item if it IS the target
                                 for( Object nextChoice : allChoiceOfValues) {
                                 	if( nextChoice != object ) {
-                                		if( nextChoice != null && nextChoice instanceof EObject) {
-                                			System.out.println("     added choice = " + ModelerCore.getModelEditor().getFullPathToParent((EObject)nextChoice) + " Name = " + ModelerCore.getModelEditor().getName((EObject)nextChoice));
-                                		}
                                 		choiceOfValues.add(nextChoice);
                                 	}
                                 }
-                                
-                                
-                                System.out.println(" # Choice items = " + choiceOfValues.size());
+
                                 // property is single-valued.
                                 if (choiceOfValues.size() < COMBO_BOX_CHOICE_LIMIT) {
                                     useComboBox = true;
