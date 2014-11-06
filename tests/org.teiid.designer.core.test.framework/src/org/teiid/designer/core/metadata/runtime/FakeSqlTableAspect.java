@@ -124,4 +124,9 @@ public class FakeSqlTableAspect implements SqlTableAspect {
         this.supportsUpdate = supportsUpdate;
     }
 
+	@Override
+	public boolean isGlobalTempTable(EObject eObject) {
+		return false;
+	}
+
 }

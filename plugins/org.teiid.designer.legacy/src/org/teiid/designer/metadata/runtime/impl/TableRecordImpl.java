@@ -35,6 +35,7 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     private boolean isSystem;
     private boolean isMaterialized;
     private boolean supportsUpdate;
+	private boolean isTempTable;
 
     // ==================================================================================
     //                        C O N S T R U C T O R S
@@ -115,6 +116,14 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     @Override
 	public boolean isMaterialized() {
         return isMaterialized;
+    }
+    
+    /**
+     * @see org.teiid.designer.metadata.runtime.TableRecord#isTempTable()
+     */
+    @Override
+    public boolean isTempTable() {
+    	return isTempTable;
     }
 
     /**
@@ -212,6 +221,15 @@ public class TableRecordImpl extends ColumnSetRecordImpl implements TableRecord 
     public void setMaterialized(boolean isMaterialized) {
         this.isMaterialized = isMaterialized;
     }
+    
+    /**
+     * @param isTempTable The isTempTable to set.
+     * @since 4.2
+     */
+    public void setTempTable(boolean isTempTable) {
+        this.isTempTable = isTempTable;
+    }
+
 
     /**
      * @param b

@@ -51,7 +51,14 @@ public interface SqlTableAspect extends SqlColumnSetAspect {
      * Check if table represents a materialized view
      * @return true if the table is materialized view
      */
-    boolean isMaterialized(EObject eObject);    
+    boolean isMaterialized(EObject eObject);   
+    
+    /**
+     * Check if table represents a global temporary table
+     * @return true if the table is temporary table
+     */
+    boolean isGlobalTempTable(EObject eObject);    
+
 
     /**
      * Return the table type of this table

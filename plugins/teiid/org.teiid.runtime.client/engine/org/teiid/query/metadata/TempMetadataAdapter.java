@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
@@ -801,6 +802,11 @@ public class TempMetadataAdapter extends BasicQueryMetadataWrapper {
         		return true;
         	}
         }
+        
+        if( actualMetadata.isTemporaryTable(groupID) ) {
+        	return true;
+        }
+        
         return false;
     }
     
