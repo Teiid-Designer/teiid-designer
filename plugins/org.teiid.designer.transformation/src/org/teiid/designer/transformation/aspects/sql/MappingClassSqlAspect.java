@@ -273,4 +273,9 @@ public class MappingClassSqlAspect extends MappingClassObjectSqlAspect implement
         // do nothis mapping class is never updatable
     }
 
+	@Override
+	public boolean isGlobalTempTable(EObject eObject) {
+		return false;
+	}
+
 }

@@ -17,6 +17,22 @@ import java.util.List;
  * @since 8.0
  */
 public interface TableRecord extends MetadataRecord  {
+	
+	public enum Type {
+		Table,
+		View,
+		Document,
+		XmlMappingClass,
+		XmlStagingTable,
+		MaterializedTable,
+		/** Temporary from a Teiid Perspective - will not have a parent set */
+		TemporaryTable {
+			@Override
+			public String toString() {
+				return "TEMPORARY TABLE"; //$NON-NLS-1$
+            }
+        }
+	}
     
     /**
      * Constants for perperties stored on a TableRecord 
@@ -37,7 +53,7 @@ public interface TableRecord extends MetadataRecord  {
         String TEMPORARY_GROUPS_FOR_DOCUMENT  = "tempGroupsForDocument";  //$NON-NLS-1$
         String SCHEMAS_FOR_DOCUMENT  = "schemasForDocument";  //$NON-NLS-1$
         
-    }    
+    }
     
     /**
      * Check if UPDATE operations are supported on the table
@@ -68,6 +84,12 @@ public interface TableRecord extends MetadataRecord  {
      * @return true if the table is materialized
      */
     boolean isMaterialized();
+    
+    /**
+     * Check if table a temporary table
+     * @return true if the table is a temporary table
+     */
+    boolean isTempTable();
 
     /**
      * Return the table type of this table

@@ -293,4 +293,9 @@ public class XmlDocumentSqlAspect extends AbstractXmlDocumentEntitySqlAspect imp
         // documents are never updatable, this wont be set
     }
 
+	@Override
+	public boolean isGlobalTempTable(EObject eObject) {
+		return false;
+	}
+
 }
