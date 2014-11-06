@@ -36,6 +36,7 @@ public class TableRecordImpl extends org.teiid.designer.metadata.runtime.impl.Ta
 	private boolean isMaterializedSet;
 	private boolean isSystemSet;
 	private boolean supportsUpdateSet;
+	private boolean isTempTableSet;
 
     // ==================================================================================
     //                        C O N S T R U C T O R S
@@ -147,6 +148,20 @@ public class TableRecordImpl extends org.teiid.designer.metadata.runtime.impl.Ta
 		}
         return super.isMaterialized();
     }
+    
+    /**
+     * @see org.teiid.designer.metadata.runtime.TableRecord#isTempTable()
+     * @since 4.2
+     */
+    @Override
+    public boolean isTempTable() {
+		if(super.eObject != null && !isTempTableSet) {
+			boolean isGTT = getTableAspect().isGlobalTempTable((EObject)this.eObject);
+			super.setTempTable(isGTT);
+			
+		}
+        return super.isTempTable();
+    }
 
     /**
      * @see org.teiid.designer.metadata.runtime.TableRecord#isSystem()
@@ -203,7 +218,7 @@ public class TableRecordImpl extends org.teiid.designer.metadata.runtime.impl.Ta
     @Override
     public void setCardinality(int i) {
         super.setCardinality(i);
-		accessPatternIDsSet = true;
+		cardinalitySet = true;
     }
 
     /**
@@ -252,6 +267,16 @@ public class TableRecordImpl extends org.teiid.designer.metadata.runtime.impl.Ta
         this.isMaterializedSet = true;
     }
 
+    /**
+     * @param isTempTable The isTempTable to set.
+     * @since 4.2
+     */
+    public void setTempTable(boolean isTempTable) {
+        super.setTempTable(isTempTable);
+        this.isTempTableSet = true;
+    }
+
+    
     /**
      * @param b
      */

@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
@@ -553,6 +554,11 @@ public class RecordFactory {
             table.setMaterializedTableID(tokens.get(tokenIndex++));
             // The next token are the UUID for the materialized stage table ID
             table.setMaterializedStageTableID(tokens.get(tokenIndex++));
+        }
+        
+        // Initializes the temp table value
+        if( table.getTableType() == TableRecord.Type.TemporaryTable.ordinal() ) {
+        	table.setTempTable(true);
         }
 
 		// The next tokens are footer values

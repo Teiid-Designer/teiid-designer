@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -73,6 +74,7 @@ import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.util.ModelVisitor;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
+import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.metadata.runtime.TransformationRecord;
 import org.teiid.designer.metadata.runtime.impl.RecordFactory;
 import org.teiid.designer.metamodels.core.Annotation;
@@ -909,4 +911,19 @@ public class ModelerMetadata extends TransformationMetadata {
         }
         return result;
     }
+    
+    @Override
+    public boolean isTemporaryTable(Object groupID) throws Exception {
+    	if( groupID instanceof TableRecord ) {
+    		return ((TableRecord)groupID).isTempTable();
+    	}
+        return false;
+    }
+
+	@Override
+	public String getExtensionProperty(Object metadataID, String key,
+			boolean checkUnqualified) {
+		Properties props = getExtensionProperties( metadataID );
+		return props.getProperty(key);
+	}
 }

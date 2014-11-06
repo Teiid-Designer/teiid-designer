@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -25,7 +27,6 @@ import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureAspect;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.extension.ExtensionPlugin;
-import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -36,8 +37,6 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.View;
-import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
-import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 
 
@@ -142,6 +141,36 @@ public class TableAspect extends RelationalEntityAspect implements SqlTableAspec
         CoreArgCheck.isInstanceOf(Table.class, eObject); 
         Table table = (Table) eObject;       
         return table.isMaterialized();
+    }   
+    
+    /** 
+     * @see org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect#isMaterialized(org.eclipse.emf.ecore.EObject)
+     * @since 4.2
+     */
+    @Override
+	public boolean isGlobalTempTable(EObject eObject) {
+        CoreArgCheck.isInstanceOf(Table.class, eObject); 
+        // Find extension property, if it doesnt exist, it's "false"
+        // else check the value and return proper boolean
+        Properties props = new Properties();
+        
+        try {
+			props = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator().getPropertyValues(eObject);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        if( props == null || props.isEmpty() ) return false;
+        
+        for( Object key : props.keySet() ) {
+        	String keyStr = (String)key;
+        	if( keyStr.equalsIgnoreCase("global-temp-table")) {
+        		String value = props.getProperty(keyStr);
+        		return Boolean.getBoolean(value);
+        	}
+        }
+        return false;
     }   
 
     /* (non-Javadoc)

@@ -244,4 +244,9 @@ public class InputSetSqlAspect extends AbstractTransformationSqlAspect implement
         return null;
     }
 
+	@Override
+	public boolean isGlobalTempTable(EObject eObject) {
+		return false;
+	}
+
 }
