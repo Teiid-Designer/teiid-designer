@@ -493,26 +493,15 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         if (isDetailedMapping()) {
             resetTransformationActions();
 
-            final IContributionItem groupMarker = new Separator(T_MARKER);
-
-            // check to see if menu is edit menu or just a context menu
-            if ((theMenuMgr.getId() != null) && theMenuMgr.getId().equals(ModelerActionBarIdManager.getEditMenuId())) {
+            // check to see if menu is the TempMenuID menu or just a context menu
+            if ((theMenuMgr.getId() != null) && theMenuMgr.getId().equals("TempMenuID")) {
                 setEditMenu(theMenuMgr); // need this in dispose()
 
-                // edit menu contributions should only happen one time (contributeToMenu(IMenuManager)).
-                // call createActionContributionItem so that the contributions visibility can be controlled
-                // by the pageActivate/pageDeactivate methods.
-                theMenuMgr.appendToGroup(ModelerActionBarIdManager.getMenuAdditionsMarkerId(), groupMarker);
-                addContributionItem(groupMarker);
-
-                theMenuMgr.appendToGroup(T_MARKER, createActionContributionItem(this.addSourcesAction));
-                theMenuMgr.appendToGroup(T_MARKER, createActionContributionItem(this.addUnionSourcesAction));
-                theMenuMgr.appendToGroup(T_MARKER, createActionContributionItem(this.clearSourcesAction));
+                theMenuMgr.add(this.addSourcesAction);
+                theMenuMgr.add(this.addUnionSourcesAction);
             } else {
-                theMenuMgr.add(groupMarker);
-                if (this.addSourcesAction.isEnabled()) theMenuMgr.appendToGroup(T_MARKER, this.addSourcesAction);
-                if (this.addUnionSourcesAction.isEnabled()) theMenuMgr.appendToGroup(T_MARKER, this.addUnionSourcesAction);
-                if (this.clearSourcesAction.isEnabled()) theMenuMgr.appendToGroup(T_MARKER, this.clearSourcesAction);
+                if (this.addSourcesAction.isEnabled()) theMenuMgr.add(this.addSourcesAction);
+                if (this.addUnionSourcesAction.isEnabled()) theMenuMgr.add(this.addUnionSourcesAction);
             }
         }
     }

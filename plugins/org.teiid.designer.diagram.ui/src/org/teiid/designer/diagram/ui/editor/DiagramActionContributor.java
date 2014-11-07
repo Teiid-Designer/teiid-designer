@@ -579,8 +579,11 @@ public final class DiagramActionContributor extends AbstractModelEditorPageActio
         IContributionItem[] theItems = menu.getItems();
         if (theItems != null && theItems.length > 0) {
             for (int i = 0; i < theItems.length; i++) {
-                if (theItems[i] instanceof IAction)
+                if (theItems[i] instanceof IAction) {
                     theActions.add((IAction) theItems[i]);
+                } else if( theItems[i] instanceof ActionContributionItem ) {
+                	theActions.add(((ActionContributionItem) theItems[i]).getAction());
+                }
             }
         }
 

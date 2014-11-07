@@ -351,32 +351,16 @@ public class CustomDiagramActionAdapter
      */
     @Override
     public void contributeExportedActions(IMenuManager theMenuMgr) {
-        IContributionItem groupMarker = new Separator(D_MARKER);
         
-        // check to see if menu is edit menu or just a context menu
-        if ((theMenuMgr.getId() != null) && theMenuMgr.getId().equals(ModelerActionBarIdManager.getEditMenuId())) {
-            setEditMenu(theMenuMgr); // need this in dispose()
+        // check to see if menu is the TempMenuID menu or just a context menu
+        if ((theMenuMgr.getId() != null) && theMenuMgr.getId().equals("TempMenuID")) {
+            theMenuMgr.add(this.addAction);
+            theMenuMgr.add(this.clearAction);
 
-            // edit menu contributions should only happen one time (contributeToMenu(IMenuManager)). 
-            // call createActionContributionItem so that the contributions visibility can be controlled
-            // by the pageActivate/pageDeactivate methods.
-            theMenuMgr.appendToGroup(ModelerActionBarIdManager.getMenuAdditionsMarkerId(), groupMarker);
-            addContributionItem(groupMarker);
-            
-            theMenuMgr.appendToGroup(D_MARKER, createActionContributionItem(this.addToNewCustomDiagramAction));
-            theMenuMgr.appendToGroup(D_MARKER, createActionContributionItem(this.addAction));
-            theMenuMgr.appendToGroup(D_MARKER, createActionContributionItem(this.clearAction));
-            
-            Separator sep = new Separator(D_MARKER_END);
-            addContributionItem(sep);
-            theMenuMgr.appendToGroup(D_MARKER, sep);
         } else {
             // assume it must be a context menu. just add to end.
-            theMenuMgr.add(groupMarker);
-            theMenuMgr.appendToGroup(D_MARKER, this.addToNewCustomDiagramAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.addAction);
-            theMenuMgr.appendToGroup(D_MARKER, this.clearAction);
-            theMenuMgr.appendToGroup(D_MARKER, new Separator(D_MARKER_END));
+            theMenuMgr.add(this.addAction);
+            theMenuMgr.add(this.clearAction);
         }
     }
     
