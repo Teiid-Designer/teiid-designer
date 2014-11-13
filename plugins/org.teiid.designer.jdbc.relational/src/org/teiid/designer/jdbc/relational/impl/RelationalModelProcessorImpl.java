@@ -66,6 +66,7 @@ import org.teiid.designer.jdbc.JdbcImportSettings;
 import org.teiid.designer.jdbc.JdbcPlugin;
 import org.teiid.designer.jdbc.JdbcSource;
 import org.teiid.designer.jdbc.SourceNames;
+import org.teiid.designer.jdbc.data.JdbcConversionException;
 import org.teiid.designer.jdbc.data.Request;
 import org.teiid.designer.jdbc.data.Results;
 import org.teiid.designer.jdbc.metadata.JdbcDatabase;
@@ -2196,6 +2197,11 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 return;
             }
 
+            // TEIIDDES-2213
+            // Doing an extra check for multiple return parameters 
+            //   - Postgres bug for 9.3 driver, with certain procedures
+            boolean procHasMultipleReturns = hasMultipleReturnParameters(results, rows, numRows);
+            
             ProcedureResult procResult = null;
             int numParamsWithNullName = 0;
 
@@ -2215,7 +2221,12 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 
 
                 final boolean resultSetColumn = isProcedureResultColumn(columnType, type, typeName);
-                if (!resultSetColumn) {
+                
+                // TEIIDDES-2213
+                //   - Additional check for Postgres bug.  Certain procedures have multiple return params.
+                final boolean returnParamWithMultipleReturns = isProcedureReturnParameter(columnType) && procHasMultipleReturns;
+                
+                if (!resultSetColumn && !returnParamWithMultipleReturns) {
                     // It's just a normal procedure parameter ...
                     final ProcedureParameter param = this.factory.createProcedureParameter();
                     // Add the parameter to the procedure
@@ -2383,6 +2394,41 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                                                final short type,
                                                final String typeName ) {
         return (columnType == DatabaseMetaData.procedureColumnResult);
+    }
+    
+    /**
+     * Determine if the supplied column type is a procedure return parameter
+     * @param columnType the column jdbc type
+     * @return 'true' if its a return param, 'false' if not
+     */
+    private boolean isProcedureReturnParameter( final short columnType ) {
+    	return (columnType == DatabaseMetaData.procedureColumnReturn);
+    }
+
+    /**
+     * Determine if the results contain multiple return parameters.  This should not happen, but
+     * we are handling a postgres bug for certain procedures.
+     * @param results the results
+     * @param rows the result rows
+     * @param numRows the number of rows
+     * @return 'true' if multiple return parameters exist, 'false' if not
+     */
+    private boolean hasMultipleReturnParameters(Results results, Object[] rows, int numRows) {
+    	int returnCount = 0;
+    	if(rows!=null) {
+            for (int i = 0; i < numRows; ++i) {
+                final Object row = rows[i];
+                try {
+					final short columnType = results.getShort(row, 4); // COLUMN_TYPE
+					if ( isProcedureReturnParameter(columnType) ) {
+						returnCount++;
+					}
+				} catch (JdbcConversionException ex) {
+				}
+            }
+        }
+    	
+    	return returnCount>1;
     }
 
     /**
