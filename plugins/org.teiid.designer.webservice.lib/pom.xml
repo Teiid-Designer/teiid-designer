@@ -27,7 +27,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <version.saxonhe>9.2.1.5</version.saxonhe>
         <version.scannotation>1.0.3</version.scannotation>
         <version.sjsxp>1.0.1</version.sjsxp>
-        <version.wss4j>1.0.0</version.wss4j>
+        <version.wss4j>1.6.17</version.wss4j>
     </properties>
     <build>
         <plugins>
@@ -167,7 +167,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>xfire</groupId>
+                                    <groupId>org.apache.ws.security</groupId>
                                     <artifactId>wss4j</artifactId>
                                     <version>${version.wss4j}</version>
                                 </artifactItem>              
