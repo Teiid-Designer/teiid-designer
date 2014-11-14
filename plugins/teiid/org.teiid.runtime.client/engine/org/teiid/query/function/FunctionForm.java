@@ -64,7 +64,7 @@ public class FunctionForm implements Serializable, Comparable<FunctionForm>, IFu
         // Get function stuff
         this.name = method.getName().toUpperCase();
         this.description = method.getDescription();
-        this.category = method.getCategory().toUpperCase();
+        this.category = method.getCategory();
         
         // Get input parameter stuff
         List<FunctionParameter> inputParams = method.getInputParameters();
