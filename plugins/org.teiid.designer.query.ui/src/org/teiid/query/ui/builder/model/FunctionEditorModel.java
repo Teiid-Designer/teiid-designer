@@ -246,10 +246,12 @@ public class FunctionEditorModel extends AbstractLanguageObjectEditorModel {
 
     public void setCategory( String theCategory ) {
         // only set category if not null and valid
-        if ((theCategory != null) && Arrays.asList(categories).contains(theCategory)) {
+        if ((theCategory != null)) {
             boolean changeCategory = true;
 
-            if ((category != null) && category.equals(theCategory)) {
+            if (category == null ) {
+            	changeCategory = true;
+            } else if((category.toUpperCase() != null) && category.equals(theCategory.toUpperCase()) ) {
                 changeCategory = false;
             }
 
