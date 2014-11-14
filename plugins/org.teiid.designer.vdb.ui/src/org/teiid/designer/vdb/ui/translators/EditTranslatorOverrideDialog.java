@@ -407,6 +407,11 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
         if (CoreStringUtil.isEmpty(this.type)) {
             return Util.getString(PREFIX + "translatorOverrideTypeMissing", this.name); //$NON-NLS-1$
         }
+        
+        // make sure translator override name doesn't match the translator name it's overriding
+        if (this.name.equalsIgnoreCase(this.type)) {
+                return Util.getString(PREFIX + "translatorOverrideNameMatchesTranslatorType"); //$NON-NLS-1$
+        }
 
         return null;
     }
