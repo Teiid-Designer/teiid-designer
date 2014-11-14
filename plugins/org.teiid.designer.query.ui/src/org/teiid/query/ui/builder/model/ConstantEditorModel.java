@@ -478,7 +478,6 @@ public class ConstantEditorModel extends AbstractLanguageObjectEditorModel imple
         }
 
         if (changed) {
-            setDefaults();
             fireModelChanged(TYPE);
         }
     }
