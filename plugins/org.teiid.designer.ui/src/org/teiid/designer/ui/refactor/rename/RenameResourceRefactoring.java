@@ -66,6 +66,8 @@ public class RenameResourceRefactoring extends AbstractResourcesRefactoring {
 
             // Calculate any text changes made as a result of the relative path pair
             TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(relatedFile, Collections.singleton(relativePathPair));
+            
+            RefactorResourcesUtils.calculateModelImportsElementLChanges(relatedFile, relativePathPair, textFileChange);
 
             if (ModelUtil.isModelFile(getResource())) {
                 // It is reasonable that only if a model file is being renamed will it impact the SQL of related files.

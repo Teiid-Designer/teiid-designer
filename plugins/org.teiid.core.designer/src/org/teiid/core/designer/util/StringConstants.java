@@ -40,6 +40,11 @@ public interface StringConstants {
     String NEW_LINE = "\n"; //$NON-NLS-1$
     
     /**
+     * The String "\r"
+     */
+    String CARRIAGE_RETURN = "\r"; //$NON-NLS-1$
+    
+    /**
      * A Comma.
      */
     String COMMA = ","; //$NON-NLS-1$

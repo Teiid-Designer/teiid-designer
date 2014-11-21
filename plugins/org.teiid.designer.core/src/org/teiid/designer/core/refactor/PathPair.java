@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.core.refactor;
 
+import org.eclipse.core.runtime.Path;
+
 /**
  * Class for holding a pair of related paths, usually a path to be replaced
  * and its replacement.
@@ -22,7 +24,7 @@ public class PathPair {
      * @param sourcePath
      * @param targetPath
      */
-    public PathPair(String sourcePath, String targetPath) {
+    public PathPair( String sourcePath,  String targetPath) {
         this.sourcePath = sourcePath;
         this.targetPath = targetPath;
     }
@@ -39,6 +41,27 @@ public class PathPair {
      */
     public String getTargetPath() {
         return targetPath;
+    }
+    
+    /**
+     * @return the source resource name with no extension
+     */
+    public String getSourceNameNoExtension() {
+    	if( this.sourcePath != null ) {
+    		return new Path(sourcePath).removeFileExtension().lastSegment();
+    	}
+    	return null;
+    }
+    
+    
+    /**
+     * @return the target resource name with no extension
+     */
+    public String getTargetNameNoExtension() {
+    	if( this.targetPath != null ) {
+    		return new Path(targetPath).removeFileExtension().lastSegment();
+    	}
+    	return null;
     }
 
     @Override
