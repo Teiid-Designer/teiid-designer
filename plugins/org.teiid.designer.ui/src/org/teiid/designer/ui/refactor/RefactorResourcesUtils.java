@@ -18,8 +18,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.LocationKind;
@@ -33,12 +35,14 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.IEditorPart;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
@@ -64,6 +68,8 @@ import org.w3c.dom.NodeList;
 public class RefactorResourcesUtils {
 
     private static final String PARENT_DIRECTORY = ".."; //$NON-NLS-1$
+    private static final String MODEL_IMPORTS_ELEMENT_START = "<modelImports "; //$NON-NLS-1$
+    private static final String SQL_STATEMENT_START = "Sql="; //$NON-NLS-1$
     
     /**
      * Options for types of pair to be included in calculations
@@ -410,24 +416,32 @@ public class RefactorResourcesUtils {
         try {
             reader = new BufferedReader(new FileReader(nativeFile));
 
-            while ((line = reader.readLine()) != null) {
-                for (PathPair pathPair : pathPairs) {
-                    if (pathPair.getSourcePath().equals(pathPair.getTargetPath())) {
-                        /* Absolutely nothing to do since the replacement is the same as the change */
-                        continue;
-                    }
+			while ((line = reader.readLine()) != null) {
+				if (!line.contains(MODEL_IMPORTS_ELEMENT_START)) {
+					for (PathPair pathPair : pathPairs) {
+						if (pathPair.getSourcePath().equals(pathPair.getTargetPath())) {
+							/*
+							 * Absolutely nothing to do since the replacement is
+							 * the same as the change
+							 */
+							continue;
+						}
 
-                    int lineOffset = line.indexOf(pathPair.getSourcePath());
-                    if (lineOffset < 0) continue;
+						int lineOffset = line.indexOf(pathPair.getSourcePath());
+						if (lineOffset < 0) continue;
 
-                    int offset = docOffset + lineOffset;
-                    ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath());
-                    fileChangeRootEdit.addChild(edit);
+						int offset = docOffset + lineOffset;
+						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath());
+						fileChangeRootEdit.addChild(edit);
+					}
+				}
+
+				// Add the line length and a +1 represent the newline character
+				docOffset += line.length() + 1;
+                if( Platform.getOS().equalsIgnoreCase(Platform.WS_WIN32) ) {
+                	docOffset++;
                 }
-
-                // Add the line length and a +1 represent the newline character
-                docOffset += line.length() + 1;
-            }
+			}
         } finally {
             if (reader != null)
                 reader.close();
@@ -547,7 +561,7 @@ public class RefactorResourcesUtils {
             reader = new BufferedReader(new FileReader(nativeFile));
 
             while ((line = reader.readLine()) != null) {
-                if (line.contains("Sql=")) { //$NON-NLS-1$
+                if (line.contains(SQL_STATEMENT_START)) { //$NON-NLS-1$
                     for (char prefixChar : prefixChars) {
                         String toReplace = prefixChar + sourceName + '.';
 
@@ -564,6 +578,79 @@ public class RefactorResourcesUtils {
                 
                 // Add the line length and a +1 represent the newline character
                 docOffset += line.length() + 1;
+                if( Platform.getOS().equalsIgnoreCase(Platform.WS_WIN32) ) {
+                	docOffset++;
+                }
+            }
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
+        
+    }
+    
+
+    /**
+     * Calculate changes to user-generated sql
+     * 
+     * @param file
+     * @param pathPair
+     * @param textFileChange
+     * 
+     * @throws Exception 
+     */
+    public static void calculateModelImportsElementLChanges(IFile file, PathPair pathPair, TextFileChange textFileChange) throws Exception {
+        File nativeFile = ModelUtil.getLocation(file).makeAbsolute().toFile();
+        if (nativeFile == null || ! nativeFile.exists())
+            throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
+
+        TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
+        boolean isWindows = Platform.getOS().equals(Platform.WS_WIN32);
+
+        BufferedReader reader = null;
+        String line;
+        int docOffset = 0;
+        
+        try {
+            reader = new BufferedReader(new FileReader(nativeFile));
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(MODEL_IMPORTS_ELEMENT_START)) { //$NON-NLS-1$
+                	// Let's replace entire line
+                	StringBuilder sb = new StringBuilder(line);
+                	
+                	// Assuming it's amodel import, we need to 1) Check for path changes and create an edit
+                	// 2) if (1) is performed, the create a second edit to replace the model name
+					if (pathPair.getSourcePath().equals(pathPair.getTargetPath())) {
+						/*
+						 * Absolutely nothing to do since the replacement is
+						 * the same as the change
+						 */
+						// Add the line length and a +1 represent the newline character
+		                docOffset += line.length() + 1;
+						continue;
+					}
+					
+					int lineOffset = line.indexOf(pathPair.getSourcePath());
+					if (lineOffset > 0) {
+						int offset = docOffset + lineOffset;
+						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath());
+						fileChangeRootEdit.addChild(edit);
+					}
+					
+					lineOffset = line.indexOf(pathPair.getSourceNameNoExtension());
+					if (lineOffset > 0)  {
+						int offset = docOffset + lineOffset;
+						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourceNameNoExtension().length(), pathPair.getTargetNameNoExtension());
+						fileChangeRootEdit.addChild(edit);
+					}
+                }
+                
+                // Add the line length and a +1 represent the newline character
+                docOffset += line.length() + 1;
+                if( isWindows ) {
+                	docOffset++;
+                }
             }
         } finally {
             if (reader != null)
