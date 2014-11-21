@@ -177,7 +177,11 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
     }
     
     public boolean doGenerateDefaultSQL() {
-    	return generateDefaultSQLCheckBox.getSelection();
+    	// Note, for non-transformation use-case, the generateDefaultSQLCheckBox will be NULL
+    	if( generateDefaultSQLCheckBox != null ) {
+    		generateDefaultSQLCheckBox.getSelection();
+    	}
+    	return false;
     }
 
     /**
