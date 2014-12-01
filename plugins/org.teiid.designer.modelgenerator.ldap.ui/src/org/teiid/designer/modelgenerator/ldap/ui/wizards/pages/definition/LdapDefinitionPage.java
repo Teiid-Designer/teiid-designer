@@ -30,7 +30,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -45,6 +44,7 @@ import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
 import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -151,7 +151,8 @@ public class LdapDefinitionPage extends WizardPage
 
         // ================================================================================
         Group profileGroup = WidgetFactory.createGroup(pnl, getString("profileLabel_text"), SWT.NONE, 2); //$NON-NLS-1$
-        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(profileGroup);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 5).applyTo(profileGroup);
+        LdapPageUtils.setBackground(profileGroup, pnl);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(profileGroup);
 
         profileLabelProvider = new LabelProvider() {
@@ -167,7 +168,7 @@ public class LdapDefinitionPage extends WizardPage
                                                                  profileWorker.getProfiles(),
                                                                  profileLabelProvider,
                                                                  true);
-        this.connectionProfilesCombo.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
+        LdapPageUtils.blueForeground(this.connectionProfilesCombo);
         this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
 
             @Override
@@ -203,29 +204,30 @@ public class LdapDefinitionPage extends WizardPage
 
         // options group
         Group ldapURIGroup = WidgetFactory.createGroup(pnl, getString("ldapLabel_text"), SWT.FILL, 2); //$NON-NLS-1$
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(ldapURIGroup);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 5).applyTo(ldapURIGroup);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(ldapURIGroup);
+        LdapPageUtils.setBackground(ldapURIGroup, pnl);
 
         Label ldapURILabel = new Label(ldapURIGroup, SWT.NONE);
         ldapURILabel.setText(getString("ldapLabel_text")); //$NON-NLS-1$
+        LdapPageUtils.setBackground(ldapURILabel, pnl);
         GridDataFactory.fillDefaults().grab(false, false).applyTo(ldapURILabel);
 
         // LDAP URI used for information only. Extracted from the connection profile
         ldapURIText = new Text(ldapURIGroup, SWT.BORDER | SWT.SINGLE);
         ldapURIText.setToolTipText(getString("ldapURITextField_tooltip")); //$NON-NLS-1$
-        ldapURIText.setForeground(ldapURIGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-        ldapURIText.setBackground(ldapURIGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        LdapPageUtils.blueForeground(ldapURIText);
         ldapURIText.setEditable(false);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(ldapURIText);
 
         Label rootDNLabel = new Label(ldapURIGroup, SWT.NONE);
         rootDNLabel.setText(getString("rootDNLabel_text")); //$NON-NLS-1$
+        LdapPageUtils.setBackground(rootDNLabel, pnl);
         GridDataFactory.fillDefaults().grab(false, false).applyTo(rootDNLabel);
 
         rootDNText = new Text(ldapURIGroup, SWT.BORDER | SWT.SINGLE);
         rootDNText.setToolTipText(getString("rootDNTextField_tooltip")); //$NON-NLS-1$
-        rootDNText.setForeground(ldapURIGroup.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-        rootDNText.setBackground(ldapURIGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        LdapPageUtils.blueForeground(rootDNText);
         rootDNText.setEditable(false);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(rootDNText);
 

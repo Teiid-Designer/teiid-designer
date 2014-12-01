@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -34,6 +35,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
@@ -84,7 +86,10 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
 
         SOURCE_MODEL_INFO: {
             Group group = WidgetFactory.createGroup(parent, getString("sourceModelDefinition"), GridData.FILL_HORIZONTAL, 1, 3); //$NON-NLS-1$
+            GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 5).applyTo(group);
+            LdapPageUtils.setBackground(group, parent);
             Label locationLabel = new Label(group, SWT.NULL);
+            LdapPageUtils.setBackground(locationLabel, parent);
             locationLabel.setText(getString("location")); //$NON-NLS-1$
 
             this.sourceModelContainerText = new Text(group, SWT.BORDER | SWT.SINGLE);
@@ -109,6 +114,7 @@ public class SourceModelPanel implements IChangeListener, ModelGeneratorLdapUiCo
             Label fileLabel = new Label(group, SWT.NULL);
             fileLabel.setText(getString("name")); //$NON-NLS-1$
             fileLabel.setToolTipText(getString("sourceNameTooltip")); //$NON-NLS-1$
+            LdapPageUtils.setBackground(fileLabel, parent);
 
             this.sourceModelFileText = new Text(group, SWT.BORDER | SWT.SINGLE);
             gridData = new GridData(GridData.FILL_HORIZONTAL);

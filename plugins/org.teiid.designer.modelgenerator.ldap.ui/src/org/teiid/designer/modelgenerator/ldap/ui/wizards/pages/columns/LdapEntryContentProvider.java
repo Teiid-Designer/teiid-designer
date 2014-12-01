@@ -142,6 +142,7 @@ public class LdapEntryContentProvider extends AbstractLdapContentProvider {
                 return childAttributes.toArray();
 
             } catch (NamingException ex) {
+                getImportManager().notifyError(ex);
                 ModelGeneratorLdapUiConstants.UTIL.log(ex);
                 return EMPTY_ARRAY;
             }

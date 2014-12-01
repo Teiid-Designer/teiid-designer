@@ -31,9 +31,9 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -47,6 +47,7 @@ import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -82,7 +83,9 @@ public class LdapColumnsPage extends WizardPage
 
     private Text columnMaxValueText;
 
-    private boolean synchronising;
+    private Button validateButton;
+
+    private boolean dirty;
 
     /**
      * Constructs the page with the provided import manager
@@ -105,11 +108,12 @@ public class LdapColumnsPage extends WizardPage
         return ModelGeneratorLdapUiConstants.UTIL.getString(LdapColumnsPage.class.getSimpleName() + "_" + key, properties); //$NON-NLS-1$
     }
 
-    /**
-     * @return the synchronising
-     */
-    private boolean isSynchronising() {
-        return this.synchronising;
+    private boolean isDirty() {
+        return dirty;
+    }
+
+    private void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
     private void nodeSelected( final Object node ) {
@@ -179,9 +183,8 @@ public class LdapColumnsPage extends WizardPage
         if (control == null)
             return;
 
-        Display display = control.getDisplay();
-        control.setForeground(display.getSystemColor(SWT.COLOR_DARK_BLUE));
-        control.setBackground(display.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        LdapPageUtils.blueForeground(control);
+        LdapPageUtils.greyBackground(control);
         control.setEditable(false);
     }
 
@@ -247,20 +250,27 @@ public class LdapColumnsPage extends WizardPage
                 if (selectedItems.length == 0)
                     return;
 
-                for (TreeItem treeItem : selectedItems) {
-                    if(treeItem.getImage() == null)
-                        continue;
+                importManager.setSynchronising(true);
 
-                    if (treeItem.getData() instanceof ILdapAttributeNode) {
-                        ILdapAttributeNode attributeNode = (ILdapAttributeNode) treeItem.getData();
-                        Rectangle imageRec = treeItem.getImageBounds(0);
+                try {
+                    for (TreeItem treeItem : selectedItems) {
+                        if (treeItem.getImage() == null)
+                            continue;
 
-                        if (imageRec.contains(e.x, e.y)) {
-                            treeItemChecked(treeItem, ! importManager.attributeSelected(attributeNode));
+                        if (treeItem.getData() instanceof ILdapAttributeNode) {
+                            ILdapAttributeNode attributeNode = (ILdapAttributeNode)treeItem.getData();
+                            Rectangle imageRec = treeItem.getImageBounds(0);
+
+                            if (imageRec.contains(e.x, e.y)) {
+                                treeItemChecked(treeItem, !importManager.attributeSelected(attributeNode));
+                            }
                         }
-                    }
 
-                    nodeSelected(treeItem.getData());
+                        nodeSelected(treeItem.getData());
+                    }
+                } finally {
+                    // Turns off synchronising and calls state changed
+                    importManager.setSynchronising(false);
                 }
             }
         });
@@ -291,6 +301,7 @@ public class LdapColumnsPage extends WizardPage
         ViewForm detailsView = new ViewForm(this.splitter, SWT.BORDER);
         Group detailsGroup = WidgetFactory.createGroup(detailsView, getString("columnAttributesTitle"), SWT.NONE, 2); //$NON-NLS-1$
         GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(detailsGroup);
+        LdapPageUtils.setBackground(detailsGroup, this.splitter);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(detailsGroup);
 
         detailsView.setContent(detailsGroup);
@@ -303,8 +314,7 @@ public class LdapColumnsPage extends WizardPage
         columnNameText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                if (isSynchronising())
-                    return;
+                setDirty(true);
 
                 IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
                 if (selection.isEmpty())
@@ -316,7 +326,6 @@ public class LdapColumnsPage extends WizardPage
                     String colNameText = columnNameText.getText();
                     if (! colNameText.equals(node.getLabel())) {
                         node.setLabel(colNameText);
-                        notifyChanged();
                     }
                 }
             }
@@ -350,6 +359,18 @@ public class LdapColumnsPage extends WizardPage
         GridDataFactory.fillDefaults().grab(true, false).applyTo(columnMaxValueText);
         setNonEditable(columnMaxValueText);
 
+        validateButton = new Button(detailsGroup, SWT.PUSH);
+        validateButton.setText(getString("validateButtonLabel")); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().span(2, 1).align(GridData.END, GridData.CENTER).applyTo(validateButton);
+        validateButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                setDirty(false);
+                notifyChanged();
+            }
+        });
+
         this.splitter.setWeights(SPLITTER_WEIGHTS);
 
         final Button deselectAllButton = WidgetFactory.createButton(pg, InternalUiConstants.Widgets.DESELECT_ALL_BUTTON);
@@ -366,6 +387,20 @@ public class LdapColumnsPage extends WizardPage
      * Performs validation and sets the page status.
      */
     private void setPageStatus() {
+        if (getControl() != null && !getControl().isVisible())
+            return;
+
+        if (isDirty()) {
+            WizardUtil.setPageComplete(this, getString("needsValidating"), IMessageProvider.ERROR); //$NON-NLS-1$
+            return;
+        }
+
+        if (this.importManager.getError() != null) {
+            ModelGeneratorLdapUiConstants.UTIL.log(this.importManager.getError());
+            WizardUtil.setPageComplete(this, this.importManager.getError().getLocalizedMessage(), IMessageProvider.ERROR);
+            return;
+        }
+
         if (! this.importManager.hasAttributesForEachSelectedEntry()) {
             WizardUtil.setPageComplete(this, getString("sourceColumnsIncomplete"), IMessageProvider.ERROR); //$NON-NLS-1$
             return;
