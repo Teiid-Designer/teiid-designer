@@ -87,6 +87,7 @@ public class LdapConnectionContentProvider extends AbstractLdapContentProvider {
             return entries.toArray();
 
         } catch (NamingException ex) {
+            getImportManager().notifyError(ex);
             ModelGeneratorLdapUiConstants.UTIL.log(ex);
             return EMPTY_ARRAY;
         }

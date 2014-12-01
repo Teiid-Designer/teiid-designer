@@ -50,6 +50,14 @@ public class LdapImportWizardManager implements IChangeNotifier {
 
     private Collection<IChangeListener> listeners;
 
+    // Transient field for communicating exceptions from tree providers
+    // to the pages on which they are resident
+    private Exception error = null;
+
+    // Flag to determine whether wizard is synchronising
+    // and manager should avoid notifying pages too frequently
+    private boolean synchronising;
+
     /**
      * The set of {@link LdapEntryNode}s selected to be tables
      * in the source model
@@ -386,6 +394,15 @@ public class LdapImportWizardManager implements IChangeNotifier {
      * Notify listeners of a change of state
      */
     public void notifyChanged() {
+        if (isSynchronising()) {
+            /*
+             * In middle of major operation so protect performance
+             * by notifying of state needlessly. When synchronising
+             * is switched back on then a notify change should be called.
+             */
+            return;
+        }
+
         for( IChangeListener listener: this.listeners ) {
             listener.stateChanged(this);
         }
@@ -399,5 +416,44 @@ public class LdapImportWizardManager implements IChangeNotifier {
     @Override
     public void removeChangeListener(IChangeListener listener) {
         this.listeners.remove(listener);
+    }
+
+    /**
+     * @return the error
+     */
+    public Exception getError() {
+        return this.error;
+    }
+
+    /**
+     * Notify listeners of any generated errors.
+     * Note, the error field is transient in that its
+     * immediately nullified after calling this.
+     *
+     * @param error
+     */
+    public void notifyError(Exception error) {
+        this.error = error;
+        notifyChanged();
+        this.error = null;
+    }
+
+    /**
+     * @return synchronising
+     */
+    public boolean isSynchronising() {
+        return this.synchronising;
+    }
+
+    /**
+     * @param synchronising
+     */
+    public void setSynchronising(boolean synchronising) {
+        boolean oldSync = this.synchronising;
+        this.synchronising = synchronising;
+
+        // Only notify if sync value has actually changed
+        if (!synchronising && oldSync)
+            notifyChanged();
     }
 }

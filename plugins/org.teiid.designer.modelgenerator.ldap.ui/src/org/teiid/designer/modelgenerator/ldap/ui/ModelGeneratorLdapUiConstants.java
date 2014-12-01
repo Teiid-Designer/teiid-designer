@@ -64,6 +64,7 @@ public interface ModelGeneratorLdapUiConstants {
         String WIZARD_BANNER = WIZBAN + "ldap_banner_icon.png"; //$NON-NLS-1$
         String CHECKED_CHECKBOX = CTOOL16 + "checkbox-checked.png"; //$NON-NLS-1$
         String UNCHECKED_CHECKBOX = CTOOL16 + "checkbox-unchecked.png"; //$NON-NLS-1$
+        String LDAP_REFRESH_ICON = CTOOL16 + "refresh.gif"; //$NON-NLS-1$
     }
 
     /**
