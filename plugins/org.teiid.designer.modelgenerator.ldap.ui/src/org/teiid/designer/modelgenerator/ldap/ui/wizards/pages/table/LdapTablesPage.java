@@ -34,6 +34,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -49,9 +50,8 @@ import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiPlugin;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
 import org.teiid.designer.ui.common.InternalUiConstants;
-import org.teiid.designer.ui.common.UiConstants;
-import org.teiid.designer.ui.common.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -81,7 +81,10 @@ public class LdapTablesPage extends WizardPage
 
     private Text tableSourceSuffixText;
 
-    private boolean synchronising;
+    private Button validateButton;
+
+    // flag to denote when the validate button should be clicked before allowing Next page
+    private boolean dirty;
 
     /**
      * Constructs the page with the provided import manager
@@ -104,11 +107,12 @@ public class LdapTablesPage extends WizardPage
         return ModelGeneratorLdapUiConstants.UTIL.getString(LdapTablesPage.class.getSimpleName() + "_" + key, properties); //$NON-NLS-1$
     }
 
-    /**
-     * @return the synchronising
-     */
-    private boolean isSynchronising() {
-        return this.synchronising;
+    private boolean isDirty() {
+        return dirty;
+    }
+
+    private void setDirty(boolean dirty) {
+        this.dirty = dirty;
     }
 
     private void refresh() {
@@ -210,7 +214,7 @@ public class LdapTablesPage extends WizardPage
 
             @Override
             public ImageDescriptor getImageDescriptor() {
-                return UiPlugin.getDefault().getImageDescriptor(UiConstants.Images.REFRESH);
+                return ModelGeneratorLdapUiPlugin.getDefault().getImageDescriptor(ModelGeneratorLdapUiConstants.Images.LDAP_REFRESH_ICON);
             }
 
             @Override
@@ -225,6 +229,7 @@ public class LdapTablesPage extends WizardPage
         this.objsView.setTopRight(bar);
         // Add contents to view form
         this.treeViewer = new TreeViewer(this.objsView, SWT.SINGLE | SWT.BORDER);
+
         this.treeViewer.setUseHashlookup(true);
         final Tree tree = this.treeViewer.getTree();
         this.objsView.setContent(tree);
@@ -242,12 +247,12 @@ public class LdapTablesPage extends WizardPage
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
-                IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+                IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
                 if (selection.isEmpty())
                     return;
 
                 Object node = selection.getFirstElement();
-                treeViewer.setExpandedState(node, ! treeViewer.getExpandedState(node));
+                treeViewer.setExpandedState(node, !treeViewer.getExpandedState(node));
             }
 
             @Override
@@ -256,18 +261,25 @@ public class LdapTablesPage extends WizardPage
                 if (selectedItems.length == 0)
                     return;
 
-                for (TreeItem treeItem : selectedItems) {
-                    if(treeItem.getImage() == null)
-                        continue;
+                importManager.setSynchronising(true);
 
-                    ILdapEntryNode entryNode = (ILdapEntryNode) treeItem.getData();
-                    Rectangle imageRec = treeItem.getImageBounds(0);
+                try {
+                    for (TreeItem treeItem : selectedItems) {
+                        if (treeItem.getImage() == null)
+                            continue;
 
-                    if (imageRec.contains(e.x, e.y)) {
-                        treeItemChecked(treeItem, ! importManager.entrySelected(entryNode));
+                        ILdapEntryNode entryNode = (ILdapEntryNode)treeItem.getData();
+                        Rectangle imageRec = treeItem.getImageBounds(0);
+
+                        if (imageRec.contains(e.x, e.y)) {
+                            treeItemChecked(treeItem, !importManager.entrySelected(entryNode));
+                        }
+
+                        nodeSelected(entryNode);
                     }
-
-                    nodeSelected(entryNode);
+                } finally {
+                    // Turns off synchronising and calls state changed
+                    importManager.setSynchronising(false);
                 }
             }
         });
@@ -294,6 +306,7 @@ public class LdapTablesPage extends WizardPage
 
         ViewForm detailsView = new ViewForm(this.splitter, SWT.BORDER);
         Group detailsGroup = WidgetFactory.createGroup(detailsView, getString("tableAttributesTitle"), SWT.NONE, 2); //$NON-NLS-1$
+        LdapPageUtils.setBackground(detailsGroup, detailsView);
         GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(detailsGroup);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(detailsGroup);
 
@@ -307,8 +320,7 @@ public class LdapTablesPage extends WizardPage
         tableNameText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                if (isSynchronising())
-                    return;
+                setDirty(true);
 
                 IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
                 if (selection.isEmpty())
@@ -318,7 +330,6 @@ public class LdapTablesPage extends WizardPage
                 String tblNameText = tableNameText.getText();
                 if (! tblNameText.equals(node.getLabel())) {
                     node.setLabel(tblNameText);
-                    notifyChanged();
                 }
             }
         });
@@ -328,8 +339,8 @@ public class LdapTablesPage extends WizardPage
 
         tableSourceNameText = new Text(detailsGroup, SWT.BORDER | SWT.SINGLE);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(tableSourceNameText);
-        tableSourceNameText.setForeground(tableSourceNameText.getDisplay().getSystemColor(SWT.COLOR_DARK_BLUE));
-        tableSourceNameText.setBackground(tableSourceNameText.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        LdapPageUtils.blueForeground(tableSourceNameText);
+        LdapPageUtils.setBackground(tableSourceNameText, detailsView);
         tableSourceNameText.setEditable(false);
 
         Label tableSourceSuffixLabel = new Label(detailsGroup, SWT.NONE);
@@ -341,8 +352,7 @@ public class LdapTablesPage extends WizardPage
         tableSourceSuffixText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                if (isSynchronising())
-                    return;
+                setDirty(true);
 
                 IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
                 if (selection.isEmpty())
@@ -352,11 +362,22 @@ public class LdapTablesPage extends WizardPage
                 String tableSuffixText = tableSourceSuffixText.getText();
                 if (! tableSuffixText.equals(node.getLabel())) {
                     node.setSourceNameSuffix(tableSuffixText);
-                    notifyChanged();
                 }
             }
         });
 
+        validateButton = new Button(detailsGroup, SWT.PUSH);
+        validateButton.setText(getString("validateButtonLabel")); //$NON-NLS-1$
+        GridDataFactory.swtDefaults().span(2, 1).align(GridData.END, GridData.CENTER).applyTo(validateButton);
+        validateButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                setDirty(false);
+                notifyChanged();
+            }
+        });
+        
         this.splitter.setWeights(SPLITTER_WEIGHTS);
 
         final Button deselectAllButton = WidgetFactory.createButton(pg, InternalUiConstants.Widgets.DESELECT_ALL_BUTTON);
@@ -373,6 +394,21 @@ public class LdapTablesPage extends WizardPage
      * Performs validation and sets the page status.
      */
     private void setPageStatus() {
+        if (getControl() != null && !getControl().isVisible())
+            return;
+
+        if (isDirty()) {
+            WizardUtil.setPageComplete(this, getString("needsValidating"), IMessageProvider.ERROR); //$NON-NLS-1$
+            return;
+        }
+
+        System.out.println("CALLING SET PAGE STATUS IN LDAP TABLES PAGE");
+        if (this.importManager.getError() != null) {
+            ModelGeneratorLdapUiConstants.UTIL.log(this.importManager.getError());
+            WizardUtil.setPageComplete(this, this.importManager.getError().getLocalizedMessage(), IMessageProvider.ERROR);
+            return;
+        }
+
         if (this.importManager.hasSelectedEntries()) {
             WizardUtil.setPageComplete(this, getString("noSourceModelTables"), IMessageProvider.ERROR); //$NON-NLS-1$
             return;
