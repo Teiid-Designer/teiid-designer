@@ -547,15 +547,11 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 			if( this.includeTypeLine ) {
 				String dataTypeString = getDataTypeString();
 				if( dataTypeString != null ) {
-					int nextCol = 0;
 					StringTokenizer tokenizer = new StringTokenizer(dataTypeString, delim);
 					while( tokenizer.hasMoreTokens() ) {
 						String nextTok = tokenizer.nextToken().trim();
 
 						if( nextTok != null && nextTok.length() > 0 ) {
-							if( nextTok.equalsIgnoreCase("integer" )) {
-								nextTok = "int";
-							}
 							datatypes.add(nextTok);
 						}
 					}
