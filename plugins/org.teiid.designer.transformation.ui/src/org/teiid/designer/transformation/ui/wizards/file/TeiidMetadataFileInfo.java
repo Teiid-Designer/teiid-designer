@@ -293,6 +293,15 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		CoreArgCheck.isPositive(firstDataRow, "firstDataRow is not greater than zero"); //$NON-NLS-1$
 		
 		this.firstDataRow = firstDataRow;
+		if( !this.includeSkip &&
+				this.firstDataRow > 0 && this.headerLineNumber > 0 &&
+				(this.firstDataRow - this.headerLineNumber > 1) ) {
+			setIncludeSkip(true);
+		} else if( this.firstDataRow > 0 && this.headerLineNumber > 0 &&
+			(this.firstDataRow - this.headerLineNumber <= 1) ) {
+			setIncludeSkip(false);
+		}
+			
 	}
 	
 	/**
@@ -1030,6 +1039,9 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	
 	public void setIncludeTypeLine(boolean value) {
 		this.includeTypeLine = value;
+		if( value ) {
+			firstDataRow = 3;
+		}
 	}
     
 }
