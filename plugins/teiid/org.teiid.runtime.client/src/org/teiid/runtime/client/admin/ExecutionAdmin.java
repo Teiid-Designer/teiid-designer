@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
@@ -411,8 +413,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @param jarList the colon-separated list of jar path locations
      */
     private void deployJars(Admin admin, String jarList) {
-        // Path Entries are colon separated
-        String[] jarPathStrs = jarList.split("[:]");  //$NON-NLS-1$
+        // Path Entries are separated by the file system path separator (WINDOWS = ';', LINUX = ':')
+    	String splitter = "[" + File.pathSeparatorChar + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        String[] jarPathStrs = jarList.split(splitter); 
 
         // Attempt to deploy each jar
         for(String jarPathStr: jarPathStrs) {
