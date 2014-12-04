@@ -85,7 +85,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
     
-    private static RestModelExtensionAssistant getRestAssistant() {
+    public static RestModelExtensionAssistant getRestAssistant() {
     	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
         final String prefix = RestModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
         return (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
@@ -99,6 +99,28 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, restMethod);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, restCharSet);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, restHeaders);
+			} catch (Exception e) {
+				RelationalPlugin.Util.log(e);
+				return false;
+			}
+        }
+        
+        return true;
+    }
+    
+    public static boolean setRestProperty(EObject procedure, String id, String value) {
+        final RestModelExtensionAssistant assistant = getRestAssistant();
+        if( assistant != null ) {
+			try {
+				if( RestModelExtensionConstants.PropertyIds.URI.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI, value);
+				} else if( RestModelExtensionConstants.PropertyIds.REST_METHOD.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, value);
+				} else if( RestModelExtensionConstants.PropertyIds.CHARSET.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, value);
+				} else if( RestModelExtensionConstants.PropertyIds.HEADERS.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, value);
+				}
 			} catch (Exception e) {
 				RelationalPlugin.Util.log(e);
 				return false;

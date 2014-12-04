@@ -55,6 +55,7 @@ public final class ModelExtensionDefinitionBuilder extends AbstractTeiidProjectB
     private static final String SEE_DETAILS_MSG = " (See log for details)"; //$NON-NLS-1$
     private static final String LEGACY_CLASSNAME_PREFIX = "com.metamatrix"; //$NON-NLS-1$
     public static final String HAS_LEGACY_NAMES = "hasLegacyNames"; //$NON-NLS-1$
+    public static final String HAS_OLD_REST_PREFIX = "hasOldRestPrefix"; //$NON-NLS-1$
 
     private ModelExtensionAssistantAggregator aggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
     private ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
@@ -248,6 +249,9 @@ public final class ModelExtensionDefinitionBuilder extends AbstractTeiidProjectB
         attributes.put(IMarker.SEVERITY, severity);
         attributes.put(IMarker.MESSAGE, message);
         if(hasLegacyNames) attributes.put(HAS_LEGACY_NAMES, true);
+        if( message.indexOf("\"rest\"") > -1 && message.indexOf("is not registered in workspace") > -1 ) {
+        	attributes.put(HAS_OLD_REST_PREFIX, true);
+        }
 
         try {
             MarkerUtilities.createMarker(file, attributes, markerId);
