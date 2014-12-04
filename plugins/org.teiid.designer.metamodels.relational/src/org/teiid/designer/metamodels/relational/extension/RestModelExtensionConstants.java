@@ -16,6 +16,7 @@ import org.teiid.designer.extension.properties.NamespaceProvider;
  * @since 8.0
  */
 public interface RestModelExtensionConstants {
+	String MED_PROBLEM_MARKER_ID = "org.teiid.designer.extension.ui.medMarker";  //$NON-NLS-1$
 	
     /**
      *
@@ -97,6 +98,13 @@ public interface RestModelExtensionConstants {
          * @since 8.1
          */
         String HEADERS = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "headers"); //$NON-NLS-1$
+    }
+    
+    interface OLD_REST_INFO {
+    	String OLD_REST_NAMESPACE_PREFIX = "rest";
+    	String OLD_REST_PREFIX = "rest:";
+    	String OLD_REST_METHOD_KEY = "rest:restMethod";
+    	String OLD_REST_URI_KEY = "rest:uri";  //$NON-NLS-1$
     }
 
 }

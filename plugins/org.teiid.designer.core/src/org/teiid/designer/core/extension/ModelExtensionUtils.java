@@ -40,7 +40,7 @@ import org.teiid.designer.metamodels.core.AnnotationContainer;
 /**
  * Utilities that manage persisting of model extension definitions in model objects.
  */
-class ModelExtensionUtils {
+public class ModelExtensionUtils {
 
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelExtensionUtils.class);
 
