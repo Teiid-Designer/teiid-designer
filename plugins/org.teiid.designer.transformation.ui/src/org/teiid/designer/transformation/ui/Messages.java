@@ -208,6 +208,14 @@ public class Messages extends NLS {
     public static String restHeaders;
     public static String restHeadersTooltip;
     
+    public static String quickFixModelDirtyTitle;
+    public static String quickFixModelDirtyMsg;
+    public static String getSupportedPrefixesErrorMsg;
+    public static String getModelMedErrorMsg;
+    public static String saveModelMedErrorMsg;
+    public static String saveModelErrorMsg;
+    public static String restMedQuickFixLabel;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$
     }

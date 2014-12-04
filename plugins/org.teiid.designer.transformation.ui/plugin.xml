@@ -371,5 +371,14 @@
             name="org.teiid.designer.transformation.ui.actions.CreateViewIndexAction">
       </class>
    </extension>
-  
+   <extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator
+	          class="org.teiid.designer.transformation.ui.wizards.rest.RestExtensionPropertiesResolutionGenerator"
+	          markerType="org.teiid.designer.extension.ui.medMarker">
+	       <attribute
+	             name="hasOldRestPrefix"
+	             value="true">
+	       </attribute>
+	    </markerResolutionGenerator>
+    </extension>
 </plugin>
