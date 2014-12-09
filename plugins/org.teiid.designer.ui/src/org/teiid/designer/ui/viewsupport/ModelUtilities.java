@@ -488,6 +488,19 @@ public abstract class ModelUtilities implements UiConstants {
         return null;
     }
     
+    public static IProject getProject(Object object) {
+    	ModelResource mr = getModelResource(object);
+    	
+    	try {
+			return mr.getCorrespondingResource().getProject();
+		} catch (ModelWorkspaceException ex) {
+			String message = "[ModelUtilities.getProject()] ERROR: exception finding project"; //$NON-NLS-1$
+            UiConstants.Util.log(IStatus.ERROR, ex, message);
+		}
+    	
+    	return null;
+    }
+    
     /**
      * 
      * @param modelObject the eObject
