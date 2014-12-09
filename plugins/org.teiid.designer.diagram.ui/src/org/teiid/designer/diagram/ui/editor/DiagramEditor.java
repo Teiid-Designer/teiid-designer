@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -1357,16 +1358,40 @@ public class DiagramEditor extends GraphicalEditor
                 refreshDiagramSafe();
             } // endif -- diagram not null
         } else if (stillValid && eventType == ModelResourceEvent.CHANGED) // Check Readonly status
-        updateReadOnlyState();
+        	updateReadOnlyState();
         else if (stillValid && eventType == ModelResourceEvent.ADDED) {
             // file should not be represented in the diagram, since it is new.
             // how do we find if we need to refresh?
-        } else if (stillValid && (eventType == ModelResourceEvent.REMOVED || eventType == ModelResourceEvent.MOVED)) // if moved or
-        // removed:
-        if (currentDiagram != null) {
-            final IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
-            if (idt.dependsOnResource(currentModel, event.getResource())) // redisplay contents:
-            refreshDiagramSafe();
+        } else if (stillValid && (eventType == ModelResourceEvent.REMOVED || eventType == ModelResourceEvent.MOVED)) { // if moved or removed:
+        	if (currentDiagram != null) {
+        		final ModelResource editorMR = ModelUtilities.getModelResourceForModelObject(getDiagram());
+        		
+        		// During Project and model closing or deleting, the open model editor may be "stale", so if NOT OPEN, then just return since
+        		// The editor should close
+        		if( ! editorMR.isOpen() ) {
+        			return;
+        		}
+        		
+        		// If we get here, check if removed project that the project is the same project as the open model's project
+        		if( event.getResource() instanceof IProject ) {
+        			IProject eventProj = (IProject)event.getResource();
+        			// get resource from diagram.
+        			IProject editorProject = ModelUtilities.getProject(editorMR);
+        			
+        			if( editorProject == eventProj) {
+	                	return;
+        			}
+        		}
+        		
+        		// If we get here do a refresh if there's a dependency
+	            final IDiagramType idt = DiagramUiPlugin.getDiagramTypeManager().getDiagram(currentDiagram.getType());
+	            // Note the following dependsOntResource() will re-load/register EMF resources, so need make sure (above) that the model/resource
+	            // isn't being removed
+	            
+	            if (idt.dependsOnResource(currentModel, event.getResource()))  {
+	            	refreshDiagramSafe();  // redisplay contents:
+	            }
+        	}
         } // endif -- diagram not null
     }
 
