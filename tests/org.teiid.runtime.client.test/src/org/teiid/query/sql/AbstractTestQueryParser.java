@@ -10,6 +10,7 @@ package org.teiid.query.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
@@ -33,6 +35,7 @@ import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
+import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.lang.ExistsCriteria;
@@ -156,6 +159,10 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
 
     protected void helpException(String sql) {
         helpException(sql, null);
+    }
+    
+    protected CacheHint helpGetCacheHint(String sql) {
+    	return parser.getTeiidParser(sql).getQueryCacheOption(sql);
     }
 
     protected void helpException(String sql, String expected) {
