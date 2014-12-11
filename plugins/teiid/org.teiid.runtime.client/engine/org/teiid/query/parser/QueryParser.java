@@ -25,6 +25,7 @@ package org.teiid.query.parser;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashSet;
+
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
@@ -37,6 +38,8 @@ import org.teiid.query.parser.v7.Teiid7Parser;
 import org.teiid.query.parser.v8.Teiid8Parser;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.Criteria;
+import org.teiid.query.sql.lang.LeadingComment;
+import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -205,6 +208,18 @@ public class QueryParser implements IQueryParser {
             } else {
                 result = getTeiidParser(sql).command(parseInfo);
             }
+            String noCommentSql = sql;
+            LeadingComment leadingComment = getTeiidParser(sql).getLeadingComment(sql);
+            TrailingComment trailingComment = getTeiidParser(sql).getTrailingComment(noCommentSql);
+            
+            if( leadingComment != null ) {
+            	noCommentSql = getTeiidParser(sql).removeComments(sql, leadingComment, trailingComment);
+            }
+            result.setLeadingComment(leadingComment);
+            result.setTrailingComment(trailingComment);
+            
+            result.setCacheHint(getTeiidParser(sql).getQueryCacheOption(noCommentSql));
+
         } catch(Exception e) {
            throw convertParserException(e);
         }

@@ -64,7 +64,7 @@ import org.teiid.core.util.StringUtil;
 @SuppressWarnings({"nls", "unused", "javadoc"})
 public class Teiid8Parser extends AbstractTeiidParser {
 
-    private String getComment(Token t) {
+    private String getHintComment(Token t) {
         Token optToken = t.specialToken;
         if (optToken == null) { 
             return ""; //$NON-NLS-1$
@@ -86,7 +86,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
     }
 
     private boolean isNonStrictHint(Token t) {
-        String[] parts = getComment(t).split("\\s"); //$NON-NLS-1$
+        String[] parts = getHintComment(t).split("\\s"); //$NON-NLS-1$
         for (int i = 0; i < parts.length; i++) {
             if (parts[i].equalsIgnoreCase(Limit.NON_STRICT)) {
                 return true;
@@ -96,7 +96,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
     }
 
     private SourceHint getSourceHint(Token t) {
-        String comment = getComment(t);
+        String comment = getHintComment(t);
         Matcher matcher = SOURCE_HINT.matcher(comment);
         if (!matcher.find()) {
             return null;
@@ -139,7 +139,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
 
     private SubqueryHint getSubqueryHint(Token t) {
         SubqueryHint hint = new SubqueryHint();
-        String[] parts = getComment(t).split("\\s"); //$NON-NLS-1$
+        String[] parts = getHintComment(t).split("\\s"); //$NON-NLS-1$
         for (int i = 0; i < parts.length; i++) {
             if (parts[i].equalsIgnoreCase(SubqueryHint.MJ)) {
                 hint.setMergeJoin(true);
@@ -153,7 +153,7 @@ public class Teiid8Parser extends AbstractTeiidParser {
     }
 
     private void setFromClauseOptions(Token groupID, FromClause fromClause){
-        String[] parts = getComment(groupID).split("\\s"); //$NON-NLS-1$
+        String[] parts = getHintComment(groupID).split("\\s"); //$NON-NLS-1$
 
         for (int i = 0; i < parts.length; i++) {
             if (parts[i].equalsIgnoreCase(Option.OPTIONAL)) {
@@ -835,11 +835,11 @@ Command alter(ParseInfo info) :
 	(
 	 	(<VIEW> target = id(null) <AS> { comment = getToken(1).specialToken; } command = queryExpression(info)) 
 	 	{
-	 	    /*
-	 	     * if (comment != null) {
-		 	 *     command.setCacheHint(getQueryCacheOption(comment.image));
-	 	     * }
-	 	     */
+	 	    if (comment != null) {
+		 	    command.setCacheHint(getQueryCacheOption(comment.image));
+	 	    }
+	 	    
+	 	    
             AlterView alterView = alterView();
 	 		alterView.setTarget(groupSymbol(target));
 	 		alterView.setDefinition(command);
@@ -849,11 +849,11 @@ Command alter(ParseInfo info) :
 		{
 			CreateProcedureCommand cup = createASTNode(ASTNodes.CREATE_PROCEDURE_COMMAND);
 			cup.setBlock(asBlock(stmt));
-			/*
-			 * if (comment != null) {
-		 	 *     cup.setCacheHint(getQueryCacheOption(comment.image));
-	 	     * }
-	 	     */
+
+			if (comment != null) {
+		 	    cup.setCacheHint(getQueryCacheOption(comment.image));
+	 	    }
+	 	    
             AlterProcedure alterProc = alterProcedure();
 			alterProc.setTarget(groupSymbol(target));
 			alterProc.setDefinition(cup);

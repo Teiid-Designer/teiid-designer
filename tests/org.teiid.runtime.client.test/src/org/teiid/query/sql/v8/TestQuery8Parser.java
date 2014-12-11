@@ -7,7 +7,10 @@
  */
 package org.teiid.query.sql.v8;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
+
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -19,9 +22,11 @@ import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.From;
+import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
@@ -306,5 +311,54 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         this.teiidVersion = Version.TEIID_8_3.get();
         this.parser = new QueryParser(teiidVersion);
         helpException(sql);
+    }
+    
+    @Test
+    public void testCacheHint() {
+    	String sql 		= "/*+ cache(ttl:180000) */ SELECT column_1 FROM model_a.table_1";
+    	String expected = "/*+ cache(ttl:180000) */ SELECT column_1 FROM model_a.table_1";
+    	
+    	GroupSymbol g = getFactory().newGroupSymbol("model_a.table_1");
+        From from = getFactory().newFrom();
+        from.addGroup(g);
+
+        Select select = getFactory().newSelect();
+        ElementSymbol a = getFactory().newElementSymbol("column_1");
+        select.addSymbol(a);
+
+        Query query = getFactory().newQuery(select, from);
+        query.setCacheHint(helpGetCacheHint(sql));
+        
+        helpTest(sql, expected, query);
+    }
+    
+    @Test
+    public void testLeadingAndTrailingComments() {
+    	String sql 		= "/* leading comment */ SELECT column_1 FROM model_a.table_1 /* trailing comment */";
+    	String expected = "/* leading comment */ \nSELECT column_1 FROM model_a.table_1\n /* trailing comment */";
+    	
+    	GroupSymbol g = getFactory().newGroupSymbol("model_a.table_1");
+        From from = getFactory().newFrom();
+        from.addGroup(g);
+
+        Select select = getFactory().newSelect();
+        ElementSymbol a = getFactory().newElementSymbol("column_1");
+        select.addSymbol(a);
+
+        Query query = getFactory().newQuery(select, from);
+        query.setLeadingComment(new LeadingComment("/* leading comment */"));
+        query.setTrailingComment(new TrailingComment("/* trailing comment */"));
+        
+        helpTest(sql, expected, query);
+    }
+    
+    @Test
+    public void testInvalidLeadingComment() {
+    	String sql 		= "/* leading comment  SELECT column_1 FROM model_a.table_1";
+    	String expected = "/* leading comment */ \nSELECT column_1 FROM model_a.table_1";
+    	LeadingComment comment = parser.getTeiidParser().getLeadingComment(sql);
+        
+        assertTrue("Leading comment in SQL is invalid", comment == null);
+        
     }
 }

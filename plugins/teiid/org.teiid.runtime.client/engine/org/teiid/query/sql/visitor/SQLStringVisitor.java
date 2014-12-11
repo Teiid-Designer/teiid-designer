@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
@@ -57,6 +58,7 @@ import org.teiid.query.sql.lang.AlterTrigger;
 import org.teiid.query.sql.lang.AlterView;
 import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
+import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Create;
@@ -78,6 +80,7 @@ import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
 import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.Limit;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.NamespaceItem;
@@ -107,6 +110,7 @@ import org.teiid.query.sql.lang.SubqueryHint;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.TextColumn;
 import org.teiid.query.sql.lang.TextTable;
+import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
@@ -1415,6 +1419,8 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(Query obj) {
+    	addLeadingComment(obj.getLeadingComment());
+    	addCacheHint(obj.getCacheHint());
         addWithClause(obj);
         append(SELECT);
 
@@ -1468,6 +1474,7 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+        addTrailingComment(obj.getTrailingComment());
     }
 
     private void addSourceHint(SourceHint sh) {
@@ -1621,6 +1628,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(SetQuery obj) {
+    	addCacheHint(obj.getCacheHint());
         addWithClause(obj);
         QueryCommand query = obj.getLeftQuery();
         appendSetQuery(obj, query, false);
@@ -1666,6 +1674,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(StoredProcedure obj) {
+    	addCacheHint(obj.getCacheHint());
         if (obj.isCalledWithReturn()) {
             for (SPParameter param : obj.getParameters()) {
                 if (param.getParameterType() == SPParameter.RETURN_VALUE) {
@@ -1717,6 +1726,75 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+    }
+    
+    public void addCacheHint( CacheHint obj ) {
+        if (obj == null) {
+            return;
+        }
+        append(BEGIN_HINT);
+        append(SPACE);
+        append(CacheHint.CACHE);
+        boolean addParens = false;
+        if (obj.isPrefersMemory()) {
+            append(Tokens.LPAREN);
+            addParens = true;
+            append(CacheHint.PREF_MEM);
+        }
+        if (obj.getTtl() != null) {
+            if (!addParens) {
+                append(Tokens.LPAREN);
+                addParens = true;
+            } else {
+                append(SPACE);
+            }
+            append(CacheHint.TTL);
+            append(obj.getTtl());
+        }
+        if (obj.getUpdatable() != null) {
+            if (!addParens) {
+                append(Tokens.LPAREN);
+                addParens = true;
+            } else {
+                append(SPACE);
+            }
+            append(CacheHint.UPDATABLE);
+        }
+        if (obj.getScope() != null) {
+            if (!addParens) {
+                append(Tokens.LPAREN);
+                addParens = true;
+            } else {
+                append(SPACE);
+            }     
+            append(CacheHint.SCOPE);
+            append(obj.getScope());            
+        }
+        if (addParens) {
+            append(Tokens.RPAREN);
+        }
+        append(SPACE);
+        append(END_HINT);
+        beginClause(0);
+    }
+    
+    public void addLeadingComment(LeadingComment comment) {
+        if (comment == null) {
+            return;
+        }
+        append(comment.getComment());
+        append(SPACE);
+        append(NEWLINE);
+    }
+    
+    
+    public void addTrailingComment(TrailingComment comment) {
+        if (comment == null) {
+            return;
+        }
+        append(NEWLINE);
+        append(SPACE);
+        append(comment.getComment());
     }
 
     @Override
@@ -2232,6 +2310,7 @@ public class SQLStringVisitor extends LanguageVisitor
     @Override
     @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
+    	addLeadingComment(obj.getLeadingComment());
         append(CREATE);
         append(SPACE);
         if (!obj.isUpdateProcedure()) {
@@ -2242,10 +2321,12 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
+        addTrailingComment(obj.getTrailingComment());
     }
 
     @Override
     public void visit(CreateProcedureCommand obj) {
+    	addLeadingComment(obj.getLeadingComment());
         if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
             append(CREATE);
             append(SPACE);
@@ -2256,6 +2337,7 @@ public class SQLStringVisitor extends LanguageVisitor
             addTabs(0);
         }
         visitNode(obj.getBlock());
+        addTrailingComment(obj.getTrailingComment());
     }
 
     @Override
@@ -3024,6 +3106,7 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(TriggerAction obj) {
+    	addLeadingComment(obj.getLeadingComment());
         append(FOR);
         append(SPACE);
         append(EACH);
@@ -3032,6 +3115,7 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
+        addTrailingComment(obj.getTrailingComment());
     }
 
     @Override

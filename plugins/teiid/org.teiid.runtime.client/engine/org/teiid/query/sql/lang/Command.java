@@ -30,6 +30,8 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     /** The option clause */
     private Option option;
 
+	private CacheHint cacheHint;
+	
     private SourceHint sourceHint;
 
     private boolean isResolved;
@@ -37,6 +39,12 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     private transient GroupContext externalGroups;
 
     private SymbolMap correlatedReferences;
+    
+    private LeadingComment leadingComment;
+    
+    private TrailingComment trailingComment;
+    
+
 
     /**
      * All temporary group IDs discovered while resolving this 
@@ -135,8 +143,32 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
         }
         return updateCommandSymbol;
     }
+    
+    public CacheHint getCacheHint() {
+		return cacheHint;
+	}
+    
+    public void setCacheHint(CacheHint cacheHint) {
+		this.cacheHint = cacheHint;
+	}
 
-    protected void copyMetadataState(Command copy) {
+    public LeadingComment getLeadingComment() {
+		return leadingComment;
+	}
+
+	public void setLeadingComment(LeadingComment leadingComment) {
+		this.leadingComment = leadingComment;
+	}
+
+	public TrailingComment getTrailingComment() {
+		return trailingComment;
+	}
+
+	public void setTrailingComment(TrailingComment trailingComment) {
+		this.trailingComment = trailingComment;
+	}
+
+	protected void copyMetadataState(Command copy) {
         if(this.getExternalGroupContexts() != null) {
             copy.externalGroups = (GroupContext)this.externalGroups.clone();
         }

@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
@@ -54,12 +55,15 @@ import org.teiid.query.metadata.DDLConstants;
 import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterTrigger;
+import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SourceHint;
 import org.teiid.query.sql.lang.StoredProcedure;
+import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -73,7 +77,12 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     protected Pattern SOURCE_HINT = Pattern.compile("\\s*sh(\\s+KEEP ALIASES)?\\s*(?::((?:'[^']*')+))?\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
     
     protected Pattern SOURCE_HINT_ARG = Pattern.compile("\\s*([^: ]+)(\\s+KEEP ALIASES)?\\s*:((?:'[^']*')+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+    
+	private static Pattern CACHE_HINT = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
 
+	private static String COMMENT_START = "/*"; //$NON-NLS-1$
+	private static String COMMENT_END = "*/"; //$NON-NLS-1$
+	
     protected ITeiidServerVersion version;
 
     private MetadataFactory metadataFactory;
@@ -321,6 +330,88 @@ public abstract class AbstractTeiidParser implements TeiidParser {
             throw new TeiidClientException(Messages.getString(key, id)); 
         }
         return id;
+    }
+    
+    public LeadingComment getLeadingComment(String sql) {
+    	String trimmedSQL = sql.trim();
+    	if( trimmedSQL.startsWith(COMMENT_START) && trimmedSQL.indexOf(COMMENT_END) > -1) {
+    		if( trimmedSQL.charAt(2) != '+') {
+    			int beginIndex = sql.indexOf(COMMENT_START);
+    			int endIndex = sql.indexOf(COMMENT_END) + 2;
+    			return new LeadingComment(trimmedSQL.substring(beginIndex, endIndex));
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    
+    public TrailingComment getTrailingComment(String sql) {
+    	String trimmedSQL = sql.trim();
+    	if( trimmedSQL.endsWith(COMMENT_END) && trimmedSQL.lastIndexOf(COMMENT_START) > -1) {
+    		if( trimmedSQL.charAt(2) != '+') {
+    			int beginIndex = sql.lastIndexOf(COMMENT_START);
+    			int endIndex = sql.lastIndexOf(COMMENT_END) + 2;
+    			return new TrailingComment(trimmedSQL.substring(beginIndex, endIndex));
+    		}
+    	}
+    	
+    	return null;
+    }
+    
+    public String removeComments(String sql, LeadingComment leadingComment, TrailingComment trailingComment) {
+    	int indexAfterLeadingComment = 0;
+    	int indexBeforeTrailingComment = sql.length()-1;
+    	if( leadingComment != null ) {
+        	if( sql.startsWith(COMMENT_START) && sql.indexOf(COMMENT_END) > -1) {
+        		if( sql.charAt(2) != '+') {
+        			indexAfterLeadingComment = sql.indexOf(COMMENT_END) + 2;
+        			String remainingStr = sql.substring(indexAfterLeadingComment, indexBeforeTrailingComment);
+	        			if( remainingStr.length() > 0 ) {
+	        			for( char nextChar : remainingStr.toCharArray() ) {
+	        				if( nextChar == ' ' ||
+	        					nextChar == '\n' ||
+	        					nextChar == '\t' ||
+	        					nextChar == '\r' ) {
+	        					indexAfterLeadingComment++;
+	        					continue;
+	        				}
+	        				break;
+	        			}
+        			}
+        		}
+        	}
+    	}
+    	if( trailingComment != null ) {
+    		indexBeforeTrailingComment = sql.lastIndexOf(COMMENT_START)-1;
+    	}
+    	
+    	return sql.substring(indexAfterLeadingComment, indexBeforeTrailingComment);
+    }
+    
+    
+	public CacheHint getQueryCacheOption(String query) {
+    	Matcher match = CACHE_HINT.matcher(query);
+    	if (match.matches()) {
+    		CacheHint hint = new CacheHint();
+    		if (match.group(2) !=null) {
+    			hint.setPrefersMemory(true);
+    		}
+    		String ttl = match.group(3);
+    		if (ttl != null) {
+    			hint.setTtl(Long.valueOf(ttl.substring(4)));
+    		}
+    		if (match.group(4) != null) {
+    			hint.setUpdatable(true);
+    		}
+    		String scope =  match.group(5);
+    		if (scope != null) {
+    			scope = scope.substring(6);
+    			hint.setScope(scope);
+    		}    		
+    		return hint;
+    	}
+    	return null;
     }
 
     @Removed(Version.TEIID_8_0)
