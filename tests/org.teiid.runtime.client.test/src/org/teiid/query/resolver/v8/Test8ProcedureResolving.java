@@ -32,6 +32,8 @@ import org.teiid.query.sql.v8.Test8Factory;
 @SuppressWarnings( {"javadoc", "nls"} )
 public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
 
+    private static final String NEW_LINE = "\n";
+
     private Test8Factory factory;
 
     protected Test8ProcedureResolving(ITeiidServerVersion teiidVersion) {
@@ -139,6 +141,20 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
         String userUpdateStr = "UPDATE vm1.g1 SET e1='x'"; //$NON-NLS-1$
 
         helpResolveUpdateProcedure(proc.toString(), userUpdateStr, Table.TriggerEvent.UPDATE);
+    }
+
+    @Test
+    public void testTEIDDES2345() throws Exception {
+        String proc = "FOR EACH ROW" + NEW_LINE +
+                            "BEGIN ATOMIC" + NEW_LINE +
+                            "DECLARE integer VARIABLES.ROWS_UPDATED;" + NEW_LINE +
+                            "UPDATE vm1.g1 SET e1='x';" + NEW_LINE +
+                            "VARIABLES.ROWS_UPDATED = VARIABLES.ROWCOUNT;" + NEW_LINE +
+                            "END";
+
+        String userUpdateStr = "UPDATE vm1.g1 SET e1='x1'"; //$NON-NLS-1$
+
+        helpResolveUpdateProcedure(proc, userUpdateStr, Table.TriggerEvent.UPDATE);
     }
 
     /**
