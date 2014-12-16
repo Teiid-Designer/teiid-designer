@@ -10,7 +10,6 @@ package org.teiid.query.sql;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
@@ -30,12 +28,12 @@ import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
+import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
-import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Delete;
 import org.teiid.query.sql.lang.DynamicCommand;
 import org.teiid.query.sql.lang.ExistsCriteria;
@@ -113,23 +111,34 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         super(teiidVersion);
     }
 
-    protected void helpTest(String sql, String expectedString, Command expectedCommand) {
-        helpTest(sql, expectedString, expectedCommand, new ParseInfo());
+    protected void helpTest(String sql, String expectedString, Command expectedCommand, boolean designerCommand) {
+        helpTest(sql, expectedString, expectedCommand, new ParseInfo(), true);
     }
 
-    protected void helpTest(String sql, String expectedString, Command expectedCommand, ParseInfo info) {
+    protected void helpTest(String sql, String expectedString, Command expectedCommand) {
+        helpTest(sql, expectedString, expectedCommand, new ParseInfo(), false);
+    }
+
+    protected void helpTest(String sql, String expectedString, Command expectedCommand, ParseInfo info, boolean designerCommand) {
         Command actualCommand = null;
         String actualString = null;
 
         try {
-            actualCommand = parser.parseCommand(sql, info);
+            if (designerCommand)
+                actualCommand = parser.parseDesignerCommand(sql);
+            else
+                actualCommand = parser.parseCommand(sql, info);
+
             actualString = actualCommand.toString();
         } catch (Throwable e) {
             fail(e.getMessage());
         }
 
-        assertEquals("Command objects do not match: ", expectedCommand, actualCommand);
-        assertEquals("SQL strings do not match: ", expectedString, actualString);
+        if (expectedCommand != null)
+            assertEquals("Command objects do not match: ", expectedCommand, actualCommand);
+
+        if (expectedString != null)
+            assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
     protected void helpTestLiteral(Boolean expected, Class<?> expectedType, String sql, String expectedSql) {
@@ -1818,7 +1827,7 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         Query query = getFactory().newQuery(select, from);
         ParseInfo info = new ParseInfo();
         info.setAnsiQuotedIdentifiers(false);
-        helpTest("SELECT \"g\"\".\"\"a\" from g", "SELECT 'g\".\"a' FROM g", query, info);
+        helpTest("SELECT \"g\"\".\"\"a\" from g", "SELECT 'g\".\"a' FROM g", query, info, false);
     }
 
     /** SELECT g.x AS "select" FROM g */
