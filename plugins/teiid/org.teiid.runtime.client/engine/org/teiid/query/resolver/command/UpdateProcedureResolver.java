@@ -37,7 +37,6 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstant
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
@@ -122,11 +121,52 @@ public class UpdateProcedureResolver extends CommandResolver {
     /**
      * @return the dataTypeManager
      */
+    @Override
     public DataTypeManagerService getDataTypeManager() {
         if (dataTypeManager == null)
             dataTypeManager = DataTypeManagerService.getInstance(getTeiidVersion());
 
         return this.dataTypeManager;
+    }
+
+    /**
+     * @param command
+     * @param metadata
+     */
+    private void addRowCountToContext(Command command, TempMetadataAdapter metadata) throws Exception {
+        //by creating a new group context here it means that variables will resolve with a higher precedence than input/changing
+        GroupContext externalGroups = command.getExternalGroupContexts();
+
+        List<ElementSymbol> symbols = new LinkedList<ElementSymbol>();
+
+        //
+        // Only applicable for teiid 7
+        //
+        if (command instanceof CreateUpdateProcedureCommand && ((CreateUpdateProcedureCommand)command).isUpdateProcedure()) {
+            resolveVirtualGroupElements((CreateUpdateProcedureCommand) command, metadata);
+
+            //add the default variables
+            String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWS_UPDATED;
+            ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
+            updateCount.setName(countVar);
+            updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
+            symbols.add(updateCount);
+        }
+        //
+        // End of Only applicable to teiid 7
+        //
+
+        String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWCOUNT;
+        ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
+        updateCount.setName(countVar);
+        updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
+        symbols.add(updateCount);
+
+        ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
+                                                  ProcedureReservedWords.VARIABLES,
+                                                  metadata.getMetadataStore(),
+                                                  externalGroups,
+                                                  symbols);
     }
 
     private void resolveCommand(TriggerAction ta, TempMetadataAdapter metadata, boolean resolveNullLiterals) throws Exception {
@@ -184,75 +224,18 @@ public class UpdateProcedureResolver extends CommandResolver {
         procCommand.setSymbolMap(symbolMap);
     }
 
-    @Removed(Version.TEIID_8_0)
-    @Deprecated
-    private void resolveCommand(CreateUpdateProcedureCommand procCommand, TempMetadataAdapter metadata, boolean resolveNullLiterals)
-        throws Exception {
-
-        //by creating a new group context here it means that variables will resolve with a higher precedence than input/changing
-        GroupContext externalGroups = procCommand.getExternalGroupContexts();
-
-        List<ElementSymbol> symbols = new LinkedList<ElementSymbol>();
-
-        // virtual group elements in HAS and TRANSLATE criteria have to be resolved
-        if (procCommand.isUpdateProcedure()) {
-            resolveVirtualGroupElements(procCommand, metadata);
-
-            //add the default variables
-            String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWS_UPDATED;
-            ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
-            updateCount.setName(countVar);
-            updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
-            symbols.add(updateCount);
-        }
-
-        String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWCOUNT;
-        ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
-        updateCount.setName(countVar);
-        updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
-        symbols.add(updateCount);
-
-        ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
-                                                  ProcedureReservedWords.VARIABLES,
-                                                  metadata.getMetadataStore(),
-                                                  externalGroups,
-                                                  symbols);
-        resolveBlock(procCommand, procCommand.getBlock(), externalGroups, metadata);
-    }
-
-    private void resolveCommand(CreateProcedureCommand command, TempMetadataAdapter metadata, boolean resolveNullLiterals)
-        throws Exception {
-
-        //by creating a new group context here it means that variables will resolve with a higher precedence than input/changing
-        GroupContext externalGroups = command.getExternalGroupContexts();
-
-        List<ElementSymbol> symbols = new LinkedList<ElementSymbol>();
-
-        String countVar = ProcedureReservedWords.VARIABLES + Symbol.SEPARATOR + ProcedureReservedWords.ROWCOUNT;
-        ElementSymbol updateCount = create(ASTNodes.ELEMENT_SYMBOL);
-        updateCount.setName(countVar);
-        updateCount.setType(DataTypeManagerService.DefaultDataTypes.INTEGER.getTypeClass());
-        symbols.add(updateCount);
-
-        ProcedureContainerResolver.addScalarGroup(getTeiidParser(),
-                                                  ProcedureReservedWords.VARIABLES,
-                                                  metadata.getMetadataStore(),
-                                                  externalGroups,
-                                                  symbols);
-
-        resolveBlock(command, command.getBlock(), externalGroups, metadata);
-    }
-
     /**
      * @see org.teiid.query.resolver.CommandResolver#resolveCommand(org.teiid.query.sql.lang.Command, TempMetadataAdapter, boolean)
      */
     @Override
     public void resolveCommand(Command command, TempMetadataAdapter metadata, boolean resolveNullLiterals) throws Exception {
 
+        addRowCountToContext(command, metadata);
+
         if (command instanceof CreateProcedureCommand)
-            resolveCommand((CreateProcedureCommand)command, metadata, resolveNullLiterals);
+            resolveBlock((CreateProcedureCommand) command, ((CreateProcedureCommand) command).getBlock(), command.getExternalGroupContexts(), metadata);
         else if (command instanceof CreateUpdateProcedureCommand)
-            resolveCommand((CreateUpdateProcedureCommand)command, metadata, resolveNullLiterals);
+            resolveBlock((CreateUpdateProcedureCommand) command, ((CreateUpdateProcedureCommand) command).getBlock(), command.getExternalGroupContexts(), metadata);
         else if (command instanceof TriggerAction)
             resolveCommand((TriggerAction)command, metadata, resolveNullLiterals);
         else
