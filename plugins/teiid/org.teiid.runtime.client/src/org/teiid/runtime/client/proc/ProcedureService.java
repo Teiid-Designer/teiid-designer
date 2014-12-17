@@ -374,7 +374,11 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          if( rootPath != null && rootPath.length() > 0 ) {
              xQueryExp = rootPath;
          }
-         sb.append(S_QUOTE).append(xQueryExp).append(S_QUOTE);
+         //If this is JSON, we already have a starting quote with 'response.
+         if (!isJson) {
+        	 sb.append(S_QUOTE);
+         }
+         sb.append(xQueryExp).append(S_QUOTE);
          
          tokens.add(sb.toString());
          
