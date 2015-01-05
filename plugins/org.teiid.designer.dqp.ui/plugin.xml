@@ -153,6 +153,15 @@
       </resourceAction>
    </extension>
    <extension
+        id="SetJBossDataSourceNameAction"
+        name="%setDataSourceJNDINameAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.SetJBossDataSourceNameAction"
+         label="%setDataSourceJNDINameAction.label">
+      </resourceAction>
+   </extension>
+   <extension
          point="org.teiid.designer.vdb.sourceHandler">
       <class
             name="org.teiid.designer.runtime.ui.connection.VdbSourceConnectionHandler">

@@ -118,9 +118,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
             }
         } catch (Exception e) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(),
-            		DqpUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
+            		DqpUiConstants.UTIL.getString("SetConnectionInfo.exceptionMessage"), e.getMessage()); //$NON-NLS-1$
             IStatus status = new Status(IStatus.ERROR, DqpUiConstants.PLUGIN_ID,
-            		DqpUiConstants.UTIL.getString("SetConnectionProfileAction.exceptionMessage"), e); //$NON-NLS-1$
+            		DqpUiConstants.UTIL.getString("SetConnectionInfo.exceptionMessage"), e); //$NON-NLS-1$
             DqpUiConstants.UTIL.log(status);
 
             return;
@@ -159,7 +159,8 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         return sourceModelSelected(selection);
     }
 
-    private boolean sourceModelSelected( ISelection theSelection ) {
+    @SuppressWarnings("rawtypes")
+	private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
         List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
