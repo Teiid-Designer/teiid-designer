@@ -303,14 +303,14 @@ public class ParameterPanel implements DatatoolsUiConstants {
             
             if (this.wsProfileDetailsWizardPage!=null){
             	for( Object key : this.parameterMap.keySet() )  {
-            		Parameter para = (Parameter)this.parameterMap.get((String)key);
+            		Parameter para = (Parameter)this.parameterMap.get(key);
             		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
             	}
             	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
             	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
             }else{
             	for( Object key : this.parameterMap.keySet() )  {
-            		Parameter para = (Parameter)this.parameterMap.get((String)key);
+            		Parameter para = (Parameter)this.parameterMap.get(key);
             		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
             	}
             	propertyPage.setParameterMap(this.parameterMap);
@@ -330,9 +330,13 @@ public class ParameterPanel implements DatatoolsUiConstants {
         this.propertiesViewer.refresh();
         
         if (this.wsProfileDetailsWizardPage!=null){
+        	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
+        	wsProfileDetailsWizardPage.getProfileProperties().remove(selectedProperty.getName());
         	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
         }else{
-        	propertyPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+        	propertyPage.setParameterMap(this.parameterMap);
+        	propertyPage.getExtraProperties().remove(Parameter.PREFIX+selectedProperty.getName());
+        	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
         }
     }
 	
@@ -434,7 +438,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 					if( newType != null && newType.length() > 0 && !newType.equalsIgnoreCase(oldType)) {
 						((Parameter)element).setType(Parameter.Type.fromValue(newType));
 						parameterMap.put(key,element);
-						propertiesViewer.refresh();
+						propertiesViewer.refresh(element);
 					}
 				} else if( columnID == 2 ) {
 						String oldDefaultValue = ((Parameter)element).getDefaultValue();
@@ -442,7 +446,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 						if( newDefaultValue != null && newDefaultValue.length() > 0 && !newDefaultValue.equalsIgnoreCase(oldDefaultValue)) {
 							((Parameter)element).setDefaultValue(newDefaultValue);
 							parameterMap.put(key,element);
-							propertiesViewer.refresh();
+							propertiesViewer.refresh(element);
 						}
 					}
 			}
@@ -639,7 +643,10 @@ public class ParameterPanel implements DatatoolsUiConstants {
         private void updateState() {
             // check to see if new name is valid
             String msg = validateName();
-
+            
+            // check to see if new default value is valid
+            String defaultValueMsg = StringUtilities.isEmpty(this.defaultValue) ? UTIL.getString("AddParameterDialog_emptyDefaultValue") : UTIL.getString("AddParameterDialog_message");  //$NON-NLS-1$
+            
             // update UI controls
             if (StringUtilities.isEmpty(msg)) {
                 if (!this.btnOk.isEnabled()) {
@@ -651,7 +658,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 }
 
                 this.imageLabel.setImage(getInfoImage());
-                msg = UTIL.getString("AddParameterDialog_message"); //$NON-NLS-1$
+        //        msg = UTIL.getString("AddParameterDialog_message"); //$NON-NLS-1$
             } else {
                 // value is not valid
                 if (this.btnOk.isEnabled()) {
@@ -661,7 +668,11 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 this.imageLabel.setImage(getErrorImage());
             }
 
-            this.messageLabel.setText(msg);
+            if (!StringUtilities.isEmpty(msg)) {
+            	this.messageLabel.setText(msg);
+            }else{
+            	this.messageLabel.setText(defaultValueMsg);
+            }
             this.messageLabel.pack();
         }
 
@@ -712,10 +723,10 @@ public class ParameterPanel implements DatatoolsUiConstants {
          * @param proposedValue the proposed value
          * @return an error message or <code>null</code> if value is valid
          */
-        public String validateValue( String proposedValue ) {
+        public String validateDefaultValue( String proposedValue ) {
             // must have a value
             if (StringUtilities.isEmpty(proposedValue)) {
-                return UTIL.getString("AddParameterDialog_emptyParameterValue"); //$NON-NLS-1$
+                return UTIL.getString("AddParameterDialog_emptyDefaultValue"); //$NON-NLS-1$
             }
 
             // valid
