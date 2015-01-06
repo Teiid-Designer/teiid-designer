@@ -246,7 +246,7 @@ public class WsdlDefinitionPage extends WizardPage
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				// Need to sync the worker with the current profile
-				handleConnectionProfileSelected();
+				handleConnectionProfileSelected(false);
 			}
 
 			@Override
@@ -324,9 +324,14 @@ public class WsdlDefinitionPage extends WizardPage
 		GridDataFactory.fillDefaults().grab(true, false).applyTo(endPointURIText);
         
 		updateWidgetEnablements();
+		if( connectionProfilesCombo.getItemCount() > 0 ) {
+			connectionProfilesCombo.select(0);
+			handleConnectionProfileSelected(true);
+		}
+		
 	}
 
-	private void handleConnectionProfileSelected() {
+	private void handleConnectionProfileSelected(boolean initializing) {
 		int selIndex = connectionProfilesCombo.getSelectionIndex();
 
 		if (selIndex >= 0) {
@@ -353,11 +358,15 @@ public class WsdlDefinitionPage extends WizardPage
 					this.wsdlStatus = null;
 				}
 				
-				this.operationsPanel.notifyWsdlChanged(true);
+				if( !initializing ) {
+					this.operationsPanel.notifyWsdlChanged(true);
+				}
 			}
 		}
 		
-		notifyChanged();
+		if( !initializing ) {
+			notifyChanged();
+		}
 	}
 	
 	private void createWsdlOperationsPanel(Composite theParent) {
@@ -727,7 +736,7 @@ public class WsdlDefinitionPage extends WizardPage
 			refreshUiFromManager();
 			
 			if( profileChanged ) {
-				handleConnectionProfileSelected();
+				handleConnectionProfileSelected(false);
 			}
 			
 			setPageStatus();
