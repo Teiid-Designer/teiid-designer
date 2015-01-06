@@ -326,14 +326,14 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		selectedFileText.setEditable(false);
 		
 		Button showFileContentsButton = new Button(folderContentsGroup, SWT.PUSH);
-		showFileContentsButton.setText("Show Contents");
+		showFileContentsButton.setText("Show Contents"); //$NON-NLS-1$
 		showFileContentsButton.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if( modelsDefinitionSection.getXmlFileInfo() != null ) {
 					FileUiUtils.INSTANCE.showFileContents(getShell(), modelsDefinitionSection.getXmlFileInfo().getDataFile(), 
-							"Response Document", modelsDefinitionSection.getXmlFileInfo().getDataFile().getName());
+							"Response Document", modelsDefinitionSection.getXmlFileInfo().getDataFile().getName()); //$NON-NLS-1$
 				}
 			}
 			
@@ -693,9 +693,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
 					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (Exception ex) {
-			if( ex instanceof JSONException && ex.getMessage().contains("A JSONObject text must begin with") ) {
+			if( ex instanceof JSONException && ex.getMessage().contains("A JSONObject text must begin with") ) { //$NON-NLS-1$
 				
-				String message = getString("invalidRESTResponseTypeMessage", responseType);
+				String message = getString("invalidRESTResponseTypeMessage", responseType); //$NON-NLS-1$
 				MessageDialog.openError(this.getShell(),
 						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
 						message); //$NON-NLS-1$
@@ -734,7 +734,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		
 		jsonFile = File.createTempFile(
 				CoreStringUtil.createFileName(jsonFile.getName()), DOT_XML_LOWER);
-		String xml = XML.toString(jsonObject);
+		String xml = XML.toString(jsonObject, "result"); //$NON-NLS-1$
 		FileUtils.write(xml.getBytes(), jsonFile);
 		return jsonFile;
 

@@ -274,6 +274,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	 * @return the extraProperties
 	 */
 	public Properties getExtraProperties() {
+		this.extraProperties = new Properties();
     	for( String key : this.getParameterMap().keySet() )  {
     		Parameter para = this.getParameterMap().get(key);
     		this.extraProperties.put(para.getPropertyKey(), para.getPropertyValue());
@@ -288,7 +289,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	public void setExtraProperties(Properties extraProperties) {
     	for( String key : this.getParameterMap().keySet() )  {
     		Parameter para = this.getParameterMap().get(key);
-    		this.extraProperties.put(para.getPropertyKey(), para.getPropertyValue());
+    		extraProperties.put(para.getPropertyKey(), para.getPropertyValue());
     	}
 		this.extraProperties = extraProperties;
 	}
