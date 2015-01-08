@@ -162,7 +162,7 @@ public class ModelObjectTableModel implements UiConstants, EObjectPropertiesOrde
             for (int i = 0; i < properties.length; ++i) {
                 if (properties[i] instanceof ModelObjectPropertyDescriptor) {
                     ((ModelObjectPropertyDescriptor)properties[i]).setShowReadOnlyDialog(false);
-                    ((ModelObjectPropertyDescriptor)properties[i]).setLazyLoadValues(true);
+                    ((ModelObjectPropertyDescriptor)properties[i]).setLazyLoadValues(false);
                 } else if (properties[i] instanceof ExtensionPropertyDescriptor) {
                     ((ExtensionPropertyDescriptor)properties[i]).setShowReadOnlyDialog(false);
                 }
