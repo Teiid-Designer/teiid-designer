@@ -134,7 +134,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         Group group = WidgetFactory.createSimpleGroup(parent,
                                                       UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
 
-        scrolled = new Composite(group, SWT.NONE);
+        scrolled = new Composite(group, SWT.FILL);
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
         scrolled.setLayout(gridLayout);
