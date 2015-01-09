@@ -88,6 +88,27 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
         super.setControl(panel);
     }
     
+	private ModelResource getSelectedResource() {
+        ModelResource selectedResource = null;
+        if ( selection != null && SelectionUtilities.isSingleSelection(selection) ) {
+            Object obj = SelectionUtilities.getSelectedObject(selection);
+            if ( obj instanceof IFile ) {
+                if ( ModelUtilities.isModelFile((IFile) obj) ) {
+                    try {
+                        selectedResource = ModelUtil.getModelResource((IFile) obj, false);
+                        if ( ! selectedResource.getPrimaryMetamodelDescriptor().equals(this.metamodelDescriptor) ) {
+                            selectedResource = null;
+                        }
+                    } catch (ModelWorkspaceException e) {
+                        // no need to log, just launch the dialog empty
+                    } 
+                }
+            }
+        }
+        
+        return selectedResource;
+	}
+    
     public boolean isClearSupportsUpdate() {
         return panel.isClearSupportsUpdate();
     }
@@ -120,6 +141,15 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
     @Override
 	public boolean deselectDescendants(Object theNode) {
         return true;
+	}
+    
+	@Override
+	public void setVisible(boolean visible) {
+		super.setVisible(visible);
+		
+		if( visible ) {
+			ModelUtilities.warnIfUnsupportedModelInfoWontBeCopied(getSelectedResource());
+		}
 	}
 
 }

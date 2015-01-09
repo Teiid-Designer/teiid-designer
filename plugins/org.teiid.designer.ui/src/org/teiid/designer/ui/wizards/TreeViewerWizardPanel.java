@@ -33,6 +33,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.ClosedProjectFilter;
 import org.teiid.designer.ui.common.viewsupport.DotProjectFilter;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.ui.viewsupport.ModelWorkspaceTreeProvider;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
@@ -215,6 +216,9 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
                 wizardPage.setErrorMessage(null);
             }
         }
+        
+        // overridden extension property values might exist in a model and will not be copied
+        warnIfUnsupportedModelInfo(this.selectorDialogResult);
     }
 
     private IStructuralCopyTreePopulator displaySelectorDialog() {
@@ -268,5 +272,9 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
      */
     void setCopyEntireModel( boolean copyEntireModel ) {
         copyEntire = copyEntireModel;
+    }
+    
+    public void warnIfUnsupportedModelInfo(ModelResource mr) {
+        ModelUtilities.warnIfUnsupportedModelInfoWontBeCopied(mr);
     }
 }// end TreeViewerWizardPanel
