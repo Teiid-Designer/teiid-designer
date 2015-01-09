@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -38,6 +39,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
@@ -55,6 +57,8 @@ import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil.FileResourceCollectorVisitor;
 import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.definition.ModelExtensionAssistant;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.jdbc.JdbcPackage;
 import org.teiid.designer.jdbc.JdbcSource;
@@ -2014,5 +2018,56 @@ public abstract class ModelUtilities implements UiConstants {
 		} catch (Exception ex) {
 			UiConstants.Util.log(ex);
 		}
+    }
+    
+    /**
+     * Method that warns user that model contains info that will not be copied
+     * @param mr
+     * @return
+     */
+    public static void warnIfUnsupportedModelInfoWontBeCopied(ModelResource mr) {
+        if( mr == null ) return;
+        
+    	// Get assistants
+    	Collection<ModelObjectExtensionAssistant> assistants = new ArrayList<ModelObjectExtensionAssistant>();
+    	
+        for (String namespacePrefix : ExtensionPlugin.getInstance().getRegistry().getAllNamespacePrefixes()) {
+        	ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(namespacePrefix);
+            if (assistant instanceof ModelObjectExtensionAssistant) {
+            	assistants.add((ModelObjectExtensionAssistant)assistant);
+            }
+        }
+    	
+        boolean doWarn = false;
+		try {
+			// Iterate through model's eObjects and bail 
+			Iterator<?> iter = mr.getEmfResource().getAllContents();
+			doWarn = false;
+			
+			while (iter.hasNext()) {
+			    final EObject eObj = (EObject) iter.next();
+			    
+			    for( ModelObjectExtensionAssistant nextAss : assistants ) {
+			        if( nextAss.supportsMyNamespace(eObj)) {
+			        	Properties props = nextAss.getOverriddenValues(eObj);
+			        	if( props != null && !props.isEmpty() ) doWarn = true;;
+			        	
+			        	if( doWarn ) break;
+			        }
+			    }
+			    if( doWarn ) {
+			    	break;
+			    }
+			}
+		} catch (ModelWorkspaceException e) {
+			UiConstants.Util.log(e);
+		} catch (Exception e) {
+			UiConstants.Util.log(e);
+		}
+
+        if( doWarn ) {
+			MessageDialog.openWarning(Display.getCurrent().getActiveShell(), UiConstants.Util.getString("StructuralCopyWizardPage.modelContainsExtensionPropertiesWarningTitle"),  //$NON-NLS-1$
+					UiConstants.Util.getString("StructuralCopyWizardPage.modelContainsExtensionPropertiesWarningMsg", mr.getItemName()));  //$NON-NLS-1$
+        }
     }
 }
