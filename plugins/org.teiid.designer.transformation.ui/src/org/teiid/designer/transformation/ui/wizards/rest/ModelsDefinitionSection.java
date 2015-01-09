@@ -264,9 +264,16 @@ public final class ModelsDefinitionSection implements UiConstants{
 	}
 	
 	void setXmlFileInfo() {
+		String oldVPName = null;
+		if( this.xmlFileInfo != null ) {
+			oldVPName = this.viewProcedureNameText.getText();
+		}
 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
 				this.xmlFileInfo = fileInfo;
+				if( oldVPName != null) {
+					this.xmlFileInfo.setViewProcedureName(oldVPName);
+				}
 				break;
 			}
 		}
@@ -688,14 +695,13 @@ public final class ModelsDefinitionSection implements UiConstants{
 			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
 		}
 
+		String viewProcedureName = viewProcedureNameText.getText();
 		if (this.xmlFileInfo != null) {
 			if (this.xmlFileInfo.getViewProcedureName() != null) {
-				this.viewProcedureNameText.setText(this.xmlFileInfo
-						.getViewProcedureName());
-			} else {
-				this.viewProcedureNameText
-						.setText(StringUtilities.EMPTY_STRING);
+				this.viewProcedureNameText.setText(this.xmlFileInfo.getViewProcedureName());
 			}
+		} else {
+			this.viewProcedureNameText.setText(viewProcedureName);
 		}
 
 		String viewFileName = EMPTY_STRING;

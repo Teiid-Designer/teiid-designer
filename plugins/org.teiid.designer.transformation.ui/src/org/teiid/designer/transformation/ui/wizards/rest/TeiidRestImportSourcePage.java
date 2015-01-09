@@ -132,7 +132,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	private ILabelProvider srcLabelProvider;
 	private Combo srcCombo;
-	private Text dataFileFolderText;
 	private Button editCPButton;
 	private TableViewer fileViewer;
 	private DataFolderContentProvider fileContentProvider;
@@ -141,8 +140,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	Text responseTypeText;
 
 	private Map<String, Object> parameterMap;
-
-	private Text selectedFileText;
 
 	private ProfileManager profileManager = ProfileManager.getInstance();
 	private Collection<IConnectionProfile> connectionProfiles;
@@ -303,27 +300,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		Label locationLabel = new Label(folderContentsGroup, SWT.NONE);
 		locationLabel.setText(getString("folderLocation")); //$NON-NLS-1$
 
-		dataFileFolderText = new Text(folderContentsGroup, SWT.BORDER
-				| SWT.SINGLE);
-		dataFileFolderText.setBackground(WidgetUtil
-				.getReadOnlyBackgroundColor());
-		dataFileFolderText.setForeground(WidgetUtil.getDarkBlueColor());
-		dataFileFolderText
-				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		((GridData)dataFileFolderText.getLayoutData()).horizontalSpan = 2;
-		dataFileFolderText.setEditable(false);
-
 		createFileTableViewer(folderContentsGroup);
-
-		Label selectedFileLabel = new Label(folderContentsGroup, SWT.NONE);
-		selectedFileLabel.setText(getString("selectedRestFile")); //$NON-NLS-1$
-
-		selectedFileText = new Text(folderContentsGroup, SWT.BORDER
-				| SWT.SINGLE);
-		selectedFileText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-		selectedFileText.setForeground(WidgetUtil.getDarkBlueColor());
-		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		selectedFileText.setEditable(false);
 		
 		Button showFileContentsButton = new Button(folderContentsGroup, SWT.PUSH);
 		showFileContentsButton.setText("Show Contents"); //$NON-NLS-1$
@@ -423,41 +400,51 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	}
 
 	void profileComboSelectionChanged() {
+		boolean changed = false;
 		if (this.srcCombo.getSelectionIndex() > -1) {
 			String cpName = this.srcCombo.getItem(this.srcCombo
 					.getSelectionIndex());
 			for (IConnectionProfile profile : this.connectionProfiles) {
 				if (profile.getName().equalsIgnoreCase(cpName)) {
-					setConnectionProfile(profile);
-					setDataFolderLocation();
-
-					clearFileListViewer();
-					loadFileListViewer();
+					changed = setConnectionProfile(profile, false);
+					if (changed) {
+						clearFileListViewer();
+						loadFileListViewer();
+					}
 					break;
 				}
 			}
 		} else {
-			setConnectionProfile(null);
+			changed = true;
+			setConnectionProfile(null, false);
 		}
 
-		synchronizeUI();
-
-		validatePage();
-
-		this.editCPButton.setEnabled(getConnectionProfile() != null);
+		if (changed) {
+			synchronizeUI();
+			validatePage();
+			this.editCPButton.setEnabled(getConnectionProfile() != null);
+		}
 	}
 
 	public void setDesignerProperties(Properties properties) {
 		this.designerProperties = properties;
 	}
 
-	private void setConnectionProfile(IConnectionProfile profile) {
+	private boolean setConnectionProfile(IConnectionProfile profile, boolean wasEdited) {
+		IConnectionProfile existingProfile = info.getConnectionProfile();
+		
+		if (!wasEdited && existingProfile != null && profile != null && existingProfile.getName().equals(profile.getName()))
+			return false;
+		
 		if (profile == null || isInvalidXmlFileProfile(profile)) {
 			this.fileViewer.setInput(null);
 			clearFileListViewer();
 		}
+		
 		this.parameterMap.clear();
+
 		this.info.setConnectionProfile(profile);
+		return true;
 	}
 
 	private IConnectionProfile getConnectionProfile() {
@@ -516,19 +503,19 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				// This will be the case if No XML is defined and URL
 				// version exists OR if nothing is defined in CP
 				fileViewer.setInput("no input"); //$NON-NLS-1$
-
+				
 				if (isRestConnectionProfile()) {
 					xmlFile = getXmlFileFromRestUrl(getConnectionProfile());
 				} else {
 					xmlFile = getXmlFileFromUrl(urlString);
 				}
-				if( this.modelsDefinitionSection.getXmlFileInfo() == null ) {
+//				if( this.modelsDefinitionSection.getXmlFileInfo() == null ) {
 					if (xmlFile != null && xmlFile.exists()) {
 						setXmlFile(xmlFile, true, urlString);
 					}
-				} else if (xmlFile != null && xmlFile.exists() ) {
-					resetXmlFile(xmlFile);
-				}
+//				} else if (xmlFile != null && xmlFile.exists() ) {
+//					resetXmlFile(xmlFile);
+//				}
 			} else {
 				fileViewer.setInput(null);
 				MessageDialog.openError(this.getShell(),
@@ -668,13 +655,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				fos = new FileOutputStream(xmlFile);
 				write(fos, is);
 			} else {
-				jsonFile = File
-						.createTempFile(
-								CoreStringUtil.createFileName(filePath),
-								DOT_XML_LOWER);
+				jsonFile = File.createTempFile(CoreStringUtil.createFileName(filePath), DOT_XML_LOWER);
 				fos = new FileOutputStream(jsonFile);
 				write(fos, is);
-				xmlFile = convertJsonToXml(jsonFile, CoreStringUtil.createFileName(filePath));
+				xmlFile = convertJsonToXml(jsonFile);
 			}
 
 		} catch (MalformedURLException ex) {
@@ -721,7 +705,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	 * @throws IOException 
 	 * @throws JSONException 
 	 */
-	private File convertJsonToXml(File jsonFile, String name) throws IOException, Exception {
+	private File convertJsonToXml(File jsonFile) throws IOException, Exception {
 
 		String jsonText = null;
 		try {
@@ -731,9 +715,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			ex.printStackTrace();
 		}
 		JSONObject jsonObject = new JSONObject(jsonText);
-		
-		jsonFile = File.createTempFile(
-				CoreStringUtil.createFileName(jsonFile.getName()), DOT_XML_LOWER);
+
 		String xml = XML.toString(jsonObject, "result"); //$NON-NLS-1$
 		FileUtils.write(xml.getBytes(), jsonFile);
 		return jsonFile;
@@ -846,18 +828,27 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	private void setXmlFile(File xmlFile, boolean isUrl, String urlString) {
 		fileViewer.setInput(xmlFile);
-		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
-		if (fileInfo == null) {
-			fileInfo = new TeiidXmlFileInfo(xmlFile);
-			fileInfo.setIsUrl(isUrl);
-			if (isUrl) {
-				fileInfo.setParameterMap(this.parameterMap);
-				fileInfo.setXmlFileUrl(urlString);
-				Properties props = getConnectionProfile().getBaseProperties();
-				fileInfo.setResponseType((String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
-			}
-			//this.info.addXmlFileInfo(fileInfo);
+		
+		TeiidXmlFileInfo oldFileInfo = this.info.getXmlFileInfo(xmlFile);
+		String oldVPName = null;
+		if( oldFileInfo != null ) {
+			oldVPName = oldFileInfo.getViewProcedureName();
+			this.info.clearXmlFileInfos();
 		}
+		
+		TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(xmlFile);
+		if( oldVPName != null ) {
+			fileInfo.setViewProcedureName(oldVPName);
+		}
+		
+		fileInfo.setIsUrl(isUrl);
+		if (isUrl) {
+			fileInfo.setParameterMap(this.parameterMap);
+			fileInfo.setXmlFileUrl(urlString);
+			Properties props = getConnectionProfile().getBaseProperties();
+			fileInfo.setResponseType((String)props.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY));
+		}
+
 		this.info.addXmlFileInfo(fileInfo);
 		fileViewer.getTable().select(0);
 		fileViewer.getTable().getItem(0).setChecked(true);
@@ -868,10 +859,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 					getString("parsingErrorTitle"), //$NON-NLS-1$
 					fileParsingStatus.getMessage());
 		}
+		modelsDefinitionSection.setXmlFileInfo();
 	}
 	
 	private void resetXmlFile(File xmlFile) {
 		fileViewer.setInput(xmlFile);
+		
 		TeiidXmlFileInfo fileInfo = this.info.getXmlFileInfo(xmlFile);
 		
 		fileViewer.getTable().select(0);
@@ -965,17 +958,20 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		CPListener listener = new CPListener();
 		ProfileManager.getInstance().addProfileListener(listener);
+		
 		if (wizardDialog.open() == Window.OK) {
 
 			refreshConnectionProfiles();
 
 			resetCPComboItems();
-			setConnectionProfile(listener.getChangedProfile());
+			setConnectionProfile(listener.getChangedProfile(), true);
 
 			selectProfile(listener.getChangedProfile());
-
-			ProfileManager.getInstance().removeProfileListener(listener);
+			
+			profileComboSelectionChanged();
 		}
+		
+		ProfileManager.getInstance().removeProfileListener(listener);
 	}
 
 	void selectProfile(IConnectionProfile profile) {
@@ -1010,7 +1006,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 			// Update the Combo Box
 			if (action.wasFinished()) {
-				setConnectionProfile(listener.getChangedProfile());
+				setConnectionProfile(listener.getChangedProfile(), true);
 				this.refreshConnectionProfiles();
 				WidgetUtil.setComboItems(this.srcCombo, this.connectionProfiles, this.srcLabelProvider, true);
 
@@ -1021,7 +1017,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				
 				modelsDefinitionSection.setXmlFileInfo();
 				
-				setConnectionProfile(null);
+				setConnectionProfile(null, false);
 				
 				selectConnectionProfile(currentProfile.getName());
 
@@ -1030,10 +1026,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				//profileComboSelectionChanged();
 				
 				modelsDefinitionSection.setXmlFileInfo();
-			} else {
-				// Remove the listener if the dialog is canceled
-				ProfileManager.getInstance().removeProfileListener(listener);
 			}
+			
+			ProfileManager.getInstance().removeProfileListener(listener);
 		}
 	}
 
@@ -1052,7 +1047,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				break;
 			}
 		}
-		this.selectedFileText.setText(fileName);
+//		this.selectedFileText.setText(fileName);
 
 		synchronizing = false;
 		
@@ -1339,7 +1334,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				this.info.setViewModelName(null);
 				this.info.setSourceModelName(null);
 			} else if (!isValidProfileForPage(currentProfile)) {
-				setConnectionProfile(null);
+				setConnectionProfile(null, false);
 				this.fileViewer.setInput(null);
 				this.info.setViewModelName(null);
 				this.info.setSourceModelName(null);
@@ -1348,8 +1343,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				this.info.setViewModelName(null);
 				this.info.setSourceModelName(null);
 			}
-
-			setDataFolderLocation();
 
 			refreshConnectionProfiles();
 
@@ -1365,42 +1358,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			validatePage();
 			
 			visibleCompleted = true;
-		}
-	}
-
-	private void setDataFolderLocation() {
-		IConnectionProfile profile = getConnectionProfile();
-		if (profile != null) {
-			Properties props = profile.getBaseProperties();
-			String home = (String) props
-					.get(IXmlProfileConstants.TEIID_PARENT_DIRECTORY_KEY);
-			if (home != null) {
-				String location = home;
-				if (location.length() > 60) {
-					int len = location.length();
-					location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
-				}
-				this.dataFileFolderText.setText(location);
-				this.dataFileFolderText.setToolTipText(home);
-			} else {
-				String URL = (String) props
-						.get(IXmlProfileConstants.URL_PROP_ID);
-				if (URL != null) {
-					String location = URL;
-					if (location.length() > 60) {
-						int len = location.length();
-						location = "..." + location.substring(len - 60, len); //$NON-NLS-1$
-					}
-					this.dataFileFolderText.setText(location);
-					this.dataFileFolderText.setToolTipText(URL);
-				} else {
-					this.dataFileFolderText.setText(EMPTY_STRING);
-					this.dataFileFolderText.setToolTipText(EMPTY_STRING);
-				}
-			}
-		} else {
-			this.dataFileFolderText.setText(EMPTY_STRING);
-			this.dataFileFolderText.setToolTipText(EMPTY_STRING);
 		}
 	}
 
