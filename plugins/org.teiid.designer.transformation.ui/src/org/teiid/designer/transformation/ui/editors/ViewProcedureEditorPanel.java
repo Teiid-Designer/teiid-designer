@@ -734,8 +734,10 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
                         String selectedFile = VdbFileDialogUtil.selectFile(udfJarPathBrowse.getShell(),
                                                                                 getModelFile().getProject(),
                                                                                 VdbFolders.UDF);
-                        getRelationalReference().setUdfJarPath(selectedFile);
-                        handleInfoChanged();
+                        if( selectedFile != null && !selectedFile.isEmpty() ) {
+	                        getRelationalReference().setUdfJarPath(selectedFile);
+	                        handleInfoChanged();
+                        }
                     }
                 });
 
