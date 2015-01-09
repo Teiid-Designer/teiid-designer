@@ -89,7 +89,7 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
      */
 	private void createPanel(Composite parent) {
     	Composite panel = WidgetFactory.createGroup(parent, StringConstants.EMPTY_STRING, SWT.FILL, 2, 1); 
-    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
     	gd.horizontalSpan = 2;
     	panel.setLayoutData(gd);
 
