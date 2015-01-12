@@ -92,6 +92,44 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
     	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
     	gd.horizontalSpan = 2;
     	panel.setLayoutData(gd);
+    	
+        //
+        // add toolbar above the table
+        //
+        
+        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
+        ((GridLayout)toolbarPanel.getLayout()).marginHeight = 0;
+        
+        this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.addPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.ADD_PROPERTY_ICON)); 
+        this.addPropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_addNewPropertyButton_tooltip")); //$NON-NLS-1$
+        this.addPropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleAddProperty();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.removePropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.REMOVE_PROPERTY_ICON));
+        this.removePropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_removePropertyButton_tooltip"));  //$NON-NLS-1$
+        this.removePropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleRemoveProperty();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        this.removePropertyButton.setEnabled(false);
 
         this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
         GridDataFactory.fillDefaults().grab(true, true).span(2, 1).applyTo(propertiesViewer.getTableComposite());
@@ -198,43 +236,6 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
                 handlePropertySelected();
             }
         });
-
-        //
-        // add toolbar below the table
-        //
-        
-        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
-        
-        this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.addPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.ADD_PROPERTY_ICON)); 
-        this.addPropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_addNewPropertyButton_tooltip")); //$NON-NLS-1$
-        this.addPropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleAddProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        
-        this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.removePropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.REMOVE_PROPERTY_ICON));
-        this.removePropertyButton.setToolTipText(UTIL.getString("HeaderPropertiesPanel_removePropertyButton_tooltip"));  //$NON-NLS-1$
-        this.removePropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleRemoveProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        this.removePropertyButton.setEnabled(false);
         
         this.propertiesViewer.setInput(this);
 	}

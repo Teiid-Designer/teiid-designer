@@ -108,9 +108,47 @@ public class ParameterPanel implements DatatoolsUiConstants {
 	private void createPanel(Composite parent) {
 		
     	Composite panel = WidgetFactory.createGroup(parent, StringConstants.EMPTY_STRING, SWT.FILL, 2, 1);  //$NON-NLS-1$
-    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+    	GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
     	gd.horizontalSpan = 2;
     	panel.setLayoutData(gd);
+    	
+    	//
+        // add toolbar above the table
+        //
+        
+        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
+        ((GridLayout)toolbarPanel.getLayout()).marginHeight = 0;
+        
+        this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.addPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.ADD_PROPERTY_ICON)); 
+        this.addPropertyButton.setToolTipText(UTIL.getString("ParametersPanel_addNewParameterButton_tooltip")); //$NON-NLS-1$
+        this.addPropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleAddProperty();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.removePropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.REMOVE_PROPERTY_ICON));
+        this.removePropertyButton.setToolTipText(UTIL.getString("ParametersPanel_removeParameterButton_tooltip"));  //$NON-NLS-1$
+        this.removePropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleRemoveProperty();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        this.removePropertyButton.setEnabled(false);
 
         this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
         GridDataFactory.fillDefaults().grab(true, true).span(3, 1).hint(360,  160).applyTo(propertiesViewer.getTableComposite());
@@ -206,43 +244,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 handlePropertySelected();
             }
         });
-
-        //
-        // add toolbar below the table
-        //
-        
-        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
-        
-        this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.addPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.ADD_PROPERTY_ICON)); 
-        this.addPropertyButton.setToolTipText(UTIL.getString("ParametersPanel_addNewParameterButton_tooltip")); //$NON-NLS-1$
-        this.addPropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleAddProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        
-        this.removePropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
-        this.removePropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.REMOVE_PROPERTY_ICON));
-        this.removePropertyButton.setToolTipText(UTIL.getString("ParametersPanel_removeParameterButton_tooltip"));  //$NON-NLS-1$
-        this.removePropertyButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleRemoveProperty();
-			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-		});
-        this.removePropertyButton.setEnabled(false);
         
         this.propertiesViewer.setInput(this);
 	}
