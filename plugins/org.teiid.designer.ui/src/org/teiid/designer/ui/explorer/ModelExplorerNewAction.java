@@ -9,6 +9,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -129,6 +130,22 @@ public class ModelExplorerNewAction extends Action implements IMenuCreator{
 
 		return list;
 	}
+	
+	private void addGoToExamplesAction(Menu menu) {
+		new Separator().fill(menu, -1);
+		
+		IAction goToExamplesAction = new Action("Go to examples...") {
+
+			@Override
+			public void run() {
+				ModelerUiViewUtils.openTeiidDesignerExamplesPage(); 
+			}
+			
+		};
+		
+		ActionContributionItem item = new ActionContributionItem(goToExamplesAction);
+		item.fill(menu, -1);
+	}
 
 	@Override
 	public void dispose() {
@@ -140,6 +157,8 @@ public class ModelExplorerNewAction extends Action implements IMenuCreator{
 		for (IAction action : actions) {
 			addActionToMenu(menu, action);
 		}
+
+		addGoToExamplesAction(menu);
 
 		setEnabled(!actions.isEmpty());
 

@@ -120,7 +120,8 @@ public class Messages  extends NLS {
     public static String GenerateRestWar_Short;
     public static String GenerateSoapWar;
     public static String GenerateSoapWar_Short;
-
+    public static String GoToExamples; 
+    public static String GoToExamples_Tooltip;
     
     public static String Guides;
     
