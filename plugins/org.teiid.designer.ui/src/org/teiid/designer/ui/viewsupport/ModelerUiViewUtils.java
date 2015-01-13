@@ -7,9 +7,12 @@
  */
 package org.teiid.designer.ui.viewsupport;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -28,12 +31,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelProject;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.ui.UiConstants;
-import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.UiConstants.Extensions;
+import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -47,6 +47,7 @@ import org.teiid.designer.ui.wizards.NewModelProjectWizard;
 public class ModelerUiViewUtils {
 
 	private static IViewPart cachedView;
+	public static final String DESIGNER_EXAMPLES_URL = "http://developer.jboss.org/wiki/TeiidDesignerExamples";//$NON-NLS-1$
 
     /** 
      * @since 5.0
@@ -338,6 +339,19 @@ public class ModelerUiViewUtils {
 		
         IProject project = DesignerPropertiesUtil.getProject(newProps);
         return project;
+	}
+	
+	public static void openTeiidDesignerExamplesPage() {
+		
+		try {
+			PlatformUI.getWorkbench().getBrowserSupport().createBrowser("designerExamplesID").openURL(new URL(DESIGNER_EXAMPLES_URL));//$NON-NLS-1$
+		} catch (PartInitException theException) {
+			 UiConstants.Util.log(IStatus.ERROR, theException, theException.getLocalizedMessage());
+             WidgetUtil.showError(theException.getLocalizedMessage());
+		} catch (MalformedURLException theException) {
+			 UiConstants.Util.log(IStatus.ERROR, theException, theException.getLocalizedMessage());
+             WidgetUtil.showError(theException.getLocalizedMessage());
+		} 
 	}
 
 }
