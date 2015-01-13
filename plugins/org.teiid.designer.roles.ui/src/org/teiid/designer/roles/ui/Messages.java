@@ -39,6 +39,7 @@ public class Messages  extends NLS {
 	public static String columnMask;
 	public static String order;
 	public static String constraint;
+	public static String constraint_with_tooltip;
 	public static String mask;
 	public static String options;
 	public static String optionsTabDescription;

@@ -185,6 +185,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 	        
 	        column = tableBuilder.createColumn(SWT.LEFT, 30, 100, true);
 	        column.getColumn().setText(Messages.constraint);
+	        column.getColumn().setToolTipText(Messages.constraintButtonTooltip);
 	        column.setLabelProvider(new PermissionLabelProvider(1));
 	        column.setEditingSupport(new ContraintEditingSupport(tableBuilder.getTableViewer()));
 
@@ -556,7 +557,10 @@ public class RowBasedSecurityPanel extends DataRolePanel {
     	        button.setEnabled(!isEdit);
 
     	        this.constraintButton = new Button(innerPanel, SWT.CHECK);
-    	        this.constraintButton.setText(Messages.constraint);
+    	        this.constraintButton.setText(Messages.constraint_with_tooltip);
+    	        GridData gd = new GridData();
+    	        gd.horizontalSpan = 3;
+    	        this.constraintButton.setLayoutData(gd);
     	        if( isEdit ) {
     	        	this.constraintButton.setSelection(this.constraint);
     	        } else {
