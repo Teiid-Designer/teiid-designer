@@ -43,6 +43,7 @@ import org.teiid.designer.advisor.ui.actions.AdvisorActionProvider;
 import org.teiid.designer.advisor.ui.actions.AdvisorGuides;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.forms.FormUtil;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -59,6 +60,7 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 	private Combo actionGroupCombo;
     private TreeViewer guidesViewer;
     private Hyperlink executeLink;
+    private Hyperlink goToExamplesLink;
     private Text descriptionText;
     private AdvisorActionProvider actionProvider;
     private AdvisorGuides guides;
@@ -81,6 +83,7 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 	
 	@SuppressWarnings("unused")
 	private void createSection(Composite theParent) {
+
 		SECTION : {
 	        section = this.toolkit.createSection(theParent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED );
 	        Color bkgdColor = this.toolkit.getColors().getBackground();
@@ -98,6 +101,24 @@ public class TeiidGuidesSection  implements AdvisorUiConstants {
 	        layout.marginHeight = 1;
 	        layout.marginWidth = 1;
 	        sectionBody.setLayout(layout);
+		}
+
+		// Add go to examples link in section toolbar
+		EXAMPLES_LINK : {
+    		Composite toolbar = FormUtil.createSectionToolBar(this.section, toolkit);
+    		
+			this.goToExamplesLink = this.toolkit.createHyperlink(toolbar, Messages.GoToExamples, SWT.WRAP);
+			this.toolkit.adapt(this.goToExamplesLink, true, true);
+			this.goToExamplesLink.setEnabled(false);
+			this.goToExamplesLink.setToolTipText(Messages.GoToExamples_Tooltip);
+			this.goToExamplesLink.addHyperlinkListener(new HyperlinkAdapter() {
+				@Override
+				public void linkActivated(HyperlinkEvent theEvent) {
+					ModelerUiViewUtils.openTeiidDesignerExamplesPage(); 
+				}
+			});
+			this.goToExamplesLink.setBackground(this.section.getBackground());
+			this.goToExamplesLink.setEnabled(true);
 		}
 
 		EXECUTE_LINK : {
