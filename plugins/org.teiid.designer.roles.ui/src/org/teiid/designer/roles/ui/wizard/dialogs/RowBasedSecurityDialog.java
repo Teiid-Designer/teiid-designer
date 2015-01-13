@@ -95,10 +95,18 @@ public class RowBasedSecurityDialog extends AbstractAddOrEditTitleDialog {
 	        this.targetNameText.setEditable(false);
 	        this.targetNameText.setBackground(innerPanel.getBackground());
 
-	        Label label = WidgetFactory.createLabel(innerPanel, Messages.constraint);
-	        label.setToolTipText(Messages.constraintButtonTooltip);
-
 	        this.constraintButton = new Button(innerPanel, SWT.CHECK);
+	        this.constraintButton.setText(Messages.constraint_with_tooltip);
+	        GridData gd = new GridData();
+	        gd.horizontalSpan = 3;
+	        this.constraintButton.setLayoutData(gd);
+	        if( isEdit ) {
+	        	this.constraintButton.setSelection(this.constraint);
+	        } else {
+	        	this.constraintButton.setSelection(true);
+	        }
+	        this.constraintButton.setToolTipText(Messages.constraintButtonTooltip);
+	        
 	        if( isEdit ) {
 	        	this.constraintButton.setSelection(this.constraint);
 	        } else {
