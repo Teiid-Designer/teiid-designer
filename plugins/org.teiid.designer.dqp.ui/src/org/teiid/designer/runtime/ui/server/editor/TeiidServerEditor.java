@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.server.editor;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Properties;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -50,6 +52,7 @@ import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
 import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.runtime.DqpPlugin;
@@ -81,6 +84,11 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     public static final String EDITOR_ID = TeiidServerEditor.class.getCanonicalName();
     
     private static final String EMPTY_STRING = CoreStringUtil.Constants.EMPTY_STRING;
+    
+    private static final String NOT_CONNECTED = UTIL.getString("TeiidServerJDBCSection.notConnectedLabel"); //$NON-NLS-1$
+    
+    private static final int PORT_MIN = 1;
+    private static final int PORT_MAX = 65535;
 
     /**
      * Flag indicating editor's dirty status
@@ -125,6 +133,8 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     private Text jdbcPasswdText;
 
     private Control jdbcPort;
+    
+    private Text jdbcPortOverride;
     
     private Button jdbcSSLCheckbox;
 
@@ -413,7 +423,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
         
         Composite composite = toolkit.createComposite(section);
-        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).margins(5, 10).spacing(5, 20).applyTo(composite);
+        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
        
         if (isSevenServer()) {
@@ -490,7 +500,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         GridDataFactory.fillDefaults().grab(true, false).applyTo(section);
         
         Composite composite = toolkit.createComposite(section);
-        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(true).margins(5, 10).spacing(5, 20).applyTo(composite);
+        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(5, 10).spacing(5, 20).applyTo(composite);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(composite);
         
         Label userNameLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.userNameLabel")); //$NON-NLS-1$
@@ -499,7 +509,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         jdbcUserNameText = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getUsername());
         GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcUserNameText);
         jdbcUserNameText.addKeyListener(dirtyKeyListener);
-        
+
         Label passwdLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.passwordLabel")); //$NON-NLS-1$
         blueForeground(passwdLabel);
         
@@ -508,18 +518,43 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         jdbcPasswdText.addKeyListener(dirtyKeyListener);
         
         Label portLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.portLabel")); //$NON-NLS-1$
+        portLabel.setToolTipText(UTIL.getString("TeiidServerJDBCSection.portToolTip"));  //$NON-NLS-1$
         blueForeground(portLabel);
         
-        if (isSevenServer()) {
+        if (isSevenServer() ) {
             // Only if Teiid Instance is version 7 will the port be editable since subsequent 
             // versions the port can be gathered from the server
             jdbcPort = toolkit.createText(composite, teiidServer.getTeiidJdbcInfo().getPort());
             GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPort);
             jdbcPort.addKeyListener(dirtyKeyListener);
         } else {
-            jdbcPort = toolkit.createLabel(composite, teiidServer.getTeiidJdbcInfo().getPort());
+        	String portValue = NOT_CONNECTED;
+	        if( teiidServer.isConnected() ) {
+	        	portValue = getServerManager().getJdbcPort(teiidServer, false);
+	        	if( portValue == null ) {
+	        		portValue = NOT_CONNECTED;
+	        	}
+	        }
+            jdbcPort = toolkit.createLabel(composite, portValue);
+            jdbcPort.setToolTipText(UTIL.getString("TeiidServerJDBCSection.portToolTip"));  //$NON-NLS-1$
+
         }
         blueForeground(jdbcPort);
+        
+        if ( !isSevenServer() ) {
+	        Label portOverrideLabel = toolkit.createLabel(composite, UTIL.getString("TeiidServerJDBCSection.portOverrideLabel")); //$NON-NLS-1$
+	        blueForeground(portOverrideLabel);
+	        portOverrideLabel.setToolTipText(UTIL.getString("TeiidServerJDBCSection.portOverrideToolTip"));  //$NON-NLS-1$
+	        String portOverride = getServerManager().getJdbcPort(teiidServer, true);
+	        if( portOverride == null ) {
+	        	portOverride = EMPTY_STRING;
+	        }
+	        
+	    	jdbcPortOverride = toolkit.createText(composite, portOverride);
+	        GridDataFactory.fillDefaults().grab(true, false).applyTo(jdbcPortOverride);
+	        jdbcPortOverride.addKeyListener(dirtyKeyListener);
+	        jdbcPortOverride.setToolTipText(UTIL.getString("TeiidServerJDBCSection.portOverrideToolTip"));  //$NON-NLS-1$
+        }
         
         Label checkboxLabel = toolkit.createLabel(composite, UTIL.getString("serverPageSecureConnJDBCLabel")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().grab(true, false).applyTo(checkboxLabel);
@@ -596,11 +631,24 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         jdbcUserNameText.setText(teiidJdbcInfo.getUsername() != null ? teiidJdbcInfo.getUsername() : EMPTY_STRING); //teiidJdbcInfo.getUsername());
         jdbcPasswdText.setText(teiidJdbcInfo.getPassword() != null ? teiidJdbcInfo.getPassword() : EMPTY_STRING); //teiidJdbcInfo.getPassword());
         
-        String portValue = teiidJdbcInfo.getPort() != null ? teiidJdbcInfo.getPort() : EMPTY_STRING;
-        if (jdbcPort instanceof Text) {
-            ((Text) jdbcPort).setText(portValue);
-        } else if (jdbcPort instanceof Label) {
-            ((Label) jdbcPort).setText(portValue);
+        if( isSevenServer() ) {
+        	String portValue = teiidJdbcInfo.getPort() != null ? teiidJdbcInfo.getPort() : EMPTY_STRING;
+        	if (jdbcPort instanceof Text) {
+                ((Text) jdbcPort).setText(portValue);
+            } 
+        } else {
+	        String portValue = NOT_CONNECTED;
+	        if( teiidServer.isConnected() ) {
+	        	portValue = getServerManager().getJdbcPort(teiidServer, false);
+	        	if( portValue == null ) {
+	        		portValue = NOT_CONNECTED;
+	        	}
+	        	((Label) jdbcPort).setText(portValue);
+	        }
+	        portValue = getServerManager().getJdbcPort(teiidServer, true);
+	        if( portValue != null ) {
+	        	jdbcPortOverride.setText(portValue);
+	        }
         }
 
         jdbcSSLCheckbox.setSelection(teiidJdbcInfo.isSecure());
@@ -631,8 +679,25 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     public void doSave(IProgressMonitor monitor) {
         if (teiidServer == null)
             return;
+        
+        // VALIDATE ANY UI CONTENT
+        String invalidMessage = validate();
+        
+        if( invalidMessage != null ) {
+        	MessageDialog.openError(getSite().getShell(), "Teiid Server Configuration Errors", invalidMessage);
+        	return;
+        }
 
         ITeiidServerVersion newTeiidServerVersion = teiidServer.getServerVersion();
+
+        // =========================================================================
+        // Make sure that the latest override value is saved to the server manager
+        //
+        
+        updatePortOverride();
+        
+        // =========================================================================
+        
         if (versionValueCombo.getText() != null)
             newTeiidServerVersion = new TeiidServerVersion(versionValueCombo.getText());
 
@@ -645,7 +710,20 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             serverOptions.add(ServerOptions.ADMIN_SECURE_CONNECTION);
         if (jdbcSSLCheckbox.getSelection())
             serverOptions.add(ServerOptions.JDBC_SECURE_CONNECTION);
-
+        
+        // =========================================================================
+        // Determine if an override exists and use it instead the discovered PORT
+        String finalJdbcPort = EMPTY_STRING;
+        if( isSevenServer() ) {
+        	finalJdbcPort = jdbcPort instanceof Text ? ((Text) jdbcPort).getText() : teiidServer.getTeiidJdbcInfo().getPort();
+        } else {
+        	finalJdbcPort = getServerManager().getJdbcPort(teiidServer, true);
+	        if( StringUtilities.isEmpty(finalJdbcPort) ) {
+	        	finalJdbcPort = jdbcPort instanceof Text ? ((Text) jdbcPort).getText() : teiidServer.getTeiidJdbcInfo().getPort();
+	        }
+        }
+        // =========================================================================
+        
         ITeiidServer newTeiidServer = teiidServerFactory.createTeiidServer(
                                              newTeiidServerVersion,
                                              getServerManager(),
@@ -653,7 +731,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                                              teiidServer.getTeiidAdminInfo().getPort(),
                                              adminUserNameText != null ? adminUserNameText.getText() : teiidServer.getTeiidAdminInfo().getUsername(),
                                              adminPasswdText != null ? adminPasswdText.getText() : teiidServer.getTeiidAdminInfo().getPassword(),
-                                             jdbcPort instanceof Text ? ((Text) jdbcPort).getText() : teiidServer.getTeiidJdbcInfo().getPort(),
+                                             finalJdbcPort, // <<<<<<<<< DETERMINED ABOVE
                                              jdbcUserNameText.getText(),
                                              jdbcPasswdText.getText(),
                                              serverOptions.toArray(new ServerOptions[0]));
@@ -684,6 +762,48 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
     @Override
     public boolean isSaveAsAllowed() {
         return false;
+    }
+    
+    /*
+     * Update the port override value in the server manager
+     */
+    private void updatePortOverride() {
+    	if ( isSevenServer() ) return;
+    	
+    	String value = jdbcPortOverride.getText();
+    	int port = 0;
+    	if( !value.isEmpty() ) {
+    		port = Integer.parseInt(value);
+    	}
+    	
+    	getServerManager().setJdbcPort(teiidServer, port, true);
+    }
+    
+    /*
+     * Validate any UI content
+     */
+    private String validate() {
+    	if ( isSevenServer() ) return null;
+    	String msg = null;
+    	
+    	// Check jdbc port override value
+    	
+    	String value = jdbcPortOverride.getText();
+    	
+    	if( value == null ) {
+    		msg = "PORT override undefined";
+    	} else if( !value.isEmpty() ) {
+    		try {
+				int port = Integer.parseInt(value);
+				if( port < PORT_MIN || port > PORT_MAX ) {
+					msg = UTIL.getString("TeiidServerJDBCSection.invalidPortNumberMessage", PORT_MIN, PORT_MAX);
+				}
+			} catch (NumberFormatException e) {
+				msg = UTIL.getString("TeiidServerJDBCSection.invalidPortNumberMessage", PORT_MIN, PORT_MAX);
+			}
+    	}
+    	
+    	return msg;
     }
 
 }

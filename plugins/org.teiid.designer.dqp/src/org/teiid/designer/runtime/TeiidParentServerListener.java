@@ -11,6 +11,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
@@ -88,7 +89,10 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 if (teiidServer.getServerVersion().isGreaterThan(Version.TEIID_7_7.get())) {
                     teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
                 }
-                teiidServer.getTeiidJdbcInfo().setPort(newTeiidServer.getTeiidJdbcInfo().getPort());
+                String portNumber = serverManager.getJdbcPort(teiidServer, true);
+                if( StringUtilities.isEmpty(portNumber) ) {
+                    teiidServer.getTeiidJdbcInfo().setPort(newTeiidServer.getTeiidJdbcInfo().getPort());
+                }
 
                 teiidServer.notifyRefresh();
 
@@ -209,6 +213,18 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                      */
                     teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
                     teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
+                    
+                    // Cache the default Teiid JDBC port that was discovered on connection
+                    try {
+						int defaultPort = Integer.parseInt(queryServer.getTeiidJdbcInfo().getPort());
+						DqpPlugin.getInstance().getServerManager().setJdbcPort(teiidServer, defaultPort, false);
+						// If there is no override port cached, set it the same value as the default so they start in sync
+						if( DqpPlugin.getInstance().getServerManager().getJdbcPort(teiidServer, true) == null ) {
+							DqpPlugin.getInstance().getServerManager().setJdbcPort(teiidServer, defaultPort, true);
+						}
+					} catch (Exception e) {
+						// DO NOTHING
+					}
                 } else {
                     // If the query server is null then this is not a Teiid-enabled JBoss Server but
                     // a TeiidServer was cached in the registry, presumably due to an adaption
