@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -62,7 +61,6 @@ import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.panels.PropertyItem;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.types.DatatypeMapping;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -93,7 +91,6 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private File ddlFile;
     private String uniqueImportVdbName;
     private boolean redeploy = false;
-    private DatatypeMapping datatypeOverrides = new DatatypeMapping(true);
     
     /**
      * Set the data source name
