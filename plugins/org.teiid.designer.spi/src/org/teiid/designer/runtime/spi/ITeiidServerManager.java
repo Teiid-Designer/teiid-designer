@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.spi;
 
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.server.core.IServer;
@@ -145,6 +146,22 @@ public interface ITeiidServerManager extends EventManager {
      * @param teiidServer Sets defaultServer to the specified value. May be null.
      */
     void setDefaultServer(ITeiidServer teiidServer);
+    
+    /**
+     * 
+     * @param server the server instance
+     * @param port the port for this server to cache
+     * @param isOverride true if it's an port override value, false if not
+     */
+	void setJdbcPort(ITeiidServer server, int port, boolean isOverride);
+	
+	/**
+	 * 
+	 * @param server the server instance
+	 * @param isOverride true if returning an port override value, false if getting configured port
+	 * @return
+	 */
+	String getJdbcPort(ITeiidServer server, boolean isOverride);
 
     /**
      * Try and restore the manager's prior state

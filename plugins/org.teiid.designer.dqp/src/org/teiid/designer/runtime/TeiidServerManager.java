@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Collection;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -26,6 +28,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -175,6 +178,11 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * The attribute used to persist a server's secure value.
      */
     private static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
+    
+    /**
+     * The attribute used to persist a server's jdbc port override value.
+     */
+    private static final String JDBC_PORT_OVERRIDE_ATTR = "jdbcportoverride"; //$NON-NLS-1$
 
     private class TeiidServerKeyValueAdapter implements KeyFromValueAdapter<String, ITeiidServer> {
 
@@ -233,6 +241,8 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * The provider used for storing passwords
      */
     private ISecureStorageProvider secureStorageProvider;
+    
+	public TeiidJdbcPortManager jdbcPortManager = new TeiidJdbcPortManager();;
 
     /**
      * Flag indicating whether other open editors should be closed when the default server
@@ -667,6 +677,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
             for (int size = servers.getLength(), i = 0; i < size; ++i) {
                 ITeiidAdminInfo teiidAdminInfo = null;
                 ITeiidJdbcInfo teiidJdbcInfo = null;
+                String jdbcOverridePort = null;
                 Node serverNode = servers.item(i);
 
                 // server attributes (host, custom label, default teiid instance)
@@ -764,6 +775,14 @@ public final class TeiidServerManager implements ITeiidServerManager {
                                 Node jdbcPortNode = attributeMap.getNamedItem(JDBC_PORT_ATTR);
                                 assert (jdbcPortNode != null);
                                 String jdbcPort = jdbcPortNode.getNodeValue();
+                                
+                                // port override must be non-null/not empty to be valid server
+                                Node jdbcPortOverrideNode = attributeMap.getNamedItem(JDBC_PORT_OVERRIDE_ATTR);
+                                if( jdbcPortOverrideNode != null ) {
+                                	jdbcOverridePort = jdbcPortOverrideNode.getNodeValue();
+                                	
+                                }
+                                
 
                                 // username must be non-null/not empty to be valid server
                                 Node jdbcUserNode = attributeMap.getNamedItem(JDBC_USER_ATTR);
@@ -801,6 +820,9 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 teiidServer.setCustomLabel(customLabel);
 
                addServerInternal(teiidServer, true);
+               if( !StringUtilities.isEmpty(jdbcOverridePort) ) {
+            	   this.jdbcPortManager.setPort(teiidServer, Integer.parseInt(jdbcOverridePort), true);
+               }
 
                 if (previewServer) {
                     defaultServer = teiidServer;
@@ -889,7 +911,17 @@ public final class TeiidServerManager implements ITeiidServerManager {
         setDefaultServerInternal(teiidServer);
     }
 
-    /**
+    @Override
+	public void setJdbcPort(ITeiidServer server, int port, boolean isOverride) {
+    	jdbcPortManager.setPort(server, port, isOverride);
+	}
+    
+    @Override
+	public String getJdbcPort(ITeiidServer server, boolean isOverride) {
+    	return jdbcPortManager.getPort(server, isOverride);
+	}
+
+	/**
      * Close editors associated with modelling projects
      */
     private void closeEditors() {
@@ -1022,8 +1054,19 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 { // JDBC CONNECTION INFO
                     Element jdbcElement = doc.createElement(JDBC_TAG);
                     serverElement.appendChild(jdbcElement);
+                    
+                    // Check if actual port is cached, else set to default
+                    String actualPort = jdbcPortManager.getPort(teiidServer, false);
+                    if( actualPort == null ) {
+                    	actualPort = ITeiidJdbcInfo.DEFAULT_PORT;
+                    }
+                    jdbcElement.setAttribute(JDBC_PORT_ATTR, actualPort);
 
-                    jdbcElement.setAttribute(JDBC_PORT_ATTR, teiidServer.getTeiidJdbcInfo().getPort());
+                    // check for port override
+                    String overridePort = jdbcPortManager.getPort(teiidServer, true);
+                    if( overridePort != null ) {
+                    	jdbcElement.setAttribute(JDBC_PORT_OVERRIDE_ATTR, overridePort);
+                    }
                     jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
                         
                     /* The token of the password is saved to file while the password is saved in the eclipse secure storage
