@@ -419,7 +419,6 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		});
 
         this.columnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 100).applyTo(this.columnsViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = columnsViewer.createColumn(SWT.LEFT, 30, 30, true);
@@ -1002,7 +1001,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		});
     	
     	this.parametersViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, false).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 150).applyTo(this.parametersViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = parametersViewer.createColumn(SWT.LEFT, 30, 30, true);
@@ -1512,7 +1511,6 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         	} else if( element instanceof RelationalColumn ) {
         		((RelationalColumn)element).setDatatype(newValue);
         	}
-            handleInfoChanged();
         }
     }
     
