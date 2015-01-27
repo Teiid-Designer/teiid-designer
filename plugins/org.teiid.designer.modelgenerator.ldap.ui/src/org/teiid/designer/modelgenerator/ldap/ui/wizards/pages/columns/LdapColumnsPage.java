@@ -9,15 +9,19 @@ package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.columns;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTreeViewer;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeViewerListener;
-import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -30,7 +34,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -38,19 +41,16 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiPlugin;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
-import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 
 /**
@@ -71,7 +71,7 @@ public class LdapColumnsPage extends WizardPage
 
     private SashForm splitter;
     private ViewForm objsView;
-    private TreeViewer treeViewer;
+    private CheckboxTreeViewer treeViewer;
 
     private Text columnNameText;
 
@@ -135,47 +135,27 @@ public class LdapColumnsPage extends WizardPage
         }
     }
 
-    private void treeItemChecked(TreeItem item, boolean selected ) {
-        // Update check boxes of item
-        if (item == null) {
-            return;
-        }
-
-        if (! (item.getData() instanceof ILdapAttributeNode))
+    private void nodeChecked(ILdapAttributeNode attrNode, boolean selected) {
+        if (attrNode == null)
             return;
 
-        final ILdapAttributeNode attributeNode = (ILdapAttributeNode) item.getData();
+        importManager.setSynchronising(true);
 
-        try {
-            if (selected) {
-                importManager.addAttribute(attributeNode);
-            } else {
-                importManager.removeAttribute(attributeNode);
-            }
-
-            // Ensure the treeviewer has completed all events before updating the node
-            treeViewer.getControl().getDisplay().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    treeViewer.update(attributeNode, null);
-                }
-            });
-        } catch(Exception ex) {
-            ModelGeneratorLdapUiConstants.UTIL.log(ex);
-            WizardUtil.setPageComplete(this, ex.getLocalizedMessage(), IMessageProvider.ERROR);
+        if (selected) {
+            importManager.addAttribute(attrNode);
+        } else {
+            importManager.removeAttribute(attrNode);
         }
+
+        importManager.setSynchronising(false);
     }
 
     private void deselectAllButtonSelected() {
         Collection<ILdapAttributeNode> oldSelection = new ArrayList<ILdapAttributeNode>(); 
         oldSelection.addAll(importManager.getSelectedAttributes());
 
-        for (ILdapAttributeNode attributeNode : oldSelection) {
-            TreeItem treeItem = WidgetUtil.findTreeItem(attributeNode, treeViewer);
-            if (treeItem == null)
-                continue;
-
-            treeItemChecked(treeItem, false);
+        for (ILdapAttributeNode node : oldSelection) {
+            treeViewer.setChecked(node, false);
         }
     }
 
@@ -218,7 +198,7 @@ public class LdapColumnsPage extends WizardPage
         this.objsView.setTopLeft(ldapLabel);
 
         // Add contents to view form
-        this.treeViewer = new TreeViewer(this.objsView, SWT.SINGLE | SWT.BORDER);
+        this.treeViewer = new CheckboxTreeViewer(this.objsView, SWT.SINGLE | SWT.BORDER);
         this.treeViewer.setUseHashlookup(true);
         final Tree tree = this.treeViewer.getTree();
         this.objsView.setContent(tree);
@@ -226,12 +206,48 @@ public class LdapColumnsPage extends WizardPage
         this.treeViewer.setContentProvider(contentProvider);
         this.treeViewer.setLabelProvider(labelProvider);
 
-        /*
-         * Mouse down listener for simulating the checkbox selection.
-         *
-         * This is used instead of the SWT checkbox tree viewer which has really
-         * awful performance on item selection.
-         */
+        this.treeViewer.addCheckStateListener(new ICheckStateListener() {
+            @Override
+            public void checkStateChanged(CheckStateChangedEvent event) {
+                Object element = event.getElement();
+                if (! (element instanceof ILdapAttributeNode))
+                    return;
+
+                ILdapAttributeNode node = (ILdapAttributeNode) element;
+                nodeChecked(node, event.getChecked());
+            }
+          });
+
+        this.treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                ISelection selection = event.getSelection();
+                if (selection.isEmpty())
+                    return;
+
+                if (! (selection instanceof IStructuredSelection))
+                    return;
+
+                IStructuredSelection sselection = (IStructuredSelection) selection;
+                importManager.setSynchronising(true);
+
+                try {
+                    Iterator iterator = sselection.iterator();
+                    while(iterator.hasNext()) {
+                        Object object = iterator.next();
+                        if (! (object instanceof ILdapAttributeNode))
+                            continue;
+
+                        nodeSelected(object);
+                    }
+                } finally {
+                    // Turns off synchronising and calls state changed
+                    importManager.setSynchronising(false);
+                }
+            }
+        });
+
         this.treeViewer.getTree().addMouseListener(new MouseAdapter() {
 
             @Override
@@ -242,59 +258,6 @@ public class LdapColumnsPage extends WizardPage
 
                 Object node = selection.getFirstElement();
                 treeViewer.setExpandedState(node, ! treeViewer.getExpandedState(node));
-            }
-
-            @Override
-            public void mouseDown(MouseEvent e) {
-                TreeItem[] selectedItems = treeViewer.getTree().getSelection();
-                if (selectedItems.length == 0)
-                    return;
-
-                importManager.setSynchronising(true);
-
-                try {
-                    for (TreeItem treeItem : selectedItems) {
-                        if (treeItem.getImage() == null)
-                            continue;
-
-                        if (treeItem.getData() instanceof ILdapAttributeNode) {
-                            ILdapAttributeNode attributeNode = (ILdapAttributeNode)treeItem.getData();
-                            Rectangle imageRec = treeItem.getImageBounds(0);
-
-                            if (imageRec.contains(e.x, e.y)) {
-                                treeItemChecked(treeItem, !importManager.attributeSelected(attributeNode));
-                            }
-                        }
-
-                        nodeSelected(treeItem.getData());
-                    }
-                } finally {
-                    // Turns off synchronising and calls state changed
-                    importManager.setSynchronising(false);
-                }
-            }
-        });
-
-        // Add listener to select node when expanded/collapsed
-        this.treeViewer.addTreeListener(new ITreeViewerListener() {
-
-            @Override
-            public void treeCollapsed(TreeExpansionEvent e) {
-                // Nothing to do
-            }
-
-            @Override
-            public void treeExpanded(TreeExpansionEvent e) {
-                Object element = e.getElement();
-                TreeItem treeItem = WidgetUtil.findTreeItem(element, treeViewer);
-                if (treeItem == null)
-                    return;
-
-                if (treeItem.getData() instanceof ILdapEntryNode)
-                    return;
-
-                ILdapAttributeNode attributeNode = (ILdapAttributeNode) treeItem.getData();
-                treeItemChecked(treeItem, importManager.attributeSelected(attributeNode));
             }
         });
 
@@ -419,10 +382,8 @@ public class LdapColumnsPage extends WizardPage
         if (this.importManager.getConnectionProfile() == null)
             return;
 
-        if (this.treeViewer.getInput() == null) {
-            this.treeViewer.setInput(importManager);
-            this.treeViewer.expandToLevel(2);
-        }
+        this.treeViewer.setInput(importManager);
+        this.treeViewer.expandToLevel(2);
 
         setPageStatus();
     }
