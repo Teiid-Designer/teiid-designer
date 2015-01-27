@@ -263,15 +263,14 @@ public class LdapImportWizardManager implements IChangeNotifier {
      * Add an attribute to the collection of selected attributes
      *
      * @param attribute
-     * @throws Exception
      */
-    public void addAttribute(ILdapAttributeNode attribute) throws Exception {
+    public void addAttribute(ILdapAttributeNode attribute) {
         ILdapEntryNode associatedEntry = attribute.getAssociatedEntry();
 
         // Prefer the version already in the import manager
         associatedEntry = ldapEntryNodes.get(associatedEntry.hashCode());
         if (associatedEntry == null)
-            throw new Exception(getString("noEntryForAttribute")); //$NON-NLS-1$
+            return;
 
         associatedEntry.addAttribute(attribute);
         notifyChanged();
@@ -281,15 +280,14 @@ public class LdapImportWizardManager implements IChangeNotifier {
      * Removes an attribute from the set of selected attributes
      *
      * @param attribute
-     * @throws Exception
      */
-    public void removeAttribute(ILdapAttributeNode attribute) throws Exception {
+    public void removeAttribute(ILdapAttributeNode attribute) {
         ILdapEntryNode associatedEntry = attribute.getAssociatedEntry();
 
         // Prefer the version already in the import manager
         associatedEntry = ldapEntryNodes.get(associatedEntry.hashCode());
         if (associatedEntry == null)
-            throw new Exception(getString("noEntryForAttribute")); //$NON-NLS-1$
+            return;
 
         if (associatedEntry.removeAttribute(attribute))
             notifyChanged();
@@ -449,11 +447,6 @@ public class LdapImportWizardManager implements IChangeNotifier {
      * @param synchronising
      */
     public void setSynchronising(boolean synchronising) {
-        boolean oldSync = this.synchronising;
         this.synchronising = synchronising;
-
-        // Only notify if sync value has actually changed
-        if (!synchronising && oldSync)
-            notifyChanged();
     }
 }
