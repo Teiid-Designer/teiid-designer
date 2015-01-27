@@ -1042,6 +1042,8 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 		if( value ) {
 			firstDataRow = 3;
 		}
+		
+		setIncludeSkip(value);
 	}
     
 }
