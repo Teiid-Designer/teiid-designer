@@ -7,7 +7,6 @@
 */
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.columns;
 
-import org.eclipse.swt.graphics.Image;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.AbstractLdapLabelProvider;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
@@ -33,19 +32,6 @@ public class LdapEntryLabelProvider extends AbstractLdapLabelProvider {
 
         if (element instanceof ILdapAttributeNode) {
             return ((ILdapAttributeNode)element).getId();
-        }
-
-        return null;
-    }
-
-    @Override
-    public Image getImage(Object element) {
-        if (element instanceof ILdapAttributeNode) {
-            ILdapAttributeNode attribute = (ILdapAttributeNode) element;
-            if (getImportManager().attributeSelected(attribute))
-                return CHECKED_IMAGE;
-            else
-                return UNCHECKED_IMAGE;
         }
 
         return null;
