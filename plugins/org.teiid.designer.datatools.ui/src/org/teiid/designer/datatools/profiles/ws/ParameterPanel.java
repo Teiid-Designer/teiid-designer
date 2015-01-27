@@ -645,9 +645,10 @@ public class ParameterPanel implements DatatoolsUiConstants {
             // check to see if new name is valid
             String msg = validateName();
             
-            // check to see if new default value is valid
-            String defaultValueMsg = StringUtilities.isEmpty(this.defaultValue) ? UTIL.getString("AddParameterDialog_emptyDefaultValue") : UTIL.getString("AddParameterDialog_message");  //$NON-NLS-1$
-            
+            if (StringUtilities.isEmpty(msg)) {
+	            // check to see if new default value is valid
+	            msg = StringUtilities.isEmpty(this.defaultValue) ? UTIL.getString("AddParameterDialog_emptyDefaultValue") : msg;  //$NON-NLS-1$
+	        }
             // update UI controls
             if (StringUtilities.isEmpty(msg)) {
                 if (!this.btnOk.isEnabled()) {
@@ -659,7 +660,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 }
 
                 this.imageLabel.setImage(getInfoImage());
-        //        msg = UTIL.getString("AddParameterDialog_message"); //$NON-NLS-1$
             } else {
                 // value is not valid
                 if (this.btnOk.isEnabled()) {
@@ -671,8 +671,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
 
             if (!StringUtilities.isEmpty(msg)) {
             	this.messageLabel.setText(msg);
-            }else{
-            	this.messageLabel.setText(defaultValueMsg);
             }
             this.messageLabel.pack();
         }
@@ -720,20 +718,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
         	return false;
         }
         
-        /**
-         * @param proposedValue the proposed value
-         * @return an error message or <code>null</code> if value is valid
-         */
-        public String validateDefaultValue( String proposedValue ) {
-            // must have a value
-            if (StringUtilities.isEmpty(proposedValue)) {
-                return UTIL.getString("AddParameterDialog_emptyDefaultValue"); //$NON-NLS-1$
-            }
-
-            // valid
-            return null;
-        }
-
     }
 
 }

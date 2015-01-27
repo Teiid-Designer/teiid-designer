@@ -665,7 +665,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 		if( this.info.getSourceModelName() != null ) {
 			sourceFileName = this.info.getSourceModelName();
 		}
-		xmlFileInfo = null;
+		//xmlFileInfo = null;
 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
 				xmlFileInfo = fileInfo;
