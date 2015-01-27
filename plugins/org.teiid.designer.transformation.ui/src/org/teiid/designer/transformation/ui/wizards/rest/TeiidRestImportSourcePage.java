@@ -433,8 +433,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private boolean setConnectionProfile(IConnectionProfile profile, boolean wasEdited) {
 		IConnectionProfile existingProfile = info.getConnectionProfile();
 		
-		if (!wasEdited && existingProfile != null && profile != null && existingProfile.getName().equals(profile.getName()))
+		if (existingProfile == null){
+			//If existingProfile == null continue since this is a new CP and we want to update the page.
+		}else if  
+		 (!wasEdited && existingProfile != null && profile != null && existingProfile.getName().equals(profile.getName())) {
 			return false;
+		}
 		
 		if (profile == null || isInvalidXmlFileProfile(profile)) {
 			this.fileViewer.setInput(null);
@@ -969,6 +973,11 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			selectProfile(listener.getChangedProfile());
 			
 			profileComboSelectionChanged();
+			loadFileListViewer();
+			
+			synchronizeUI();
+			validatePage();
+			this.editCPButton.setEnabled(getConnectionProfile() != null);
 		}
 		
 		ProfileManager.getInstance().removeProfileListener(listener);
@@ -1041,7 +1050,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		String fileName = EMPTY_STRING;
 
-		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
+ 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
 				fileName = fileInfo.getDataFile().getName();
 				break;
