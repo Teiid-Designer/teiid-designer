@@ -172,50 +172,61 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
             @Override
             public void run() {
-                int attempts = 0;
 
-                // Loop will try to connect the teiid server 10 times after receiving a server
-                // start signal from the server framework. Given the thread sleeps for 5 seconds
-                // then the server has 60 seconds to finish starting if not already started.
-                while (!connected && attempts < 10) {
                     try {
-                        attempts++;
-                        connected = tryConnecting(parentServer);
-                        Thread.sleep(6000);
+                        tryConnecting(parentServer);
                     } catch (Exception ex) {
                         DqpPlugin.handleException(ex);
-                        break;
+
                     }
-                }
             }
 
             /**
              * @param parentServer
              * @throws Exception
              */
-            private boolean tryConnecting(final IServer parentServer) throws Exception {
+            private void tryConnecting(final IServer parentServer) throws Exception {
                 ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
 
-                boolean parentConnected = teiidServer != null && teiidServer.isParentConnected();
-                if (!parentConnected)
-                    return false;
-
+                boolean parentConnected = false; 
                 /*
                  * Update all the settings since the server has been started and a
                  * proper set of queries can take place.
                  */
-                ITeiidServer queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+                ITeiidServer queryServer = null;
+                int attempts = 0;
 
-                if (queryServer != null) {
-                    /*
-                     * Updates those settings that may have been successfully queried from the
-                     * contacted server.
-                     */
-                    teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
-                    teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
-                    
-                    // Cache the default Teiid JDBC port that was discovered on connection
+                // Loop will try to connect the teiid server 10 times after receiving a server
+                // start signal from the server framework. Given the thread sleeps for 5 seconds
+                // then the server has 60 seconds to finish starting if not already started.
+                while ( (!parentConnected || queryServer == null ) && attempts < 10) {
                     try {
+                        attempts++;
+                        
+                        parentConnected = teiidServer != null && teiidServer.isParentConnected();
+                        if( parentConnected ) {
+                        	queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+                        }
+                        Thread.sleep(6000);
+                    } catch (Exception ex) {
+                        DqpPlugin.handleException(ex);
+                        break;
+                    }
+                }
+                
+                if( queryServer != null ) {
+
+	                /*
+	                 * Updates those settings that may have been successfully queried from the
+	                 * contacted server.
+	                 */
+	                teiidServer.getTeiidAdminInfo().setAll(queryServer.getTeiidAdminInfo());
+	                teiidServer.getTeiidJdbcInfo().setPort(queryServer.getTeiidJdbcInfo().getPort());
+	                
+	                teiidServer.reconnect();
+	                
+	                // Cache the default Teiid JDBC port that was discovered on connection
+	                try {
 						int defaultPort = Integer.parseInt(queryServer.getTeiidJdbcInfo().getPort());
 						DqpPlugin.getInstance().getServerManager().setJdbcPort(teiidServer, defaultPort, false);
 						// If there is no override port cached, set it the same value as the default so they start in sync
@@ -225,16 +236,17 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 					} catch (Exception e) {
 						// DO NOTHING
 					}
+
                 } else {
                     // If the query server is null then this is not a Teiid-enabled JBoss Server but
                     // a TeiidServer was cached in the registry, presumably due to an adaption
                     // being made while the server was not started. Since we now know better, we
                     // can correct the registry.
                     DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
+                    return;
                 }
 
-                teiidServer.reconnect();
-                return teiidServer.isConnected();
+                return;
             }
         };
 
