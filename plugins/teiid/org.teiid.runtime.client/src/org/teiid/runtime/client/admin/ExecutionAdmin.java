@@ -893,10 +893,13 @@ public class ExecutionAdmin implements IExecutionAdmin {
             adminSpec.deploy(admin, PING_VDB, new ByteArrayInputStream(adminSpec.getTestVDB().getBytes()));
             
             try{
-                String urlAndCredentials = url + ";user=" + teiidJdbcInfo.getUsername() + ";password=" + teiidJdbcInfo.getPassword() + ';';  //$NON-NLS-1$ //$NON-NLS-2$              
+                String urlAndCredentials = url + ";";  //$NON-NLS-1$             
                 TeiidDriver teiidDriver = TeiidDriver.getInstance();
                 teiidDriver.setTeiidVersion(teiidServer.getServerVersion());
-                teiidJdbcConnection = teiidDriver.connect(urlAndCredentials, null);
+                Properties props = new Properties();
+                props.put("user", teiidJdbcInfo.getUsername());
+                props.put("password", teiidJdbcInfo.getPassword());
+                teiidJdbcConnection = teiidDriver.connect(urlAndCredentials, props);
                //pass
             } catch(SQLException ex){
                 String msg = Messages.getString(Messages.ExecutionAdmin.serverDeployUndeployProblemPingingTeiidJdbc, url);
