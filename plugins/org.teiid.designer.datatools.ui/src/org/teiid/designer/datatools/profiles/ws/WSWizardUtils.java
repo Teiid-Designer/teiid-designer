@@ -48,6 +48,12 @@ public class WSWizardUtils {
         Properties connProperties = connectionProfile.getBaseProperties();
         // InputStream not provided, check XML file
         String xmlFile = connProperties == null ? null : (String) connProperties.get(propertyKey);
+		String responseType = IWSProfileConstants.XML;
+		if( connProperties != null ) {
+			if(  connProperties.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY) != null) {
+				responseType = (String)connProperties.get(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY);
+			}
+		}
 
         try {
             URL url = URLHelper.buildURL(xmlFile);
@@ -59,7 +65,12 @@ public class WSWizardUtils {
             if( connProperties.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY) != null ) {
             	connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, (String)connProperties.get(IWSProfileConstants.ACCEPT_PROPERTY_KEY));
 			} else {
-				connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				if( responseType.equalsIgnoreCase(IWSProfileConstants.JSON) ) {
+					connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.CONTENT_TYPE_JSON_VALUE);
+				} else {
+					connPropMap.put(IWSProfileConstants.ACCEPT_PROPERTY_KEY, IWSProfileConstants.ACCEPT_DEFAULT_VALUE);
+				}
+				
 			}
 			
 			if( connProperties.get(IWSProfileConstants.CONTENT_TYPE_PROPERTY_KEY) != null ) {
