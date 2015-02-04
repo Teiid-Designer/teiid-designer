@@ -631,13 +631,13 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
      */
     private void createXMLMethod( StringBuilder sb,
                                   RestProcedure restProcedure ) {
-        commonRestMethodLogic(sb, restProcedure, ""); //$NON-NLS-1$
+        commonRestMethodLogic(sb, restProcedure, "", true); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
             sb.append("\tparameterMap = getInputs(is);" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
         // Gen return and execute
-        sb.append("\treturn convertStreamToString(teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties), \"" + restProcedure.getCharSet() + "\");" + NEWLINE //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
+        sb.append("\treturn teiidProvider.execute(\"" + restProcedure.getFullyQualifiedProcedureName() + "\", parameterMap, \"" + restProcedure.getCharSet() + "\", properties);" + NEWLINE //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-4
                   + "}" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -647,7 +647,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
      */
     private void createJSONMethod( StringBuilder sb,
                                    RestProcedure restProcedure ) {
-        commonRestMethodLogic(sb, restProcedure, "json"); //$NON-NLS-1$
+        commonRestMethodLogic(sb, restProcedure, "json", false); //$NON-NLS-1$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
             sb.append("\tparameterMap = getJSONInputs(is, \""+restProcedure.getCharSet()+ "\");" + NEWLINE + "\t"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
@@ -666,7 +666,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
      */
     private void commonRestMethodLogic( StringBuilder sb,
                                         RestProcedure restProcedure,
-                                        String methodAppendString ) {
+                                        String methodAppendString,
+                                        boolean isXml) {
         sb.append("@" + restProcedure.getRestMethod().toUpperCase() + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$
         String uri = methodAppendString == "" ? restProcedure.getUri() : methodAppendString + "/" + restProcedure.getUri(); //$NON-NLS-1$ //$NON-NLS-2$
         
@@ -677,8 +678,14 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         if (restProcedure.getProducesAnnotation() != null && !restProcedure.getProducesAnnotation().isEmpty()) {
             sb.append(restProcedure.getProducesAnnotation() + NEWLINE + "\t"); //$NON-NLS-1$
         }
+        
         // Gen method signature
-        sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
+        if (isXml){
+        	sb.append("public InputStream " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
+        }else{
+        	sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
         // Check for URI parameters and add as @PathParams
         Collection<String> pathParams = WarArchiveUtil.getPathParameters(uri);
         int pathParamCount = 0;
