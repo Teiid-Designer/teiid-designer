@@ -450,7 +450,26 @@ public class ParameterPanel implements DatatoolsUiConstants {
 							propertiesViewer.refresh(element);
 						}
 					}
+				
 			}
+			
+			if (wsProfileDetailsWizardPage!=null){
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	wsProfileDetailsWizardPage.setParameterMap(parameterMap);
+            	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+            }else{
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	propertyPage.setParameterMap(parameterMap);
+            	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
+            }
+			
+			
 		}
 
 	}
@@ -638,6 +657,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 
         void handleTypeChanged(Object type) {
             this.type = (String)type;
+            handleAddProperty();
             updateState();
         }
 
@@ -704,7 +724,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
             // make sure only letters
             for (char c : proposedName.toCharArray()) {
                 if ( ! isValidChar(c)) {
-                    return UTIL.getString("AddParameterDialog_invalidParametersName");  //$NON-NLS-1$
+                    return UTIL.getString("AddParameterDialog_invalidParameterName");  //$NON-NLS-1$
                 }
             }
 

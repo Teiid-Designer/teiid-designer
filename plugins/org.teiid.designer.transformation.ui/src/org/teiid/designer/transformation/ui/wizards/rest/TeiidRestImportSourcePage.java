@@ -906,6 +906,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (dotLocation > -1) {
 			filePath = filePath.substring(0, dotLocation);
 		}
+		if (filePath.equals(EMPTY_STRING)) filePath="response";  //$NON-NLS-1$
 		return filePath;
 	}
 
