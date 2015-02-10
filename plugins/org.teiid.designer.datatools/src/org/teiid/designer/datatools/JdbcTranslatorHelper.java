@@ -16,6 +16,7 @@ public class JdbcTranslatorHelper {
 	public static final String POSTGRES = "postgres"; //$NON-NLS-1$
 	public static final String POSTGRESQL = "postgresql"; //$NON-NLS-1$
 	public static final String ACCESS = "access"; //$NON-NLS-1$
+	public static final String HANA = "hana"; //$NON-NLS-1$
 	public static final String HIVE = "hive"; //$NON-NLS-1$
 	public static final String HSQL = "hsql"; //$NON-NLS-1$
 	public static final String INGRES = "ingres"; //$NON-NLS-1$
@@ -65,6 +66,10 @@ public class JdbcTranslatorHelper {
 			
 			if( vendor.toUpperCase().startsWith("SQL SERVER".toUpperCase()) ) { //$NON-NLS-1$
 				return SQLSERVER;
+			}
+			
+			if( vendor.toUpperCase().startsWith(HANA.toUpperCase()) ) {
+				return HANA;
 			}
 			
 			if( vendor.toUpperCase().startsWith(DERBY.toUpperCase()) ) {
@@ -152,6 +157,10 @@ public class JdbcTranslatorHelper {
 			
 			if( vendor.toUpperCase().startsWith("SQL SERVER".toUpperCase()) ) { //$NON-NLS-1$
 				return SQLSERVER;
+			}
+			
+			if( vendor.toUpperCase().startsWith(HANA.toUpperCase()) ) { //$NON-NLS-1$
+				return HANA;
 			}
 			
 			if( vendor.toUpperCase().startsWith(DERBY.toUpperCase()) ) {
