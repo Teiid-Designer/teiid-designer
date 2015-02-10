@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -98,6 +99,7 @@ public final class NewVdbWizard extends AbstractWizard
     private static final String TITLE = getString("title"); //$NON-NLS-1$
     private static final String PAGE_TITLE = getString("pageTitle"); //$NON-NLS-1$
     private static final String VDB_NAME_ERROR = getString("vdbNameError"); //$NON-NLS-1$
+    private static final String VDB_NAME_DOT_ERROR = getString("vdbNameContainsTooManyDotsErrorMessage"); //$NON-NLS-1$
 
     private static final int COLUMN_COUNT = 3;
 
@@ -683,6 +685,35 @@ public final class NewVdbWizard extends AbstractWizard
             } else if (ModelUtilities.vdbNameReservedValidation(proposedName) != null) {
                 this.mainPage.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
                 this.mainPage.setPageComplete(false);
+            } else if( proposedName.indexOf('.') > -1 ) {
+                // VDB name can contain an integer value
+                // EXAMPLE:   Customers.2.vdb
+                // 
+            	// make sure there is only 1 '.'
+            	int firstIndex = proposedName.indexOf('.');
+            	int lastIndex = proposedName.lastIndexOf('.');
+            	
+            	if( lastIndex != -1 && firstIndex != lastIndex ) {
+            		this.mainPage.setErrorMessage(VDB_NAME_DOT_ERROR);
+            		this.mainPage.setPageComplete(false);
+            	} else {
+            		// Check for integer
+            		String versionStr = proposedName.substring(firstIndex+1);
+            		boolean succeeded = false;
+        	    	try {
+						Integer.parseInt(versionStr);
+						succeeded = true;
+					} catch (NumberFormatException e) {
+						this.mainPage.setErrorMessage(VdbUiConstants.Util.getString(I18N_PREFIX + "vdbNameErrorVersionNotAnInteger", versionStr)); //$NON-NLS-1$);
+						this.mainPage.setPageComplete(false);
+						succeeded = false;
+					}
+        	    	
+        	    	if( succeeded ) {
+                        this.mainPage.setErrorMessage(null);
+                        this.mainPage.setPageComplete(true);
+        	    	}
+            	}
             } else {
                 this.mainPage.setErrorMessage(null);
                 this.mainPage.setPageComplete(true);

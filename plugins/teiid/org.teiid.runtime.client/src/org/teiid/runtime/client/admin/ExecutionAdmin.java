@@ -174,13 +174,33 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
         String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
         String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
-    
+        
         // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
     	if(isLessThanTeiidEightSeven()) {
     		undeployVdb(vdbName);
     	}
         
-        doDeployVdb(vdbDeploymentName, vdbName, 1, vdbFile.getContents());
+        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), 1, vdbFile.getContents());
+    }
+    
+    @Override
+    public void deployVdb( IFile vdbFile, int version) throws Exception {
+        ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
+
+        String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
+        String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
+        
+        // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
+    	if(isLessThanTeiidEightSeven()) {
+    		undeployVdb(vdbName);
+    	}
+    	
+    	int vdbVersion = 1;
+    	if( version > 1 ) {
+    		vdbVersion = version;
+    	}
+        
+        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), vdbVersion, vdbFile.getContents());
     }
     
     @Override
@@ -239,6 +259,22 @@ public class ExecutionAdmin implements IExecutionAdmin {
         }
 
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
+    }
+    
+    private String getVdbName(String originalVdbName) throws Exception {
+    	String vdbName = originalVdbName;
+    	
+    	int firstIndex = vdbName.indexOf('.');
+    	int lastIndex = vdbName.lastIndexOf('.');
+    	if (firstIndex != -1) {
+	    	if (firstIndex != lastIndex) {
+	    		throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
+	    	}
+    	
+	    	vdbName = vdbName.substring(0, firstIndex);
+    	}
+    	
+    	return vdbName;
     }
     
     @Override
