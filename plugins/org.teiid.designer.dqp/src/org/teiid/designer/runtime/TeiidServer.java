@@ -563,6 +563,12 @@ public class TeiidServer implements ITeiidServer {
         connect();
         admin.deployVdb(vdbFile);
     }
+    
+    @Override
+    public void deployVdb(IFile vdbFile, int version) throws Exception {
+        connect();
+        admin.deployVdb(vdbFile, version);
+    }
 
     @Override
     public ITeiidDataSource getDataSource(String name) throws Exception {
