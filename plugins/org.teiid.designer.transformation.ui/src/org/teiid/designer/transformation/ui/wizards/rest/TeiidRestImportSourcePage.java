@@ -720,7 +720,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		}
 		JSONObject jsonObject = new JSONObject(jsonText);
 
-		String xml = XML.toString(jsonObject, "result"); //$NON-NLS-1$
+		String xml = XML.toString(jsonObject, "response"); //$NON-NLS-1$
 		FileUtils.write(xml.getBytes(), jsonFile);
 		return jsonFile;
 

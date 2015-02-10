@@ -21,6 +21,7 @@ public interface DataSourceConnectionConstants {
         String DB2 = "db2"; //$NON-NLS-1$
         String MYSQL = "mysql"; //$NON-NLS-1$
         String H2 = "h2"; //$NON-NLS-1$
+        String HANA = "hana"; //$NON-NLS-1$
         String DERBY = "derby"; //$NON-NLS-1$
         String METAMATRIX = "metamatrix"; //$NON-NLS-1$
         String SALESFORCE = "salesforce"; //$NON-NLS-1$
@@ -33,9 +34,9 @@ public interface DataSourceConnectionConstants {
         String UNKNOWN = "unknown"; //$NON-NLS-1$
 
         final static String[] JDBC_TRANSLATORS = {INFORMIX, SYBASE, TEIID, POSTGRESQL, ACCESS, HSQL, ORACLE, MYSQL, MYSQL5,
-            JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY};
+            JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, HANA, DERBY};
 
-        final static String[] ALL_TRANSLATORS = {INFORMIX, SYBASE, TEIID, POSTGRESQL, ACCESS, HSQL, ORACLE, MYSQL, MYSQL5,
+        final static String[] ALL_TRANSLATORS = {INFORMIX, SYBASE, TEIID, POSTGRESQL, ACCESS, HANA, HSQL, ORACLE, MYSQL, MYSQL5,
             JDBC_ANSI, JDBC_SIMPLE, SQLSERVER, DB2, H2, DERBY, METAMATRIX, SALESFORCE, TERADATA, LOOPBACK, LDAP, FILE, WS, ODATA};
 
     }
