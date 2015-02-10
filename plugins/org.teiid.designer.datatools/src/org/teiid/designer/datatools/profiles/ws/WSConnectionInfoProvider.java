@@ -87,9 +87,9 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
             connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
 
-        String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-        if (null != contextFactory) {
-            connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, contextFactory);
+        String securityType = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+        if (null != securityType &! securityType.equals("")) {
+            connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityType);
         }
         else {
             connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
@@ -111,8 +111,8 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 	public boolean requiresPassword(IConnectionProfile connectionProfile) {
 		Properties props = connectionProfile.getBaseProperties();
 		
-		String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-		if( contextFactory != null && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
+		String securityType = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+		if( securityType != null &! securityType.equals("") &! securityType.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
 			props.remove(ICredentialsCommon.USERNAME_PROP_ID);
 			return true;
 		}
