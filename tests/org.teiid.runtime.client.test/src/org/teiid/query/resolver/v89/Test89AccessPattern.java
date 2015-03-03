@@ -9,13 +9,13 @@ package org.teiid.query.resolver.v89;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.resolver.v87.Test87AccessPattern;
+import org.teiid.query.resolver.v88.Test88AccessPattern;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test89AccessPattern extends Test87AccessPattern {
+public class Test89AccessPattern extends Test88AccessPattern {
 
     protected Test89AccessPattern(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

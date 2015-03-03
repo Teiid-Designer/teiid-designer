@@ -9,13 +9,13 @@ package org.teiid.query.resolver.v89;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.resolver.v87.Test87XMLResolver;
+import org.teiid.query.resolver.v88.Test88XMLResolver;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test89XMLResolver extends Test87XMLResolver {
+public class Test89XMLResolver extends Test88XMLResolver {
 
     protected Test89XMLResolver(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);

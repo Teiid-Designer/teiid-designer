@@ -9,10 +9,10 @@ package org.teiid.query.resolver.v89;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.resolver.v87.Test87Resolver;
+import org.teiid.query.resolver.v88.Test88Resolver;
 
 @SuppressWarnings( {"javadoc"} )
-public class Test89Resolver extends Test87Resolver {
+public class Test89Resolver extends Test88Resolver {
 
     protected Test89Resolver(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
