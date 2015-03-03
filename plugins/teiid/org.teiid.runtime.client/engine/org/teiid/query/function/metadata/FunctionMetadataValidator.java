@@ -28,6 +28,7 @@ import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.FunctionMethod;
@@ -67,7 +68,7 @@ public class FunctionMetadataValidator {
 	}
 
 	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
-        if (runtimeTypeMap == null) {
+        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
             runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
         }
 	    if(methods != null) {
@@ -111,16 +112,22 @@ public class FunctionMetadataValidator {
 	            for(int i=0; i<params.size(); i++) {
 	                FunctionParameter param = params.get(i);
 	                validateFunctionParameter(teiidVersion, param);
-	                param.setPosition(i+1);
-	                MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
-	                param.getUUID();
+	                if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	                    // runtime type map not supported in Teiid 7
+	                    param.setPosition(i+1);
+	                    MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
+	                    param.getUUID();
+	                }
 	            }
 	        }
 
 	        // Validate output parameters
 	        validateFunctionParameter(teiidVersion, method.getOutputParameter());
-	        method.getOutputParameter().setPosition(0);
-            MetadataFactory.setDataType(method.getOutputParameter().getRuntimeType(), method.getOutputParameter(), runtimeTypeMap, true);
+	        if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	            // runtime type map not supported in Teiid 7
+	            method.getOutputParameter().setPosition(0);
+	            MetadataFactory.setDataType(method.getOutputParameter().getRuntimeType(), method.getOutputParameter(), runtimeTypeMap, true);
+	        }
         } catch(Exception e) {
         	updateReport(report, method, e.getMessage());
         }

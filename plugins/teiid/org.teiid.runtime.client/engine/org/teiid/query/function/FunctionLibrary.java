@@ -288,6 +288,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	 * @param returnType
 	 * @param args 
 	 * @param types Existing types passed to the function
+     * @param hasUnknownType
      * @return Null if no conversion could be found, otherwise an array of conversions
      * to apply to each argument.  The list should match 1-to-1 with the parameters.
      * Parameters that do not need a conversion are null; parameters that do are
@@ -295,14 +296,6 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	 * @throws Exception
 	 */
 	public ConversionResult determineNecessaryConversions(String name, Class<?> returnType, Expression[] args, Class<?>[] types, boolean hasUnknownType) throws Exception {
-		// Check for no args - no conversion necessary
-		if(types.length == 0) {
-		    if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
-		        return new ConversionResult(null);
-
-			return null;
-		}
-
         //First find existing functions with same name and same number of parameters
         final Collection<FunctionMethod> functionMethods = new LinkedList<FunctionMethod>();
         functionMethods.addAll( this.systemFunctions.findFunctionMethods(name, types.length) );

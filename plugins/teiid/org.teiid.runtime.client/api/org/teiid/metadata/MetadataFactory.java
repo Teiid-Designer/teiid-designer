@@ -270,7 +270,7 @@ public class MetadataFactory implements Serializable {
             type = type.substring(0, type.length()-2);
         }
         Datatype datatype = dataTypes.get(type);
-        if (datatype == null && (!allowNull || !DataTypeManagerService.DefaultDataTypes.NULL.equals(type))) {
+        if (datatype == null && (!allowNull || !DataTypeManagerService.DefaultDataTypes.NULL.getId().equals(type))) {
             //TODO: potentially we want to check the enterprise types, but at
             //this point we're keying them by name, not runtime name (which
             // is an awkward difference to start with)

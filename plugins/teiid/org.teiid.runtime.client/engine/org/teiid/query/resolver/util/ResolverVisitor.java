@@ -44,6 +44,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.IResolverVisitor;
 import org.teiid.designer.query.sql.symbol.IElementSymbol.DisplayMode;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.query.function.FunctionDescriptor;
@@ -676,6 +677,9 @@ public class ResolverVisitor extends LanguageVisitor
                 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31150, function));
             }
         } catch (Exception e) {
+            if (e instanceof QueryResolverException)
+                throw e;
+
             // Known function form - but without type information
             if (hasArgWithoutType) {
                  throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30069, function));
@@ -745,8 +749,17 @@ public class ResolverVisitor extends LanguageVisitor
 	private List<FunctionDescriptor> findWithImplicitConversions(FunctionLibrary library, Function function, Expression[] args, Class<?>[] types, boolean hasArgWithoutType) throws Exception {
 	    
 	    // Try to find implicit conversion path to still perform this function
-	    ConversionResult cr = library.determineNecessaryConversions(function.getName(), function.getType(), args, types, hasArgWithoutType);
-        if (cr.method == null) {
+	    ConversionResult cr = null;
+	    try {
+	        cr = library.determineNecessaryConversions(function.getName(), function.getType(), args, types, hasArgWithoutType);
+	    } catch (Exception ex) {
+	        if (getTeiidVersion().isLessThan(TeiidServerVersion.Version.TEIID_8_9.get()))
+	            return Collections.emptyList();
+	        else
+	            throw ex;
+	    }
+
+        if (cr.method == null && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_9.get())) {
 			return Collections.emptyList();
 		}
 		Class<?>[] newSignature = types;
@@ -769,13 +782,13 @@ public class ResolverVisitor extends LanguageVisitor
 		                function.insertConversion(i, conversions[i]);
 		            }
 		        } 
-		                    
+
 		        newSignature[i] = newType;
 		    }
 	    }
 
 	    // Now resolve using the new signature to get the function's descriptor
-	    String name = cr.method.getFullName();
+	    String name = cr.method != null && cr.method.getFullName() != null ? cr.method.getFullName() : function.getName();
 	    return library.findAllFunctions(name, newSignature);
 	}
 
