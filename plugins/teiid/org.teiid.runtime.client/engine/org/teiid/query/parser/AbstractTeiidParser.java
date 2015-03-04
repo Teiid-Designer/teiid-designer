@@ -711,13 +711,36 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 			if (pp.getType() == ProcedureParameter.Type.InOut || pp.getType() == ProcedureParameter.Type.Out) {
 				throw  new RuntimeException(Messages.getString(Messages.TeiidParser.function_in, proc.getName()));
 			}
-			
-			FunctionParameter fp = new FunctionParameter(pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
-			if (pp.getType() == ProcedureParameter.Type.In) {
-				fp.setVarArg(pp.isVarArg());
-				ins.add(fp);
-			} else {
-				method.setOutputParameter(fp);
+
+			// New functionality for Teiid 8.9+
+			if (versionAtLeast(Version.TEIID_8_9)) {
+			    //copy the metadata
+	            FunctionParameter fp = new FunctionParameter(getVersion(), pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+	            fp.setDatatype(pp.getDatatype(), true, pp.getArrayDimensions());
+	            fp.setLength(pp.getLength());
+	            fp.setNameInSource(pp.getNameInSource());
+	            fp.setNativeType(pp.getNativeType());
+	            fp.setNullType(pp.getNullType());
+	            fp.setProperties(pp.getProperties());
+	            fp.setRadix(pp.getRadix());
+	            fp.setScale(pp.getScale());
+	            fp.setUUID(pp.getUUID());
+	            if (pp.getType() == ProcedureParameter.Type.In) {
+	                fp.setVarArg(pp.isVarArg());
+	                ins.add(fp);
+	                fp.setPosition(ins.size());
+	            } else {
+	                method.setOutputParameter(fp);
+	                fp.setPosition(0);
+	            }
+			} else { // Functionality for older parsers 8.8 and below
+			    FunctionParameter fp = new FunctionParameter(getVersion(), pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+			    if (pp.getType() == ProcedureParameter.Type.In) {
+			        fp.setVarArg(pp.isVarArg());
+			        ins.add(fp);
+			    } else {
+			        method.setOutputParameter(fp);
+			    }
 			}
 		}
 		method.setInputParameters(ins);

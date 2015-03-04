@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.AggregateAttributes;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -37,15 +38,15 @@ import org.teiid.query.function.FunctionMetadataSource;
 public class FakeFunctionMetadataSource implements FunctionMetadataSource {
 
     @Override
-    public Collection<org.teiid.metadata.FunctionMethod> getFunctionMethods() {
+    public Collection<org.teiid.metadata.FunctionMethod> getFunctionMethods(ITeiidServerVersion version) {
         List<org.teiid.metadata.FunctionMethod> methods = new ArrayList<org.teiid.metadata.FunctionMethod>();
         methods.add(new FunctionMethod("xyz", "", "misc", PushDown.MUST_PUSHDOWN,  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                                        FakeFunctionMetadataSource.class.getName(), "xyz", //$NON-NLS-1$
                                        null,  
-                                       new FunctionParameter("out", "integer"), true, Determinism.DETERMINISTIC)); //$NON-NLS-1$ //$NON-NLS-2$
+                                       new FunctionParameter(version, "out", "integer"), true, Determinism.DETERMINISTIC)); //$NON-NLS-1$ //$NON-NLS-2$
         
-        FunctionParameter p1 = new FunctionParameter("astring", "string");  //$NON-NLS-1$  //$NON-NLS-2$
-        FunctionParameter result = new FunctionParameter("trimstring", "string"); //$NON-NLS-1$  //$NON-NLS-2$
+        FunctionParameter p1 = new FunctionParameter(version, "astring", "string");  //$NON-NLS-1$  //$NON-NLS-2$
+        FunctionParameter result = new FunctionParameter(version, "trimstring", "string"); //$NON-NLS-1$  //$NON-NLS-2$
 
         FunctionMethod method = new FunctionMethod("MYRTRIM", "", "", FakeFunctionMetadataSource.class.getName(), "myrtrim", new FunctionParameter[] {p1}, result);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         method.setPushdown(PushDown.CAN_PUSHDOWN);
@@ -55,7 +56,7 @@ public class FakeFunctionMetadataSource implements FunctionMetadataSource {
         method2.setPushdown(PushDown.MUST_PUSHDOWN);
         methods.add(method2);
         
-        FunctionMethod method3 = new FunctionMethod("parsedate_", "", "", null, null, new FunctionParameter[] {p1}, new FunctionParameter("", DataTypeManagerService.DefaultDataTypes.DATE.getId()));  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        FunctionMethod method3 = new FunctionMethod("parsedate_", "", "", null, null, new FunctionParameter[] {p1}, new FunctionParameter(version, "", DataTypeManagerService.DefaultDataTypes.DATE.getId()));  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         method3.setPushdown(PushDown.MUST_PUSHDOWN);
         methods.add(method3);
         

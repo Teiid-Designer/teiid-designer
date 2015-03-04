@@ -147,10 +147,10 @@ public class QueryService implements IQueryService {
 
             List<FunctionParameter> inputParameters = new ArrayList<FunctionParameter>();
             for (FunctionParameterDescriptor paramDescriptor : descriptor.getInputParameters()) {
-                inputParameters.add(new FunctionParameter(paramDescriptor.getName(), paramDescriptor.getType()));
+                inputParameters.add(new FunctionParameter(teiidVersion, paramDescriptor.getName(), paramDescriptor.getType()));
             }
 
-            FunctionParameter outputParameter = new FunctionParameter(descriptor.getOutputParameter().getName(),
+            FunctionParameter outputParameter = new FunctionParameter(teiidVersion, descriptor.getOutputParameter().getName(),
                                                                       descriptor.getOutputParameter().getType());
 
             FunctionMethod fMethod = new FunctionMethod(descriptor.getName(), descriptor.getDescription(),

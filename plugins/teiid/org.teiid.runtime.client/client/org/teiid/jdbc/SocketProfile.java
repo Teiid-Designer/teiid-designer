@@ -24,7 +24,9 @@ package org.teiid.jdbc;
 
 import java.sql.SQLException;
 import java.util.Properties;
-import org.teiid.net.ServerConnection;
+import org.teiid.net.TeiidURL;
+import org.teiid.net.socket.OioOjbectChannelFactory;
+import org.teiid.net.socket.SocketServerConnection;
 import org.teiid.net.socket.SocketServerConnectionFactory;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -41,12 +43,24 @@ final class SocketProfile implements ConnectionProfile {
 
     @Override
     public ConnectionImpl connect(String url, Properties info) throws SQLException {
-
-        ServerConnection serverConn;
-		try {
+        int loginTimeoutSeconds = 0;
+        SocketServerConnection serverConn;
+        try {
+            String timeout = info.getProperty(TeiidURL.CONNECTION.LOGIN_TIMEOUT);
+            if (timeout != null) {
+                loginTimeoutSeconds = Integer.parseInt(timeout);
+            }
+            
+            if (loginTimeoutSeconds > 0) {
+                OioOjbectChannelFactory.TIMEOUTS.set(System.currentTimeMillis() + loginTimeoutSeconds * 1000);
+            }
 			serverConn = SocketServerConnectionFactory.getInstance().getConnection(info);
 		} catch (TeiidClientException e) {
 			throw new SQLException(e);
+		} finally {
+            if (loginTimeoutSeconds > 0) {
+                OioOjbectChannelFactory.TIMEOUTS.set(null);
+            }
 		}
 
         // construct a MMConnection object.

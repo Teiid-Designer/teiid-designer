@@ -20,9 +20,11 @@
 				specified in our parent pom. The teiid-designer.target
 				will remain to serve as a platform easily available to
 				developers loading the TP into an eclipse IDE.
+
+				RESTORED TEMPORARILY DUE TO saxonhe DEPENDENCY NOT BEING
+				PRESENT IN INTEGRATION-STACK YET
 		-->
 		<plugins>
-			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -37,16 +39,15 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>teiid-designer.target</file>
-									<type>target</type>
-									<classifier>teiid-designer</classifier>
+									<file>teiid-designer-${td.tpc.version}.target</file>
+									<type>${td.tpc.type}</type>
+									<classifier>teiid-designer-${td.tpc.version}</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>
 	</build>
 
@@ -57,6 +58,11 @@
 			<build>
 				<plugins>
 					<plugin>
+					<!--
+						REPLACED TEMPORARILY DUE TO saxonhe DEPENDENCY NOT BEING
+						PRESENT IN INTEGRATION-STACK YET
+					-->
+					<!--
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<version>2.1</version>
@@ -80,6 +86,34 @@
 											<destFileName>teiid-designer-${td.tpc.version}.target</destFileName>
 										</artifactItem>
 									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					-->
+						<groupId>org.jboss.tools.tycho-plugins</groupId>
+						<artifactId>target-platform-utils</artifactId>
+						<version>0.21.1</version>
+						<executions>
+							<execution>
+								<id>copy-merge</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>merge-targets</goal>
+								</goals>
+								<configuration>
+									<sourceTargetArtifacts>
+										<item>
+											<groupId>${td.tpc.groupId}</groupId>
+											<artifactId>${td.tpc.artifactId}</artifactId>
+											<version>${td.tpc.version}</version>
+											<classifier>${td.tpc.classifier}</classifier>
+										</item>
+									</sourceTargetArtifacts>
+									<sourceTargetFiles>
+										<item>teiid-designer-extras-${td.tpc.version}.target</item>
+									</sourceTargetFiles>
+									<outputFile>teiid-designer-${td.tpc.version}.target</outputFile>
+									<targetName>target-platform-${td.tpc.version}</targetName>
 								</configuration>
 							</execution>
 						</executions>

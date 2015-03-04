@@ -52,7 +52,6 @@ import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.designer.query.sql.proc.ICreateProcedureCommand;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
@@ -315,6 +314,16 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     @Override
     public void visit(OrderByItem obj) {
     	validateSortable(obj.getSymbol());
+
+    	if (obj.getExpressionPosition() < 0 && isTeiid89OrGreater()) { // Added for Teiid 8.9
+            for (SubqueryContainer subquery : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(obj)) {
+                for (ElementSymbol es : ElementCollectorVisitor.getElements(obj, true, true)) {
+                    if (es.isExternalReference()) {
+                        handleValidationError(Messages.gs(Messages.TEIID.TEIID31156, subquery), obj);
+                    }
+                }
+            }
+        }
     }
     
     @Override

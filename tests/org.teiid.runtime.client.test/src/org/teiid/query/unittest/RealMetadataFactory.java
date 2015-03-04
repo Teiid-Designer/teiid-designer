@@ -380,8 +380,8 @@ public class RealMetadataFactory {
         
         // this is for the source added function
         bqt1.addFunction(new FunctionMethod("reverse", "reverse", "misc", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-                new FunctionParameter[] {new FunctionParameter("columnName", DataTypeManagerService.DefaultDataTypes.STRING.getId(), "")}, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter("result", DataTypeManagerService.DefaultDataTypes.STRING.getId(), "") ) ); //$NON-NLS-1$ //$NON-NLS-2$    		
+                new FunctionParameter[] {new FunctionParameter(teiidVersion, "columnName", DataTypeManagerService.DefaultDataTypes.STRING.getId(), "")}, //$NON-NLS-1$ //$NON-NLS-2$
+                new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING.getId(), "") ) ); //$NON-NLS-1$ //$NON-NLS-2$    		
         
     	 return metadataStore;
     }
@@ -608,7 +608,7 @@ public class RealMetadataFactory {
 		// Create models
 		Schema pm1 = createPhysicalModel("pm1", metadataStore); //$NON-NLS-1$
 		
-		pm1.addFunction(new FakeFunctionMetadataSource().getFunctionMethods().iterator().next());
+		pm1.addFunction(new FakeFunctionMetadataSource().getFunctionMethods(teiidVersion).iterator().next());
 		
 		Schema pm2 = createPhysicalModel("pm2", metadataStore); //$NON-NLS-1$
 		Schema pm3 = createPhysicalModel("pm3", metadataStore); //allows push of SELECT DISTINCT //$NON-NLS-1$

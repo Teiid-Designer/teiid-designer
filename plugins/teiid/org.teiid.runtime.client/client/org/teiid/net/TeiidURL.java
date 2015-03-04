@@ -132,7 +132,10 @@ public class TeiidURL {
 		 * Constant for encrypting requests
 		 */
 		String ENCRYPT_REQUESTS = "encryptRequests"; //$NON-NLS-1$;
-		
+		/**
+         * Constant for login timeout
+         */
+		String LOGIN_TIMEOUT = "loginTimeout"; //$NON-NLS-1$
 	}
 
 	private static final String COMMA_DELIMITER = ","; //$NON-NLS-1$

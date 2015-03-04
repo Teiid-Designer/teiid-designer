@@ -64,8 +64,7 @@ import org.teiid.runtime.client.Messages;
  * That handshake will establish a {@link Cryptor} to be used for secure traffic.
  */
 public class SocketServerInstanceImpl implements SocketServerInstance {
-	
-	static final int HANDSHAKE_RETRIES = 10;
+
     private static Logger log = Logger.getLogger("org.teiid.client.sockets"); //$NON-NLS-1$
 
 	private static AtomicInteger MESSAGE_ID = new AtomicInteger();
@@ -80,13 +79,15 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
     private HashMap<Class<?>, Object> serviceMap = new HashMap<Class<?>, Object>();
     
     private boolean hasReader;
+    private int soTimeout;
     
-    public SocketServerInstanceImpl(HostInfo info, long synchTimeout) {
+    public SocketServerInstanceImpl(HostInfo info, long synchTimeout, int soTimeout) {
     	if (!info.isResolved()) {
     		throw new AssertionError("Expected HostInfo to be resolved"); //$NON-NLS-1$
     	}
         this.info = info;
         this.synchTimeout = synchTimeout;
+        this.soTimeout = soTimeout;
     }
     
     public synchronized void connect(ObjectChannelFactory channelFactory) throws CommunicationException, IOException {
@@ -118,7 +119,11 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
     private void doHandshake() throws IOException, CommunicationException {
     	Handshake handshake = null;
     	boolean sentInit = false;
-    	for (int i = 0; i < HANDSHAKE_RETRIES; i++) {
+    	long handShakeRetries = 1;
+        if (this.soTimeout > 0) {
+            handShakeRetries = Math.max(1, synchTimeout/this.soTimeout);
+        }
+        for (int i = 0; i < handShakeRetries; i++) {
 	        try {
 				Object obj = this.socketChannel.read();
 				
@@ -136,7 +141,7 @@ public class SocketServerInstanceImpl implements SocketServerInstance {
 		    		this.socketChannel.write(null);
 		    		sentInit = true;
 		    	}
-				if (i == HANDSHAKE_RETRIES - 1) {
+				if (i == handShakeRetries - 1) {
 					throw e;
 				}
 			} catch (IOException e) {

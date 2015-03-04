@@ -40,8 +40,9 @@ import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
 
@@ -226,7 +227,32 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
         .append(" AND UCASE(Name)").append(LIKE_ESCAPE)//$NON-NLS-1$
         .append(" ORDER BY TABLE_SCHEM").toString(); //$NON-NLS-1$
-    
+
+    @Since(Version.TEIID_8_9)
+    private static final String QUERY_FUNCTIONS = new StringBuffer("SELECT VDBName AS Function_CAT, SchemaName AS FUNCTION_SCHEM, " //$NON-NLS-1$
+      + "Name AS FUNCTION_NAME, Description as REMARKS, 1 as FUNCTION_TYPE, UID AS SPECIFIC_NAME") //$NON-NLS-1$
+      .append(" FROM ").append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME).append(".Functions") //$NON-NLS-1$ //$NON-NLS-2$
+      .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" AND UCASE(Name)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" ORDER BY FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME, SPECIFIC_NAME").toString(); //$NON-NLS-1$
+
+    @Since(Version.TEIID_8_9)
+    private static final String QUERY_FUNCTION_COLUMNS = new StringBuffer("SELECT VDBName AS Function_CAT, SchemaName AS FUNCTION_SCHEM, ") //$NON-NLS-1$
+      .append("FunctionName AS FUNCTION_NAME, Name as COLUMN_NAME, CASE WHEN Type = 'ReturnValue' Then 4 WHEN Type = 'In' Then 1 ELSE 0 END AS COLUMN_TYPE") //$NON-NLS-1$
+      .append(", 1 AS DATA_TYPE") //$NON-NLS-1$
+      .append(", DataType AS TYPE_NAME, \"Precision\" AS \"PRECISION\", TypeLength  AS LENGTH, convert(case when scale > 32767 then 32767 else Scale end, short) AS SCALE") //$NON-NLS-1$
+      .append(", Radix AS RADIX, convert(decodeString(NullType, '") //$NON-NLS-1$
+      .append(PROC_COLUMN_NULLABILITY_MAPPING).append("', ','), integer) AS NULLABLE") //$NON-NLS-1$
+      .append(", Description AS REMARKS, NULL AS CHAR_OCTET_LENGTH, Position AS ORDINAL_POSITION,") //$NON-NLS-1$
+      .append(IS_NULLABLE).append(", FunctionUID as SPECIFIC_NAME") //$NON-NLS-1$
+      .append(" FROM ").append(RUNTIME_MODEL.VIRTUAL_MODEL_NAME).append(".FunctionParams") //$NON-NLS-1$ //$NON-NLS-2$
+      .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" AND UCASE(FunctionName)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" AND UCASE(Name)").append(LIKE_ESCAPE)//$NON-NLS-1$
+      .append(" ORDER BY FUNCTION_CAT, FUNCTION_SCHEM, FUNCTION_NAME, SPECIFIC_NAME, ORDINAL_POSITION").toString(); //$NON-NLS-1$
+
     private final String TABLE_TYPE;
     
     private final String QUERY_TABLES;
@@ -272,12 +298,8 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         return driverConnection.getTeiidVersion();
     }
 
-    private boolean isTeiid87OrGreater() {
-        return getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_7.get());
-    }
- 
-    private boolean isTeiid88OrGreater() {
-        return getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_8.get());
+    private boolean isTeiidVersionOrGreater(Version version) {
+        return getTeiidVersion().isGreaterThanOrEqualTo(version.get());
     }
 
     private DataTypeManagerService getDataTypeManager() {
@@ -872,7 +894,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
            buf.append("SELECT VDBName AS TABLE_CAT, SchemaName AS TABLE_SCHEM, TableName AS TABLE_NAME") //$NON-NLS-1$
                .append(", case when KeyType = 'Index' then TRUE else FALSE end AS NON_UNIQUE, NULL AS INDEX_QUALIFIER, KeyName AS INDEX_NAME"); //$NON-NLS-1$
 
-           if (isTeiid87OrGreater())
+           if (isTeiidVersionOrGreater(Version.TEIID_8_7))
                buf.append(", 3 AS TYPE, convert(Position, short) AS ORDINAL_POSITION, k.Name AS COLUMN_NAME"); //$NON-NLS-1$
            else
                buf.append(", 0 AS TYPE, convert(Position, short) AS ORDINAL_POSITION, k.Name AS COLUMN_NAME"); //$NON-NLS-1$
@@ -883,7 +905,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
                .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
                .append(" AND UCASE(TableName)") .append(LIKE_ESCAPE); //$NON-NLS-1$
 
-          if (isTeiid87OrGreater())
+          if (isTeiidVersionOrGreater(Version.TEIID_8_7))
               buf.append(" AND KeyType IN ('Unique', ?)"); //$NON-NLS-1$
           else
               buf.append(" AND KeyType IN ('Index', ?)"); //$NON-NLS-1$
@@ -901,7 +923,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
           .append(", convert(decodeString(TYPE, '").append(PARAM_DIRECTION_MAPPING).append("', ','), short) AS COLUMN_TYPE") //$NON-NLS-1$ //$NON-NLS-2$
           .append(", 1 AS DATA_TYPE"); //$NON-NLS-1$
 
-        if (isTeiid87OrGreater())
+        if (isTeiidVersionOrGreater(Version.TEIID_8_7))
           buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(case when scale > 32767 then 32767 else Scale end, short) AS SCALE"); //$NON-NLS-1$
         else
           buf.append(", DataType AS TYPE_NAME, p.Precision AS \"PRECISION\", TypeLength  AS LENGTH, convert(Scale, short) AS SCALE"); //$NON-NLS-1$
@@ -943,7 +965,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 
         try {
             String query = getQueryIndexInfoStatement();
-            if (isTeiid88OrGreater()) {
+            if (isTeiidVersionOrGreater(Version.TEIID_8_8)) {
                 if (approximate) {
                     query += " UNION ALL " + QUERY_INDEX_INFO_CARDINALITY;
                 }
@@ -955,12 +977,12 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
             prepareQuery.setObject(2, schema.toUpperCase());
             prepareQuery.setObject(3, table.toUpperCase());
 
-            if (isTeiid87OrGreater())
+            if (isTeiidVersionOrGreater(Version.TEIID_8_7))
                 prepareQuery.setObject(4, unique?null:"Index"); //$NON-NLS-1$
             else
                 prepareQuery.setObject(4, unique?null:"NonUnique"); //$NON-NLS-1$
 
-            if (isTeiid88OrGreater()) {
+            if (isTeiidVersionOrGreater(Version.TEIID_8_8)) {
                 if (approximate) {
                     prepareQuery.setObject(5, catalog.toUpperCase());
                     prepareQuery.setObject(6, schema.toUpperCase());
@@ -2490,32 +2512,151 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
     public ResultSet getFunctionColumns(String catalog, String schemaPattern,
 			String functionNamePattern, String columnNamePattern)
 			throws SQLException {
+
+	    if (isTeiidVersionOrGreater(Version.TEIID_8_9)) {
+	        if (catalog == null) {
+	            catalog = PERCENT;
+	        }
+	        
+	        if (schemaPattern == null) {
+	            schemaPattern = PERCENT;
+	        }
+	        
+	        if (functionNamePattern == null) {
+	            functionNamePattern = PERCENT;
+	        }
+	        
+	        if (columnNamePattern == null) {
+	            columnNamePattern = PERCENT;
+	        }
+	        
+	        List records = new ArrayList ();
+
+	        ResultSetMetaData rmetadata = null;
+	        ResultSetImpl results = null;
+	        PreparedStatementImpl prepareQuery = null;
+	        try {
+	            prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTION_COLUMNS);
+	            prepareQuery.setString(1, catalog.toUpperCase());
+	            prepareQuery.setString(2, schemaPattern.toUpperCase());
+	            prepareQuery.setString(3, functionNamePattern.toUpperCase());
+	            prepareQuery.setString(4, columnNamePattern.toUpperCase());
+	            results = prepareQuery.executeQuery();
+	            // Get the metadata for the results
+	            rmetadata = results.getMetaData();
+	            int cols = rmetadata.getColumnCount();
+	            while (results.next ()) {
+	                List currentRow = new ArrayList (cols);
+	                for(int i=0; i < cols; i++) {
+	                    currentRow.add(results.getObject(i+1));
+	                }
+	                String typeName = (String)currentRow.get(6);
+	                Integer length = (Integer)currentRow.get(8);
+	                Integer precision = (Integer)currentRow.get(7);
+	                if (precision != null && precision <= 0) {
+	                    currentRow.set(7, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+	                }
+	                if (length != null && length <= 0) {
+	                    currentRow.set(8, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+	                }
+	                if (typeName != null) {
+	                    currentRow.set(5, JDBCSQLTypeInfo.getSQLType(typeName));
+	                } else {
+	                    currentRow.set(5, null);                    
+	                }
+	                // add the current row to the list of records.
+	                records.add(currentRow);
+	            }// end of while
+
+	            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_success));
+
+	            // construct results object from column values and their metadata
+	            return dummyStatement().createResultSet(records, rmetadata);
+	        } catch(Exception e) {
+	            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctioncolumns_error, e.getMessage()), e);
+	        } finally {
+	            if (prepareQuery != null) {
+	                prepareQuery.close();
+	            }
+	        }
+	    }
+
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
     public ResultSet getFunctions(String catalog, String schemaPattern,
 			String functionNamePattern) throws SQLException {
+
+	       if (isTeiidVersionOrGreater(Version.TEIID_8_9)) {
+
+            if (catalog == null) {
+                catalog = PERCENT;
+            }
+
+            if (schemaPattern == null) {
+                schemaPattern = PERCENT;
+            }
+
+            if (functionNamePattern == null) {
+                functionNamePattern = PERCENT;
+            }
+            List records = new ArrayList();
+
+            ResultSetMetaData rmetadata = null;
+            ResultSetImpl results = null;
+            PreparedStatementImpl prepareQuery = null;
+            try {
+                prepareQuery = driverConnection.prepareStatement(QUERY_FUNCTIONS);
+                prepareQuery.setString(1, catalog.toUpperCase());
+                prepareQuery.setString(2, schemaPattern.toUpperCase());
+                prepareQuery.setString(3, functionNamePattern.toUpperCase());
+                results = prepareQuery.executeQuery();
+                // Get the metadata for the results
+                rmetadata = results.getMetaData();
+                int cols = rmetadata.getColumnCount();
+                while (results.next()) {
+                    List currentRow = new ArrayList(cols);
+
+                    for (int i = 0; i < cols; i++) {
+                        currentRow.add(results.getObject(i + 1));
+                    }
+
+                    records.add(currentRow);
+                }
+
+                logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_success));
+
+                // construct results object from column values and their metadata
+                return dummyStatement().createResultSet(records, rmetadata);
+            } catch (Exception e) {
+                throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getfunctions_error, e.getMessage()), e);
+            } finally {
+                if (prepareQuery != null) {
+                    prepareQuery.close();
+                }
+            }
+        }
+
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+    @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-    public ResultSet getSchemas(String catalog, String schemaPattern)
-			throws SQLException {
-		if (catalog == null) {
+    @Override
+    public ResultSet getSchemas(String catalog, String schemaPattern) throws SQLException {
+        if (catalog == null) {
             catalog = PERCENT;
         }
-        
+
         if (schemaPattern == null) {
             schemaPattern = PERCENT;
         }
         // list which represent records containing schema info
-        List records = new ArrayList ();
+        List records = new ArrayList();
 
         ResultSetMetaData rmetadata = null;
         ResultSetImpl results = null;
@@ -2525,15 +2666,15 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
             prepareQuery.setObject(1, catalog.toUpperCase());
             prepareQuery.setObject(2, schemaPattern.toUpperCase());
             // make a query against runtimemetadata and get results
-            results = (ResultSetImpl) prepareQuery.executeQuery();
+            results = (ResultSetImpl)prepareQuery.executeQuery();
 
-            while (results.next ()) {
+            while (results.next()) {
                 // each row will have only one column(Virtual database name)
-                List currentRow = new ArrayList (2);
+                List currentRow = new ArrayList(2);
 
-                for(int i = 0; i < JDBCColumnPositions.SCHEMAS.MAX_COLUMNS; i++) {
+                for (int i = 0; i < JDBCColumnPositions.SCHEMAS.MAX_COLUMNS; i++) {
                     // get the value at the current index add it to currentRow
-                    currentRow.add(results.getObject(i+1));
+                    currentRow.add(results.getObject(i + 1));
                 }
 
                 records.add(currentRow);
@@ -2542,16 +2683,16 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
             // Get the metadata for the results
             rmetadata = results.getMetaData();
 
-            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getschema_success)); 
+            logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getschema_success));
 
             // construct results object from column values and their metadata
             return dummyStatement().createResultSet(records, rmetadata);
-        } catch(Exception e) {
-            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getschema_error, e.getMessage()), e); 
+        } catch (Exception e) {
+            throw new SQLException(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getschema_error, e.getMessage()), e);
         } finally {
-        	if (prepareQuery != null) {
-        		prepareQuery.close();
-        	}
+            if (prepareQuery != null) {
+                prepareQuery.close();
+            }
         }
 	}
 

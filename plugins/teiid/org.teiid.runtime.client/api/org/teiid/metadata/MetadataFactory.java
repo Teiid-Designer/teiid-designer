@@ -37,6 +37,7 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -136,6 +137,9 @@ public class MetadataFactory implements Serializable {
         this.rawMetadata = rawMetadata;
     }
 
+    private boolean isTeiid89OrGreater() {
+        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9.get());
+    }
 
     private long longHash(String s, long h) {
         if (s == null) {
@@ -147,8 +151,8 @@ public class MetadataFactory implements Serializable {
         return h;
     }
 
-    private static String hex(long val, int hexLength) {
-        long hi = 1L << (hexLength * 4);
+    public static String hex(long val, int hexLength) {
+        long hi = 1L << (Math.min(63, hexLength * 4));
         return Long.toHexString(hi | (val & (hi - 1))).substring(1);
     }
 
@@ -228,13 +232,18 @@ public class MetadataFactory implements Serializable {
         table.addColumn(column);
         column.setParent(table);
         column.setPosition(table.getColumns().size()); //1 based indexing
-        setColumnType(type, column);
+
+        if (isTeiid89OrGreater())
+            setDataType(type, column, this.dataTypes, false);
+        else
+            setColumnType(type, column);
+
         setUUID(column);
         return column;
     }
 
-    private Datatype setColumnType(String type,
-            BaseColumn column) {
+    @Removed(Version.TEIID_8_9)
+    private Datatype setColumnType(String type, BaseColumn column) {
 		int arrayDimensions = 0;
 		while (DataTypeManagerService.isArrayType(type)) {
 			arrayDimensions++;
@@ -250,6 +259,26 @@ public class MetadataFactory implements Serializable {
              throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60009, type));
         }
 		column.setDatatype(datatype, true, arrayDimensions);
+        return datatype;
+    }
+
+    @Since(Version.TEIID_8_9)
+    public static Datatype setDataType(String type, BaseColumn column, Map<String, Datatype> dataTypes, boolean allowNull) {
+        int arrayDimensions = 0;
+        while (DataTypeManagerService.isArrayType(type)) {
+            arrayDimensions++;
+            type = type.substring(0, type.length()-2);
+        }
+        Datatype datatype = dataTypes.get(type);
+        if (datatype == null && (!allowNull || !DataTypeManagerService.DefaultDataTypes.NULL.equals(type))) {
+            //TODO: potentially we want to check the enterprise types, but at
+            //this point we're keying them by name, not runtime name (which
+            // is an awkward difference to start with)
+            //so the runtime type names are considered fixed and a type system
+            //generalization would be needed to support injecting new runtime types
+            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60009, type));
+        }
+        column.setDatatype(datatype, true, arrayDimensions);
         return datatype;
     }
 
@@ -432,7 +461,12 @@ public class MetadataFactory implements Serializable {
         setUUID(param);
         param.setType(parameterType);
         param.setProcedure(procedure);
-        setColumnType(type, param);
+
+        if (isTeiid89OrGreater())
+            setDataType(type, param, this.dataTypes, false);
+        else
+            setColumnType(type, param);
+
         if (parameterType == ProcedureParameter.Type.ReturnValue) {
             procedure.getParameters().add(0, param);
             for (int i = 0; i < procedure.getParameters().size(); i++) {
@@ -492,7 +526,7 @@ public class MetadataFactory implements Serializable {
 	 * @throws MetadataException 
 	 */
 	public FunctionMethod addFunction(String name, String returnType, String... paramTypes) {
-		FunctionMethod function = FunctionMethod.createFunctionMethod(name, null, null, returnType, paramTypes);
+		FunctionMethod function = FunctionMethod.createFunctionMethod(teiidVersion, name, null, null, returnType, paramTypes);
 		function.setPushdown(PushDown.MUST_PUSHDOWN);
 		setUUID(function);
 		schema.addFunction(function);
@@ -557,7 +591,7 @@ public class MetadataFactory implements Serializable {
         if (params.length > 0 && CommandContext.class.isAssignableFrom(params[0])) {
             paramTypes = Arrays.copyOfRange(paramTypes, 1, paramTypes.length);
         }
-        FunctionMethod func = FunctionMethod.createFunctionMethod(name, null, null, returnType, paramTypes);
+        FunctionMethod func = FunctionMethod.createFunctionMethod(teiidVersion, name, null, null, returnType, paramTypes);
         func.setInvocationMethod(method.getName());
         func.setPushdown(PushDown.CANNOT_PUSHDOWN);
         func.setMethod(method);
@@ -866,6 +900,14 @@ public class MetadataFactory implements Serializable {
 	public void addFunction(FunctionMethod functionMethod) {
 		functionMethod.setParent(this.schema);
 		setUUID(functionMethod);
+
+		if(isTeiid89OrGreater()) {
+		    for (FunctionParameter param : functionMethod.getInputParameters()) {
+		        setUUID(param);
+		    }
+		    setUUID(functionMethod.getOutputParameter());
+		}
+
 		this.schema.addFunction(functionMethod);
 	}
 }

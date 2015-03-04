@@ -14,25 +14,25 @@
 	  <version>9.0.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
-        <jbossas-version>7.2.0.Alpha1-redhat-4</jbossas-version>
-        <version.org.jboss.jboss-dmr>1.1.6.Final</version.org.jboss.jboss-dmr>
-        <version.org.jboss.modules.jboss-modules>1.2.2.Final</version.org.jboss.modules.jboss-modules>
-        <version.org.jboss.jboss-vfs>3.1.0.Final</version.org.jboss.jboss-vfs>
-        <version.org.jboss.jboss-threads>2.1.0.Final</version.org.jboss.jboss-threads>
+        <jbossas-version>7.4.0.Final-redhat-19</jbossas-version>
+        <version.org.jboss.jboss-dmr>1.2.0.Final</version.org.jboss.jboss-dmr>
+        <version.org.jboss.modules.jboss-modules>1.3.0.Final</version.org.jboss.modules.jboss-modules>
+        <version.org.jboss.jboss-vfs>3.2.2.Final</version.org.jboss.jboss-vfs>
+        <version.org.jboss.jboss-threads>2.1.1.Final</version.org.jboss.jboss-threads>
         <version.org.jboss.logging.jboss-logging>3.1.2.GA</version.org.jboss.logging.jboss-logging>
-        <version.org.jboss.marshalling.jboss-marshalling>1.3.18.GA</version.org.jboss.marshalling.jboss-marshalling>
-        <version.org.jboss.marshalling.jboss-marshalling-river>1.3.18.GA</version.org.jboss.marshalling.jboss-marshalling-river>
-        <version.org.jboss.jboss-remoting>3.2.16.GA</version.org.jboss.jboss-remoting>
+        <version.org.jboss.marshalling.jboss-marshalling>1.4.3.Final</version.org.jboss.marshalling.jboss-marshalling>
+        <version.org.jboss.marshalling.jboss-marshalling-river>1.4.3.Final</version.org.jboss.marshalling.jboss-marshalling-river>
+        <version.org.jboss.jboss-remoting>3.3.0.CR4</version.org.jboss.jboss-remoting>
         <version.org.jboss.jboss-sasl>1.0.3.Final</version.org.jboss.jboss-sasl>
-        <version.org.jboss.netty>3.6.2.Final</version.org.jboss.netty>
-        <version.org.jboss.xnio-api>3.0.7.GA</version.org.jboss.xnio-api>
-        <version.org.jboss.xnio-nio>3.0.7.GA</version.org.jboss.xnio-nio>
+        <version.org.jboss.netty>3.6.10.Final</version.org.jboss.netty>
+        <version.org.jboss.xnio-api>3.0.9.GA</version.org.jboss.xnio-api>
+        <version.org.jboss.xnio-nio>3.0.9.GA</version.org.jboss.xnio-nio>
         <version.json-simple>1.1</version.json-simple>
         <version.org.jgroups>3.2.10.Final</version.org.jgroups>
         <version.connector-api>1.5</version.connector-api>
         <version.jta>1.1</version.jta>
         <version.nux>1.6</version.nux>
-        <version.xom>1.2.5</version.xom>
+        <version.nu.xom>1.2.7.redhat-4</version.nu.xom>
     </properties>
     <build>
         <plugins>
@@ -101,7 +101,7 @@
                                 <artifactItem>
                                     <groupId>xom</groupId>
                                     <artifactId>xom</artifactId>
-                                    <version>${version.xom}</version>
+                                    <version>${version.nu.xom}</version>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.jboss.as</groupId>
@@ -367,9 +367,9 @@
             </snapshots>
         </repository>
         <repository>
-            <id>jboss-eap-alpha</id>
-            <name>JBoss EAP6.1 Alpha</name>
-            <url>http://maven.repository.redhat.com/techpreview/eap6/6.1.0.Alpha1/maven-repository/</url>
+            <id>redhat-techpreview-all-repository</id>
+            <name>Red Hat Tech Preview repository</name>
+            <url>http://maven.repository.redhat.com/techpreview/all/</url>
             <layout>default</layout>
             <releases>
                 <enabled>true</enabled>
@@ -377,9 +377,26 @@
             </releases>
             <snapshots>
                 <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>redhat-techpreview-all-repository</id>
+            <name>Red Hat Tech Preview repository (all)</name>
+            <url>http://maven.repository.redhat.com/techpreview/all/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
     <dependencies>
         <dependency>
             <groupId>javax.resource</groupId>
@@ -510,7 +527,7 @@
             <dependency>
                 <groupId>xom</groupId>
                 <artifactId>xom</artifactId>
-                <version>${version.xom}</version>
+                <version>${version.nu.xom}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.as</groupId>

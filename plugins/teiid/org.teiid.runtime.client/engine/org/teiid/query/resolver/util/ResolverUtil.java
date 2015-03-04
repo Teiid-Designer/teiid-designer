@@ -56,6 +56,7 @@ import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
@@ -86,6 +87,7 @@ import org.teiid.query.sql.symbol.Symbol;
 import org.teiid.query.sql.util.SymbolMap;
 import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.GroupsUsedByElementsVisitor;
+import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.runtime.client.Messages;
 
 
@@ -307,6 +309,13 @@ public class ResolverUtil {
                                             boolean implicit, FunctionLibrary library) {
         DataTypeManagerService dataTypeManagerService = DataTypeManagerService.getInstance(sourceExpression.getTeiidVersion());
         Class<?> srcType = dataTypeManagerService.getDataTypeClass(sourceTypeName);
+        Class<?> targetType = dataTypeManagerService.getDataTypeClass(targetTypeName);
+
+        try {
+            setDesiredType(sourceExpression, targetType, sourceExpression);
+        } catch (Exception e) {
+            // Ignore exception
+        }
 
         FunctionDescriptor fd = library.findTypedConversionFunction(srcType, dataTypeManagerService.getDataTypeClass(targetTypeName));
 
@@ -373,7 +382,7 @@ public class ResolverUtil {
 	 * @param metadata
 	 *            IQueryMetadataInterface
 	 */
-    public static void resolveOrderBy(OrderBy orderBy, QueryCommand command, IQueryMetadataInterface metadata)
+    public static void resolveOrderBy(OrderBy orderBy, QueryCommand command, TempMetadataAdapter metadata)
         throws Exception {
 
     	List<Expression> knownElements = command.getProjectedQuery().getSelect().getProjectedSymbols();
@@ -459,6 +468,18 @@ public class ResolverUtil {
         	if (command instanceof SetQuery) {
     			 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30086, sortKey));
     		}
+
+        	//resolve subqueries
+            for (SubqueryContainer container : ValueIteratorProviderCollectorVisitor.getValueIteratorProviders(sortKey)) {
+                Command c = container.getCommand();
+                QueryResolver queryResolver = new QueryResolver(command.getTeiidVersion());
+                queryResolver.setChildMetadata(c, command);
+                c.pushNewResolvingContext(fromClauseGroups);
+
+                queryResolver = new QueryResolver(command.getTeiidVersion());
+                queryResolver.resolveCommand(c, metadata.getMetadata(), false);
+            }
+
         	ResolverVisitor visitor = new ResolverVisitor(command.getTeiidVersion());
         	for (ElementSymbol symbol : ElementCollectorVisitor.getElements(sortKey, false)) {
         		try {
