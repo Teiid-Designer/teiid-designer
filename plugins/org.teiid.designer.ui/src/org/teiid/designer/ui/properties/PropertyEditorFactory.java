@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.ui.EMFEditUIPlugin;
 import org.eclipse.emf.edit.ui.provider.PropertyDescriptor.EDataTypeCellEditor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
@@ -134,6 +135,8 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
         if (!itemPropertyDescriptor.canSetProperty(object)) {
             return null;
         }
+        
+        boolean isTableEditor = composite instanceof Table;
 
         CellEditor result = null;
 
@@ -192,11 +195,15 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
                         if (containsLiterals) {
                             // this is standard; use the accumulator
-                            result = createAccumulatorEnumEditor(composite,
-                                                                 propertyDescriptor,
-                                                                 feature,
-                                                                 itemPropertyDescriptor,
-                                                                 object);
+                        	if( isTableEditor ) {
+                        		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object); 
+                        	} else {
+	                            result = createAccumulatorEnumEditor(composite,
+	                                                                 propertyDescriptor,
+	                                                                 feature,
+	                                                                 itemPropertyDescriptor,
+	                                                                 object);
+                        	}
                         } else {
                             // this is a non-standard; use the combo box editor
                             result = createComboEditor(composite, itemPropertyDescriptor, propertyDescriptor, object);
@@ -221,11 +228,15 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                                     // no properties that will travel down this block of code with getChoiceOfValues( ) returning
                                     // values.
                                     // Should that ever occur (say, in EMF 2.0), this block of code will need to be re-tested.
-                                    result = createAccumulatorEnumEditor(composite,
-                                                                         propertyDescriptor,
-                                                                         feature,
-                                                                         itemPropertyDescriptor,
-                                                                         object);
+                                	if( isTableEditor ) {
+                                		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object);
+                                	} else {
+		                                result = createAccumulatorEnumEditor(composite,
+		                                                                     propertyDescriptor,
+		                                                                     feature,
+		                                                                     itemPropertyDescriptor,
+		                                                                     object);
+                                	}
                                 }
                             } else {
                                 result = createAccumulatorEnumEditor(composite,
@@ -242,14 +253,22 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                             // property is single-valued.
                             if (choiceOfValues != null) {
                                 if (choiceOfValues.size() < COMBO_BOX_CHOICE_LIMIT) {
-                                    result = createComboEditor(composite, itemPropertyDescriptor, propertyDescriptor, object);
+                                	if( isTableEditor ) {
+                                		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object); 
+                                	} else {
+                                		result = createComboEditor(composite, itemPropertyDescriptor, propertyDescriptor, object);
+                                	}
                                 } else {
-                                    result = createListEditor(composite,
-                                                              propertyDescriptor,
-                                                              feature,
-                                                              itemPropertyDescriptor,
-                                                              object,
-                                                              choiceOfValues);
+                                	if( isTableEditor ) {
+                                		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object);
+                                	} else {
+                                		result = createListEditor(composite,
+	                                                              propertyDescriptor,
+	                                                              feature,
+	                                                              itemPropertyDescriptor,
+	                                                              object,
+	                                                              choiceOfValues);
+                                	}
                                 }
                             } else {
                                 result = new EDataTypeCellEditor(eDataType, composite);
@@ -266,12 +285,15 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
                             if (valid) {
                                 // create a cell editor that launches the accumulator
-                                result = createAccumulatorEditor(composite,
-                                                                 propertyDescriptor,
-                                                                 feature,
-                                                                 itemPropertyDescriptor,
-                                                                 object);
-
+                            	if( isTableEditor ) {
+                            		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object);
+                            	} else {
+	                                result = createAccumulatorEditor(composite,
+	                                                                 propertyDescriptor,
+	                                                                 feature,
+	                                                                 itemPropertyDescriptor,
+	                                                                 object);
+                            	}
                             }
                         } else {
 
@@ -294,15 +316,22 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
                             // property is single-valued.
                             if (useComboBox) {
-                                result = createComboEditor(composite, (ArrayList)choiceOfValues, propertyDescriptor, object);
+                            	if( isTableEditor ) {
+                            		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object);
+                            	} else {
+                            		result = createComboEditor(composite, (ArrayList)choiceOfValues, propertyDescriptor, object);
+                            	}
                             } else {
-                                result = createListEditor(composite,
-                                                          propertyDescriptor,
-                                                          feature,
-                                                          itemPropertyDescriptor,
-                                                          object,
-                                                          choiceOfValues);
-
+                            	if( isTableEditor ) {
+                            		result = createUnsupportedCellEditor(composite, propertyDescriptor, feature, object);
+                            	} else {
+	                                result = createListEditor(composite,
+	                                                          propertyDescriptor,
+	                                                          feature,
+	                                                          itemPropertyDescriptor,
+	                                                          object,
+	                                                          choiceOfValues);
+                            	}
                             }
                         }
 
@@ -584,6 +613,27 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
             }
         };
     }
+    
+	private static CellEditor createUnsupportedCellEditor(final Composite composite, 
+			final IPropertyDescriptor propertyDescriptor,
+			final EStructuralFeature feature, 
+			final Object object) {
+
+		return new ExtendedDialogCellEditor(composite, propertyDescriptor.getLabelProvider()) {
+			@Override
+			protected Object openDialogBox(Control cellEditorWindow) {
+				if( object instanceof EObject ) {
+					String name = ModelerCore.getModelEditor().getName((EObject)object);
+					
+					MessageDialog.openWarning(composite.getShell(),
+							UiConstants.Util.getString("PropertyEditorFactory.unsupportedEditingMessage"), 
+							UiConstants.Util.getString("PropertyEditorFactory.unsupportedEditingMessage", feature.getName(), name));
+				}
+				// return the original object
+				return getValue();
+			}
+		};
+	}
 
     static List copyList( List inList ) {
         List outList = new ArrayList(inList.size());
