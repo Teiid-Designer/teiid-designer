@@ -145,5 +145,11 @@
       <refactorHandler
             name="org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler">
       </refactorHandler>
+   </extension>
+      <extension
+         point="org.teiid.designer.ui.extendedModelLabelProvider">
+      <class
+            name="org.teiid.designer.vdb.ui.util.DynamicVdbExtendedLabelProvider">
+      </class>
    </extension> 
 </plugin>
