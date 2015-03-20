@@ -44,16 +44,23 @@
 		                              resteasy-jettison-provider.jar,
 		                              saxonhe.jar,
 		                              scannotation.jar,
-		                              sjsxp.jar"/>
+									  swagger-jersey-jaxrs_2.9.1.jar,
+									  swagger-annotations_2.9.1.jar,
+								      swagger-core_2.9.1.jar,
+								      swagger-jaxrs_2.9.1.jar,
+									  scala-library.jar,
+									  json4s-jackson_2.9.1-1,
+								      json4s-core_2.9.2,
+		                              sjsxp.jar" />
 
-	<property name="soap-libs" value="wss4j.jar"/>
-	
+	<property name="soap-libs" value="wss4j.jar" />
+
 	<!--
 	   Test whether all the required libraries are present
 	-->
 	<target name="check-libs" depends="init-ant-contrib">
 		<!-- correct any extra whitespace created from formatting -->
-		<removeWhitespace arg="${rest-libs}"/>
+		<removeWhitespace arg="${rest-libs}" />
 
 		<filelist id="my.restlibs" dir="${rest-lib-dir}" files="${rwsResult}" />
 		<restrict id="missing.restlibs">
@@ -64,16 +71,16 @@
 		</restrict>
 
 		<!-- correct any extra whitespace created from formatting -->
-	    <removeWhitespace arg="${soap-libs}"/>
+		<removeWhitespace arg="${soap-libs}" />
 
-	    <filelist id="my.soaplibs" dir="${soap-lib-dir}" files="${rwsResult}" />
-	    <restrict id="missing.soaplibs">
-            <filelist refid="my.soaplibs" />
-	        <not>
-	            <exists />
-	        </not>
-	    </restrict>
-		
+		<filelist id="my.soaplibs" dir="${soap-lib-dir}" files="${rwsResult}" />
+		<restrict id="missing.soaplibs">
+			<filelist refid="my.soaplibs" />
+			<not>
+				<exists />
+			</not>
+		</restrict>
+
 		<property name="missing.restlibs" refid="missing.restlibs" />
 		<property name="missing.soaplibs" refid="missing.soaplibs" />
 		<condition property="libs-present" value="true">
@@ -100,8 +107,8 @@
 	</target>
 
 	<target name="clean">
-		<property name="should-import" value="true"/>
-		<antcall target="clean-internal"/>
+		<property name="should-import" value="true" />
+		<antcall target="clean-internal" />
 	</target>
 
 	<target name="download" depends="init-ant-contrib, check-work, nothing-todo, clean-internal" if="should-import">

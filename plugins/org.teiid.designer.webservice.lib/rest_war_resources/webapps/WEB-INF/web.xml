@@ -5,21 +5,48 @@
     <param-name>javax.ws.rs.Application</param-name>
     <param-value>org.teiid.rest.services.TeiidRestApplication</param-value>
   </context-param>
+  <context-param>
+		<param-name>resteasy.resources</param-name>
+		<param-value>com.wordnik.swagger.jaxrs.listing.ApiListingResourceJSON</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>resteasy.providers</param-name>
+		<param-value>
+    			com.wordnik.swagger.jaxrs.listing.ApiDeclarationProvider
+    			,com.wordnik.swagger.jaxrs.listing.ResourceListingProvider
+    	</param-value>
+	</context-param>
   <listener>
     <listener-class>
             org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
-        </listener-class>
+    </listener-class>
   </listener>
   <servlet>
     <servlet-name>RestDataservice</servlet-name>
     <servlet-class>
             org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
-        </servlet-class>
+    </servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RestDataservice</servlet-name>
-    <url-pattern>/*</url-pattern>
+    ${urlPattern}
+    <url-pattern>/api-docs/*</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+		<servlet-name>DefaultJaxrsConfig</servlet-name>
+		<servlet-class>com.wordnik.swagger.jaxrs.config.DefaultJaxrsConfig</servlet-class>
+		<init-param>
+			<param-name>api.version</param-name>
+			<param-value>1.0.0</param-value>
+		</init-param>
+		<init-param>
+			<param-name>swagger.api.basepath</param-name>
+			<param-value>http://localhost:8080/${contextName}</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
   
   <!--<security-constraint>
 	<web-resource-collection>

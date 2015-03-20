@@ -281,5 +281,27 @@ public class WarArchiveUtil {
 
         return restMethod;
     }
+    
+    /**
+     * @param description of the procedure
+     * @return String rest description
+     */
+    public static String getRestDescription( Procedure procedure ) {
+        String restDescription = null;
+
+        try {
+            // try new way first
+            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
+                                                                                                    .getRegistry()
+                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
+            restDescription = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION);
+
+        } catch (Exception e) {
+            UTIL.log(e);
+        }
+
+        return restDescription;
+    }
+
 
 }

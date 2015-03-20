@@ -189,7 +189,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 			RelationalProcedure procedureRef, Procedure procedure) {
 		RelationalViewProcedure viewProcedure = (RelationalViewProcedure)procedureRef;
 		RestModelExtensionAssistant.setRestProperties(
-				procedure, viewProcedure.getRestMethod(), viewProcedure.getRestUri(),  viewProcedure.getRestCharSet(),  viewProcedure.getRestHeaders());
+				procedure, viewProcedure.getRestMethod(), viewProcedure.getRestUri(),  viewProcedure.getRestCharSet(),  viewProcedure.getRestHeaders(), viewProcedure.getRestDescription());
 		super.applyProcedureExtensionProperties(procedureRef, procedure);
 	}
 

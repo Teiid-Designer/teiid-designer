@@ -53,7 +53,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+
 ${path}
+${api}
 public class ${className}{
 
     ${TeiidRSProvider} teiidProvider = new ${TeiidRSProvider}();
