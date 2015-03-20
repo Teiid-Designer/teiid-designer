@@ -65,7 +65,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         if (propDefn != null) {
             // must be procedure in a virtual model
             if ((modelObject instanceof Procedure) && ModelUtil.isVirtual(modelObject)) {
-                if (PropertyIds.REST_METHOD.equals(propId) || PropertyIds.URI.equals(propId) || PropertyIds.CHARSET.equals(propId) || PropertyIds.HEADERS.equals(propId)) {
+                if (PropertyIds.REST_METHOD.equals(propId) || PropertyIds.URI.equals(propId) || PropertyIds.CHARSET.equals(propId) || PropertyIds.HEADERS.equals(propId) || PropertyIds.DESCRIPTION.equals(propId)) {
                     return propDefn;
                 }
             }
@@ -91,7 +91,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
         return (RestModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
     }
     
-    public static boolean setRestProperties(EObject procedure, String restMethod, String restUri, String restCharSet, String restHeaders) {
+    public static boolean setRestProperties(EObject procedure, String restMethod, String restUri, String restCharSet, String restHeaders, String restDescription) {
         final RestModelExtensionAssistant assistant = getRestAssistant();
         if( assistant != null ) {
 			try {
@@ -99,6 +99,7 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD, restMethod);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, restCharSet);
 				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, restHeaders);
+				assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION, restDescription);
 			} catch (Exception e) {
 				RelationalPlugin.Util.log(e);
 				return false;
@@ -120,6 +121,8 @@ public class RestModelExtensionAssistant extends EmfModelObjectExtensionAssistan
 					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.CHARSET, value);
 				} else if( RestModelExtensionConstants.PropertyIds.HEADERS.equals(id)) {
 					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.HEADERS, value);
+				} else if( RestModelExtensionConstants.PropertyIds.DESCRIPTION.equals(id)) {
+					assistant.setPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION, value);
 				}
 			} catch (Exception e) {
 				RelationalPlugin.Util.log(e);

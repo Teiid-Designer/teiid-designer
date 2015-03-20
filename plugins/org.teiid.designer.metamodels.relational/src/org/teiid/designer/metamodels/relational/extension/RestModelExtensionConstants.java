@@ -98,6 +98,13 @@ public interface RestModelExtensionConstants {
          * @since 8.1
          */
         String HEADERS = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "headers"); //$NON-NLS-1$
+        
+        /**
+         * The property definition identifier for the Description.
+         * @since 8.1
+         */
+        String DESCRIPTION = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "DESCRIPTION"); //$NON-NLS-1$
+    
     }
     
     interface OLD_REST_INFO {

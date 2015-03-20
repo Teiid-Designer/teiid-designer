@@ -23,6 +23,7 @@ public class RestProcedure {
     private String consumesAnnotation;
     private String producesAnnotation;
     private String uri;
+    private String description;
     private String modelName;
     private String charSet;
     private LinkedList<String> queryParameterList;
@@ -172,6 +173,22 @@ public class RestProcedure {
 	 */
 	public void setHeaderParameterList(LinkedList<String> headerParameterList) {
 		this.headerParameterList = headerParameterList;
+	}
+
+	/**
+	 * @return get the description of the procedure
+	 * @since 9.0.2
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @return set the description of the procedure
+	 * @since 9.0.2
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }
