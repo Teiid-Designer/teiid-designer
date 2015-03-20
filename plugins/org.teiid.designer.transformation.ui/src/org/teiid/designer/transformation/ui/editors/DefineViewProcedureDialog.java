@@ -366,7 +366,7 @@ public class DefineViewProcedureDialog extends TitleAreaDialog implements
 		this.doApplyRestWarProperties = this.applyRestWarPropertiesCB.getSelection();
 		if( doApplyRestWarProperties() ) {
 			RestModelExtensionAssistant.setRestProperties(
-					getViewProcedure(), getRestMethod(), getRestUri(), null, null);
+					getViewProcedure(), getRestMethod(), getRestUri(), null, null, null);
 		}
 		super.okPressed();
 	}

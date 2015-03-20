@@ -80,8 +80,15 @@ public interface WebServiceLibConstants {
     String SCANANNOTATION_JAR = "scannotation.jar"; //$NON-NLS-1$
 
     String SJSXP_JAR = "sjsxp.jar"; //$NON-NLS-1$
-
-
+    
+    String SWAGGER_JERSEYS_JAR = "swagger-jersey-jaxrs_2.9.1.jar"; //$NON-NLS-1$
+    
+    String SWAGGER_ANNOTATIONS_JAR = "swagger-annotations_2.9.1.jar"; //$NON-NLS-1$
+    
+    String SWAGGER_CORE_JAR = "swagger-core_2.9.1.jar"; //$NON-NLS-1$
+    
+    String SWAGGER_JAXRS_JAR = "swagger-jaxrs_2.9.1.jar"; //$NON-NLS-1$
+    
     /* Soap Related */
 
     String SOAP_WAR_RESOURCES = "war_resources"; //$NON-NLS-1$

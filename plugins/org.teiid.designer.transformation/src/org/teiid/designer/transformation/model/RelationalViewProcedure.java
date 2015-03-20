@@ -29,6 +29,8 @@ public class RelationalViewProcedure extends RelationalProcedure {
     
     private String restHeaders;
 
+    private String restDescription;
+
     /**
      * 
      */
@@ -153,6 +155,24 @@ public class RelationalViewProcedure extends RelationalProcedure {
 	 */
 	public void setRestHeaders(String restHeaders) {
 		this.restHeaders = restHeaders;
+	}
+	
+	/**
+	 * Sets the Rest Description value
+	 * 
+	 * @param restDescription
+	 */
+	public String getRestDescription() {
+		return restDescription;
+	}
+	
+	/**
+	 * Sets the Rest Description value
+	 * 
+	 * @param restDescription
+	 */
+	public void setRestDescription(String restDescription) {
+		this.restDescription = restDescription;
 	}
     
 }

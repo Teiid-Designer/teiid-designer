@@ -28,5 +28,9 @@
             <p:description locale="en_US">The relative URI to map this procedure to.</p:description>
             <p:display locale="en_US">URI</p:display>
         </p:property>
+        <p:property advanced="false" index="true" masked="false" name="DESCRIPTION" required="false" type="string">
+            <p:description locale="en_US">The description of this procedure.</p:description>
+            <p:display locale="en_US">Description</p:display>
+        </p:property>
     </p:extendedMetaclass>
 </modelExtension>
