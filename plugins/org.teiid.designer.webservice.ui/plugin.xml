@@ -35,7 +35,15 @@
          label="%generateWebServiceModelAction2.label">
       </specialAction>
    </extension>
-
+   <extension
+		id="GenerateRestVirtualProceduresAction"
+		name="%generateRestVirtualProceduresAction.name"
+        point="org.teiid.designer.ui.modelObjectSpecialAction">
+      <specialAction
+         name="org.teiid.designer.webservice.ui.actions.GenerateRestVirtualProceduresAction"
+         label="%generateRestVirtualProceduresAction.label">
+      </specialAction>
+   </extension>
 <!-- Context Help Infopops -->
 	<extension point="org.eclipse.help.contexts">
 		<contexts file="helpContexts.xml"  />
