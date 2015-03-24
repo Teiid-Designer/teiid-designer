@@ -657,7 +657,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
 
         void handleTypeChanged(Object type) {
             this.type = (String)type;
-            handleAddProperty();
             updateState();
         }
 
