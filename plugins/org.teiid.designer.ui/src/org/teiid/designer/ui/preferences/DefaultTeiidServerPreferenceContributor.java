@@ -54,7 +54,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         Composite panel = new Composite(parent, SWT.NONE);
         GridLayoutFactory.fillDefaults().numColumns(2).applyTo(panel);
 
-        versionCombo = new Combo(panel, SWT.DROP_DOWN | SWT.READ_ONLY);
+        versionCombo = new Combo(panel, SWT.DROP_DOWN);
         versionCombo.setFont(JFaceResources.getDialogFont());
         versionCombo.setToolTipText(Util.getStringOrKey(PREFIX + "toolTip")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(versionCombo);
@@ -175,7 +175,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         }
 
         try {
-            for (ITeiidServerVersion regVersion : TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions()) {
+            for (ITeiidServerVersion regVersion : TeiidRuntimeRegistry.getInstance().getSupportedVersions()) {
                 if (regVersion.compareTo(version)) {
                     getPreferenceStore().setValue(PREF_ID, regVersion.toString());
                     return true;
@@ -183,6 +183,14 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
             }
         } catch (Exception ex) {
             Util.log(ex);
+        }
+
+        boolean changeVersion = MessageDialog.openQuestion(shell,
+                                                           Util.getStringOrKey(PREFIX + "unsupportedVersionQuestionTitle"), //$NON-NLS-1$
+                                                           Util.getStringOrKey(PREFIX + "unsupportedVersionQuestionMesssage")); //$NON-NLS-1$
+        if (changeVersion) {
+            getPreferenceStore().setValue(PREF_ID, version.toString());
+            return true;
         }
 
         // No runtime client to support default version
@@ -219,7 +227,7 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
         List<String> items = new ArrayList<String>();
 
         try {
-            Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+            Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
             for (ITeiidServerVersion version : registeredServerVersions) {
                 items.add(version.toString());
             }

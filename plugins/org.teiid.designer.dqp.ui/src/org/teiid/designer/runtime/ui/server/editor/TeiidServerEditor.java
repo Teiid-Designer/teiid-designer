@@ -396,7 +396,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         List<String> serverVersions = new ArrayList<String>();
         serverVersions.add(teiidServer.getServerVersion().toString());
         try {
-            Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+            Collection<ITeiidServerVersion> registeredServerVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
             for (ITeiidServerVersion version : registeredServerVersions) {
                 serverVersions.add(version.toString());
             }

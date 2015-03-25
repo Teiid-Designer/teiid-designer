@@ -103,6 +103,7 @@ import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
+import org.teiid.designer.runtime.spi.IExecutionAdminFactory.SupportLevel;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
@@ -2217,7 +2218,21 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
             throw new RuntimeException(ex);
         }
     }
-    
+
+    /**
+     * Get the level of support for the given {@link ITeiidServerVersion}
+     * 
+     * @return support level
+     */
+    public static SupportLevel getTeiidSupportLevel(ITeiidServerVersion teiidVersion) {
+        try {
+            IExecutionAdminFactory factory = TeiidRuntimeRegistry.getInstance().getExecutionAdminFactory(teiidVersion);
+            return factory.supports(teiidVersion);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     /**
      * This method will generate a ModelResource based on IPath and and name
 	 * @param location
