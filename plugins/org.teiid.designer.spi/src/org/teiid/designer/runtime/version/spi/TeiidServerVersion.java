@@ -177,7 +177,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
         Collection<ITeiidServerVersion> serverVersions = null;
         try {
-            serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+            serverVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
         } catch (Exception ex) {
             DesignerSPIPlugin.log(ex);
             return lastTestedDefault;

@@ -27,7 +27,7 @@ public class NameUtilTest extends TestCase {
     private Collection<ITeiidServerVersion> serverVersions;
     
     public NameUtilTest() throws Exception {
-        serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+        serverVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
     }
     
     @Override

@@ -102,7 +102,7 @@ public class TestDisplayNodeFactory extends TestCase {
 
     public TestDisplayNodeFactory(String name) throws Exception {
         super(name);
-        serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+        serverVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
         
         expectedResults = new HashMap<String, Map<ITeiidServerVersion,String>>();
         initExpectedResults();
