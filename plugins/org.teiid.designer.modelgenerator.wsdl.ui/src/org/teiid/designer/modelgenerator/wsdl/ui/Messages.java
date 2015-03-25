@@ -220,6 +220,8 @@ public class Messages  extends NLS {
     public static String WsdlOperationsPage_deselectAllButton_tipText;
     public static String WsdlOperationsPage_dialog_wsdlParseError_title;
     public static String WsdlOperationsPage_dialog_wsdlParseError_msg;
+    public static String WsdlDefinitionPage_validationResultsTitle;
+    public static String WsdlDefinitionPage_validationResultsOkMessage;
     
     static {
         NLS.initializeMessages("org.teiid.designer.modelgenerator.wsdl.ui.messages", Messages.class); //$NON-NLS-1$
