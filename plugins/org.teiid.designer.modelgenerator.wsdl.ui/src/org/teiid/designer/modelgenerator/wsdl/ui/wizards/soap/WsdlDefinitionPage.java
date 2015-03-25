@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,6 +22,7 @@ import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -170,6 +172,9 @@ public class WsdlDefinitionPage extends WizardPage
 		// if wsdl already has valid status, disable
 		if (this.wsdlStatus != null && this.wsdlStatus.isOK()) {
 			this.buttonValidateWSDL.setEnabled(false);
+			MessageDialog.openInformation(getShell(),
+					Messages.WsdlDefinitionPage_validationResultsTitle, 
+					Messages.WsdlDefinitionPage_validationResultsOkMessage);
 		} else {
 			// if there is a wsdl selection, enable validation button
 			if (this.importManager.getWSDLFileUri() != null) {
@@ -432,7 +437,6 @@ public class WsdlDefinitionPage extends WizardPage
 			//this.operationsPanel.notifyWsdlChanged();
 		}
 		
-		updateValidateWSDLButtonEnablement();
 		notifyChanged();
 	}
 
