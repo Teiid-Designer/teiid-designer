@@ -402,6 +402,13 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
                 return Util.getString(PREFIX + "translatorOverrideAlreadyExists"); //$NON-NLS-1$
             }
         }
+        
+        // make sure translator override name doesn't already exist
+        for (String existingName : this.translatorTypes) {
+            if (existingName.equals(this.name)) {
+                return Util.getString(PREFIX + "translatorNameIsBuiltInName", this.name); //$NON-NLS-1$
+            }
+        }
 
         // make sure there is a type
         if (CoreStringUtil.isEmpty(this.type)) {
