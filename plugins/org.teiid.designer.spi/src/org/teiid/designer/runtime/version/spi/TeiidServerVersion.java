@@ -323,15 +323,45 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
 
-        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        int majCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMajor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMajor());
+            majCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        }
+
         if (majCompResult > 0)
             return true;
-        
-        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+
+        int minCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMinor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMinor());
+            minCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        }
+
         if (majCompResult == 0 && minCompResult > 0)
             return true;
 
-        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        int micCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMicro());
+            int otherMin = Integer.parseInt(otherMinVersion.getMicro());
+            micCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        }
+
         if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
             return true;
             
@@ -343,15 +373,45 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
 
-        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        int majCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMajor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMajor());
+            majCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        }
+
         if (majCompResult < 0)
             return true;
 
-        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        int minCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMinor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMinor());
+            minCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        }
+
         if (majCompResult == 0 && minCompResult < 0)
             return true;
 
-        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        int micCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMicro());
+            int otherMin = Integer.parseInt(otherMinVersion.getMicro());
+            micCompResult = Integer.compare(myMax, otherMin);
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        }
+
         if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
             return true;
             
