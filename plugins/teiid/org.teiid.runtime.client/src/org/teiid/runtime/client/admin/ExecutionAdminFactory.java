@@ -16,6 +16,7 @@ import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.IExecutionAdminFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.client.TeiidRuntimePlugin;
@@ -29,6 +30,20 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
     private final Map<ITeiidServerVersion, DataTypeManagerService> dataTypeManagerServiceCache = new HashMap<ITeiidServerVersion, DataTypeManagerService>();
     
     private final Map<ITeiidServerVersion, QueryService> queryServiceCache = new HashMap<ITeiidServerVersion, QueryService>();
+
+    @Override
+    public SupportLevel supports(ITeiidServerVersion version) {
+        if (version == null)
+            return SupportLevel.NO_SUPPORT;
+
+        if (version.isLessThan(TeiidServerVersion.Version.TEIID_7_7.get()))
+            return SupportLevel.NO_SUPPORT;
+
+        if (version.isLessThanOrEqualTo(TeiidServerVersion.Version.TEIID_DEFAULT.get()))
+            return SupportLevel.FULL_SUPPORT;
+
+        return SupportLevel.WORKS;
+    }
 
     @Override
     public IExecutionAdmin createExecutionAdmin(ITeiidServer teiidServer) throws Exception {
