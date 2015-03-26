@@ -386,7 +386,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * Analyzes this object's data values and sets the current <code>IStatus</code>
 	 */
 	public void validate() {
-		if( isFlatFileLocalMode() ) {
+		if( isFlatFileLocalMode() || isFlatFileUrlMode() ) {
 			if( this.fileInfoMap.isEmpty() ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$
 				return;
