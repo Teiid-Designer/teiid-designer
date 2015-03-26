@@ -24,6 +24,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.actions.FindModelObjectHandler;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -131,6 +132,22 @@ public class ModelExplorerNewAction extends Action implements IMenuCreator{
 		return list;
 	}
 	
+	private void addFindModelObjectAction(Menu menu) {
+		new Separator().fill(menu, -1);
+		
+		IAction action = new Action("Find model object...", UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.FIND_MODEL_OBJECT)) {
+
+			@Override
+			public void run() {
+				FindModelObjectHandler.findObject();
+			}
+			
+		};
+		
+		ActionContributionItem item = new ActionContributionItem(action);
+		item.fill(menu, -1);
+	}
+	
 	private void addGoToExamplesAction(Menu menu) {
 		new Separator().fill(menu, -1);
 		
@@ -158,6 +175,7 @@ public class ModelExplorerNewAction extends Action implements IMenuCreator{
 			addActionToMenu(menu, action);
 		}
 
+		addFindModelObjectAction(menu);
 		addGoToExamplesAction(menu);
 
 		setEnabled(!actions.isEmpty());

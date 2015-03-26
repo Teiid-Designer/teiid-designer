@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
@@ -37,6 +38,11 @@ public final class FindModelObjectHandler extends AbstractHandler {
     @Override
     public Object execute( ExecutionEvent event ) throws ExecutionException {
         Shell shell = HandlerUtil.getActiveShell(event);
+        
+        return executeInternal(shell);
+    }
+    
+    public static Object executeInternal( Shell shell )  {
         ModelObjectSelectionDialog dialog = new ModelObjectSelectionDialog(shell);
 
         if (!dialog.userCancelledDuringLoad()) {
@@ -92,6 +98,10 @@ public final class FindModelObjectHandler extends AbstractHandler {
         }
 
         return null; // per javadoc
+    }
+    
+    public static void findObject() {
+    	FindModelObjectHandler.executeInternal(Display.getCurrent().getActiveShell());
     }
 
 }

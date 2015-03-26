@@ -111,6 +111,7 @@ public interface PluginConstants {
         String NEW_PUSHDOWN_FUNCTION = OBJ16 + "PushdownFunction.gif"; //$NON-NLS-1$
         String BUILD_MODEL_IMPORTS_ICON = OBJ16 + "Imports.gif"; //$NON-NLS-1$
         String FIND = CVIEW16 + "find.gif"; //$NON-NLS-1$
+        String FIND_MODEL_OBJECT = CTOOL16 + "opentype.gif";  //$NON-NLS-1$
         String FIND_REPLACE = CVIEW16 + "find_replace.gif"; //$NON-NLS-1$
 
         String ENUM_OVERLAY_ICON = OVR16 + "enum_co.gif"; //$NON-NLS-1$
