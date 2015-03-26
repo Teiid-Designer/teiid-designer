@@ -180,6 +180,8 @@ public class JdbcImportObjectsPage extends WizardPage
     private IAction uncheckSelectedAction;
     
     private JdbcImporter importer;
+    
+	boolean refreshing;
 
 	/**
      * @param pageName
@@ -340,7 +342,7 @@ public class JdbcImportObjectsPage extends WizardPage
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-                refresh();
+            	if( !refreshing ) refresh();
                 saveWidgetValues();
             }
         });
@@ -350,7 +352,7 @@ public class JdbcImportObjectsPage extends WizardPage
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-                refresh();
+                if( !refreshing ) refresh();
                 saveWidgetValues();
             }
         });
@@ -360,7 +362,7 @@ public class JdbcImportObjectsPage extends WizardPage
 
             @Override
             public void widgetSelected(final SelectionEvent event) {
-                refresh();
+            	if( !refreshing ) refresh();
                 saveWidgetValues();
             }
         });
@@ -504,13 +506,14 @@ public class JdbcImportObjectsPage extends WizardPage
      * @since 4.0
      */
     protected void refresh() {
+    	refreshing = true;
         this.db.refresh();
         JdbcNode[] selectedNodes = getSelectedChildren();
         if (selectedNodes == null || selectedNodes.length == 0) {
             if (showSelectedSchemaButton.getSelection()) {
                 // We need to show ALL schemas because user has to select at least one
             	showAllSchemaButton.setSelection(true);
-                refresh();
+                if( !refreshing ) refresh();
                 showSelectedSchemaButton.setEnabled(false);
             }
         } else {
@@ -538,6 +541,7 @@ public class JdbcImportObjectsPage extends WizardPage
         } catch (final JdbcException err) {
             JdbcUiUtil.showAccessError(err);
         }
+        refreshing = false;
     }
 
     /**
