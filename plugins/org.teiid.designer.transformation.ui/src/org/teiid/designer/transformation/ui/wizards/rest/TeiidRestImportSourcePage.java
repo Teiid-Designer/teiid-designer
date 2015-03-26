@@ -682,14 +682,17 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$
 					getString("ioErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 		} catch (Exception ex) {
-			if( ex instanceof JSONException && ex.getMessage().contains("A JSONObject text must begin with") ) { //$NON-NLS-1$
+			if( ex instanceof JSONException ) { //$NON-NLS-1$
 				
 				String message = getString("invalidRESTResponseTypeMessage", responseType); //$NON-NLS-1$
+				message+="\r\n"+ex.getLocalizedMessage();
 				MessageDialog.openError(this.getShell(),
 						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
 						message); //$NON-NLS-1$
 			} else {
-				ex.printStackTrace();
+				MessageDialog.openError(this.getShell(),
+						getString("invalidRESTConnectionProfileTitle"), //$NON-NLS-1$
+						ex.getLocalizedMessage()); //$NON-NLS-1$
 			}
 		} finally {
 			try {
