@@ -5,61 +5,6 @@
          point="org.teiid.designer.spi.teiidRuntimeClient">
       <runtimeFactory
             class="org.teiid.runtime.client.admin.ExecutionAdminFactory">
-         <version
-               major="7"
-               minor="7"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="0"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="1"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="2"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="3"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="4"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="5"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="6"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="7"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="8"
-               micro="x">
-         </version>
-         <version
-               major="8"
-               minor="9"
-               micro="x">
-         </version>
       </runtimeFactory>
    </extension>
 

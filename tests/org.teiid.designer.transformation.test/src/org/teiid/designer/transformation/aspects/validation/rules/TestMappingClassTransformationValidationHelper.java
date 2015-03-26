@@ -44,7 +44,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
     public TestMappingClassTransformationValidationHelper(String name) throws Exception {
         super(name);
 
-        serverVersions = TeiidRuntimeRegistry.getInstance().getRegisteredServerVersions();
+        serverVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
     }
 
     // =========================================================================

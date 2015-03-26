@@ -20,7 +20,9 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.BaseSelectionListenerAction;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.spi.IExecutionAdminFactory.SupportLevel;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -136,7 +138,32 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
             if (! continueChangingServer)
                 return;
         }
+
+        /*
+         * If a server version change is occurring then tell the user and ask them if its
+         * alright to continue since this will close any open editors.
+         */
+        continueChangingServer = false;
+        SupportLevel level = ModelerCore.getTeiidSupportLevel(selectedServer.getServerVersion());
+        switch (level) {
+            case FULL_SUPPORT:
+                continueChangingServer = true;
+                break;
+            case NO_SUPPORT:
+                MessageDialog.openError(getShell(),
+                                        UTIL.getString("setDefaultServerActionNoSupportTitle"),  //$NON-NLS-1$
+                                        UTIL.getString("setDefaultServerActionNoSupportMessage")); //$NON-NLS-1$
+                continueChangingServer = false;
+                break;
+            case WORKS:
+                continueChangingServer = MessageDialog.openQuestion(getShell(), 
+                                                           UTIL.getString("setDefaultServerActionWorksChangeTitle"),  //$NON-NLS-1$
+                                                           UTIL.getString("setDefaultServerActionWorksChangeMessage")); //$NON-NLS-1$
+        }
         
+        if (! continueChangingServer)
+            return;
+
         /*
          * If old default teiid instance is connected, ask user if they wish to disconnect it.
          */
