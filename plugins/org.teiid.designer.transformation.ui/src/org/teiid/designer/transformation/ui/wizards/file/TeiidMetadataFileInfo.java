@@ -242,13 +242,13 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 	}
 	
 	private void initialize() {
-		setStatus(Status.OK_STATUS);
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<ITeiidColumnInfo>();
 		
 		//loadHeader();
 
 		setViewTableName("new_table"); //$NON-NLS-1$
+		setStatus(Status.OK_STATUS);
 	}
 
 	/**
