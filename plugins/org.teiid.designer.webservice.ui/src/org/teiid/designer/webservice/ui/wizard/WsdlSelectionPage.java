@@ -1136,7 +1136,6 @@ public final class WsdlSelectionPage extends AbstractWizardPage
             }
         }
 
-        builder.setParentResource(targetModelLocation);
         builder.setModelPath(fullModelPath);
         getContainer().updateButtons();
 
