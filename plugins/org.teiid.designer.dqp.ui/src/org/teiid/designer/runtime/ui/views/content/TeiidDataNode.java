@@ -139,6 +139,8 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
                 }
             }
 
+            int version = ((ITeiidVdb)value).getVersion();
+            builder.append("\nVersion:").append(version); //$NON-NLS-1$
             builder.append("\nModels:"); //$NON-NLS-1$
             for (String modelName : vdb.getModelNames()) {
                 builder.append("\n\t   ").append(modelName); //$NON-NLS-1$

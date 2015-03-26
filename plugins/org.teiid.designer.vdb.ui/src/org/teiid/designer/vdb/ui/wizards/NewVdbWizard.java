@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,6 +85,7 @@ import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
+import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 
@@ -223,6 +225,19 @@ public final class NewVdbWizard extends AbstractWizard
             		if( desc != null && desc.length() > 0 ) {
             			newVdb.setDescription(desc);
             		}
+            		
+            		// Now parse the name to see if it contains a version
+                    String fullVdbName = newVdb.getName().removeFileExtension().lastSegment();
+    				int firstIndex = fullVdbName.indexOf('.');
+                    String versionStr = fullVdbName.substring(firstIndex + 1);
+					int version = 1;
+					try {
+						version = Integer.parseInt(versionStr);
+					} catch (NumberFormatException e) {
+						// Do nothing.. shouldn't get here and swallow anyway cause version == 1 is back-up
+					}
+					newVdb.setVersion(version);;
+            		
                     newVdb.save(monitor);
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
@@ -683,7 +698,37 @@ public final class NewVdbWizard extends AbstractWizard
             } else if (ModelUtilities.vdbNameReservedValidation(proposedName) != null) {
                 this.mainPage.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
                 this.mainPage.setPageComplete(false);
-            } else {
+			} else if (proposedName.indexOf('.') > -1) {
+				// VDB name can contain an integer value
+				// EXAMPLE: Customers.2.vdb
+				//
+				// make sure there is only 1 '.'
+				int firstIndex = proposedName.indexOf('.');
+				int lastIndex = proposedName.lastIndexOf('.');
+				if (lastIndex != -1 && firstIndex != lastIndex) {
+					String error = VdbUiPlugin.Util.getString(I18N_PREFIX + "vdbNameContainsTooManyDotsErrorMessage", proposedName); //$NON-NLS-1$)
+					this.mainPage.setErrorMessage(error);
+					this.mainPage.setPageComplete(false);
+				} else {
+					// Check for integer
+					String versionStr = proposedName.substring(firstIndex + 1);
+					boolean succeeded = false;
+					try {
+						Integer.parseInt(versionStr);
+						succeeded = true;
+					} catch (NumberFormatException e) {
+						this.mainPage.setErrorMessage(
+								VdbUiConstants.Util.getString(I18N_PREFIX
+														+ "vdbNameErrorVersionNotAnInteger", versionStr)); //$NON-NLS-1$);
+						this.mainPage.setPageComplete(false);
+						succeeded = false;
+					}
+					if (succeeded) {
+						this.mainPage.setErrorMessage(null);
+						this.mainPage.setPageComplete(true);
+					}
+				}
+			} else {
                 this.mainPage.setErrorMessage(null);
                 this.mainPage.setPageComplete(true);
             }

@@ -76,7 +76,12 @@ public class VdbElement implements Serializable {
      * @throws Exception
      */
     public VdbElement( final Vdb vdb ) throws Exception {
-        name = vdb.getName().removeFileExtension().lastSegment();
+        String initialVdbName = vdb.getName().removeFileExtension().lastSegment();
+        int indexOfDot = initialVdbName.indexOf('.');
+        if( indexOfDot > -1 ) {
+        	initialVdbName = initialVdbName.substring(0, indexOfDot);
+        }
+        name = initialVdbName;
         description = vdb.getDescription();
         version = vdb.getVersion();
         for (final VdbEntry entry : vdb.getEntries())
