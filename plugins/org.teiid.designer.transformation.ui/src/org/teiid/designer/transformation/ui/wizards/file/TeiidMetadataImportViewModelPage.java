@@ -439,6 +439,11 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			setThisPageComplete(getString("viewTableNameNullOrEmpty"), ERROR); //$NON-NLS-1$
 			return false;
 		}
+		
+		if( info.getStatus().getSeverity() == IStatus.ERROR ) {
+			setThisPageComplete(info.getStatus().getMessage(), ERROR);
+			return false;
+		}
 
 		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
 

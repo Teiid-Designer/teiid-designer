@@ -165,6 +165,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public void setSourceModelLocation(IPath location) {
 		CoreArgCheck.isNotNull(location, "location is null"); //$NON-NLS-1$
 		this.sourceModelLocation = location;
+		validate();
 	}
 	
 	public void setSourceModelExists(boolean sourceModelExists) {
@@ -210,6 +211,7 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	public void setViewModelLocation(IPath location) {
 		CoreArgCheck.isNotNull(location, "location is null"); //$NON-NLS-1$
 		this.viewModelLocation = location;
+		validate();
 	}
 	
 	public void setViewModelExists(boolean viewModelExists) {
@@ -434,6 +436,16 @@ public class TeiidMetadataImportInfo implements UiConstants {
 			}
 			
 			setStatus(Status.OK_STATUS);
+		}
+		
+		if( getStatus().isOK() && viewModelLocation != null && sourceModelLocation != null ) {
+			if( viewModelLocation.segmentCount() > 0 && sourceModelLocation.segmentCount() > 0 ) {
+				// Check that locations for source and view model are not different projects
+				if( ! ( viewModelLocation.segment(0).equalsIgnoreCase(sourceModelLocation.segment(0)) ) ) {
+					setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+							Util.getString(I18N_PREFIX + "errorFileLocationsInDifferentProjects") )); //$NON-NLS-1$
+				}
+			}
 		}
 	}
 	
