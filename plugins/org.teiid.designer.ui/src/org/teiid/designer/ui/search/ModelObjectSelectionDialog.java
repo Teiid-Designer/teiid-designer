@@ -82,7 +82,7 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         super(parent, new FindObjectLabelProvider(FindObjectLabelProvider.OBJECT));
 
         fQualifierRenderer = new FindObjectLabelProvider(FindObjectLabelProvider.CONTAINER);
-        setSize(50, 15);
+        setSize(200, 300);
         setAllowDuplicates(false);
 
         setTitle(TITLE);
@@ -291,8 +291,8 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         createLabel(contents, fUpperListLabel);
         Control listCtrl = createFilteredList(contents);
         final GridData gdlc = (GridData)listCtrl.getLayoutData();
-        gdlc.heightHint = convertHeightInCharsToPixels(8);
-        gdlc.widthHint = SWT.DEFAULT;
+        gdlc.heightHint = convertHeightInCharsToPixels(18);
+        gdlc.widthHint = 300;
 
         createLabel(contents, fLowerListLabel);
         createLowerList(contents);
@@ -359,7 +359,6 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
         });
 
         GridData data = new GridData();
-        // data.widthHint= convertWidthInCharsToPixels(50);
         data.heightHint = convertHeightInCharsToPixels(8);
         data.grabExcessVerticalSpace = true;
         data.grabExcessHorizontalSpace = true;
