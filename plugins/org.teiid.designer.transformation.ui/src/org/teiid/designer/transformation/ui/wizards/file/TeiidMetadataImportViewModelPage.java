@@ -512,6 +512,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 
 		if (this.info.getViewModelLocation() != null) {
 			viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
+			this.viewModelFilePath = this.info.getViewModelLocation();
 		} else {
 			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
 		}
@@ -619,7 +620,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	};
 
 	private boolean viewAlreadyExists() {
-		if( !info.viewModelExists() ) {
+		if( info == null && !info.viewModelExists() ) {
 			return false;
 		}
 		
