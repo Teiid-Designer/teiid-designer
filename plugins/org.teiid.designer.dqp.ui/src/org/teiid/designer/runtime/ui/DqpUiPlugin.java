@@ -19,7 +19,10 @@ import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.preview.jobs.TeiidPreviewVdbCleanupJob;
+import org.teiid.designer.runtime.spi.ITeiidServerManager;
+import org.teiid.designer.runtime.ui.server.ServerVersionGuard;
 import org.teiid.designer.ui.common.AbstractUiPlugin;
 import org.teiid.designer.ui.common.actions.ActionService;
 
@@ -135,5 +138,8 @@ public class DqpUiPlugin extends AbstractUiPlugin implements DqpUiConstants {
         super.start(context);
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
+
+        ITeiidServerManager manager = DqpPlugin.getInstance().getServerManager();
+        manager.addListener(ServerVersionGuard.getInstance());
     }
 }
