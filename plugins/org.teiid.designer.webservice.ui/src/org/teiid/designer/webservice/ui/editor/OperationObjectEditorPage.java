@@ -587,7 +587,6 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
                     this.selectedOp = op;
 
                     // Refresh/redraw the sections
-                    varSection.refresh();
                     sqlPanelSection.redraw();
 
                     return;
