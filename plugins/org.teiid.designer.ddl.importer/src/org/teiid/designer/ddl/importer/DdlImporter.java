@@ -53,6 +53,7 @@ import org.teiid.designer.metamodels.relational.View;
 import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
+import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.processor.EmfModelGenerator;
 
 /**
@@ -183,6 +184,14 @@ public class DdlImporter {
         // ------------------------------------------------------------------------------
         monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
         model = ModelerCore.create(modelFile);
+        
+        // Have to specifically set the metamodel type and properties and initialize the containers to anything downstream
+        // has a valid ModelResource
+        model.getModelAnnotation().setPrimaryMetamodelUri( RelationalModelFactory.RELATIONAL_PACKAGE_URI );
+        model.getModelAnnotation().setModelType(importManager.getModelType());
+        ModelerCore.getModelEditor().getAllContainers(model.getEmfResource());
+        model.save(monitor, false);
+        
         importManager.setRelationalModel(model);
         
         RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
