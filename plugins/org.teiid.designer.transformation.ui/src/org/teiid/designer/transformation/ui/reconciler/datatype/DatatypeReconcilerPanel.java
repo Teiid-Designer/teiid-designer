@@ -444,7 +444,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         bindingListInput.datatypeChanged();
 
         // Refresh
-        bindingTableViewer.refresh(true);
+        bindingTableViewer.refresh();
         updateRowColors();
         updateMessageArea();
 
@@ -467,7 +467,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         bindingListInput.datatypeChanged();
 
         // Refresh
-        bindingTableViewer.refresh(true);
+        bindingTableViewer.refresh();
         updateRowColors();
         updateMessageArea();
 
@@ -489,7 +489,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         bindingListInput.datatypeChanged();
         
         // Refresh
-        bindingTableViewer.refresh(true);
+        bindingTableViewer.refresh(binding);
         updateRowColors();
         updateMessageArea();
 
@@ -512,7 +512,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         
         bindingListInput.datatypeChanged();
         // Refresh table and message area
-        bindingTableViewer.refresh(true);
+        bindingTableViewer.refresh(binding);
         updateRowColors();
         updateMessageArea();
 
