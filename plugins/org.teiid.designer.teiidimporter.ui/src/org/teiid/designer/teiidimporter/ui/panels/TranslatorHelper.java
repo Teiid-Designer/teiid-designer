@@ -45,12 +45,6 @@ public class TranslatorHelper implements UiConstants {
     public static final String TEIID_WEBSERVICE_DRIVER_DISPLAYNAME = "WebService"; //$NON-NLS-1$
 
     public static final String TEIID_GOOGLE_CLASS = "org.teiid.resource.adapter.google.SpreadsheetManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_FILE_CLASS = "org.teiid.resource.adapter.file.FileManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_INFINISPAN_CLASS = "org.teiid.resource.adapter.infinispan.InfinispanManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_LDAP_CLASS = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_SALESORCE_CLASS = "org.teiid.resource.adapter.salesforce.SalesForceManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_WEBSERVICE_CLASS = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
-//    public static final String TEIID_MONGODB_CLASS = "org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory"; //$NON-NLS-1$
     
     public static final String ACCESS = "access"; //$NON-NLS-1$
     public static final String DB2 = "db2"; //$NON-NLS-1$
@@ -299,7 +293,7 @@ public class TranslatorHelper implements UiConstants {
         }
         
         
-        if( driverName.startsWith("sap") || driverName.contains("hgdbc")) { 
+        if( driverName.startsWith("sap") || driverName.contains("hgdbc")) {  //$NON-NLS-1$ //$NON-NLS-2$
         	return URL_SAP_HANA;
         }
 
