@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -715,15 +716,26 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	private File convertJsonToXml(File jsonFile) throws IOException, Exception {
 
 		String jsonText = null;
+		boolean isArray = false;
+		String xml;
 		try {
 			jsonText = readFile(jsonFile);
 		} catch (IOException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		JSONObject jsonObject = new JSONObject(jsonText);
+		if (jsonText.trim().startsWith("[")) {
+			isArray = true;
+		}
+			
+		if (isArray){
+			JSONArray jsonArray = new JSONArray(jsonText);
+			xml = "<response>" + XML.toString(jsonArray, "response") + "</response>"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} else{
+			JSONObject jsonObject = new JSONObject(jsonText);
+			xml = XML.toString(jsonObject, "response"); //$NON-NLS-1$
+		}
 
-		String xml = XML.toString(jsonObject, "result"); //$NON-NLS-1$
 		FileUtils.write(xml.getBytes(), jsonFile);
 		return jsonFile;
 
