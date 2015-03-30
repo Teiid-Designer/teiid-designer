@@ -327,7 +327,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMajor());
             int otherMin = Integer.parseInt(otherMinVersion.getMajor());
-            majCompResult = Integer.compare(myMax, otherMin);
+            majCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
 
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
@@ -341,7 +341,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMinor());
             int otherMin = Integer.parseInt(otherMinVersion.getMinor());
-            minCompResult = Integer.compare(myMax, otherMin);
+            minCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
 
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
@@ -355,7 +355,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMicro());
             int otherMin = Integer.parseInt(otherMinVersion.getMicro());
-            micCompResult = Integer.compare(myMax, otherMin);
+            micCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
 
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
@@ -377,7 +377,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMajor());
             int otherMin = Integer.parseInt(otherMinVersion.getMajor());
-            majCompResult = Integer.compare(myMax, otherMin);
+            majCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
 
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
@@ -391,8 +391,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMinor());
             int otherMin = Integer.parseInt(otherMinVersion.getMinor());
-            minCompResult = Integer.compare(myMax, otherMin);
-
+            minCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
             minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
@@ -405,8 +404,7 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         try {
             int myMax = Integer.parseInt(myMaxVersion.getMicro());
             int otherMin = Integer.parseInt(otherMinVersion.getMicro());
-            micCompResult = Integer.compare(myMax, otherMin);
-
+            micCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
         } catch (NumberFormatException ex) {
             // One or other is a string so compare lexographically
             micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
