@@ -645,8 +645,11 @@ public class StyledTextEditor implements IMenuListener, KeyListener, UiConstants
             action = getAction(CUT_ID);
         } else if (this.isAllowFind() && (accelerator == getAction(FIND_ID).getAccelerator())) {
             action = getAction(FIND_ID);
-        } 
-        else if (this.isAllowUndoRedo() && (accelerator == getAction(REDO_ID).getAccelerator())) {
+        } else if (this.isAllowPaste() && (accelerator == getAction(PASTE_ID).getAccelerator())) {
+            if( alwaysAllowPaste ) {
+            	action = getAction(PASTE_ID);
+            }
+        } else if (this.isAllowUndoRedo() && (accelerator == getAction(REDO_ID).getAccelerator())) {
             action = getAction(REDO_ID);
         } else if (this.isAllowSelectAll() && (accelerator == getAction(SELECT_ALL_ID).getAccelerator())) {
             action = getAction(SELECT_ALL_ID);
