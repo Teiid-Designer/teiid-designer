@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.TeiidPropertyDefinition;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.teiidimporter.ui.wizard.ITeiidImportServer;
@@ -270,21 +269,16 @@ public class DataSourceManager implements UiConstants {
     public List<PropertyItem> getDriverPropertyItems(String driverName) {
         List<PropertyItem> propertyItemList = new ArrayList<PropertyItem>();
         Collection<TeiidPropertyDefinition> propDefns;
-        ITeiidServerVersion teiidVersion = null;
         try {
             // Get the driver template properties
             propDefns = teiidImportServer.getTemplatePropertyDefns(driverName);
-            teiidVersion = teiidImportServer.getTeiidServerVersion();
         } catch (Exception ex) {
             propDefns = new ArrayList<TeiidPropertyDefinition>();
             UTIL.log(ex);
         }
         
         // Get the Managed connection factory class for rars
-        String rarConnFactoryValue = null;
-        if(isRarDriver(driverName,teiidVersion)) {
-            rarConnFactoryValue = getManagedConnectionFactoryClassDefault(propDefns);
-        }
+        String rarConnFactoryValue = getManagedConnectionFactoryClassDefault(propDefns);
         
         // Create the PropertyItems, setting the template values for this source
         for(TeiidPropertyDefinition propDefn: propDefns) {
@@ -464,34 +458,6 @@ public class DataSourceManager implements UiConstants {
         }
     	
     	return dsTemplateName;
-    }
-    
-    /**
-     * Determine if this is a 'rar' type driver that is deployed with Teiid
-     * @param driverName the name of the driver
-     * @param teiidVersion the teiid instance version
-     * @return 'true' if the driver is a rar driver, 'false' if not.
-     */
-    private boolean isRarDriver(String driverName, ITeiidServerVersion teiidVersion) {
-    	boolean isRarDriver = false;
-    	if(!CoreStringUtil.isEmpty(driverName)) {
-    		// Teiid 8.3 and before
-    		if(!TranslatorHelper.isTeiid84OrHigher(teiidVersion)) {
-    			if (driverName.endsWith(DOT_RAR)) {
-    				isRarDriver = true;
-    			}
-    		// Teiid 8.4 and later
-     		} else  {
-    			if(   driverName.equals(TranslatorHelper.TEIID_FILE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_GOOGLE_DRIVER_84UP)
-    			   || driverName.equals(TranslatorHelper.TEIID_INFINISPAN_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_LDAP_DRIVER_84UP)
-    			   || driverName.equals(TranslatorHelper.TEIID_SALESORCE_DRIVER_84UP) || driverName.equals(TranslatorHelper.TEIID_WEBSERVICE_DRIVER_84UP)
-    			   || driverName.equals(TranslatorHelper.TEIID_MONGODB_DRIVER_84UP)) {
-    				isRarDriver = true;
-    			}
-    		}
-    	}
-    	
-    	return isRarDriver;
     }
     
     /*
