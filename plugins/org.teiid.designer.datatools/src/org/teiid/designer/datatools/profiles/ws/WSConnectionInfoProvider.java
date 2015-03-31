@@ -88,7 +88,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-        if (null != contextFactory) {
+        if (null != contextFactory &! contextFactory.isEmpty()) {
             connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, contextFactory);
         }
         else {
@@ -112,7 +112,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 		Properties props = connectionProfile.getBaseProperties();
 		
 		String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-		if( contextFactory != null && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
+		if( contextFactory != null &! contextFactory.isEmpty() && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
 			props.remove(ICredentialsCommon.USERNAME_PROP_ID);
 			return true;
 		}
