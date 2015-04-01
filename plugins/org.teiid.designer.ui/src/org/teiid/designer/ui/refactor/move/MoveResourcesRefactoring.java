@@ -84,6 +84,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                 return;
             }
 
+            if (pathPairs == null || pathPairs.isEmpty())
+                return;
+
             IPath relatedFilePath = ModelUtil.getLocation(relatedFile).makeAbsolute();
             IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
 
@@ -201,11 +204,6 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
             Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
-            if (pathPairs == null || pathPairs.isEmpty()) {
-                status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
-                return status;
-            }
-
             RelatedResourceCallback relatedResourceCallback = new RelatedResourceCallback(pathPairs);
 
             for (IResource resource : getResources()) {
