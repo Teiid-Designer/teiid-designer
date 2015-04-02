@@ -46,7 +46,7 @@
                     generated="false"
                     id="org.eclipse.datatools.connectivity.db.URL"
                     name="%CONNECTION_URL_PROPERTY_NAME"
-                    value="jdbc:teiid:SAMPLE-VDB@mms://localhost:31000"
+                    value="jdbc:teiid:SAMPLE-VDB@mm://localhost:31000"
                     required="false"
                     visible="true"/>
                 <property
