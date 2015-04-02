@@ -52,16 +52,16 @@ public class DefaultTeiidServerPreferenceContributor implements IGeneralPreferen
 	public void createPreferenceEditor( Composite parent ) {
         shell = parent.getShell();
         Composite panel = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(panel);
+        GridLayoutFactory.swtDefaults().numColumns(2).applyTo(panel);
 
         versionCombo = new Combo(panel, SWT.DROP_DOWN);
         versionCombo.setFont(JFaceResources.getDialogFont());
         versionCombo.setToolTipText(Util.getStringOrKey(PREFIX + "toolTip")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(versionCombo);
+        GridDataFactory.swtDefaults().grab(true, true).align(SWT.LEFT, SWT.CENTER).applyTo(versionCombo);
 
         Label title = new Label(panel, SWT.NONE);
         title.setText(Util.getStringOrKey(PREFIX + "title")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(title);
+        GridDataFactory.swtDefaults().grab(true, true).align(SWT.LEFT, SWT.CENTER).applyTo(title);
 
         // initialize state
         refresh();

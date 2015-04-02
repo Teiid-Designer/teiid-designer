@@ -73,16 +73,11 @@ public class TeiidServerVersion implements ITeiidServerVersion {
          * Teiid 8.7
          */
         TEIID_8_7(VersionID.TEIID_8_7),
-
-        /**
-         * Teiid 8.8
-         */
-        TEIID_8_8(VersionID.TEIID_8_7),
         
         /**
          * Default Teiid for this Designer
          */
-        TEIID_DEFAULT(VersionID.TEIID_8_8);
+        TEIID_DEFAULT(VersionID.TEIID_8_7);
 
         private final ITeiidServerVersion version;
 

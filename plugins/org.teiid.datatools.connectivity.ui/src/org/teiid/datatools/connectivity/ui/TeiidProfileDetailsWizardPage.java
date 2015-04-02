@@ -110,9 +110,7 @@ public class TeiidProfileDetailsWizardPage extends
 		};
 		
 		driverCombo.addChangeListener(driverChangeListener);
-		if (driverCombo.getCombo().getItemCount() > 0) {
-			driverCombo.getCombo().select(0);
-		} else if (driverCombo.getErrorMessage() != null) {
+		if (driverCombo.getErrorMessage() != null) {
 			setMessage(driverCombo.getErrorMessage(), IMessageProvider.INFORMATION);//ErrorMessage(driverCombo.getErrorMessage());
 		}
 	}
