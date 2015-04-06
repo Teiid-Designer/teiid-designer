@@ -370,10 +370,20 @@ public class VdbUtil implements VdbConstants {
             statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, defaultTeiidVersion)) ); //$NON-NLS-1$    
 
-        if (validationVersion.isGreaterThan(maxDesignerVersion))
-            /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
-            statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
+        if (validationVersion.isGreaterThan(maxDesignerVersion) && !sameMinorVersion(validationVersion, maxDesignerVersion) )
+            /* Vdb version is greater than the fully-suppported Designer Teiid Version which means all bets are off! */
+            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$
+    }
+    
+    /**
+     * Checks to see if 2 server versions have the same major and minor versions
+     * @param version_1
+     * @param version_2
+     * @return
+     */
+    public static boolean sameMinorVersion(ITeiidServerVersion version_1, ITeiidServerVersion version_2) {
+    	return version_1.getMajor().equals(version_2.getMajor()) && version_1.getMinor().equals(version_2.getMinor());
     }
 	
 	/**
