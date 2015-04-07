@@ -626,7 +626,7 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 					String name = ModelerCore.getModelEditor().getName((EObject)object);
 					
 					MessageDialog.openWarning(composite.getShell(),
-							UiConstants.Util.getString("PropertyEditorFactory.unsupportedEditingMessage"), 
+							UiConstants.Util.getString("PropertyEditorFactory.unsupportedEditingTitle"), 
 							UiConstants.Util.getString("PropertyEditorFactory.unsupportedEditingMessage", feature.getName(), name));
 				}
 				// return the original object
