@@ -55,7 +55,7 @@ public class TeiidXmlFileImportProcessor extends TeiidMetadataImportProcessor {
                 
                 for( TeiidXmlFileInfo info : this.getInfo().getXmlFileInfos()) {
                 	if( info.doProcess() ) {
-                		if (info.getViewProcedureName() != null &! info.getViewProcedureName().equals(StringConstants.EMPTY_STRING)) {
+                		if (info.getViewProcedureName() != null && !info.getViewProcedureName().equals(StringConstants.EMPTY_STRING)) {
                 			factory.createViewProcedure(editor.getModelResource(), info, relationalModelName);
                 		}else{
                 			factory.createViewTable(editor.getModelResource(), info, relationalModelName);

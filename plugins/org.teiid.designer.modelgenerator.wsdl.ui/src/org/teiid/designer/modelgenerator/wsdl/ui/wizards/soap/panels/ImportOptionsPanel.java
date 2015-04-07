@@ -515,7 +515,11 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	 */
 	@Override
 	public void stateChanged(IChangeNotifier theSource) {
+		refreshing = true;
+
 		refreshUiFromManager();
+		
+		refreshing = false;
 	}
     
 	public void notifyChanged() {
