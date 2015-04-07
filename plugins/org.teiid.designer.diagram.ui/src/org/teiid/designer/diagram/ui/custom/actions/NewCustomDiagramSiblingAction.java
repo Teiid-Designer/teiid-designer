@@ -196,7 +196,7 @@ public class NewCustomDiagramSiblingAction extends DiagramAction implements Diag
 //                    }
 //                }
 //            } else {
-                if( modelResource != null &&! modelResource.isReadOnly() ) {
+                if( modelResource != null && !modelResource.isReadOnly() ) {
                     setEnabled(true);
                     return;
                 }

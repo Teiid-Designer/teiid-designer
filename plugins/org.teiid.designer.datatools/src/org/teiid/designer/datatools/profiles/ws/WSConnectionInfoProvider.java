@@ -1,7 +1,9 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -34,7 +36,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         }
 
         String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-        if (null != user && user.isEmpty()) {
+        if (null != user && !user.isEmpty()) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + ICredentialsCommon.USERNAME_PROP_ID, user);
         }
 
@@ -87,9 +89,9 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
             connectionProps.setProperty(IWSProfileConstants.END_POINT_URI_PROP_ID, url);
         }
 
-        String securityType = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-        if (null != securityType &! securityType.equals("")) {
-            connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, securityType);
+        String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+        if (null != contextFactory && !contextFactory.isEmpty()) {
+            connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID, contextFactory);
         }
         else {
             connectionProps.setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
@@ -98,7 +100,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         
         if (!connectionProps.getProperty(ICredentialsCommon.SECURITY_TYPE_ID).equals(SecurityType.None.name())){
         	 String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-             if (null != user &! user.equals("")) { //$NON-NLS-1$
+             if (null != user && !user.equals(StringUtilities.EMPTY_STRING)) { 
                  connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
              }
         }
@@ -111,8 +113,8 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 	public boolean requiresPassword(IConnectionProfile connectionProfile) {
 		Properties props = connectionProfile.getBaseProperties();
 		
-		String securityType = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
-		if( securityType != null &! securityType.equals("") &! securityType.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
+		String contextFactory = props.getProperty(ICredentialsCommon.SECURITY_TYPE_ID);
+		if( null != contextFactory && !contextFactory.isEmpty() && !contextFactory.equalsIgnoreCase(IWSProfileConstants.SecurityType.None.name()) ) {
 			props.remove(ICredentialsCommon.USERNAME_PROP_ID);
 			return true;
 		}

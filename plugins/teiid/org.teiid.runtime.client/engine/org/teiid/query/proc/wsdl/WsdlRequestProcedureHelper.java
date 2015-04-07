@@ -105,7 +105,7 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
             headerString.append(SPACE).append(XMLNAMESPACES).append(L_PAREN).append(S_QUOTE).append(ENVELOPE_NS).append(S_QUOTE).append(SPACE).append(AS).append(SPACE);
             headerString.append(ENVELOPE_NS_ALIAS);
             
-            if (requestInfo.getNamespaceMap().size()>0 || (getWrapperProcedure().getNamespaceURI() != null &! getWrapperProcedure().getNamespaceURI().isEmpty())){
+            if (requestInfo.getNamespaceMap().size()>0 || (getWrapperProcedure().getNamespaceURI() != null && !getWrapperProcedure().getNamespaceURI().isEmpty())){
             	
             	String prefix=requestInfo.getReverseNSMap().get(getWrapperProcedure().getNamespaceURI());
             	if (isDefaultNS(prefix)) {
@@ -267,7 +267,7 @@ public class WsdlRequestProcedureHelper extends AbstractWsdlHelper implements IW
         }
         String nsString = nsMap.get(NSSTRING);
         String nsPrefix = nsMap.get(NSPREFIX);
-        if (nsPrefix!=null &! isDefaultNS(nsPrefix)){
+        if (nsPrefix!=null && !isDefaultNS(nsPrefix)){
         	sb.append("\""+nsPrefix+":"+elementName+"\"").append(COMMA).append(SPACE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }else{
         	sb.append(convertSqlNameSegment(elementName)).append(COMMA).append(SPACE);
