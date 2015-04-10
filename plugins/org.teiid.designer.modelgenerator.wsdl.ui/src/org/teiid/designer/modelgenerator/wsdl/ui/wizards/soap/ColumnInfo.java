@@ -468,7 +468,9 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
         StringBuilder text = new StringBuilder();
         text.append("Column Info: "); //$NON-NLS-1$
         text.append("name = ").append(getSymbolName()); //$NON-NLS-1$
+        text.append(", ordinal = ").append(getOrdinality()); //$NON-NLS-1$
         text.append(", datatype = ").append(getDatatype()); //$NON-NLS-1$
+        text.append(", default = ").append(getDefaultValue()); //$NON-NLS-1$
         text.append(", PATH = ").append(getRelativePath()); //$NON-NLS-1$
 
         return text.toString();

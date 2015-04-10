@@ -429,9 +429,9 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		panel.setLayout(new GridLayout(2, false));
 
 		Composite namePanel = WidgetFactory.createPanel(panel);
-		namePanel.setLayout(new GridLayout(2, false));
+		namePanel.setLayout(new GridLayout(3, false));
 		GridData namePanelGD = new GridData(GridData.FILL_HORIZONTAL);
-		namePanelGD.horizontalSpan = 2;
+		namePanelGD.horizontalSpan = 3;
 		namePanel.setLayoutData(namePanelGD);
 
 		Label procedureNameLabel = new Label(namePanel, SWT.NONE);
