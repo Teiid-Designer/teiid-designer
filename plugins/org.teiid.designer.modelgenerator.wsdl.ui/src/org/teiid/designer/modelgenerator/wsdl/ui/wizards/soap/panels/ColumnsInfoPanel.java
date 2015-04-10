@@ -24,10 +24,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
+import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.EditColumnDialog;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -39,11 +41,11 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
  */
 public class ColumnsInfoPanel {
 	private ProcedureInfo procedureInfo;
-	private Button addButton, deleteButton, upButton, downButton;
+	private Button addButton, deleteButton, upButton, downButton, editButton;
 	private Text rootPathText;
+	private Shell shell;
 	
 	TreeViewer schemaTreeViewer;
-	
 
 	EditColumnsPanel editColumnsPanel;
 	private int type = -1;
@@ -56,6 +58,7 @@ public class ColumnsInfoPanel {
 		super();
 		this.type = type;
 		this.detailsPage = detailsPage;
+		this.shell = parent.getShell();
 		init(parent);
 	}
 	
@@ -82,14 +85,23 @@ public class ColumnsInfoPanel {
 		this.editColumnsPanel.refresh();
 	}
 	
+	public Shell getShell() {
+		return shell;
+	}
+
+	public void setShell(Shell shell) {
+		this.shell = shell;
+	}
+
 	public Text getRootPathText() {
 		return rootPathText;
 	}
 	
 	private void init(Composite parent) {
-    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 2, 2);
+    	Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 3, 3);
     	GridData gd = new GridData(GridData.FILL_BOTH);
-    	gd.horizontalSpan = 1;
+    	gd.horizontalSpan = 3;
+    	gd.grabExcessVerticalSpace=true;
     	columnInfoGroup.setLayoutData(gd);
     	
     	Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
@@ -98,7 +110,7 @@ public class ColumnsInfoPanel {
     	rootPathText = WidgetFactory.createTextField(columnInfoGroup, SWT.NONE);
     	gd = new GridData(GridData.FILL_HORIZONTAL);
     	gd.minimumWidth = 50;
-    	gd.horizontalSpan=1;
+    	gd.horizontalSpan=3;
     	gd.grabExcessHorizontalSpace = true;
     	rootPathText.setLayoutData(gd);
     	rootPathText.addModifyListener(new ModifyListener() {
@@ -110,13 +122,14 @@ public class ColumnsInfoPanel {
 
     	Composite leftToolbarPanel = new Composite(columnInfoGroup, SWT.NONE);
     	GridLayout tbGL = new GridLayout();
+    	tbGL.numColumns = 1;
     	tbGL.marginHeight = 0;
     	tbGL.marginWidth = 0;
     	tbGL.verticalSpacing = 2;
     	leftToolbarPanel.setLayout(tbGL);
-	GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
-	ltpGD.heightHint=120;
-	leftToolbarPanel.setLayoutData(ltpGD);
+		GridData ltpGD = new GridData(GridData.FILL_VERTICAL);
+		ltpGD.heightHint=120;
+		leftToolbarPanel.setLayoutData(ltpGD);
     	
     	addButton = new Button(leftToolbarPanel, SWT.PUSH);
     	addButton.setText(Messages.Add);
@@ -213,6 +226,26 @@ public class ColumnsInfoPanel {
     		
 		});
     	
+    	editButton = new Button(leftToolbarPanel, SWT.PUSH);
+    	editButton.setText(Messages.Edit);
+    	editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	editButton.setEnabled(false);
+    	editButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ColumnInfo info = editColumnsPanel.getSelectedColumn();
+				if( info != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), editColumnsPanel.getSelectedColumn());
+			        dialog.open();
+				}else{
+				}
+					editButton.setEnabled(true);
+					editColumnsPanel.refresh();
+					notifyColumnDataChanged();
+				}
+		});
+    	
     	upButton = new Button(leftToolbarPanel, SWT.PUSH);
     	upButton.setText(Messages.Up);
     	upButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -280,6 +313,7 @@ public class ColumnsInfoPanel {
 				
 				if( sel.isEmpty()) {
 					deleteButton.setEnabled(false);
+					editButton.setEnabled(false);
 					upButton.setEnabled(false);
 					downButton.setEnabled(false);
 				} else {
@@ -298,6 +332,7 @@ public class ColumnsInfoPanel {
 						enable = false;
 					}
 					deleteButton.setEnabled(enable);
+					editButton.setEnabled(enable);
 					if( enable ) {
 						if( type == ProcedureInfo.TYPE_BODY ) {
     						upButton.setEnabled(procedureInfo.canMoveBodyColumnUp(columnInfo));
