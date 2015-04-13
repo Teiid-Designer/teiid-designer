@@ -43,6 +43,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
+import org.teiid.designer.ddl.importer.node.EmfModelGenerator;
 import org.teiid.designer.ddl.registry.DdlNodeImporterRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -54,7 +55,6 @@ import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
-import org.teiid.designer.relational.processor.EmfModelGenerator;
 
 /**
  * DdlImporter parses the provided DDL and generates a model containing the parsed entities

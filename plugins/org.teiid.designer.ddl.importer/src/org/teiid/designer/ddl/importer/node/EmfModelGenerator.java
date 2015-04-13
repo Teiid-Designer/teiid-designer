@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.relational.processor;
+package org.teiid.designer.ddl.importer.node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -84,6 +85,8 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalView;
+import org.teiid.designer.relational.model.RelationalViewTable;
+import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 
 /**
  * EmfModelGenerator - creates EMF model objects from RelationalReference counterparts.
@@ -97,6 +100,7 @@ public class EmfModelGenerator {
 
     @SuppressWarnings("javadoc")
 	public static EmfModelGenerator INSTANCE = new EmfModelGenerator();
+    public static RelationalViewModelFactory VIEW_MODEL_FACTORY = new RelationalViewModelFactory();
 
     private DatatypeProcessor datatypeProcessor = new DatatypeProcessor();
     private ModelEditor modelEditor = ModelerCore.getModelEditor();
@@ -282,8 +286,12 @@ public class EmfModelGenerator {
         	// NOOP. Shouldn't get here
         } break;
         case TYPES.TABLE: {
-        	newEObject = createBaseTable(relationalRef, modelResource);
-        	modelResource.getEmfResource().getContents().add(newEObject);
+        	if( relationalRef instanceof RelationalViewTable ) {
+        		newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+        	} else {
+	        	newEObject = createBaseTable(relationalRef, modelResource);
+	        	modelResource.getEmfResource().getContents().add(newEObject);
+        	}
         } break;
         case TYPES.VIEW: {
         	newEObject = createView(relationalRef, modelResource);

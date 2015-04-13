@@ -18,5 +18,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.relational,
  org.teiid.designer.relational.compare,
- org.teiid.designer.relational.model,
- org.teiid.designer.relational.processor
+ org.teiid.designer.relational.model

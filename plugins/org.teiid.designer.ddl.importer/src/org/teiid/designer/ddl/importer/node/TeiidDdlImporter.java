@@ -24,6 +24,7 @@ import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlConstants;
 import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
@@ -45,6 +46,8 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.relational.model.RelationalView;
+import org.teiid.designer.relational.model.RelationalViewTable;
 
 
 /**
@@ -444,8 +447,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		// -----------------------------------------------------------------------
 		// Handle Creation of Teiid Entities
 		// -----------------------------------------------------------------------
-		if (is(node, TeiidDdlLexicon.CreateTable.TABLE_STATEMENT)
-				|| is(node, TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
+		if (is(node, TeiidDdlLexicon.CreateTable.TABLE_STATEMENT) ) {
 
 			RelationalTable baseTable = getFactory().createBaseTable();
 			initializeTable(baseTable, node, model);
@@ -471,7 +473,37 @@ public class TeiidDdlImporter extends StandardImporter {
 				processOptions(optionNodes,baseTable);
 			}
 
-		} else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
+		} else if (is(node, TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
+
+			RelationalViewTable viewTable = getFactory().createViewTable();
+			initializeTable(viewTable, node, model);
+
+			List<AstNode> optionNodes = new ArrayList<AstNode>();
+
+			for (AstNode child : node) {
+				// Table Elements
+				if (is(child, TeiidDdlLexicon.CreateTable.TABLE_ELEMENT)) {
+					createColumn(child, viewTable);
+					// Statement Options
+				} else if (is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+					optionNodes.add(child);
+					// Contraints
+				} else if (is(child, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
+						|| is(child, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
+						|| is(child, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
+					deferredMap.put(child, viewTable);
+				}
+			}
+			// processes all options for this table
+			if(!optionNodes.isEmpty()) {
+				processOptions(optionNodes,viewTable);
+			}
+			String queryExpression = (String)node.getProperty(TeiidDdlLexicon.CreateTable.QUERY_EXPRESSION);
+			if( ! StringUtilities.isEmpty(queryExpression) ) {
+				viewTable.setTransformationSQL(queryExpression);
+			}
+
+		}else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
 				|| is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
 			createProcedure(node, model);
 

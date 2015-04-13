@@ -725,5 +725,13 @@ public class RelationalReferenceFactory implements RelationalConstants {
     public RelationalUniqueConstraint createUniqueConstraint( ) {
     	return new RelationalUniqueConstraint();
     }
+    
+    /**
+     * Create a RelationalTable
+     * @return the new object
+     */
+    public RelationalViewTable createViewTable( ) {
+    	return new RelationalViewTable();
+    }
         
 }

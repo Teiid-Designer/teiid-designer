@@ -18,7 +18,8 @@ Require-Bundle: org.teiid.designer.compare;bundle-version="[9.0.0,10.0.0)",
  org.teiid.designer.ddl.spi;bundle-version="[9.0.0,10.0.0)",
  org.teiid.designer.extension;bundle-version="[9.0.0,10.0.0)",
  org.teiid.designer.relational;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.spi;bundle-version="9.0.0"
+ org.teiid.designer.spi;bundle-version="9.0.0",
+ org.teiid.designer.transformation;bundle-version="9.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
