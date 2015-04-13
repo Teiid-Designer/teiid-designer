@@ -31,6 +31,8 @@ import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalProcedure;
 import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
+import org.teiid.designer.relational.model.RelationalViewProcedure;
+import org.teiid.designer.relational.model.RelationalViewTable;
 import org.teiid.designer.transformation.Messages;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;

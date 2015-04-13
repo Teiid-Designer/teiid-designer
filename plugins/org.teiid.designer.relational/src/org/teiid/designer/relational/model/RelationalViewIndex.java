@@ -5,10 +5,9 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.transformation.model;
+package org.teiid.designer.relational.model;
 
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.relational.model.RelationalIndex;
 
 /**
  *

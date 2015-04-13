@@ -9,6 +9,7 @@ package org.teiid.designer.ddl.importer.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -33,6 +34,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.teiid.core.designer.I18n;
 import org.teiid.designer.ddl.importer.DdlImporter;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.compare.OperationList;
@@ -356,6 +358,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         private final Image VIEW_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.TABLE_ICON);
         private final Image PROCEDURE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.PROCEDURE_ICON);
         private final Image INDEX_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_ICON);
+        private final Image VIEW_TABLE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.VIRTUAL_TABLE_ICON);
         
 
         @Override
@@ -363,10 +366,16 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         	if(node instanceof RelationalReference) {
         		int type = ((RelationalReference)node).getType();
         		if(type==RelationalConstants.TYPES.TABLE) {
+        			if( importer.modelType() == ModelType.VIRTUAL_LITERAL) {
+        				return VIEW_TABLE_IMG;
+        			}
         			return TABLE_IMG;
         		} else if(type==RelationalConstants.TYPES.COLUMN) {
         			return COLUMN_IMG;
         		} else if(type==RelationalConstants.TYPES.VIEW) {
+        			if( importer.modelType() == ModelType.VIRTUAL_LITERAL) {
+        				return VIEW_TABLE_IMG;
+        			}
         			return VIEW_IMG;
         		} else if(type==RelationalConstants.TYPES.PROCEDURE) {
         			return PROCEDURE_IMG;
