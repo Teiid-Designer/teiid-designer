@@ -427,11 +427,11 @@ public class RefactorResourcesUtils {
 							continue;
 						}
 
-						int lineOffset = line.indexOf(pathPair.getSourcePath());
+						int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
 						if (lineOffset < 0) continue;
 
 						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath());
+						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
 						fileChangeRootEdit.addChild(edit);
 					}
 				}
@@ -631,10 +631,10 @@ public class RefactorResourcesUtils {
 						continue;
 					}
 					
-					int lineOffset = line.indexOf(pathPair.getSourcePath());
+					int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
 					if (lineOffset > 0) {
 						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath());
+						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
 						fileChangeRootEdit.addChild(edit);
 					}
 					
