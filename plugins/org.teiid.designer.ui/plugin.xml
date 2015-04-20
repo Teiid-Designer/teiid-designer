@@ -952,5 +952,12 @@
           <attribute name="missingVdbBuilder" value="true"/>
        </markerResolutionGenerator> 
 	</extension>
-
+   <extension
+         id="relationalReferenceNewModelObjectHelper"
+         name="%relationalReferenceNewModelObjectHelper"
+         point="org.teiid.designer.core.newModelObjectHelper">
+      <class
+        name="org.teiid.designer.ui.actions.workers.RelationalReferenceNewModelObjectHelper">
+      </class>
+   </extension>
 </plugin>

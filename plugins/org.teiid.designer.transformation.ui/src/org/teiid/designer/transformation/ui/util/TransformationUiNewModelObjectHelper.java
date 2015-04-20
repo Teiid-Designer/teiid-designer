@@ -7,7 +7,9 @@
  */
 package org.teiid.designer.transformation.ui.util;
 
+import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.INewModelObjectHelper;
@@ -64,7 +66,8 @@ public class TransformationUiNewModelObjectHelper implements INewModelObjectHelp
      */
     @Override
 	public boolean helpCreate( Object newObject,
-                               Map properties ) {
+                               Map properties,
+                               List<EObject> references ) {
         CoreArgCheck.isNotNull(newObject);
 
         if (newObject instanceof EObject) {

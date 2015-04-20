@@ -7,7 +7,9 @@
  */
 package org.teiid.designer.diagram.ui.util;
 
+import java.util.List;
 import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.util.INewModelObjectHelper;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -56,7 +58,8 @@ public class DiagramUiNewModelObjectHelper implements INewModelObjectHelper {
      */
     @Override
 	public boolean helpCreate( Object newObject,
-                               Map properties ) {
+                               Map properties,
+                               List<EObject> references) {
         if (newObject != null && newObject instanceof EObject && canHelpCreate(newObject)) {
             EObject newEObject = (EObject)newObject;
             if (isValidPackage(newEObject)) {
