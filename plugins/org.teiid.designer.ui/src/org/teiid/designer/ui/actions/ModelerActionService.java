@@ -342,7 +342,17 @@ public final class ModelerActionService extends AbstractActionService
      */
     private boolean failedInsertSiblingPreconditions( ISelection theSelection ) {
         boolean failed = false;
-        failed = ((theSelection == null) || theSelection.isEmpty() || SelectionUtilities.isMultiSelection(theSelection) || (SelectionUtilities.getSelectedEObject(theSelection) == null));
+        failed = ((theSelection == null) || theSelection.isEmpty());
+        
+        if( !failed ) {
+        	if( SelectionUtilities.isMultiSelection(theSelection)) {
+	        	// One more check for same parent siblings
+	        	failed = ! SelectionUtilities.isAllEObjects(theSelection) ||
+	        			!ModelObjectUtilities.shareCommonParent(SelectionUtilities.getSelectedEObjects(theSelection));
+        	} else {
+        		failed = SelectionUtilities.getSelectedEObject(theSelection) == null;
+        	}
+        }
 
         if (!failed) {
             EObject eObj = SelectionUtilities.getSelectedEObject(theSelection);
@@ -629,7 +639,9 @@ public final class ModelerActionService extends AbstractActionService
             menu.add(new NewSiblingAction());
         } else {
             // should be guaranteed to have an EObject at this point
-            EObject eObj = SelectionUtilities.getSelectedEObject(theSelection);
+        	// Could be multi-selection
+        	List<EObject> eObjects = SelectionUtilities.getSelectedEObjects(theSelection);
+            EObject eObj = eObjects.get(0);
             if (eObj instanceof Diagram) {
                 eObj = ((Diagram)eObj).getTarget();
             }

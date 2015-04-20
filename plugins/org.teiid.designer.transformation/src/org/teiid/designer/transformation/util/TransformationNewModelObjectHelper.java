@@ -76,7 +76,8 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
     @SuppressWarnings("rawtypes")
 	@Override
 	public boolean helpCreate( Object newObject,
-                               Map properties ) {
+                               Map properties,
+                               List<EObject> references ) {
         CoreArgCheck.isNotNull(newObject);
         if (properties==null) properties = new HashMap();
         boolean defineDefaultTableSQL = properties.get("generateDefaultSQL") != null;

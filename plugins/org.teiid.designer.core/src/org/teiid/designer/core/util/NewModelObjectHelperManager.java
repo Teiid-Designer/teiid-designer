@@ -12,11 +12,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
@@ -100,6 +102,34 @@ public abstract class NewModelObjectHelperManager {
         }
     }
     
+    public static boolean helpCreate(Object newObject, Map properties, List<EObject> references) throws ModelerCoreException  {
+        CoreArgCheck.isNotNull(newObject);
+        
+        // Set default behavior to undoable. This is the behavior of the UnitOfWorkImpl.
+        boolean canUndo = true;
+            
+        // Defect 18433 - BML 8/31/05 - Added this manager and INewModelObjectHelper interface to give arbitary
+        // plugins the change to contribute more work following the creation of a new object
+        // In the case of a Virtual Group, we needed to create the transformation for that table so it didn't 
+        // get lazily created as another "Undo" event. (i.e. TransformationNotificationListener, EditAction,, etc.)
+        // If Helper exists, ask for helpCreate(newObj)
+        // The helper also has the opportunity to change/override the "Undo" state of the transaction
+        
+        // Get all applicable helpers
+        INewModelObjectHelper[] helpers = getHelpers(newObject);
+        boolean undoHelp = true;
+        
+        // Walk through each and ask to help create additional objects
+        for( int i=0; i<helpers.length; i++ ) {
+            undoHelp = helpers[i].helpCreate(newObject, properties, references);
+            // if any helper says it can't undo the work, then we set the canUndo for the entire operation
+            if( !undoHelp && canUndo )
+                canUndo = false;
+        }
+        
+        return canUndo;
+    }
+    
     public static boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException  {
         CoreArgCheck.isNotNull(newObject);
         
@@ -119,7 +149,7 @@ public abstract class NewModelObjectHelperManager {
         
         // Walk through each and ask to help create additional objects
         for( int i=0; i<helpers.length; i++ ) {
-            undoHelp = helpers[i].helpCreate(newObject, properties);
+            undoHelp = helpers[i].helpCreate(newObject, properties, null);
             // if any helper says it can't undo the work, then we set the canUndo for the entire operation
             if( !undoHelp && canUndo )
                 canUndo = false;
