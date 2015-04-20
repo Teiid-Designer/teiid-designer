@@ -40,6 +40,9 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.relational.Index;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
@@ -112,6 +115,10 @@ public class CreateRelationalProcedureAction extends Action implements INewChild
      */
     @Override
 	public boolean canCreateSibling(EObject parent) {
+		// has to be a table, view, procedure or function
+		if( !(parent instanceof Table || parent instanceof Procedure || parent instanceof Index) ) {
+			return false;
+		}
     	//Convert eObject selection to IFile
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(parent);
     	if( mr != null ) {

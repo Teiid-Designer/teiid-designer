@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -27,6 +28,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.relational.Index;
+import org.teiid.designer.metamodels.relational.Procedure;
+import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
 import org.teiid.designer.relational.model.RelationalView;
@@ -96,6 +100,10 @@ public class CreateRelationalViewAction  extends Action implements INewChildActi
      */
     @Override
 	public boolean canCreateSibling(EObject parent) {
+		// has to be a table, view, procedure or function
+		if( !(parent instanceof Table || parent instanceof Procedure || parent instanceof Index) ) {
+			return false;
+		}
     	//Convert eObject selection to IFile
     	ModelResource mr = ModelUtilities.getModelResourceForModelObject(parent);
     	if( mr != null ) {

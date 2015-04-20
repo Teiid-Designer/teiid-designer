@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.ui.actions;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
@@ -23,6 +25,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelObjectLabelProvider;
@@ -199,8 +202,13 @@ public class NewSiblingAction extends ModelObjectAction {
                        // get lazily created as another "Undo" event. (i.e. TransformationNotificationListener, EditAction,, etc.)
                        // If Helper exists, ask for helpCreate(newObj)
                        // The helper also has the opportunity to change/override the "Undo" state of the transaction
-
-                       undoable = NewModelObjectHelperManager.helpCreate(newObj, null);
+                       List<EObject> potentialReferences = SelectionUtilities.getSelectedEObjects(getSelection());
+                       if( ! potentialReferences.isEmpty() ) {
+                    	   undoable = NewModelObjectHelperManager.helpCreate(newObj, null, potentialReferences);
+                       } else {
+                    	   undoable = NewModelObjectHelperManager.helpCreate(newObj, null);
+                       }
+                       
                        if( !undoable )
                            ModelerCore.getCurrentUoW().setUndoable(false);
                        
@@ -252,7 +260,7 @@ public class NewSiblingAction extends ModelObjectAction {
     @Override
     public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
-        // does not care about selection since the selected object is passed in
+        super.selectionChanged(thePart, theSelection);
     }
     
     /**

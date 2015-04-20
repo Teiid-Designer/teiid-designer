@@ -7,8 +7,10 @@
  */
 package org.teiid.designer.core.util;
 
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 
 
@@ -39,9 +41,11 @@ public interface INewModelObjectHelper {
      * @param properties extra properties to specify to tweak creation.  For example, a property
      *   can be set to prevent virtual base tables from having supportsUpdate set to false.  This
      *   value may be null or Collections.EMPTY_MAP if there are no such properties.
+     * @param references list of references to be applied to the newObject if applicable
+     * 	 Intended to allow create sibling (Access pattern, PK/FK) to set column references
      * @return true, if the actions performed were undoable, false otherwise.
      * @since 4.3
      */
-    boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException;
+    boolean helpCreate(Object newObject, Map properties, List<EObject> references) throws ModelerCoreException;
 
 }

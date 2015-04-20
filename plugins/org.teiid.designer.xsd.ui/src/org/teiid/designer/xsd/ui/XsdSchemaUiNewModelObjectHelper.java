@@ -9,7 +9,9 @@ package org.teiid.designer.xsd.ui;
 
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
@@ -56,7 +58,9 @@ public class XsdSchemaUiNewModelObjectHelper implements
      * @since 4.3
      */
     @Override
-	public boolean helpCreate(Object newObject, Map properties) throws ModelerCoreException {
+	public boolean helpCreate(Object newObject,
+								Map properties,
+								List<EObject> references) throws ModelerCoreException {
         XSDSchemaImpl xsdSchemaImpl = (XSDSchemaImpl) newObject;
         MetamodelDescriptor descriptor = ModelUtilities.getModelResourceForModelObject(xsdSchemaImpl).getPrimaryMetamodelDescriptor();
         
