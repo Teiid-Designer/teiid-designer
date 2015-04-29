@@ -22,7 +22,7 @@
 
 		<td.tpc.groupId>org.jboss.tools.integration-stack</td.tpc.groupId>
 		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
-		<td.tpc.version>4.2.0.Final</td.tpc.version>
+		<td.tpc.version>4.2.3.CR1a</td.tpc.version>
 		<td.tpc.type>target</td.tpc.type>
 		<td.tpc.classifier>base</td.tpc.classifier>
 
@@ -146,22 +146,11 @@
 					<ignoreTychoRepositories>true</ignoreTychoRepositories>
 					<target>
 						<artifact>
-						  <groupId>org.jboss.tools.target-platforms</groupId>
-						  <artifactId>teiid.designer</artifactId>
-						  <version>0.1.0-SNAPSHOT</version>
-						  <type>${td.tpc.type}</type>
-						  <classifier>teiid-designer-${td.tpc.version}</classifier>
-						  <!--
-							Commented out since in order to include the provisional repository containing
-							the saxon plugin, a local target file must be used instead. Should be uncommented
-							when this plugin is available in the JBT-IS
-
 							<groupId>${td.tpc.groupId}</groupId>
 							<artifactId>${td.tpc.artifactId}</artifactId>
 							<version>${td.tpc.version}</version>
 							<type>${td.tpc.type}</type>
 							<classifier>${td.tpc.classifier}</classifier>
-						  -->
 						</artifact>
 					</target>
 				</configuration>
