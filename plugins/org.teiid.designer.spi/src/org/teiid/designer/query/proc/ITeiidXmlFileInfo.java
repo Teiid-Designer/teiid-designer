@@ -125,12 +125,5 @@ public interface ITeiidXmlFileInfo<T extends ITeiidXmlColumnInfo> extends ITeiid
      * @return
      */
     String getNamespaceString();
-    
-    /**
-     * Parse the Xml file
-     * 
-     * @return whether parsing was successful
-     */
-    IStatus parseXmlFile();
 
 }
