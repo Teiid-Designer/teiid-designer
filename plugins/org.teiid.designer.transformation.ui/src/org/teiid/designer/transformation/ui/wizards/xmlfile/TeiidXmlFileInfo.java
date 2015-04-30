@@ -9,6 +9,8 @@ package org.teiid.designer.transformation.ui.wizards.xmlfile;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.IQueryService;
@@ -41,7 +46,7 @@ import org.xml.sax.helpers.LocatorImpl;
  */
 public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITeiidXmlFileInfo<TeiidXmlColumnInfo> {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(TeiidXmlFileInfo.class);
-	
+
 
     private static final String XSI_NAMESPACE_PREFIX = "xsi"; //$NON-NLS-1$
 	
@@ -52,6 +57,17 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
     private static String getString( final String id, final Object arg1) {
         return Util.getString(I18N_PREFIX + id, arg1);
     }
+    
+    /** UTF-8 BOM */
+    public static final ByteOrderMark UTF_8    = new ByteOrderMark("UTF-8",    0xEF, 0xBB, 0xBF);
+    /** UTF-16BE BOM (Big Endian) */
+    public static final ByteOrderMark UTF_16BE = new ByteOrderMark("UTF-16BE", 0xFE, 0xFF);
+    /** UTF-16LE BOM (Little Endian) */
+    public static final ByteOrderMark UTF_16LE = new ByteOrderMark("UTF-16LE", 0xFF, 0xFE);
+    
+    public static final ByteOrderMark UTF_32BE = new ByteOrderMark("UTF-32BE", 0x00, 0x00, 0xFE, 0xFF);
+    /** UTF-16LE BOM (Little Endian) */
+    public static final ByteOrderMark UTF_32LE = new ByteOrderMark("UTF-32LE",  0x00, 0x00, 0xFF, 0xFE);
     
     /**
      * The number of cached lines of the data file for display
@@ -174,8 +190,8 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		this.cachedFirstLines = new String[0];
 		this.columnInfoList = new ArrayList<TeiidXmlColumnInfo>();
 		this.namespaceMap = new HashMap<String, String>();
-		
-		parsingStatus = parseXmlFile();
+		this.parsingStatus = Status.OK_STATUS;
+		parseXmlFile();
 		
 		setViewTableName("new_table"); //$NON-NLS-1$
 
@@ -582,23 +598,36 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
     	return sb.toString();
     }
 
-    @Override
-    public IStatus parseXmlFile() {
+    private void parseXmlFile() {
+    	String fileString = getFileAsString(getDataFile());
+    	
+    	if( parsingStatus.getSeverity() == IStatus.ERROR ) return;
+    	
+    	if( StringUtilities.isEmpty(fileString)) {
+			String message = Util.getString("TeiidXmlFileInfo.errorXmlFileIsEmpty", getDataFile().getName()); //$NON-NLS-1$
+			parsingStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
+			return;
+    	}
+    	
 		XmlParser xmlParser = new XmlParser();
 		XmlFileContentHandler contentHandler = new XmlFileContentHandler();
 		contentHandler.setDocumentLocator(new LocatorImpl());
 		xmlParser.setContentHandler(contentHandler);
+		
 		try {
-			xmlParser.doParse(getDataFile());
+			xmlParser.doParse(fileString);
 		} catch (RuntimeException ex) {
 			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			parsingStatus =  new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			return;
 		} catch (IOException ex) {
 			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			parsingStatus =  new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			return;
 		} catch (SAXException ex) {
 			String message = Util.getString("TeiidXmlFileInfo.parsingError", ex.getMessage()); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			parsingStatus =  new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, ex);
+			return;
 		}
 		
 		this.namespaceMap.clear();
@@ -607,14 +636,15 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		rootNode = contentHandler.getRootElement();
 		if( rootNode == null ) {
 			String message = getString("noRootNodeParsingError"); //$NON-NLS-1$
-			return new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
+			parsingStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message);
+			return;
 		}
 		
 		determineCommonRootPath();
 		
 		setRootPath(this.commonRootPath);
 
-		return Status.OK_STATUS;
+		parsingStatus = Status.OK_STATUS;
     }
     
 	private void determineCommonRootPath(){
@@ -685,5 +715,43 @@ public class TeiidXmlFileInfo extends TeiidFileInfo implements UiConstants, ITei
 		} else {
 			this.parameterMap=parameterMap;
 		}
+	}
+	
+	private String getFileAsString(File file) {
+		FileInputStream fileInputStream = null;
+		BOMInputStream inputStream = null;
+		String fileText = null;
+		try {
+			int ch;
+			StringBuffer strContent = new StringBuffer("");
+			fileInputStream = new FileInputStream(file);
+			
+			// there may be a BOM (byte order mark) so exclude them all
+			inputStream = new BOMInputStream(
+					fileInputStream, UTF_8, UTF_16BE, UTF_16LE, UTF_32BE, UTF_32LE);
+			
+			while ((ch = inputStream.read()) != -1) {
+				strContent.append((char) ch);
+			}
+
+			fileText = strContent.toString();
+		} catch (FileNotFoundException e) {
+			String message = Util.getString("TeiidXmlFileInfo.couldNotFindXmlFile", getDataFile().getName()); //$NON-NLS-1$
+			parsingStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, e);
+		} catch (IOException e) {
+			String message = Util.getString("TeiidXmlFileInfo.errorReadingXmlFile", getDataFile().getName()); //$NON-NLS-1$
+			parsingStatus = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, message, e);
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					String message = Util.getString("TeiidXmlFileInfo.errorReadingXmlFile", getDataFile().getName()); //$NON-NLS-1$
+					parsingStatus = new Status(IStatus.WARNING, UiConstants.PLUGIN_ID, message, e);
+				}
+			}
+		}
+
+		return fileText;
 	}
 }
