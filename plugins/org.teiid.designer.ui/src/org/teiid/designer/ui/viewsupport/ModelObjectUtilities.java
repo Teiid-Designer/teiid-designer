@@ -538,14 +538,31 @@ public abstract class ModelObjectUtilities {
         boolean sameParent = true;
 
         Object firstParent = ((EObject)eObjectList.get(0)).eContainer();
+        
+        // firstParent will be null for any object under a resource (tables, procedure, etc)
         int nObjects = eObjectList.size();
-        for (int i = 1; i < nObjects; i++) {
-            if (((EObject)eObjectList.get(0)).eContainer().equals(firstParent)) {
-                // allOK
-            } else {
-                sameParent = false;
-                break;
+        if( firstParent == null ) {
+            firstParent = ((EObject)eObjectList.get(0)).eResource();
+            for (int i = 1; i < nObjects; i++) {
+            	// check for a container parent also, this will indicate that a table/procedure and a column/parameter
+            	// were selected (i.e. different parent types)
+            	Object containerParent = ((EObject)eObjectList.get(i)).eContainer();
+                if ( containerParent == null && firstParent != null && ((EObject)eObjectList.get(i)).eResource().equals(firstParent)) {
+                    // allOK
+                } else {
+                    sameParent = false;
+                    break;
+                }
             }
+        } else {
+	        for (int i = 1; i < nObjects; i++) {
+	            if ( firstParent != null && ((EObject)eObjectList.get(i)).eContainer().equals(firstParent)) {
+	                // allOK
+	            } else {
+	                sameParent = false;
+	                break;
+	            }
+	        }
         }
 
         return sameParent;
