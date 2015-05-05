@@ -24,6 +24,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
+import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
@@ -122,6 +123,14 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
             	}
             }
             
+        	Properties connProps = getModelConnectionProperties(modelResource);
+        	
+        	if( connProps == null || connProps.isEmpty() ) {
+        		MessageDialog.openInformation(getShell(), getString("noInfo.title"),  //$NON-NLS-1$
+        				getString("noInfo.message", modelResource.getItemName())); //$NON-NLS-1$
+        		return;
+        	}
+            
             // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
 
             // B) Use ConnectionProfileHandler.getConnectionProfile(connectionProfileInfo) to query the user to
@@ -131,44 +140,48 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
             // via the ConnectionProfileInfoHandler
 
             Collection<ModelResource> relationalModels = getRelationalModelsWithConnections();
-            final CreateDataSourceWizard wizard = new CreateDataSourceWizard(teiidServer, relationalModels, modelResource);
+            final CreateDataSourceWizard dialog = new CreateDataSourceWizard(iww.getShell(), teiidServer, relationalModels, modelResource);
 
-            wizard.init(iww.getWorkbench(), new StructuredSelection());
-            final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
+//            wizard.init(iww.getWorkbench(), new StructuredSelection());
+//            final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
             final int rc = dialog.open();
             if (rc != Window.OK)
                 return;
 
             // Need to check if the connection needs a password
 
-            TeiidDataSourceInfo info = wizard.getTeiidDataSourceInfo();
+            TeiidDataSourceInfo info = dialog.getTeiidDataSourceInfo();
             Properties props = info.getProperties();
             IConnectionInfoProvider provider = info.getConnectionInfoProvider();
-            boolean cancelledPassword = false;
-            if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
-                if (info.requiresPassword()) {
-
-                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
-                        @SuppressWarnings( "synthetic-access" )
-                        @Override
-                        protected boolean isPasswordValid( final String password ) {
-                            pwd = password;
-                            return true;
-                        }
-                    }.open();
-                    if (result == Window.OK) {
-                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
-                    } else {
-                        cancelledPassword = true;
-                    }
-                }
-            }
-
-            if( !cancelledPassword) {
-                teiidServer.getOrCreateDataSource(info.getDisplayName(),
-                                                  info.getJndiName(),
-                                                  provider.getDataSourceType(),
-                                                  props);
+            // Model may not have a provider (created from scratch)
+            
+            if( provider != null ) {
+	            boolean cancelledPassword = false;
+	            if (null != provider.getDataSourcePasswordPropertyKey() && props.get(provider.getDataSourcePasswordPropertyKey()) == null) {
+	                if (info.requiresPassword()) {
+	
+	                    int result = new AbstractPasswordDialog(iww.getShell(), getString("passwordTitle"), null) { //$NON-NLS-1$
+	                        @SuppressWarnings( "synthetic-access" )
+	                        @Override
+	                        protected boolean isPasswordValid( final String password ) {
+	                            pwd = password;
+	                            return true;
+	                        }
+	                    }.open();
+	                    if (result == Window.OK) {
+	                        props.put(provider.getDataSourcePasswordPropertyKey(), this.pwd);
+	                    } else {
+	                        cancelledPassword = true;
+	                    }
+	                }
+	            }
+	
+	            if( !cancelledPassword) {
+	                teiidServer.getOrCreateDataSource(info.getDisplayName(),
+	                                                  info.getJndiName(),
+	                                                  provider.getDataSourceType(),
+	                                                  props);
+	            }
             }
 
         } catch (Exception e) {
@@ -257,5 +270,39 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
 
     private Shell getShell() {
         return Display.getCurrent().getActiveShell();
+    }
+    
+    private Properties getModelConnectionProperties(ModelResource mr) {
+
+        try {
+            if (ModelIdentifier.isRelationalSourceModel(mr)) {
+                IConnectionInfoProvider provider = null;
+
+                try {
+                    provider = getProvider(mr);
+                } catch (Exception e) {
+                    // If provider throws exception its OK because some models may not have connection info.
+                }
+
+                if (provider != null) {
+                    Properties properties = provider.getProfileProperties(mr); //ConnectionProperties(mr);
+                    Properties p2 = provider.getConnectionProperties(mr);
+                    String translatorName = provider.getTranslatorName(mr);
+                    for( Object key : p2.keySet()) {
+                    	properties.put(key, p2.get(key));
+                    }
+                    if( translatorName != null ) {
+                    	properties.put(getString("translatorKey"), translatorName); //$NON-NLS-1$
+                    }
+                    if (properties != null && !properties.isEmpty()) {
+                        return properties;
+                    }
+                }
+            }
+        } catch (CoreException e) {
+            DatatoolsUiConstants.UTIL.log(e);
+        }
+
+        return null;
     }
 }
