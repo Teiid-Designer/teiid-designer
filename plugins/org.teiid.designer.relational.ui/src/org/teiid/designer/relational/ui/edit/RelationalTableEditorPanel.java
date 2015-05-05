@@ -114,6 +114,8 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 
 	private boolean finishedStartup = false;
 	private boolean validationPerformed = false;
+	
+	private int HEIGHT_HINT_80 = 80;
 
 	/**
 	 * @param parent the parent panel
@@ -613,7 +615,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             Text pkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
             pkHelpText.setBackground(parent.getBackground());
             pkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).span(2, 1).applyTo(pkHelpText);
+            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(pkHelpText);
             pkHelpText.setText(Messages.primaryKeysNotSupportedForViews);
         }
 
@@ -715,7 +717,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
 
         this.pkColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.pkColumnsViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.pkColumnsViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = pkColumnsViewer.createColumn(SWT.LEFT, 100, 40, true);
@@ -740,7 +742,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             Text ucHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
             ucHelpText.setBackground(parent.getBackground());
             ucHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).span(2, 1).applyTo(ucHelpText);
+            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(ucHelpText);
             ucHelpText.setText(Messages.uniqueConstraintsNotSupportedForViews);
         }
 
@@ -843,7 +845,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
 
         this.ucColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 100).applyTo(this.ucColumnsViewer.getTableComposite());        
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.ucColumnsViewer.getTableComposite());        
 
         // create columns
         TableViewerColumn column = this.ucColumnsViewer.createColumn(SWT.LEFT, 100, 40, false);
@@ -868,7 +870,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             Text fkHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
             fkHelpText.setBackground(parent.getBackground());
             fkHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).span(2, 1).applyTo(fkHelpText);
+            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(fkHelpText);
             fkHelpText.setText(Messages.foreignKeysNotSupportedForViews);
         }
 
@@ -957,7 +959,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
 
         this.fkViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.fkViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.fkViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = fkViewer.createColumn(SWT.LEFT, 100, 40, false);
@@ -982,7 +984,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             Text indexesHelpText = new Text(thePanel, SWT.WRAP | SWT.READ_ONLY);
             indexesHelpText.setBackground(parent.getBackground());
             indexesHelpText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, 100).span(2, 1).applyTo(indexesHelpText);
+            GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(indexesHelpText);
             indexesHelpText.setText(Messages.indexesNotSupportedForViews);
         }
 
@@ -1066,7 +1068,7 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		});
 
         this.indexesViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(this.indexesViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.indexesViewer.getTableComposite());
 
         // create columns
         TableViewerColumn column = indexesViewer.createColumn(SWT.LEFT, 100, 40, false);

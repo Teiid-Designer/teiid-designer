@@ -10,9 +10,6 @@ package org.teiid.designer.relational.ui.editor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -22,11 +19,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.edit.RelationalEditorPanel;
 import org.teiid.designer.ui.common.eventsupport.IDialogStatusListener;
+import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 
 /**
  *
  */
-public class EditRelationalObjectDialog extends TitleAreaDialog implements IDialogStatusListener {
+public class EditRelationalObjectDialog extends ScrollableTitleAreaDialog implements IDialogStatusListener {
 
     private final EditRelationalObjectDialogModel dialogModel;
 
@@ -71,16 +69,14 @@ public class EditRelationalObjectDialog extends TitleAreaDialog implements IDial
     protected Control createDialogArea(Composite parent) {
         Composite pnlOuter = (Composite) super.createDialogArea(parent);
         
-        Composite mainPanel = new Composite(pnlOuter, SWT.NONE);
-        GridLayoutFactory.fillDefaults().margins(20, 20).applyTo(mainPanel);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(mainPanel);
-
         this.setTitle(dialogModel.getDialogTitle());
         this.setMessage(dialogModel.getHelpText());
 
-        editorPanel = dialogModel.getEditorPanel(this, mainPanel);
-
-        return mainPanel;
+        editorPanel = dialogModel.getEditorPanel(this, pnlOuter);
+        
+        sizeScrolledPanel();
+        
+        return pnlOuter;
     }
     
     @Override

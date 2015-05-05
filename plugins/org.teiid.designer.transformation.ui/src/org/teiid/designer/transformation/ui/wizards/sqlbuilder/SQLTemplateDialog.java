@@ -8,7 +8,6 @@
 package org.teiid.designer.transformation.ui.wizards.sqlbuilder;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
@@ -35,6 +34,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 
 
 /**
@@ -43,7 +43,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  *
  * @since 8.0
  */
-public class SQLTemplateDialog  extends TitleAreaDialog {
+public class SQLTemplateDialog  extends ScrollableTitleAreaDialog {
 
     public static int TABLE_TEMPLATES = 1;
     public static int PROC_TEMPLATES = 2;
@@ -79,7 +79,7 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
      */
     public SQLTemplateDialog( Shell parent,
                               int templatesToShow ) {
-        super(parent);
+        super(parent, 2);
         this.templatesToShow = templatesToShow;
     }
     
@@ -108,16 +108,12 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
         setMessage(Messages.sqlTemplateDialogTitleMessage);
     	
         Composite composite = (Composite)super.createDialogArea(parent);
+        
         //------------------------------        
         // Set layout for the Composite
         //------------------------------        
-        GridLayout gridLayout = new GridLayout();
-        composite.setLayout(gridLayout);
-        gridLayout.numColumns = 1;
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.grabExcessHorizontalSpace = true;
-        gridData.widthHint = 500;
-        composite.setLayoutData(gridData);
+        ((GridData)composite.getLayoutData()).grabExcessHorizontalSpace = true;
+        ((GridData)composite.getLayoutData()).widthHint = 500;
         
         // Create the RadioButton Group for Template selection
         createSqlTemplateOptionsGroup(composite);
@@ -127,6 +123,8 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
 
         // Init SQL Text area with selection
         setSQLTemplateArea();
+        
+        sizeScrolledPanel();
 
         return composite;
     }
@@ -135,7 +133,10 @@ public class SQLTemplateDialog  extends TitleAreaDialog {
      * Create the Group of Radio Buttons for template type selection
      */
     private void createSqlTemplateOptionsGroup( Composite parent ) {
-        Group theGroup = WidgetFactory.createGroup(parent, Messages.sqlTemplateDialogOptionsGroup, SWT.NONE, 1, 2);
+        Group theGroup = WidgetFactory.createGroup(parent, Messages.sqlTemplateDialogOptionsGroup, SWT.NONE, 1, 1);
+        GridLayout gridLayout = new GridLayout();
+        theGroup.setLayout(gridLayout);
+        gridLayout.numColumns = 1;
     	theGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
     	
         // **********************************
