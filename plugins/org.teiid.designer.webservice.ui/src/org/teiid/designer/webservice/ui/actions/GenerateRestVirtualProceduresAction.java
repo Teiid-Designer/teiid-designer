@@ -27,7 +27,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -83,6 +82,7 @@ import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
@@ -511,7 +511,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	
     }
     
-    class SelectViewsAndTablesDialog extends TitleAreaDialog {
+    class SelectViewsAndTablesDialog extends ScrollableTitleAreaDialog {
 
         private final String TITLE = UTIL.getString("SelectViewsAndTablesDialog.title"); //$NON-NLS-1$
         private final String INITIAL_MSG = UTIL.getString("SelectViewsAndTablesDialog.originalMessage"); //$NON-NLS-1$
@@ -721,7 +721,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	    		}
 	    		
 	            Composite buttonPanel = WidgetFactory.createPanel(sourceGroup, SWT.NONE, 1, 1);
-	            GridLayoutFactory.fillDefaults().numColumns(5).margins(5, 5).applyTo(buttonPanel);
+	            GridLayoutFactory.fillDefaults().numColumns(5).margins(1, 1).applyTo(buttonPanel);
 	            GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 	            Label iconLabel = new Label(buttonPanel, SWT.NONE);
 				if( ModelIdentifier.isRelationalSourceModel(modelResource)) {
@@ -770,7 +770,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	            tableViewer = CheckboxTableViewer.newCheckList(sourceGroup, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 	            
 	            GridData gd = new GridData(GridData.FILL_BOTH);
-	            gd.heightHint = 200;
+	            gd.heightHint = 100;
 	            tableViewer.getTable().setLayoutData(gd);
 	
 	            tableViewer.setLabelProvider(new ILabelProvider() {
@@ -822,6 +822,8 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					}
 				});
             }
+            
+            sizeScrolledPanel();
             
             return composite;
         }

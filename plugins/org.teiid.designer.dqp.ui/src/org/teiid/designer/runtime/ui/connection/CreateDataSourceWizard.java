@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -34,12 +34,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbench;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
@@ -52,11 +53,12 @@ import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.runtime.ui.DqpUiPlugin;
+import org.teiid.designer.transformation.ui.UiConstants.Images;
+import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 
 
@@ -65,12 +67,10 @@ import org.teiid.designer.ui.viewsupport.ModelIdentifier;
  *
  * @since 8.0
  */
-public class CreateDataSourceWizard extends AbstractWizard implements IProfileChangedListener {
+public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements IProfileChangedListener {
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(CreateDataSourceWizard.class);
 
     private static final String TITLE = getString("title"); //$NON-NLS-1$
-
-    //private static final ImageDescriptor IMAGE = DqpUiPlugin.getDefault().getImageDescriptor("icons/full/wizban/dataPolicyWizard.png"); //$NON-NLS-1$
 
     private static final String DEFAULT_NAME = getString("defaultName"); //$NON-NLS-1$
     private static final String PASSWORD = getString("passwordStr"); //$NON-NLS-1$
@@ -123,10 +123,11 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
     /**
      * @since 4.0
      */
-    public CreateDataSourceWizard( ITeiidServer teiidServer,
+    public CreateDataSourceWizard( Shell shell,
+    							   ITeiidServer teiidServer,
                                    Collection<ModelResource> relationalModels,
                                    ModelResource initialSelection ) {
-        super(DqpUiPlugin.getDefault(), TITLE, null);
+        super(shell, 2);
         this.relationalModelsMap = new HashMap<String, ModelResource>();
         for (ModelResource mr : relationalModels) {
             this.relationalModelsMap.put(ModelUtil.getName(mr), mr);
@@ -137,37 +138,30 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         this.providerFactory = new ConnectionInfoProviderFactory();
         this.teiidDataSourceProperties = new Properties();
     }
-
-    /**
-     * @see IWorkbenchWizard#init(IWorkbench, IStructuredSelection)
-     */
-    public void init( IWorkbench workbench,
-                      IStructuredSelection selection ) {
-        this.wizardPage = new WizardPage(CreateDataSourceWizard.class.getSimpleName(), TITLE, null) {
-            @Override
-            public void createControl( final Composite parent ) {
-                setControl(createPageControl(parent));
-            }
-        };
-
-        this.wizardPage.setPageComplete(false);
-        this.wizardPage.setMessage(getString("initialMessage")); //$NON-NLS-1$
-
-        addPage(wizardPage);
+    
+    /* (non-Javadoc)
+    * @see org.eclipse.jface.window.Window#setShellStyle(int)
+    */
+    @Override
+    protected void setShellStyle( int newShellStyle ) {
+        super.setShellStyle(newShellStyle | SWT.RESIZE | SWT.MAX);
     }
 
-    /**
-     * @param parent
-     * @return composite the page
-     * @since 4.0
-     */
-    Composite createPageControl( final Composite parent ) {
+    
+    @Override
+    protected Control createDialogArea( final Composite parent ) {
+        setTitle(TITLE);
+        setTitleImage(UiPlugin.getDefault().getImage(Images.IMPORT_TEIID_METADATA));
+        setMessage("Create and Deploy a Data Source");
         profileWorker = new ConnectionProfileWorker(this.getShell(), null, this);
 
         // ===========>>>> Create page composite
-        final Composite mainPanel = new Composite(parent, SWT.NONE);
-        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-        mainPanel.setLayout(new GridLayout(2, false));
+        
+        final Composite mainPanel = (Composite)super.createDialogArea(parent);
+//        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridLayout)mainPanel.getLayout()).marginTop = 5;
+        ((GridLayout)mainPanel.getLayout()).marginBottom = 10;
+        ((GridLayout)mainPanel.getLayout()).verticalSpacing = 8;
 
         WidgetFactory.createLabel(mainPanel, getString("teiidServer.label")); //$NON-NLS-1$
 
@@ -231,7 +225,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         });
 
         WidgetFactory.createLabel(connectionSourceGroup, getString("model.label")); //$NON-NLS-1$
-        ArrayList modelsList = new ArrayList(relationalModelsMap.values());
+        ArrayList<ModelResource> modelsList = new ArrayList<ModelResource>(relationalModelsMap.values());
 
         ILabelProvider modelsLabelProvider = new LabelProvider() {
 
@@ -361,12 +355,12 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
         final GridData propertiesGridData = new GridData(GridData.FILL_BOTH);
         propertiesGridData.horizontalSpan = 2;
-        propertiesGridData.heightHint = 220;
-        propertiesGridData.minimumHeight = 220;
+        propertiesGridData.heightHint = 180;
+        propertiesGridData.minimumHeight = 180;
         propertiesGridData.grabExcessVerticalSpace = true;
         propsGroup.setLayoutData(propertiesGridData);
 
-        int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;
+        int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION;
         propsViewer = new TableViewer(propsGroup, tableStyle);
         Table table = propsViewer.getTable();
         table.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
@@ -418,6 +412,8 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
             setConnectionProperties();
         }
         
+        sizeScrolledPanel();
+        
         resetComboBoxes();
 
         // ===========>>>> If we're in edit mode, load the UI objects with the info from the input dataRole
@@ -467,20 +463,6 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
         }
     }
 
-    /**
-     * @see org.eclipse.jface.wizard.IWizard#canFinish()
-     * @since 4.0
-     */
-    @Override
-    public boolean canFinish() {
-        return wizardPage.isPageComplete();
-    }
-
-    @Override
-    public boolean finish() {
-        return true;
-    }
-
     public TeiidDataSourceInfo getTeiidDataSourceInfo() {
         TeiidDataSourceInfo info = new TeiidDataSourceInfo(dataSourceName, dataSourceName, teiidDataSourceProperties,
                                                            currentProvider, connRequiresPassword);
@@ -489,28 +471,21 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     void validateInputs() {
         // Check that name != null
-        // TODO: Add NAME EXISTS ERROR
         if (this.dataSourceName == null || this.dataSourceName.length() == 0) {
-            wizardPage.setErrorMessage(getString("nullNameError.message")); //$NON-NLS-1$
-            wizardPage.setPageComplete(false);
+            setErrorMessage(getString("nullNameError.message")); //$NON-NLS-1$
         } else if (useModelCheckBox != null && useModelCheckBox.getSelection() && teiidDataSourceProperties.isEmpty()) {
-            wizardPage.setErrorMessage(getString("noValidTeiidPropertiesInModelError.message")); //$NON-NLS-1$
-            wizardPage.setPageComplete(false);
+            setErrorMessage(getString("noValidTeiidPropertiesInModelError.message")); //$NON-NLS-1$
         } else if (useConnectionProfileCheckBox != null && useConnectionProfileCheckBox.getSelection()
                    && teiidDataSourceProperties.isEmpty()) {
-            wizardPage.setErrorMessage(getString("noValidTeiidPropertiesError.message")); //$NON-NLS-1$
-            wizardPage.setPageComplete(false);
+            setErrorMessage(getString("noValidTeiidPropertiesError.message")); //$NON-NLS-1$
         } else if (!isValidName(this.dataSourceName)) {
             String msg = checkValidName(this.dataSourceName);
-            wizardPage.setErrorMessage(msg);
-            wizardPage.setPageComplete(false);
+            setErrorMessage(msg);
         } else if (nameExists(this.dataSourceName)) {
-            wizardPage.setErrorMessage(getString("dataSourceExists.message", this.dataSourceName)); //$NON-NLS-1$
-            wizardPage.setPageComplete(false);
+            setErrorMessage(getString("dataSourceExists.message", this.dataSourceName)); //$NON-NLS-1$
         } else {
-            wizardPage.setErrorMessage(null);
-            wizardPage.setMessage(getString("finish.message")); //$NON-NLS-1$
-            wizardPage.setPageComplete(true);
+            setErrorMessage(null);
+            setMessage(getString("finish.message")); //$NON-NLS-1$
         }
 
     }
@@ -631,7 +606,7 @@ public class CreateDataSourceWizard extends AbstractWizard implements IProfileCh
 
     void resetCPComboItems() {
         if (connectionProfilesCombo != null) {
-            ArrayList profileList = new ArrayList();
+            ArrayList<IConnectionProfile> profileList = new ArrayList<IConnectionProfile>();
             for (IConnectionProfile prof : profileWorker.getProfiles()) {
                 profileList.add(prof);
             }

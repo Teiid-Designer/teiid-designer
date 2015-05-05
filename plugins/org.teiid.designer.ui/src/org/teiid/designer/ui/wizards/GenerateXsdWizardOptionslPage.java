@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
@@ -61,6 +62,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -137,7 +139,9 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
      */
     @Override
 	public void createControl( Composite parent ) {
-        Composite container = new Composite(parent, SWT.NULL);
+    	DefaultScrolledComposite mainScrolledPanel = new DefaultScrolledComposite(parent);
+        
+        Composite container = mainScrolledPanel.getPanel();
         GridLayout layout = new GridLayout();
         container.setLayout(layout);
 
@@ -173,127 +177,126 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
             }
         });
         
-        Group outputGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.outputGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
-
-
-        Label spacer = null;
-        GridData spGridData = null;
+//        Composite scrolledPanel = new Composite(container, SWT.NULL);
+//        GridLayoutFactory.swtDefaults().margins(1, 1).applyTo(scrolledPanel);
         
-        // Control to capture the Model name to use
-        Label modelNameLabel = new Label(outputGroup, SWT.NULL);
-        modelNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
+        {
+	        Group modelsGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.modelDefinition"), GridData.FILL_BOTH, 1, 4); //$NON-NLS-1$
+	        
+	        // Control to prompt for creation of input docs for Procedures
+	        genInputButton = new Button(modelsGroup, SWT.CHECK);
+	        buttonGridData = new GridData();
+	        buttonGridData.horizontalSpan = 1;
+	        genInputButton.setLayoutData(buttonGridData);
+	        genInputButton.setText(Util.getString("GenerateXsdWizard.generate")); //$NON-NLS-1$
+	        genInputButton.setToolTipText(Util.getString("GenerateXsdWizard.generateInputSchemaModel")); //$NON-NLS-1$
+	        genInputButton.setSelection(true);
+	        genInputButton.addSelectionListener(new SelectionAdapter() {
 
-        outputNameText = new Text(outputGroup, SWT.BORDER | SWT.SINGLE);
-        GridData outputGridData = new GridData(GridData.FILL_HORIZONTAL);
-        outputNameText.setLayoutData(outputGridData);
-        outputNameText.addModifyListener(new ModifyListener() {
+	            @Override
+	            public void widgetSelected( SelectionEvent e ) {
+	                handleGenInputButton();
+	            }
+	        });
+	        
+	        // Control to capture the name of the Input Doc model name.
+	        Label inputNameLabel = new Label(modelsGroup, SWT.NULL);
+	        inputNameLabel.setText("Input Schema"); //$NON-NLS-1$
 
-            @Override
-			public void modifyText( ModifyEvent e ) {
-                checkStatus();
-            }
-        });
-        
-        spacer = new Label(outputGroup, SWT.NULL);
-        spGridData = new GridData();
-        spGridData.horizontalSpan = 1;
-        spacer.setLayoutData(spGridData);
+	        inputNameText = new Text(modelsGroup, SWT.BORDER | SWT.SINGLE);
+	        gd = new GridData(GridData.FILL_HORIZONTAL);
+	        inputNameText.setLayoutData(gd);
+	        inputNameText.addModifyListener(new ModifyListener() {
 
-        // Control to capture flat or nested XSD preference
-        doFlatOutputButton = new Button(outputGroup, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 1;
-        doFlatOutputButton.setLayoutData(buttonGridData);
-        doFlatOutputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
-        doFlatOutputButton.setSelection(true);
-        doFlatOutputButton.addSelectionListener(new SelectionAdapter() {
+	            @Override
+				public void modifyText( ModifyEvent e ) {
+	                checkStatus();
+	            }
+	        });
+	        
+	        // Control to capture flat or nested XSD preference
+	        doFlatInputButton = new Button(modelsGroup, SWT.CHECK);
+	        buttonGridData = new GridData();
+	        buttonGridData.horizontalSpan = 1;
+	        doFlatInputButton.setLayoutData(buttonGridData);
+	        doFlatInputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
+	        doFlatInputButton.setToolTipText(Util.getString("GenerateXsdWizard.doFlatInputTooltip"));  //$NON-NLS-1$
+	        doFlatInputButton.setSelection(true);
+	        doFlatInputButton.addSelectionListener(new SelectionAdapter() {
 
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                doFlatInputButton.setSelection(doFlatOutputButton.getSelection());
-            }
-        });
+	            @Override
+	            public void widgetSelected( SelectionEvent e ) {
+	                doFlatOutputButton.setSelection(doFlatInputButton.getSelection());
+	            }
+	        });
+	        
+	        GridData spGridData = null;
+	        
+	        Label spacer = new Label(modelsGroup, SWT.NULL);
+	        spGridData = new GridData();
+	        spGridData.horizontalSpan = 1;
+	        spacer.setLayoutData(spGridData);
+	        
+	        // Control to capture the Model name to use
+	        Label modelNameLabel = new Label(modelsGroup, SWT.NULL);
+	        modelNameLabel.setText("Output Schema");
+	        
+	        outputNameText = new Text(modelsGroup, SWT.BORDER | SWT.SINGLE);
+	        GridData outputGridData = new GridData(GridData.FILL_HORIZONTAL);
+	        outputGridData.minimumWidth = 200;
+	        outputNameText.setLayoutData(outputGridData);
+	        outputNameText.addModifyListener(new ModifyListener() {
+	
+	            @Override
+				public void modifyText( ModifyEvent e ) {
+	                checkStatus();
+	            }
+	        });
+	        
+	        // Control to capture flat or nested XSD preference
+	        doFlatOutputButton = new Button(modelsGroup, SWT.CHECK);
+	        buttonGridData = new GridData();
+	        buttonGridData.horizontalSpan = 1;
+	        doFlatOutputButton.setLayoutData(buttonGridData);
+	        doFlatOutputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
+	        doFlatOutputButton.setToolTipText(Util.getString("GenerateXsdWizard.doFlatOutputTooltip"));  //$NON-NLS-1$
+	        doFlatOutputButton.setSelection(true);
+	        doFlatOutputButton.addSelectionListener(new SelectionAdapter() {
 
-        Group inputGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.inputGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
+	            @Override
+	            public void widgetSelected( SelectionEvent e ) {
+	                doFlatInputButton.setSelection(doFlatOutputButton.getSelection());
+	            }
+	        });
+	        
+	        spacer = new Label(modelsGroup, SWT.NULL);
+	        spGridData = new GridData();
+	        spGridData.horizontalSpan = 1;
+	        spacer.setLayoutData(spGridData);
+	        
+	        // Control to capture the WebService Model name
+	        Label wsNameLabel = new Label(modelsGroup, SWT.NULL);
+	        wsNameLabel.setText("Web Service"); //$NON-NLS-1$
 
-        // Control to prompt for creation of input docs for Procedures
-        genInputButton = new Button(inputGroup, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 2;
-        genInputButton.setLayoutData(buttonGridData);
-        genInputButton.setText("Generate"); //Util.getString("GenerateXsdWizard.genInputForProcs")); //$NON-NLS-1$
-        genInputButton.setSelection(true);
-        genInputButton.addSelectionListener(new SelectionAdapter() {
+	        wsNameText = new Text(modelsGroup, SWT.BORDER | SWT.SINGLE);
+	        gd = new GridData(GridData.FILL_HORIZONTAL);
+	        wsNameText.setLayoutData(gd);
+	        wsNameText.addModifyListener(new ModifyListener() {
 
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                handleGenInputButton();
-            }
-        });
-
-        // Control to capture the name of the Input Doc model name.
-        Label inputNameLabel = new Label(inputGroup, SWT.NULL);
-        inputNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
-
-        inputNameText = new Text(inputGroup, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        inputNameText.setLayoutData(gd);
-        inputNameText.addModifyListener(new ModifyListener() {
-
-            @Override
-			public void modifyText( ModifyEvent e ) {
-                checkStatus();
-            }
-        });
-        
-        spacer = new Label(inputGroup, SWT.NULL);
-        spGridData = new GridData();
-        spGridData.horizontalSpan = 1;
-        spacer.setLayoutData(spGridData);
-        
-        // Control to capture flat or nested XSD preference
-        doFlatInputButton = new Button(inputGroup, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 1;
-        doFlatInputButton.setLayoutData(buttonGridData);
-        doFlatInputButton.setText(Util.getString("GenerateXsdWizard.doFlat")); //$NON-NLS-1$
-        doFlatInputButton.setSelection(true);
-        doFlatInputButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-                doFlatOutputButton.setSelection(doFlatInputButton.getSelection());
-            }
-        });
-
-        Group wsGroup = WidgetFactory.createGroup(container, Util.getString("GenerateXsdWizard.wsGroup.label"), GridData.FILL_BOTH, 1, 2); //$NON-NLS-1$
-        // Control to capture the WebService Model name
-        Label wsNameLabel = new Label(wsGroup, SWT.NULL);
-        wsNameLabel.setText(Util.getString("GenerateXsdWizard.name.label")); //$NON-NLS-1$
-
-        wsNameText = new Text(wsGroup, SWT.BORDER | SWT.SINGLE);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        wsNameText.setLayoutData(gd);
-        wsNameText.addModifyListener(new ModifyListener() {
-
-            @Override
-			public void modifyText( ModifyEvent e ) {
-                checkStatus();
-            }
-        });
-        
-        spacer = new Label(wsGroup, SWT.NULL);
-        spGridData = new GridData();
-        spGridData.horizontalSpan = 1;
-        spacer.setLayoutData(spGridData);
-        
-        // Control to prompt for generation of default Mapping class SQL
-        genSqlButton = new Button(wsGroup, SWT.CHECK);
-        buttonGridData = new GridData();
-        buttonGridData.horizontalSpan = 1;
-        genSqlButton.setLayoutData(buttonGridData);
-        genSqlButton.setText(Util.getString("GenerateXsdWizard.genSql")); //$NON-NLS-1$
-        genSqlButton.setSelection(true);
+	            @Override
+				public void modifyText( ModifyEvent e ) {
+	                checkStatus();
+	            }
+	        });
+	        
+	        // Control to prompt for generation of default Mapping class SQL
+	        genSqlButton = new Button(modelsGroup, SWT.CHECK);
+	        buttonGridData = new GridData();
+	        buttonGridData.horizontalSpan = 1;
+	        genSqlButton.setLayoutData(buttonGridData);
+	        genSqlButton.setText(Util.getString("GenerateXsdWizard.genSql")); //$NON-NLS-1$
+	        genSqlButton.setSelection(true);
+        }
 
         setControl(container);
         checkStatus();
@@ -301,6 +304,7 @@ public class GenerateXsdWizardOptionslPage extends WizardPage
 
         setDefaults();
         initialize();
+        mainScrolledPanel.sizeScrolledPanel();
     }
 
     /**

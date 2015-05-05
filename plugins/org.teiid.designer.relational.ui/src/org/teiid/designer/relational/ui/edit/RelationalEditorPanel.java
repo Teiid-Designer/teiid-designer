@@ -162,7 +162,7 @@ public abstract class RelationalEditorPanel {
 
         final Group descGroup = WidgetFactory.createGroup(thePanel, UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DESCRIPTION), GridData.FILL_BOTH, 3);
         descriptionTextEditor = new StyledTextEditor(descGroup, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 120).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 40).minSize(SWT.DEFAULT, 30).applyTo(descriptionTextEditor.getTextWidget());
         descriptionTextEditor.setText(""); //$NON-NLS-1$
         descriptionTextEditor.getTextWidget().addModifyListener(new ModifyListener() {
 
