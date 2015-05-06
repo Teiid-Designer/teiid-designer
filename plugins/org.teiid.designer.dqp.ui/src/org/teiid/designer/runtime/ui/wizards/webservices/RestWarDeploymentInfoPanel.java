@@ -279,12 +279,12 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
 
 		final Group securityOptionsGroup = WidgetFactory.createGroup(
 				pnlContents, SECURITY_OPTIONS_GROUP, GridData.FILL_HORIZONTAL,
-				3);
+				3, 3);
 		{
 			CLabel label3 = new CLabel(securityOptionsGroup, SWT.WRAP);
 			label3.setText("When using HTTPBasic security, a local Teiid connection is required using the PassthroughAuthentication property."); //$NON-NLS-1$
 			final GridData gridData3 = new GridData(GridData.FILL_HORIZONTAL);
-			gridData3.horizontalSpan = 1;
+			gridData3.horizontalSpan = 3;
 			label3.setLayoutData(gridData3);
 
 			this.noSecurityButton = WidgetFactory.createRadioButton(
@@ -307,6 +307,8 @@ public abstract class RestWarDeploymentInfoPanel extends Composite implements
 							basicSecurityButtonSelected();
 						}
 					});
+			
+			new CLabel(securityOptionsGroup, SWT.NONE);
 
 			// security realm Label
 			this.SECURITY_REALM = getString("securityRealmLabel"); //$NON-NLS-1$       
