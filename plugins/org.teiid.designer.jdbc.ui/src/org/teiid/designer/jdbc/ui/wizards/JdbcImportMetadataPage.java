@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -42,6 +45,7 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.IListPanelController;
 import org.teiid.designer.ui.common.widget.ListPanel;
 import org.teiid.designer.ui.common.widget.ListPanelAdapter;
@@ -136,12 +140,28 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
     @SuppressWarnings("unused")
 	@Override
 	public void createControl(final Composite parent) {
-        // Create page
-        final Composite pg = new Composite(parent, SWT.NONE);
-        pg.setLayout(new GridLayout(COLUMN_COUNT, false));
-        setControl(pg);
+//        // Create page
+//        final Composite pg = new Composite(parent, SWT.NONE);
+//        pg.setLayout(new GridLayout(COLUMN_COUNT, false));
+//        setControl(pg);
+
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(2, false));
+        
         // Add widgets to page
-        final Composite checkBoxPanel = WidgetFactory.createPanel(pg, SWT.NO_TRIM, GridData.VERTICAL_ALIGN_BEGINNING);
+        final Composite checkBoxPanel = WidgetFactory.createPanel(mainPanel, SWT.NO_TRIM, GridData.VERTICAL_ALIGN_BEGINNING);
         {
             this.foreignKeysCheckBox = WidgetFactory.createCheckBox(checkBoxPanel);
             this.foreignKeysCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -197,13 +217,17 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
                 return null;
             }
         };
-        this.listPanel = new ListPanel(pg, TABLE_TYPES_GROUP, ctrlr, SWT.READ_ONLY | SWT.MULTI, ITEMS_COMMONLY_ALL_SELECTED);
+        this.listPanel = new ListPanel(mainPanel, TABLE_TYPES_GROUP, ctrlr, SWT.READ_ONLY | SWT.MULTI, ITEMS_COMMONLY_ALL_SELECTED);
         this.listPanel.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {
                 tableTypesSelected(event);
 			}
 		});
+        
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
 	}
 
     /**<p>

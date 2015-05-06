@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +24,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -43,12 +46,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.NewFolderDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -74,6 +81,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
@@ -166,6 +174,9 @@ public class JdbcImportOptionsPage extends WizardPage implements
     private IFile selectedModel;
     private boolean isVirtual = false;
     
+    private TabItem modelsTab;
+    private TabItem nameOptionsTab;
+    
     private JdbcImporter importer;
 
     // ===========================================================================================================================
@@ -189,17 +200,224 @@ public class JdbcImportOptionsPage extends WizardPage implements
     @Override
 	public void createControl(final Composite parent) {
         usesHiddenProject = ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric();
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
 
-        // Create page
-        final Composite mainPanel = new Composite(parent, SWT.NONE);
-        mainPanel.setLayout(new GridLayout(1, false));
-        setControl(mainPanel);
         
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(1, false));
+        
+		TabFolder tabFolder = createTabFolder(mainPanel);
+		
+		createModelDefinitionTab(tabFolder);
+		createNameOptionsTab(tabFolder);
+        
+//        // Create Group for Model Info
+//        final Group modelGroup = WidgetFactory.createGroup(mainPanel,
+//        		MODEL_GROUP, GridData.HORIZONTAL_ALIGN_FILL, 1, COLUMN_COUNT);
+//        
+//        // Add widgets to page
+//        WidgetFactory.createLabel(modelGroup, NAME_LABEL);
+//        this.nameText = WidgetFactory.createTextField(modelGroup, GridData.FILL_HORIZONTAL);
+//        this.nameText.addModifyListener(new ModifyListener() {
+//
+//            @Override
+//			public void modifyText(final ModifyEvent event) {
+//                nameModified();
+//            }
+//        });
+//
+//        // add browse button to allow selecting a model in the workspaced to update
+//        browseSelectedModelBtn = WidgetFactory.createButton(modelGroup, BROWSE_BUTTON);
+//        browseSelectedModelBtn.setToolTipText(getString("browseModelButton.tip")); //$NON-NLS-1$
+//        browseSelectedModelBtn.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//                browseModelSelected();
+//            }
+//        });
+//
+//        CLabel folderLabel = WidgetFactory.createLabel(modelGroup, FOLDER_LABEL);
+//        final IContainer folder = ((JdbcImportWizard)getWizard()).getFolder();
+//        final String name = (folder == null ? null : folder.getFullPath().makeRelative().toString());
+//        this.folderText = WidgetFactory.createTextField(modelGroup, GridData.FILL_HORIZONTAL, name);
+//
+//        // If hidden project is used for the current project, don't show the folder fields
+//        if (usesHiddenProject) {
+//            this.folderText.setEditable(false);
+//            this.folderText.setVisible(false);
+//            folderLabel.setVisible(false);
+//        }
+//        this.folderText.addModifyListener(new ModifyListener() {
+//
+//            @Override
+//			public void modifyText(final ModifyEvent event) {
+//                folderModified();
+//            }
+//        });
+//
+//        // If hidden project is used for the current project, don't show the browse button to change the location
+//        if (!usesHiddenProject) {
+//            WidgetFactory.createButton(modelGroup, BROWSE_BUTTON).addSelectionListener(new SelectionAdapter() {
+//
+//                @Override
+//                public void widgetSelected(final SelectionEvent event) {
+//                    browseButtonSelected();
+//                }
+//            });
+//        }
+//        
+//		this.virtualModelBox = WidgetFactory.createCheckBox(modelGroup, VIRTUAL_MODEL_CHECKBOX, 0, COLUMN_COUNT);
+//		this.virtualModelBox.addSelectionListener(new SelectionAdapter() {
+//
+//			@Override
+//			public void widgetSelected(final SelectionEvent event) {
+//				virtualModelBoxSelected();
+//			}
+//		});
+//		this.virtualModelBox.setSelection(isVirtual);
+//
+//        this.updateCheckBox = WidgetFactory.createCheckBox(modelGroup, UPDATE_CHECKBOX, 0, COLUMN_COUNT);
+//        this.updateCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//                updateCheckBoxSelected();
+//            }
+//        });
+//        
+//        WidgetFactory.createLabel(mainPanel, "  "); //$NON-NLS-1$
+//        
+//        this.calculateCostingCheckBox = WidgetFactory.createCheckBox(mainPanel, CALCULATE_COSTING_CHECKBOX, 0, 1);
+//        this.calculateCostingCheckBox.setToolTipText(CALCULATE_COSTING_CHECKBOX_TOOLTIP);
+//        this.calculateCostingCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//            	calculateCostingCheckBox();
+//            }
+//        });
+//        this.calculateCostingCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+//
+//        this.includeCatalogCheckBox = WidgetFactory.createCheckBox(mainPanel, INCLUDE_CATALOG_CHECKBOX, 0, 1);
+//        this.includeCatalogCheckBox.setToolTipText(INCLUDE_CATALOG_CHECKBOX_TOOLTIP);
+//        this.includeCatalogCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//            	includeCatalogCheckBox();
+//            }
+//        });
+//        this.includeCatalogCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+//        
+//        WidgetFactory.createLabel(mainPanel, "  "); //$NON-NLS-1$
+//        
+//        Group caseOptionsGroup = WidgetFactory.createGroup(mainPanel,
+//                CASE_OPTIONS_GROUP,
+//                GridData.HORIZONTAL_ALIGN_FILL,
+//                1, 2);
+//        
+//        this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, FULLY_QUALIFIED_CHECKBOX, 0, 2);
+//        this.fullyQualifiedNamesCheckBox.setToolTipText(FULLY_QUALIFIED_CHECKBOX_TOOLTIP);
+//        this.fullyQualifiedNamesCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//            	fullyQualifiedNamesCheckBoxSelected();
+//            }
+//        });
+//        this.fullyQualifiedNamesCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+//        ((GridData) this.fullyQualifiedNamesCheckBox.getLayoutData()).horizontalSpan = 2;
+//        
+//        this.modifyCaseCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, MODIFY_CASE_CHECKBOX, 0, 2);
+//        this.modifyCaseCheckBox.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//            	modifyCaseSelected();
+//            }
+//        });
+//        this.modifyCaseCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+//        ((GridData) this.modifyCaseCheckBox.getLayoutData()).horizontalSpan = 2;
+//        
+//        // Indent the change case group
+//        Label spacer = new Label(caseOptionsGroup, SWT.NONE);
+//        spacer.setText("      "); //$NON-NLS-1$
+//        
+//        changeCaseGroup = WidgetFactory.createGroup(caseOptionsGroup,
+//                CHANGE_CASE_GROUP,
+//                GridData.HORIZONTAL_ALIGN_FILL,
+//                1, 1);
+//        
+//        this.uppercaseButton = WidgetFactory.createRadioButton(changeCaseGroup, MAKE_ALL_UPPER_RADIO);
+//        this.uppercaseButton.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//                uppercaseButtonSelected();
+//            }
+//        });
+//        this.lowercaseButton = WidgetFactory.createRadioButton(changeCaseGroup, MAKE_ALL_LOWER_RADIO);
+//        this.lowercaseButton.addSelectionListener(new SelectionAdapter() {
+//
+//            @Override
+//            public void widgetSelected(final SelectionEvent event) {
+//                lowercaseButtonSelected();
+//            }
+//        });
+        
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
+
+    }
+    
+    protected TabFolder createTabFolder(Composite parent) {
+        TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(tabFolder);
+        return tabFolder;
+    }
+    
+	private void createModelDefinitionTab(TabFolder folderParent) {
+        // build the SELECT tab
+		Composite thePanel = createModelDefinitionPanel(folderParent);
+
+        this.modelsTab = new TabItem(folderParent, SWT.NONE);
+        this.modelsTab.setControl(thePanel);
+        this.modelsTab.setText(MODEL_GROUP);
+	}
+	
+	private void createNameOptionsTab(TabFolder folderParent) {
+        // build the SELECT tab
+		Composite thePanel = createNameOptionsPanel(folderParent);
+
+        this.nameOptionsTab = new TabItem(folderParent, SWT.NONE);
+        this.nameOptionsTab.setControl(thePanel);
+        this.nameOptionsTab.setText(CASE_OPTIONS_GROUP);
+	}
+	
+    /*
+     * Create the SQL Display tab panel
+     */
+    private Composite createModelDefinitionPanel( Composite parent ) {
         // Create Group for Model Info
-        final Group modelGroup = WidgetFactory.createGroup(mainPanel,
-        		MODEL_GROUP,
-        GridData.HORIZONTAL_ALIGN_FILL,
-        1, COLUMN_COUNT);
+        final Composite mainPanel = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_FILL | SWT.NO_SCROLL, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(mainPanel);
+        
+        final Group modelGroup = WidgetFactory.createGroup(mainPanel, StringConstants.EMPTY_STRING, GridData.HORIZONTAL_ALIGN_FILL, 1, COLUMN_COUNT);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).applyTo(modelGroup);
+        GridDataFactory.fillDefaults().grab(true,  false).applyTo(modelGroup);
+        mainPanel.getHorizontalBar().setVisible(false);
         
         // Add widgets to page
         WidgetFactory.createLabel(modelGroup, NAME_LABEL);
@@ -272,8 +490,6 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         
-        WidgetFactory.createLabel(mainPanel, "  "); //$NON-NLS-1$
-        
         this.calculateCostingCheckBox = WidgetFactory.createCheckBox(mainPanel, CALCULATE_COSTING_CHECKBOX, 0, 1);
         this.calculateCostingCheckBox.setToolTipText(CALCULATE_COSTING_CHECKBOX_TOOLTIP);
         this.calculateCostingCheckBox.addSelectionListener(new SelectionAdapter() {
@@ -296,12 +512,15 @@ public class JdbcImportOptionsPage extends WizardPage implements
         });
         this.includeCatalogCheckBox.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
         
-        WidgetFactory.createLabel(mainPanel, "  "); //$NON-NLS-1$
-        
-        Group caseOptionsGroup = WidgetFactory.createGroup(mainPanel,
-                CASE_OPTIONS_GROUP,
-                GridData.HORIZONTAL_ALIGN_FILL,
-                1, 2);
+        return mainPanel;
+    }
+    
+    /*
+     * Create the SQL Display tab panel
+     */
+    private Composite createNameOptionsPanel( Composite parent ) {
+        Composite caseOptionsGroup = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_FILL | SWT.NO_SCROLL, 1, 2);
+        caseOptionsGroup.getHorizontalBar().setVisible(false);
         
         this.fullyQualifiedNamesCheckBox = WidgetFactory.createCheckBox(caseOptionsGroup, FULLY_QUALIFIED_CHECKBOX, 0, 2);
         this.fullyQualifiedNamesCheckBox.setToolTipText(FULLY_QUALIFIED_CHECKBOX_TOOLTIP);
@@ -352,6 +571,7 @@ public class JdbcImportOptionsPage extends WizardPage implements
             }
         });
         
+        return caseOptionsGroup;
     }
 
     /**

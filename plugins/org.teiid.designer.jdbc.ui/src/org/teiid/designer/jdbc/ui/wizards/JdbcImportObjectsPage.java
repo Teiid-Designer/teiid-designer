@@ -23,6 +23,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -55,6 +57,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
@@ -64,6 +67,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.jdbc.JdbcException;
 import org.teiid.designer.jdbc.data.Request;
 import org.teiid.designer.jdbc.data.Results;
@@ -85,6 +89,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.AbstractTableLabelProvider;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 
 
 /**
@@ -199,21 +204,34 @@ public class JdbcImportObjectsPage extends WizardPage
     @Override
 	public void createControl( final Composite parent ) {
         // Create page
-        final Composite pg = new Composite(parent, SWT.NONE) {
+//        final Composite pg = new Composite(parent, SWT.NONE) {
+//
+//            @Override
+//            public Point computeSize( final int widthHint,
+//                                      final int heightHint,
+//                                      final boolean changed ) {
+//                final Point size = super.computeSize(widthHint, heightHint, changed);
+//                size.x = 800;
+//                return size;
+//            }
+//        };
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
 
-            @Override
-            public Point computeSize( final int widthHint,
-                                      final int heightHint,
-                                      final boolean changed ) {
-                final Point size = super.computeSize(widthHint, heightHint, changed);
-                size.x = 800;
-                return size;
-            }
-        };
-        pg.setLayout(new GridLayout(COLUMN_COUNT, false));
-        setControl(pg);
+        final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(1, false));
+        
         // Add widgets to page
-        this.splitter = WidgetFactory.createSplitter(pg);
+        this.splitter = WidgetFactory.createSplitter(mainPanel);
         {
             this.objsView = new ViewForm(this.splitter, SWT.BORDER);
             {
@@ -239,6 +257,8 @@ public class JdbcImportObjectsPage extends WizardPage
                 // Add contents to view form
                 this.treeViewer = new TreeViewer(this.objsView, SWT.MULTI | SWT.CHECK | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
                 final Tree tree = this.treeViewer.getTree();
+                GridDataFactory.fillDefaults().hint(120, 120).applyTo(tree);
+                
                 this.objsView.setContent(tree);
                 this.treeViewer.setContentProvider(createTreeContentProvider());
                 
@@ -318,8 +338,8 @@ public class JdbcImportObjectsPage extends WizardPage
             };
         }
         this.splitter.setWeights(SPLITTER_WEIGHTS);
-        this.statusLabel = WidgetFactory.createLabel(pg, GridData.HORIZONTAL_ALIGN_FILL);
-        final Button deselectAllButton = WidgetFactory.createButton(pg, DESELECT_ALL_BUTTON);
+        this.statusLabel = WidgetFactory.createLabel(mainPanel, GridData.HORIZONTAL_ALIGN_FILL);
+        final Button deselectAllButton = WidgetFactory.createButton(mainPanel, DESELECT_ALL_BUTTON);
         deselectAllButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -328,15 +348,14 @@ public class JdbcImportObjectsPage extends WizardPage
             }
         });
 
-        Label spacer = new Label(pg, SWT.NULL);
-        GridData spGridData = new GridData();
-        spGridData.horizontalSpan = 2;
-        spacer.setLayoutData(spGridData);
+        final Group showGroup = WidgetFactory.createGroup(mainPanel, "Show", GridData.HORIZONTAL_ALIGN_FILL, 1, 3);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(5, 5).applyTo(showGroup);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(showGroup);
 
         //=========================        
         // Schema Display Options
         //=========================        
-        this.showAllSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_ALL_SCHEMA_TXT);
+        this.showAllSchemaButton = WidgetFactory.createRadioButton(showGroup, "All schema"); //RADIO_SHOW_ALL_SCHEMA_TXT);
         this.showAllSchemaButton.setToolTipText(RADIO_SHOW_ALL_SCHEMA_TIP);
         this.showAllSchemaButton.addSelectionListener(new SelectionAdapter() {
 
@@ -346,7 +365,7 @@ public class JdbcImportObjectsPage extends WizardPage
                 saveWidgetValues();
             }
         });
-        this.showSelectedSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_SELECTED_SCHEMA_TXT);
+        this.showSelectedSchemaButton = WidgetFactory.createRadioButton(showGroup, "Only selected schema"); // RADIO_SHOW_SELECTED_SCHEMA_TXT);
         this.showSelectedSchemaButton.setToolTipText(RADIO_SHOW_SELECTED_SCHEMA_TIP);
         this.showSelectedSchemaButton.addSelectionListener(new SelectionAdapter() {
 
@@ -356,7 +375,7 @@ public class JdbcImportObjectsPage extends WizardPage
                 saveWidgetValues();
             }
         });
-        this.showFilteredSchemaButton = WidgetFactory.createRadioButton(pg, RADIO_SHOW_FILTERED_SCHEMA_TXT);
+        this.showFilteredSchemaButton = WidgetFactory.createRadioButton(showGroup, "Select and connection filtered schema"); //RADIO_SHOW_FILTERED_SCHEMA_TXT);
         this.showFilteredSchemaButton.setToolTipText(RADIO_SHOW_FILTERED_SCHEMA_TIP);
         this.showFilteredSchemaButton.addSelectionListener(new SelectionAdapter() {
 
@@ -366,6 +385,11 @@ public class JdbcImportObjectsPage extends WizardPage
                 saveWidgetValues();
             }
         });
+        
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
+        
         restoreWidgetValues();
     }
     

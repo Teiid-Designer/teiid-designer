@@ -13,12 +13,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.datatools.connectivity.db.generic.ui.wizard.NewJDBCFilteredCPWizard;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
@@ -26,6 +29,7 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -56,6 +60,7 @@ import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -196,17 +201,27 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
     @SuppressWarnings("unused")
 	@Override
 	public void createControl( final Composite parent ) {
-        // Create page
-        final Composite pg = new Composite(parent, SWT.NONE);
-        pg.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        pg.setLayout(new GridLayout(1, false));
-        setControl(pg);
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(1, false));
+
         // Add widgets to page
         
         // ---------------------------------------------------------------------------
         // ----------- Connection Profile SOURCE Panel ---------------------------------
         // ---------------------------------------------------------------------------
-        Group profileGroup = WidgetFactory.createGroup(pg, SOURCE_LABEL, SWT.NONE, 2, PROFILE_COLUMN_COUNT);
+        Group profileGroup = WidgetFactory.createGroup(mainPanel, SOURCE_LABEL, SWT.NONE, 2, PROFILE_COLUMN_COUNT);
         profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         ArrayList sourceList = new ArrayList(this.mgr.getJdbcSources().size());
@@ -260,7 +275,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         // ---------------------------------------------------------------------------
         // ----------- JDBC Metadata Processor Panel ---------------------------------
         // ---------------------------------------------------------------------------
-        Group processorPanel = WidgetFactory.createGroup(pg, getString("processorCombo"), SWT.NONE, 1); //$NON-NLS-1$
+        Group processorPanel = WidgetFactory.createGroup(mainPanel, getString("processorCombo"), SWT.NONE, 1); //$NON-NLS-1$
         processorPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         Collection<String> processors = JdbcModelProcessorManager.getMetadataProcessorNames();
@@ -300,7 +315,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         // ---------------------------------------------------------------------------
         // ----------- Connection Properties EDIT Panel ---------------------------------
         // ---------------------------------------------------------------------------
-        this.editPanel = WidgetFactory.createGroup(pg, getString("propertiesLabel"), //$NON-NLS-1$
+        this.editPanel = WidgetFactory.createGroup(mainPanel, getString("propertiesLabel"), //$NON-NLS-1$
                                                    GridData.HORIZONTAL_ALIGN_FILL, // | GridData.FILL_VERTICAL,
                                                    1,
                                                    EDIT_PANEL_COLUMN_COUNT);
@@ -322,7 +337,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         });
         
         TEIID_PROFILE_GROUP: {
-	        this.teiidProfileGroup = WidgetFactory.createGroup(pg,  TEIID_PROFILE_OPTIONS_GROUP_LABEL,
+	        this.teiidProfileGroup = WidgetFactory.createGroup(mainPanel,  TEIID_PROFILE_OPTIONS_GROUP_LABEL,
 	        		GridData.HORIZONTAL_ALIGN_FILL, 1, 1);
 	        
 	        this.isVdbSourceModelCheckBox = WidgetFactory.createCheckBox(teiidProfileGroup, IS_VDB_SOURCE_MODEL_CHECKBOX, 0, 1);
@@ -336,7 +351,7 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
 	        });
 	        Text descriptionText = new Text(teiidProfileGroup,  SWT.WRAP | SWT.READ_ONLY);
 	        GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
-	        gd.heightHint = 80;
+	        gd.heightHint = 60;
 	        gd.widthHint = 500;
 	        descriptionText.setLayoutData(gd);
 	        descriptionText.setText(IS_VDB_SOURCE_MODEL_CHECKBOX_MESSAGE);
@@ -354,7 +369,14 @@ public class JdbcSourceSelectionPage extends AbstractWizardPage
         if (validatePage()) {
             setMessage(INITIAL_MESSAGE);
         }
+
+
+//        scrolledComposite.setContent(mainPanel);
+//        scrolledComposite.setMinSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        scrolledComposite.sizeScrolledPanel();
         
+        setControl(hostPanel);
+
         updateWidgetsState();
     }
 
