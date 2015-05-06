@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -34,13 +35,14 @@ import org.teiid.designer.runtime.ui.wizards.webservices.util.RestProcedure;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilder;
 import org.teiid.designer.runtime.ui.wizards.webservices.util.WebArchiveBuilderFactory;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
 import org.teiid.designer.webservice.WebServicePlugin;
 
 
 /**
  * @since 8.0
  */
-public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements InternalModelerWarUiConstants {
+public class RestWarDeploymentInfoDialog extends ScrollableTitleAreaDialog implements InternalModelerWarUiConstants {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTANTS
@@ -123,7 +125,7 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
 
     @Override
     protected Control createDialogArea( Composite parent ) {
-        Composite contents = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
+        Composite contents = (Composite) super.createDialogArea(parent); //WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1);
         warDeploymentInfoDataPage = null;
         warDeploymentInfoDataPage = new RestWarDeploymentInfoDataPage(contents, this, this.theVdb, this.initialStatus, this.designerProperties);
 
@@ -133,6 +135,8 @@ public class RestWarDeploymentInfoDialog extends TitleAreaDialog implements Inte
         this.setTitle(MESSAGE_TITLE);
         this.setMessage(INITIAL_MESSAGE);
 
+        sizeScrolledPanel();
+        
         return contents;
     }
 
