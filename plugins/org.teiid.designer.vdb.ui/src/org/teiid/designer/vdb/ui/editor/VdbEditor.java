@@ -15,6 +15,7 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -24,6 +25,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -102,6 +104,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.common.widget.DefaultContentProvider;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.properties.extension.VdbFileDialogUtil;
@@ -1551,16 +1554,19 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void createPartControl( final Composite parent ) {
-        parent.setLayout(new GridLayout());
-        parent.setLayoutData(new GridData());
+    	parent.setLayout(new GridLayout());
+    	parent.setLayoutData(new GridData());
+        
+        DefaultScrolledComposite scrollable = new DefaultScrolledComposite(parent);
+        Composite parentPanel = scrollable.getPanel();
 
         if (vdb == null) {
-            createErrorPanel(parent);
+            createErrorPanel(parentPanel);
             return;
         }
       
         { // Header Panel
-	        Composite headerPanel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL, 1, 6);
+	        Composite headerPanel = WidgetFactory.createPanel(parentPanel, SWT.NONE, GridData.FILL, 1, 6);
 	        Label projectLabel = new Label(headerPanel, SWT.NONE);
 	        projectLabel.setText(Messages.vdbEditor_location);
 	        
@@ -1598,7 +1604,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
         
         // So create another Tab Folder (bottom oriented)
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(parent);
+        CTabFolder tabFolder = WidgetFactory.createTabFolder(parentPanel);
         tabFolder.setTabPosition(SWT.BOTTOM);
         { // models tab
             CTabItem leftTab = new CTabItem(tabFolder, SWT.NONE);
@@ -1622,6 +1628,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         ModelerCore.getWorkspace().addResourceChangeListener(this);
         
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        
+        scrollable.sizeScrolledPanel();
     }
     
     private void addSynchronizePanel(Composite parent ) {
