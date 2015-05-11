@@ -16,9 +16,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IDialogBlockedHandler;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,6 +34,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.dnd.DND;
@@ -40,7 +48,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.HyperlinkSettings;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
@@ -48,25 +58,37 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.ArrayUtil;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.core.Annotation;
+import org.teiid.designer.metamodels.core.AnnotationContainer;
+import org.teiid.designer.metamodels.core.CoreFactory;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.metamodels.webservice.Input;
 import org.teiid.designer.metamodels.webservice.Interface;
 import org.teiid.designer.metamodels.webservice.Operation;
+import org.teiid.designer.metamodels.webservice.Output;
+import org.teiid.designer.metamodels.webservice.WebServiceFactory;
 import org.teiid.designer.metamodels.xml.XmlDocument;
 import org.teiid.designer.query.sql.proc.IAssignmentStatement;
 import org.teiid.designer.query.sql.proc.IBlock;
 import org.teiid.designer.query.sql.proc.IDeclareStatement;
+import org.teiid.designer.relational.RelationalPlugin;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.actions.TransformationSourceManager;
 import org.teiid.designer.transformation.ui.editors.SqlPanelDropTargetListener;
 import org.teiid.designer.transformation.ui.editors.TransformationObjectEditorPage;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlEditorPanel;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlAttribute;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.tree.AbstractTreeContentProvider;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -132,6 +154,9 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
     private Section sqlPanelSection, treeSection;
     private SqlEditorPanel sqlEditorPanel;
     private boolean allowsExternalEdits = true;
+    
+	Action createOperationAction;
+	Action deleteAction;
 
     @Override
     protected boolean allowsMultipleTabs() {
@@ -238,7 +263,10 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
         super.setNoUpdatesAllowed(true);
         ((OperationEditorNotifyChangedListener)this.opEditorPage.getNotifyChangedListener()).initialize(this.opViewer,
                                                                                                         this.opEditorPage.getEditorResource());
-
+        // Add a Context Menu
+        final MenuManager columnMenuManager = new MenuManager();
+        this.opViewer.getControl().setMenu(columnMenuManager.createContextMenu(parent));
+        
         this.opViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
@@ -247,11 +275,74 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
 
                     @Override
 					public void run() {
+                    	columnMenuManager.removeAll();
+    					columnMenuManager.add(createOperationAction);
+    					columnMenuManager.add(new Separator());
+    					columnMenuManager.add(deleteAction);
+    					
                         operationSelected(event);
                     }
                 });
             }
         });
+        
+        this.createOperationAction = new Action("Create Operation") {
+            @Override
+            public void run() {
+                boolean requiredStart = ModelerCore.startTxn(true, true, "Create New Operation", this); //$NON-NLS-1$
+                boolean succeeded = false;
+         
+            	try {
+					createOperation();
+					
+					succeeded = true;
+				} catch (ModelWorkspaceException e) {
+					Util.log(e);
+				}  finally {
+		            // if we started the txn, commit it.
+		            if (requiredStart) {
+		                if (succeeded) {
+		                    ModelerCore.commitTxn();
+		                    opViewer.refresh();
+		                } else {
+		                    ModelerCore.rollbackTxn();
+		                }
+		            }
+		        }
+            }
+		};
+		this.createOperationAction.setImageDescriptor(WebServiceUiPlugin.getDefault().getImageDescriptor(NEW_OPERATION_ICON));
+		
+        this.deleteAction = new Action("Delete") {
+            @Override
+            public void run() {
+                boolean requiredStart = ModelerCore.startTxn(true, true, "Create New Operation", this); //$NON-NLS-1$
+                boolean succeeded = false;
+         
+            	try {
+                	IStructuredSelection sel = (IStructuredSelection)opViewer.getSelection();
+                	EObject eObject = (EObject)sel.getFirstElement();
+                	ModelerCore.getModelEditor().delete(eObject);
+					
+					succeeded = true;
+				} catch (ModelerCoreException e) {
+					Util.log(e);
+				}  finally {
+		            // if we started the txn, commit it.
+		            if (requiredStart) {
+		                if (succeeded) {
+		                    ModelerCore.commitTxn();
+		                    opViewer.refresh();
+		                } else {
+		                    ModelerCore.rollbackTxn();
+		                }
+		            }
+		        }
+            }
+		};
+		this.deleteAction.setImageDescriptor(
+				PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE));
+
         // Create editor within splitter with declaration area at top
         this.vSplitter = new SashForm(this.hSplitter, SWT.VERTICAL);
         this.declarationsToAssignments = new TreeMap(new Comparator() {
@@ -823,4 +914,79 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
     public void setAllowsExternalEdits( boolean theAllowExternalEdits ) {
         this.allowsExternalEdits = theAllowExternalEdits;
     }
+    
+    
+    private void createOperation() throws ModelWorkspaceException {
+    	IStructuredSelection sel = (IStructuredSelection)this.opViewer.getSelection();
+    	Object obj = sel.getFirstElement();
+    	Interface intFace = null;
+    	
+    	if( obj instanceof Operation ) {
+    		intFace = ((Operation)obj).getInterface();
+    	} else if( obj instanceof Interface ) {
+    		intFace = (Interface)obj;
+    	}
+    	
+    	NewOperationDialog dialog = new NewOperationDialog(getControl().getShell(), intFace);
+    	
+    	if( dialog.open() == IDialogConstants.OK_ID ) {
+    		WebServiceOperation operationData = dialog.getOperationData();
+    		WebServiceFactory factory = WebServiceFactory.eINSTANCE;
+    		ModelResource modelResource = ModelUtilities.getModelResource(intFace);
+    		
+    		Operation operation = factory.createOperation();
+    		operation.setName(operationData.getName());
+    		intFace.getOperations().add(operation);
+    		
+    		// Description
+    		String desc = operationData.getDescription();
+    		if( desc != null ) {
+                try {
+                    AnnotationContainer annotations = null;
+                    final Iterator contents = modelResource.getEmfResource().getContents().iterator();
+                    while (contents.hasNext()) {
+                        final Object next = contents.next();
+                        if (next instanceof AnnotationContainer) {
+                            annotations = (AnnotationContainer)next;
+                            break;
+                        }
+                    } // while
+
+                    if (annotations == null) {
+                        annotations = CoreFactory.eINSTANCE.createAnnotationContainer();
+                        modelResource.getEmfResource().getContents().add(annotations);
+                    }
+
+                    Annotation annotation = annotations.findAnnotation(operation);
+                    if (annotation == null) {
+                        annotation = CoreFactory.eINSTANCE.createAnnotation();
+                        annotations.getAnnotations().add(annotation);
+                        annotation.setAnnotatedObject(operation);
+                    }
+
+                    annotation.setDescription(desc);
+                } catch (ModelWorkspaceException e) {
+                    Util.log(IStatus.ERROR, "Error setting description on new resource");
+                }
+    		}
+    		
+    		// Input
+    		Input input = factory.createInput();
+    		input.setName(operationData.getInputMessageName());
+    		operation.setInput(input);
+    		input.setContentElement(operationData.getInputContentViaElement());
+    		
+    		Output output = factory.createOutput();
+    		output.setName(operationData.getOutputMessageName());
+    		operation.setOutput(output);
+    		output.setContentElement(operationData.getOutputContentViaElement());
+    		output.setXmlDocument(operationData.getXmlDocument());
+    		
+//        	MessageDialog.openInformation(getControl().getShell(), "Create New Operation", " < NOT YET IMPLEMENTED> ");
+    	}
+    	
+
+    }
+    
+
 }
