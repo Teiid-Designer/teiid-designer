@@ -77,6 +77,8 @@ public interface IInternalUiConstants extends IUiConstants {
         String SERVICE_ICON = OBJ16 + "service_obj.gif"; //$NON-NLS-1$
         String OPERATION_ICON = OBJ16 + "operation_obj.gif"; //$NON-NLS-1$
         String PORT_ICON = OBJ16 + "port_obj.gif"; //$NON-NLS-1$
+        
+        String NEW_OPERATION_ICON = OBJ16 + "new_operation.png"; //$NON-NLS-1$
     }
 
     /**

@@ -35,6 +35,7 @@ public interface RelationalConstants {
         public static final int AP = 11;
         public static final int RESULT_SET = 12;
         public static final int INDEX = 13;
+        public static final int OPERATION = 14;
     }
     
     /**
@@ -54,7 +55,8 @@ public interface RelationalConstants {
     	"Unique Constraint", //$NON-NLS-1$
     	"Access Pattern", //$NON-NLS-1$
     	"Result Set", //$NON-NLS-1$
-    	"Index" //$NON-NLS-1$
+    	"Index", //$NON-NLS-1$
+    	"Operation" //$NON-NLS-1$
     };
     
     /**
@@ -76,6 +78,7 @@ public interface RelationalConstants {
         public static final String ACCESSPATTERN = "ACCESS-PATTERN"; //$NON-NLS-1$
         public static final String RESULTSET = "RESULT-SET"; //$NON-NLS-1$
         public static final String INDEX = "INDEX"; //$NON-NLS-1$
+        public static final String OPERATION = "OPERATION"; //$NON-NLS-1$
     }
     
     // ALL_EXCEPT_LIKE, LIKE_ONLY, SEARCHABLE, UNSEARCHABLE

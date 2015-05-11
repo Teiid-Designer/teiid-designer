@@ -8,15 +8,22 @@
 package org.teiid.designer.webservice.ui.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -26,6 +33,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSchemaContent;
+import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -33,9 +43,13 @@ import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.util.FileUrl;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelFileUtil;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.webservice.Input;
@@ -57,6 +71,8 @@ import org.teiid.designer.transformation.util.TransformationSqlHelper;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.SystemClipboardUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.webservice.IWebServiceResource;
 import org.teiid.designer.webservice.procedure.XsdInstanceNode;
 import org.teiid.designer.webservice.ui.IInternalUiConstants;
@@ -728,6 +744,82 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
             MessageDialog.openError(theShell, UTIL.getString(PREFIX + "dialog.viewFile.title", new Object[] {txt}), //$NON-NLS-1$
                                     getString("dialog.viewFile.msg")); //$NON-NLS-1$
         }
+    }
+
+    /*
+     * Walk the workspace looking for all global Element Declarations.
+     * Must load any unloaded XSDs.
+     */
+    public static Collection<EObject> getGlobalElementDeclarations( final EObject object ) {
+        final ArrayList<EObject> result = new ArrayList<EObject>();
+
+        final ResourceSet resourceSet = ((EObject)object).eResource().getResourceSet();
+        for (final Iterator<Resource> it = resourceSet.getResources().iterator(); it.hasNext();) {
+            final Object o = it.next();
+            if (o instanceof Resource) {
+                final Resource resource = (Resource)o;
+                try {
+                    // We only care about XSDResources
+                    if (resource instanceof XSDResourceImpl) {
+                        // If the resource is not loaded, load first
+                        if (!resource.isLoaded()) {
+                            resource.load(resourceSet.getLoadOptions());
+                        }
+
+                        // Only get the immediate roots as we only care about global Elements
+                        final XSDSchema schema = ((XSDResourceImpl)resource).getSchema();
+                        if (schema != null) {
+                            final Iterator<XSDSchemaContent> roots = schema.getContents().iterator();
+                            while (roots.hasNext()) {
+                                final Object element = roots.next();
+                                // Include all global non abstract elements in the result
+                                if (element instanceof XSDElementDeclaration
+                                    && !((XSDElementDeclaration)element).isAbstract()) {
+                                    result.add((EObject) element);
+                                }
+
+                            } // while
+                        }
+                    }
+                } catch (IOException ioe) {
+                	UTIL.log(ioe);
+                }
+            }
+        }
+
+        return result;
+    }
+    
+    /*
+     * Walk the workspace looking for all global Element Declarations.
+     * Must load any unloaded XSDs.
+     */
+    public static Collection<EObject> getXmlDocumentsForProject( final EObject object ) {
+        final ArrayList<EObject> result = new ArrayList<EObject>();
+        
+        ModelResource mr = ModelUtilities.getModelResource(object);
+        IProject proj = mr.getResource().getProject();
+        
+        Collection<IFile> projectFiles = DotProjectUtils.getAllProjectResources(proj);
+
+        for ( IFile file : projectFiles ) {
+            ModelResource modelRes = ModelUtilities.getModelResource(file);
+            if( modelRes != null && ModelIdentifier.isXmlViewModel(modelRes) ) {
+            	try {
+					for( Object child : modelRes.getEObjects() ) {
+						if( child instanceof XmlDocument ) {
+							result.add((EObject)child);
+						}
+					}
+				} catch (ModelWorkspaceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	
+            }
+        }
+
+        return result;
     }
 
     // ===========================================================================================================================
