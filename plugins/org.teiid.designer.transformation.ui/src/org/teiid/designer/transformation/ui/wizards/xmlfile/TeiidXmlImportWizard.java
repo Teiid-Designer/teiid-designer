@@ -39,8 +39,6 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
     TeiidXmlImportOptionsPage optionsPage;
     
     TeiidXmlImportSourcePage sourcePage;
-//    
-//    private Properties designerProperties;
     
 	/**
 	 * 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -34,6 +35,7 @@ import org.eclipse.datatools.connectivity.IProfileListener;
 import org.eclipse.datatools.connectivity.ProfileManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -87,10 +89,12 @@ import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.FileSystemLabelProvider;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -208,15 +212,20 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 	@Override
 	public void createControl(Composite parent) {
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout());
-		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
-				| GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 
-		setControl(mainPanel);
 		// Add widgets to page
 
 		createProfileGroup(mainPanel);
@@ -224,6 +233,10 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		createFolderContentsListGroup(mainPanel);
 
 		createSourceModelGroup(mainPanel);
+		
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
 
 		setMessage(INITIAL_MESSAGE);
 	}
@@ -236,6 +249,7 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 		Group profileGroup = WidgetFactory.createGroup(parent,
 				FLAT_FILE_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        ((GridData)profileGroup.getLayoutData()).minimumWidth = 400;
 
 		this.srcLabelProvider = new LabelProvider() {
 
@@ -296,11 +310,10 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 	private void createFolderContentsListGroup(Composite parent) {
 		String groupLabel = getString("folderXmlContentsGroup"); //$NON-NLS-1$
 
-		Group folderContentsGroup = WidgetFactory.createGroup(parent,
-				groupLabel, SWT.FILL, 3, 2);
+		Group folderContentsGroup = WidgetFactory.createGroup(parent, groupLabel, SWT.FILL, 3, 2);
 		GridData gd_1 = new GridData(GridData.FILL_BOTH);
-		gd_1.heightHint = 180;
 		folderContentsGroup.setLayoutData(gd_1);
+		((GridData)folderContentsGroup.getLayoutData()).minimumHeight = 140;
 
 		Label locationLabel = new Label(folderContentsGroup, SWT.NONE);
 		locationLabel.setText(getString("folderLocation")); //$NON-NLS-1$
@@ -327,7 +340,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 
 	private void createFileTableViewer(Composite parent) {
 		this.fileViewer = new TableViewerBuilder(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK );
-		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 160).span(2, SWT.DEFAULT).applyTo(fileViewer.getTableComposite());
+		GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 60).span(2, SWT.DEFAULT).applyTo(fileViewer.getTableComposite());
+		((GridData)fileViewer.getTableComposite().getLayoutData()).minimumHeight = 60;
 
 		fileContentProvider = new DataFolderContentProvider();
 		this.fileViewer.setContentProvider(fileContentProvider);

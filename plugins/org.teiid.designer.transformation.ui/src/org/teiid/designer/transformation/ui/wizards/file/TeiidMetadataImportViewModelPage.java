@@ -51,6 +51,7 @@ import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -124,14 +125,20 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	@Override
 	public void createControl(Composite parent) {
 		creatingControl = true;
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout(2, false));
-		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 
-		setControl(mainPanel);
 
 		setMessage(INITIAL_MESSAGE);
 
@@ -150,6 +157,10 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		createViewModelGroup(mainPanel);
 
 		setViewHelpMessage();
+		
+		scrolledComposite.sizeScrolledPanel();
+
+		setControl(mainPanel);
 
 		creatingControl = false;
 
@@ -189,6 +200,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 		GridData gd_vg = new GridData(GridData.FILL_HORIZONTAL);
 		gd_vg.horizontalSpan = 2;
 		viewGroup.setLayoutData(gd_vg);
+        ((GridData)viewGroup.getLayoutData()).minimumWidth = 400;
 
 		Label locationLabel = new Label(viewGroup, SWT.NULL);
 		locationLabel.setText(getString("location")); //$NON-NLS-1$

@@ -10,6 +10,8 @@ package org.teiid.designer.transformation.ui.wizards.xmlfile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
@@ -34,8 +36,10 @@ import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo
 import org.teiid.designer.transformation.ui.wizards.xmlfile.panels.ColumnsInfoPanel;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.panels.XmlFileContentsGroup;
 import org.teiid.designer.ui.common.graphics.ColorManager;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -76,20 +80,29 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	@Override
 	public void createControl(Composite parent) {
 		creatingControl = true;
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+        
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout());
-		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		setControl(mainPanel);
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 
 		setMessage(Messages.XmlConfigPageInitialMessage);
 		
 		createColumnsDefinitionSplitter(mainPanel);
         
         createXmlTableSqlGroup(mainPanel);
+        
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
         
 		creatingControl = false;
 
@@ -113,7 +126,8 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 		SashForm splitter = new SashForm(columnsPanel, SWT.HORIZONTAL);
 		GridData gid = new GridData(GridData.FILL_BOTH);
 		gid.horizontalSpan = 2;
-		gid.heightHint = 300;
+		gid.heightHint = 200;
+		gid.widthHint = 400;
 		
 		splitter.setLayoutData(gid);
 
@@ -127,7 +141,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	@Override
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-
+		
 		if (visible) {
 			TeiidXmlFileInfo xmlFileInfo = null;
 			for( TeiidXmlFileInfo xmlInfo : info.getXmlFileInfos() ) {
