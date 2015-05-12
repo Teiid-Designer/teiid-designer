@@ -41,7 +41,7 @@
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.help" version="3.6.0" match="compatible"/>
       <import plugin="org.jdom" version="1.1.1" match="compatible"/>
-      <import plugin="org.jboss.tools.locus.sf.saxon" version="9.2.1" match="compatible"/>
+      <import plugin="org.jboss.tools.locus.sf.saxon" version="9.5.1" match="compatible"/>
       <import plugin="org.apache.poi" version="3.9.0" match="compatible"/>
       <import plugin="org.apache.xerces"/>
       <import plugin="org.eclipse.emf" version="2.6.0" match="compatible"/>
