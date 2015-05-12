@@ -70,7 +70,7 @@ public class EditColumnsPanel {
         column.setLabelProvider(new ColumnDataLabelProvider(0));
 
         
-        column = columnsViewer.createColumn(SWT.LEFT, 10, 20, true);
+        column = columnsViewer.createColumn(SWT.LEFT, 10, 30, true);
         column.getColumn().setText(Messages.ForOrdinality);
         column.setLabelProvider(new ColumnDataLabelProvider(1));
         column.setEditingSupport(new OrdinalityEditingSupport(this.columnsViewer.getTableViewer()));

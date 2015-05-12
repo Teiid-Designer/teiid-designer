@@ -20,6 +20,11 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
  *  Utility class that simplifies using a scrolled composite in a dialog or wizard
+ *  
+ *  Note that for the horizontal scroll to appear at least one sub-panel (child of the internalPanle) Composite needs 
+ *  to have a minimum width or width hint set on it.
+ *  
+ *  i.e.     ((GridData)someGroup.getLayoutData()).minimumWidth = 400;
  */
 public class DefaultScrolledComposite extends ScrolledComposite {
 	Composite internalPanel;
@@ -53,7 +58,7 @@ public class DefaultScrolledComposite extends ScrolledComposite {
             bar.setPageIncrement(60);
         }
         
-        internalPanel = WidgetFactory.createPanel(this, SWT.NONE, GridData.FILL_BOTH);
+        internalPanel = new Composite(this, SWT.NONE);
         setContent(internalPanel);
 	}
 	
