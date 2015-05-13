@@ -157,7 +157,6 @@ public final class DataSourcePanel extends Composite implements UiConstants {
         table.setLinesVisible(true);
         table.setLayout(new TableLayout());
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        ((GridData)table.getLayoutData()).heightHint = table.getItemHeight() * this.visibleTableRows;
 
         // create columns
         TableViewerColumn column = dataSourcesViewer.createColumn(SWT.LEFT, 30, 30, true);

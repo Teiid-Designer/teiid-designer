@@ -10,6 +10,7 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.osgi.util.NLS;
@@ -31,6 +32,7 @@ import org.teiid.designer.teiidimporter.ui.panels.DataSourcePropertiesPanel;
 //import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -88,10 +90,22 @@ public class SelectDataSourcePage extends AbstractWizardPage
 
     @Override
     public void createControl( Composite theParent ) {
-        Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
-        pnl.setLayout(new GridLayout(1, false));
+        final Composite hostPanel = new Composite(theParent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
 
-        setControl(pnl);
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite pnl = scrolledComposite.getPanel();
+        pnl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        pnl.setLayout(new GridLayout(1, false));
+        
+        setControl(hostPanel);
 
         // Must have a running 8+ server to use this wizard.
         if(!importManager.isValidImportServer()) {
@@ -137,7 +151,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
         this.dataSourcePanel.addListener(this.propertiesPanel);
         this.dataSourcePanel.addListener(this);
         
-        //LayoutDebugger.debugLayout(pnl);
+        scrolledComposite.sizeScrolledPanel();
         
         // Validate the page
         validatePage();
@@ -150,6 +164,7 @@ public class SelectDataSourcePage extends AbstractWizardPage
     private void createDataSourcesGroup(Composite parent) {
         Group dataSourcesGroup = WidgetFactory.createGroup(parent, Messages.selectDataSourcePage_dataSourceGroupText, SWT.NONE); 
         dataSourcesGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        ((GridData)dataSourcesGroup.getLayoutData()).heightHint = 180;
         
         int visibleRows = 5;
         this.dataSourcePanel = new DataSourcePanel(dataSourcesGroup, visibleRows, importManager);

@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -158,6 +159,7 @@ public final class DataSourcePropertiesPanel extends Composite implements UiCons
         // Create Table Viewer
         int tableStyle = SWT.BORDER | SWT.V_SCROLL | SWT.FULL_SELECTION;
         this.propertiesViewer = new TableViewerBuilder(panel, tableStyle);
+        ((GridData)propertiesViewer.getTableComposite().getLayoutData()).minimumHeight = 120;
         
         // Create 'Required' label below table 
         Label reqdLabel = new Label(panel,SWT.NONE);
