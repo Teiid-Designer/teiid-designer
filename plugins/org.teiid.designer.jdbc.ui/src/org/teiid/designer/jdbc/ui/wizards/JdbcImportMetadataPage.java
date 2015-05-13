@@ -159,6 +159,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
         final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
         mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         mainPanel.setLayout(new GridLayout(2, false));
+        ((GridData)mainPanel.getLayoutData()).minimumWidth = 400;
         
         // Add widgets to page
         final Composite checkBoxPanel = WidgetFactory.createPanel(mainPanel, SWT.NO_TRIM, GridData.VERTICAL_ALIGN_BEGINNING);
@@ -218,6 +219,7 @@ final class JdbcImportMetadataPage extends WizardPage implements InternalUiConst
             }
         };
         this.listPanel = new ListPanel(mainPanel, TABLE_TYPES_GROUP, ctrlr, SWT.READ_ONLY | SWT.MULTI, ITEMS_COMMONLY_ALL_SELECTED);
+        ((GridData)listPanel.getLayoutData()).minimumHeight = 240;
         this.listPanel.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			@Override
 			public void selectionChanged(final SelectionChangedEvent event) {

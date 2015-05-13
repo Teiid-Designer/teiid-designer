@@ -85,6 +85,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
+import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
@@ -299,8 +300,12 @@ public class JdbcImportObjectsPage extends WizardPage
 
                     @Override
 					public void selectionChanged( final SelectionChangedEvent event ) {
-                        JdbcNode node = (JdbcNode)((IStructuredSelection)event.getSelection()).getFirstElement();
-                        nodeSelected(node);
+                    	if( !SelectionUtilities.isMultiSelection(event.getSelection()) ) {
+	                        JdbcNode node = (JdbcNode)((IStructuredSelection)event.getSelection()).getFirstElement();
+	                        nodeSelected(node);
+                    	} else {
+                    		nodeSelected(null);
+                    	}
                     }
                 });
                 // Add listener to expand/collapse node when double-clicked
