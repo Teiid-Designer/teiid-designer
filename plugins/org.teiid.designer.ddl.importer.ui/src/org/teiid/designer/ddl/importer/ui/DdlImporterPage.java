@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -34,21 +36,18 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ExpandAdapter;
-import org.eclipse.swt.events.ExpandEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.ExpandBar;
-import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -66,6 +65,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.util.ErrorHandler;
@@ -87,7 +87,6 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private static final int MAX_HISTORY = 5;
     private static final List<ModelType> MODEL_TYPES = Arrays.asList(ModelType.PHYSICAL_LITERAL, ModelType.VIRTUAL_LITERAL);
     private static final List<String> DIALECT_TYPES = Arrays.asList(TEIID_DIALECT,SQL92_DIALECT,ORACLE_DIALECT,POSTGRES_DIALECT,DERBY_DIALECT);
-    private static final String DDL_FILE_CONTENTS_SHOWN_SETTING = "ddlFileContentsShown"; //$NON-NLS-1$
     private static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING = "optToCreateModelEntitiesForUnsupportedDdl"; //$NON-NLS-1$
     private static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING = "optToSetModelEntityDescription"; //$NON-NLS-1$
 
@@ -105,13 +104,14 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private Button generateDefaultSQLCheckBox;
     private Button optToSetModelEntityDescriptionCheckBox;
     private Button optToCreateModelEntitiesForUnsupportedDdlCheckBox;
-    private ExpandBar ddlFileContentsExpanderBar;
-    private ExpandItem ddlFileContentsExpander;
     private Text ddlFileContentsBox;
+    
+    private TabItem modelDefinitionTab;
+    private TabItem optionsTab;
+    private TabItem ddlTab;
 
     private String initDlgFolderName;
     private boolean generateModelName = true;
-    private int ddlFileContentsBoxY;
 
     /**
      * DdlImporterPage constructor
@@ -265,8 +265,23 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         final IDialogSettings settings = getDialogSettings();
         initDlgFolderName = settings.get(INITIAL_DIALOG_FOLDER_SETTING);
 
-        final Composite panel = WidgetFactory.createPanel(parent, SWT.NONE, GridData.FILL_BOTH, 1, PANEL_GRID_SPAN);
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite panel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        panel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        panel.setLayout(new GridLayout(3, false));
+
         setControl(panel);
+
 
         Composite ddlFileGroup = WidgetFactory.createGroup(panel, DdlImporterUiI18n.FILE_GROUP_LABEL, GridData.FILL_HORIZONTAL, 3, 3);
         // ----------------------------------------
@@ -353,13 +368,82 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         // Disable Combo initially - auto-select is checked
         dialectCombo.setEnabled(false);
         
+        
+		TabFolder tabFolder = createTabFolder(panel);
+		
+		createModelDefinitionTab(tabFolder);
+		createNameOptionsTab(tabFolder);
+		createDdlTab(tabFolder);
+		
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
 
-        Composite modelInfoGroup = WidgetFactory.createGroup(panel, DdlImporterUiI18n.MODEL_GROUP_LABEL, GridData.FILL_HORIZONTAL, 3, 3);
+        if (selectedFile != null) {
+            if (relationalModel(selectedFile)) {
+                modelNameFld.setText(selectedFile.getFullPath().removeFileExtension().lastSegment());
+                generateModelName = false;
+            } else {
+                String ext = selectedFile.getFileExtension();
+                if (ext != null) {
+                    ext = ext.toLowerCase();
+                    if ("ddl".equals(ext) || "sql".equals(ext)) ddlFileCombo.setText(selectedFile.getLocation().toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+        } else validate();
+    }
+    
+    private TabFolder createTabFolder(Composite parent) {
+        TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER | SWT.NO_SCROLL);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(tabFolder);
+        return tabFolder;
+    }
+    
+	private void createModelDefinitionTab(TabFolder folderParent) {
+        // build the SELECT tab
+		Composite thePanel = createModelDefinitionPanel(folderParent);
+
+        this.modelDefinitionTab = new TabItem(folderParent, SWT.NONE);
+        this.modelDefinitionTab.setControl(thePanel);
+        this.modelDefinitionTab.setText(DdlImporterUiI18n.MODEL_GROUP_LABEL);
+	}
+	
+	private void createNameOptionsTab(TabFolder folderParent) {
+        // build the SELECT tab
+		Composite thePanel = createOptionsPanel(folderParent);
+
+        this.optionsTab = new TabItem(folderParent, SWT.NONE);
+        this.optionsTab.setControl(thePanel);
+        this.optionsTab.setText(DdlImporterUiI18n.OPTIONS_GROUP_LABEL);
+	}
+	
+	private void createDdlTab(TabFolder folderParent) {
+        // build the SELECT tab
+		Composite thePanel = createDdlPanel(folderParent);
+
+        this.ddlTab = new TabItem(folderParent, SWT.NONE);
+        this.ddlTab.setControl(thePanel);
+        this.ddlTab.setText(DdlImporterUiI18n.DDL_FILE_CONTENTS_TITLE);
+	}
+	
+    /*
+     * 
+     * Create the model definition panel
+     */
+    private Composite createModelDefinitionPanel( Composite parent ) {
+        // Create Group for Model Info
+        final Composite mainPanel = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_FILL, 1, 3);
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 10).applyTo(mainPanel);
+        
+        if( mainPanel.getHorizontalBar() != null ) {
+        	mainPanel.getHorizontalBar().setVisible(false);
+        }
+        
         // ----------------------------------------
         // Model Folder controls
         // ----------------------------------------
-        WidgetFactory.createLabel(modelInfoGroup, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_FOLDER_LABEL);
-        modelFolderFld = WidgetFactory.createTextField(modelInfoGroup, GridData.FILL_HORIZONTAL);
+        WidgetFactory.createLabel(mainPanel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_FOLDER_LABEL);
+        modelFolderFld = WidgetFactory.createTextField(mainPanel, GridData.FILL_HORIZONTAL);
         final IContainer modelFolder = importer.modelFolder();
         if (modelFolder != null) modelFolderFld.setText(modelFolder.getFullPath().toString());
         modelFolderFld.addModifyListener(new ModifyListener() {
@@ -369,7 +453,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 validate();
             }
         });
-        button = WidgetFactory.createButton(modelInfoGroup, DdlImporterUiI18n.CHOOSE_BUTTON);
+        Button button = WidgetFactory.createButton(mainPanel, DdlImporterUiI18n.CHOOSE_BUTTON);
         if (projects.length == 0) button.setEnabled(false);
         else button.addSelectionListener(new SelectionAdapter() {
 
@@ -382,8 +466,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         // ----------------------------------------
         // Model Name controls
         // ----------------------------------------
-        WidgetFactory.createLabel(modelInfoGroup, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_NAME_LABEL);
-        modelNameFld = WidgetFactory.createTextField(modelInfoGroup);
+        WidgetFactory.createLabel(mainPanel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_NAME_LABEL);
+        modelNameFld = WidgetFactory.createTextField(mainPanel);
         modelNameFld.addModifyListener(new ModifyListener() {
 
             @Override
@@ -391,7 +475,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 modelNameModified();
             }
         });
-        button = WidgetFactory.createButton(modelInfoGroup, DdlImporterUiI18n.CHOOSE_BUTTON);
+        button = WidgetFactory.createButton(mainPanel, DdlImporterUiI18n.CHOOSE_BUTTON);
         if (projects.length == 0) button.setEnabled(false);
         else button.addSelectionListener(new SelectionAdapter() {
 
@@ -404,8 +488,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         // ----------------------------------------
         // Model Type controls
         // ----------------------------------------
-        WidgetFactory.createLabel(modelInfoGroup, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_TYPE_LABEL);
-        final Composite modelTypePanel = WidgetFactory.createPanel(modelInfoGroup, SWT.NONE, GridData.HORIZONTAL_ALIGN_FILL, 2, 2);
+        WidgetFactory.createLabel(mainPanel, GridData.VERTICAL_ALIGN_CENTER, DdlImporterUiI18n.MODEL_TYPE_LABEL);
+        final Composite modelTypePanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.HORIZONTAL_ALIGN_FILL, 2, 2);
         modelTypeCombo = WidgetFactory.createCombo(modelTypePanel, SWT.READ_ONLY, GridData.HORIZONTAL_ALIGN_FILL, MODEL_TYPES,   new LabelProvider() {
 
             @Override
@@ -442,83 +526,8 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         });
         generateDefaultSQLCheckBox.setEnabled(false);
         modelTypeCombo.select(modelTypeCombo.indexOf(ModelType.PHYSICAL_LITERAL.getDisplayName()));
-
-        Composite optionsGroup = WidgetFactory.createGroup(panel, DdlImporterUiI18n.OPTIONS_GROUP_LABEL, GridData.FILL_HORIZONTAL, 3, 1);
-        // ----------------------------------------
-        // Option checkboxes
-        // ----------------------------------------
-        optToSetModelEntityDescriptionCheckBox = WidgetFactory.createCheckBox(optionsGroup,
-                                                                              DdlImporterUiI18n.OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL,
-                                                                              0,
-                                                                              PANEL_GRID_SPAN,
-                                                                              settings.getBoolean(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING));
-        optToSetModelEntityDescriptionCheckBox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                optToSetModelEntityDescriptionModified();
-            }
-        });
         
-        // make sure importer has restored setting
-        optToSetModelEntityDescriptionModified();
-
-        optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(optionsGroup,
-                                                                                         DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
-                                                                                         0,
-                                                                                         PANEL_GRID_SPAN,
-                                                                                         settings.getBoolean(OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING));
-        optToCreateModelEntitiesForUnsupportedDdlCheckBox.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected( final SelectionEvent event ) {
-                optToCreateModelEntitiesForUnsupportedDdlModified();
-            }
-        });
-        
-        // make sure importer has restored setting
-        optToCreateModelEntitiesForUnsupportedDdlModified();
-
-        // ----------------------------------------
-        // File contents area
-        // ----------------------------------------
-        ddlFileContentsExpanderBar = new ExpandBar(panel, SWT.NONE);
-        final GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.horizontalSpan = PANEL_GRID_SPAN;
-        ddlFileContentsExpanderBar.setLayoutData(gridData);
-        ddlFileContentsExpanderBar.addExpandListener(new ExpandAdapter() {
-
-            @Override
-            public void itemExpanded( final ExpandEvent event ) {
-                sizeDdlFileContents();
-            }
-        });
-        ddlFileContentsExpanderBar.addControlListener(new ControlAdapter() {
-
-            @Override
-            public void controlResized( final ControlEvent event ) {
-                panelResized();
-            }
-        });
-        ddlFileContentsExpander = new ExpandItem(ddlFileContentsExpanderBar, SWT.NONE);
-        ddlFileContentsExpander.setText(DdlImporterUiI18n.DDL_FILE_CONTENTS_TITLE);
-        ddlFileContentsBox = WidgetFactory.createTextBox(ddlFileContentsExpanderBar);
-        ddlFileContentsExpander.setControl(ddlFileContentsBox);
-        ddlFileContentsBox.setEditable(false);
-        ddlFileContentsExpander.setExpanded(settings.getBoolean(DDL_FILE_CONTENTS_SHOWN_SETTING));
-
-        if (selectedFile != null) {
-            if (relationalModel(selectedFile)) {
-                modelNameFld.setText(selectedFile.getFullPath().removeFileExtension().lastSegment());
-                generateModelName = false;
-            } else {
-                String ext = selectedFile.getFileExtension();
-                if (ext != null) {
-                    ext = ext.toLowerCase();
-                    if ("ddl".equals(ext) || "sql".equals(ext)) ddlFileCombo.setText(selectedFile.getLocation().toString()); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            }
-        } else validate();
+        return mainPanel;
     }
 
     void ddlFileModified() {
@@ -543,6 +552,73 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
             }
         }
         ddlFileContentsBox.setTopIndex(0);
+    }
+    
+    /*
+     * 
+     * Create the Options panel
+     */
+    private Composite createOptionsPanel( Composite parent ) {
+        final IDialogSettings settings = getDialogSettings();
+        // Create Group for Model Info
+        final Composite mainPanel = WidgetFactory.createPanel(parent, GridData.HORIZONTAL_ALIGN_FILL, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(mainPanel);
+        
+        if( mainPanel.getHorizontalBar() != null ) {
+        	mainPanel.getHorizontalBar().setVisible(false);
+        }
+
+        // ----------------------------------------
+        // Option checkboxes
+        // ----------------------------------------
+        optToSetModelEntityDescriptionCheckBox = WidgetFactory.createCheckBox(mainPanel,
+                                                                              DdlImporterUiI18n.OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL,
+                                                                              0,
+                                                                              PANEL_GRID_SPAN,
+                                                                              settings.getBoolean(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING));
+        optToSetModelEntityDescriptionCheckBox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                optToSetModelEntityDescriptionModified();
+            }
+        });
+        
+        // make sure importer has restored setting
+        optToSetModelEntityDescriptionModified();
+
+        optToCreateModelEntitiesForUnsupportedDdlCheckBox = WidgetFactory.createCheckBox(mainPanel,
+                                                                                         DdlImporterUiI18n.OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL,
+                                                                                         0,
+                                                                                         PANEL_GRID_SPAN,
+                                                                                         settings.getBoolean(OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING));
+        optToCreateModelEntitiesForUnsupportedDdlCheckBox.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                optToCreateModelEntitiesForUnsupportedDdlModified();
+            }
+        });
+        
+        // make sure importer has restored setting
+        optToCreateModelEntitiesForUnsupportedDdlModified();
+
+        return mainPanel;
+    }
+    
+    /*
+     * 
+     * Create the DDL panel
+     */
+    private Composite createDdlPanel( Composite parent ) {
+        // Create Group for Model Info
+        final Composite mainPanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(mainPanel);
+        
+        ddlFileContentsBox = WidgetFactory.createTextBox(mainPanel);
+        ddlFileContentsBox.setEditable(false);
+        
+        return mainPanel;
     }
 
     void ddlFileSelected() {
@@ -601,9 +677,9 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         importer.setOptToSetModelEntityDescription(optToSetModelEntityDescriptionCheckBox.getSelection());
     }
 
-    void panelResized() {
-        if (ddlFileContentsExpander.getExpanded()) sizeDdlFileContents();
-    }
+//    void panelResized() {
+//        if (ddlFileContentsExpander.getExpanded()) sizeDdlFileContents();
+//    }
 
     boolean relationalModel( final IFile file ) {
         if (file == null) return false;
@@ -650,7 +726,6 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
                 settings.put(HISTORY_SETTING, history);
             }
         }
-        settings.put(DDL_FILE_CONTENTS_SHOWN_SETTING, ddlFileContentsExpander.getExpanded());
         settings.put(OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_SETTING, optToSetModelEntityDescriptionCheckBox.getSelection());
         settings.put(OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_SETTING,
                      optToCreateModelEntitiesForUnsupportedDdlCheckBox.getSelection());
@@ -675,17 +750,11 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     @Override
     public void setVisible( final boolean visible ) {
         super.setVisible(visible);
-        if (ddlFileContentsExpander.getExpanded()) sizeDdlFileContents();
         if (importer.modelFolder() != null) ddlFileCombo.setFocus();
     }
 
     private IResource showChooseDialog( final ElementTreeSelectionDialog dialog ) {
         return dialog.open() == Window.OK ? ((IResource)dialog.getFirstResult()) : null;
-    }
-
-    void sizeDdlFileContents() {
-        if (ddlFileContentsBoxY == 0) ddlFileContentsBoxY = ddlFileContentsBox.getLocation().y;
-        ddlFileContentsExpander.setHeight(ddlFileContentsExpanderBar.getSize().y - ddlFileContentsBoxY);
     }
 
     void tabFromDdlFileCombo() {
