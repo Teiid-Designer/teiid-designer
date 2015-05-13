@@ -406,6 +406,12 @@ public class DdlImporter {
             if (modelFolderPath.segmentCount() == 1) modelFolder = root.getProject(projectName);
             else modelFolder = root.getFolder(modelFolderPath);
         } else modelFolder = (IContainer)resource;
+        
+        // need to re-set model name so model file gets re-generated
+        
+        if( importManager.getModelName() != null ) {
+        	setModelName(importManager.getModelName());
+        }
     }
 
     /**

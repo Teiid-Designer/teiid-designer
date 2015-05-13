@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -46,6 +48,7 @@ import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -84,7 +87,19 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
 
     @Override
     public void createControl( Composite theParent ) {
-        Composite pnl = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
+        final Composite hostPanel = new Composite(theParent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite pnl = scrolledComposite.getPanel();
+        pnl.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         pnl.setLayout(new GridLayout(1, false));
 
         setControl(pnl);
@@ -123,6 +138,10 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
 			}
 		});
         
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
+        
         // Validate the page
         validatePage();
     }
@@ -158,6 +177,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         // -------------------------------------
         Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTargetPage_TgtModelDefnGroup, SWT.NONE, 1, 3);
         sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        ((GridData)sourceGroup.getLayoutData()).widthHint = 400;
 
         // -----------------------
         // Location controls
@@ -243,6 +263,9 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
                                                                        new ModelingResourceFilter(),
                                                                        new ModelProjectSelectionStatusValidator());
+        if( folder == null ) {
+        	return; // do nothing
+        }
 
         if (folder != null && targetModelContainerText != null) {
             this.importManager.setTargetModelLocation(folder.getFullPath().makeRelative());
