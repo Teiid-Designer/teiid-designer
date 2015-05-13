@@ -9,14 +9,14 @@ package org.teiid.designer.teiidimporter.ui.wizard;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
@@ -44,6 +44,7 @@ import org.teiid.designer.teiidimporter.ui.panels.TranslatorHelper;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.TranslatorOverridePropertyEditingSupport;
 import org.teiid.designer.ui.viewsupport.TranslatorPropertyLabelProvider;
@@ -81,10 +82,20 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
 
     @Override
     public void createControl( Composite theParent ) {
-        Composite mainPanel = WidgetFactory.createPanel(theParent, SWT.FILL, GridData.FILL_HORIZONTAL);
-        mainPanel.setLayout(new GridLayout(1, false));
+        final Composite hostPanel = new Composite(theParent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
 
-        setControl(mainPanel);
+        final Composite mainPanel = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(1, false));
 
         // Must have a running 8+ server to use this wizard.
         if(!importManager.isValidImportServer()) {
@@ -113,6 +124,9 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         // Panel for Optional Properties
         new ImportPropertiesPanel(mainPanel, importManager);
         
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
         
         // Validate the page
         validatePage();
