@@ -91,6 +91,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.FileSystemLabelProvider;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -222,12 +223,18 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 
 	@Override
 	public void createControl(Composite parent) {
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout());
-		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 
 		setControl(mainPanel);
 		// Add widgets to page
@@ -237,6 +244,10 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		createFolderContentsListGroup(mainPanel);
 		
 		createSourceModelGroup(mainPanel);
+		
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
 		
 		setMessage(INITIAL_MESSAGE);
 	}
@@ -316,6 +327,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
 		Group folderContentsGroup = WidgetFactory.createGroup(parent, groupLabel, SWT.FILL, 3, 2);
 		GridData gd_1 = new GridData(GridData.FILL_BOTH);
 		gd_1.heightHint = 180;
+		gd_1.widthHint = 400;
 		folderContentsGroup.setLayoutData(gd_1);
 
 		Label locationLabel = new Label(folderContentsGroup, SWT.NONE);

@@ -23,6 +23,7 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.TeiidMetadataImportInfo;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
@@ -55,18 +56,24 @@ public class TeiidFlatFileImportOptionsPage extends AbstractWizardPage implement
 	@Override
 	public void createControl(Composite parent) {
 		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout());
-		GridData mpGD = new GridData(GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL);
-		mpGD.widthHint = 400;
-		mainPanel.setLayoutData(mpGD);
-		//mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		setControl(mainPanel);
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
+        
 		// Add widgets to page
 		Group descriptionGroup = WidgetFactory.createGroup(mainPanel, getString("description"), GridData.FILL_HORIZONTAL); //$NON-NLS-1$
-
+        ((GridData)descriptionGroup.getLayoutData()).widthHint = 400;
+		
         Text descriptionText = new Text(descriptionGroup,  SWT.WRAP | SWT.READ_ONLY);
         GridData gd = new GridData(SWT.FILL, SWT.CENTER, true, false);
         gd.heightHint = 120;
@@ -99,6 +106,10 @@ public class TeiidFlatFileImportOptionsPage extends AbstractWizardPage implement
 				}
 			}
 		});
+		
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
 
 		setMessage(getString("message")); //$NON-NLS-1$
 
