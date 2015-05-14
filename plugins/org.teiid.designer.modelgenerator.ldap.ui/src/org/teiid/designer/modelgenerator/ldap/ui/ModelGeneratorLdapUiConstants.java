@@ -62,9 +62,11 @@ public interface ModelGeneratorLdapUiConstants {
         String IMPORT_LDAP_ICON = CTOOL16 + "import_ldap_wiz.gif"; //$NON-NLS-1$
         String LDAP_OBJECTS_ICON = CTOOL16 + "ldap_banner_icon.png"; //$NON-NLS-1$
         String WIZARD_BANNER = WIZBAN + "ldap_banner_icon.png"; //$NON-NLS-1$
-        String CHECKED_CHECKBOX = CTOOL16 + "checkbox-checked.png"; //$NON-NLS-1$
-        String UNCHECKED_CHECKBOX = CTOOL16 + "checkbox-unchecked.png"; //$NON-NLS-1$
         String LDAP_REFRESH_ICON = CTOOL16 + "refresh.gif"; //$NON-NLS-1$
+        String LDAP_DELETE_ICON = CTOOL16 + "delete.gif"; //$NON-NLS-1$
+        String LDAP_ADD_ICON = CTOOL16 + "add.gif"; //$NON-NLS-1$
+        String LDAP_TABLE_ICON = CTOOL16 + "table.png"; //$NON-NLS-1$
+        String LDAP_COLUMN_ICON = CTOOL16 + "column.png"; //$NON-NLS-1$
     }
 
     /**

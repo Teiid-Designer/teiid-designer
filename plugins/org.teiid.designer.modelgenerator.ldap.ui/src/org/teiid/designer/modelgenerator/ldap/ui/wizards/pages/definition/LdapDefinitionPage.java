@@ -8,7 +8,11 @@
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.definition;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import org.apache.directory.studio.connection.ui.RunnableContextRunner;
+import org.apache.directory.studio.ldapbrowser.core.jobs.FetchBaseDNsRunnable;
+import org.apache.directory.studio.ldapbrowser.core.model.IBrowserConnection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -16,6 +20,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -24,12 +29,12 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -37,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.datatools.profiles.ldap.ILdapProfileConstants;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
@@ -57,7 +63,7 @@ import org.teiid.designer.ui.viewsupport.ModelNameUtil;
  */
 public class LdapDefinitionPage extends WizardPage
     implements IChangeListener, IProfileChangedListener, ModelGeneratorLdapUiConstants, ModelGeneratorLdapUiConstants.Images,
-    ModelGeneratorLdapUiConstants.HelpContexts {
+    ModelGeneratorLdapUiConstants.HelpContexts, ILdapProfileConstants, StringConstants {
 
     /** <code>IDialogSetting</code>s key for saved dialog height. */
     private static final String DIALOG_HEIGHT = "dialogHeight"; //$NON-NLS-1$
@@ -76,10 +82,6 @@ public class LdapDefinitionPage extends WizardPage
     /* The import manager. */
     private final LdapImportWizardManager importManager;
 
-    /** Source and target text fields */
-    private Text ldapURIText;
-    private Text rootDNText;
-
     private Button newCPButton;
     private Button editCPButton;
 
@@ -87,6 +89,11 @@ public class LdapDefinitionPage extends WizardPage
     private ILabelProvider profileLabelProvider;
 
     private ConnectionProfileWorker profileWorker;
+
+    /** Source and target text fields */
+    private Text ldapURIText;
+    private Combo baseDNCombo;
+    private Button fetchBaseDnsButton;
 
     private SourceModelPanel sourceModelPanel;
 
@@ -169,16 +176,12 @@ public class LdapDefinitionPage extends WizardPage
                                                                  profileLabelProvider,
                                                                  true);
         LdapPageUtils.blueForeground(this.connectionProfilesCombo);
-        this.connectionProfilesCombo.addSelectionListener(new SelectionListener() {
+        this.connectionProfilesCombo.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 // Need to sync the worker with the current profile
                 handleConnectionProfileSelected();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
 
@@ -203,8 +206,8 @@ public class LdapDefinitionPage extends WizardPage
         });
 
         // options group
-        Group ldapURIGroup = WidgetFactory.createGroup(pnl, getString("ldapLabel_text"), SWT.FILL, 2); //$NON-NLS-1$
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 5).applyTo(ldapURIGroup);
+        Group ldapURIGroup = WidgetFactory.createGroup(pnl, getString("ldapLabel_title"), SWT.FILL, 2); //$NON-NLS-1$
+        GridLayoutFactory.fillDefaults().numColumns(3).margins(10, 5).applyTo(ldapURIGroup);
         GridDataFactory.fillDefaults().grab(true, false).applyTo(ldapURIGroup);
         LdapPageUtils.setBackground(ldapURIGroup, pnl);
 
@@ -218,18 +221,55 @@ public class LdapDefinitionPage extends WizardPage
         ldapURIText.setToolTipText(getString("ldapURITextField_tooltip")); //$NON-NLS-1$
         LdapPageUtils.blueForeground(ldapURIText);
         ldapURIText.setEditable(false);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(ldapURIText);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(ldapURIText);
 
-        Label rootDNLabel = new Label(ldapURIGroup, SWT.NONE);
-        rootDNLabel.setText(getString("rootDNLabel_text")); //$NON-NLS-1$
-        LdapPageUtils.setBackground(rootDNLabel, pnl);
-        GridDataFactory.fillDefaults().grab(false, false).applyTo(rootDNLabel);
+        Label dnLabel = new Label(ldapURIGroup, SWT.NONE);
+        dnLabel.setText(getString("dnLabel_text")); //$NON-NLS-1$
+        LdapPageUtils.setBackground(dnLabel, pnl);
+        GridDataFactory.fillDefaults().grab(false, false).applyTo(dnLabel);
 
-        rootDNText = new Text(ldapURIGroup, SWT.BORDER | SWT.SINGLE);
-        rootDNText.setToolTipText(getString("rootDNTextField_tooltip")); //$NON-NLS-1$
-        LdapPageUtils.blueForeground(rootDNText);
-        rootDNText.setEditable(false);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(rootDNText);
+        baseDNCombo = new Combo(ldapURIGroup, SWT.DROP_DOWN);
+        baseDNCombo.setToolTipText(getString("dnTextField_tooltip")); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(baseDNCombo);
+        baseDNCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                IConnectionProfile profile = importManager.getConnectionProfile();
+                Properties properties = profile.getBaseProperties();
+                properties.setProperty(ILdapProfileConstants.BASE_DN, baseDNCombo.getText());
+
+                importManager.resetBrowserConnection();
+            }
+        });
+
+        fetchBaseDnsButton = new Button(ldapURIGroup, SWT.PUSH);
+        fetchBaseDnsButton.setEnabled(false);
+        fetchBaseDnsButton.setText(getString("fetchBaseDNs" ) ); //$NON-NLS-1$
+        GridDataFactory.fillDefaults().applyTo(fetchBaseDnsButton);
+		fetchBaseDnsButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IBrowserConnection browserConnection = importManager.getBrowserConnection();
+				if (browserConnection == null)
+					return;
+
+				FetchBaseDNsRunnable runnable = new FetchBaseDNsRunnable(browserConnection);
+				IStatus status = RunnableContextRunner.execute(runnable, getContainer(), true);
+				if (status.isOK()) {
+					if (!runnable.getBaseDNs().isEmpty()) {
+						List<String> baseDNs = runnable.getBaseDNs();
+						baseDNCombo.setItems(baseDNs.toArray(new String[baseDNs
+								.size()]));
+						baseDNCombo.select(0);
+					} else {
+						MessageDialog.openWarning(Display.getDefault()
+								.getActiveShell(), getString("fetchBaseDNs"), //$NON-NLS-1$
+								getString("noBaseDNReturnedFromServer")); //$NON-NLS-1$
+						baseDNCombo.setItems(new String[0]);
+					}
+				}
+			}
+		});
 
         // Defines Location and Name values for source model
         sourceModelPanel = new SourceModelPanel(pnl, this.importManager);
@@ -334,7 +374,7 @@ public class LdapDefinitionPage extends WizardPage
                 if (profileWorker.getProfiles().isEmpty()) {
                     setErrorMessage(getString("no_profiles_configured")); //$NON-NLS-1$
                     ldapURIText.setText(EMPTY_STR);
-                    rootDNText.setText(EMPTY_STR);
+                    baseDNCombo.setText(EMPTY_STR);
                     return;
                 }
 
@@ -357,7 +397,7 @@ public class LdapDefinitionPage extends WizardPage
 
             Properties props = profile.getBaseProperties();
             ldapURIText.setText(props.getProperty(ILdapProfileConstants.URL_PROP_ID));
-            rootDNText.setText(props.getProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID));
+
             setErrorMessage(null);
             setMessage(getString("select_profile")); //$NON-NLS-1$
         } finally {
@@ -424,12 +464,6 @@ public class LdapDefinitionPage extends WizardPage
                     job.schedule();
                 }
             }
-        }
-
-        String rootDN = connectionProfile.getBaseProperties().getProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID);
-        if (rootDN == null || rootDN.length() == 0) {
-            WizardUtil.setPageComplete(this, getString("no_root_dn"), IMessageProvider.ERROR); //$NON-NLS-1$
-            return;
         }
 
         if (this.importManager.getSourceModelName() == null || this.importManager.getSourceModelName().length() == 0) {
@@ -510,6 +544,7 @@ public class LdapDefinitionPage extends WizardPage
 
     private void setConnectionProfileInternal(final IConnectionProfile profile) {
         this.importManager.setConnectionProfile(profile);
+        this.fetchBaseDnsButton.setEnabled(importManager.getConnectionProfile() != null);
     }
 
     @Override

@@ -9,7 +9,7 @@ package org.teiid.designer.modelgenerator.ldap.ui.wizards.impl;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.naming.directory.Attribute;
+import org.apache.directory.studio.ldapbrowser.core.model.IAttribute;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 
@@ -34,9 +34,9 @@ public class LdapAttributeNode implements ILdapAttributeNode {
      * @param associatedEntry
      * @param attribute
      */
-    public LdapAttributeNode(ILdapEntryNode associatedEntry, Attribute attribute) {
+    public LdapAttributeNode(ILdapEntryNode associatedEntry, IAttribute attribute) {
         this.associatedEntry = associatedEntry;
-        this.id = attribute.getID();
+        this.id = attribute.getDescription();
         this.label = id;
     }
 
@@ -99,7 +99,7 @@ public class LdapAttributeNode implements ILdapAttributeNode {
         if (maxValueLength == 0)
             return DEFAULT_VALUE_LENGTH;
 
-        return maxValueLength ;
+        return maxValueLength;
     }
 
     @Override

@@ -25,6 +25,11 @@ public interface StringConstants {
     String SPACE = " "; //$NON-NLS-1$
 
     /**
+     * A hyphen.
+     */
+    String HYPHEN = "-"; //$NON-NLS-1$
+
+    /**
      * A star.
      */
     String STAR = "*"; //$NON-NLS-1$
@@ -89,4 +94,9 @@ public interface StringConstants {
      * Equals
      */
     String EQUALS = "="; //$NON-NLS-1$
+
+    /**
+     * Colon
+     */
+	String COLON = ":"; //$NON-NLS-1$
 }

@@ -8,18 +8,23 @@
 package org.teiid.designer.modelgenerator.ldap.ui.wizards;
 
 import java.util.Collection;
-
-
+import org.apache.directory.studio.ldapbrowser.core.model.IEntry;
+import org.teiid.core.designer.util.StringConstants;
 
 /**
  *
  */
-public interface ILdapEntryNode {
+public interface ILdapEntryNode extends StringConstants {
 
     /**
      * LDAP context separator
      */
-    String SEPARATOR = ","; //$NON-NLS-1$
+    String SEPARATOR = COMMA;
+
+    /**
+     * @return the original entry from the search
+     */
+    IEntry getEntry();
 
     /**
      * @return parent of this node
@@ -62,11 +67,6 @@ public interface ILdapEntryNode {
     boolean isRoot();
 
     /**
-     * @return Is this node context relative
-     */
-    boolean isRelative();
-
-    /**
      * @return attributes
      */
     Collection<ILdapAttributeNode> getAttributes();
@@ -88,4 +88,14 @@ public interface ILdapEntryNode {
      * @return true if removed, false otherwise
      */
     boolean removeAttribute(ILdapAttributeNode attribute);
+
+    /**
+     * @return true if node has children
+     */
+    boolean hasChildren();
+
+    /**
+     * @return node's children
+     */
+    Object[] getChildren();
 }
