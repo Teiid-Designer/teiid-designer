@@ -550,6 +550,9 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     }
 
     private void displayNoExecPlanMessage() {
+        if (visualisation == null)
+            return;
+
         try {
             File noPlanFile = new File(ExecutionPlanConverter.TEMP_DIRECTORY, "NoExecutionPlan.html");  //$NON-NLS-1$
             if (! noPlanFile.exists()) {
@@ -560,7 +563,7 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
                 writer.close();
             }
             noPlanFile.deleteOnExit();
-            
+
             visualisation.setUrl(noPlanFile.toURI().toURL().toString());
         } catch (IOException ex) {
             Activator.log(ex);
@@ -568,6 +571,9 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     }
 
     private void displayHTMLExecPlan(String execPlan) {
+        if (visualisation == null)
+            return;
+
         try {
             ExecutionPlanConverter converter = new ExecutionPlanConverter();
             String url = converter.convert(execPlan);

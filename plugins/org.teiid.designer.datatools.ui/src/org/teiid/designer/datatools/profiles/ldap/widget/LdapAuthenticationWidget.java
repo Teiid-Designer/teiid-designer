@@ -111,9 +111,18 @@ public class LdapAuthenticationWidget extends Composite implements Listener, ICh
 
     private void initControls() {
         String authMethod = connProperties.getProperty(ILdapProfileConstants.AUTHENTICATION_METHOD);
-        int index = authMethod == null ? 0 : 1;
-        if (ILdapProfileConstants.AUTHMETHOD_SIMPLE.equals(authMethod))
+        int index = 1;
+        if (ILdapProfileConstants.AUTHMETHOD_NONE.equals(authMethod))
+            index = 0;
+        else if (ILdapProfileConstants.AUTHMETHOD_SIMPLE.equals(authMethod))
             index = 1; // Simple Selection
+        else {
+            //
+            // Only None and Simple are supported at the moment
+            //
+            setProperty(ILdapProfileConstants.AUTHENTICATION_METHOD, ILdapProfileConstants.AUTHMETHOD_SIMPLE);
+            index = 1;
+        }
 
         authenticationMethodCombo.select(index);
 
@@ -142,7 +151,11 @@ public class LdapAuthenticationWidget extends Composite implements Listener, ICh
             UTIL.getString("LdapAuthenticationWidget.SimpleAuthentication")}; //$NON-NLS-1$
         authenticationMethodCombo = new Combo(scrolled, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
         authenticationMethodCombo.setItems(authMethods);
-        authenticationMethodCombo.select(0);
+        //
+        // Teiid ONLY supports authenticated connections at the moment
+        //
+        authenticationMethodCombo.select(1);
+        authenticationMethodCombo.setEnabled(false);
         GridDataFactory.swtDefaults().align(GridData.FILL, GridData.BEGINNING).grab(true, false).applyTo(authenticationMethodCombo);
 
         usernameLabel = new Label(scrolled, SWT.NONE);
