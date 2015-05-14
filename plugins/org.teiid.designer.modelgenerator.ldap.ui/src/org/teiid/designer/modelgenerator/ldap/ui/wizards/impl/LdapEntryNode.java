@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.naming.directory.SearchResult;
+import org.apache.directory.studio.ldapbrowser.core.model.IEntry;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 
@@ -20,30 +20,29 @@ import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
  */
 public class LdapEntryNode implements ILdapEntryNode {
 
+    private final ILdapEntryNode parent;
+
+    private final IEntry entry;
+
     private String label;
 
     /*
      * Used for the suffix of source name which can include a scope, eg.
      * sourceBaseName?search_scope?objectClass_name
      */
-    private String sourceNameSuffix = ""; //$NON-NLS-1$
+    private String sourceNameSuffix = EMPTY_STRING;
 
-    private final String sourceBaseName;
-
-    private final ILdapEntryNode parent;
-
-    private final boolean relative;
 
     private final Set<ILdapAttributeNode> attributes = new HashSet<ILdapAttributeNode>();
 
+
     /**
-     * @param searchResult
      * @param parent
+     * @param entry
      */
-    public LdapEntryNode(SearchResult searchResult, ILdapEntryNode parent) {
-        this.sourceBaseName = searchResult.getName();
+    public LdapEntryNode(ILdapEntryNode parent, IEntry entry) {
         this.parent = parent;
-        this.relative = searchResult.isRelative();
+        this.entry = entry;
         setLabel(getSourceBaseName());
     }
 
@@ -53,13 +52,23 @@ public class LdapEntryNode implements ILdapEntryNode {
     }
 
     @Override
-    public boolean isRelative() {
-        return relative;
+    public ILdapEntryNode getParent() {
+        return parent;
     }
 
     @Override
-    public ILdapEntryNode getParent() {
-        return parent;
+    public IEntry getEntry() {
+        return entry;
+    }
+
+    @Override
+    public Object[] getChildren() {
+        return new Object[0];
+    }
+
+    @Override
+    public boolean hasChildren() {
+        return false;
     }
 
     /**
@@ -67,16 +76,12 @@ public class LdapEntryNode implements ILdapEntryNode {
      */
     @Override
     public String getSourceBaseName() {
-        return this.sourceBaseName;
+        return entry.getRdn().getName();
     }
 
     @Override
     public String getSourceName() {
-        if (isRelative()) {
-            return getSourceBaseName() + SEPARATOR + parent.getSourceName();
-        }
-
-        return getSourceBaseName();
+        return entry.getDn().getName();
     }
 
     /**
@@ -125,8 +130,7 @@ public class LdapEntryNode implements ILdapEntryNode {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.parent == null) ? 0 : this.parent.hashCode());
-        result = prime * result + (this.relative ? 1231 : 1237);
-        result = prime * result + ((this.sourceBaseName == null) ? 0 : this.sourceBaseName.hashCode());
+        result = prime * result + ((this.entry == null) ? 0 : this.entry.hashCode());
         return result;
     }
 
@@ -139,10 +143,9 @@ public class LdapEntryNode implements ILdapEntryNode {
         if (this.parent == null) {
             if (other.parent != null) return false;
         } else if (!this.parent.equals(other.parent)) return false;
-        if (this.relative != other.relative) return false;
-        if (this.sourceBaseName == null) {
-            if (other.sourceBaseName != null) return false;
-        } else if (!this.sourceBaseName.equals(other.sourceBaseName)) return false;
+        if (this.entry == null) {
+            if (other.entry != null) return false;
+        } else if (!this.entry.equals(other.entry)) return false;
         return true;
     }
 }

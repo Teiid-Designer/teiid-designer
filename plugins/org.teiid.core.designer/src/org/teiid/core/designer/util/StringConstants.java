@@ -29,6 +29,11 @@ public interface StringConstants {
     String SPACE = " "; //$NON-NLS-1$
 
     /**
+     * A hyphen.
+     */
+    String HYPHEN = "-"; //$NON-NLS-1$
+
+    /**
      * A star.
      */
     String STAR = "*"; //$NON-NLS-1$
@@ -340,5 +345,4 @@ public interface StringConstants {
      * The String "\r"
      */
     String CARRIAGE_RETURN = "\r"; //$NON-NLS-1$
-
 }

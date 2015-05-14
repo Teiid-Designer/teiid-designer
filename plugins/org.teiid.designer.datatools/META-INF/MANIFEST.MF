@@ -15,7 +15,10 @@ Require-Bundle: org.teiid.core.designer;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.ui.common;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
  org.codehaus.jackson.core;bundle-version="[1.6.0,2.0.0)",
- org.codehaus.jackson.mapper;bundle-version="[1.6.0,2.0.0)"
+ org.codehaus.jackson.mapper;bundle-version="[1.6.0,2.0.0)",
+ org.apache.directory.studio.common.core;bundle-version="2.0.0",
+ org.apache.directory.studio.connection.core;bundle-version="2.0.0",
+ org.apache.directory.studio.ldapbrowser.core;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools,

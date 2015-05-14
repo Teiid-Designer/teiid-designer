@@ -13,9 +13,11 @@ import java.util.Iterator;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -24,7 +26,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -40,12 +41,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Tree;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
-import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiPlugin;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizard;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapPageUtils;
@@ -62,7 +62,7 @@ public class LdapColumnsPage extends WizardPage
 
     private static final String NULL_STRING = ""; //$NON-NLS-1$
 
-    private static final int[] SPLITTER_WEIGHTS = new int[] {30, 70};
+    private static final int[] SPLITTER_WEIGHTS = new int[] {40, 60};
 
     private final LdapImportWizardManager importManager;
 
@@ -70,7 +70,7 @@ public class LdapColumnsPage extends WizardPage
     private ILabelProvider labelProvider;
 
     private SashForm splitter;
-    private ViewForm objsView;
+
     private CheckboxTreeViewer treeViewer;
 
     private Text columnNameText;
@@ -156,7 +156,10 @@ public class LdapColumnsPage extends WizardPage
 
         for (ILdapAttributeNode node : oldSelection) {
             treeViewer.setChecked(node, false);
+            nodeChecked(node, false);
         }
+
+        setPageStatus();
     }
 
     private void setNonEditable(Text control) {
@@ -188,30 +191,40 @@ public class LdapColumnsPage extends WizardPage
         // Add widgets to page
         this.splitter = WidgetFactory.createSplitter(pg);
 
-        this.objsView = new ViewForm(this.splitter, SWT.BORDER);
-
-        CLabel ldapLabel = new CLabel(this.objsView, SWT.NONE);
-        ldapLabel.setImage(ModelGeneratorLdapUiPlugin.getDefault().getImage(LDAP_OBJECTS_ICON));
-        GridDataFactory.swtDefaults().applyTo(ldapLabel);
-
-        // Add title label to view form's title bar
-        this.objsView.setTopLeft(ldapLabel);
+        Group treeComposite = new Group(splitter, SWT.BORDER);
+        treeComposite.setText(getString("attrTreeTitle")); //$NON-NLS-1$
+        treeComposite.setFont(JFaceResources.getBannerFont());
+        GridLayoutFactory.fillDefaults().margins(10, 5).applyTo(treeComposite);
 
         // Add contents to view form
-        this.treeViewer = new CheckboxTreeViewer(this.objsView, SWT.SINGLE | SWT.BORDER);
+        this.treeViewer = new CheckboxTreeViewer(treeComposite, SWT.SINGLE | SWT.BORDER);
         this.treeViewer.setUseHashlookup(true);
-        final Tree tree = this.treeViewer.getTree();
-        this.objsView.setContent(tree);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(this.treeViewer.getTree());
 
         this.treeViewer.setContentProvider(contentProvider);
         this.treeViewer.setLabelProvider(labelProvider);
+        this.treeViewer.setCheckStateProvider(new ICheckStateProvider() {
+
+            @Override
+            public boolean isGrayed(Object element) {
+                return element instanceof ILdapEntryNode;
+            }
+
+            @Override
+            public boolean isChecked(Object element) {
+                return element instanceof ILdapEntryNode;
+            }
+        });
 
         this.treeViewer.addCheckStateListener(new ICheckStateListener() {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 Object element = event.getElement();
-                if (! (element instanceof ILdapAttributeNode))
+
+                if (!(element instanceof ILdapAttributeNode)) {
+                    event.getCheckable().setChecked(element, true);
                     return;
+                }
 
                 ILdapAttributeNode node = (ILdapAttributeNode) element;
                 nodeChecked(node, event.getChecked());
@@ -291,6 +304,8 @@ public class LdapColumnsPage extends WizardPage
                         node.setLabel(colNameText);
                     }
                 }
+
+                setPageStatus();
             }
         });
 
@@ -393,7 +408,10 @@ public class LdapColumnsPage extends WizardPage
         if (treeViewer != null && treeViewer.getInput() != null) {
             // Required if the user flicks back a page, makes a change
             // then comes forward to this page again
+
+            Object[] checkedElements = treeViewer.getCheckedElements();
             treeViewer.refresh(true);
+            treeViewer.setCheckedElements(checkedElements);
         }
 
         setPageStatus();
