@@ -576,7 +576,7 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
                 writer.close();
             }
             noPlanFile.deleteOnExit();
-            
+
             visualisation.setUrl(noPlanFile.toURI().toURL().toString());
         } catch (IOException ex) {
             Activator.log(ex);

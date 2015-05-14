@@ -16,7 +16,7 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
     /* LDAP Binding Properties and sample values
      * 
-     * LdapAuthMethod = None / Simple
+     * LdapAuthMethod = Simple - Only supported at the moment in Teiid
      * LdapAdminUserDN
      * LdapAdminUserPassword
      * LdapStartTLS (encryption) = true/false
@@ -85,6 +85,11 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
         Properties props = connectionProfile.getBaseProperties();
 
+        //
+        // Connection profile contains more properties for ease
+        // of processing but only include the ones specifically
+        // to be injected into teiid
+        //
         String password = props.getProperty(ILdapProfileConstants.PASSWORD_PROP_ID);
         if (password != null) {
             connectionProps.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, password);
@@ -93,11 +98,6 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         String url = props.getProperty(ILdapProfileConstants.URL_PROP_ID);
         if (null != url) {
             connectionProps.setProperty(ILdapProfileConstants.URL_PROP_ID, url);
-        }
-
-        String authMethod = props.getProperty(ILdapProfileConstants.AUTHENTICATION_METHOD);
-        if (null != authMethod) {
-            connectionProps.setProperty(ILdapProfileConstants.AUTHENTICATION_METHOD, authMethod);
         }
 
         String user = props.getProperty(ILdapProfileConstants.USERNAME_PROP_ID);
