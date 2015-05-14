@@ -32,6 +32,7 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -101,15 +102,19 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	@Override
 	public void createControl(Composite parent) {
 		creatingControl = true;
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
-
-		mainPanel.setLayout(new GridLayout(1, false));
-		mainPanel.setLayoutData(new GridData()); //GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		setControl(mainPanel);
 		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 		
         // Create Bottom Composite
         Composite upperPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2, 2);
@@ -132,6 +137,10 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 
 		createFileContentsGroup(mainPanel);
         
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
+		
 		creatingControl = false;
 
 		setPageComplete(false);

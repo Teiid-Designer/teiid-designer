@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -62,6 +63,7 @@ import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -149,15 +151,19 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 	@Override
 	public void createControl(Composite parent) {
 		creatingControl = true;
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
-
-		mainPanel.setLayout(new GridLayout(2, false));
-		mainPanel.setLayoutData(new GridData()); //GridData.VERTICAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		setControl(mainPanel);
 		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 		
         // Create Bottom Composite
         Composite upperPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 2, 2);
@@ -177,6 +183,10 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         
         createSqlGroup(mainPanel);
         
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
+		
 		creatingControl = false;
 
 		setPageComplete(false);
@@ -1043,6 +1053,7 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
     	Group textTableOptionsGroup = WidgetFactory.createGroup(parent, getString("textTableOptionsGroup"), SWT.NONE, 2, 1); //$NON-NLS-1$
     	GridData gd = new GridData(GridData.FILL_BOTH);
     	gd.heightHint = 120;
+    	gd.widthHint = 400;
     	gd.horizontalSpan = 2;
     	textTableOptionsGroup.setLayoutData(gd);
     	
