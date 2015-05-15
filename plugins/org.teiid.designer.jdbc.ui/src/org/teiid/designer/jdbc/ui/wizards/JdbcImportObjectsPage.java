@@ -581,22 +581,6 @@ public class JdbcImportObjectsPage extends WizardPage
         }
         try {
             final Request rqst = this.selectedNode.getRequest(this.selectedNode.getNamesOfResults()[tabFolder.getSelectionIndex()]);
-            if (!rqst.invoke()) {
-                final IStatus status = rqst.getProblems();
-                Util.log(status);
-                Image img;
-                if (status.getSeverity() == IStatus.ERROR) {
-                    img = JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_ERROR);
-                } else {
-                    img = JFaceResources.getImage(Dialog.DLG_IMG_MESSAGE_WARNING);
-                }
-                final String msg = WidgetUtil.getCauseMessage(getString(REQUEST_ERROR_MESSAGE_ID, tab.getText()), status);
-                final Composite panel = WidgetFactory.createPanel(this.tabFolder, SWT.NO_TRIM, GridData.FILL_BOTH, 1, 2);
-                WidgetFactory.createLabel(panel, GridData.VERTICAL_ALIGN_BEGINNING, img, SWT.TOP);
-                WidgetFactory.createWrappingLabel(panel, GridData.FILL_BOTH, msg);
-                tab.setControl(panel);
-                return;
-            }
             final Results results = rqst.getResults();
             final List metadatas = results.getMetadata().getColumnMetadata();
             if (metadatas.isEmpty()) {
