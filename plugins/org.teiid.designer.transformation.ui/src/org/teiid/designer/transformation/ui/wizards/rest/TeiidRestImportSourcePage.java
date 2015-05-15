@@ -88,6 +88,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.FileSystemLabelProvider;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 
@@ -161,8 +162,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 	
 	boolean controlComplete = false;
 	boolean visibleCompleted = false;
-	
-	ModelsDefinitionSection modelsDefinitionSection;
 
 	/**
 	 * Constructor
@@ -192,22 +191,30 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 	@Override
 	public void createControl(Composite parent) {
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+		controlComplete = false;
+		
+        final Composite hostPanel = new Composite(parent, SWT.NONE);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel);
+        hostPanel.setLayout(new GridLayout(1, false));
+        hostPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		mainPanel.setLayout(new GridLayout());
-		mainPanel.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_FILL
-				| GridData.HORIZONTAL_ALIGN_FILL));
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+        mainPanel.setLayout(new GridLayout(1, false));
 
-		setControl(mainPanel);
 		// Add widgets to page
 
 		createProfileGroup(mainPanel);
 
 		createFolderContentsListGroup(mainPanel);
-
-		createModelGroup(mainPanel);
+		
+		scrolledComposite.sizeScrolledPanel();
+		
+		setControl(hostPanel);
 
 		setMessage(INITIAL_MESSAGE);
 		controlComplete = true;
@@ -218,9 +225,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		// ----------- Connection Profile SOURCE Panel
 		// ---------------------------------
 		// ---------------------------------------------------------------------------
-		Group profileGroup = WidgetFactory.createGroup(parent,
-				REST_SOURCE_LABEL, SWT.NONE, 2, 3);
+		Group profileGroup = WidgetFactory.createGroup(parent, REST_SOURCE_LABEL, SWT.NONE, 2, 3);
 		profileGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		((GridData)profileGroup.getLayoutData()).widthHint = 400;
 
 		this.srcLabelProvider = new LabelProvider() {
 
@@ -239,7 +246,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			public void widgetSelected(SelectionEvent e) {
 				profileComboSelectionChanged();
 				fileViewer.refresh();
-				modelsDefinitionSection.synchronizeUi();
 			}
 
 			@Override
@@ -309,9 +315,9 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if( modelsDefinitionSection.getXmlFileInfo() != null ) {
-					FileUiUtils.INSTANCE.showFileContents(getShell(), modelsDefinitionSection.getXmlFileInfo().getDataFile(), 
-							"Response Document", modelsDefinitionSection.getXmlFileInfo().getDataFile().getName()); //$NON-NLS-1$
+				if( info.getSourceXmlFileInfo() != null ) {
+					FileUiUtils.INSTANCE.showFileContents(getShell(), info.getSourceXmlFileInfo().getDataFile(), 
+							"Response Document", info.getSourceXmlFileInfo().getDataFile().getName()); //$NON-NLS-1$
 				}
 			}
 			
@@ -394,10 +400,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		fileNameColumn
 				.setLabelProvider(new DataFileContentColumnLabelProvider());
 		fileNameColumn.getColumn().pack();
-	}
-
-	private void createModelGroup(Composite parent) {
-		modelsDefinitionSection = new ModelsDefinitionSection(this, this.info, parent); 
 	}
 
 	void profileComboSelectionChanged() {
@@ -490,7 +492,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		this.info.clearXmlFileInfos();
 		this.info.clearFileInfos();
 		fileViewer.getTable().clearAll();
-		this.modelsDefinitionSection.setXmlFileInfo();
+		this.info.setSourceXmlFileInfo();
 	}
 
 	private void loadFileListViewer() {
@@ -879,7 +881,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 					getString("parsingErrorTitle"), //$NON-NLS-1$
 					fileParsingStatus.getMessage());
 		}
-		modelsDefinitionSection.setXmlFileInfo();
+		this.info.setSourceXmlFileInfo();
 	}
 	
 	private void resetXmlFile(File xmlFile) {
@@ -1041,7 +1043,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				// Need to clear the file info
 				info.clearXmlFileInfos();
 				
-				modelsDefinitionSection.setXmlFileInfo();
+				info.setSourceXmlFileInfo();
 				
 				setConnectionProfile(null, false);
 				
@@ -1050,8 +1052,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 				ProfileManager.getInstance().removeProfileListener(listener);
 
 				//profileComboSelectionChanged();
-				
-				modelsDefinitionSection.setXmlFileInfo();
 			}
 			
 			ProfileManager.getInstance().removeProfileListener(listener);
@@ -1076,8 +1076,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 //		this.selectedFileText.setText(fileName);
 
 		synchronizing = false;
-		
-		this.modelsDefinitionSection.synchronizeUi();
 	}
 
 
@@ -1160,11 +1158,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 
 		if (fileParsingStatus.getSeverity() == IStatus.ERROR) {
 			setThisPageComplete(fileParsingStatus.getMessage(), ERROR);
-			return false;
-		}
-		
-		// Validate the models section
-		if( ! this.modelsDefinitionSection.validatePage() ) {
 			return false;
 		}
 

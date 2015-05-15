@@ -45,6 +45,8 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
     TeiidXmlImportOptionsPage optionsPage;
     
     TeiidRestImportSourcePage sourcePage;
+    
+    TeiidRestImporterModelDefinitionPage modelDefPage;
 //    
 //    private Properties designerProperties;
     
@@ -67,6 +69,9 @@ public class TeiidRestImportWizard extends TeiidMetadataImportWizard {
 		
         this.sourcePage = new TeiidRestImportSourcePage(getFileInfo());
         addPage(sourcePage);
+        
+        this.modelDefPage = new TeiidRestImporterModelDefinitionPage(getFileInfo());
+        addPage(modelDefPage);
         
         TeiidXmlImportXmlConfigurationPage sqlPage = new TeiidXmlImportXmlConfigurationPage(getFileInfo());
         addPage(sqlPage);
