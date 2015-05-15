@@ -77,9 +77,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 		return Util.getString(I18N_PREFIX + id);
 	}
 	
-	TeiidRestImportSourcePage page;
+	TeiidRestImporterModelDefinitionPage page;
 	private TeiidMetadataImportInfo info;
-	private TeiidXmlFileInfo xmlFileInfo;
 	
 	private Text sourceModelContainerText;
 	private Text sourceModelFileText;
@@ -97,7 +96,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 	boolean synchronizing = false;
 	boolean controlComplete = false;
 
-	public ModelsDefinitionSection(TeiidRestImportSourcePage page, TeiidMetadataImportInfo info, Composite parent) {
+	public ModelsDefinitionSection(TeiidRestImporterModelDefinitionPage page, TeiidMetadataImportInfo info, Composite parent) {
 		super();
 		
 		this.page = page;
@@ -110,6 +109,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 		Group sourceGroup = WidgetFactory.createGroup(parent,
 				getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		((GridData)sourceGroup.getLayoutData()).widthHint = 400;
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
 		locationLabel.setText(getString("location")); //$NON-NLS-1$
@@ -260,23 +260,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 	}
 	
 	protected TeiidXmlFileInfo getXmlFileInfo() {
-		return this.xmlFileInfo;
-	}
-	
-	void setXmlFileInfo() {
-		String oldVPName = null;
-		if( this.xmlFileInfo != null ) {
-			oldVPName = this.viewProcedureNameText.getText();
-		}
-		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
-			if (fileInfo.doProcess()) {
-				this.xmlFileInfo = fileInfo;
-				if( oldVPName != null) {
-					this.xmlFileInfo.setViewProcedureName(oldVPName);
-				}
-				break;
-			}
-		}
+		return this.info.getSourceXmlFileInfo();
 	}
 	
 	public void setThisPageComplete(String message, int severity) {
@@ -390,7 +374,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 		}
 
 		// Check if View Name is valid
-		String invalidMessage = this.xmlFileInfo == null ? null : validator.checkValidName(this.xmlFileInfo.getViewTableName());
+		String invalidMessage = getXmlFileInfo() == null ? null : validator.checkValidName(getXmlFileInfo().getViewTableName());
 		if (invalidMessage != null) {
 			setThisPageComplete(getString("viewProcedureNameInvalid"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return false;
@@ -401,7 +385,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 			return false;
 		}
 
-		if (this.xmlFileInfo == null || this.xmlFileInfo.getViewProcedureName() == null || this.xmlFileInfo.getViewProcedureName().length() == 0) {
+		if (getXmlFileInfo() == null || getXmlFileInfo().getViewProcedureName() == null || getXmlFileInfo().getViewProcedureName().length() == 0) {
 			setThisPageComplete(
 					getString("viewProcedureNameNullOrEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
 			return false;
@@ -429,10 +413,10 @@ public final class ModelsDefinitionSection implements UiConstants{
 		ModelResource smr = ModelUtilities.getModelResourceForIFile((IFile) viewModel, false);
 		if (smr != null) {
 			try {
-				if (xmlFileInfo.getViewProcedureName() == null) {
+				if (getXmlFileInfo().getViewProcedureName() == null) {
 					return false;
 				}
-				String existingName = this.xmlFileInfo.getViewProcedureName();
+				String existingName = getXmlFileInfo().getViewProcedureName();
 
 				for (Object obj : smr.getAllRootEObjects()) {
 
@@ -633,9 +617,9 @@ public final class ModelsDefinitionSection implements UiConstants{
 		if (this.viewProcedureNameText.getText() != null
 				&& this.viewProcedureNameText.getText().length() > -1) {
 			newName = this.viewProcedureNameText.getText();
-			this.xmlFileInfo.setViewProcedureName(newName);
+			this.info.getSourceXmlFileInfo().setViewProcedureName(newName);
 		} else {
-			this.xmlFileInfo.setViewProcedureName(StringUtilities.EMPTY_STRING);
+			this.info.getSourceXmlFileInfo().setViewProcedureName(StringUtilities.EMPTY_STRING);
 		}
 
 		int caret = this.viewProcedureNameText.getCaretPosition();
@@ -668,7 +652,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 		//xmlFileInfo = null;
 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
-				xmlFileInfo = fileInfo;
+				this.info.setSourceXmlFileInfo(fileInfo);
 				if (this.info.getSourceModelName() != null) {
 					sourceFileName = this.info.getSourceModelName();
 				} else {
@@ -696,9 +680,9 @@ public final class ModelsDefinitionSection implements UiConstants{
 		}
 
 		String viewProcedureName = viewProcedureNameText.getText();
-		if (this.xmlFileInfo != null) {
-			if (this.xmlFileInfo.getViewProcedureName() != null) {
-				this.viewProcedureNameText.setText(this.xmlFileInfo.getViewProcedureName());
+		if (getXmlFileInfo() != null) {
+			if (getXmlFileInfo().getViewProcedureName() != null) {
+				this.viewProcedureNameText.setText(getXmlFileInfo().getViewProcedureName());
 			}
 		} else {
 			this.viewProcedureNameText.setText(viewProcedureName);
@@ -708,10 +692,10 @@ public final class ModelsDefinitionSection implements UiConstants{
 		if( this.info.getViewModelName() != null ) {
 			viewFileName = this.info.getViewModelName();
 		}
-		xmlFileInfo = null;
+		this.info.setSourceXmlFileInfo(null);
 		for (TeiidXmlFileInfo fileInfo : this.info.getXmlFileInfos()) {
 			if (fileInfo.doProcess()) {
-				xmlFileInfo = fileInfo;
+				this.info.setSourceXmlFileInfo(fileInfo);
 				if (this.info.getViewModelName() != null) {
 					viewFileName = this.info.getViewModelName();
 				} else {
@@ -852,7 +836,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 		if (!controlComplete)
 			return;
 		
-		if (xmlFileInfo == null || !xmlFileInfo.doProcess()
+		if (getXmlFileInfo() == null || !getXmlFileInfo().doProcess()
 				|| info.getViewModelName() == null
 				|| info.getViewModelName().length() == 0) {
 			this.viewHelpText.setText(Util.getString(I18N_PREFIX
@@ -888,7 +872,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 												+ "existingSourceModelHasNoProcedure", info.getSourceModelName(), procedureName)); //$NON-NLS-1$
 			}
 		} else {
-			if (xmlFileInfo == null || !xmlFileInfo.doProcess()
+			if (getXmlFileInfo() == null || !getXmlFileInfo().doProcess()
 					|| info.getSourceModelName() == null
 					|| info.getSourceModelName().length() == 0) {
 				this.sourceHelpText.setText(Util.getString(I18N_PREFIX

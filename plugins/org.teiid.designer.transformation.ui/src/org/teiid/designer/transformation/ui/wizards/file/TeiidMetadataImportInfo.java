@@ -59,6 +59,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 */
 	private Map<File, TeiidXmlFileInfo> xmlFileInfoMap;
 	
+	private TeiidXmlFileInfo sourceXmlFileInfo;
+	
     /**
      * The unique source model name (never <code>null</code> or empty).
      * 
@@ -241,6 +243,24 @@ public class TeiidMetadataImportInfo implements UiConstants {
 		return this.xmlFileInfoMap.get(file);
 	}
 	
+	public void setSourceXmlFileInfo(TeiidXmlFileInfo fileInfo) {
+		this.sourceXmlFileInfo = fileInfo;
+		validate();
+	}
+	
+	public TeiidXmlFileInfo getSourceXmlFileInfo() {
+		return this.sourceXmlFileInfo;
+	}
+	
+	public void setSourceXmlFileInfo() {
+		for (TeiidXmlFileInfo fileInfo : getXmlFileInfos()) {
+			if (fileInfo.doProcess()) {
+				setSourceXmlFileInfo(fileInfo);
+				break;
+			}
+		}
+	}
+	
 	/**
 	 * Convenience method to allow setting doProcess on a cached <code>TeiidMetadataFileInfo</code> object
 	 * @param file
@@ -386,6 +406,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	 * Analyzes this object's data values and sets the current <code>IStatus</code>
 	 */
 	public void validate() {
+		setStatus(Status.OK_STATUS);
+		
 		if( isFlatFileLocalMode() || isFlatFileUrlMode() ) {
 			if( this.fileInfoMap.isEmpty() ) {
 				setStatus(new Status(IStatus.ERROR, PLUGIN_ID, getString("noDataFilesFound"))); //$NON-NLS-1$

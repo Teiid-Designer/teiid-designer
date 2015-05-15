@@ -169,6 +169,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 	}
 
 	private boolean validatePage() {
+		info.validate();
 
 		if( !isFileInfoValid()) {
 			setThisPageComplete(fileInfo.getStatus().getMessage(), IMessageProvider.ERROR);
