@@ -632,7 +632,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 	};
 
 	private boolean viewAlreadyExists() {
-		if( info == null && !info.viewModelExists() ) {
+		if( !info.viewModelExists() ) {
 			return false;
 		}
 		
