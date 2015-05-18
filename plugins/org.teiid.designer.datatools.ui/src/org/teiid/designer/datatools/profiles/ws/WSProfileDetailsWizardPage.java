@@ -30,6 +30,7 @@ import org.eclipse.datatools.connectivity.ui.wizards.ConnectionProfileDetailsPag
 import org.eclipse.datatools.connectivity.ui.wizards.NewConnectionProfileWizard;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
@@ -53,12 +54,14 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
+import org.teiid.designer.datatools.ui.dialogs.ScrolledConnectionProfileDetailsPage;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.CredentialsComposite;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 
-public class WSProfileDetailsWizardPage extends ConnectionProfileDetailsPage implements DatatoolsUiConstants {
+public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetailsPage implements DatatoolsUiConstants {
 
 	
     private Composite scrolled;

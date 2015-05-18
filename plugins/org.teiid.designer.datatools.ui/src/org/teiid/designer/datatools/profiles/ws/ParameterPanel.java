@@ -152,7 +152,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
         this.removePropertyButton.setEnabled(false);
 
         this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
-        GridDataFactory.fillDefaults().grab(true, true).span(3, 1).hint(360,  160).applyTo(propertiesViewer.getTableComposite());
+        GridDataFactory.fillDefaults().grab(true, true).span(3, 1).hint(360,  100).applyTo(propertiesViewer.getTableComposite());
 
         ColumnViewerToolTipSupport.enableFor(this.propertiesViewer.getTableViewer());
         this.propertiesViewer.setContentProvider(new IStructuredContentProvider() {
