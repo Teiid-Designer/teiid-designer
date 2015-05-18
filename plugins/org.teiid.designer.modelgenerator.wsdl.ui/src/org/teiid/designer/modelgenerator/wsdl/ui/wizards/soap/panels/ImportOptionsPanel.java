@@ -81,6 +81,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 		
 		SOURCE_MODEL_INFO : {
     		Group group = WidgetFactory.createGroup(parent, Messages.SourceModelDefinition, GridData.FILL_HORIZONTAL, 1, 3);
+    		((GridData)group.getLayoutData()).widthHint = 400;
     		Label locationLabel = new Label(group, SWT.NULL);
     		locationLabel.setText(Messages.Location);
     
@@ -146,7 +147,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     			WidgetUtil.colorizeWidget(this.sourceModelHelpText, WidgetUtil.TEXT_COLOR_BLUE, true);
     			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
-    			gd.widthHint = 600;
+    			gd.widthHint = 300;
     			sourceModelHelpText.setLayoutData(gd);
     		}
 		
@@ -220,7 +221,7 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
     			WidgetUtil.colorizeWidget(this.viewModelHelpText, WidgetUtil.TEXT_COLOR_BLUE, true);
     			gd = new GridData(GridData.FILL_BOTH);
     			gd.heightHint = 40;
-    			gd.widthHint = 600;
+    			gd.widthHint = 300;
     			viewModelHelpText.setLayoutData(gd);
     		}
 		}

@@ -10,9 +10,12 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextViewer;
@@ -64,6 +67,7 @@ import org.teiid.designer.ui.common.graphics.ColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 /**
@@ -144,7 +148,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	public OperationsDetailsPage(WSDLImportWizardManager theImportManager) {
 		super(OperationsDetailsPage.class.getSimpleName(), Messages.ProcedureDefinition);
 		this.importManager = theImportManager;
-		this.importManager.setSelectedOperations(new ArrayList());
+		this.importManager.setSelectedOperations(new ArrayList<Operation>());
 		setImageDescriptor(ModelGeneratorWsdlUiUtil.getImageDescriptor(Images.NEW_MODEL_BANNER));
 
 		semanticAdapterFactory = new XSDSemanticItemProviderAdapterFactory();
@@ -233,15 +237,31 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	 */
 	@Override
 	public void createControl(Composite theParent) {
-		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE,
-				GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(2, false);
-		pnlMain.setLayout(layout);
-		setControl(pnlMain);
+        final Composite hostPanel = new Composite(theParent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite pnlMain = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        pnlMain.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        pnlMain.setLayout(new GridLayout(2, false));
+        
+        ((GridData)pnlMain.getLayoutData()).widthHint = 400;
 
 		createOperationsSelectionPanel(pnlMain);
 
 		createTabbedDetailsPanel(pnlMain);
+		
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
 	}
 
 	@SuppressWarnings("unused")
@@ -250,6 +270,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		operationsGroup.setLayoutData(gd);
+        ((GridData)operationsGroup.getLayoutData()).widthHint = 400;
 
 		ACTION_COMBO: {
 			operationsCombo = new Combo(operationsGroup, SWT.NONE | SWT.READ_ONLY);
@@ -295,6 +316,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 	private void createTabbedDetailsPanel(Composite parent) {
 		tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(GridData.FILL_BOTH));
+		((GridData)tabFolder.getLayoutData()).widthHint = 400;
 
 		createRequestTab(tabFolder);
 		createResponseTab(tabFolder);
@@ -799,7 +821,7 @@ public class OperationsDetailsPage extends AbstractWizardPage implements
 		@Override
 		public Object[] getChildren(final Object node) {
 			if (node instanceof ArrayList) {
-				ArrayList theList = ((ArrayList) node);
+				ArrayList<?> theList = ((ArrayList<?>) node);
 
 				return theList.toArray();
 			}
