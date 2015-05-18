@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -32,6 +33,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.ImportOptio
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 
@@ -86,11 +88,21 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 	@Override
 	@SuppressWarnings("unused")
 	public void createControl(Composite theParent) {
-		final int COLUMNS = 1;
-		Composite pnlMain = WidgetFactory.createPanel(theParent, SWT.NONE, GridData.FILL_BOTH);
-		GridLayout layout = new GridLayout(COLUMNS, false);
-		pnlMain.setLayout(layout);
-		setControl(pnlMain);
+        final Composite hostPanel = new Composite(theParent, SWT.NONE);
+        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        hostPanel.setLayout(new GridLayout(1, false));
+        
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite pnlMain = scrolledComposite.getPanel(); //new Composite(scrolledComposite, SWT.NONE);
+        pnlMain.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        pnlMain.setLayout(new GridLayout(1, false));
+        ((GridData)pnlMain.getLayoutData()).widthHint = 400;
 
 		MODEL_DEFINITION: {
 			// Defines Location and Name values for source and view models
@@ -124,7 +136,7 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			customProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
 			customProceduresHelpText.setText(Messages.OptionDefineCustomProcures);
 			GridDataFactory.swtDefaults()
-                                        .hint(400, SWT.DEFAULT)
+                                        .hint(300, SWT.DEFAULT)
                                         .align(SWT.FILL,SWT.FILL)
                                         .grab(true, true)
                                         .applyTo(customProceduresHelpText);
@@ -147,11 +159,15 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			defaultProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
 			defaultProceduresHelpText.setText(Messages.OptionDefineDefaultProcedures);
 			GridDataFactory.swtDefaults()
-			                            .hint(400, SWT.DEFAULT)
+			                            .hint(300, SWT.DEFAULT)
 			                            .align(SWT.FILL,SWT.FILL)
 			                            .grab(true, true)
 			                            .applyTo(defaultProceduresHelpText);
 		}
+        
+        scrolledComposite.sizeScrolledPanel();
+        
+        setControl(hostPanel);
 	}
 	
 	private void handleGenerateOptionChanged() {
