@@ -53,6 +53,7 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
+import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -65,7 +66,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
     TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
-	private Map parameterMap;
+	private Map<String, Parameter> parameterMap;
 	private int visibleTableRows;
 	private WSProfileDetailsWizardPage wsProfileDetailsWizardPage;
 	private PropertyPage propertyPage;
@@ -172,7 +173,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-            	Map parameters = parameterMap;
+            	Map<String, Parameter> parameters = parameterMap;
 
                 if (parameters == null || parameters.isEmpty()) {
                     return new Object[0];
@@ -225,7 +226,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
         column.getColumn().setText(UTIL.getString("ParametersPanel_type"));  //$NON-NLS-1$
         column.getColumn().setToolTipText(UTIL.getString("AddParameterDialog_txtType_toolTip"));
         column.setLabelProvider(new PropertyLabelProvider(1));
-        column.setEditingSupport(new PropertyNameEditingSupport(this.propertiesViewer.getTableViewer(), 1));
+        column.setEditingSupport(new ParameterTypeComboEditingSupport(this.propertiesViewer.getTableViewer()));
         
         column = propertiesViewer.createColumn(SWT.LEFT, 30, 40, true);
         column.getColumn().setText(UTIL.getString("ParametersPanel_default_value"));  //$NON-NLS-1$
@@ -265,7 +266,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 	
     void handleAddProperty() {
         assert (!this.propertiesViewer.getSelection().isEmpty());
-        if (this.parameterMap == null) this.parameterMap = new LinkedHashMap();
+        if (this.parameterMap == null) this.parameterMap = new LinkedHashMap<String, Parameter>();
         Set<String> keys = new HashSet<String>();
         for( Object key : parameterMap.keySet() ) {
         	keys.add((String)key);
@@ -366,6 +367,42 @@ public class ParameterPanel implements DatatoolsUiConstants {
 			return super.getText(element);
 		}
 	}
+	
+    class ParameterTypeComboEditingSupport extends ComboBoxEditingSupport {
+    	
+    	private String[] datatypes = { IWSProfileConstants.QUERY_STRING, IWSProfileConstants.URI };
+        /**
+         * @param viewer
+         */
+        public ParameterTypeComboEditingSupport( ColumnViewer viewer ) {
+            super(viewer);
+        }
+
+
+        @Override
+        protected String getElementValue( Object element ) {
+        	return ((Parameter)element).getType().toString();
+        }
+
+        @Override
+        protected String[] refreshItems( Object element ) {
+            return datatypes;
+        }
+
+        @Override
+        protected void setElementValue( Object element, String newValue ) {
+        	Parameter param = (Parameter)element;
+			String key = param.getPropertyKey();
+			String oldType = param.getType().toString();
+
+			String newType = (String)newValue;
+			if( newType != null && newType.length() > 0 && !newType.equalsIgnoreCase(oldType)) {
+				param.setType(Parameter.Type.fromValue(newType));
+				parameterMap.put(key,param);
+				propertiesViewer.refresh(param);
+			}
+        }
+    }
 
     class PropertyNameEditingSupport extends EditingSupport {
     	int columnID;
@@ -433,23 +470,18 @@ public class ParameterPanel implements DatatoolsUiConstants {
 		protected void setValue(Object element, Object value) {
 			if( element instanceof Parameter ) {
 				String key = ((Parameter)element).getPropertyKey();
-				if( columnID == 1 ) {
-					String oldType = ((Parameter)element).getType().toString();
-					String newType = (String)value;
-					if( newType != null && newType.length() > 0 && !newType.equalsIgnoreCase(oldType)) {
-						((Parameter)element).setType(Parameter.Type.fromValue(newType));
-						parameterMap.put(key,element);
+				if( columnID == 2 ) {
+					String oldDefaultValue = StringConstants.EMPTY_STRING;
+					if( ((Parameter)element).getDefaultValue() != null ) {
+						oldDefaultValue = ((Parameter)element).getDefaultValue();
+					}
+					String newDefaultValue = (String)value;
+					if( newDefaultValue != null && newDefaultValue.length() > 0 && !newDefaultValue.equalsIgnoreCase(oldDefaultValue)) {
+						((Parameter)element).setDefaultValue(newDefaultValue);
+						parameterMap.put(key, (Parameter)element);
 						propertiesViewer.refresh(element);
 					}
-				} else if( columnID == 2 ) {
-						String oldDefaultValue = ((Parameter)element).getDefaultValue();
-						String newDefaultValue = (String)value;
-						if( newDefaultValue != null && newDefaultValue.length() > 0 && !newDefaultValue.equalsIgnoreCase(oldDefaultValue)) {
-							((Parameter)element).setDefaultValue(newDefaultValue);
-							parameterMap.put(key,element);
-							propertiesViewer.refresh(element);
-						}
-					}
+				}
 			}
 		}
 
