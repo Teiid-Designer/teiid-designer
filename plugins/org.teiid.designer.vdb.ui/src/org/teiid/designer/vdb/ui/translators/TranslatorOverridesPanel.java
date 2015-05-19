@@ -637,8 +637,10 @@ public final class TranslatorOverridesPanel extends Composite {
         assert (!this.translatorsViewer.getSelection().isEmpty());
 
         TranslatorOverride translatorOverride = getSelectedTranslator();
+        String[] translatorTypes = getTranslatorTypes();
         EditTranslatorOverrideDialog dialog = new EditTranslatorOverrideDialog(getShell(),
                                                                                translatorOverride,
+                                                                               translatorTypes,
                                                                                this.vdb.getTranslators());
 
         if (dialog.open() == Window.OK) {
