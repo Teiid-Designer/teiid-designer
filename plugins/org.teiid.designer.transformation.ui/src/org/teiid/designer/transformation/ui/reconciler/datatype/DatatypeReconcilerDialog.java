@@ -7,6 +7,10 @@
  */
 package org.teiid.designer.transformation.ui.reconciler.datatype;
 
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -15,6 +19,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.reconciler.BindingList;
 import org.teiid.designer.transformation.ui.reconciler.ColorManager;
+import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
 import org.teiid.designer.ui.common.widget.ExtendedTitleAreaDialog;
 
 
@@ -64,9 +69,27 @@ public class DatatypeReconcilerDialog extends ExtendedTitleAreaDialog {
         GridLayout gl = new GridLayout();
         gl.marginWidth = 5;
         composite.setLayout(gl);
-        panel = new DatatypeReconcilerPanel(composite,this,bindingList,targetLocked,colorManager);
+
+        // Create page            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(composite, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(2, false));
+        ((GridData)mainPanel.getLayoutData()).minimumWidth = 400;
+        
+        
+        panel = new DatatypeReconcilerPanel(mainPanel,this,bindingList,targetLocked,colorManager);
         setDialogTitle(dialogTitle);
         setInitialSizeRelativeToScreen(50,70);
+        
+        
+        scrolledComposite.sizeScrolledPanel();
+        
         return composite;
     }
     
