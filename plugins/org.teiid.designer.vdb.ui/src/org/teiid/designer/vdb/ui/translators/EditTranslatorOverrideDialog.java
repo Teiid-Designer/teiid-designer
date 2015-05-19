@@ -98,13 +98,15 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
      * 
      * @param parentShell the parent shell (can be <code>null</code>)
      * @param translator the translator whose name is being edited (cannot be <code>null</code>)
+     * @param translatorTypes the collection of translator types (can be <code>null</code>)
      * @param existingTranslators the collection of VDB translator overrides (can be <code>null</code>)
      */
     public EditTranslatorOverrideDialog( Shell parentShell,
                                          TranslatorOverride translator,
+                                         String[] translatorTypes,
                                          Set<TranslatorOverride> existingTranslators ) {
         this(parentShell, Util.getString(PREFIX + "editTranslatorTitle"), Util.getString(PREFIX + "editTranslatorInitialMessage"), //$NON-NLS-1$ //$NON-NLS-2$
-                null, existingTranslators);
+        		translatorTypes, existingTranslators);
         CoreArgCheck.isNotNull(translator, "translator is null"); //$NON-NLS-1$
 
         this.translatorBeingEdited = translator;
