@@ -136,7 +136,7 @@ import org.teiid.designer.vdb.ui.translators.TranslatorOverridesPanel;
 /**
  * @since 8.0
  */
-// TODO: read-only, undo/redo, function model 259
+
 public final class VdbEditor extends EditorPart implements IResourceChangeListener {
 
     static final String MODEL_COLUMN_NAME = i18n("modelColumnName"); //$NON-NLS-1$
@@ -1554,19 +1554,31 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void createPartControl( final Composite parent ) {
-    	parent.setLayout(new GridLayout());
-    	parent.setLayoutData(new GridData());
         
-        DefaultScrolledComposite scrollable = new DefaultScrolledComposite(parent);
-        Composite parentPanel = scrollable.getPanel();
+        parent.setLayout(new GridLayout());
+        parent.setLayoutData(new GridData());
+
+        // Create Scrolled composite so entire editor panel will scroll if resized            
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+    	scrolledComposite.setExpandHorizontal(true);
+    	scrolledComposite.setExpandVertical(true);
+        GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
+        GridDataFactory.fillDefaults().grab(true,  false);
+
+        final Composite mainPanel = scrolledComposite.getPanel();
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(1, false));
+        ((GridData)mainPanel.getLayoutData()).minimumWidth = 400;
+        ((GridData)mainPanel.getLayoutData()).minimumHeight = 400;
 
         if (vdb == null) {
-            createErrorPanel(parentPanel);
+            createErrorPanel(mainPanel);
             return;
         }
       
         { // Header Panel
-	        Composite headerPanel = WidgetFactory.createPanel(parentPanel, SWT.NONE, GridData.FILL, 1, 6);
+	        Composite headerPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL, 1, 6);
+
 	        Label projectLabel = new Label(headerPanel, SWT.NONE);
 	        projectLabel.setText(Messages.vdbEditor_location);
 	        
@@ -1604,7 +1616,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         }
         
         // So create another Tab Folder (bottom oriented)
-        CTabFolder tabFolder = WidgetFactory.createTabFolder(parentPanel);
+        CTabFolder tabFolder = WidgetFactory.createTabFolder(mainPanel);
         tabFolder.setTabPosition(SWT.BOTTOM);
         { // models tab
             CTabItem leftTab = new CTabItem(tabFolder, SWT.NONE);
@@ -1629,7 +1641,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         
         showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
         
-        scrollable.sizeScrolledPanel();
+        scrolledComposite.sizeScrolledPanel();
     }
     
     private void addSynchronizePanel(Composite parent ) {
@@ -2352,7 +2364,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      */
     @Override
     public void doSaveAs() {
-        // TODO: implement
+        // NO implementation
     }
 
     /**
