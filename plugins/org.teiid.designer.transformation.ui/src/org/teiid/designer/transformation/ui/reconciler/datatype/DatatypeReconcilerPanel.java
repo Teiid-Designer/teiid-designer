@@ -246,7 +246,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         
         BINDING_TABLE : {
         	this.bindingTableViewer = new TableViewerBuilder(tablePanel, SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-	        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 200).applyTo(bindingTableViewer.getTableComposite());
+	        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, 160).applyTo(bindingTableViewer.getTableComposite());
 
 	        this.bindingContentProvider = new BindingContentProvider();
 	        
@@ -307,7 +307,7 @@ public class DatatypeReconcilerPanel extends SashForm implements ISelectionChang
         SELECTION_STATUS_PANEL : {
 	        Composite selectionPanel = WidgetFactory.createGroup(tablePanel, Messages.datatypeReconciler_selectionPanelInfoLabel, 1, 2);
 			selectionPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-			((GridData)selectionPanel.getLayoutData()).minimumHeight = 80;
+			((GridData)selectionPanel.getLayoutData()).minimumHeight = 60;
 			
 //			Label selectedSymbolLabel = new Label(selectionPanel, SWT.NONE);
 //			selectedSymbolLabel.setText("Selected Symbol: ");
