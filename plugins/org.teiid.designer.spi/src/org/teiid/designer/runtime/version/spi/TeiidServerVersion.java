@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.Messages;
@@ -313,15 +314,15 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
 
-        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        int majCompResult = isOtherNumberGreaterThan(myMaxVersion.getMajor(), otherMinVersion.getMajor());
         if (majCompResult > 0)
             return true;
         
-        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        int minCompResult = isOtherNumberGreaterThan(myMaxVersion.getMinor(), otherMinVersion.getMinor());
         if (majCompResult == 0 && minCompResult > 0)
             return true;
 
-        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        int micCompResult = isOtherNumberGreaterThan(myMaxVersion.getMicro(), otherMinVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
             return true;
             
@@ -333,15 +334,15 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
 
-        int majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        int majCompResult = isOtherNumberLessThan(myMaxVersion.getMajor(), otherMinVersion.getMajor());
         if (majCompResult < 0)
             return true;
 
-        int minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        int minCompResult = isOtherNumberLessThan(myMaxVersion.getMinor(), otherMinVersion.getMinor());
         if (majCompResult == 0 && minCompResult < 0)
             return true;
 
-        int micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        int micCompResult = isOtherNumberLessThan(myMaxVersion.getMicro(), otherMinVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
             return true;
             
@@ -356,5 +357,52 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     @Override
     public boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion) {
         return this.compareTo(otherVersion) || this.isLessThan(otherVersion);
+    }
+    
+    private int isOtherNumberLessThan(String myNumber, String otherNumber ) {
+    	int myValue = -1;
+    	int otherValue = -1;
+    	
+    	try {
+    		myValue = Integer.parseInt(myNumber);
+		} catch (NumberFormatException e) {
+			myValue = -1;
+		}
+    	
+    	try {
+    		otherValue = Integer.parseInt(otherNumber);
+		} catch (NumberFormatException e) {
+			otherValue = -1;
+		}
+    	
+    	if( myValue < 0 || otherValue < 0 ) {
+    		return myNumber.compareTo(otherNumber);
+    	} else {
+    		return myValue - otherValue;
+    	}
+    }
+    
+    
+    private int isOtherNumberGreaterThan(String myNumber, String otherNumber ) {
+    	int myValue = -1;
+    	int otherValue = -1;
+    	
+    	try {
+    		myValue = Integer.parseInt(myNumber);
+		} catch (NumberFormatException e) {
+			myValue = -1;
+		}
+    	
+    	try {
+    		otherValue = Integer.parseInt(otherNumber);
+		} catch (NumberFormatException e) {
+			otherValue = -1;
+		}
+    	
+    	if( myValue < 0 || otherValue < 0 ) {
+    		return myNumber.compareTo(otherNumber);
+    	} else {
+    		return myValue - otherValue;
+    	}
     }
 }

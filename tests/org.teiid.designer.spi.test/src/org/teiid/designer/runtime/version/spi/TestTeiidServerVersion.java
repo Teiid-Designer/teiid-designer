@@ -120,6 +120,11 @@ public class TestTeiidServerVersion extends TestCase {
         // 20 < 18 but designer > teiidteiid
         assertTrue(version("8.teiidteiid-18.0").isGreaterThan(version("8.designer-20.0")));  //$NON-NLS-1$//$NON-NLS-2$
         assertFalse(version("8.designer-20.0").isGreaterThan(version("8.teiidteiid-18.0")));  //$NON-NLS-1$//$NON-NLS-2$
+        
+        assertTrue(version("8.11.0").isGreaterThan(version("8.8.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(version("8.10.0").isGreaterThan(version("8.8.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(version("8.10.1").isGreaterThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        assertFalse(version("8.10.1").isGreaterThan(version("8.11.0"))); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -179,5 +184,8 @@ public class TestTeiidServerVersion extends TestCase {
         // 20 > 18 but designer < teiidteiid
         assertTrue(version("8.designer-20.0").isLessThan(version("8.teiidteiid-18.0")));  //$NON-NLS-1$//$NON-NLS-2$
         assertFalse(version("8.teiidteiid-18.0").isLessThan(version("8.designer-20.0")));  //$NON-NLS-1$//$NON-NLS-2$
+        
+	    assertTrue(version("8.7.0").isLessThan(version("8.7.1"))); //$NON-NLS-1$ //$NON-NLS-2$
+	    assertTrue(version("8.8.0").isLessThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
