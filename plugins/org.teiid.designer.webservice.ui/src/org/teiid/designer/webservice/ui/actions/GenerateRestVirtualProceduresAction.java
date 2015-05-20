@@ -532,11 +532,8 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	private IContainer viewModelFolder;
         String viewModelName;
     	private Text viewModelFileText;
-    	
-    	ModelWorkspaceViewerFilter virtualModelFilter;
-        
+
     	private String restMethodValue = RestModelExtensionConstants.METHODS.GET;
-//    	private Combo restMethodsCombo;
 
         /**
          * Construct an instance of ModelStatisticsDialog.
@@ -582,7 +579,6 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 
         		Button browseButton = new Button(viewGroup, SWT.PUSH);
         		gridData = new GridData();
-        		// buttonGridData.horizontalAlignment = GridData.HORIZONTAL_ALIGN_END;
         		browseButton.setLayoutData(gridData);
         		browseButton.setText(getString("browse")); //$NON-NLS-1$
         		browseButton.addSelectionListener(new SelectionAdapter() {
@@ -702,23 +698,6 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	    		GridData gd_vg = new GridData(GridData.FILL_HORIZONTAL);
 	    		gd_vg.horizontalSpan = 2;
 	    		sourceGroup.setLayoutData(gd_vg);
-	
-	    		{
-//		        	Composite namePanel = new Composite(sourceGroup, SWT.NONE);
-//		        	GridLayoutFactory.swtDefaults().numColumns(3).applyTo(namePanel);
-		            
-//		            Label iconLabel = new Label(namePanel, SWT.NONE);
-//					if( ModelIdentifier.isRelationalSourceModel(modelResource)) {
-//						iconLabel.setImage(WebServiceUiPlugin.getDefault().getImage(Images.SOURCE_MODEL_ICON));
-//					} else {
-//						iconLabel.setImage( WebServiceUiPlugin.getDefault().getImage(Images.VIEW_MODEL_ICON));
-//					}
-//					
-//		            Label modelNameLabel = new Label(namePanel, SWT.NONE);
-//		            modelNameLabel.setText(this.modelResource.getItemName());
-//		            GridDataFactory.swtDefaults().grab(true, false).applyTo(modelNameLabel);
-//		            modelNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-	    		}
 	    		
 	            Composite buttonPanel = WidgetFactory.createPanel(sourceGroup, SWT.NONE, 1, 1);
 	            GridLayoutFactory.fillDefaults().numColumns(5).margins(1, 1).applyTo(buttonPanel);
@@ -958,23 +937,10 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				}
 			}
 			
-//			if( StringUtilities.isEmpty(restMethodsCombo.getText()) ) {
-//				setErrorMessage(getString("msg.restMethodNotSelected")); //$NON-NLS-1$
-//				getButton(IDialogConstants.OK_ID).setEnabled(false);
-//				return;
-//			}
-			
 			setErrorMessage(null);
 			setMessage(getString("msg.clickOkToGenerateProcedures")); //$NON-NLS-1$
 			getButton(IDialogConstants.OK_ID).setEnabled(true);
         }
-        
-//        private void selectMethodComboItem(int selectionIndex) {
-//        	if( selectionIndex >=0 ) {
-//        		restMethodsCombo.select(selectionIndex);
-//        		this.restMethodValue = restMethodsCombo.getItem(selectionIndex);
-//        	}
-//        }
 
         /* (non-Javadoc)
          * @see org.eclipse.jface.window.Window#create()
