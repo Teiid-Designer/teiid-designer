@@ -646,11 +646,12 @@ public class TeiidXmlColumnInfo implements ITeiidXmlColumnInfo {
     @Override
     public String toString() {
         StringBuilder text = new StringBuilder();
-        text.append("Teiid XML Metadata Column Info: "); //$NON-NLS-1$
-        text.append("\tname =").append(getName()); //$NON-NLS-1$
-        text.append("\n\tsymbol name = ").append(getSymbolName()); //$NON-NLS-1$
-        text.append("\n\tdatatype =").append(getDatatype()); //$NON-NLS-1$
-        text.append("\n\tfullPath =").append(getFullXmlPath()); //$NON-NLS-1$
+        text.append("Column Info: "); //$NON-NLS-1$
+        text.append("name = ").append(getSymbolName()); //$NON-NLS-1$
+        text.append(", ordinal = ").append(getOrdinality()); //$NON-NLS-1$
+        text.append(", datatype = ").append(getDatatype()); //$NON-NLS-1$
+        text.append(", default = ").append(getDefaultValue()); //$NON-NLS-1$
+        text.append(", PATH = ").append(getRelativePath()); //$NON-NLS-1$
 
         return text.toString();
     }

@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
+package org.teiid.designer.transformation.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +35,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
+import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.ui.common.UILabelUtil;
+import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 /**
@@ -50,7 +54,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 	// =============================================================
 	// Instance variables
 	// =============================================================
-	ColumnInfo columnInfo;
+	ITeiidXmlColumnInfo columnInfo;
 
 	// =============================================================
 	// Constructors
@@ -63,7 +67,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 	 * @param columnInfo
 	 *            the columnInfo table object
 	 */
-	public EditColumnDialog(Shell parent, ColumnInfo columnInfo) {
+	public EditColumnDialog(Shell parent, ITeiidXmlColumnInfo columnInfo) {
 		super(parent);
 		this.columnInfo = columnInfo;
 	}
@@ -131,7 +135,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				columnInfo.setName(value);
+				((TeiidXmlColumnInfo)(columnInfo)).setName(value);
 				validate();
 			}
 		});
@@ -155,7 +159,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				columnInfo.setDefaultValue(value);
+				((TeiidXmlColumnInfo)(columnInfo)).setDefaultValue(value);
 				validate();
 			}
 		});
@@ -179,7 +183,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				columnInfo.setRelativePath(value);
+				((TeiidXmlColumnInfo)(columnInfo)).setRelativePath(value);
 				validate();
 			}
 		});
@@ -188,7 +192,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 		// Data type dropdown
 		// ------------------------------
 		Label datatype = new Label(composite, SWT.BORDER | SWT.NONE);
-		datatype.setText(Messages.DataType);
+		datatype.setText(Messages.dataTypeLabel);
 		datatype.setLayoutData(new GridData());
 
 		final Combo datatypeCombo = new Combo(composite,
@@ -215,7 +219,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 		datatypeCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				columnInfo.setDatatype(datatypeCombo.getText());
+				((TeiidXmlColumnInfo)(columnInfo)).setDatatype(datatypeCombo.getText());
 				validate();
 			}
 		});
@@ -224,7 +228,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 		// Ordinality checkbox
 		// ------------------------------
 		Label ordinality = new Label(composite, SWT.BORDER | SWT.NONE);
-		ordinality.setText(Messages.Ordinality);
+		ordinality.setText(Messages.ForOrdinality);
 		ordinality.setLayoutData(new GridData());
 		
 		final Button ordinalityCb = new Button(composite, SWT.CHECK | SWT.LEFT);
@@ -232,7 +236,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 		ordinalityCb.setSelection(columnInfo.getOrdinality());
 		ordinalityCb.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(final SelectionEvent event) {
-				columnInfo.setOrdinality(ordinalityCb.getSelection());
+				((TeiidXmlColumnInfo)(columnInfo)).setOrdinality(ordinalityCb.getSelection());
 			}
 		});
 
@@ -257,48 +261,6 @@ public class EditColumnDialog extends TitleAreaDialog {
 		super.okPressed();
 	}
 
-//	class DatatypeCombo extends Combo {
-//
-//		private String[] datatypes;
-//
-//		protected void checkSubclass() {
-//		}
-//
-//		public DatatypeCombo(Composite parent, int style) {
-//			super(parent, style);
-//			IDataTypeManagerService service = ModelerCore
-//					.getTeiidDataTypeManagerService();
-//			Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-//			Collection<String> dTypes = new ArrayList<String>();
-//
-//			String[] sortedStrings = unsortedDatatypes
-//					.toArray(new String[unsortedDatatypes.size()]);
-//			Arrays.sort(sortedStrings);
-//			for (String dType : sortedStrings) {
-//				dTypes.add(dType);
-//			}
-//
-//			datatypes = dTypes.toArray(new String[dTypes.size()]);
-//			this.setItems(datatypes);
-//		}
-//
-//		protected String getElementValue(Object element) {
-//			return ((ITeiidXmlColumnInfo) element).getDatatype();
-//		}
-//
-//		protected String[] refreshItems(Object element) {
-//			return datatypes;
-//		}
-//
-//		protected void setElementValue(Object element, String newValue) {
-//			if (!((ITeiidXmlColumnInfo) element).getOrdinality()) {
-//				((TeiidXmlColumnInfo) element).setDatatype(newValue);
-//			}
-//		}
-//	}
-	
-	
-
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
 		private final int columnNumber;
@@ -314,20 +276,20 @@ public class EditColumnDialog extends TitleAreaDialog {
 		 */
 		@Override
 		public String getText(Object element) {
-			if (element instanceof ColumnInfo) {
+			if (element instanceof ITeiidXmlColumnInfo) {
 				switch (this.columnNumber) {
 				case 0: {
-					return ((ColumnInfo) element).getName();
+					return ((ITeiidXmlColumnInfo) element).getName();
 				}
 				case 1: {
-					return Boolean.toString(((ColumnInfo) element)
+					return Boolean.toString(((ITeiidXmlColumnInfo) element)
 							.getOrdinality());
 				}
 				case 2: {
-					return ((ColumnInfo) element).getDatatype();
+					return ((ITeiidXmlColumnInfo) element).getDatatype();
 				}
 				case 3: {
-					return (((ColumnInfo) element).getRelativePath());
+					return (((ITeiidXmlColumnInfo) element).getRelativePath());
 				}
 				}
 			}
