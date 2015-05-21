@@ -54,6 +54,7 @@ import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 
@@ -233,6 +234,11 @@ public class EditColumnsPanel {
 				case 1: {
 					StringBuilder buf = new StringBuilder();
 					buf.append(((ColumnInfo) element).toString().substring(((ColumnInfo) element).toString().indexOf(", ")+2));
+					if (((ColumnInfo) element).getOrdinality()){
+						buf = new StringBuilder(buf.toString().replace("ordinal = true", "ordinal"));
+					}else{
+						buf = new StringBuilder(buf.toString().replace("ordinal = false", "ordinal"));
+					}
 					return buf.toString().replace("datatype", "type");
 				}
 				}

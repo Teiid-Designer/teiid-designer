@@ -1,155 +1,191 @@
 /*
  * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.designer.transformation.ui.wizards.xmlfile.panels;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TreeEditor;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.actions.TextActionHandler;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
-import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
-import org.teiid.designer.type.IDataTypeManagerService;
-import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
-import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
-import org.teiid.designer.ui.common.table.TableViewerBuilder;
-
 
 /**
  * @since 8.0
  */
 public class EditColumnsPanel {
-    private final String EMPTY = ""; //$NON-NLS-1$
-    private final int NAME_PROP = 0;
-    private final int DEFAULT_VALUE_PROP = 1;
-    private final int XML_PATH_PROP = 2;
-    
-	
-	TableViewerBuilder columnsViewer;
+	private final Image XSD_ELEMENT_ICON_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.SCHEMA_ELEMENT);
+	private final Image XSD_ATTRIBUTE_ICON_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.SCHEMA_ATTRIBUTE);
+
 	final TeiidXmlImportXmlConfigurationPage configPage;
-	
-	public EditColumnsPanel(Composite parent, TeiidXmlImportXmlConfigurationPage configPage) {
+	TreeViewer columnsViewer;
+
+	int type;
+	TreeEditor treeEditor;
+	Text textEditor;
+	Composite textEditorParent;
+	TextActionHandler textActionHandler;
+	Object selectedObject;
+	TreeItem[] cachedSelection;
+
+	public EditColumnsPanel(Composite parent,
+			TeiidXmlImportXmlConfigurationPage configPage) {
 		super();
 		this.configPage = configPage;
 		createPanel(parent);
 	}
-	
+
 	private void createPanel(Composite parent) {
-        this.columnsViewer = new TableViewerBuilder(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().hint(SWT.DEFAULT, 80).applyTo(this.columnsViewer.getControl());
-        
-        // create columns
-        TableViewerColumn column = columnsViewer.createColumn(SWT.LEFT, 30, 40, true);
-        column.getColumn().setText(Messages.ColumnName + getSpaces(25));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), NAME_PROP));
-        column.setLabelProvider(new ColumnDataLabelProvider(0));
 
-        
-        column = columnsViewer.createColumn(SWT.LEFT, 10, 30, true);
-        column.getColumn().setText(Messages.ForOrdinality);
-        column.setLabelProvider(new ColumnDataLabelProvider(1));
-        column.setEditingSupport(new OrdinalityEditingSupport(this.columnsViewer.getTableViewer()));
+		Tree table = new Tree(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.BORDER);
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		table.setLayout(new TableLayout());
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		gd.heightHint = 80;
+		table.setLayoutData(gd);
 
+		this.columnsViewer = new TreeViewer(table);
+		this.columnsViewer.getControl().setLayoutData(gd);
+		TreeViewerColumn name = new TreeViewerColumn(this.columnsViewer,
+				SWT.LEFT);
+		name.setLabelProvider(new ColumnDataLabelProvider(0));
+		name.getColumn().setWidth(200);
+		name.getColumn().setText(Messages.Name);
+		TreeViewerColumn columnInfo = new TreeViewerColumn(this.columnsViewer,
+				SWT.LEFT);
+		columnInfo.setLabelProvider(new ColumnDataLabelProvider(1));
+		columnInfo.getColumn().setWidth(200);
+		columnInfo.getColumn().setText(Messages.ColumnInfo);
+		treeEditor = new TreeEditor(columnsViewer.getTree());
 
-        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
-        column.getColumn().setText(Messages.dataTypeLabel + getSpaces(2));
-        column.setLabelProvider(new ColumnDataLabelProvider(2));
-        column.setEditingSupport(new DatatypeComboEditingSupport(this.columnsViewer.getTableViewer()));
+		ColumnDataTreeProvider provider = new ColumnDataTreeProvider();
+		this.columnsViewer.setContentProvider(provider);
+		this.columnsViewer.setAutoExpandLevel(3);
+		this.columnsViewer.setInput(this.configPage.getFileInfo());
 
-        
-        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
-        column.getColumn().setText(Messages.DefaultValue + getSpaces(2));
-        column.setLabelProvider(new ColumnDataLabelProvider(3));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), DEFAULT_VALUE_PROP));
+		this.columnsViewer.addDoubleClickListener(new IDoubleClickListener() {
 
-        
-        column = columnsViewer.createColumn(SWT.LEFT, 20, 30, true);
-        column.getColumn().setText(Messages.Path);
-        column.setLabelProvider(new ColumnDataLabelProvider(4));
-        column.setEditingSupport(new ColumnInfoTextEditingSupport(this.columnsViewer.getTableViewer(), XML_PATH_PROP));
+			@Override
+			public void doubleClick(DoubleClickEvent event) {
+				renameInline();
+			}
+		});
 
-        
-        if( getFileInfo() != null ) {
-	        for( ITeiidXmlColumnInfo row : getFileInfo().getColumnInfoList() ) {
-	        	this.columnsViewer.add(row);
-	        }
-        }
+		this.columnsViewer.getTree().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent theEvent) {
+				if (theEvent.button == 1) {
+					if (isTextEditorActive() && selectedObject != null) {
+						saveChangesAndDispose(selectedObject);
+					}
+				}
+			}
+		});
+
 	}
-	
-    private String getSpaces(int nSpaces) {
-    	StringBuffer sb = new StringBuffer(nSpaces);
-    	for( int i=0; i<nSpaces; i++ ) {
-    		sb.append(StringUtilities.SPACE);
-    	}
-    	return sb.toString();
-    }
 
-	private TeiidXmlFileInfo getFileInfo() {
-		return this.configPage.getFileInfo();
-	}
-    
 	public void refresh() {
-    	this.columnsViewer.getTable().removeAll();
-        for( ITeiidXmlColumnInfo row : getFileInfo().getColumnInfoList() ) {
-        	this.columnsViewer.add(row);
-        }
+		this.columnsViewer.setInput(this.configPage);
+		this.columnsViewer.refresh();
+		this.columnsViewer.expandAll();
 	}
-	
+
 	public void refresh(Object element) {
 		this.columnsViewer.refresh(element);
 	}
-	
+
 	public void addSelectionListener(ISelectionChangedListener listener) {
 		this.columnsViewer.addSelectionChangedListener(listener);
 	}
-	
+
+	public Object getSelectedObject() {
+
+		IStructuredSelection selection = (IStructuredSelection) this.columnsViewer
+				.getSelection();
+		for (Object obj : selection.toArray()) {
+			return obj;
+		}
+
+		return null;
+	}
+
 	public TeiidXmlColumnInfo getSelectedColumn() {
-		
-		IStructuredSelection selection = (IStructuredSelection)this.columnsViewer.getSelection();
-		for( Object obj : selection.toArray()) {
-			if( obj instanceof ITeiidXmlColumnInfo ) {
+		IStructuredSelection selection = (IStructuredSelection) this.columnsViewer
+				.getSelection();
+		for (Object obj : selection.toArray()) {
+			if (obj instanceof TeiidXmlColumnInfo) {
 				return (TeiidXmlColumnInfo) obj;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public int getSelectedIndex() {
-		return columnsViewer.getTable().getSelectionIndex();
+		TreeItem[] selectedItems = columnsViewer.getTree().getSelection();
+		if (selectedItems.length > 0) {
+			int i = 0;
+			for (TreeItem item : columnsViewer.getTree().getItems()) {
+				if (selectedItems[0] == item) {
+					return i;
+				}
+			}
+		}
+		return -1;
 	}
-	
+
 	public void selectRow(int index) {
-		if( index > -1 ) {
-			columnsViewer.getTable().select(index);
+		if (index > -1) {
+			TreeItem item = columnsViewer.getTree().getItem(index);
+			columnsViewer.getTree().select(item);
 		} else {
 			columnsViewer.setSelection(new StructuredSelection());
 		}
+	}
+
+	private void notifyColumnDataChanged() {
+		 this.columnsViewer.refresh();
+	}
+
+	public void setEnabled(boolean enable) {
+		columnsViewer.getTree().setEnabled(enable);
 	}
 	class ColumnDataLabelProvider extends ColumnLabelProvider {
 
@@ -166,26 +202,24 @@ public class EditColumnsPanel {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof ITeiidXmlColumnInfo ) {
+			if (element instanceof TeiidXmlColumnInfo) {
 				switch (this.columnNumber) {
-					case 0: {
-						return ((ITeiidXmlColumnInfo)element).getName();
+				case 0: {
+					return ((TeiidXmlColumnInfo) element).getName();
+				}
+				case 1: {
+					StringBuilder buf = new StringBuilder();
+					buf.append(((TeiidXmlColumnInfo) element).toString().substring(((TeiidXmlColumnInfo) element).toString().indexOf(", ")+2));
+					if (((TeiidXmlColumnInfo) element).getOrdinality()){
+						buf = new StringBuilder(buf.toString().replace("ordinal = true", "ordinal"));
+					}else{
+						buf = new StringBuilder(buf.toString().replace("ordinal = false", "ordinal"));
 					}
-					case 1: {
-						return EMPTY;
-					}
-					case 2: {
-						return ((ITeiidXmlColumnInfo)element).getDatatype();
-					}
-					case 3: {
-						return ((ITeiidXmlColumnInfo)element).getDefaultValue();
-					}
-					case 4: {
-						return ((ITeiidXmlColumnInfo)element).getRelativePath();
-					}
+					return buf.toString().replace("datatype", "type");
+				}
 				}
 			}
-			return EMPTY;
+			return StringUtilities.EMPTY_STRING;
 		}
 
 		/**
@@ -202,20 +236,23 @@ public class EditColumnsPanel {
 			case 1: {
 				return "Tooltip 2"; //getString("datatypeColumnTooltip"); //$NON-NLS-1$
 			}
-		}
-		return "unknown tooltip"; //$NON-NLS-1$
+			}
+			return "unknown tooltip"; //$NON-NLS-1$
 		}
 
 		@Override
 		public Image getImage(Object element) {
-			if( this.columnNumber == 0 ) {
-				return UiPlugin.getDefault().getImage(UiConstants.Images.COLUMN_ICON);
-			} else if( this.columnNumber == 1 ) {
-				if(element instanceof ITeiidXmlColumnInfo) {
-					if( ((ITeiidXmlColumnInfo)element).getOrdinality() ) {
-						return UiPlugin.getDefault().getImage(PluginConstants.Images.CHECKED_BOX_ICON);
+			if (this.columnNumber == 0) {
+				return UiPlugin.getDefault().getImage(
+						UiConstants.Images.COLUMN_ICON);
+			} else if (this.columnNumber == 1) {
+				if (element instanceof ITeiidXmlColumnInfo) {
+					if (((ITeiidXmlColumnInfo) element).getOrdinality()) {
+						return UiPlugin.getDefault().getImage(
+								PluginConstants.Images.CHECKED_BOX_ICON);
 					} else {
-						return UiPlugin.getDefault().getImage(PluginConstants.Images.UNCHECKED_BOX_ICON);
+						return UiPlugin.getDefault().getImage(
+								PluginConstants.Images.UNCHECKED_BOX_ICON);
 					}
 				}
 				return null;
@@ -223,176 +260,240 @@ public class EditColumnsPanel {
 			return null;
 		}
 	}
-	
-    class ColumnInfoTextEditingSupport extends EditingSupport {
-    	
-		private TextCellEditor editor;
-		private int type;
+	class ColumnDataTreeProvider implements ITreeContentProvider,
+			ILabelProvider {
 
-		/**
-		 * Create a new instance of the receiver.
-		 * 
-		 * @param viewer
-		 */
-		public ColumnInfoTextEditingSupport(ColumnViewer viewer, int type) {
-			super(viewer);
-			this.type = type;
-			this.editor = new TextCellEditor((Composite) viewer.getControl());
+		@Override
+		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			// NO OP
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-		 */
 		@Override
-		protected boolean canEdit(Object element) {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-		 */
-		@Override
-		protected CellEditor getCellEditor(Object element) {
-			return editor;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-		 */
-		@Override
-		protected Object getValue(Object element) {
-			if( element instanceof ITeiidXmlColumnInfo ) {
-				switch(this.type) {
-					case NAME_PROP: {
-						return ((ITeiidXmlColumnInfo)element).getName();
-					}
-					case DEFAULT_VALUE_PROP: {
-						return ((ITeiidXmlColumnInfo)element).getDefaultValue();
-					}
-					case XML_PATH_PROP: {
-						return ((ITeiidXmlColumnInfo)element).getRelativePath();
-					}
-				}
+		public Object[] getElements(Object inputElement) {
+			if (inputElement instanceof TeiidXmlImportXmlConfigurationPage) {
+				return ((TeiidXmlImportXmlConfigurationPage) inputElement).getFileInfo().getColumnInfoList().toArray();
 			}
-			return EMPTY;
+			return new Object[0];
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object,
-		 *      java.lang.Object)
-		 */
 		@Override
-		protected void setValue(Object element, Object value) {
-			if( element instanceof ITeiidXmlColumnInfo ) {
-				switch(this.type) {
-					case NAME_PROP: {
-						String oldValue = ((ITeiidXmlColumnInfo)element).getName();
-						String newValue = (String)value;
-						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidXmlColumnInfo)element).setName(newValue);
-							refresh(element);
-					    	getFileInfo().columnChanged((ITeiidXmlColumnInfo)element);
-							configPage.handleInfoChanged(false);
-						}
-					} break;
-					case DEFAULT_VALUE_PROP: {
-						String oldValue = ((ITeiidXmlColumnInfo)element).getDefaultValue();
-						String newValue = (String)value;
-						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidXmlColumnInfo)element).setDefaultValue(newValue);
-							refresh(element);
-							getFileInfo().columnChanged((ITeiidXmlColumnInfo)element);
-							configPage.handleInfoChanged(false);
-						}
-					} break;
-					case XML_PATH_PROP: {
-						String oldValue = ((ITeiidXmlColumnInfo)element).getRelativePath();
-						String newValue = (String)value;
-						if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-							((TeiidXmlColumnInfo)element).setRelativePath(newValue);
-							refresh(element);
-							getFileInfo().columnChanged((ITeiidXmlColumnInfo)element);
-							configPage.handleInfoChanged(false);
-						}
-					} break;
-				}
-				
+		public Object[] getChildren(Object parentElement) {
+
+		//	if (parentElement instanceof TeiidXmlColumnInfo) {
+		//		//return ((TeiidXmlColumnInfo) parentElement);
+		//		return new String[] {"someValue"};
+		//	}
+			return null;
+		}
+
+		@Override
+		public boolean hasChildren(Object element) {
+			if (element instanceof TeiidXmlColumnInfo) {
+				return true;
 			}
+			return false;
+		}
+
+		@Override
+		public Object getParent(Object element) {
+			return null;
+		}
+
+		@Override
+		public boolean isLabelProperty(Object element, String property) {
+			// NO OP
+			return false;
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if (element instanceof TeiidXmlColumnInfo) {
+				return XSD_ELEMENT_ICON_IMG;
+			}
+			return null;
+		}
+
+		@Override
+		public String getText(Object element) {
+			if (element instanceof TeiidXmlColumnInfo) {
+				return ((TeiidXmlColumnInfo) element).getName();
+			}
+			return null;
+		}
+
+		@Override
+		public void addListener(ILabelProviderListener listener) {
+			// NO OP
+		}
+
+		@Override
+		public void removeListener(ILabelProviderListener listener) {
+			// NO OP
+		}
+
+		@Override
+		public void dispose() {
+			// NO OP
 		}
 
 	}
-    
-    class DatatypeComboEditingSupport extends ComboBoxEditingSupport {
-    	
-    	private String[] datatypes;
-        /**
-         * @param viewer
-         */
-        public DatatypeComboEditingSupport( ColumnViewer viewer ) {
-            super(viewer);
-            IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
-    		Set<String> unsortedDatatypes = service.getAllDataTypeNames();
-    		Collection<String> dTypes = new ArrayList<String>();
-    		
-    		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
-    		Arrays.sort(sortedStrings);
-    		for( String dType : sortedStrings ) {
-    			dTypes.add(dType);
-    		}
-    		
-    		datatypes = dTypes.toArray(new String[dTypes.size()]);
-    		
-        }
 
-
-        @Override
-        protected String getElementValue( Object element ) {
-        	return ((ITeiidXmlColumnInfo)element).getDatatype();
-        }
-
-        @Override
-        protected String[] refreshItems( Object element ) {
-            return datatypes;
-        }
-
-        @Override
-        protected void setElementValue( Object element,
-                                        String newValue ) {
-        	if( !((ITeiidXmlColumnInfo)element).getOrdinality() ) {
-	            ((TeiidXmlColumnInfo)element).setDatatype(newValue);
-	            configPage.handleInfoChanged(false);
-        	}
-        }
-    }
-	class OrdinalityEditingSupport extends CheckBoxEditingSupport {
-
-		public OrdinalityEditingSupport(ColumnViewer viewer) {
-			super(viewer);
+	private void renameInline() {
+		Object obj = getSelectedObject();
+		selectedObject = obj;
+		cachedSelection = columnsViewer.getTree().getSelection();
+		// Make sure text editor is created only once. Simply reset text
+		// editor when action is executed more than once. Fixes bug 22269.
+		if (textEditorParent == null) {
+			createTextEditor(obj);
+		}
+		String name = null;
+		if (obj instanceof TeiidXmlColumnInfo) {
+			name = ((TeiidXmlColumnInfo) obj).getName();
+		}
+		if (name != null) {
+			textEditor.setText(name);
 		}
 
-		@Override
-		protected void setElementValue(Object element, Object newValue) {
-			if (element instanceof ITeiidXmlColumnInfo
-					&& newValue instanceof Boolean) {
-				TeiidXmlColumnInfo info = (TeiidXmlColumnInfo) element;
-				if (info.getOrdinality()) {
-					getFileInfo().setOrdinality(info, false);
-					configPage.handleInfoChanged(false);
-				} else {
-					getFileInfo().setOrdinality(info, true);
-					configPage.handleInfoChanged(false);
+		// Open text editor with initial size.
+		textEditorParent.setVisible(true);
+		Point textSize = textEditor.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		textSize.x += textSize.y; // Add extra space for new characters.
+		Point parentSize = textEditorParent.getSize();
+		textEditor.setBounds(2, 1, Math.min(textSize.x, parentSize.x - 4),
+				parentSize.y - 2);
+		textEditorParent.redraw();
+		textEditor.selectAll();
+		textEditor.setFocus();
+	}
+
+	private void createTextEditor(final Object obj) {
+		// Create text editor parent. This draws a nice bounding rect.
+		textEditorParent = createEditorParent();
+		textEditorParent.setVisible(false);
+		textEditorParent.addListener(SWT.Paint, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				Point textSize = textEditor.getSize();
+				Point parentSize = textEditorParent.getSize();
+				e.gc.drawRectangle(0, 0,
+						Math.min(textSize.x + 4, parentSize.x - 1),
+						parentSize.y - 1);
+			}
+		});
+
+		// Create inner text editor.
+		textEditor = new Text(textEditorParent, SWT.NONE);
+		textEditorParent.setBackground(textEditor.getBackground());
+		textEditor.addListener(SWT.Modify, new Listener() {
+			@Override
+			public void handleEvent(Event e) {
+				Point textSize = textEditor.computeSize(SWT.DEFAULT,
+						SWT.DEFAULT);
+				textSize.x += textSize.y; // Add extra space for new characters.
+				Point parentSize = textEditorParent.getSize();
+				textEditor.setBounds(2, 1,
+						Math.min(textSize.x, parentSize.x - 4),
+						parentSize.y - 2);
+				textEditorParent.redraw();
+			}
+		});
+		textEditor.addListener(SWT.Traverse, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+
+				// Workaround for Bug 20214 due to extra
+				// traverse events
+				switch (event.detail) {
+				case SWT.TRAVERSE_ESCAPE:
+					// Do nothing in this case
+					disposeTextWidget();
+					event.doit = true;
+					event.detail = SWT.TRAVERSE_NONE;
+					break;
+				case SWT.TRAVERSE_RETURN:
+					saveChangesAndDispose(obj);
+					event.doit = true;
+					event.detail = SWT.TRAVERSE_NONE;
+					break;
 				}
 			}
+		});
+		textEditor.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent fe) {
+				// saveChangesAndDispose(obj);
+			}
+		});
+
+		if (textActionHandler != null)
+			textActionHandler.addText(textEditor);
+	}
+
+	Composite createEditorParent() {
+		Tree tree = columnsViewer.getTree();
+		Composite result = new Composite(tree, SWT.NONE);
+		// Now let's make sure the target eObject is selected
+		TreeItem[] selectedItems = cachedSelection; // tree.getSelection();
+		if (selectedItems.length > 0) {
+			treeEditor.horizontalAlignment = SWT.LEFT;
+			treeEditor.grabHorizontal = true;
+			treeEditor.setEditor(result, selectedItems[0]);
+		}
+		return result;
+	}
+
+	/**
+	 * Indicates if the text editor is currently active and not disposed.
+	 * 
+	 * @return <code>true</code>if active; <code>false</code> otherwise.
+	 * @since 4.2
+	 */
+	boolean isTextEditorActive() {
+		return (this.textEditor != null);
+	}
+
+	/**
+	 * Close the text widget and reset the editorText field.
+	 */
+	void disposeTextWidget() {
+		if (textActionHandler != null)
+			textActionHandler.removeText(textEditor);
+
+		if (textEditorParent != null) {
+			textEditorParent.dispose();
+			textEditorParent = null;
+			textEditor = null;
+			treeEditor.setEditor(null, null);
 		}
 
 	}
-    
+
+	/**
+	 * Save the changes and dispose of the text widget.
+	 * 
+	 * @param resource
+	 *            - the resource to move.
+	 */
+	void saveChangesAndDispose(Object obj) {
+		// Cache the resource to avoid selection loss since a selection of
+		// another item can trigger this method
+		final String newName = textEditor.getText();
+		if (obj instanceof TeiidXmlColumnInfo) {
+			((TeiidXmlColumnInfo) obj).setName(newName);
+		} 
+
+		Runnable query = new Runnable() {
+			@Override
+			public void run() {
+				// Dispose the text widget regardless
+				disposeTextWidget();
+				notifyColumnDataChanged();
+			}
+		};
+
+		this.columnsViewer.getTree().getShell().getDisplay().asyncExec(query);
+
+	}
+
 }

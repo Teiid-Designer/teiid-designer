@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.Messages;
+import org.teiid.designer.transformation.ui.wizards.EditColumnDialog;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlFileInfo;
 import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlImportXmlConfigurationPage;
@@ -37,7 +38,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
  */
 public class ColumnsInfoPanel {
 	
-	private Button addButton, deleteButton, upButton, downButton;
+	private Button addButton, deleteButton, upButton, downButton, editButton;
 	private Text rootPathText;
 
 	TreeViewer schemaTreeViewer;
@@ -70,7 +71,7 @@ public class ColumnsInfoPanel {
 		return rootPathText;
 	}
 
-	private void init(Composite parent) {
+	private void init(final Composite parent) {
 		Group columnInfoGroup = WidgetFactory.createGroup(parent, Messages.ColumnInfo, SWT.NONE, 1, 2);
 
 		Label prefixLabel = new Label(columnInfoGroup, SWT.NONE);
@@ -135,6 +136,26 @@ public class ColumnsInfoPanel {
 			}
 
 		});
+		
+		editButton = new Button(leftToolbarPanel, SWT.PUSH);
+    	editButton.setText(Messages.Edit);
+    	editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    	editButton.setEnabled(false);
+    	editButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ITeiidXmlColumnInfo info = editColumnsPanel.getSelectedColumn();
+				if( info != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(parent.getShell(), editColumnsPanel.getSelectedColumn());
+			        dialog.open();
+				}else{
+				}
+					editButton.setEnabled(true);
+					editColumnsPanel.refresh();
+					notifyColumnDataChanged();
+				}
+		});
 
 		upButton = new Button(leftToolbarPanel, SWT.PUSH);
 		upButton.setText(Messages.moveUpLabel);
@@ -192,6 +213,7 @@ public class ColumnsInfoPanel {
 				
 				if( sel.isEmpty()) {
 					deleteButton.setEnabled(false);
+					editButton.setEnabled(false);
 					upButton.setEnabled(false);
 					downButton.setEnabled(false);
 				} else {
@@ -210,6 +232,7 @@ public class ColumnsInfoPanel {
 						enable = false;
 					}
 					deleteButton.setEnabled(enable);
+					editButton.setEnabled(true);
 					if( enable ) {
 						upButton.setEnabled(getFileInfo().canMoveUp(columnInfo));
 						downButton.setEnabled(getFileInfo().canMoveDown(columnInfo));
@@ -236,6 +259,7 @@ public class ColumnsInfoPanel {
 
 	public void disableButtons() {
 		deleteButton.setEnabled(false);
+		editButton.setEnabled(false);
 		upButton.setEnabled(false);
 		downButton.setEnabled(false);
 	}
