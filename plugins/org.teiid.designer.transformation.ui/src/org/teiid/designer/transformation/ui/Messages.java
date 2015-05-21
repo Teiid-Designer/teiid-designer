@@ -16,6 +16,8 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     public static String Browse;
     public static String Edit;
+    public static String EditColumnTitle;
+    public static String EditingColumnInformation;
     public static String Name;
     public static String Path;
     public static String RootPath;
