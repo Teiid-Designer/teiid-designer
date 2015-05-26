@@ -123,13 +123,20 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
             	}
             }
             
-        	Properties connProps = getModelConnectionProperties(modelResource);
-        	
-        	if( connProps == null || connProps.isEmpty() ) {
-        		MessageDialog.openInformation(getShell(), getString("noInfo.title"),  //$NON-NLS-1$
-        				getString("noInfo.message", modelResource.getItemName())); //$NON-NLS-1$
-        		return;
-        	}
+            /* 
+             * check whether this was called from selection (i.e. right clicking on a model)
+             * and if so, check whether the source model has a connection profile set.
+             * Otherwise, this was called from the server view.
+             */
+            if (modelResource != null){
+	        	Properties connProps = getModelConnectionProperties(modelResource);
+	        	
+	        	if( connProps == null || connProps.isEmpty() ) {
+	        		MessageDialog.openInformation(getShell(), getString("noInfo.title"),  //$NON-NLS-1$
+	        				getString("noInfo.message", modelResource.getItemName())); //$NON-NLS-1$
+	        		return;
+	        	}
+            }
             
             // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
 
