@@ -683,6 +683,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 		if (getXmlFileInfo() != null) {
 			if (getXmlFileInfo().getViewProcedureName() != null) {
 				this.viewProcedureNameText.setText(getXmlFileInfo().getViewProcedureName());
+			} else {
+				this.viewProcedureNameText.setText(StringUtilities.EMPTY_STRING);
 			}
 		} else {
 			this.viewProcedureNameText.setText(viewProcedureName);
