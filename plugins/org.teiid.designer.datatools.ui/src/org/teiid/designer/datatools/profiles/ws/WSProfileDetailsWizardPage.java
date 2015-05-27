@@ -315,7 +315,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 				} else {
 					parameterString.append("&"); //$NON-NLS-1$  
 				}
-				parameterString.append(encodeString(key)).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
+				parameterString.append(encodeString(value.getName())).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
 			}
 		}
 
