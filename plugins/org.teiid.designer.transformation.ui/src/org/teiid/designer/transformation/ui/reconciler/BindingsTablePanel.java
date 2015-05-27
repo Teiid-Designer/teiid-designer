@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.reconciler;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelection;
@@ -133,6 +134,7 @@ public class BindingsTablePanel extends Composite {
         GridLayout gridLayout = new GridLayout();
         this.setLayout(gridLayout);
         gridLayout.numColumns = 1;
+        gridLayout.marginRight = 0;
         GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.grabExcessHorizontalSpace = true;
         gridData.grabExcessVerticalSpace = true;
@@ -146,6 +148,10 @@ public class BindingsTablePanel extends Composite {
         GridLayout gridLayout2 = new GridLayout();
         comp.setLayout(gridLayout2);
         gridLayout2.numColumns = 2;
+        gridLayout2.marginHeight = 1;
+        gridLayout2.marginWidth = 1;
+        gridLayout2.marginTop = 1;
+        gridLayout2.marginBottom = 1;
 
         GridData gridDataLeft = new GridData(GridData.FILL_BOTH);
         gridDataLeft.horizontalAlignment = SWT.BEGINNING;
@@ -161,7 +167,7 @@ public class BindingsTablePanel extends Composite {
         });
 
         GridData gridDataRight = new GridData(GridData.FILL_BOTH);
-        gridDataRight.horizontalAlignment = SWT.END;
+        gridDataRight.horizontalAlignment = SWT.BEGINNING;
 
         CLabel leftLabel = WidgetFactory.createLabel(comp, LABEL_GRID_STYLE, 2, BINDINGS_TABLE_TITLE_TEXT);
         leftLabel.setLayoutData(gridDataRight);
@@ -203,7 +209,9 @@ public class BindingsTablePanel extends Composite {
         GridLayout gridLayout = new GridLayout();
         buttonComposite.setLayout(gridLayout);
         gridLayout.numColumns = 9;
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
+        gridLayout.horizontalSpacing = 2;
+
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
         buttonComposite.setLayoutData(gridData);
 
         topButton = WidgetFactory.createButton(buttonComposite, TOP_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
@@ -251,7 +259,7 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, "    "); //$NON-NLS-1$
+        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, ""); //$NON-NLS-1$
 
         deleteButton = WidgetFactory.createButton(buttonComposite, DELETE_ATTR_BUTTON_TEXT, BUTTON_GRID_STYLE);
         deleteButton.setEnabled(!isReadOnly);
@@ -262,7 +270,7 @@ public class BindingsTablePanel extends Composite {
             }
         });
 
-        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, "    "); //$NON-NLS-1$
+        WidgetFactory.createLabel(buttonComposite, BUTTON_GRID_STYLE, ""); //$NON-NLS-1$
 
         resolveTypeButton = WidgetFactory.createButton(buttonComposite, RESOLVE_TYPE_BUTTON_TEXT, BUTTON_GRID_STYLE);
         resolveTypeButton.setEnabled(!isReadOnly);
