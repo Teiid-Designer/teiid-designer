@@ -282,7 +282,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
             String defaultValue = dialog.getDefaultValue();
             Parameter parameter = new Parameter(name, defaultValue, Parameter.Type.fromValue(type));
 
-            this.parameterMap.put(name, parameter);
+            this.parameterMap.put(Parameter.PREFIX+name, parameter);
             
             // update UI from model
             this.propertiesViewer.refresh();
@@ -326,14 +326,14 @@ public class ParameterPanel implements DatatoolsUiConstants {
         assert (selectedProperty != null);
 
         // update model
-        parameterMap.remove(selectedProperty.getName());
+        parameterMap.remove(Parameter.PREFIX+selectedProperty.getName());
 
         // update UI
         this.propertiesViewer.refresh();
         
         if (this.wsProfileDetailsWizardPage!=null){
         	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
-        	wsProfileDetailsWizardPage.getProfileProperties().remove(selectedProperty.getName());
+        	wsProfileDetailsWizardPage.getProfileProperties().remove(Parameter.PREFIX+selectedProperty.getName());
         	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
         }else{
         	propertyPage.setParameterMap(this.parameterMap);
