@@ -855,6 +855,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if( oldFileInfo != null ) {
 			oldVPName = oldFileInfo.getViewProcedureName();
 			this.info.clearXmlFileInfos();
+		} else {
+			if( !this.info.getXmlFileInfos().isEmpty() ) {
+				this.info.clearXmlFileInfos();
+			}
 		}
 		
 		TeiidXmlFileInfo fileInfo = new TeiidXmlFileInfo(xmlFile);
