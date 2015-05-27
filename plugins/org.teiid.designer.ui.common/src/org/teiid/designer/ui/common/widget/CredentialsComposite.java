@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.UiConstants;
 
@@ -43,6 +44,8 @@ public class CredentialsComposite extends Composite implements UiConstants, List
     private Label passwordLabel;
 
     private Text passwordText;
+    
+    boolean handlingEvent = false;
 
     /*
      * Need to stash the inputted values since they may be retrieved after the
@@ -105,21 +108,24 @@ public class CredentialsComposite extends Composite implements UiConstants, List
      */
     @Override
     public void handleEvent(Event event) {
-        if (event.widget == securityCombo) {
-            if (securityCombo.getText().equals(SecurityType.None.name())) {
-                usernameText.setText(null); //$NON-NLS-1$
-                usernameText.setEnabled(false);
-                passwordText.setText(null); //$NON-NLS-1$
-                passwordText.setEnabled(false);
-            } else {
-                usernameText.setEnabled(true);
-                passwordText.setEnabled(true);
-            }
-        }
-
-        securityType = SecurityType.valueOf(securityCombo.getText());
-        userName = usernameText.getText();
-        password = passwordText.getText();
+    	if( !handlingEvent ) {
+    		handlingEvent = true;
+	        if (event.widget == securityCombo) {
+	            if (securityCombo.getText().equals(SecurityType.None.name())) {
+	                usernameText.setText(StringConstants.EMPTY_STRING); 
+	                usernameText.setEnabled(false);
+	                passwordText.setText(StringConstants.EMPTY_STRING);
+	                passwordText.setEnabled(false);
+	            } else {
+	                usernameText.setEnabled(true);
+	                passwordText.setEnabled(true);
+	            }
+	        }
+	        securityType = SecurityType.valueOf(securityCombo.getText());
+	        userName = usernameText.getText();
+	        password = passwordText.getText();
+	        handlingEvent = false;
+    	}
     }
 
     public void addSecurityOptionListener(int eventType, Listener listener) {

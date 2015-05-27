@@ -296,6 +296,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	
 	 void handleResponseTypeChanged(String type) {
 		 this.extraProperties.put(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, type);
+		 validate();
      }
 	
 	/**
