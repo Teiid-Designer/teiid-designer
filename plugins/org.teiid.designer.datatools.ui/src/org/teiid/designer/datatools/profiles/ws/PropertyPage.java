@@ -349,7 +349,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	    	  }else{
 	    		  parameterString.append("&");   //$NON-NLS-1$  
 	    	  }
-	    	  parameterString.append(key).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
+	    	  parameterString.append(value.getName()).append("=").append(value.getDefaultValue()); //$NON-NLS-1$
 	      }
 	    }
 
@@ -500,7 +500,6 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void loadParameters(Properties props) {
     	for( Object key : props.keySet() )  {
     		String keyStr = (String)key;
-    		
     		if( keyStr.startsWith(Parameter.PREFIX)) {
     			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
     			parameterMap.put(newParam.getName(), newParam);
