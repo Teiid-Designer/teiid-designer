@@ -223,6 +223,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 	
 	 void handleResponseTypeChanged(String type) {
 		 setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, type);
+		 updateState();
      }
 	
 	/**
@@ -342,7 +343,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
     /**
      * 
      */
-    private void addListeners() {
+    private void addListeners() { 
         urlText.addListener(SWT.Modify, new Listener() {
             @Override
             public void handleEvent(Event event) {
@@ -355,6 +356,14 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
         });
 
         credentialsComposite.addSecurityOptionListener(SWT.Modify, new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
+                        credentialsComposite.getSecurityOption().name());
+            }
+        });
+        
+        credentialsComposite.addSecurityOptionListener(SWT.SELECTED, new Listener() {
             @Override
             public void handleEvent(Event event) {
                 setProperty(ICredentialsCommon.SECURITY_TYPE_ID,
@@ -382,6 +391,11 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
     private void setProperty(String propertyId, String value) {
         if (null == profileProperties) profileProperties = ((NewConnectionProfileWizard) getWizard()).getProfileProperties();
         profileProperties.setProperty(propertyId, value);
+        // check for security == None
+        if( propertyId.equals(ICredentialsCommon.SECURITY_TYPE_ID) && value.equals(SecurityType.None.name()) ) {
+        	profileProperties.remove(ICredentialsCommon.USERNAME_PROP_ID);
+        	profileProperties.remove(ICredentialsCommon.PASSWORD_PROP_ID);
+        }
         updateState();
     }
     
@@ -438,12 +452,14 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
         	if (null == profileProperties.get(ICredentialsCommon.USERNAME_PROP_ID)
                     || profileProperties.get(ICredentialsCommon.USERNAME_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Username.Error.Message")); //$NON-NLS-1$
+                    setPageComplete(false);
                     return;
                 }
                 setErrorMessage(null);
                 if (null == profileProperties.get(ICredentialsCommon.PASSWORD_PROP_ID)
                     || profileProperties.get(ICredentialsCommon.PASSWORD_PROP_ID).toString().isEmpty()) {
                     setErrorMessage(UTIL.getString("Common.Password.Error.Message")); //$NON-NLS-1$
+                    setPageComplete(false);
                     return;
                 }
                 
