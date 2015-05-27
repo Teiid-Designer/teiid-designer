@@ -72,7 +72,7 @@ public class ReconcilerDialog extends ExtendedTitleAreaDialog {
         Composite composite = (Composite)super.createDialogArea(parent);
         panel = new ReconcilerPanel(composite,this,transformationObj, isUnion, this.unionSegment, builderGroups);
         setDialogTitle(dialogTitle);
-        getShell().setMinimumSize(750, 500);
+        getShell().setMinimumSize(720, 500);
         return composite;
     }
     
