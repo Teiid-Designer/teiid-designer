@@ -97,6 +97,8 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         mainPanel.setLayout(new GridLayout(1, false));
 
+        setControl(hostPanel);
+        
         // Must have a running 8+ server to use this wizard.
         if(!importManager.isValidImportServer()) {
             setErrorMessage(Messages.selectDataSourcePage_InvalidServerMsg); 
@@ -125,9 +127,7 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         new ImportPropertiesPanel(mainPanel, importManager);
         
         scrolledComposite.sizeScrolledPanel();
-        
-        setControl(hostPanel);
-        
+
         // Validate the page
         validatePage();
     }
