@@ -42,8 +42,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.106.0,4.0.0)",
  org.apache.directory.studio.connection.core;bundle-version="2.0.0",
  org.apache.directory.studio.connection.ui;bundle-version="2.0.0",
  org.apache.directory.studio.ldapbrowser.common;bundle-version="2.0.0",
- org.apache.directory.studio.ldapbrowser.core;bundle-version="2.0.0",
- org.apache.directory.studio.ldapbrowser.ui;bundle-version="2.0.0"
+ org.apache.directory.studio.ldapbrowser.core;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.designer.schema.tools.processing

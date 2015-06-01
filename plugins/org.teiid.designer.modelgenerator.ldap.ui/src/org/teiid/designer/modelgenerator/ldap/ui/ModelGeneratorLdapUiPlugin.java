@@ -7,11 +7,9 @@
  */
 package org.teiid.designer.modelgenerator.ldap.ui;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.ui.IWorkbenchPage;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
@@ -26,8 +24,6 @@ import org.teiid.designer.ui.common.actions.ActionService;
  * @since 8.0
  */
 public final class ModelGeneratorLdapUiPlugin extends AbstractUiPlugin implements ModelGeneratorLdapUiConstants {
-
-    private static final String LDAP_BROWSER_UI_PLUGIN_ID = "org.apache.directory.studio.ldapbrowser.ui"; //$NON-NLS-1$
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // FIELDS
@@ -95,14 +91,6 @@ public final class ModelGeneratorLdapUiPlugin extends AbstractUiPlugin implement
 
         // Initialize logging/i18n/debugging utility
         ((PluginUtilImpl)UTIL).initializePlatformLogger(this);
-
-        //
-        // Ensure that the browser.ui plugin is fully started before using
-        // any of the ldap-related wizards. This is due to
-        // https://issues.apache.org/jira/browse/DIRSTUDIO-1046
-        //
-        Bundle ldapBrowserBundle = Platform.getBundle(LDAP_BROWSER_UI_PLUGIN_ID);
-        ldapBrowserBundle.start();
     }
 
     /**

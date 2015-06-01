@@ -8,14 +8,15 @@
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.table;
 
 import java.util.Iterator;
+import org.apache.directory.studio.ldapbrowser.common.BrowserCommonActivator;
+import org.apache.directory.studio.ldapbrowser.common.BrowserCommonConstants;
 import org.apache.directory.studio.ldapbrowser.common.widgets.browser.BrowserConfiguration;
 import org.apache.directory.studio.ldapbrowser.common.widgets.browser.BrowserQuickSearchWidget;
 import org.apache.directory.studio.ldapbrowser.common.widgets.browser.BrowserUniversalListener;
 import org.apache.directory.studio.ldapbrowser.common.widgets.browser.BrowserWidget;
 import org.apache.directory.studio.ldapbrowser.core.model.IBrowserConnection;
 import org.apache.directory.studio.ldapbrowser.core.model.IEntry;
-import org.apache.directory.studio.ldapbrowser.ui.views.browser.ShowBookmarksAction;
-import org.apache.directory.studio.ldapbrowser.ui.views.browser.ShowSearchesAction;
+import org.apache.directory.studio.ldapbrowser.core.model.impl.SearchResult;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -34,6 +35,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -84,19 +86,15 @@ public class LdapTablesPage extends WizardPage
     // flag to denote when the validate button should be clicked before allowing Next page
     private boolean dirty;
 
-	private BrowserWidget widget;
+    private BrowserWidget widget;
 
-	private BrowserUniversalListener universalListener;
+    private BrowserUniversalListener universalListener;
 
-	private ShowSearchesAction showSearchesAction;
+    private TreeViewer entryViewer;
 
-	private ShowBookmarksAction showBookmarksAction;
+    private LdapConnectionContentProvider entryContentProvider;
 
-	private TreeViewer entryViewer;
-
-	private LdapConnectionContentProvider entryContentProvider;
-
-	private LdapConnectionLabelProvider entryLabelProvider;
+    private LdapConnectionLabelProvider entryLabelProvider;
 
     /**
      * Constructs the page with the provided import manager
@@ -136,7 +134,7 @@ public class LdapTablesPage extends WizardPage
         entryLabelProvider.dispose();
     }
 
-    private void nodeSelected( final ILdapEntryNode node ) {
+    private void nodeSelected(final ILdapEntryNode node) {
         if (node.isRoot()) {
             tableNameText.setText(EMPTY_STRING);
             tableNameText.setEditable(false);
@@ -159,7 +157,7 @@ public class LdapTablesPage extends WizardPage
         importManager.setSynchronising(true);
 
         boolean entryAdded = importManager.addEntry(entryNode);
-        if (! entryAdded)
+        if (!entryAdded)
             return;
 
         entryViewer.refresh();
@@ -179,12 +177,12 @@ public class LdapTablesPage extends WizardPage
         importManager.setSynchronising(true);
 
         boolean entryRemoved = importManager.removeEntry(entryNode);
-        if (! entryRemoved)
+        if (!entryRemoved)
             return;
 
         entryViewer.refresh();
         ConnectionNode connectionNode = importManager.getConnectionNode();
-		entryViewer.setExpandedElements(new Object[] {connectionNode});
+        entryViewer.setExpandedElements(new Object[] {connectionNode});
         entryViewer.setSelection(new StructuredSelection(connectionNode));
         setDirty(true);
 
@@ -276,13 +274,11 @@ public class LdapTablesPage extends WizardPage
 
     @Override
     public void createControl(Composite parent) {
-     // Create page
+        // Create page
         final Composite pg = new Composite(parent, SWT.NONE) {
 
             @Override
-            public Point computeSize( final int widthHint,
-                                      final int heightHint,
-                                      final boolean changed ) {
+            public Point computeSize(final int widthHint, final int heightHint, final boolean changed) {
                 final Point size = super.computeSize(widthHint, heightHint, changed);
                 size.x = 800;
                 return size;
@@ -355,6 +351,9 @@ public class LdapTablesPage extends WizardPage
                 Iterator<Object> iter = sselection.iterator();
                 while (iter.hasNext()) {
                     Object next = iter.next();
+                    if (next instanceof SearchResult)
+                        next = ((SearchResult)next).getEntry();
+
                     if (!(next instanceof IEntry))
                         continue;
 
@@ -371,10 +370,10 @@ public class LdapTablesPage extends WizardPage
         widget.getToolBarManager().update(true);
 
         widget.getViewer().addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-			public void doubleClick(DoubleClickEvent event) {
-				addAction.run();
-			}
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                addAction.run();
+            }
         });
 
         //
@@ -382,15 +381,16 @@ public class LdapTablesPage extends WizardPage
         //
         widget.getInfoText().setVisible(false);
 
-        showSearchesAction = new ShowSearchesAction();
-        showBookmarksAction = new ShowBookmarksAction();
-		widget.getMenuManager().add(showSearchesAction);
-		widget.getMenuManager().add(showBookmarksAction);
-		widget.getMenuManager().update(true);
+        //
+        // Remove the drop down menu from the toolbar
+        // since it is empty
+        //
+        ViewForm composite = (ViewForm)widget.getControl();
+        composite.setTopRight(null);
 
-		//
-		// The chosen-entries side of the splitter
-		//
+        //
+        // The chosen-entries side of the splitter
+        //
         Group selectedComposite = new Group(splitter, SWT.BORDER);
         selectedComposite.setText(getString("selectedEntryTitle")); //$NON-NLS-1$
         selectedComposite.setFont(JFaceResources.getBannerFont());
@@ -413,13 +413,13 @@ public class LdapTablesPage extends WizardPage
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
 
-                IStructuredSelection selection = (IStructuredSelection) entryViewer.getSelection();
+                IStructuredSelection selection = (IStructuredSelection)entryViewer.getSelection();
                 if (selection.isEmpty())
                     return;
 
-                ILdapEntryNode node = (ILdapEntryNode) selection.getFirstElement();
+                ILdapEntryNode node = (ILdapEntryNode)selection.getFirstElement();
                 String tblNameText = tableNameText.getText();
-                if (! tblNameText.equals(node.getLabel())) {
+                if (!tblNameText.equals(node.getLabel())) {
                     node.setLabel(tblNameText);
                 }
             }
@@ -445,13 +445,13 @@ public class LdapTablesPage extends WizardPage
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
 
-                IStructuredSelection selection = (IStructuredSelection) entryViewer.getSelection();
+                IStructuredSelection selection = (IStructuredSelection)entryViewer.getSelection();
                 if (selection.isEmpty())
                     return;
 
-                ILdapEntryNode node = (ILdapEntryNode) selection.getFirstElement();
+                ILdapEntryNode node = (ILdapEntryNode)selection.getFirstElement();
                 String tableSuffixText = tableSourceSuffixText.getText();
-                if (! tableSuffixText.equals(node.getLabel())) {
+                if (!tableSuffixText.equals(node.getLabel())) {
                     node.setSourceNameSuffix(tableSuffixText);
                 }
             }
@@ -468,7 +468,7 @@ public class LdapTablesPage extends WizardPage
                 notifyChanged();
             }
         });
-        
+
         this.splitter.setWeights(SPLITTER_WEIGHTS);
         this.splitter.setSashWidth(20);
     }
@@ -522,7 +522,7 @@ public class LdapTablesPage extends WizardPage
     public void setVisible(boolean visible) {
         super.setVisible(visible);
 
-        if (! visible)
+        if (!visible)
             return;
 
         if (this.importManager.getConnectionProfile() == null)
@@ -535,33 +535,33 @@ public class LdapTablesPage extends WizardPage
         setPageStatus();
     }
 
-	private void initBrowserWidget() {
-		if (widget == null)
-			return;
+    private void initBrowserWidget() {
+        if (widget == null)
+            return;
 
-		if (widget.getViewer() == null)
-			return;
+        if (widget.getViewer() == null)
+            return;
 
-		IBrowserConnection browserConnection = importManager.getBrowserConnection();
-		if (browserConnection == null)
-			return;
+        IBrowserConnection browserConnection = importManager.getBrowserConnection();
+        if (browserConnection == null)
+            return;
 
-		if (browserConnection.equals(widget.getViewer().getInput()))
-			return;
+        if (browserConnection.equals(widget.getViewer().getInput()))
+            return;
 
-		widget.setInput(browserConnection);
+        widget.setInput(browserConnection);
 
-		BrowserQuickSearchWidget quickSearchWidget = widget.getQuickSearchWidget();
-		quickSearchWidget.setInput(browserConnection);
+        BrowserQuickSearchWidget quickSearchWidget = widget.getQuickSearchWidget();
+        quickSearchWidget.setInput(browserConnection);
 
-		//
-		// Turn off bookmarks and searches by default
-		//
-		showBookmarksAction.setChecked(false);
-		showBookmarksAction.run();
-		showSearchesAction.setChecked(false);
-		showSearchesAction.run();
-	}
+        //
+        // Turn off bookmarks and searches by default
+        //
+        BrowserCommonActivator.getDefault().getPreferenceStore().setValue(
+                                     BrowserCommonConstants.PREFERENCE_BROWSER_SHOW_BOOKMARKS, false);
+        BrowserCommonActivator.getDefault().getPreferenceStore().setValue(
+                                     BrowserCommonConstants.PREFERENCE_BROWSER_SHOW_SEARCHES, false);
+    }
 
     @Override
     public void stateChanged(IChangeNotifier theSource) {

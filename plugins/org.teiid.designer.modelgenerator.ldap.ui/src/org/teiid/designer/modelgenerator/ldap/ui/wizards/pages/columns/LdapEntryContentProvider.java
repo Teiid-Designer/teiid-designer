@@ -69,7 +69,6 @@ public class LdapEntryContentProvider extends AbstractLdapContentProvider {
 			Map<Integer, ILdapAttributeNode> childAttributes = new HashMap<Integer, ILdapAttributeNode>();
 
 			for (IEntry child : children) {
-			    System.out.println("Child of " + parentNode.getSourceBaseName() + " is " + child.getDn());
 			    // Making sure attributes are initialized
 			    if (! child.isAttributesInitialized()) {
 			        NullProgressMonitor ipm = new NullProgressMonitor();
