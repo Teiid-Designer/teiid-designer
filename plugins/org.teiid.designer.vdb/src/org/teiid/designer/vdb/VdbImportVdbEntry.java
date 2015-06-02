@@ -42,7 +42,7 @@ public class VdbImportVdbEntry {
 	 * @param vdb
 	 *	@param element
 	 */
-	VdbImportVdbEntry(Vdb vdb, ImportVdbElement element) {
+	public VdbImportVdbEntry(Vdb vdb, ImportVdbElement element) {
 		this(vdb, element.getName());
         this.version.set(element.getVersion());    
         this.importDataPolicies.set(element.isImportDataPolicies());

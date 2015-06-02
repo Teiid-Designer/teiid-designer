@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Localization: plugin
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.vdb;singleton:=true
-Bundle-Version: 9.0.2.qualifier
+Bundle-Version: 9.1.0.qualifier
 Bundle-Activator: org.teiid.designer.vdb.VdbPlugin
 Bundle-Vendor: %pluginProvider
 Require-Bundle: org.teiid.designer.legacy;bundle-version="[9.0.0,10.0.0)",
@@ -24,7 +24,12 @@ Require-Bundle: org.teiid.designer.legacy;bundle-version="[9.0.0,10.0.0)",
  org.teiid.designer.spi;bundle-version="[9.0.0,10.0.0)"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.teiid.designer.vdb,
+Export-Package: org.teiid.designer.komodo.vdb,
+ org.teiid.designer.komodo.vdb.ddl,
+ org.teiid.designer.komodo.vdb.dynamic,
+ org.teiid.designer.komodo.vdb.manifest,
+ org.teiid.designer.komodo.vdb.xmi,
+ org.teiid.designer.vdb,
  org.teiid.designer.vdb.connections,
  org.teiid.designer.vdb.manifest,
  org.teiid.designer.vdb.refactor

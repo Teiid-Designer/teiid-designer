@@ -10,6 +10,7 @@ package org.teiid.designer.vdb.ui.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
@@ -36,6 +37,7 @@ import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.XmiVdb;
 
 /**
  * This class provides utilities to find resources given in input VDB file
@@ -67,7 +69,7 @@ public class VdbResourceFinder {
         ModelEditorImpl.setContainer(this.container);
         
         try {
-            this.vdb = new Vdb(vdbFile, false, new NullProgressMonitor());
+            this.vdb = new XmiVdb(vdbFile, false, new NullProgressMonitor());
         } catch (Exception ex) {
             throw ErrorHandler.toCoreException(ex);
         }

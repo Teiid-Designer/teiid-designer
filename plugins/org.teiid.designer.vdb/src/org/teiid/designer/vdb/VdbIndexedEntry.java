@@ -228,7 +228,7 @@ public abstract class VdbIndexedEntry extends VdbEntry {
      * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    void save( final ZipOutputStream out, final IProgressMonitor monitor ) throws Exception {
+    public void save( final ZipOutputStream out, final IProgressMonitor monitor ) throws Exception {
         super.save(out, monitor);
         // Save model index
         save(out, new ZipEntry(INDEX_FOLDER + getIndexName()), getIndexFile(), monitor);

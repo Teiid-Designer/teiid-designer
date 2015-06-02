@@ -41,7 +41,9 @@ import org.teiid.designer.metamodels.relational.extension.RestModelExtensionCons
 import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -65,9 +67,9 @@ public class RestVdbUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
-            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
+            Vdb vdb = new XmiVdb(vdbFile, new NullProgressMonitor());
+            Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;

@@ -41,7 +41,7 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
      * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
-    VdbSchemaEntry( final Vdb vdb, final EntryElement element, final IProgressMonitor monitor ) throws Exception {
+    public VdbSchemaEntry( final Vdb vdb, final EntryElement element, final IProgressMonitor monitor ) throws Exception {
         super(vdb, element, monitor);
     }
 

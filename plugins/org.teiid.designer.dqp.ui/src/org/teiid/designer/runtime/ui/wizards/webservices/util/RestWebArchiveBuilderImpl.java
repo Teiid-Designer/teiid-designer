@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
@@ -33,7 +32,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -175,7 +173,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             // exist.
             final String webServicePluginPath = WebServiceLibPlugin.getDefault().getInstallPath().toOSString();
             final String buildDirectoryName = webServicePluginPath + File.separator + WebArchiveBuilderConstants.REST_BUILD_DIR;
-            
             File buildDirectory = new File(buildDirectoryName);
             buildDirectory.mkdir();
 
@@ -223,7 +220,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             // Create properties file and write to classes root.
             createPropertiesFile(webInfClassesDirectory, properties);
             // Create and compile Provider files (one per port).
-            createResourceJavaClasses(contextDirectory, webInfLibDirectory, webInfClassesDirectory, properties);
+            createResourceJavaClasses(webInfLibDirectory, webInfClassesDirectory, properties);
 
             monitor.worked(10);
 
@@ -386,19 +383,11 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         String securityDomainNode = "<security-domain>java:/jaas/" + securityDomain + "</security-domain>"; //$NON-NLS-1$ //$NON-NLS-2$
 
         AntTasks.replace(jbossWebXmlFile,
-                "<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", securityDomainNode); //$NON-NLS-1$
+                         "<!--<security-domain>java:/jaas/teiid-security</security-domain>-->", securityDomainNode); //$NON-NLS-1$
         
     }
 
-    private String getUrlPatterns() {
-    	StringBuilder patternStringBuilder = new StringBuilder();
-		for (String model:models){
-			patternStringBuilder.append("<url-pattern>/").append(model).append("/*</url-pattern>").append(NEWLINE);
-		}
-		return patternStringBuilder.toString();
-	}
-
-	/**
+    /**
      * Replace the variables in the web.xml file with their appropriate values.
      * 
      * @param webInfDirectoryName
@@ -415,9 +404,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
 
         // Replace variables in the web.xml file.
         webXmlFile = new File(webInfDirectoryName + File.separator + WEB_XML);
-        
-        String urlPatterns = getUrlPatterns();
-        AntTasks.replace(webXmlFile, "${urlPattern}", urlPatterns); //$NON-NLS-1$
 
         // Update for Basic Auth if HTTPBasic security is selected
         if (securityCredentials.hasType(WarDeploymentInfoPanel.BASIC)) {
@@ -475,19 +461,13 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
      * @throws Exception
      * @since 7.4
      */
-    private void createResourceJavaClasses(   File contextDirectory,
-    										  File webInfLibDirectory,
+    private void createResourceJavaClasses( File webInfLibDirectory,
                                               File webInfClassesDirectory,
-                                              Properties properties) throws Exception {
+                                              Properties properties ) throws Exception {
 
         String pathToResource = "/org" + File.separator + "teiid" + File.separator + "rest" + File.separator + "services"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         String pathToPlugin = "/org" + File.separator + "teiid" + File.separator + "rest"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
         String teiidProviderJavaFile= null;
-        
-        String vdbFileName = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_VDB_FILE_NAME);
-        String context = properties.getProperty(WebArchiveBuilderConstants.PROPERTY_CONTEXT_NAME);
-        String vdbName = vdbFileName.substring(vdbFileName.lastIndexOf(File.separator ));
-        vdbName=vdbName.substring(1,vdbName.lastIndexOf(".")) + " VDB";
         
         List<File> resources = new ArrayList<File>();
         StringBuilder singletonSb = new StringBuilder();
@@ -497,7 +477,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             FileUtils.copy(webInfClassesDirectory.getCanonicalPath() + pathToResource + File.separator + "ResourceTemplate.java", //$NON-NLS-1$
                            resourceJavaFilePath,
                            true);
-            File indexHtml = new File(contextDirectory.getCanonicalPath() + File.separator + "index.html");
             File resourceJavaFile = new File(resourceJavaFilePath);
             resources.add(resourceJavaFile);
 
@@ -509,17 +488,13 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             }else{
             	teiidProviderJavaFile = "TeiidRSProviderPre"; //$NON-NLS-1$
             }
-            
             AntTasks.replace(resourceJavaFile, "${TeiidRSProvider}", "org.teiid.rest.services." + teiidProviderJavaFile); //$NON-NLS-1$ //$NON-NLS-2$
             AntTasks.replace(resourceJavaFile, "${className}", resource); //$NON-NLS-1$
             AntTasks.replace(resourceJavaFile, "${modelName}", "org.teiid.rest.services." + resource); //$NON-NLS-1$ //$NON-NLS-2$
-            AntTasks.replace(resourceJavaFile, "${path}", "@Path( \"/" + resource + "\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            AntTasks.replace(resourceJavaFile, "${api}", "@Api( value=\"/" + resource + "\", description=\"REST operations\")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            AntTasks.replace(resourceJavaFile, "${path}", "@Path( \"" + resource + "\" )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             String methods = generateMethods(resource);
             AntTasks.replace(resourceJavaFile, "${httpMethods}", methods); //$NON-NLS-1$
-            AntTasks.replace(indexHtml, "${title}", vdbName); //$NON-NLS-1$
-            AntTasks.replace(indexHtml, "${context}", context); //$NON-NLS-1$
 
             singletonSb.append(NEWLINE + "singletons.add(new org.teiid.rest.services." + resource + "());"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -554,10 +529,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + JSON_JAR;
             String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + JAXRS_API_JAR;
             String pathToJar6 = webInfLibDirectory.getCanonicalPath() + File.separator + SAXONHE_JAR;
-            String pathToJar7 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_ANNOTATIONS_JAR;
-            String pathToJar8 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_CORE_JAR;
-            String pathToJar9 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_JAXRS_JAR;
-            String pathToJar10 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_JERSEYS_JAR;
             
             FileUtils.copy(spiFile, webInfLibDirectory, true);
             FileUtils.copy(runtimeFile, webInfLibDirectory, true);
@@ -568,11 +539,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             classPaths.add(new File(pathToJar3));
             classPaths.add(new File(pathToJar4));
             classPaths.add(new File(pathToJar5));
-            classPaths.add(new File(pathToJar6));
-            classPaths.add(new File(pathToJar7));
-            classPaths.add(new File(pathToJar8));
-            classPaths.add(new File(pathToJar9));
-            classPaths.add(new File(pathToJar10));
 
             classPaths.add(runtimeFile);
             classPaths.add(spiFile);
@@ -705,7 +671,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         sb.append("@" + restProcedure.getRestMethod().toUpperCase() + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$
         String uri = methodAppendString == "" ? restProcedure.getUri() : methodAppendString + "/" + restProcedure.getUri(); //$NON-NLS-1$ //$NON-NLS-2$
         
-        sb.append("@Path( \"/" + uri + "\" )" + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        sb.append("@Path( \"" + uri + "\" )" + NEWLINE + "\t"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
         if (restProcedure.getConsumesAnnotation() != null && !restProcedure.getConsumesAnnotation().isEmpty()) {
             sb.append(restProcedure.getConsumesAnnotation() + NEWLINE + "\t"); //$NON-NLS-1$
         }
@@ -715,10 +681,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         
         // Gen method signature
         if (isXml){
-        	sb.append("@ApiOperation(value=\"(XML) " + restProcedure.getProcedureName() + ": " + restProcedure.getDescription() + "\",response=InputStream.class)" + NEWLINE + "\t"); //$NON-NLS-1$
         	sb.append("public InputStream " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
         }else{
-        	sb.append("@ApiOperation(value=\"(JSON) " + restProcedure.getProcedureName() + ": " + restProcedure.getDescription() + "\",response=String.class)" + NEWLINE + "\t");
         	sb.append("public String " + restProcedure.getProcedureName() + methodAppendString + "( "); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
@@ -727,7 +691,6 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         int pathParamCount = 0;
         for (String param : pathParams) {
             pathParamCount++;
-            sb.append("@ApiParam( \"" + param + "\" ) "); //$NON-NLS-1$ //$NON-NLS-2$
             sb.append("@PathParam( \"" + param + "\" ) String " + param); //$NON-NLS-1$ //$NON-NLS-2$
             if (pathParamCount < pathParams.size()) {
                 sb.append(", "); //$NON-NLS-1$

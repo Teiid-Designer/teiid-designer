@@ -161,9 +161,6 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
                                                            UTIL.getString("setDefaultServerActionWorksChangeMessage")); //$NON-NLS-1$
         }
         
-        if (! continueChangingServer)
-            return;
-
         /*
          * If old default teiid instance is connected, ask user if they wish to disconnect it.
          */

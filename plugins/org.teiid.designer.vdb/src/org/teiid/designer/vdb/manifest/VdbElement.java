@@ -76,18 +76,13 @@ public class VdbElement implements Serializable {
      * @throws Exception
      */
     public VdbElement( final Vdb vdb ) throws Exception {
-    	String initialVdbName = vdb.getName().removeFileExtension().lastSegment();
-    	int indexOfDot = initialVdbName.indexOf('.');
-    	if( indexOfDot > -1 ) {
-    		initialVdbName = initialVdbName.substring(0, indexOfDot);
-    	}
-        name = initialVdbName;
+        name = vdb.getName().removeFileExtension().lastSegment();
         description = vdb.getDescription();
         version = vdb.getVersion();
         for (final VdbEntry entry : vdb.getEntries())
             getEntries().add(new EntryElement(entry));
-        for (final VdbModelEntry modelEntry : vdb.getModelEntries())
-            getModels().add(new ModelElement(modelEntry));
+        for (final VdbEntry modelEntry : vdb.getModelEntries())
+            getModels().add(new ModelElement((VdbModelEntry)modelEntry));
         for (final VdbImportVdbEntry importVdbEntry : vdb.getImportVdbEntries())
         	getImportVdbEntries().add(new ImportVdbElement(importVdbEntry));
         for (final TranslatorOverride translator : vdb.getTranslators())

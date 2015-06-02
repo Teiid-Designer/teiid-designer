@@ -9,6 +9,7 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -23,6 +24,7 @@ import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.XmiVdb;
 
 /**
  * The <code>UpdatePreviewVdbJob</code> synchronizes the Preview VDB with the workspace.
@@ -110,7 +112,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
         IStatus status = null;
-        Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
+        Vdb pvdb = new XmiVdb(this.pvdbFile, true, monitor);
 
         // run this only if we have a preview server
         if (this.previewServer == null || ! previewServer.isConnected()) {

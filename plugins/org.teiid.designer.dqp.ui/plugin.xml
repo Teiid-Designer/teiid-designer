@@ -87,7 +87,6 @@
          label="%deployVdbAction.label">
       </resourceAction>
    </extension>
-<!--
    <extension
         id="DeployDynamicVdbAction"
         name="%deployVdbAction.name"
@@ -97,7 +96,6 @@
          label="%deployDynamicVdbAction.label">
       </resourceAction>
    </extension>
--->
      <extension
         id="ExecuteVdbAction"
         name="%executeVdbAction.name"
@@ -150,6 +148,15 @@
       <resourceAction
          name="org.teiid.designer.runtime.ui.connection.SetTranslatorNameAction"
          label="%setTranslatorNameAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="SetJBossDataSourceNameAction"
+        name="%setDataSourceJNDINameAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.connection.SetJBossDataSourceNameAction"
+         label="%setDataSourceJNDINameAction.label">
       </resourceAction>
    </extension>
    <extension

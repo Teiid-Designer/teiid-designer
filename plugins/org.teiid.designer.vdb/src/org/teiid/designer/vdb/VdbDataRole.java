@@ -50,7 +50,12 @@ public class VdbDataRole {
     private List<String> mappedRoleNames = new ArrayList<String>();
 
     
-    VdbDataRole(final Vdb vdb,
+    /**
+     * @param vdb
+     * @param dataRole
+     * @param monitor
+     */
+    public VdbDataRole(final Vdb vdb,
     		final DataRole dataRole,
     		final IProgressMonitor monitor) {
     	 super();
@@ -65,7 +70,11 @@ public class VdbDataRole {
          this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
 	}
     
-    VdbDataRole(final Vdb vdb,
+    /**
+     * @param vdb
+     * @param element
+     */
+    public VdbDataRole(final Vdb vdb,
     		final DataRoleElement element) {
     	 super();
     	 this.vdb = vdb;

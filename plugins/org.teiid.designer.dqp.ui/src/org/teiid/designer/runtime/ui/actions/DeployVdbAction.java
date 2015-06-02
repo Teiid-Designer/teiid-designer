@@ -47,6 +47,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -289,7 +290,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
 				return false;
 			}
 
-			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb(
+			Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new XmiVdb(
 					(IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
 
 			if(!vdb.isSynchronized()) {
@@ -403,7 +404,7 @@ public class DeployVdbAction extends Action implements ISelectionListener, Compa
     }
     
     private void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) throws Exception {
-    	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new Vdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
+    	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new XmiVdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
 	    String vdbName = vdb.getFile().getFullPath().removeFileExtension().lastSegment();
     	teiidServer.createVdbDataSource(vdbName, displayName, jndiName);

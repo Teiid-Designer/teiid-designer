@@ -77,6 +77,9 @@ public class ModelElement extends EntryElement {
 
     @XmlElement( name = "source", type = SourceElement.class )
     private List<SourceElement> sources;
+    
+    @XmlElement( name = "metadata", type = MetadataElement.class )
+    private List<MetadataElement> metadata;
 
     @XmlElement( name = "validation-error", type = ProblemElement.class )
     private List<ProblemElement> problems;
@@ -129,6 +132,10 @@ public class ModelElement extends EntryElement {
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
         for (final String importedVdbName : entry.getImportVdbNames())
             props.add(new PropertyElement(IMPORT_VDB_REFERENCE, importedVdbName));
+        
+        if( entry.getSchemaText() != null ) {
+        	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getType()));
+        }
     }
 
     /**
@@ -152,6 +159,14 @@ public class ModelElement extends EntryElement {
     public List<SourceElement> getSources() {
         if (sources == null) sources = new ArrayList<SourceElement>();
         return sources;
+    }
+    
+    /**
+     * @return connectors
+     */
+    public List<MetadataElement> getMetadata() {
+        if (metadata == null) metadata = new ArrayList<MetadataElement>();
+        return metadata;
     }
 
     /**

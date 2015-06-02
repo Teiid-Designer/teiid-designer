@@ -84,6 +84,7 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
@@ -99,7 +100,6 @@ public final class NewVdbWizard extends AbstractWizard
     private static final String TITLE = getString("title"); //$NON-NLS-1$
     private static final String PAGE_TITLE = getString("pageTitle"); //$NON-NLS-1$
     private static final String VDB_NAME_ERROR = getString("vdbNameError"); //$NON-NLS-1$
-    private static final String VDB_NAME_DOT_ERROR = getString("vdbNameContainsTooManyDotsErrorMessage"); //$NON-NLS-1$
 
     private static final int COLUMN_COUNT = 3;
 
@@ -220,7 +220,7 @@ public final class NewVdbWizard extends AbstractWizard
                 try {
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
                     vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
-                    Vdb newVdb = new Vdb(vdbFile, false, monitor);
+                    Vdb newVdb = new XmiVdb(vdbFile, false, monitor);
             		String desc = descriptionTextEditor.getText();
             		if( desc != null && desc.length() > 0 ) {
             			newVdb.setDescription(desc);
@@ -685,35 +685,6 @@ public final class NewVdbWizard extends AbstractWizard
             } else if (ModelUtilities.vdbNameReservedValidation(proposedName) != null) {
                 this.mainPage.setErrorMessage(ModelUtilities.vdbNameReservedValidation(proposedName));
                 this.mainPage.setPageComplete(false);
-            } else if( proposedName.indexOf('.') > -1 ) {
-                // VDB name can contain an integer value
-                // EXAMPLE:   Customers.2.vdb
-                // 
-            	// make sure there is only 1 '.'
-            	int firstIndex = proposedName.indexOf('.');
-            	int lastIndex = proposedName.lastIndexOf('.');
-            	
-            	if( lastIndex != -1 && firstIndex != lastIndex ) {
-            		this.mainPage.setErrorMessage(VDB_NAME_DOT_ERROR);
-            		this.mainPage.setPageComplete(false);
-            	} else {
-            		// Check for integer
-            		String versionStr = proposedName.substring(firstIndex+1);
-            		boolean succeeded = false;
-        	    	try {
-						Integer.parseInt(versionStr);
-						succeeded = true;
-					} catch (NumberFormatException e) {
-						this.mainPage.setErrorMessage(VdbUiConstants.Util.getString(I18N_PREFIX + "vdbNameErrorVersionNotAnInteger", versionStr)); //$NON-NLS-1$);
-						this.mainPage.setPageComplete(false);
-						succeeded = false;
-					}
-        	    	
-        	    	if( succeeded ) {
-                        this.mainPage.setErrorMessage(null);
-                        this.mainPage.setPageComplete(true);
-        	    	}
-            	}
             } else {
                 this.mainPage.setErrorMessage(null);
                 this.mainPage.setPageComplete(true);

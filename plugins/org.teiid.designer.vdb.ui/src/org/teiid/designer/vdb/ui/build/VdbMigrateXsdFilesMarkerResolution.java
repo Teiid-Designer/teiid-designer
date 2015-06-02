@@ -18,6 +18,7 @@ import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.ui.Messages;
 
 /**
@@ -75,7 +76,7 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
 
     void fixVdb(IFile theVdb) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
-        Vdb vdb = new Vdb(theVdb, false, monitor);
+        Vdb vdb = new XmiVdb(theVdb, false, monitor);
         vdb.save(monitor);
 
         try {

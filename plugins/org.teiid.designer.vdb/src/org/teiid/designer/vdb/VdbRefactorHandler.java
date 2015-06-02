@@ -27,7 +27,7 @@ public class VdbRefactorHandler extends AbstractRefactorModelHandler {
                 && Vdb.FILE_EXTENSION_NO_DOT.equals(((IFile)refactoredResource).getFileExtension())) {
             // just save VDB to get new manifest written out
             NullProgressMonitor monitor = new NullProgressMonitor();
-            Vdb renamedVdb = new Vdb((IFile)refactoredResource, monitor);
+            Vdb renamedVdb = new XmiVdb((IFile)refactoredResource, monitor);
             renamedVdb.save(monitor);
         }
     }

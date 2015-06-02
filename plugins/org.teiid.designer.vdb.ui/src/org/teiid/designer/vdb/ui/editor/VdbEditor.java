@@ -120,6 +120,7 @@ import org.teiid.designer.vdb.VdbFileEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
@@ -595,7 +596,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlProperties.setLayout(new GridLayout());
             pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             propertiesTab.setControl(pnlProperties);
-            propertiesPanel = new PropertiesPanel(pnlProperties, this);
+            propertiesPanel = new PropertiesPanel(pnlProperties, getVdb());
         }
         
         { // properties tab
@@ -606,7 +607,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlProperties.setLayout(new GridLayout());
             pnlProperties.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             tab.setControl(pnlProperties);
-            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(pnlProperties, this);
+            userDefinedPropertiesPanel = new UserDefinedPropertiesPanel(pnlProperties, getVdb());
         }
 
         { // translator overrides tab
@@ -1819,7 +1820,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             
             createModelsSection(pnlModelsList);
             
-            modelDetailsPanel = new ModelDetailsPanel(splitter, this);
+            modelDetailsPanel = new ModelDetailsPanel(splitter, getVdb());
             splitter.setWeights(new int[] {35, 65});
             
             modelsTab.setControl(pnlModels);
@@ -1868,7 +1869,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             pnlDescription.setLayout(new GridLayout());
             pnlDescription.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
             descriptionTab.setControl(pnlDescription);
-            descriptionPanel = new DescriptionPanel(pnlDescription, this);
+            descriptionPanel = new DescriptionPanel(pnlDescription, getVdb());
         }
 
         this.schemaGroup.setInput(vdb);
@@ -1903,7 +1904,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                */
                                               @Override
                                               public VdbModelEntry[] getElements() {
-                                                  final Set<VdbModelEntry> modelEntries = getVdb().getModelEntries();
+                                                  final Set<VdbEntry> modelEntries = getVdb().getModelEntries();
                                                   return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
                                               }
 
@@ -2103,7 +2104,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             return false;
                         }
 
-                        for (final VdbModelEntry modelEntry : getVdb().getModelEntries())
+                        for (final VdbEntry modelEntry : getVdb().getModelEntries())
                             if (file.equals(modelEntry.findFileInWorkspace())) return false;
                         return true;
                     }
@@ -2400,7 +2401,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                       final IEditorInput input ) {
         final IFile file = ((IFileEditorInput)input).getFile();
         try {
-            vdb = new Vdb(file, new NullProgressMonitor());
+        	vdb = new XmiVdb(file, new NullProgressMonitor());
             vdbListener = new PropertyChangeListener() {
                 /**
                  * {@inheritDoc}

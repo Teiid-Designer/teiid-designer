@@ -292,7 +292,14 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
          * @return <code>true</code> if resource is a VDB file
          */
         private boolean isVdbFile( IResource resource ) {
-            return ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+        	
+            boolean mightBeXmiVdb = ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+            
+            if(mightBeXmiVdb) {
+            	return !VdbUtil.isDdlVdb((IFile)resource);
+            }
+            
+            return false;
         }
 
         /**

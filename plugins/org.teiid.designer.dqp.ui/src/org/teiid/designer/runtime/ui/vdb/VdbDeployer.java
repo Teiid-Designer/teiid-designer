@@ -15,7 +15,6 @@ import java.util.Collection;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -33,6 +32,7 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 
 /**
@@ -169,7 +169,7 @@ public class VdbDeployer {
                 boolean foundFirstOne = false; // determines if create DS dialog is shown
                 boolean createOnServer = false; // user's choice on if they want DSs auto-created on server
 
-                for (VdbModelEntry modelEntry : this.vdb.getModelEntries()) {
+                for (VdbEntry modelEntry : this.vdb.getModelEntries()) {
                     // see if user canceled monitor
                     if (monitor.isCanceled()) {
                         this.status = DeployStatus.MONITOR_CANCELLED;
@@ -179,7 +179,7 @@ public class VdbDeployer {
                     String modelName = modelEntry.getName().toFile().getName();
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelTypeTask", modelName)); //$NON-NLS-1$
                     boolean autoCreate = false; // based on DS name and preference value
-                    String modelType = modelEntry.getType();
+                    String modelType = ((VdbModelEntry)modelEntry).getType();
                     boolean sourceModel = (modelType.equalsIgnoreCase(ModelType.PHYSICAL_LITERAL.getName()));
 
                     // only source models have a data source and translator
@@ -190,7 +190,7 @@ public class VdbDeployer {
                     // check translator
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelTranslatorTask", modelName)); //$NON-NLS-1$
 
-                    if (!hasValidTranslator(modelEntry)) {
+                    if (!hasValidTranslator((VdbModelEntry)modelEntry)) {
                         this.status = DeployStatus.TRANSLATOR_PROBLEM;
                         break; // translator problems are fatal (deployment will fail)
                     }
@@ -205,8 +205,8 @@ public class VdbDeployer {
                     
                     // check DS
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelDataSourceTask", modelName)); //$NON-NLS-1$
-                    String sourceName = modelEntry.getSourceInfo().getSource(0).getName();
-                    String jndiName = modelEntry.getSourceInfo().getSource(0).getJndiName();
+                    String sourceName = ((VdbModelEntry)modelEntry).getSourceInfo().getSource(0).getName();
+                    String jndiName = ((VdbModelEntry)modelEntry).getSourceInfo().getSource(0).getJndiName();
 
                     // DS with matching jndi not found on server
                     if (!StringUtilities.isEmpty(jndiName) && !dataSourceWithJndiExists(jndiName)) {
@@ -304,23 +304,8 @@ public class VdbDeployer {
 
             if (this.status == null) {
                 monitor.subTask(UTIL.getString(PREFIX + "deployVdbTask", getVdbName())); //$NON-NLS-1$
-                
-                // VDB name can contain an integer value
-                // VDB can also have a version in it's manifest (vdb.xml)
-                //
-                // EXAMPLE:   Customers.2.vdb
-                // 
-                int version = vdb.getVersion(); // Manifest version
-                int versionInName = getVdbVersion(getVdbName()); // version in name
-                if( versionInName > 0 ) { // If version in name, then use it (i.e. ignore manifest version)
-                	version = versionInName;
-                }
-                
-                teiidServer.deployVdb(vdb.getFile(), version);
-                //teiidServer.deployVdb(vdb.getFile());
-                // VDB name may have a version in it, so need to strip off any extension
-                String actualName = new Path(getVdbName()).removeFileExtension().toString();
-                this.status = (teiidServer.hasVdb(actualName) ? DeployStatus.DEPLOYED_VDB : DeployStatus.DEPLOY_VDB_FAILED);
+                teiidServer.deployVdb(vdb.getFile());
+                this.status = (teiidServer.hasVdb(getVdbName()) ? DeployStatus.DEPLOYED_VDB : DeployStatus.DEPLOY_VDB_FAILED);
             }
         } catch (Exception e) {
             this.status = DeployStatus.EXCEPTION;
@@ -334,25 +319,6 @@ public class VdbDeployer {
         }
         
         return null;
-    }
-    
-    private int getVdbVersion(String originalVdbName) throws Exception {
-    	String vdbName = originalVdbName;
-    	String vdbVersionStr = null;
-    	
-    	int firstIndex = vdbName.indexOf('.');
-    	int lastIndex = vdbName.lastIndexOf('.');
-    	if (firstIndex != -1) {
-	    	if (firstIndex != lastIndex) {
-	    		// TODO:
-	    		throw new Exception(UTIL.getString(PREFIX + "vdbNameContainsTooManyDotsErrorMessage", originalVdbName));  //$NON-NLS-1$"VBD Version contains more than one '.'"); //Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
-	    	}
-    	
-	    	vdbVersionStr = vdbName.substring(firstIndex+1);
-	    	return Integer.parseInt(vdbVersionStr);
-    	}
-    	
-    	return -1;
     }
     
     /*

@@ -78,7 +78,7 @@ public final class VdbFileEntry extends VdbEntry {
      * @param element the EntryElement
      * @param monitor the progress monitor or <code>null</code>
      */
-    VdbFileEntry( final Vdb vdb,
+    public VdbFileEntry( final Vdb vdb,
                   final EntryElement element,
                   final IProgressMonitor monitor ) throws Exception {
         
@@ -105,7 +105,7 @@ public final class VdbFileEntry extends VdbEntry {
     }
     
     @Override
-    void save( final ZipOutputStream out,
+    public void save( final ZipOutputStream out,
                final IProgressMonitor monitor ) throws Exception {
         // Name of VDB entry
         String zipName = getName().toString();

@@ -10,7 +10,9 @@ package org.teiid.designer.runtime.ui.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.Action;
@@ -45,6 +47,7 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.actions.ExecuteVDBAction;
 import org.teiid.designer.runtime.ui.connection.CreateDataSourceAction;
+import org.teiid.designer.runtime.ui.connection.CreateDynamicVdbAction;
 import org.teiid.designer.runtime.ui.connection.CreateVdbDataSourceAction;
 import org.teiid.designer.runtime.ui.dialogs.ClearPreviewArtifactsOptionsDialog;
 import org.teiid.designer.runtime.ui.server.DisconnectFromServerAction;
@@ -112,6 +115,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction clearPreviewArtifactsAction;
     
     private Action createVdbDataSourceAction;
+    
+    private Action importAsDynamicVdbAction;
 
     private final TeiidServerPreviewOptionContributor previewOptionContributor;
 
@@ -399,6 +404,48 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         // the edit action is only enabled when one server is selected
         this.setDefaultServerAction = new SetDefaultServerAction();
         viewer.addSelectionChangedListener(this.setDefaultServerAction);
+        
+        this.importAsDynamicVdbAction = new Action() {
+        	@Override
+            public void run() {
+                ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                if (teiidServer != null && teiidServer.isConnected()) {
+	                // Assume a VDB is selected
+	                List<Object> selectedObjs = getSelectedObjects();
+	                if (selectedObjs.size() == 1) {
+	                    Object selection = selectedObjs.get(0);
+	                    ITeiidVdb teiidVdb = RuntimeAssistant.adapt(selection, ITeiidVdb.class);
+	                    if (teiidVdb != null) {
+	                    	try {
+								String vdbName = teiidVdb.getDeployedName();
+	                    		System.out.println(" VDB =  " + vdbName + "\n");
+	                        	
+	                        	String manifest = teiidVdb.getManifest();
+	                        	
+	                        	System.out.println(" Manifest for VDB " + vdbName + "\n\n" + manifest);
+
+//								Map<String, String> modelDDLArray = new HashMap<String, String>();
+//								
+//								for( String modelName : teiidVdb.getModelNames() ) {
+//									if( modelName != null ) {
+//										String ddl = teiidServer.getSchema(vdbName, teiidVdb.getVersion(), modelName);
+//										if( ddl != null ) {
+//											System.out.println(" DDL for model " + modelName + "\n\n" + ddl);
+//											modelDDLArray.put(modelName, ddl);
+//										}
+//									}
+//								}
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	                    	
+	                    }
+	                }
+                }
+        	}
+		};
+		this.importAsDynamicVdbAction.setText("Import As Dynamic VDB"); //$NON-NLS-1
     }
     
     /* (non-Javadoc)
@@ -502,6 +549,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(this.createVdbDataSourceAction);
+                manager.add(this.importAsDynamicVdbAction);
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
                 manager.add(new Separator());

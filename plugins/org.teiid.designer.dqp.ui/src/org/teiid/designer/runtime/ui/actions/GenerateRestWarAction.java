@@ -9,6 +9,7 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -57,7 +60,9 @@ import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -237,9 +242,9 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
-            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
+            Vdb vdb = new XmiVdb(this.selectedVDB, new NullProgressMonitor());
+            Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
@@ -368,7 +373,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                     }
                 }
                 
-                
                 //Check for query parameters
                 if (uriString.indexOf("&")>-1){ //$NON-NLS-1$
                 	String[] queryParameterArray = uriString.split("&"); //$NON-NLS-1$
@@ -383,7 +387,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 	                }
                 }
                 
-                restProcedure.setDescription(WarArchiveUtil.getRestDescription(procedure));
                 restProcedure.setCharSet(charSet);
                 restProcedure.setRestMethod(restMethod);
                 restProcedure.setUri(uri);
@@ -394,7 +397,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
                 // Create JSON version
                 RestProcedure jsonRestProcedure = new RestProcedure();
-                jsonRestProcedure.setDescription(WarArchiveUtil.getRestDescription(procedure));
                 jsonRestProcedure.setCharSet(charSet);
                 jsonRestProcedure.setFullyQualifiedProcedureName(restProcedure.getFullyQualifiedProcedureName());
                 jsonRestProcedure.setModelName(restProcedure.getModelName());

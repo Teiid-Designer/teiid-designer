@@ -139,11 +139,6 @@ public class WebArchiveBuilderConstants {
      * Location where the REST WAR template is stored.
      */
     public static final String REST_BUILD_DIR = "rest_war_build"; //$NON-NLS-1$
-    
-    /**
-     * Location where the REST WAR resources are stored.
-     */
-    public static final String REST_RESOURCE_DIR = "rest_war_resources"; //$NON-NLS-1$
 
     /**
      * Name of the template work directory.

@@ -39,6 +39,11 @@ public interface VdbConstants {
      * The location of a vdb manifest
      */
     String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
+    
+    /**
+     *  Dynamic VDB file extension
+     */
+    String DYNAMIC_VDB_FILE_EXTENSION = "xml";
 
     /** Constants for the SourceHandler extension point */
     interface SourceHandlerExtension {

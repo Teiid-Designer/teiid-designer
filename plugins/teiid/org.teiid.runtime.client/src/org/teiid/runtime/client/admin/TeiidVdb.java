@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.VDB;
+import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
@@ -22,6 +24,10 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
     private final ITeiidServer teiidServer;
 
     private final boolean isPreview;
+    
+    private final boolean isDdlFileVdb;
+    
+    private final boolean isDynamic;
 
     public TeiidVdb( VDB vdb,
                      ITeiidServer teiidServer ) {
@@ -31,6 +37,19 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
         this.vdb = vdb;
         this.teiidServer = teiidServer;
         isPreview = Boolean.parseBoolean(vdb.getProperties().getProperty(PREVIEW));
+        isDynamic = ((VDBMetaData)vdb).isXmlDeployment();
+        boolean ddlFileResult = false;
+        if( !isDynamic ) {
+	    	for( Model mod : this.vdb.getModels()) {
+	    		String schemaText = mod.getSchemaText();
+	    		if( schemaText != null ) {
+	    			ddlFileResult = true;
+	    			break;
+	    		}
+	    	}
+	    	
+        }
+        isDdlFileVdb = ddlFileResult;
     }
 
     /* (non-Javadoc)
@@ -96,6 +115,22 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
     public boolean isPreviewVdb() {
         return isPreview;
     }
+    
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.impl.ITeiidVdb#isDynamicVdb()
+     */
+    @Override
+    public boolean isDynamicVdb() {
+        return isDynamic;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.teiid.designer.runtime.impl.ITeiidVdb#isDdlFileVdb()
+     */
+    @Override
+    public boolean isDdlFileVdb() {
+        return isDdlFileVdb;
+    }
 
     @Override
     public boolean isActive() {
@@ -133,6 +168,12 @@ public class TeiidVdb implements ITeiidVdb, Comparable<TeiidVdb> {
     }
     
     @Override
+	public String getManifest() {
+    	VdbManifestGenerator generator = new VdbManifestGenerator(this.teiidServer, ((VDBMetaData)vdb));
+		return generator.getManifest();
+	}
+
+	@Override
     public Collection<String> getModelNames() {
         if (! hasModels())
             return Collections.emptyList();

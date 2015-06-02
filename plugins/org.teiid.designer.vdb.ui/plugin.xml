@@ -16,12 +16,23 @@
       <editor
             name="%vdbEditor"
             default="true"
-            icon="platform:/plugin/org.teiid.designer.ui/icons/full/obj16/VDB.gif"
+            icon="icons/full/obj16/VDB.gif"
             extensions="vdb"
             class="org.teiid.designer.vdb.ui.editor.VdbEditor"
             id="vdbEditor">
       </editor>
+<!-- Dynamic VDB Editor -->
+      <editor
+            name="%dynamicVdbEditor"
+            default="true"
+            icon="icons/full/obj16/dynamic-vdb.png"
+            extensions="xml"
+            class="org.teiid.designer.komodo.vdb.ui.editor.DynamicVdbEditor"
+            id="dynamicVdbEditor">
+      </editor>
    </extension>
+
+
 
 <!-- New wizards -->
    <extension
@@ -145,5 +156,11 @@
       <refactorHandler
             name="org.teiid.designer.vdb.ui.util.VdbUiRefactorHandler">
       </refactorHandler>
+   </extension>
+      <extension
+         point="org.teiid.designer.ui.extendedModelLabelProvider">
+      <class
+            name="org.teiid.designer.vdb.ui.util.DynamicVdbExtendedLabelProvider">
+      </class>
    </extension> 
 </plugin>

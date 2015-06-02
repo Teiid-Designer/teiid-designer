@@ -10,11 +10,14 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry;
 
@@ -48,6 +51,7 @@ public class EntryElement implements Serializable {
      * Used by JAXB
      */
     public EntryElement() {
+    	path = StringConstants.EMPTY_STRING;
     }
 
     EntryElement( final VdbEntry entry ) {

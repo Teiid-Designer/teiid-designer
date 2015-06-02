@@ -53,7 +53,13 @@ public abstract class VdbEntry implements StringConstants {
 
     private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
 
-    VdbEntry( final Vdb vdb,
+    /**
+     * @param vdb
+     * @param element
+     * @param monitor
+     * @throws Exception
+     */
+    public VdbEntry( final Vdb vdb,
               final EntryElement element,
               final IProgressMonitor monitor ) throws Exception {
         this(vdb, Path.fromPortableString(element.getPath()));
@@ -66,7 +72,11 @@ public abstract class VdbEntry implements StringConstants {
         this.description.set(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
     }
 
-    private VdbEntry( final Vdb vdb,
+    /**
+     * @param vdb
+     * @param name
+     */
+    public VdbEntry( final Vdb vdb,
                       final IPath name ) {
         this.vdb = vdb;
         this.name = name;
@@ -88,7 +98,13 @@ public abstract class VdbEntry implements StringConstants {
         }
     }
 
-    VdbEntry( final Vdb vdb,
+    /**
+     * @param vdb
+     * @param name
+     * @param monitor
+     * @throws Exception
+     */
+    public VdbEntry( final Vdb vdb,
               final IPath name,
               final IProgressMonitor monitor ) throws Exception {
         this(vdb, name);
@@ -122,7 +138,10 @@ public abstract class VdbEntry implements StringConstants {
         });
     }
 
-    void dispose() {
+    /**
+     * 
+     */
+    public void dispose() {
 //        ModelerCore.getWorkspace().removeResourceChangeListener(fileListener);
         new File(vdb.getFolder(), name.toString()).delete();
     }
@@ -200,14 +219,14 @@ public abstract class VdbEntry implements StringConstants {
     /**
      * @return description
      */
-    public final String getDescription() {
+    public String getDescription() {
         return description.get();
     }
 
     /**
      * @return name
      */
-    public final IPath getName() {
+    public IPath getName() {
         return name;
     }
     
@@ -230,7 +249,7 @@ public abstract class VdbEntry implements StringConstants {
     /**
      * @return the VDB containing this entry
      */
-    final Vdb getVdb() {
+    public Vdb getVdb() {
         return vdb;
     }
 
@@ -244,7 +263,13 @@ public abstract class VdbEntry implements StringConstants {
         return hashcode;
     }
 
-    void save( final ZipOutputStream out,
+    
+    /**
+     * @param out
+     * @param monitor
+     * @throws Exception
+     */
+    public void save( final ZipOutputStream out,
                final IProgressMonitor monitor ) throws Exception {
     	String zipName = name.toString();
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models

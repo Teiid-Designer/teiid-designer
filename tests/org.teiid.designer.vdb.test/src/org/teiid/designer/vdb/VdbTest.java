@@ -132,7 +132,7 @@ public class VdbTest implements VdbConstants {
 
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
 
-        vdb = new Vdb(vdbFile, null);
+        vdb = new XmiVdb(vdbFile, null);
     }
     
     @After
@@ -413,7 +413,7 @@ public class VdbTest implements VdbConstants {
         }
 
         MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
-        Vdb booksVdb = new Vdb(booksVdbBuilder.getResourceFile(), monitor);
+        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile(), monitor);
         
         assertEquals(booksVdbFile.getCanonicalPath(), booksVdb.getName().toString());
         assertEquals(2, booksVdb.getModelEntries().size());
@@ -421,19 +421,19 @@ public class VdbTest implements VdbConstants {
         assertEquals(0, booksVdb.getUdfJarEntries().size());
         assertEquals(0, booksVdb.getUserFileEntries().size());
 
-        for (VdbModelEntry modelEntry : booksVdb.getModelEntries()) {
+        for (VdbEntry modelEntry : booksVdb.getModelEntries()) {
             assertEquals(Synchronization.Synchronized, modelEntry.getSynchronization());
-            assertTrue(modelEntry.getIndexFile().exists());
+            assertTrue(((VdbModelEntry)modelEntry).getIndexFile().exists());
 
             /* Get the expected index file from the test data directory */
             File expIdxFile = SmartTestDesignerSuite.getTestDataFile(getClass(),
                                                    BOOKS_VDB_PROJECT + File.separator +
                                                    RUNTIME_INF + File.separator +
-                                                   modelEntry.getIndexName());
+                                                   ((VdbModelEntry)modelEntry).getIndexName());
             assertTrue(expIdxFile.exists());
 
             /* Compare the checksums of the created index file and the expected index file */
-            Checksum idxChksum = ChecksumUtil.computeChecksum(new FileInputStream(modelEntry.getIndexFile()));
+            Checksum idxChksum = ChecksumUtil.computeChecksum(new FileInputStream(((VdbModelEntry)modelEntry).getIndexFile()));
             Checksum expChksum = ChecksumUtil.computeChecksum(new FileInputStream(expIdxFile));
             assertEquals(expChksum.getValue(), idxChksum.getValue());
         }
@@ -471,7 +471,7 @@ public class VdbTest implements VdbConstants {
         when(booksVdbBuilder.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
         when(booksVdbBuilder.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
 
-        Vdb booksVdb = new Vdb(booksVdbBuilder.getResourceFile(), monitor);
+        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile(), monitor);
         booksVdb.save(monitor);
 
         JAXBContext jaxbContext = JAXBContext.newInstance(new Class<?>[] { VdbElement.class });

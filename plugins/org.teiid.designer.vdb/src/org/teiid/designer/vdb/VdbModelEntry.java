@@ -61,7 +61,7 @@ import org.teiid.designer.vdb.manifest.SourceElement;
  * @since 8.0
  */
 @ThreadSafe
-public final class VdbModelEntry extends VdbIndexedEntry {
+public class VdbModelEntry extends VdbIndexedEntry {
 
     /**
      * @param path the model path (may not be <code>null</code>)
@@ -82,6 +82,8 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     private final String type;
     final VdbSourceInfo sourceInfo;
     private transient ModelElement element;
+    private final String schemaText;
+    private final String metadataType;
 
     /**
      * Constructs a model entry and adds it to the specified VDB. <strong>Callers of this method should call
@@ -92,7 +94,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
      * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
-    VdbModelEntry( final Vdb vdb,
+    public VdbModelEntry( final Vdb vdb,
                    final IPath name,
                    final IProgressMonitor monitor ) throws Exception {
         super(vdb, name, monitor);
@@ -150,6 +152,8 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         if (this.description.get() == null) {
             this.description.set(EMPTY_STRING);
         }
+        schemaText = null;
+        metadataType = null;
     }
 
     private void updateUdfJars(Resource model) throws Exception {
@@ -225,7 +229,13 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         return udfJarPath;
     }
     
-    VdbModelEntry( final Vdb vdb,
+    /**
+     * @param vdb
+     * @param element
+     * @param monitor
+     * @throws Exception
+     */
+    public VdbModelEntry( final Vdb vdb,
                    final ModelElement element,
                    final IProgressMonitor monitor ) throws Exception {
         super(vdb, element, monitor);
@@ -233,12 +243,20 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         type =  element.getType();
         visible.set(element.isVisible());
         sourceInfo = new VdbSourceInfo(vdb);
+        if( element.getMetadata() != null && !element.getMetadata().isEmpty()) {
+        	schemaText = element.getMetadata().get(0).getSchemaText();
+        	metadataType = element.getMetadata().get(0).getType();
+        } else {
+        	schemaText = null;
+            metadataType = null;
+        }
         if (element.getSources() != null && !element.getSources().isEmpty()) {
             for (final SourceElement source : element.getSources()) {
             	sourceInfo.add(source.getName(), source.getJndiName(), 
             			source.getTranslatorName() == null ? EMPTY_STRING : source.getTranslatorName());
             }
         }
+
         if(VdbUtil.FUNCTION.equals(type) || VdbUtil.VIRTUAL.equals(type) || VdbUtil.PHYSICAL.equals(type)) {
             updateUdfJars(findModel());
         }
@@ -292,7 +310,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
      * @see org.teiid.designer.vdb.VdbEntry#dispose()
      */
     @Override
-    final void dispose() {
+    public final void dispose() {
         super.dispose();
 
         // remove the imported by models
@@ -385,18 +403,25 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     /**
      * @return type
      */
-    public final String getType() {
+    public String getType() {
         return type;
     }
 
-    void initializeImports() {
-        for (final PropertyElement property : element.getProperties())
-            if (ModelElement.IMPORTS.equals(property.getName())) for (final VdbModelEntry entry : getVdb().modelEntries)
-                if (property.getValue().equals(entry.getName().toString())) {
-                    entry.importedBy.add(this);
-                    imports.add(entry);
-                    break;
-                }
+    /**
+     * 
+     */
+    public void initializeImports() {
+        for (final PropertyElement property : element.getProperties()) {
+            if (ModelElement.IMPORTS.equals(property.getName())) {
+            	for (final VdbEntry entry : getVdb().getModelEntries()) {
+	                if (property.getValue().equals(entry.getName().toString())) {
+	                    ((VdbModelEntry)entry).importedBy.add(this);
+	                    imports.add(entry);
+	                    break;
+	                }
+            	}
+            }
+        }
         element = null;
     }
     
@@ -434,7 +459,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
      * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
-    final void save( final ZipOutputStream out,
+    public final void save( final ZipOutputStream out,
                      final IProgressMonitor monitor ) throws Exception {
         super.save(out, monitor);
     }
@@ -475,6 +500,20 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     	String oldName = sourceInfo.getSource(index).getTranslatorName();
         if (StringUtilities.equals(name, oldName)) return;
         sourceInfo.getSource(index).setTranslatorName(name);
+    }
+    
+    /**
+     * @return
+     */
+    public String getSchemaText() {
+    	return schemaText;
+    }
+    
+    /**
+     * @return
+     */
+    public final String getMetadataType() {
+    	return metadataType;
     }
     
     /**
@@ -577,7 +616,11 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         super.synchronize(monitor);
     }
 
-    void synchronizeModelEntry(final IProgressMonitor monitor) throws Exception {
+    /**
+     * @param monitor
+     * @throws Exception
+     */
+    public void synchronizeModelEntry(final IProgressMonitor monitor) throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null)
             return;
@@ -634,7 +677,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
                     } else {
                         VdbEntry importedEntry = null;
 
-                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
+                        for (final VdbEntry entry : getVdb().getModelEntries()) {
                             if (name.equals(entry.getName())) {
                                 importedEntry = entry;
                                 break;

@@ -11,7 +11,6 @@ import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -100,9 +99,6 @@ public class ExecuteVdbWorker implements VdbConstants {
                     deployed = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
                     
 				    String vdbName = selectedVdb.getFullPath().removeFileExtension().lastSegment();
-				    if( vdbName.indexOf('.') > -1 ) {
-				    	vdbName = new Path(vdbName).removeFileExtension().toString();
-				    }
                     if (teiidServer.isVdbActive(vdbName)) {
                     	if( deployed ) {
                     		executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);

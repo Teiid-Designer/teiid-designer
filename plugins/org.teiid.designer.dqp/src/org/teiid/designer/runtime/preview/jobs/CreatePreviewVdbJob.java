@@ -9,9 +9,11 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+
 import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -28,8 +30,10 @@ import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbFileEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 
 /**
  * The <code>CreatePreviewVdbJob</code> creates a Preview VDB in the Eclipse workspace if it doesn't already exist. The Preview
@@ -160,7 +164,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             // make sure the file is hidden
             this.pvdbFile.setHidden(true);
 
-            Vdb pvdb = new Vdb(this.pvdbFile, true, monitor);
+            Vdb pvdb = new XmiVdb(this.pvdbFile, true, monitor);
             boolean resourceContainsUdf = false;
             
             // don't do if a project PVDB
@@ -170,9 +174,9 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
                     pvdb.addEntry(this.model.getFullPath(), monitor);
                 }
                 // Determine if the vdb contains a FunctionModel or Relational ViewMdl with procedure source
-                Set<VdbModelEntry> entries = pvdb.getModelEntries();
-                for(VdbModelEntry modelEntry: entries) {
-                    resourceContainsUdf = modelEntry.containsUdf();
+                Set<VdbEntry> entries = pvdb.getModelEntries();
+                for(VdbEntry modelEntry: entries) {
+                    resourceContainsUdf = ((VdbModelEntry)modelEntry).containsUdf();
                     if(resourceContainsUdf) {
                         break;
                     }

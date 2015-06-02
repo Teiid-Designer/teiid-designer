@@ -44,7 +44,9 @@ import org.teiid.designer.metamodels.relational.extension.RestModelExtensionCons
 import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
 
@@ -162,9 +164,9 @@ public class WarArchiveUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
-            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
+            Vdb vdb = new XmiVdb(vdbFile, new NullProgressMonitor());
+            Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
@@ -281,27 +283,5 @@ public class WarArchiveUtil {
 
         return restMethod;
     }
-    
-    /**
-     * @param description of the procedure
-     * @return String rest description
-     */
-    public static String getRestDescription( Procedure procedure ) {
-        String restDescription = null;
-
-        try {
-            // try new way first
-            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
-                                                                                                    .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
-            restDescription = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION);
-
-        } catch (Exception e) {
-            UTIL.log(e);
-        }
-
-        return restDescription;
-    }
-
 
 }

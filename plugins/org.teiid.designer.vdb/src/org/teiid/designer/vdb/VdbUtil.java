@@ -8,17 +8,20 @@
 package org.teiid.designer.vdb;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -61,6 +64,7 @@ import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
 import org.teiid.designer.vdb.file.VdbFileProcessor;
 import org.teiid.designer.vdb.manifest.EntryElement;
+import org.teiid.designer.vdb.manifest.MetadataElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.ProblemElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -86,6 +90,9 @@ public class VdbUtil implements VdbConstants {
     public static final String OTHER = "OTHER"; //$NON-NLS-1$
     @SuppressWarnings( "javadoc" )
     public static final String DEPRECATED_TYPE = "TYPE"; //$NON-NLS-1$
+    @SuppressWarnings( "javadoc" )
+    public static final String XML_EXTENSION = "XML"; //$NON-NLS-1$
+    
 
     /**
      * @param theVdb
@@ -94,7 +101,7 @@ public class VdbUtil implements VdbConstants {
     public static Collection<IFile> getVdbModels( Vdb theVdb ) {
         Collection<IFile> iFiles = new ArrayList<IFile>();
 
-        for (VdbModelEntry modelEntry : theVdb.getModelEntries()) {
+        for (VdbEntry modelEntry : theVdb.getModelEntries()) {
             // IPath modelPath = modelEntry.getName();
             IResource resource = ModelerCore.getWorkspace().getRoot().findMember(modelEntry.getName());
 
@@ -110,6 +117,7 @@ public class VdbUtil implements VdbConstants {
     /**
      * @param file
      * @return preview attribute value for VDB. true or false
+     * @throws Exception 
      */
     public static boolean isPreviewVdb( final IFile file ) throws Exception {
         CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
@@ -139,6 +147,88 @@ public class VdbUtil implements VdbConstants {
 
         return false;
     }
+    
+    /**
+     * @param file
+     * @return preview attribute value for VDB. true or false
+     */
+    public static boolean isDynamicVdb( final IFile file ) {
+        CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
+        
+        boolean result = false;
+        
+        if (file.exists()) {
+            // if VDB file is empty just check file name
+            if (file.getLocation().toFile().length() > 0) {
+                // make sure file extension is right
+                if (! XML_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
+                    return false;
+                }
+                
+	            VdbElement manifest = null;
+	            
+	            try {
+					manifest = VdbUtil.getVdbManifest(file.getLocation().toFile());
+				} catch (Exception ex) {
+					VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Problem loading VDB manifest for VDB = " + file.getName());
+				}
+	            
+	            if (manifest != null) {
+	            	result = true;
+	            }
+            }
+        }
+        
+        return result;
+    }
+    
+    
+    /**
+     * @param file
+     * @return preview attribute value for VDB. true or false
+     */
+    public static boolean isDdlVdb( final IFile file ) {
+        CoreArgCheck.isNotNull(file, "file is null"); //$NON-NLS-1$
+        
+        boolean result = false;
+        
+        if (file.exists()) {
+            // if VDB file is empty just check file name
+            if (file.getLocation().toFile().length() > 0) {
+                // make sure file prefix and extension is right
+                if ( ! VDB_FILE_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
+                    return false;
+                }
+                
+	            VdbElement manifest = null;
+	            
+	            try {
+					manifest = VdbUtil.getVdbManifest(file);
+				} catch (Exception ex) {
+					VdbPlugin.UTIL.log(ex);
+				}
+	            
+	            if (manifest != null) {
+		            if (manifest != null) {
+		            	for( ModelElement model : manifest.getModels() ) {
+		            		List<MetadataElement> allMetadata =  model.getMetadata();
+		            		if( allMetadata != null) {
+		            			for( MetadataElement metadata :allMetadata ) {
+		            				if( metadata.getType().equalsIgnoreCase("DDL-FILE") ) {
+				            			result = true;
+				            			break;
+		            				}
+		            			}
+		            		}
+		            		if( result ) break;
+		            	}
+		            }
+	            }
+            }
+        }
+        
+        return result;
+    }
 
     /**
      * Utility method to determine if a vdb contains models of a certain "class"
@@ -146,6 +236,7 @@ public class VdbUtil implements VdbConstants {
 	 * * @param modelClass
      * @param type
      * @return preview attribute value for VDB. true or false
+     * @throws Exception 
      */
 	public static boolean hasModelClass(final IFile file, final String modelClass, final String type) throws Exception {
         if (file.exists() && Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
@@ -175,6 +266,7 @@ public class VdbUtil implements VdbConstants {
      * Utility method to extract a copy of a VDB zip file's vdb.xml in VDB element xml structure
      * @param file
      * @return the root VdbElement
+     * @throws Exception 
      */
     public static VdbElement getVdbManifest( final IFile file ) throws Exception {
         final VdbElement[] manifest = new VdbElement[1];
@@ -183,11 +275,98 @@ public class VdbUtil implements VdbConstants {
             return null;
         }
 
+        if( ModelUtil.isVdbArchiveFile(file) ) {
+	        try {
+	            OperationUtil.perform(new Unreliable() {
+	
+	                ZipFile archive = null;
+	                InputStream entryStream = null;
+	
+	                @Override
+	                public void doIfFails() {
+	                }
+	
+	                @Override
+	                public void finallyDo() throws Exception {
+	                    if (entryStream != null) entryStream.close();
+	                    if (archive != null) archive.close();
+	                }
+	
+	                @Override
+	                public void tryToDo() throws Exception {
+	                    archive = new ZipFile(file.getLocation().toString());
+	                    boolean foundManifest = false;
+	                    for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
+	                        final ZipEntry zipEntry = iter.nextElement();
+	                        entryStream = archive.getInputStream(zipEntry);
+	                        if (zipEntry.getName().equals(MANIFEST)) {
+	                            // Initialize using manifest
+	                            foundManifest = true;
+	                            final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+	                            unmarshaller.setSchema(getManifestSchema());
+	                            manifest[0] = (VdbElement)unmarshaller.unmarshal(entryStream);
+	
+	                        }
+	                        // Don't process any more than we need to.
+	                        if (foundManifest) {
+	                            break;
+	                        }
+	                    }
+	                }
+	            });
+	        } catch (Exception ex) {
+	            VdbPlugin.UTIL.log(ex);
+	            return null;
+	        }
+	        return manifest[0];
+        }
+        
+        if( file.getFileExtension() != null && file.getFileExtension().equalsIgnoreCase("XML") ) {
+	        try {
+	            OperationUtil.perform(new Unreliable() {
+
+	                InputStream fileStream = null;
+	
+	                @Override
+	                public void doIfFails() {
+	                }
+	
+	                @Override
+	                public void finallyDo() throws Exception {
+	                    if (fileStream != null) fileStream.close();
+	                }
+	
+	                @Override
+	                public void tryToDo() throws Exception {
+                        fileStream = new FileInputStream(file.getLocation().toFile()); 
+                        final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                        unmarshaller.setSchema(getManifestSchema());
+                        manifest[0] = (VdbElement)unmarshaller.unmarshal(fileStream);
+	                }
+	            });
+	        } catch (Exception ex) {
+	            VdbPlugin.UTIL.log(ex);
+	            return null;
+	        }
+	        return manifest[0];
+        }
+
+        return null;
+
+    }
+    
+    /**
+     * @param dynamicVdbFile
+     * @return the VdbElement
+     * @throws Exception
+     */
+    public static VdbElement getVdbManifest( final File dynamicVdbFile ) throws Exception {
+    	final VdbElement[] manifest = new VdbElement[1];
+
         try {
             OperationUtil.perform(new Unreliable() {
 
-                ZipFile archive = null;
-                InputStream entryStream = null;
+                InputStream fileStream = null;
 
                 @Override
                 public void doIfFails() {
@@ -195,43 +374,69 @@ public class VdbUtil implements VdbConstants {
 
                 @Override
                 public void finallyDo() throws Exception {
-                    if (entryStream != null) entryStream.close();
-                    if (archive != null) archive.close();
+                    if (fileStream != null) fileStream.close();
                 }
 
                 @Override
                 public void tryToDo() throws Exception {
-                    archive = new ZipFile(file.getLocation().toString());
-                    boolean foundManifest = false;
-                    for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
-                        final ZipEntry zipEntry = iter.nextElement();
-                        entryStream = archive.getInputStream(zipEntry);
-                        if (zipEntry.getName().equals(MANIFEST)) {
-                            // Initialize using manifest
-                            foundManifest = true;
-                            final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-                            unmarshaller.setSchema(getManifestSchema());
-                            manifest[0] = (VdbElement)unmarshaller.unmarshal(entryStream);
+                    final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                    unmarshaller.setSchema(getManifestSchema());
+                    InputStream fileStream = new FileInputStream(dynamicVdbFile);
+                    
+                    manifest[0] = (VdbElement)unmarshaller.unmarshal(fileStream);
+                }
+            });
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Error finding VDB manifest for file: " + dynamicVdbFile.getName());
+            return null;
+        }
+        
+    	return manifest[0];
+    }
+    
+     /**
+	 * @param xmlString
+	 * @return the VdbElement
+	 * @throws Exception
+	 */
+	public static VdbElement getVdbManifest( final String xmlString ) throws Exception {
+    	final VdbElement[] manifest = new VdbElement[1];
 
-                        }
-                        // Don't process any more than we need to.
-                        if (foundManifest) {
-                            break;
-                        }
-                    }
+        try {
+            OperationUtil.perform(new Unreliable() {
+
+                InputStream fileStream = null;
+
+                @Override
+                public void doIfFails() {
+                }
+
+                @Override
+                public void finallyDo() throws Exception {
+                    if (fileStream != null) fileStream.close();
+                }
+
+                @Override
+                public void tryToDo() throws Exception {
+                    final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                    unmarshaller.setSchema(getManifestSchema());
+                    InputStream fileStream = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8));
+                    
+                    manifest[0] = (VdbElement)unmarshaller.unmarshal(fileStream);
                 }
             });
         } catch (Exception ex) {
             VdbPlugin.UTIL.log(ex);
             return null;
         }
-
-        return manifest[0];
+        
+    	return manifest[0];
     }
 
     /**
      * @param file
      * @return version the vdb version number
+     * @throws Exception 
      */
     public static int getVdbVersion( final IFile file ) throws Exception {
 
@@ -332,6 +537,7 @@ public class VdbUtil implements VdbConstants {
 	 * @param theVdb
 	 * @param theModelFile
 	 * @return true if model exists by name in vdb
+	 * @throws Exception 
 	 */
 	public static boolean modelInVdb(final IFile theVdb, final IFile theModelFile) throws Exception {
 		if (theVdb.exists()) {
@@ -370,20 +576,10 @@ public class VdbUtil implements VdbConstants {
             statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, defaultTeiidVersion)) ); //$NON-NLS-1$    
 
-        if (validationVersion.isGreaterThan(maxDesignerVersion) && !sameMinorVersion(validationVersion, maxDesignerVersion) )
-            /* Vdb version is greater than the fully-suppported Designer Teiid Version which means all bets are off! */
-            statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
+        if (validationVersion.isGreaterThan(maxDesignerVersion))
+            /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
+            statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$
-    }
-    
-    /**
-     * Checks to see if 2 server versions have the same major and minor versions
-     * @param version_1
-     * @param version_2
-     * @return
-     */
-    public static boolean sameMinorVersion(ITeiidServerVersion version_1, ITeiidServerVersion version_2) {
-    	return version_1.getMajor().equals(version_2.getMajor()) && version_1.getMinor().equals(version_2.getMinor());
     }
 	
 	/**
@@ -404,7 +600,7 @@ public class VdbUtil implements VdbConstants {
             Vdb theVdb = null;
             VdbElement manifest = null;
             try {
-                theVdb = new Vdb(theVdbFile, new NullProgressMonitor());
+                theVdb = new XmiVdb(theVdbFile, new NullProgressMonitor());
                 manifest = VdbUtil.getVdbManifest(theVdbFile);
             } catch (Exception ex) {
                 statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getLocalizedMessage(), ex));
@@ -589,7 +785,7 @@ public class VdbUtil implements VdbConstants {
 		Map<String, String> existingNames = new HashMap<String, String>();
 		Set<String> existingPaths = new HashSet<String>();
 		
-		for (VdbModelEntry model : vdb.getModelEntries()) {
+		for (VdbEntry model : vdb.getModelEntries()) {
 			String existingName = model.getName().removeFileExtension().lastSegment();
 			IPath path = model.getName();
 			existingNames.put(existingName.toUpperCase(), existingName);
@@ -622,7 +818,7 @@ public class VdbUtil implements VdbConstants {
 		Set<String> existingPaths = new HashSet<String>();
 		
 		if( theVdb != null ) {
-			for (VdbModelEntry modelEntry : theVdb.getModelEntries()) {
+			for (VdbEntry modelEntry : theVdb.getModelEntries()) {
 				String existingName = modelEntry.getName().removeFileExtension().lastSegment();
 				IPath path = modelEntry.getName();
 				existingNames.put(existingName.toUpperCase(), existingName);
@@ -684,7 +880,7 @@ public class VdbUtil implements VdbConstants {
 		}
 
         if( foundCheckSum ) {
-	 		for( VdbModelEntry modelEntry : theVdb.getModelEntries()) {
+	 		for( VdbEntry modelEntry : theVdb.getModelEntries()) {
 				if( modelEntry.getName().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
 	 				return modelEntry.getChecksum() == fileCheckSum;
 	 			}
@@ -721,6 +917,7 @@ public class VdbUtil implements VdbConstants {
 	 * 
 	 * @param theVdb the vdb
 	 * @return the list of models with wrong paths in VDB
+	 * @throws Exception 
 	 */
 	public static Collection<IFile> getModelsWithWrongPaths(final IFile theVdb) throws Exception {
 		Collection<IFile> misMatchedResources = new ArrayList<IFile>();
@@ -768,9 +965,9 @@ public class VdbUtil implements VdbConstants {
 	}
 
 	private static VdbModelEntry getVdbModelEntry(ModelElement element, Vdb actualVDB) {
-        for( VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+        for( VdbEntry modelEntry : actualVDB.getModelEntries()) {
             if( modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(element.getName()) ) {
-                return modelEntry;
+                return (VdbModelEntry)modelEntry;
             }
         }
 
@@ -949,7 +1146,7 @@ public class VdbUtil implements VdbConstants {
             synchronizeWorkspace(theVdb);
         }
 
-        Vdb actualVDB = new Vdb(theVdb, true, new NullProgressMonitor());
+        Vdb actualVDB = new XmiVdb(theVdb, true, new NullProgressMonitor());
 
         Set<ModelElement> modelsToReplace = new HashSet<ModelElement>();
         Collection<IResource> matchingResources = new ArrayList<IResource>();
@@ -1008,7 +1205,7 @@ public class VdbUtil implements VdbConstants {
                 oldModelPathToResourceMap.put(model.getPath(), resource);
 
                 if (fixThePath || nameWasChanged || addTheUuid) {
-                    for (VdbModelEntry modelEntry : actualVDB.getModelEntries()) {
+                    for (VdbEntry modelEntry : actualVDB.getModelEntries()) {
                         if (modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(modelName)) {
                             modelsToReplace.add(model);
                             matchingResources.add(resource);

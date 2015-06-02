@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +24,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -99,10 +102,12 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -172,8 +177,8 @@ public final class PreviewManager extends JobChangeAdapter
         // TODO implement dependsOn
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
         
-        Vdb pvdb = new Vdb(pvdbFile, null);
-        Set<VdbModelEntry> models = pvdb.getModelEntries();
+        Vdb pvdb = new XmiVdb(pvdbFile, null);
+        Set<VdbEntry> models = pvdb.getModelEntries();
         // project PVDB has no entries
         if (!models.isEmpty()) {
             IFile file = models.iterator().next().findFileInWorkspace();
@@ -194,7 +199,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     public static String getPreviewProjectVdbName( IProject project ) {
         assert (project != null) : "Project is null"; //$NON-NLS-1$
-        StringBuilder name = new StringBuilder(Vdb.getPreviewVdbPrefix(project));
+        StringBuilder name = new StringBuilder(XmiVdb.getPreviewVdbPrefix(project));
         String vdbName = name.append(project.getName()).append(PROJECT_VDB_SUFFIX).toString();
         if (vdbName.contains(StringUtilities.SPACE)) {
             vdbName = vdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
@@ -357,7 +362,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     IStatus checkPreviewVdbForErrors( Vdb pvdb ) {
         // a PVDB will have either zero entries (if a project PVDB) or one model entry
-        Set<VdbModelEntry> modelEntries = pvdb.getModelEntries();
+        Set<VdbEntry> modelEntries = pvdb.getModelEntries();
 
         if (!modelEntries.isEmpty()) {
             try {
@@ -492,7 +497,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         // PVDB always contain either zero (project PVDBs) or one model
-        VdbModelEntry modelEntry = previewVdb.getModelEntries().iterator().next();
+        VdbModelEntry modelEntry = (VdbModelEntry)previewVdb.getModelEntries().iterator().next();
         IFile model = modelEntry.findFileInWorkspace();
         ModelResource modelResource = ModelUtil.getModelResource(model, true);
 
@@ -794,7 +799,7 @@ public final class PreviewManager extends JobChangeAdapter
         }
 
         String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();
-        String prefix = Vdb.getPreviewVdbPrefix(pvdbFile);
+        String prefix = XmiVdb.getPreviewVdbPrefix(pvdbFile);
         int index = name.indexOf(prefix);
 
         if (index == -1) {
@@ -812,7 +817,7 @@ public final class PreviewManager extends JobChangeAdapter
             name = new StringBuilder(PreviewManager.getPreviewProjectVdbName((IProject)projectOrModel));
         } else {
             assert (projectOrModel instanceof IFile) : "IResource is not an IFile"; //$NON-NLS-1$
-            String prefix = Vdb.getPreviewVdbPrefix(projectOrModel);
+            String prefix = XmiVdb.getPreviewVdbPrefix(projectOrModel);
 
             if (projectOrModel.getFileExtension().equalsIgnoreCase(ITeiidVdb.VDB_EXTENSION)) {
                 String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
@@ -1255,7 +1260,7 @@ public final class PreviewManager extends JobChangeAdapter
         IFile modelToPreview = (IFile)model.getCorrespondingResource();
         IProject currentModelProject = modelToPreview.getProject();
         IFile pvdbFile = this.getPreviewVdb(modelToPreview);
-        Vdb pvdb = new Vdb(pvdbFile, true, monitor);
+        Vdb pvdb = new XmiVdb(pvdbFile, true, monitor);
         projectPreviewVdbName = getPreviewProjectVdbName(currentModelProject);
 
         List<IFile> projectPvdbsToDeploy = findProjectPvdbs(currentModelProject, true);
@@ -1341,7 +1346,7 @@ public final class PreviewManager extends JobChangeAdapter
                     continue;
                 }
                 
-                Vdb projectModelPvdb = new Vdb(projectPvdbFile, true, null);
+                Vdb projectModelPvdb = new XmiVdb(projectPvdbFile, true, null);
                 
                 // make sure no errors in any models that are dependencies of the model being previewed
                 String name = getResourceNameForPreviewVdb(projectPvdbFile);
@@ -1452,7 +1457,7 @@ public final class PreviewManager extends JobChangeAdapter
             	VERSION_8_8_DEPLOY : {
 		            if (projectVdbIFile != null) {
 		            	ITeiidVdb deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
-		            	Vdb localProjectVdb = new Vdb(projectVdbIFile, new NullProgressMonitor());
+		            	Vdb localProjectVdb = new XmiVdb(projectVdbIFile, new NullProgressMonitor());
 		            	localProjectVdb.removeAllImportVdbs();
 		            	// Add imports for all preview vdbs under project
 		                addPreviewVdbImports(localProjectVdb, localPreviewVdbs);

@@ -117,7 +117,11 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
     }
 
-    TranslatorOverride( Vdb vdb,
+    /**
+     * @param vdb
+     * @param element
+     */
+    public TranslatorOverride( Vdb vdb,
                         TranslatorElement element ) {
         this.vdb = vdb;
         this.name.set((element.getName() == null) ? StringUtilities.EMPTY_STRING : element.getName());
