@@ -140,8 +140,8 @@ public class SetDefaultServerAction extends BaseSelectionListenerAction implemen
         }
 
         /*
-         * If a server version change is occurring then tell the user and ask them if its
-         * alright to continue since this will close any open editors.
+         * If a server version change is occurring and the new server has a version that is not full
+         * support then ask the user if it is ok to continue.
          */
         continueChangingServer = false;
         SupportLevel level = ModelerCore.getTeiidSupportLevel(selectedServer.getServerVersion());

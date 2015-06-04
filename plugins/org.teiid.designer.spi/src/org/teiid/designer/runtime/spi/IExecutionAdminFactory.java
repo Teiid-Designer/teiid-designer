@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.spi;
 import java.sql.Driver;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
@@ -20,7 +19,7 @@ public interface IExecutionAdminFactory {
 
     /**
      * The support level to return from the
-     * {@link IExecutionAdminFactory#supports(TeiidServerVersion)}
+     * {@link IExecutionAdminFactory#supports(ITeiidServerVersion)}
      * support method
      */
     enum SupportLevel {
