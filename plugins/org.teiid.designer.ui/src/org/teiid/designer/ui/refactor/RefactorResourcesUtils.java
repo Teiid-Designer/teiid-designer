@@ -426,13 +426,18 @@ public class RefactorResourcesUtils {
 							 */
 							continue;
 						}
+						
+						String sourcePath = pathPair.getSourcePath().replace('\\','/'); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+						boolean sourcePathHasSlash = sourcePath.indexOf('/') > -1;
 
-						int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+						int lineOffset = line.indexOf(sourcePath);
 						if (lineOffset < 0) continue;
 
-						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
-						fileChangeRootEdit.addChild(edit);
+						if( sourcePathHasSlash || line.charAt(lineOffset-1) == '"') {
+							int offset = docOffset + lineOffset;
+							ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
+							fileChangeRootEdit.addChild(edit);
+						}
 					}
 				}
 
@@ -631,15 +636,40 @@ public class RefactorResourcesUtils {
 						continue;
 					}
 					
-					int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
-					if (lineOffset > 0) {
-						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
-						fileChangeRootEdit.addChild(edit);
+					// 	name="partssupplier" modelLocation="partssupplier.xmi"
+				    //	name="partssupplier_view_2" modelLocation="views/partssupplier_view_2.xmi"
+					//  HAVE TO PREVENT THE FOLLOWING
+				    //	name="partssupplier_RENAMED" modelLocation="partssupplier_RENAMED.xmi"
+				    //	name="partssupplier_RENAMED_view_2" modelLocation="views/partssupplier_view_2.xmi"
+
+					// Note that a file renaming a file named "partssupplier.xmi" will end up modifying "my_partssupplier.xmi"
+					// Need to add a check to see that the index-1 is a " double-quote character
+					
+					// Note that a file renaming a file named "partssupplier.xmi" will end up modifying "partssupplier_otherfile.xmi"
+					// Need to add a check to see that the index + path/name length is a " double-quote character
+					
+					// Model location may not contain any '/' chars, so the indexOf(sourcePath) will look the same as 
+					// EXAMPLE :  name="views_products" modelLocation="views_products.xmi"
+					// where products.xmi is being renamed to products_RENAMED.xmi
+					
+					String sourcePath = pathPair.getSourcePath().replace('\\','/'); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+					String sourceNameOnly = pathPair.getSourceNameNoExtension();
+					boolean sourcePathHasSlash = sourcePath.indexOf('/') > -1;
+					
+					int lineOffset = line.indexOf(sourcePath);
+					if (lineOffset > 0 ) {
+						// Check for use-case where there is no slash in path and source name is the suffix of a different model
+						// EXAMPLE products.xmi  is in the modelLocation="view_products.xmi"
+						// If slash is in path, then it won't get here because of full path check
+						if( sourcePathHasSlash || line.charAt(lineOffset-1) == '"') {
+							int offset = docOffset + lineOffset;
+							ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
+							fileChangeRootEdit.addChild(edit);
+						}
 					}
 					
-					lineOffset = line.indexOf(pathPair.getSourceNameNoExtension());
-					if (lineOffset > 0)  {
+					lineOffset = line.indexOf(sourceNameOnly);
+					if (lineOffset > 0 && line.charAt(lineOffset-1) == '"' && line.charAt(lineOffset + sourceNameOnly.length()) == '"')  {
 						int offset = docOffset + lineOffset;
 						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourceNameNoExtension().length(), pathPair.getTargetNameNoExtension());
 						fileChangeRootEdit.addChild(edit);
