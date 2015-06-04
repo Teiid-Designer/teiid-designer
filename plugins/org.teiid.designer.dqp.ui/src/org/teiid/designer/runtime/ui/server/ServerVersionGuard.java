@@ -45,8 +45,15 @@ public class ServerVersionGuard implements IExecutionConfigurationListener, Stri
             return;
 
         ITeiidServer instance = event.getUpdatedServer();
+        if (instance == null)
+            return;
+
+
         ITeiidServerVersion version = instance.getServerVersion();
-        if (! version.isGreaterThan(TeiidServerVersion.Version.TEIID_DEFAULT.get()))
+
+        ITeiidServerVersion defaultVersion = TeiidServerVersion.Version.TEIID_DEFAULT.get();
+        ITeiidServerVersion mmVersion = new TeiidServerVersion(defaultVersion.getMajor(), defaultVersion.getMinor(), ITeiidServerVersion.WILDCARD);
+        if (version.isLessThanOrEqualTo(mmVersion))
             return;
 
         IWorkbench workbench = DqpUiPlugin.getDefault().getWorkbench();

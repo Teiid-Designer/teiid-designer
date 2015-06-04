@@ -20,7 +20,7 @@ public interface IExecutionAdminFactory {
 
     /**
      * The support level to return from the
-     * {@link IExecutionAdminFactory#supports(TeiidServerVersion)}
+     * {@link IExecutionAdminFactory#supports(ITeiidServerVersion)}
      * support method
      */
     enum SupportLevel {
