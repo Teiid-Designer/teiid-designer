@@ -39,7 +39,10 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
         if (version.isLessThan(TeiidServerVersion.Version.TEIID_7_7.get()))
             return SupportLevel.NO_SUPPORT;
 
-        if (version.isLessThanOrEqualTo(TeiidServerVersion.Version.TEIID_DEFAULT.get()))
+        // Only compare major-minor versions
+        ITeiidServerVersion defaultVersion = TeiidServerVersion.Version.TEIID_DEFAULT.get();
+        ITeiidServerVersion mmVersion = new TeiidServerVersion(defaultVersion.getMajor(), defaultVersion.getMinor(), ITeiidServerVersion.WILDCARD);
+        if (version.isLessThanOrEqualTo(mmVersion))
             return SupportLevel.FULL_SUPPORT;
 
         return SupportLevel.WORKS;
