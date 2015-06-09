@@ -76,7 +76,7 @@ public class DynamicVdb extends BasicVdb {
 	 * @param file
 	 */
 	public DynamicVdb(IFile file) {
-		this(file.getFullPath().toFile());
+		this(file.getLocation().toFile());
 	}
 	
 	/**
@@ -122,6 +122,7 @@ public class DynamicVdb extends BasicVdb {
                 final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(fileStream);
                 setDescription(manifest.getDescription());
                 setVersion(manifest.getVersion());
+                setName(manifest.getName());
                 // VDB properties
                 for (final PropertyElement property : manifest.getProperties()) {
                     final String name = property.getName();
