@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.io.IOException;
@@ -6,11 +13,15 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.komodo.vdb.dynamic.DynamicVdb;
 import org.teiid.designer.komodo.vdb.xmi.XmiVdb;
+import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -124,7 +135,8 @@ public class GenerateArchiveVdbManager implements UiConstants{
 	}
 	
 	public void generate() {
-		
+		// TODO: perform the archive generation
+		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "GenerateArchiveVdbWizard", "finish() not yet implemented");
 	}
 	
 	public void validate() {
@@ -148,25 +160,29 @@ public class GenerateArchiveVdbManager implements UiConstants{
         try {
         	Integer.parseInt(getVersion());
         } catch (NumberFormatException nfe) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, "The version [" + getVersion() + "] must be a valid integer");
+        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
+        			NLS.bind(Messages.GenerateArchiveVdbWizard_validation_versionNotInteger, getVersion()));
         	return;
         }
         
 		// output location can't be null
         if( outputLocation == null ) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, "Target project of folder is undefined");
+        	status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.
+        			GenerateArchiveVdbWizard_validation_targetLocationUndefined);
         	return;
         }
         
         // vdb archive file name
         // can't be null && must end with -vdb.xml
         if( vdbArchiveFileName == null ) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, "VDB file name is undefined");
+        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
+        			Messages.GenerateArchiveVdbWizard_validation_vdbFileNameUndefined);
         	return;
         }
         
         if( vdbArchiveFileName.contains(".") && ! vdbArchiveFileName.toLowerCase().endsWith(".vdb")) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, "VDB file name must have a .vdb file extension");
+        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
+        			Messages.GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension);
         	return;
         }
 	}

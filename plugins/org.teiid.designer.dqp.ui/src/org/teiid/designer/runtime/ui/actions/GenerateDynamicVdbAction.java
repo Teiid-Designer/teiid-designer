@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.runtime.ui.actions;
 
 import java.util.Iterator;
@@ -11,11 +18,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
-import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateArchiveVdbWizard;
+import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.runtime.ui.wizards.vdbs.GenerateDynamicVdbWizard;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
@@ -23,25 +28,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
 public class GenerateDynamicVdbAction extends SortableSelectionAction implements DqpUiConstants {
-    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(GenerateDynamicVdbAction.class);
     private static final String label = DqpUiConstants.UTIL.getString("label"); //$NON-NLS-1$
-
-    private static String getString( final String id ) {
-        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id);
-    }
-
-    private static String getString( final String id,
-                                     final Object value ) {
-        return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value);
-    }
-    
-    private static String getString( final String id, final Object value, final Object value2) {
-    	return DqpUiConstants.UTIL.getString(I18N_PREFIX + id, value, value2);
-	}
-
-    private ITeiidServer cachedServer;
-    
-    private String cachedVdbName;
 
     /**
      * @since 5.0
@@ -49,19 +36,6 @@ public class GenerateDynamicVdbAction extends SortableSelectionAction implements
     public GenerateDynamicVdbAction() {
         super(label, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.DYNAMIC_VDB));
-    }
-    
-    /**
-     * @since 5.0
-     */
-    public GenerateDynamicVdbAction(String vdbName) {
-    	super(label, SWT.DEFAULT);
-    	this.cachedVdbName = vdbName;
-        setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(Images.DYNAMIC_VDB));
-    }
-
-    public void setTeiidServer( ITeiidServer teiidServer ) {
-        this.cachedServer = teiidServer;
     }
 
     /**
@@ -93,7 +67,9 @@ public class GenerateDynamicVdbAction extends SortableSelectionAction implements
     		return;
         }
 
-        MessageDialog.openInformation(iww.getShell(), "Nothing Exported", "Dynamic VDB XML file was not selected");
+        MessageDialog.openInformation(iww.getShell(), 
+        		Messages.GenerateDynamicVdbAction_nothingExportedTitle, 
+        		Messages.GenerateDynamicVdbAction_nothingExportedMessage);
 
     }
     

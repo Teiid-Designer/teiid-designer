@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.util.ArrayList;
@@ -6,7 +13,6 @@ import java.util.Collection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ListViewer;
@@ -19,12 +25,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.komodo.vdb.Model;
-import org.teiid.designer.transformation.ui.UiConstants;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -34,7 +40,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 
-public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiConstants {
+public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements DqpUiConstants {
 
 	private final String EMPTY = StringConstants.EMPTY_STRING;
 
@@ -52,9 +58,9 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
 	 * @since 8.1
 	 */
 	public GenerateArchiveVdbPageTwo(GenerateArchiveVdbManager vdbManager) {
-        super(GenerateArchiveVdbPageTwo.class.getSimpleName(), ""); //Messages.ShowDDLPage_title); 
+        super(GenerateArchiveVdbPageTwo.class.getSimpleName(), ""); //$NON-NLS-N$
         this.vdbManager = vdbManager;
-        setTitle("Specify VDB archive output");
+        setTitle(Messages.GenerateArchiveVdbPageTwo_title);
 	}
 	
 
@@ -71,7 +77,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
 
 		createHeaderPanel(mainPanel);
 	    
-	    // Create Source Models List group
+	    // Create Source Models List group //$NON-NLS-1$
 	    createSourceModelsGroup(mainPanel);
 	    
 	    createViewModelsGroup(mainPanel);
@@ -81,18 +87,20 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
 	
 	private void createHeaderPanel(Composite parent) {
 		
-        Composite vdbInfoGroup = WidgetFactory.createGroup(parent, "VDB Details", GridData.FILL_HORIZONTAL);
+        Composite vdbInfoGroup = WidgetFactory.createGroup(parent,
+        		Messages.GenerateArchiveVdbPageTwo_vdbDetails, GridData.FILL_HORIZONTAL);
         vdbInfoGroup.setLayout(new GridLayout(3, false));
         GridDataFactory.fillDefaults().grab(true,  false).span(2, 1).applyTo(vdbInfoGroup);
 
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, "Original VDB Name");
+        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER,
+        		Messages.GenerateArchiveVdbPageTwo_originalVdbName);
         Label vdbNameFld = new Label(vdbInfoGroup, SWT.NONE);
         GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbNameFld);
         vdbNameFld.setText(vdbManager.getDynamicVdb().getName());
         vdbNameFld.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
 
         Label locationLabel = new Label(vdbInfoGroup, SWT.NONE);
-        locationLabel.setText("Location");
+        locationLabel.setText(Messages.GenerateArchiveVdbPageTwo_location);
 
         vdbArchiveLocationText = new Label(vdbInfoGroup, SWT.NONE);
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(vdbArchiveLocationText);
@@ -103,7 +111,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
         Button browseButton = new Button(vdbInfoGroup, SWT.PUSH);
         GridData buttonGridData = new GridData();
         browseButton.setLayoutData(buttonGridData);
-        browseButton.setText("Change..."); 
+        browseButton.setText(Messages.GenerateArchiveVdbPageTwo_browse); 
         browseButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected( SelectionEvent e ) {
@@ -111,40 +119,31 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
             }
         });
         
-        Label vdbVersionLabel = WidgetFactory.createLabel(vdbInfoGroup, "Version"); //$NON-NLS-1$
+        Label vdbVersionLabel = WidgetFactory.createLabel(vdbInfoGroup, 
+        		Messages.GenerateArchiveVdbPageTwo_version); //$NON-NLS-1$
     	GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
     	
     	final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
     	GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
-    	((GridData)vdbVersionText.getLayoutData()).widthHint = 30;
+    	((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
     	
     	vdbVersionText.addModifyListener(new ModifyListener() {
 			
 			@Override
 			public void modifyText(ModifyEvent e) {
-				try {
-                    int versionValue = Integer.parseInt(vdbVersionText.getText());
-                    if (versionValue > -1) {
-                        vdbManager.setVersion(vdbVersionText.getText());
-					}
-				} catch (NumberFormatException ex) {
-					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
-                            "Invalid Version",
-                            "Invalid Version");
-					vdbVersionText.setText(vdbManager.getVersion());
-				}
-				
+                vdbManager.setVersion(vdbVersionText.getText());
+                validatePage();
 			}
 		});
     	
     	vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
-    	
 
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, "Archive VDB Name");
+        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, 
+        		Messages.GenerateArchiveVdbPageTwo_archiveVdbName);
         vdbArchiveNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
         GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbArchiveNameFld);
         vdbArchiveNameFld.setText(vdbManager.getDelegateArchiveVdbName());
-        vdbArchiveNameFld.setToolTipText("Specify name for VDB. This name can be the same as the dynamic VDB name above, but both VDBs cannot be deployed at the same time");
+        vdbArchiveNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_archiveVdbNameTooltip);
         vdbArchiveNameFld.addModifyListener(new ModifyListener() {
             @Override
 			public void modifyText( final ModifyEvent event ) {
@@ -153,11 +152,12 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
             }
         });
         
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, "VDB Archive File Name");
+        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, 
+        		Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileName);
         vdbArchiveFileNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
         GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbArchiveFileNameFld);
         vdbArchiveFileNameFld.setText(vdbManager.getVdbArchiveFileName());
-        vdbArchiveFileNameFld.setToolTipText("Specify unique file name for VDB archive. This name will have a *.vdb extension");
+        vdbArchiveFileNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip);
         vdbArchiveFileNameFld.addModifyListener(new ModifyListener() {
             @Override
 			public void modifyText( final ModifyEvent event ) {
@@ -169,7 +169,8 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
 	
     private void createSourceModelsGroup( Composite parent ) {
 
-		Group group = WidgetFactory.createGroup(parent, "Source Models", SWT.FILL, 1, 1);  //$NON-NLS-1$
+		Group group = WidgetFactory.createGroup(parent, 
+				Messages.GenerateArchiveVdbPageTwo_sourceModels, SWT.FILL, 1, 1);
 		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
 		GridData gd_2 = new GridData(GridData.FILL_BOTH);
 		gd_2.widthHint = 220;
@@ -187,7 +188,8 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements UiC
     
     private void createViewModelsGroup( Composite parent ) {
 
-		Group group = WidgetFactory.createGroup(parent, "View Models", SWT.FILL, 1, 1);  //$NON-NLS-1$
+		Group group = WidgetFactory.createGroup(parent, 
+				Messages.GenerateArchiveVdbPageTwo_viewModels, SWT.FILL, 1, 1);
 		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
 		GridData gd_2 = new GridData(GridData.FILL_BOTH);
 		gd_2.widthHint = 220;

@@ -1,3 +1,10 @@
+/*
+ * JBoss, Home of Professional Open Source.
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.jface.layout.GridDataFactory;
@@ -11,17 +18,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.transformation.ui.UiConstants;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
+import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
-public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements UiConstants {
+public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements DqpUiConstants {
 
 	private final String EMPTY = StringConstants.EMPTY_STRING;
-	private final int GROUP_HEIGHT = 400;
 
 	Font monospaceFont;
     private Text xmlContentsBox;
@@ -34,15 +41,15 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements UiC
 	 * @since 8.1
 	 */
 	public GenerateArchiveVdbPageOne(GenerateArchiveVdbManager vdbManager) {
-        super(GenerateArchiveVdbPageOne.class.getSimpleName(), ""); //Messages.ShowDDLPage_title); 
+        super(GenerateArchiveVdbPageOne.class.getSimpleName(), "");  //$NON-NLS-N$
         this.vdbManager = vdbManager;
-        setTitle("Dynamic VDB Contents");
+        setTitle(Messages.GenerateArchiveVdbPageOne_title);
 	}
 	
 
 	@Override
 	public void createControl(Composite parent) {
-        monospaceFont = new Font(null, "Monospace", 10, SWT.BOLD);
+        monospaceFont = new Font(null, "Monospace", 10, SWT.BOLD); //$NON-NLS-N$
 		// Create page
 		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
@@ -53,20 +60,19 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements UiC
 		setControl(mainPanel);
 		
         Composite summaryPanel = WidgetFactory.createPanel(mainPanel, SWT.NO_SCROLL, 1);
-//        summaryPanel.setLayout(new GridLayout(2, false));
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(10,  10).applyTo(summaryPanel);
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(summaryPanel);
         // ----------------------------------------
         // XML File controls 
         // ----------------------------------------
-        WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, "Dynamic VDB File");
+        WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageOne_dynamicVdbFile);
 
         Label dynamicVdbFileName = new Label(summaryPanel, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(dynamicVdbFileName);
         dynamicVdbFileName.setText(vdbManager.getDynamicVdbFile().getName());
         dynamicVdbFileName.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
         
-        WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, "VDB Name");
+        WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageOne_vdbName);
         Label vdbNameFld = new Label(summaryPanel, SWT.BORDER);
         GridDataFactory.fillDefaults().grab(true,  false).applyTo(vdbNameFld);
         vdbNameFld.setText(vdbManager.getDynamicVdb().getName());
@@ -82,11 +88,9 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements UiC
      * Create the Group containing the DDL Contents (not editable)
      */
     private void createXMLDisplayGroup( Composite parent ) {
-        Group theGroup = WidgetFactory.createGroup(parent, "File Contents",  GridData.FILL_BOTH, 1);
+        Group theGroup = WidgetFactory.createGroup(parent, Messages.GenerateArchiveVdbPageOne_vdbXmlContents,  GridData.FILL_BOTH, 1);
         GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(10,  10).applyTo(theGroup);
-        GridDataFactory.fillDefaults().span(2, 1).applyTo(theGroup);
-        ((GridData)theGroup.getLayoutData()).heightHint = GROUP_HEIGHT;
-        ((GridData)theGroup.getLayoutData()).widthHint = 400;
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(theGroup);
 
         xmlContentsBox = WidgetFactory.createTextBox(theGroup);
         
