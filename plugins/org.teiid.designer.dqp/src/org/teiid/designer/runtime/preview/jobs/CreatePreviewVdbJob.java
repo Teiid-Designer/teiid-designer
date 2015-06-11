@@ -164,14 +164,14 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
             // make sure the file is hidden
             this.pvdbFile.setHidden(true);
 
-            Vdb pvdb = new XmiVdb(this.pvdbFile, true, monitor);
+            Vdb pvdb = new XmiVdb(this.pvdbFile, true);
             boolean resourceContainsUdf = false;
             
             // don't do if a project PVDB
             if (resource instanceof IFile) {
                 // don't add if already in the PVDB (only one model per PVDB)
                 if (pvdb.getModelEntries().isEmpty()) {
-                    pvdb.addEntry(this.model.getFullPath(), monitor);
+                    pvdb.addEntry(this.model.getFullPath());
                 }
                 // Determine if the vdb contains a FunctionModel or Relational ViewMdl with procedure source
                 Set<VdbEntry> entries = pvdb.getModelEntries();
@@ -187,7 +187,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
 
             // this will trigger an resource change event which will eventually get an update job to run
             if (isNew || pvdb.isModified() || resourceContainsUdf) {
-                pvdb.save(monitor);
+                pvdb.save();
             }
         } catch (Exception e) {
             IProject proj = ((this.project == null) ? this.model.getProject() : this.project);

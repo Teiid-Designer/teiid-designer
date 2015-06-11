@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -116,7 +115,7 @@ public class VdbDataRoleResolver {
 				dr.setPermissions(keepPermList);
 				dr.setAnyAuthenticated(role.isAnyAuthenticated());
 				
-				vdb.addDataPolicy(dr, new NullProgressMonitor());
+				vdb.addDataPolicy(dr);
 				
 			}
 		}
@@ -212,7 +211,7 @@ public class VdbDataRoleResolver {
 	    			if( changedDataRole != null ) {
 	    				// Remove the old data policy
 	    				vdb.removeDataPolicy(existingRole);
-	    				vdb.addDataPolicy(changedDataRole, new NullProgressMonitor());
+	    				vdb.addDataPolicy(changedDataRole);
 	    			}
 	        	}
 	        	
@@ -270,7 +269,7 @@ public class VdbDataRoleResolver {
     			if( changedDataRole != null ) {
     				// Remove the old data policy
     				vdb.removeDataPolicy(existingRole);
-    				vdb.addDataPolicy(changedDataRole, new NullProgressMonitor());
+    				vdb.addDataPolicy(changedDataRole);
     			}
         	}
         	

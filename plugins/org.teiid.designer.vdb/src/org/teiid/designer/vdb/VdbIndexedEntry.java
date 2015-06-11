@@ -17,7 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -89,11 +89,10 @@ public abstract class VdbIndexedEntry extends VdbEntry {
     /**
      * @param vdb
      * @param element
-     * @param monitor
      * @throws Exception
      */
-    public VdbIndexedEntry(Vdb vdb, EntryElement element, IProgressMonitor monitor) throws Exception {
-        super(vdb, element, monitor);
+    public VdbIndexedEntry(Vdb vdb, EntryElement element) throws Exception {
+        super(vdb, element);
 
         String indexName = null;
         for (final PropertyElement property : element.getProperties()) {
@@ -108,11 +107,10 @@ public abstract class VdbIndexedEntry extends VdbEntry {
     /**
      * @param vdb
      * @param name
-     * @param monitor
      * @throws Exception
      */
-    public VdbIndexedEntry(Vdb vdb, IPath name, IProgressMonitor monitor) throws Exception {
-        super(vdb, name, monitor);
+    public VdbIndexedEntry(Vdb vdb, IPath name) throws Exception {
+        super(vdb, name);
         indexName = IndexUtil.getRuntimeIndexFileName(findFileInWorkspace());
     }
 
@@ -174,10 +172,9 @@ public abstract class VdbIndexedEntry extends VdbEntry {
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    protected void synchronizeIndex(final IProgressMonitor monitor) throws Exception {
+    protected void synchronizeIndex() throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null)
             return;
@@ -196,7 +193,7 @@ public abstract class VdbIndexedEntry extends VdbEntry {
         }
         if (workspaceFile.getLocalTimeStamp() > indexDate) {
             // Note that this will index and validate the model in the workspace
-            getVdb().getBuilder().buildResources(monitor,
+            getVdb().getBuilder().buildResources(new NullProgressMonitor(),
                                                  Collections.singleton(workspaceFile),
                                                  ModelerCore.getModelContainer(),
                                                  false);
@@ -225,13 +222,13 @@ public abstract class VdbIndexedEntry extends VdbEntry {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream)
      */
     @Override
-    public void save( final ZipOutputStream out, final IProgressMonitor monitor ) throws Exception {
-        super.save(out, monitor);
+    public void save( final ZipOutputStream out ) throws Exception {
+        super.save(out);
         // Save model index
-        save(out, new ZipEntry(INDEX_FOLDER + getIndexName()), getIndexFile(), monitor);
+        save(out, new ZipEntry(INDEX_FOLDER + getIndexName()), getIndexFile());
 
         if (!getVdb().isPreview()) {
             // Convert problems for this model entry to markers on the VDB file

@@ -10,13 +10,11 @@ package org.teiid.designer.vdb.ui.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -69,7 +67,7 @@ public class VdbResourceFinder {
         ModelEditorImpl.setContainer(this.container);
         
         try {
-            this.vdb = new XmiVdb(vdbFile, false, new NullProgressMonitor());
+            this.vdb = new XmiVdb(vdbFile, false);
         } catch (Exception ex) {
             throw ErrorHandler.toCoreException(ex);
         }

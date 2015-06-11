@@ -220,12 +220,12 @@ public final class NewVdbWizard extends AbstractWizard
                 try {
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
                     vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
-                    Vdb newVdb = new XmiVdb(vdbFile, false, monitor);
+                    Vdb newVdb = new XmiVdb(vdbFile, false);
             		String desc = descriptionTextEditor.getText();
             		if( desc != null && desc.length() > 0 ) {
             			newVdb.setDescription(desc);
             		}
-                    newVdb.save(monitor);
+                    newVdb.save();
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
 

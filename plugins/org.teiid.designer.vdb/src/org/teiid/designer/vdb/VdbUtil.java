@@ -600,7 +600,7 @@ public class VdbUtil implements VdbConstants {
             Vdb theVdb = null;
             VdbElement manifest = null;
             try {
-                theVdb = new XmiVdb(theVdbFile, new NullProgressMonitor());
+                theVdb = new XmiVdb(theVdbFile);
                 manifest = VdbUtil.getVdbManifest(theVdbFile);
             } catch (Exception ex) {
                 statuses.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getLocalizedMessage(), ex));
@@ -1146,7 +1146,7 @@ public class VdbUtil implements VdbConstants {
             synchronizeWorkspace(theVdb);
         }
 
-        Vdb actualVDB = new XmiVdb(theVdb, true, new NullProgressMonitor());
+        Vdb actualVDB = new XmiVdb(theVdb, true);
 
         Set<ModelElement> modelsToReplace = new HashSet<ModelElement>();
         Collection<IResource> matchingResources = new ArrayList<IResource>();
@@ -1255,25 +1255,25 @@ public class VdbUtil implements VdbConstants {
         for (String thePath : modelPathsToReplace) {
             IResource matchingResource = oldModelPathToResourceMap.get(thePath);
             if (matchingResource != null) {
-                actualVDB.addEntry(matchingResource.getFullPath(), new NullProgressMonitor());
+                actualVDB.addEntry(matchingResource.getFullPath());
             }
         }
 
         for (String thePath : dependentViewModelPaths) {
             IResource matchingResource = oldModelPathToResourceMap.get(thePath);
             if (matchingResource != null) {
-                actualVDB.addEntry(matchingResource.getFullPath(), new NullProgressMonitor());
+                actualVDB.addEntry(matchingResource.getFullPath());
             }
         }
 
-        actualVDB.synchronize(new NullProgressMonitor());
+        actualVDB.synchronize();
         
         if( updateValidationVersion ) {
 	        actualVDB.setValidationDateTime(new Date());
 	        actualVDB.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
         }
 
-        actualVDB.save(new NullProgressMonitor());
+        actualVDB.save();
         theVdb.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
     }
     

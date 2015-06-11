@@ -132,7 +132,7 @@ public class VdbTest implements VdbConstants {
 
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
 
-        vdb = new XmiVdb(vdbFile, null);
+        vdb = new XmiVdb(vdbFile);
     }
     
     @After
@@ -164,14 +164,14 @@ public class VdbTest implements VdbConstants {
     @Test
     public void shouldBeModifiedWhenEntryIsAdded() throws Exception {
         MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
-        vdb.addEntry(fileBuilder.getPath(), null);
+        vdb.addEntry(fileBuilder.getPath());
         assertThat(vdb.isModified(), is(true));
     }
 
     @Test
     public void shouldBeSynchronizedAfterAddingEntry() throws Exception {
         MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
-        vdb.addEntry(fileBuilder.getPath(), null);
+        vdb.addEntry(fileBuilder.getPath());
         assertThat(vdb.isSynchronized(), is(true));
     }
 
@@ -187,7 +187,7 @@ public class VdbTest implements VdbConstants {
 //        when(vdb.getFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
         
         vdb.setDescription("new description");
-        vdb.save(null);
+        vdb.save();
         assertThat(vdb.isModified(), is(false));
     }
 
@@ -268,25 +268,25 @@ public class VdbTest implements VdbConstants {
     public void shouldNotNotifyIfAlreadySynchronized() throws Exception {
         final PropertyChangeListener listener = mock(PropertyChangeListener.class);
         vdb.addChangeListener(listener);
-        vdb.synchronize(null);
+        vdb.synchronize();
         verify(listener, never()).propertyChange(isA(PropertyChangeEvent.class));
     }
 
     @Test
     public void shouldNotRequireMonitorToAddEntry() throws Exception {
         MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
-        vdb.addEntry(fileBuilder.getPath(), null);
+        vdb.addEntry(fileBuilder.getPath());
     }
 
     @Test
     public void shouldNotRequireMonitorToSynchronize() throws Exception {
-        vdb.synchronize(null);
+        vdb.synchronize();
     }
 
     @Test
     public void shouldReflectAddedAndRemovedEntries() throws Exception {
         MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
-        final VdbEntry entry = vdb.addEntry(fileBuilder.getPath(), null);
+        final VdbEntry entry = vdb.addEntry(fileBuilder.getPath());
         assertThat(vdb.getEntries().size(), is(1));
         vdb.removeEntry(entry);
         assertThat(vdb.getEntries().isEmpty(), is(true));
@@ -301,8 +301,8 @@ public class VdbTest implements VdbConstants {
     @Test
     public void shouldReturnExistingEntryWhenAddingDuplicateEntry() throws Exception {
         final IPath path = new Path("/my/full/path");
-        final VdbEntry thisEntry = vdb.addEntry(path, null);
-        final VdbEntry thatEntry = vdb.addEntry(path, null);
+        final VdbEntry thisEntry = vdb.addEntry(path);
+        final VdbEntry thatEntry = vdb.addEntry(path);
         assertThat(thatEntry, IsSame.sameInstance(thisEntry));
     }
     
@@ -318,7 +318,7 @@ public class VdbTest implements VdbConstants {
     	VdbImportVdbEntry entry = entries.iterator().next();
 		assertEquals(entryName, entry.getName());
     	
-    	vdb.removeImportVdb(entry, null);
+    	vdb.removeImportVdb(entry);
     	assertEquals(0, vdb.getImportVdbEntries().size());
     }
 
@@ -341,7 +341,7 @@ public class VdbTest implements VdbConstants {
 
         udfFile.addToModelWorkspace(modelWorkspaceMock);
 
-        VdbEntry vdbEntry = vdb.addEntry(modelFile.getPath(), monitor);
+        VdbEntry vdbEntry = vdb.addEntry(modelFile.getPath());
         assertTrue(vdbEntry instanceof VdbModelEntry);
         assertEquals(modelFile.getPath(), vdbEntry.getName());
         VdbModelEntry vdbModelEntry = (VdbModelEntry) vdbEntry;
@@ -352,7 +352,7 @@ public class VdbTest implements VdbConstants {
         /* Model entries are not included in the entries collection */
         assertEquals(0, vdb.getEntries().size());
 
-        vdbEntry = vdb.addEntry(schemaFile.getPath(), monitor);
+        vdbEntry = vdb.addEntry(schemaFile.getPath());
         assertTrue(vdbEntry instanceof VdbSchemaEntry);
         assertEquals(schemaFile.getPath(), vdbEntry.getName());
         VdbSchemaEntry vdbSchemaEntry = (VdbSchemaEntry) vdbEntry;
@@ -364,7 +364,7 @@ public class VdbTest implements VdbConstants {
         /* Schemas are included in the entries collection */
         assertEquals(1, vdb.getEntries().size());
         
-        vdbEntry = vdb.addEntry(udfFile.getPath(), monitor);
+        vdbEntry = vdb.addEntry(udfFile.getPath());
         assertTrue(vdbEntry instanceof VdbFileEntry);
         /* UDF Jars are stored in the lib directory of the vdb */
         String udfJarName = "/lib/" + udfFile.getName();
@@ -376,7 +376,7 @@ public class VdbTest implements VdbConstants {
         assertEquals(2, vdb.getEntries().size());
         assertTrue(vdb.getUdfJarNames().contains(udfJarName));
 
-        vdbEntry = vdb.addEntry(userFile.getPath(), monitor);
+        vdbEntry = vdb.addEntry(userFile.getPath());
         assertTrue(vdbEntry instanceof VdbFileEntry);
         /* UDF Jars are stored in the other files directory of the vdb */
         String userFileName = "/otherFiles/" + userFile.getName();
@@ -413,7 +413,7 @@ public class VdbTest implements VdbConstants {
         }
 
         MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
-        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile(), monitor);
+        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
         
         assertEquals(booksVdbFile.getCanonicalPath(), booksVdb.getName().toString());
         assertEquals(2, booksVdb.getModelEntries().size());
@@ -471,8 +471,8 @@ public class VdbTest implements VdbConstants {
         when(booksVdbBuilder.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
         when(booksVdbBuilder.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
 
-        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile(), monitor);
-        booksVdb.save(monitor);
+        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
+        booksVdb.save();
 
         JAXBContext jaxbContext = JAXBContext.newInstance(new Class<?>[] { VdbElement.class });
         ZipFile archive = new ZipFile(booksVdbCopy);

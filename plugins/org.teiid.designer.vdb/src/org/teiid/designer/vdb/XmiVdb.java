@@ -43,8 +43,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtil;
@@ -152,12 +150,10 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @param file
      * @param preview indicates if this is a Preview VDB
-     * @param monitor
      * @throws Exception
      */
     public XmiVdb( final IFile file,
-                final boolean preview,
-                final IProgressMonitor monitor ) throws Exception {
+                final boolean preview ) throws Exception {
     	this.builder = new VdbModelBuilder();
         this.file = file;
         // Create folder for VDB in state folder
@@ -261,10 +257,10 @@ public final class XmiVdb implements Vdb, VdbConstants {
                             }
                             /* Allows migration from old vdbs where xsd files were considered models */
                             if (path != null && ModelUtil.isXsdFile(path)) {
-                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element, monitor);
+                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
                                 schemaEntries.add(vdbSchemaEntry);
                             } else {
-                                modelEntries.add(new VdbModelEntry(XmiVdb.this, element, monitor));
+                                modelEntries.add(new VdbModelEntry(XmiVdb.this, element));
                             }
                         }
 
@@ -280,10 +276,10 @@ public final class XmiVdb implements Vdb, VdbConstants {
                              * become schema entries in this runtime instance.
                              */
                             if (ModelUtil.isXsdFile(path)) {
-                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element, monitor);
+                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
                                 schemaEntries.add(vdbSchemaEntry);
                             } else {
-                                VdbFileEntry vdbFileEntry = new VdbFileEntry(XmiVdb.this, element, monitor);
+                                VdbFileEntry vdbFileEntry = new VdbFileEntry(XmiVdb.this, element);
                                 switch (vdbFileEntry.getFileType()) {
                                     case UDFJar:
                                         udfJarEntries.add(vdbFileEntry);
@@ -331,23 +327,19 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param file
-     * @param monitor
      * @throws Exception
      */
-    public XmiVdb( final IFile file,
-                final IProgressMonitor monitor ) throws Exception {
-        this(file, false, monitor);
+    public XmiVdb( final IFile file ) throws Exception {
+        this(file, false);
     }
 
     /**
      * @param dataPolicy
-     * @param monitor
      * @return the new data policy
      */
     public final VdbDataRole addDataPolicy(
-    										final DataRole dataPolicy, 
-                                            final IProgressMonitor monitor ) {
-        VdbDataRole policy = new VdbDataRole(this, dataPolicy, monitor);
+    										final DataRole dataPolicy ) {
+        VdbDataRole policy = new VdbDataRole(this, dataPolicy);
         dataPolicyEntries.add(policy);
         setModified(this, Event.DATA_POLICY_ADDED, policy, null);
         return policy;
@@ -362,19 +354,17 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param name
-     * @param monitor
-     *
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
     @Override
-    public final <T extends VdbEntry> T addEntry( final IPath name, final IProgressMonitor monitor) throws Exception {
+    public final <T extends VdbEntry> T addEntry( final IPath name) throws Exception {
         CoreArgCheck.isNotNull(name);
 
         if (ModelUtil.isXsdFile(name)) {
-           return (T) addSchemaEntry(name, monitor);
+           return (T) addSchemaEntry(name);
         } else if (ModelUtil.isModelFile(name) && !ModelUtil.isXsdFile(name))
-            return (T) addModelEntry(name, monitor);
+            return (T) addModelEntry(name);
         else {
             String fileType = FileUtil.guessFileType(name.toFile());
 
@@ -383,23 +373,22 @@ public final class XmiVdb implements Vdb, VdbConstants {
                 fileEntryType = FileEntryType.UDFJar;
             }
 
-           return (T) addFileEntry(name, fileEntryType, monitor);
+           return (T) addFileEntry(name, fileEntryType);
         }
     }
     
     /**
      * @param name
-     * @param monitor
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    private VdbSchemaEntry addSchemaEntry( final IPath name, final IProgressMonitor monitor ) throws Exception {
-        VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, name, monitor);
-        VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries, monitor);
+    private VdbSchemaEntry addSchemaEntry( final IPath name ) throws Exception {
+        VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, name);
+        VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries);
 
         // entry did not exist in VDB
         if (schemaEntry == addedEntry) {
-            schemaEntry.synchronizeSchemaEntry(monitor);
+            schemaEntry.synchronizeSchemaEntry();
         } else {
             // entry already existed in VDB
             schemaEntry = addedEntry;
@@ -411,13 +400,11 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @param name
      * @param entryType the type of file entry being added
-     * @param monitor
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
     private VdbFileEntry addFileEntry( final IPath name,
-                                        final VdbFileEntry.FileEntryType entryType,
-                                        final IProgressMonitor monitor ) throws Exception {
+                                        final VdbFileEntry.FileEntryType entryType ) throws Exception {
         CoreArgCheck.isNotNull(entryType);
 
         Set<VdbFileEntry> entries = null;
@@ -429,12 +416,11 @@ public final class XmiVdb implements Vdb, VdbConstants {
                 entries = fileEntries;
         }
 
-        return addEntry(new VdbFileEntry(this, name, entryType, monitor), entries, monitor);
+        return addEntry(new VdbFileEntry(this, name, entryType), entries);
     }
 
     private <T extends VdbEntry> T addEntry( final T entry,
-                                             final Set<T> entries,
-                                             final IProgressMonitor monitor ) {
+                                             final Set<T> entries) {
         // Return existing entry if it exists
         if (!entries.add(entry)) {
             for (final T existingEntry : entries) {
@@ -450,17 +436,16 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param name
-     * @param monitor
      * @return the newly added {@link VdbModelEntry model entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    private VdbModelEntry addModelEntry( final IPath name, final IProgressMonitor monitor ) throws Exception {
-        VdbModelEntry modelEntry = new VdbModelEntry(this, name, monitor);
-        VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries, monitor);
+    private VdbModelEntry addModelEntry( final IPath name ) throws Exception {
+        VdbModelEntry modelEntry = new VdbModelEntry(this, name);
+        VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries);
 
         // entry did not exist in VDB
         if (modelEntry == addedEntry) {
-            modelEntry.synchronizeModelEntry(monitor);
+            modelEntry.synchronizeModelEntry();
         } else {
             // entry already existed in VDB
             modelEntry = addedEntry;
@@ -471,11 +456,9 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param translatorOverride the translator override (may not be <code>null</code>)
-     * @param monitor the progress monitor (may be <code>null</code>)
      * @return <code>true</code> if successfully added
      */
-    public final boolean addTranslator( TranslatorOverride translatorOverride,
-                                        IProgressMonitor monitor ) {
+    public final boolean addTranslator( TranslatorOverride translatorOverride ) {
         if (this.translatorOverrides.add(translatorOverride)) {
             setModified(this, Event.TRANSLATOR_OVERRIDE_ADDED, null, translatorOverride);
             return true;
@@ -804,13 +787,13 @@ public final class XmiVdb implements Vdb, VdbConstants {
     	
     	// If Set does not exist for modelName, create it
     	if( existingSet != null ) {
-    		unregisterStaleImportVdbs(existingSet, new NullProgressMonitor());
+    		unregisterStaleImportVdbs(existingSet);
     		modelToImportVdbMap.remove(vdbModelEntryName);
     	}
     }
 
     /**
-     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
+     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save() save}.
      */
     public final boolean isModified() {
         return modified.get();
@@ -941,9 +924,8 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @param importVdbNames the list of imported vdb names
      * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
-     * @param monitor the progress monitor
      */
-    public final void registerImportVdbs(Collection<String> importVdbNames, String modelName, IProgressMonitor monitor) {
+    public final void registerImportVdbs(Collection<String> importVdbNames, String modelName) {
     	Set<String> existingSet = modelToImportVdbMap.get(modelName);
     	Set<String> staleImportVdbs = new HashSet<String>();
     	
@@ -960,7 +942,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
     	}
     	existingSet.addAll(importVdbNames);
     	
-    	unregisterStaleImportVdbs(staleImportVdbs, monitor);
+    	unregisterStaleImportVdbs(staleImportVdbs);
     	
     	// Only add the import if it doesn't already exist
     	for( String importVdbName : importVdbNames ) {
@@ -1021,11 +1003,9 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param translatorOverride the translator override being removed (may not be <code>null</code>)
-     * @param monitor the progress monitor (may be <code>null</code>)
      * @return <code>true</code> if successfully removed
      */
-    public final boolean removeTranslator( TranslatorOverride translatorOverride,
-                                           IProgressMonitor monitor ) {
+    public final boolean removeTranslator( TranslatorOverride translatorOverride ) {
         if (this.translatorOverrides.remove(translatorOverride)) {
             setModified(this, Event.TRANSLATOR_OVERRIDE_REMOVED, translatorOverride, null);
             return true;
@@ -1038,10 +1018,9 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
      * 
      * @param entry
-     * @param monitor
      * @return whether the entry was successfully removed
      */
-    public final boolean removeImportVdb( VdbImportVdbEntry entry, IProgressMonitor monitor ) {
+    public final boolean removeImportVdb( VdbImportVdbEntry entry ) {
     	if (this.importModelEntries.remove(entry)) {
     		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
     		return true;
@@ -1081,10 +1060,9 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
-     * @param monitor
      * @throws Exception
      */
-    public void save( final IProgressMonitor monitor ) throws Exception {
+    public void save() throws Exception {
         // Build JAXB model
         final VdbElement vdbElement = new VdbElement(this);
         // Save archive
@@ -1128,9 +1106,9 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
                 // Save entries
                 for (final VdbEntry entry : getEntries())
-                    entry.save(out, monitor);
+                    entry.save(out);
                 for (final VdbModelEntry entry : modelEntries)
-                    entry.save(out, monitor);
+                    entry.save(out);
 
                 // Close zip output stream so its fully writen and any locks are removed.
                 out.close();
@@ -1279,26 +1257,24 @@ public final class XmiVdb implements Vdb, VdbConstants {
     	setModified(this, Event.AUTHENTICATION_TYPE, old, newValue);
     }
 
-    private final void synchronize( final Collection<VdbEntry> entries,
-                                    final IProgressMonitor monitor ) throws Exception {
+    private final void synchronize( final Collection<VdbEntry> entries ) throws Exception {
         for (final VdbEntry entry : entries)
-            if (entry.getSynchronization() == Synchronization.NotSynchronized) entry.synchronize(monitor);
+            if (entry.getSynchronization() == Synchronization.NotSynchronized) entry.synchronize();
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    public final void synchronize( final IProgressMonitor monitor ) throws Exception {
+    public final void synchronize( ) throws Exception {
     	getBuilder().start();
 
-        synchronize(new HashSet<VdbEntry>(modelEntries), monitor);
-        synchronize(getEntries(), monitor);
+        synchronize(new HashSet<VdbEntry>(modelEntries));
+        synchronize(getEntries());
 
         getBuilder().stop();
     }
     
-    private final void unregisterStaleImportVdbs(Set<String> proposedStaleImportVdbs, IProgressMonitor monitor) {
+    private final void unregisterStaleImportVdbs(Set<String> proposedStaleImportVdbs) {
     	Set<String> actualStaleImportVdbs = new HashSet<String>();
 		for( String importVdb : proposedStaleImportVdbs ) {
 			boolean keep = true;
@@ -1318,7 +1294,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
 		for( String staleImportVdb : actualStaleImportVdbs ) {
 			VdbImportVdbEntry entry = getImportVdbEntry(staleImportVdb);
 			if( entry != null ) {
-				removeImportVdb(entry, monitor);
+				removeImportVdb(entry);
 			}
 		}
     }

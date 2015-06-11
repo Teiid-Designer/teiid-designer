@@ -618,7 +618,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
         if (translatorOverride != null) {
             // update model
-            this.vdb.addTranslator(translatorOverride, null);
+            this.vdb.addTranslator(translatorOverride);
 
             // update UI
             this.translatorsViewer.refresh(); // reload translators
@@ -706,7 +706,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
         TranslatorOverride translatorOverride = getSelectedTranslator();
 
-        if (this.vdb.removeTranslator(translatorOverride, null)) {
+        if (this.vdb.removeTranslator(translatorOverride)) {
             this.translatorsViewer.remove(translatorOverride);
         }
     }

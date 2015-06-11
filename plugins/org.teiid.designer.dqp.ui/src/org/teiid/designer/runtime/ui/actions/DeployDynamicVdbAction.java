@@ -343,7 +343,7 @@ public class DeployDynamicVdbAction extends Action implements ISelectionListener
     }
     
     private void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) throws Exception {
-    	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new XmiVdb((IFile) vdbOrVdbFile, null) : (Vdb) vdbOrVdbFile);
+    	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new XmiVdb((IFile) vdbOrVdbFile) : (Vdb) vdbOrVdbFile);
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
 	    String vdbName = vdb.getFile().getFullPath().removeFileExtension().lastSegment();
     	teiidServer.createVdbDataSource(vdbName, displayName, jndiName);

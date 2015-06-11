@@ -24,9 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -87,17 +85,15 @@ public class VdbModelEntry extends VdbIndexedEntry {
 
     /**
      * Constructs a model entry and adds it to the specified VDB. <strong>Callers of this method should call
-     * {@link #synchronizeModelEntry(IProgressMonitor)} immediately after constructing the model entry.</strong>
+     * {@link #synchronizeModelEntry()} immediately after constructing the model entry.</strong>
      * 
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param name the resource path (may not be <code>null</code>)
-     * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
     public VdbModelEntry( final Vdb vdb,
-                   final IPath name,
-                   final IProgressMonitor monitor ) throws Exception {
-        super(vdb, name, monitor);
+                   final IPath name ) throws Exception {
+        super(vdb, name);
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
         modelClass = findModelClass(model);
@@ -184,7 +180,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
                     if(jarResource instanceof IFile) {
                         IPath path = ((IFile)jarResource).getProjectRelativePath();
                         if(path.toString().equals(udfJarPath)) {
-                            udfJars.add(new VdbFileEntry(getVdb(), jarResource.getFullPath(), VdbFileEntry.FileEntryType.UDFJar, new NullProgressMonitor()));
+                            udfJars.add(new VdbFileEntry(getVdb(), jarResource.getFullPath(), VdbFileEntry.FileEntryType.UDFJar));
                         }
                     }
                 }
@@ -232,13 +228,11 @@ public class VdbModelEntry extends VdbIndexedEntry {
     /**
      * @param vdb
      * @param element
-     * @param monitor
      * @throws Exception
      */
     public VdbModelEntry( final Vdb vdb,
-                   final ModelElement element,
-                   final IProgressMonitor monitor ) throws Exception {
-        super(vdb, element, monitor);
+                   final ModelElement element ) throws Exception {
+        super(vdb, element);
         this.element = element;
         type =  element.getType();
         visible.set(element.isVisible());
@@ -282,7 +276,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         this.builtIn = builtIn;
         this.modelClass = modelClass;
         
-        getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+        getVdb().registerImportVdbs(importVdbNames, this.getName().toString());
         
         getVdb().synchronizeUdfJars(udfJars);
     }
@@ -456,12 +450,11 @@ public class VdbModelEntry extends VdbIndexedEntry {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream)
      */
     @Override
-    public final void save( final ZipOutputStream out,
-                     final IProgressMonitor monitor ) throws Exception {
-        super.save(out, monitor);
+    public final void save( final ZipOutputStream out ) throws Exception {
+        super.save(out);
     }
 
     /**
@@ -567,7 +560,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
     		to = new TranslatorOverride(getVdb(), toName, oldTranslator, null);
     		newTranslator = toName;
     		this.sourceInfo.getSource(0).setTranslatorName(toName);
-    		getVdb().addTranslator(to, new NullProgressMonitor());
+    		getVdb().addTranslator(to);
     	}
     	
     	TranslatorOverrideProperty[] toProps = to.getProperties();
@@ -606,21 +599,20 @@ public class VdbModelEntry extends VdbIndexedEntry {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.vdb.VdbEntry#synchronize(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#synchronize()
      */
     @Override
-    public void synchronize(final IProgressMonitor monitor) throws Exception {
+    public void synchronize() throws Exception {
         if (getSynchronization() != Synchronization.NotSynchronized)
             return;
-        synchronizeModelEntry(monitor);
-        super.synchronize(monitor);
+        synchronizeModelEntry();
+        super.synchronize();
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    public void synchronizeModelEntry(final IProgressMonitor monitor) throws Exception {
+    public void synchronizeModelEntry() throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null)
             return;
@@ -657,7 +649,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
             updateUdfJars(model);
         }
 
-        synchronizeIndex(monitor);
+        synchronizeIndex();
 
         // Also add imported models if not a preview
         if (!getVdb().isPreview()) {
@@ -685,7 +677,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
                         }
 
                         if (importedEntry == null)
-                            importedEntry = getVdb().addEntry(name, monitor);
+                            importedEntry = getVdb().addEntry(name);
                         imports.add(importedEntry);
 
                         if (importedEntry instanceof VdbModelEntry)
@@ -696,7 +688,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
 
             // Process for any import VDBs
             // if list is empty, then there may be import VDB's that need to get removed from the VDB
-            getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+            getVdb().registerImportVdbs(importVdbNames, this.getName().toString());
 
             getVdb().synchronizeUdfJars(udfJars);
         }

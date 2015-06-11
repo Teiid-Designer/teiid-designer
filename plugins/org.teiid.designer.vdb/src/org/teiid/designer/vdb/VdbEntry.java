@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
@@ -56,12 +55,10 @@ public abstract class VdbEntry implements StringConstants {
     /**
      * @param vdb
      * @param element
-     * @param monitor
      * @throws Exception
      */
     public VdbEntry( final Vdb vdb,
-              final EntryElement element,
-              final IProgressMonitor monitor ) throws Exception {
+              final EntryElement element ) throws Exception {
         this(vdb, Path.fromPortableString(element.getPath()));
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
@@ -75,9 +72,10 @@ public abstract class VdbEntry implements StringConstants {
     /**
      * @param vdb
      * @param name
+     * @throws Exception 
      */
     public VdbEntry( final Vdb vdb,
-                      final IPath name ) {
+                      final IPath name ) throws Exception {
         this.vdb = vdb;
         this.name = name;
         // Calculate hashcode
@@ -96,20 +94,7 @@ public abstract class VdbEntry implements StringConstants {
         if (this.description.get() == null) {
             this.description.set(EMPTY_STRING);
         }
-    }
-
-    /**
-     * @param vdb
-     * @param name
-     * @param monitor
-     * @throws Exception
-     */
-    public VdbEntry( final Vdb vdb,
-              final IPath name,
-              final IProgressMonitor monitor ) throws Exception {
-        this(vdb, name);
-        // Synchronize with workspace file
-        setSynchronization(synchronizeEntry(monitor));
+        setSynchronization(synchronizeEntry());
     }
 
     private long computeChecksum( final IFile file ) throws Exception {
@@ -266,11 +251,9 @@ public abstract class VdbEntry implements StringConstants {
     
     /**
      * @param out
-     * @param monitor
      * @throws Exception
      */
-    public void save( final ZipOutputStream out,
-               final IProgressMonitor monitor ) throws Exception {
+    public void save( final ZipOutputStream out ) throws Exception {
     	String zipName = name.toString();
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
     	// being located at the file system "root" folder.
@@ -279,20 +262,18 @@ public abstract class VdbEntry implements StringConstants {
     	}
         final ZipEntry zipEntry = new ZipEntry(zipName);
         zipEntry.setComment(description.get());
-        save(out, zipEntry, new File(vdb.getFolder(), name.toString()), monitor);
+        save(out, zipEntry, new File(vdb.getFolder(), name.toString()));
     }
 
     /**
      * @param out
      * @param zipEntry
      * @param file
-     * @param monitor
      * @throws Exception
      */
     protected final void save( final ZipOutputStream out,
                                final ZipEntry zipEntry,
-                               final File file,
-                               final IProgressMonitor monitor ) throws Exception {
+                               final File file ) throws Exception {
         ZipUtil.copy(file, zipEntry, out);
     }
 
@@ -317,18 +298,17 @@ public abstract class VdbEntry implements StringConstants {
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    public void synchronize( final IProgressMonitor monitor ) throws Exception {
+    public void synchronize( ) throws Exception {
         if (synchronization.get() != Synchronization.NotSynchronized) return;
-        setSynchronization(synchronizeEntry(monitor));
+        setSynchronization(synchronizeEntry());
     }
 
     /*
      * Private since called by constructor and don't want subclasses overriding
      */
-    private Synchronization synchronizeEntry( final IProgressMonitor monitor ) throws Exception {
+    private Synchronization synchronizeEntry( ) throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null) return Synchronization.NotApplicable;
         long oldChecksum = 0L;

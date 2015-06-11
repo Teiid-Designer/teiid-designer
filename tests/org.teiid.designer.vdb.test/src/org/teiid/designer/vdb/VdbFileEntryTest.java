@@ -54,7 +54,7 @@ public class VdbFileEntryTest {
         eclipseMock = vdbTest.getEclipseMock();
         vdb = vdbTest.getVdb();
         MockFileBuilder fileBuilder = new MockFileBuilder("Test", "txt");
-        entry = vdb.addEntry(fileBuilder.getPath(), null);
+        entry = vdb.addEntry(fileBuilder.getPath());
     }
     
     @After
@@ -81,7 +81,7 @@ public class VdbFileEntryTest {
         when(mockRoot.findMember(name)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name, null);
+        entry = vdb.addEntry(name);
         assertThat(entry.getChecksum(), not(is(0L)));
     }
 
@@ -106,7 +106,7 @@ public class VdbFileEntryTest {
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name, null);
+        entry = vdb.addEntry(name);
 
         // A file entry changes the path according to the file entry type so ensure
         // our mock path can be found in the workspace
@@ -115,7 +115,7 @@ public class VdbFileEntryTest {
         final long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
 
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
-        entry.synchronize(null); // will use second value of iFile.getContents()
+        entry.synchronize(); // will use second value of iFile.getContents()
 
         // test
         assertThat(entry.getChecksum(), not(is(originalChecksum)));
@@ -186,7 +186,7 @@ public class VdbFileEntryTest {
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name, null); // will have an original checksum based on first value of iFile.getContents()
+        entry = vdb.addEntry(name); // will have an original checksum based on first value of iFile.getContents()
 
         // A file entry changes the path according to the file entry type so ensure
         // our mock path can be found in the workspace
@@ -199,7 +199,7 @@ public class VdbFileEntryTest {
         vdb.addChangeListener(listener);
 
         // this will cause event to fire
-        entry.synchronize(null); // will use second value of iFile.getContents() to compute checksum
+        entry.synchronize(); // will use second value of iFile.getContents() to compute checksum
 
         // tests
         final ArgumentCaptor<PropertyChangeEvent> arg = ArgumentCaptor.forClass(PropertyChangeEvent.class);
@@ -246,8 +246,8 @@ public class VdbFileEntryTest {
     @Test
     public void shouldVerifyEqualityWhenSamePath() throws Exception {
         final IPath path = new Path("/my/path/filename");
-        final VdbFileEntry thisEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile, null);
-        final VdbFileEntry thatEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile, null);
+        final VdbFileEntry thisEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile);
+        final VdbFileEntry thatEntry = new VdbFileEntry(vdb, path, FileEntryType.UserFile);
         assertThat(thisEntry.equals(thatEntry), is(true));
         assertThat(thisEntry.hashCode(), is(thatEntry.hashCode()));
     }

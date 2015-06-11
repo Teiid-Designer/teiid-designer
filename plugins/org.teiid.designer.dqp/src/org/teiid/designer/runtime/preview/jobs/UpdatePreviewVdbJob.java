@@ -112,7 +112,7 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
     @Override
     protected IStatus runImpl( IProgressMonitor monitor ) throws Exception {
         IStatus status = null;
-        Vdb pvdb = new XmiVdb(this.pvdbFile, true, monitor);
+        Vdb pvdb = new XmiVdb(this.pvdbFile, true);
 
         // run this only if we have a preview server
         if (this.previewServer == null || ! previewServer.isConnected()) {
@@ -132,11 +132,11 @@ public final class UpdatePreviewVdbJob extends WorkspacePreviewVdbJob {
         try {
             // check if synchronized because new PVDBs generated a resource change event even though nothing has changed
             if (!pvdb.isSynchronized()) {
-                pvdb.synchronize(monitor);
-                pvdb.save(monitor);
+                pvdb.synchronize();
+                pvdb.save();
             } else {
                 if (pvdb.isModified()) {
-                    pvdb.save(monitor);
+                    pvdb.save();
                 }
             }
 

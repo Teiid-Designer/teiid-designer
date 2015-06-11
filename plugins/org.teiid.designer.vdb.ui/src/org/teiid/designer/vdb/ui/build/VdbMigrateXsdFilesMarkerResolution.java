@@ -76,8 +76,8 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
 
     void fixVdb(IFile theVdb) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
-        Vdb vdb = new XmiVdb(theVdb, false, monitor);
-        vdb.save(monitor);
+        Vdb vdb = new XmiVdb(theVdb, false);
+        vdb.save();
 
         try {
             theVdb.refreshLocal(IResource.DEPTH_ZERO, monitor);

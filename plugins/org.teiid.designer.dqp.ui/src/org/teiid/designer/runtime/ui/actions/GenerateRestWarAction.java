@@ -25,7 +25,6 @@ import javax.tools.ToolProvider;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
@@ -242,7 +241,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         boolean result = false;
         try {
-            Vdb vdb = new XmiVdb(this.selectedVDB, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(this.selectedVDB);
             Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());

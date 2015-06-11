@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb.ui.util;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,13 +18,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -67,7 +64,7 @@ public class RestVdbUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new XmiVdb(vdbFile, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(vdbFile);
             Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());

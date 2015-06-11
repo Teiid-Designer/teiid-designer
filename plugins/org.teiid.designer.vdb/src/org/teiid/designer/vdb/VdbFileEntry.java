@@ -14,7 +14,6 @@ import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
@@ -54,15 +53,13 @@ public final class VdbFileEntry extends VdbEntry {
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param sourcePath the resource path (may not be <code>null</code>)
      * @param entryType the type of FileEntry
-     * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
     public VdbFileEntry( final Vdb vdb,
                   final IPath sourcePath,
-                  final FileEntryType entryType,
-                  final IProgressMonitor monitor ) throws Exception {
+                  final FileEntryType entryType ) throws Exception {
         
-        super(vdb, sourcePath, monitor);
+        super(vdb, sourcePath);
         
         this.sourceFilePath = sourcePath;
         this.fileType = entryType;
@@ -76,13 +73,11 @@ public final class VdbFileEntry extends VdbEntry {
      * 
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param element the EntryElement
-     * @param monitor the progress monitor or <code>null</code>
      */
     public VdbFileEntry( final Vdb vdb,
-                  final EntryElement element,
-                  final IProgressMonitor monitor ) throws Exception {
+                  final EntryElement element ) throws Exception {
         
-        super(vdb, Path.fromPortableString(element.getPath()), monitor);
+        super(vdb, Path.fromPortableString(element.getPath()));
         
         this.sourceFilePath = Path.fromPortableString(element.getPath());
         if(element.getPath().startsWith(StringConstants.FORWARD_SLASH + VdbFolders.UDF.getReadFolder())) {
@@ -105,8 +100,7 @@ public final class VdbFileEntry extends VdbEntry {
     }
     
     @Override
-    public void save( final ZipOutputStream out,
-               final IProgressMonitor monitor ) throws Exception {
+    public void save( final ZipOutputStream out ) throws Exception {
         // Name of VDB entry
         String zipName = getName().toString();
         // Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
@@ -121,7 +115,7 @@ public final class VdbFileEntry extends VdbEntry {
         File theFile = findUdfFile(vdbProject);
 
         if(theFile!=null && theFile.exists()) {
-            save(out, zipEntry, theFile, monitor);
+            save(out, zipEntry, theFile);
         }
     }
     

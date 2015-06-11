@@ -10,9 +10,7 @@ package org.teiid.designer.vdb.ui.editor.panels;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -187,7 +185,7 @@ public class DataRolesPanel {
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
                         vdbEditor.getVdb().removeDataPolicy(vdbDataRole);
-                        vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
+                        vdbEditor.getVdb().addDataPolicy(dp);
                     }
 
                 }
@@ -410,7 +408,7 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                    	vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
+                    	vdbEditor.getVdb().addDataPolicy(dp);
                     }
 
                 }
@@ -497,7 +495,7 @@ public class DataRolesPanel {
                                                   selectedDataRole.getDescription(), selectedDataRole.isAnyAuthenticated(),
                                                   selectedDataRole.allowCreateTempTables(), selectedDataRole.doGrantAll(),
                                                   selectedDataRole.getMappedRoleNames(), selectedDataRole.getPermissions());
-                    vdbEditor.getVdb().addDataPolicy(newDR, new NullProgressMonitor());
+                    vdbEditor.getVdb().addDataPolicy(newDR);
                     dataRolesGroup.getTable().getViewer().refresh();
                 }
 

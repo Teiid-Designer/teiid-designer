@@ -164,7 +164,7 @@ public class WarArchiveUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new XmiVdb(vdbFile, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(vdbFile);
             Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());

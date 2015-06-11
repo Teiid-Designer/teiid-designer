@@ -13,17 +13,13 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
-
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.roles.DataRole;
 import org.xml.sax.SAXException;
@@ -58,11 +54,9 @@ public interface Vdb extends VdbConstants {
     int DEFAULT_TIMEOUT = 0;
     /**
      * @param dataPolicy
-     * @param monitor
      * @return the new data policy
      */
-    VdbDataRole addDataPolicy( final DataRole dataPolicy, 
-                                            final IProgressMonitor monitor );
+    VdbDataRole addDataPolicy( final DataRole dataPolicy );
 
 
     /**
@@ -72,20 +66,16 @@ public interface Vdb extends VdbConstants {
 
     /**
      * @param name
-     * @param monitor
-     *
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    <T extends VdbEntry> T addEntry( final IPath name, final IProgressMonitor monitor) throws Exception;
+    <T extends VdbEntry> T addEntry( final IPath name) throws Exception;
 
     /**
      * @param translatorOverride the translator override (may not be <code>null</code>)
-     * @param monitor the progress monitor (may be <code>null</code>)
      * @return <code>true</code> if successfully added
      */
-    boolean addTranslator( TranslatorOverride translatorOverride,
-                                        IProgressMonitor monitor );
+    boolean addTranslator( TranslatorOverride translatorOverride );
     /**
      * Add an import VDB attribute to this VDB.
      * 
@@ -230,7 +220,7 @@ public interface Vdb extends VdbConstants {
     IPath getName();
 
     /**
-     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save(IProgressMonitor) save}.
+     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save() save}.
      */
     boolean isModified();
 
@@ -318,9 +308,8 @@ public interface Vdb extends VdbConstants {
     /**
      * @param importVdbNames the list of imported vdb names
      * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
-     * @param monitor the progress monitor
      */
-    void registerImportVdbs(Collection<String> importVdbNames, String modelName, IProgressMonitor monitor);
+    void registerImportVdbs(Collection<String> importVdbNames, String modelName);
     
     /**
      * Remove the allowed language from the property list from this VDB
@@ -342,20 +331,17 @@ public interface Vdb extends VdbConstants {
     void removeDataPolicy( final VdbDataRole policy );
     /**
      * @param translatorOverride the translator override being removed (may not be <code>null</code>)
-     * @param monitor the progress monitor (may be <code>null</code>)
      * @return <code>true</code> if successfully removed
      */
-    boolean removeTranslator( TranslatorOverride translatorOverride,
-                                           IProgressMonitor monitor );
+    boolean removeTranslator( TranslatorOverride translatorOverride );
 
     /**
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
      * 
      * @param entry
-     * @param monitor
      * @return whether the entry was successfully removed
      */
-    boolean removeImportVdb( VdbImportVdbEntry entry, IProgressMonitor monitor );
+    boolean removeImportVdb( VdbImportVdbEntry entry );
     
     /**
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
@@ -374,10 +360,9 @@ public interface Vdb extends VdbConstants {
     /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
-     * @param monitor
      * @throws Exception
      */
-    void save( final IProgressMonitor monitor ) throws Exception ;
+    void save( ) throws Exception ;
 
     /**
      * @param description Sets description to the specified value.
@@ -442,10 +427,9 @@ public interface Vdb extends VdbConstants {
     void setAuthenticationType( String newValue );
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    void synchronize( final IProgressMonitor monitor ) throws Exception;
+    void synchronize( ) throws Exception;
     
     /**
      * @return builder
@@ -527,7 +511,7 @@ public interface Vdb extends VdbConstants {
 	     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an data policy is
 	     * added to a VDB
          * 
-         * @see #addDataPolicy(DataRole, IProgressMonitor)
+         * @see #addDataPolicy(DataRole)
          */
         String DATA_POLICY_ADDED = "dataPolicyAdded"; //$NON-NLS-1$
 
@@ -576,7 +560,7 @@ public interface Vdb extends VdbConstants {
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
-         * {@link #save(IProgressMonitor) save}
+         * {@link #save() save}
          */
         String SAVED = "saved"; //$NON-NLS-1$
 

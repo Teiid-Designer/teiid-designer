@@ -107,7 +107,7 @@ public class ExecuteVdbAction extends Action {
     }
     
     private boolean isVdbSyncd(IFile file) throws Exception {
-    	Vdb vdb = new XmiVdb(file, null);
+    	Vdb vdb = new XmiVdb(file);
     	return vdb.isSynchronized();
     }
 

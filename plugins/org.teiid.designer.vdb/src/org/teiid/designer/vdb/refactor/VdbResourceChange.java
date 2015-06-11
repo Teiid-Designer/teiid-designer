@@ -192,12 +192,12 @@ public class VdbResourceChange extends ResourceChange {
             VdbUtil.synchronizeVdb(vdbFile, false, true);
 
             // This should clean up and remove old resources
-            Vdb actualVdb = new XmiVdb(vdbFile, monitor);
+            Vdb actualVdb = new XmiVdb(vdbFile);
             for (VdbEntry entry : actualVdb.getModelEntries()) {
                 for (PathPair pathPair : replacements) {
                     if (entry.getName().equals(pathPair.getSourcePath())) {
                         actualVdb.removeEntry(entry);
-                        actualVdb.save(monitor);
+                        actualVdb.save();
                     }
                 }
             }

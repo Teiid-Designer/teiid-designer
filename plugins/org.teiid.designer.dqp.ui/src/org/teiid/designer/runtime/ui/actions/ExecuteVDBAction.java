@@ -144,7 +144,7 @@ public class ExecuteVDBAction extends SortableSelectionAction implements VdbCons
     }
     
     private boolean isVdbSyncd(IFile file) throws Exception {
-    	Vdb vdb = new XmiVdb(file, null);
+    	Vdb vdb = new XmiVdb(file);
     	return vdb.isSynchronized();
     }
     

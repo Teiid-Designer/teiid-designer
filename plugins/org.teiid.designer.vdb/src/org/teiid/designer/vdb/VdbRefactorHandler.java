@@ -9,7 +9,6 @@ package org.teiid.designer.vdb;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
 
 
@@ -26,9 +25,8 @@ public class VdbRefactorHandler extends AbstractRefactorModelHandler {
         if ((type == RefactorType.RENAME) && (refactoredResource.getType() == IResource.FILE)
                 && Vdb.FILE_EXTENSION_NO_DOT.equals(((IFile)refactoredResource).getFileExtension())) {
             // just save VDB to get new manifest written out
-            NullProgressMonitor monitor = new NullProgressMonitor();
-            Vdb renamedVdb = new XmiVdb((IFile)refactoredResource, monitor);
-            renamedVdb.save(monitor);
+            Vdb renamedVdb = new XmiVdb((IFile)refactoredResource);
+            renamedVdb.save();
         }
     }
 }

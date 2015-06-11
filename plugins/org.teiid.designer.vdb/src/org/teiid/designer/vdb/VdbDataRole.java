@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
@@ -53,11 +52,9 @@ public class VdbDataRole {
     /**
      * @param vdb
      * @param dataRole
-     * @param monitor
      */
     public VdbDataRole(final Vdb vdb,
-    		final DataRole dataRole,
-    		final IProgressMonitor monitor) {
+    		final DataRole dataRole) {
     	 super();
     	 
     	 this.vdb = vdb;

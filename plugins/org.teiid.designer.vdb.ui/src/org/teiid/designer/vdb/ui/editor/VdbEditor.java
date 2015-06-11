@@ -433,7 +433,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     @Override
                     public void run() {
                         try {
-                            element.synchronize(new NullProgressMonitor());
+                            element.synchronize();
                         } catch (Exception ex) {
                             failureException[0] = ex;
                             return;
@@ -536,7 +536,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     public void addModels( final List<IFile> models ) {
         try {
             for (final Object model : models) {
-                vdb.addEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                vdb.addEntry(((IFile)model).getFullPath());
             }
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
@@ -680,11 +680,11 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     if (matchingEntry != null)
                         getVdb().removeEntry(matchingEntry);
                     // Add the selected file
-                    getVdb().addEntry(filePath, new NullProgressMonitor());
+                    getVdb().addEntry(filePath);
                 }
                 // No matching entries - safe to add the new entry
             } else {
-                getVdb().addEntry(filePath, new NullProgressMonitor());
+                getVdb().addEntry(filePath);
             }
 
         } catch (Exception ex) {
@@ -747,7 +747,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         try {
             // add the models
             for (final Object schema : schemas) {
-                getVdb().addEntry(((IFile)schema).getFullPath(), new NullProgressMonitor());
+                getVdb().addEntry(((IFile)schema).getFullPath());
             }
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
@@ -1750,7 +1750,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         @Override
                         public void run() {
                             try {
-                                getVdb().synchronize(new NullProgressMonitor());
+                                getVdb().synchronize();
                             } catch (Exception ex) {
                                 finalException[0] = ex;
                                 return;
@@ -2156,7 +2156,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 	                try {
                         // add the models
                         for (final Object model : models) {
-                            getVdb().addEntry(((IFile)model).getFullPath(), new NullProgressMonitor());
+                            getVdb().addEntry(((IFile)model).getFullPath());
                         }
                     } catch (Exception ex) {
                         ErrorHandler.toExceptionDialog(ex);
@@ -2350,7 +2350,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     	vdb.setValidationDateTime(new Date());
     	vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
         try {
-            vdb.save(monitor);
+            vdb.save();
             vdb.getFile().getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         } catch (final Exception error) {
             VdbUiConstants.Util.log(error);
@@ -2401,7 +2401,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                       final IEditorInput input ) {
         final IFile file = ((IFileEditorInput)input).getFile();
         try {
-        	vdb = new XmiVdb(file, new NullProgressMonitor());
+        	vdb = new XmiVdb(file);
             vdbListener = new PropertyChangeListener() {
                 /**
                  * {@inheritDoc}
