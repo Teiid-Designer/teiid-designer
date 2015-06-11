@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.EditColumnDialog;
@@ -73,7 +73,7 @@ public class ColumnsInfoPanel {
 		editColumnsPanel.refresh();
 		this.addButton.setEnabled(info != null);
 		
-		String rootPath = StringUtilities.EMPTY_STRING;
+		String rootPath = StringConstants.EMPTY_STRING;
 		if( this.getProcedureInfo().getRootPath() != null ) {
 			rootPath = this.getProcedureInfo().getRootPath();
 		}

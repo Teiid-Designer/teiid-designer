@@ -10,7 +10,6 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
@@ -37,6 +36,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud.Type;
@@ -471,7 +471,7 @@ public class DataRoleWizard extends AbstractWizard {
 					}
 				});
 
-		final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup, StringUtilities.EMPTY_STRING,
+		final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup, StringConstants.EMPTY_STRING,
 				GridData.FILL_HORIZONTAL, 2, 1);
 
 		readSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.read.toUpperCase(), 0, 1, false);

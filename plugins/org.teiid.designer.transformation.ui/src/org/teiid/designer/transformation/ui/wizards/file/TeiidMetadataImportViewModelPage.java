@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -305,8 +306,8 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
             this.viewModelFilePath = this.info.getViewModelLocation();
             this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
         } else {
-        	this.info.setViewModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        	this.info.setViewModelLocation(new Path(StringConstants.EMPTY_STRING));
+            this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
     	if( this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > -1 ) {
@@ -345,7 +346,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
         	this.viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
         	this.viewModelFileText.setText(this.info.getViewModelName());
         } else {
-        	this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.viewModelFileText.setText(StringConstants.EMPTY_STRING);
         }
 
 		validatePage();
@@ -382,7 +383,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			newName = this.viewTableNameText.getText();
 			this.fileInfo.setViewTableName(newName);
 		} else {
-			this.fileInfo.setViewTableName(StringUtilities.EMPTY_STRING);
+			this.fileInfo.setViewTableName(StringConstants.EMPTY_STRING);
 		}
 
 		synchronizeUI();
@@ -457,7 +458,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			return false;
 		}
 
-		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
+		setThisPageComplete(StringConstants.EMPTY_STRING, NONE);
 
 		return true;
 	}
@@ -526,14 +527,14 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
 			viewModelContainerText.setText(this.info.getViewModelLocation().makeRelative().toString());
 			this.viewModelFilePath = this.info.getViewModelLocation();
 		} else {
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.info.getViewModelName() != null) {
 			String viewModelName = this.info.getViewModelName();
 			this.viewModelFileText.setText(viewModelName);
 		} else {
-			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelFileText.setText(StringConstants.EMPTY_STRING);
 		}
 
         { // view table name
@@ -544,7 +545,7 @@ public class TeiidMetadataImportViewModelPage extends AbstractWizardPage
                     this.viewTableNameText.setText(viewTableName);
                 }
             } else {
-                this.viewTableNameText.setText(StringUtilities.EMPTY_STRING);
+                this.viewTableNameText.setText(StringConstants.EMPTY_STRING);
             }
         }
 

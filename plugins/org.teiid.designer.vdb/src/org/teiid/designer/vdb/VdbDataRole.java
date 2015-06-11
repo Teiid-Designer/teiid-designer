@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
@@ -64,7 +65,7 @@ public class VdbDataRole {
     	 grantAll = dataRole.doGrantAll();
     	 permissions = new ArrayList<Permission>(dataRole.getPermissions());
     	 mappedRoleNames = new ArrayList<String>(dataRole.getRoleNames());
-         this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
+         this.description.set(dataRole.getDescription() == null ? StringConstants.EMPTY_STRING : dataRole.getDescription());
 	}
     
     /**
@@ -80,7 +81,7 @@ public class VdbDataRole {
     	 this.allowCreateTempTables = element.allowCreateTempTables();
     	 this.grantAll = element.doGrantAll();
     	 
-         this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
+         this.description.set(element.getDescription() == null ? StringConstants.EMPTY_STRING : element.getDescription());
     	 
          for( PermissionElement pe : element.getPermissions()) {
         	 boolean allow = false;

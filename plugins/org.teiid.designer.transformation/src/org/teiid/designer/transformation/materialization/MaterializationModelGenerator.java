@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
@@ -335,7 +335,7 @@ public class MaterializationModelGenerator {
     private String getUniqueNIS(final Table orig) {
     	if (orig.getNameInSource() != null
 				&& !orig.getNameInSource().trim().equals(
-						StringUtilities.EMPTY_STRING)) {
+						StringConstants.EMPTY_STRING)) {
 			final StringBuffer buffer = new StringBuffer(orig.getNameInSource());
 			
 			//Check to see if we have used this NIS. If so, append an index.

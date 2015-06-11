@@ -76,7 +76,7 @@ import org.eclipse.ui.PartInitException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -244,7 +244,7 @@ public final class ExportDdlWizard extends AbstractWizard
     }
 
     private void exportToSQLWorkbook() throws Exception {
-        String scrap = StringUtilities.EMPTY_STRING;
+        String scrap = StringConstants.EMPTY_STRING;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         writeToStream(stream);

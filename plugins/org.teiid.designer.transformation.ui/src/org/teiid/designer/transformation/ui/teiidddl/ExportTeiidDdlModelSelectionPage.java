@@ -1,31 +1,25 @@
 package org.teiid.designer.transformation.ui.teiidddl;
 
-import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -35,7 +29,6 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
-import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -195,7 +188,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
         if( this.exporter.getModelResource() != null ) {
         	this.selectedFileText.setText(this.exporter.getModelResource().getItemName());
         } else {
-        	this.selectedFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.selectedFileText.setText(StringConstants.EMPTY_STRING);
         }
 
 		validatePage();

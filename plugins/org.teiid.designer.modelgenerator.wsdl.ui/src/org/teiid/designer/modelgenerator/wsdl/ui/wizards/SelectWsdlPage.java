@@ -60,9 +60,9 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -706,14 +706,14 @@ public class SelectWsdlPage extends WizardPage
     		if (this.importManager.getSourceModelLocation() != null) {
     			this.sourceModelContainerText.setText(this.importManager.getSourceModelLocation().getFullPath().makeRelative().toString());
     		} else {
-    			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+    			this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
     		}
 
     		if (this.importManager.getSourceModelName() != null) {
     			this.sourceModelFilePath = this.importManager.getSourceModelLocation().getFullPath().makeRelative();
     			this.sourceModelFileText.setText(this.importManager.getSourceModelName());
     		} else {
-    			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+    			this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
     		}
             
         	IContainer tgtModelLocation = this.importManager.getViewModelLocation();

@@ -38,7 +38,7 @@ import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.Stopwatch;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.compare.DifferenceDescriptor;
 import org.teiid.designer.compare.DifferenceProcessor;
 import org.teiid.designer.compare.DifferenceReport;
@@ -1593,7 +1593,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 // Convert the column name to match the form stored in the 'name in source'.
                 String quoteStr = getQuoteString(context, problems);
                 if( quoteStr != null ) {
-                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
                 } else {
                 	columnName = tableNode.getUnqualifiedName(columnName);
                 }
@@ -1697,14 +1697,14 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 // Convert the column name to match the form stored in the 'name in source'.
                 String quoteStr = getQuoteString(context, problems);
                 if( quoteStr != null ) {
-                	fkColumnName =  tableNode.getUnqualifiedName(fkColumnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                	fkColumnName =  tableNode.getUnqualifiedName(fkColumnName).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
                 } else {
                 	fkColumnName = tableNode.getUnqualifiedName(fkColumnName);
                 }
                 fkColumnName = convertName(fkColumnName, context);
                 
                 if( quoteStr != null ) {
-                	pkColumnName =  tableNode.getUnqualifiedName(pkColumnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                	pkColumnName =  tableNode.getUnqualifiedName(pkColumnName).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
                 } else {
                 	pkColumnName = tableNode.getUnqualifiedName(pkColumnName);
                 }
@@ -1882,7 +1882,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
             	mapName = convertName(column.getName(),context);
             } else {
             	if(quoteStr!=null) {
-                	mapName =  tableNode.getUnqualifiedName(columnNIS).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                	mapName =  tableNode.getUnqualifiedName(columnNIS).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
             	} else {
             		mapName = tableNode.getUnqualifiedName(columnNIS);
             	}
@@ -1935,7 +1935,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 // Convert the column name to match the form stored in the 'name in source'.
                 String quoteStr = getQuoteString(context, problems);
                 if( quoteStr != null ) {
-                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+                	columnName =  tableNode.getUnqualifiedName(columnName).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
                 } else {
                 	columnName = tableNode.getUnqualifiedName(columnName);
                 }
@@ -2148,7 +2148,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
                 ukColumnName = convertName(ukColumn.getName(),context);
             } else {
             	if(quoteStr!=null) {
-            		ukColumnName =  tableNode.getUnqualifiedName(ukColumnNIS).replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+            		ukColumnName =  tableNode.getUnqualifiedName(ukColumnNIS).replaceAll(quoteStr, StringConstants.EMPTY_STRING);
             	} else {
             		ukColumnName = tableNode.getUnqualifiedName(ukColumnNIS);
             	}
@@ -2648,7 +2648,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         	uniqueName = nameInSource;
         	String quoteStr =  getQuoteString(context, problems);
         	if( quoteStr != null && quoteStr.length() > 0 ) {
-        		uniqueName = nameInSource.replaceAll(quoteStr, StringUtilities.EMPTY_STRING);
+        		uniqueName = nameInSource.replaceAll(quoteStr, StringConstants.EMPTY_STRING);
         	}
         	
         }
@@ -2800,7 +2800,7 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
 		                		matchStr = quoteStr + catalogName + quoteStr + '.';
 		                	}
 		                    if( fullyQualifiedName.indexOf(matchStr) > -1) {
-		                    	finalName = fullyQualifiedName.replaceFirst(matchStr, StringUtilities.EMPTY_STRING);
+		                    	finalName = fullyQualifiedName.replaceFirst(matchStr, StringConstants.EMPTY_STRING);
 		                    	break;
 		                    }
 		                }

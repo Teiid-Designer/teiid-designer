@@ -1192,10 +1192,10 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 //				if( getRelationalReference().getRestUri() != null ) {
 //					restUriText.setText(getRelationalReference().getRestUri());
 //				} else {
-//					restUriText.setText(StringUtilities.EMPTY_STRING);
+//					restUriText.setText(StringConstants.EMPTY_STRING);
 //				}
 //			} else {
-//				restUriText.setText(StringUtilities.EMPTY_STRING);
+//				restUriText.setText(StringConstants.EMPTY_STRING);
 //			}
 			restMethodsCombo.setEnabled(restEnabled);
 			restUriText.setEnabled(restEnabled);

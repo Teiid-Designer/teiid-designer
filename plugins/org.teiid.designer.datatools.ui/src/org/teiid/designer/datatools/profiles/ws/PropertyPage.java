@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
@@ -58,6 +57,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.translators.SimpleProperty;
@@ -318,7 +318,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
 	StringBuilder updateUrlPreview() {
 		StringBuilder previewUrl = new StringBuilder();
 		String urlText = this.urlText.getText();
-		if (urlText == null || urlText.trim().equals(StringUtilities.EMPTY_STRING)){
+		if (urlText == null || urlText.trim().equals(StringConstants.EMPTY_STRING)){
 			urlText = "{base URL}"; //$NON-NLS-1$
 		}
 		StringBuilder parameters = buildParameterString();
@@ -414,7 +414,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         }
         //An empty or null security type value is treated the same as "None"
         String securityType = securityText.getText();
-        if (securityType!=null && (!securityType.trim().equals(StringUtilities.EMPTY_STRING) &&
+        if (securityType!=null && (!securityType.trim().equals(StringConstants.EMPTY_STRING) &&
         	!SecurityType.None.name().equals(securityType)) &&
                 !SecurityType.HTTPBasic.name().equals(securityText.getText())) {
         	errorMessage = UTIL.getString("Common.Security.Error.Message"); //$NON-NLS-1$
@@ -423,7 +423,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
             setValid(valid);
             return;
         }
-        if (securityType!=null && !securityType.trim().equals(StringUtilities.EMPTY_STRING) &&
+        if (securityType!=null && !securityType.trim().equals(StringConstants.EMPTY_STRING) &&
            (!SecurityType.None.name().equals(securityType))) {
         	if (null == passwordText.getText() || passwordText.getText().isEmpty()) {
         		errorMessage = UTIL.getString("Common.Password.Error.Message"); //$NON-NLS-1$

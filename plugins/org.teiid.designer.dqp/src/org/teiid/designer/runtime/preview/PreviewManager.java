@@ -54,6 +54,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
@@ -198,8 +199,8 @@ public final class PreviewManager extends JobChangeAdapter
         assert (project != null) : "Project is null"; //$NON-NLS-1$
         StringBuilder name = new StringBuilder(XmiVdb.getPreviewVdbPrefix(project));
         String vdbName = name.append(project.getName()).append(PROJECT_VDB_SUFFIX).toString();
-        if (vdbName.contains(StringUtilities.SPACE)) {
-            vdbName = vdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        if (vdbName.contains(StringConstants.SPACE)) {
+            vdbName = vdbName.replaceAll(StringConstants.SPACE, StringConstants.UNDERSCORE);
         }
         return vdbName;
     }
@@ -779,8 +780,8 @@ public final class PreviewManager extends JobChangeAdapter
         if (index == -1) return pvdbName;
         String jndiName = pvdbName.substring(0, index);
 
-        if (jndiName.contains(StringUtilities.SPACE)) {
-            jndiName = jndiName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+        if (jndiName.contains(StringConstants.SPACE)) {
+            jndiName = jndiName.replaceAll(StringConstants.SPACE, StringConstants.UNDERSCORE);
         }
         return jndiName;
     }
@@ -789,8 +790,8 @@ public final class PreviewManager extends JobChangeAdapter
         // see if a project PVDB
         if (pvdbFile.getFullPath().removeFileExtension().lastSegment().endsWith(PROJECT_VDB_SUFFIX)) {
             String projectVdbName = pvdbFile.getProject().getName();
-            if (projectVdbName.contains(StringUtilities.SPACE)) {
-                projectVdbName = projectVdbName.replaceAll(StringUtilities.SPACE, StringUtilities.UNDERSCORE);
+            if (projectVdbName.contains(StringConstants.SPACE)) {
+                projectVdbName = projectVdbName.replaceAll(StringConstants.SPACE, StringConstants.UNDERSCORE);
             }
             return projectVdbName;
         }

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
@@ -111,9 +112,9 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         assert (type != null);
 
         this.vdb = vdb;
-        this.name.set((name == null) ? StringUtilities.EMPTY_STRING : name);
+        this.name.set((name == null) ? StringConstants.EMPTY_STRING : name);
         this.type = type;
-        this.description.set((description == null) ? StringUtilities.EMPTY_STRING : description);
+        this.description.set((description == null) ? StringConstants.EMPTY_STRING : description);
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
     }
 
@@ -124,9 +125,9 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
     public TranslatorOverride( Vdb vdb,
                         TranslatorElement element ) {
         this.vdb = vdb;
-        this.name.set((element.getName() == null) ? StringUtilities.EMPTY_STRING : element.getName());
+        this.name.set((element.getName() == null) ? StringConstants.EMPTY_STRING : element.getName());
         this.type = element.getType();
-        this.description.set((element.getDescription() == null) ? StringUtilities.EMPTY_STRING : element.getDescription());
+        this.description.set((element.getDescription() == null) ? StringConstants.EMPTY_STRING : element.getDescription());
         this.properties = new HashMap<String, TranslatorOverrideProperty>();
 
         for (PropertyElement property : element.getProperties()) {

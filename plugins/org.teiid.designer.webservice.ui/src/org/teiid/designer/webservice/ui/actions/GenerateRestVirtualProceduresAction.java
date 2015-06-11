@@ -832,7 +832,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
                 this.viewModelContainerText.setText(folder.toString());
                 viewModelFolder = folder;
             } else {
-                this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+                this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
             }
             
 
@@ -886,7 +886,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				getButton(IDialogConstants.OK_ID).setEnabled(false);
 				return;
 			} else {
-				if(viewModelName.contains(StringUtilities.SPACE)){
+				if(viewModelName.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("viewModelNameCannotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -912,7 +912,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(viewXmlTagValue.contains(StringUtilities.SPACE)){
+				if(viewXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.viewXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -930,7 +930,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(columnXmlTagValue.contains(StringUtilities.SPACE)){
+				if(columnXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.columnXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;

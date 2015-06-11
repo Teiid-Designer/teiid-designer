@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,10 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
@@ -39,7 +36,7 @@ import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
@@ -60,7 +57,6 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.XmiVdb;
 
 
@@ -290,7 +286,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             UTIL.log(e);
         }
 
-        return headers==null?StringUtilities.EMPTY_STRING:(String)headers;
+        return headers==null?StringConstants.EMPTY_STRING:(String)headers;
     }
     
     private static String getCharset( Procedure procedure ) {
