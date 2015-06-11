@@ -34,16 +34,6 @@ import org.xml.sax.SAXException;
 public interface Vdb extends VdbConstants {
 
     /**
-     * The file extension of VDBs including the dot. ( {@value} )
-     */
-    String FILE_EXTENSION = ".vdb"; //$NON-NLS-1$
-
-    /**
-     * The file extension of a VDB but does not include the dot. ( {@value} )
-     */
-    String FILE_EXTENSION_NO_DOT = "vdb"; //$NON-NLS-1$
-
-    /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$

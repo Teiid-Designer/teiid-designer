@@ -10,6 +10,7 @@ package org.teiid.designer.vdb;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 
 
 /**
@@ -23,7 +24,7 @@ public class VdbRefactorHandler extends AbstractRefactorModelHandler {
     public void postProcess( RefactorType type, IResource refactoredResource) throws Exception {
         // only care about renames
         if ((type == RefactorType.RENAME) && (refactoredResource.getType() == IResource.FILE)
-                && Vdb.FILE_EXTENSION_NO_DOT.equals(((IFile)refactoredResource).getFileExtension())) {
+                && ITeiidVdb.VDB_EXTENSION.equals(((IFile)refactoredResource).getFileExtension())) {
             // just save VDB to get new manifest written out
             Vdb renamedVdb = new XmiVdb((IFile)refactoredResource);
             renamedVdb.save();

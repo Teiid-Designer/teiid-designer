@@ -12,9 +12,9 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.util.ErrorHandler;
-import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 
@@ -72,7 +72,7 @@ public class VdbModelNotInProjectMarkerResolution  implements IMarkerResolution 
      * @return <code>true</code> if resource is a VDB file
      */
     private boolean isVdbFile( IResource resource ) {
-        return ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+        return ((resource.getType() == IResource.FILE) && ITeiidVdb.VDB_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
     }
 
 }

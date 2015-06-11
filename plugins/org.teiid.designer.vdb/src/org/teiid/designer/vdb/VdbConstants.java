@@ -29,21 +29,11 @@ public interface VdbConstants {
      * The extension property key for vdb-name
      */
     String VDB_NAME_KEY = "core:vdb-name"; //$NON-NLS-1$
-    
-    /**
-     * The VDB file extension
-     */
-    String VDB_FILE_EXTENSION = "vdb"; //$NON-NLS-1$
 
     /**
      * The location of a vdb manifest
      */
     String MANIFEST = "META-INF/vdb.xml"; //$NON-NLS-1$
-    
-    /**
-     *  Dynamic VDB file extension
-     */
-    String DYNAMIC_VDB_FILE_EXTENSION = "xml";
 
     /** Constants for the SourceHandler extension point */
     interface SourceHandlerExtension {

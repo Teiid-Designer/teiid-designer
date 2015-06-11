@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.teiid.designer.core.builder.AbstractTeiidProjectBuilder;
-import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
@@ -293,7 +293,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
          */
         private boolean isVdbFile( IResource resource ) {
         	
-            boolean mightBeXmiVdb = ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+            boolean mightBeXmiVdb = ((resource.getType() == IResource.FILE) && ITeiidVdb.VDB_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
             
             if(mightBeXmiVdb) {
             	return !VdbUtil.isDdlVdb((IFile)resource);

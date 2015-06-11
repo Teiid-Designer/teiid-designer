@@ -10,7 +10,6 @@ package org.teiid.designer.runtime.preview;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,10 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -715,8 +712,8 @@ public final class PreviewManager extends JobChangeAdapter
     private String getFullDeployedVdbName(ITeiidVdb deployedVdb) { 
         String fullVdbName = deployedVdb.getDeployedName();
 
-        if (!fullVdbName.endsWith(Vdb.FILE_EXTENSION)) {
-            fullVdbName = fullVdbName + Vdb.FILE_EXTENSION;
+        if (!fullVdbName.endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
+            fullVdbName = fullVdbName + ITeiidVdb.VDB_DOT_EXTENSION;
         }
         return fullVdbName;
     	
@@ -831,7 +828,7 @@ public final class PreviewManager extends JobChangeAdapter
             name.append(projectOrModel.getFullPath().removeFileExtension().lastSegment());
         }
 
-        name.append(Vdb.FILE_EXTENSION);
+        name.append(ITeiidVdb.VDB_DOT_EXTENSION);
         return name.toString();
     }
 

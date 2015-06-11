@@ -27,14 +27,12 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -58,6 +56,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Xml;
@@ -126,7 +125,7 @@ public class VdbUtil implements VdbConstants {
             // if VDB file is empty just check file name
             if (file.getLocation().toFile().length() == 0L) {
                 // make sure file prefix and extension is right
-                if (!Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
+                if (!ITeiidVdb.VDB_EXTENSION.equals(file.getFileExtension())) {
                     return false;
                 }
 
@@ -196,7 +195,7 @@ public class VdbUtil implements VdbConstants {
             // if VDB file is empty just check file name
             if (file.getLocation().toFile().length() > 0) {
                 // make sure file prefix and extension is right
-                if ( ! VDB_FILE_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
+                if ( ! ITeiidVdb.VDB_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
                     return false;
                 }
                 
@@ -239,7 +238,7 @@ public class VdbUtil implements VdbConstants {
      * @throws Exception 
      */
 	public static boolean hasModelClass(final IFile file, final String modelClass, final String type) throws Exception {
-        if (file.exists() && Vdb.FILE_EXTENSION_NO_DOT.equals(file.getFileExtension())) {
+        if (file.exists() && ITeiidVdb.VDB_EXTENSION.equals(file.getFileExtension())) {
             VdbElement manifest = VdbUtil.getVdbManifest(file);
             if (manifest != null) {
                 for (ModelElement model : manifest.getModels()) {
