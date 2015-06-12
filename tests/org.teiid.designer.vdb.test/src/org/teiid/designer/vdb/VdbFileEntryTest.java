@@ -33,8 +33,6 @@ import org.mockito.ArgumentCaptor;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.workspace.MockFileBuilder;
-import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 
@@ -64,26 +62,38 @@ public class VdbFileEntryTest {
         vdbTest.after();
     }
 
+    private IPath mockPath(String pathName, String pathNameNoExt) {
+        final IPath pathNoExt = mock(Path.class);
+        when(pathNoExt.lastSegment()).thenReturn(pathNameNoExt);
+
+        final IPath path = mock(Path.class);
+        when(path.lastSegment()).thenReturn(pathName);
+        when(path.removeFileExtension()).thenReturn(pathNoExt);
+        return path;
+    }
+
     @Test
     public void shouldHaveChecksumIfFileInWorkspace() throws Exception {
         // mock file and contents so that checksum can be computed
         File tempFile = ModelResourceMockFactory.createTempFile("temp1", "", null, "abcdef");
         FileInputStream fileInputStream = new FileInputStream(tempFile);
         
-        final IPath name = mock(Path.class);
-        when(name.lastSegment()).thenReturn("test.xsd");
+        final IPath path = mockPath("test.xsd", "test");
+
         final IFile iFile = mock(IFile.class);
-        when(iFile.getLocation()).thenReturn(name);
+        when(iFile.getLocation()).thenReturn(path);
         when(iFile.getLocation().toFile()).thenReturn(tempFile);
         when(iFile.getContents()).thenReturn(fileInputStream);
 
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
-        // ensure path can find a file in the workspace
-        when(mockRoot.findMember(name.toOSString())).thenReturn(iFile);
+
+        // A file entry changes the path according to the file entry type so ensure
+        // our mock path can be found in the workspace
+        when(mockRoot.findMember(path)).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name);
+        VdbFileEntry entry = vdb.addEntry(path);
         assertThat(entry.getChecksum(), not(is(0L)));
     }
 
@@ -94,9 +104,9 @@ public class VdbFileEntryTest {
         File tempFile2 = ModelResourceMockFactory.createTempFile("temp2", "", null, "xyz");
         FileInputStream fis1 = new FileInputStream(tempFile1);
         FileInputStream fis2 = new FileInputStream(tempFile2);
-        
-        final IPath path = mock(Path.class);
-        when(path.lastSegment()).thenReturn("test.xsd");
+
+        final IPath path = mockPath("test.xsd", "test");
+
         final IFile iFile = mock(IFile.class);
         when(iFile.getLocation()).thenReturn(path);
         when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
@@ -108,11 +118,11 @@ public class VdbFileEntryTest {
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(path);
+        VdbFileEntry entry = vdb.addEntry(path);
 
         // A file entry changes the path according to the file entry type so ensure
         // our mock path can be found in the workspace
-        when(mockRoot.findMember(entry.getPath())).thenReturn(iFile);
+        when(mockRoot.findMember(path)).thenReturn(iFile);
 
         final long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
 
@@ -170,15 +180,16 @@ public class VdbFileEntryTest {
     @Test
     public void shouldNotifyAfterChecksumChanges() throws Exception {
         // change checksum by changing file contents and synchronizing
-        
+
         File tempFile1 = ModelResourceMockFactory.createTempFile("temp1", "", null, "abcdef");
         File tempFile2 = ModelResourceMockFactory.createTempFile("temp2", "", null, "xyz");
         FileInputStream fis1 = new FileInputStream(tempFile1);
         FileInputStream fis2 = new FileInputStream(tempFile2);
-        
-        final IPath name = mock(Path.class);
+
+        final IPath path = mockPath("test.xsd", "test");
+
         final IFile iFile = mock(IFile.class);
-        when(iFile.getLocation()).thenReturn(name);
+        when(iFile.getLocation()).thenReturn(path);
         when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
         
         // include values for first call and second call
@@ -188,11 +199,11 @@ public class VdbFileEntryTest {
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name); // will have an original checksum based on first value of iFile.getContents()
+        VdbFileEntry entry = vdb.addEntry(path); // will have an original checksum based on first value of iFile.getContents()
 
         // A file entry changes the path according to the file entry type so ensure
         // our mock path can be found in the workspace
-        when(mockRoot.findMember(entry.getName())).thenReturn(iFile);
+        when(mockRoot.findMember(path)).thenReturn(iFile);
 
         entry.setSynchronization(Synchronization.NotSynchronized); // so that checksum will be recalculated
 

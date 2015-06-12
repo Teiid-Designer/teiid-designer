@@ -38,8 +38,6 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
-import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbPlugin;
 
 /**
  * 
@@ -68,6 +66,7 @@ public class VdbModelEntryTest {
         FileInputStream fileInputStream = new FileInputStream(tempFile);
 
         modelResourceFileName = FileUtils.getFilenameWithoutExtension(tempFile.getName());
+
         final IPath nonExtModelPathName = mock(IPath.class);
         when(nonExtModelPathName.toString()).thenReturn(modelResourceFileName);
         when(nonExtModelPathName.lastSegment()).thenReturn(modelResourceFileName);
@@ -76,6 +75,8 @@ public class VdbModelEntryTest {
         when(modelPath.toFile()).thenReturn(tempFile);
         when(modelPath.getFileExtension()).thenReturn("xmi");
         when(modelPath.toString()).thenReturn(tempFile.getCanonicalPath());
+        when(modelPath.toOSString()).thenReturn(tempFile.getCanonicalPath());
+        when(modelPath.lastSegment()).thenReturn(modelResourceFileName);
         when(modelPath.removeFileExtension()).thenReturn(nonExtModelPathName);
 
         IFile file = mock(IFile.class);

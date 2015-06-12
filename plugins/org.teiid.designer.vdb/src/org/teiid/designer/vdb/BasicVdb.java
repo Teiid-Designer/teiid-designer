@@ -126,6 +126,21 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 		setChanged(false);
 	}
 
+	@Override
+	public void setDescription(String newDescription) {
+	    if (StringUtilities.isEmpty(newDescription))
+	        newDescription = null;
+
+	    String oldDescription = getDescription();
+	    if (StringUtilities.isEmpty(newDescription))
+            oldDescription = null;
+
+	    if (StringUtilities.areDifferent(oldDescription, newDescription)) {
+	        super.setDescription(newDescription);
+	        setModified(this, Event.DESCRIPTION, oldDescription, newDescription);
+	    }
+	}
+
 	/** (non-Javadoc)
 	 * @see org.teiid.designer.vdb.Vdb#addDataRole(DataRole)
 	 */

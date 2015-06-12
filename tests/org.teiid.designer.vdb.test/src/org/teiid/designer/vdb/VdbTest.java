@@ -53,17 +53,11 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbConstants;
-import org.teiid.designer.vdb.VdbEntry;
-import org.teiid.designer.vdb.VdbImportVdbEntry;
-import org.teiid.designer.vdb.VdbPlugin;
-import org.teiid.designer.vdb.VdbSchemaEntry;
-import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
 import org.teiid.designer.vdb.file.VdbFileProcessor;
@@ -84,6 +78,8 @@ public class VdbTest implements VdbConstants {
 
     private static final String TEST_2120  = "Test_TEIIDDES_2120";
 
+    private static final String TEST_UDF  = "TestUDF";
+
     private static final String TEST_PROJECT = BOOKS_VDB_PROJECT + File.separator + TEST_2120 + File.separator;
 
     private Vdb vdb;
@@ -95,6 +91,8 @@ public class VdbTest implements VdbConstants {
     private File books77VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-7.7.x.vdb");
 
     private File books84VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-8.4.x.vdb");
+
+    private File udfVdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "TestUDF.vdb");
 
     private File BOOK_DATATYPES_XSD = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "BookDatatypes.xsd");
     private File BOOKS_XMI = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "Books.xmi");
@@ -347,7 +345,7 @@ public class VdbTest implements VdbConstants {
 
         VdbEntry vdbEntry = vdb.addEntry(modelFile.getPath());
         assertTrue(vdbEntry instanceof VdbModelEntry);
-        assertEquals(modelFile.getPath(), vdbEntry.getName());
+        assertEquals(modelFile.getPath(), vdbEntry.getPath());
         VdbModelEntry vdbModelEntry = (VdbModelEntry) vdbEntry;
         assertNotNull(vdbModelEntry.getIndexFile());
 
@@ -358,7 +356,7 @@ public class VdbTest implements VdbConstants {
 
         vdbEntry = vdb.addEntry(schemaFile.getPath());
         assertTrue(vdbEntry instanceof VdbSchemaEntry);
-        assertEquals(schemaFile.getPath(), vdbEntry.getName());
+        assertEquals(schemaFile.getPath(), vdbEntry.getPath());
         VdbSchemaEntry vdbSchemaEntry = (VdbSchemaEntry) vdbEntry;
         assertNotNull(vdbSchemaEntry.getIndexFile());
 
@@ -372,7 +370,7 @@ public class VdbTest implements VdbConstants {
         assertTrue(vdbEntry instanceof VdbFileEntry);
         /* UDF Jars are stored in the lib directory of the vdb */
         String udfJarName = "/lib/" + udfFile.getName();
-        assertEquals(udfJarName, vdbEntry.getName().toString());
+        assertEquals(udfJarName, vdbEntry.getPath().toString());
 
         assertEquals(1, vdb.getModelEntries().size());
         assertEquals(1, vdb.getSchemaEntries().size());
@@ -384,7 +382,7 @@ public class VdbTest implements VdbConstants {
         assertTrue(vdbEntry instanceof VdbFileEntry);
         /* UDF Jars are stored in the other files directory of the vdb */
         String userFileName = "/otherFiles/" + userFile.getName();
-        assertEquals(userFileName, vdbEntry.getName().toString());
+        assertEquals(userFileName, vdbEntry.getPath().toString());
 
         assertEquals(1, vdb.getModelEntries().size());
         assertEquals(1, vdb.getSchemaEntries().size());
@@ -416,8 +414,9 @@ public class VdbTest implements VdbConstants {
 
         MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
         Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
-        
-        assertEquals(booksVdbFile.getCanonicalPath(), booksVdb.getName().toString());
+
+        assertEquals("books", booksVdb.getName());
+        assertEquals(booksVdbFile.getCanonicalPath(), booksVdb.getSourceFile().getFullPath().toOSString());
         assertEquals(2, booksVdb.getModelEntries().size());
         assertEquals(2, booksVdb.getSchemaEntries().size());
         assertEquals(0, booksVdb.getUdfJarEntries().size());
@@ -513,6 +512,89 @@ public class VdbTest implements VdbConstants {
         }
 
         archive.close();
+    }
+
+    /**
+     * Test for TEIIDES-2559
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSaveOfUdfVdb() throws Exception {
+        /* Copy the test data file as we don't want to overwrite it */
+        File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
+        File udfVdbCopy = FileUtils.copy(udfVdbFile, tempDir, true);
+        assertTrue(udfVdbCopy.exists());
+
+        /* Use the copy to test saving and checking out the manifest of the vdb */
+        MockFileBuilder udfVdbBuilder = new MockFileBuilder(udfVdbCopy);
+        udfVdbBuilder.addToModelWorkspace(modelWorkspaceMock);
+        when(udfVdbBuilder.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
+        when(udfVdbBuilder.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
+
+        Vdb udfVdb = new XmiVdb(udfVdbBuilder.getResourceFile());
+        udfVdb.save();
+
+        boolean udfJarPresent = false;
+        boolean empSourceModelPresent = false;
+        int indexFilesPresent = 0;
+        boolean empViewModelPresent = false;
+
+        JAXBContext jaxbContext = JAXBContext.newInstance(new Class<?>[] { VdbElement.class });
+        ZipFile archive = new ZipFile(udfVdbCopy);
+        Enumeration<? extends ZipEntry> iter = archive.entries();
+        while(iter.hasMoreElements()) {
+            ZipEntry zipEntry = iter.nextElement();
+            InputStream entryStream = archive.getInputStream(zipEntry);
+            if (zipEntry.getName().equals(MANIFEST)) {
+                // Initialize using manifest
+                Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+                unmarshaller.setSchema(VdbUtil.getManifestSchema());
+                VdbElement manifest = (VdbElement) unmarshaller.unmarshal(entryStream);
+
+                assertEquals(2, manifest.getModels().size());
+                for (ModelElement element : manifest.getModels()) {
+                    IPath path = Path.fromPortableString(element.getPath());
+                    assertTrue(ModelUtil.isModelFile(path));
+                    assertFalse(ModelUtil.isXsdFile(path));
+
+                    /* Ensure the models are still under the project folder */
+                    assertEquals(TEST_UDF, path.segment(path.segmentCount() - 2));
+                }
+
+                assertEquals(1, manifest.getEntries().size());
+                for (EntryElement element : manifest.getEntries()) {
+                    IPath path = Path.fromPortableString(element.getPath());
+                    assertEquals(VdbFolders.UDF.getWriteFolder(), path.segment(0));
+                    assertEquals("name_builder.jar", path.lastSegment());
+                }
+            } else {
+                //
+                // Assert that all the correct files are in the archive
+                //
+                // Should be 1 udf, 2 models and 2 index files
+                //
+                if (zipEntry.getName().equals("lib/name_builder.jar"))
+                    udfJarPresent = true;
+
+                if (zipEntry.getName().equals("TestUDF/EMPLOYEEDATA_source.xmi"))
+                    empSourceModelPresent = true;
+
+                if (zipEntry.getName().startsWith("runtime-inf") && zipEntry.getName().endsWith(".INDEX"))
+                    indexFilesPresent++;
+
+                if (zipEntry.getName().equals("TestUDF/EMPLOYEE_VIEWS.xmi"))
+                    empViewModelPresent = true;
+            }
+
+        }
+
+        archive.close();
+
+        assertTrue(udfJarPresent);
+        assertTrue(empSourceModelPresent);
+        assertEquals(2, indexFilesPresent);
+        assertTrue(empViewModelPresent);
     }
 
     @Test

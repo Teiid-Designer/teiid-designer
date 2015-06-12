@@ -26,6 +26,7 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 
@@ -52,12 +53,28 @@ public abstract class VdbEntry extends VdbUnit {
      */
     public VdbEntry( final Vdb vdb, final EntryElement element) throws Exception {
         this(vdb, Path.fromPortableString(element.getPath()));
+
+        long propChecksum = -1;
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
-            if (EntryElement.CHECKSUM.equals(name)) checksum = Long.parseLong(property.getValue());
+            if (EntryElement.CHECKSUM.equals(name))
+                propChecksum = Long.parseLong(property.getValue());
         }
-        final IFile workspaceFile = findFileInWorkspace();
-        if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
+
+        if (Synchronization.Synchronized.equals(getSynchronization())) {
+            //
+            // Already been synchronized from calling 'this' above.
+            // Means there is a file in the workspace but don't yet know if
+            // it is still the same file as that in the vdb.
+            //
+            // Now check if the checksum created matches that extracted
+            // from the properties. If it does not then entry is not synchronized
+            // with workspace.
+            //
+            if (this.checksum != propChecksum)
+                setSynchronization( Synchronization.NotSynchronized);
+        }
+
         setDescription(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
     }
 
@@ -158,7 +175,7 @@ public abstract class VdbEntry extends VdbUnit {
     /**
      * @return the associated workspace file, or <code>null</code> if it doesn't exist
      */
-    public final IFile findFileInWorkspace() {
+    public IFile findFileInWorkspace() {
         IResource resource = ModelerCore.getWorkspace().getRoot().findMember(getPath());
         if (resource == null) {
             // Lets try a little harder since the file may be in the project but not a model resource
@@ -220,13 +237,12 @@ public abstract class VdbEntry extends VdbUnit {
         return true;
     }
 
-    
     /**
      * @param out
      * @throws Exception
      */
     public void save( final ZipOutputStream out) throws Exception {
-    	String zipName = getName();
+    	String zipName = getPath().toString();
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
     	// being located at the file system "root" folder.
     	if( zipName.startsWith("/") ) { //$NON-NLS-1$
@@ -234,7 +250,7 @@ public abstract class VdbEntry extends VdbUnit {
     	}
         final ZipEntry zipEntry = new ZipEntry(zipName);
         zipEntry.setComment(getDescription());
-        save(out, zipEntry, new File(getVdb().getStagingFolder(), getName()));
+        save(out, zipEntry, new File(getVdb().getStagingFolder(), getPath().toOSString()));
     }
 
     /**
@@ -270,7 +286,7 @@ public abstract class VdbEntry extends VdbUnit {
     /*
      * Private since called by constructor and don't want subclasses overriding
      */
-    private Synchronization synchronizeEntry() throws Exception {
+    protected Synchronization synchronizeEntry() throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null) return Synchronization.NotApplicable;
         long oldChecksum = 0L;
@@ -280,7 +296,7 @@ public abstract class VdbEntry extends VdbUnit {
             checksum = computeChecksum(workspaceFile);
             // Copy snapshot of workspace file to VDB folder
             FileUtils.copy(workspaceFile.getLocation().toFile(),
-                           new File(getVdb().getStagingFolder(), getName()).getParentFile(),
+                           new File(getVdb().getStagingFolder(), getPath().toOSString()).getParentFile(),
                            true);
         } finally {
             checksumLock.writeLock().unlock();
