@@ -11,9 +11,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -123,13 +121,20 @@ public class CreateDataSourceAction extends SortableSelectionAction implements I
             	}
             }
             
-        	Properties connProps = getModelConnectionProperties(modelResource);
-        	
-        	if( connProps == null || connProps.isEmpty() ) {
-        		MessageDialog.openInformation(getShell(), getString("noInfo.title"),  //$NON-NLS-1$
-        				getString("noInfo.message", modelResource.getItemName())); //$NON-NLS-1$
-        		return;
-        	}
+            /* 
+             * check whether this was called from selection (i.e. right clicking on a model)
+             * and if so, check whether the source model has a connection profile set.
+             * Otherwise, this was called from the server view.
+             */
+            if (modelResource != null){
+	        	Properties connProps = getModelConnectionProperties(modelResource);
+	        	
+	        	if( connProps == null || connProps.isEmpty() ) {
+	        		MessageDialog.openInformation(getShell(), getString("noInfo.title"),  //$NON-NLS-1$
+	        				getString("noInfo.message", modelResource.getItemName())); //$NON-NLS-1$
+	        		return;
+	        	}
+            }
             
             // A) get the selected model and extract a "ConnectionProfileInfo" from it using the ConnectionProfileInfoHandler
 
