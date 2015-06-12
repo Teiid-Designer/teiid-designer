@@ -9,6 +9,7 @@ package org.teiid.designer.ui.refactor;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
@@ -35,14 +36,12 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.IEditorPart;
-import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexUtil;
 import org.teiid.designer.core.refactor.IRefactorModelHandler.RefactorType;
@@ -70,6 +69,7 @@ public class RefactorResourcesUtils {
     private static final String PARENT_DIRECTORY = ".."; //$NON-NLS-1$
     private static final String MODEL_IMPORTS_ELEMENT_START = "<modelImports "; //$NON-NLS-1$
     private static final String SQL_STATEMENT_START = "Sql="; //$NON-NLS-1$
+    private static final String WINDOWS_LINE_TERMINATOR = "\r\n";  //$NON-NLS-1$
     
     /**
      * Options for types of pair to be included in calculations
@@ -402,6 +402,8 @@ public class RefactorResourcesUtils {
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
+        boolean isWindows = hasWindowsLineTerminator(nativeFile);
+        
         TextFileChange textFileChange = new TextFileChange(file.getName(), file);
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
 
@@ -426,19 +428,24 @@ public class RefactorResourcesUtils {
 							 */
 							continue;
 						}
+						
+						String sourcePath = pathPair.getSourcePath().replace('\\','/'); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+						boolean sourcePathHasSlash = sourcePath.indexOf('/') > -1;
 
-						int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+						int lineOffset = line.indexOf(sourcePath);
 						if (lineOffset < 0) continue;
 
-						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
-						fileChangeRootEdit.addChild(edit);
+						if( sourcePathHasSlash || line.charAt(lineOffset-1) == '"') {
+							int offset = docOffset + lineOffset;
+							ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
+							fileChangeRootEdit.addChild(edit);
+						}
 					}
 				}
 
 				// Add the line length and a +1 represent the newline character
 				docOffset += line.length() + 1;
-                if( Platform.getOS().equalsIgnoreCase(Platform.WS_WIN32) ) {
+                if( isWindows ) {
                 	docOffset++;
                 }
 			}
@@ -551,6 +558,8 @@ public class RefactorResourcesUtils {
         if (nativeFile == null || ! nativeFile.exists())
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
+        boolean isWindows = hasWindowsLineTerminator(nativeFile);
+
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
         BufferedReader reader = null;
         String line;
@@ -578,7 +587,7 @@ public class RefactorResourcesUtils {
                 
                 // Add the line length and a +1 represent the newline character
                 docOffset += line.length() + 1;
-                if( Platform.getOS().equalsIgnoreCase(Platform.WS_WIN32) ) {
+                if( isWindows ) {
                 	docOffset++;
                 }
             }
@@ -605,7 +614,7 @@ public class RefactorResourcesUtils {
             throw new Exception(getString("ResourcesRefactoring.fileNotFoundError", file.getFullPath())); //$NON-NLS-1$
 
         TextEdit fileChangeRootEdit = setRootEdit(textFileChange);
-        boolean isWindows = Platform.getOS().equals(Platform.WS_WIN32);
+        boolean isWindows = hasWindowsLineTerminator(nativeFile);
 
         BufferedReader reader = null;
         String line;
@@ -631,15 +640,47 @@ public class RefactorResourcesUtils {
 						continue;
 					}
 					
-					int lineOffset = line.indexOf(pathPair.getSourcePath().replace('\\','/')); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
-					if (lineOffset > 0) {
-						int offset = docOffset + lineOffset;
-						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
-						fileChangeRootEdit.addChild(edit);
+					// 	name="partssupplier" modelLocation="partssupplier.xmi"
+				    //	name="partssupplier_view_2" modelLocation="views/partssupplier_view_2.xmi"
+					//  HAVE TO PREVENT THE FOLLOWING
+				    //	name="partssupplier_RENAMED" modelLocation="partssupplier_RENAMED.xmi"
+				    //	name="partssupplier_RENAMED_view_2" modelLocation="views/partssupplier_view_2.xmi"
+
+					// Note that a file renaming a file named "partssupplier.xmi" will end up modifying "my_partssupplier.xmi"
+					// Need to add a check to see that the index-1 is a " double-quote character
+					
+					// Note that a file renaming a file named "partssupplier.xmi" will end up modifying "partssupplier_otherfile.xmi"
+					// Need to add a check to see that the index + path/name length is a " double-quote character
+					
+					// Model location may not contain any '/' chars, so the indexOf(sourcePath) will look the same as 
+					// EXAMPLE :  name="views_products" modelLocation="views_products.xmi"
+					// where products.xmi is being renamed to products_RENAMED.xmi
+					
+					String sourcePath = pathPair.getSourcePath().replace('\\','/'); // TEIIDDES-2434 - Ensure srcPath separators agree with xmi line
+					String sourceNameOnly = pathPair.getSourceNameNoExtension();
+					boolean sourcePathHasSlash = sourcePath.indexOf('/') > -1;
+					
+					int lineOffset = line.indexOf(sourcePath);
+					if (lineOffset > 0 ) {
+						boolean startsWithDQuote = line.charAt(lineOffset-1) == '"';
+						// Check for use-case where there is no slash in path and source name is the suffix of a different model
+						// EXAMPLE products.xmi  is in the modelLocation="view_products.xmi"
+						// If slash is in path, then it won't get here because of full path check
+						if( sourcePathHasSlash || startsWithDQuote) {
+							int offset = docOffset + lineOffset;
+							ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourcePath().length(), pathPair.getTargetPath().replace('\\','/'));
+							fileChangeRootEdit.addChild(edit);
+						}
 					}
 					
-					lineOffset = line.indexOf(pathPair.getSourceNameNoExtension());
-					if (lineOffset > 0)  {
+					lineOffset = line.indexOf(sourceNameOnly);
+					boolean startsWithDQuote = false;
+					boolean endsWithDQuote = false;
+					if(lineOffset>0) {
+						startsWithDQuote = line.charAt(lineOffset-1) == '"';
+						endsWithDQuote = line.charAt(lineOffset + sourceNameOnly.length()) =='"';
+					}
+					if (lineOffset > 0 && startsWithDQuote && endsWithDQuote)  {
 						int offset = docOffset + lineOffset;
 						ReplaceEdit edit = new ReplaceEdit(offset, pathPair.getSourceNameNoExtension().length(), pathPair.getTargetNameNoExtension());
 						fileChangeRootEdit.addChild(edit);
@@ -672,6 +713,44 @@ public class RefactorResourcesUtils {
         return false;
     }
 
+    private static boolean hasWindowsLineTerminator(File file) {
+    	boolean hasWindowsTerminator = false;
+    	try {
+    		String lineTerminator = getLineTerminator(file);
+    		if(lineTerminator!=null && lineTerminator.equals(WINDOWS_LINE_TERMINATOR)) {
+    			hasWindowsTerminator = true;
+    		}
+    	} catch (IOException ex) {
+    		// Nothing to do.  Defaults to linux terminator on error
+    	}
+    	return hasWindowsTerminator;
+    }
+
+    private static String getLineTerminator(File file) throws IOException {
+    	char current;
+    	String lineTerminator = ""; //$NON-NLS-1$
+    	FileInputStream fis = new FileInputStream(file);
+    	try {
+    		while (fis.available() > 0) {
+    			current = (char) fis.read();
+    			if ((current == '\n') || (current == '\r')) {
+    				lineTerminator += current;
+    				if (fis.available() > 0) {
+    					char next = (char) fis.read();
+    					if ((next != current)
+    							&& ((next == '\r') || (next == '\n'))) {
+    						lineTerminator += next;
+    					}
+    				}
+    				return lineTerminator;
+    			}
+    		}
+    	} finally {
+    		fis.close();
+    	}
+    	return null;
+    }
+    
     /**
      * Unload the model resource related to the given resource
      * 
