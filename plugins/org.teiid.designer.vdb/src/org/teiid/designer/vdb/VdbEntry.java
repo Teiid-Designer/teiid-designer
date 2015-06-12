@@ -8,8 +8,6 @@
 package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.ENTRY_CHECKSUM;
-import static org.teiid.designer.vdb.Vdb.Event.ENTRY_DESCRIPTION;
-import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,8 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
-import org.teiid.core.designer.util.StringConstants;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.core.designer.util.ZipUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.vdb.manifest.EntryElement;
@@ -39,16 +35,13 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
  * @since 8.0
  */
 @ThreadSafe
-public abstract class VdbEntry implements StringConstants {
-	
-    private IPath name;
-    private final Vdb vdb;
+public abstract class VdbEntry extends VdbUnit {
+
+    private IPath path;
+
     private final AtomicReference<Synchronization> synchronization = new AtomicReference<Synchronization>(
                                                                                                           Synchronization.NotApplicable);
     private long checksum;
-    final AtomicReference<String> description = new AtomicReference<String>();
-//    private final IResourceChangeListener fileListener;
-    private final int hashcode;
 
     private final ReadWriteLock checksumLock = new ReentrantReadWriteLock();
 
@@ -57,8 +50,7 @@ public abstract class VdbEntry implements StringConstants {
      * @param element
      * @throws Exception
      */
-    public VdbEntry( final Vdb vdb,
-              final EntryElement element ) throws Exception {
+    public VdbEntry( final Vdb vdb, final EntryElement element) throws Exception {
         this(vdb, Path.fromPortableString(element.getPath()));
         for (final PropertyElement property : element.getProperties()) {
             final String name = property.getName();
@@ -66,35 +58,59 @@ public abstract class VdbEntry implements StringConstants {
         }
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile != null) setSynchronization(checksum == computeChecksum(workspaceFile) ? Synchronization.Synchronized : Synchronization.NotSynchronized);
-        this.description.set(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
+        setDescription(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
     }
 
     /**
+     * <li>The name of the entry is the path name WITHOUT the extension
+     * <li>The path of the entry is available via {@link #getPath()}
+     *
      * @param vdb
-     * @param name
-     * @throws Exception 
+     * @param path
+     * @throws Exception
+     *
      */
-    public VdbEntry( final Vdb vdb,
-                      final IPath name ) throws Exception {
-        this.vdb = vdb;
-        this.name = name;
-        // Calculate hashcode
-        hashcode = 31 + name.hashCode();
-        // Register to listen for changes to this entries associated workspace file
-//        fileListener = new IResourceChangeListener() {
-//            public void resourceChanged( final IResourceChangeEvent event ) {
-//            	if( ResourceChangeUtilities.isProjectClosing(event)) return;
-//            	
-//                final IResourceDelta delta = event.getDelta() == null ? null : event.getDelta().findMember(name);
-//                if (delta == null) return;
-//                if (ResourceChangeUtilities.isContentChanged(delta)) fileChanged(delta);
-//            }
-//        };
-//        ModelerCore.getWorkspace().addResourceChangeListener(fileListener);
-        if (this.description.get() == null) {
-            this.description.set(EMPTY_STRING);
-        }
+    public VdbEntry( final Vdb vdb, final IPath path) throws Exception {
+        super(vdb);
+        this.path = path;
+        setName(path.lastSegment());
+
         setSynchronization(synchronizeEntry());
+    }
+
+    /**
+     * @return path of this entry
+     */
+    public IPath getPath() {
+        return path;
+    }
+
+    /**
+     * @param path
+     */
+    public void setPath(IPath path) {
+        this.path = path;
+        super.setName(path.removeFileExtension().lastSegment());
+    }
+
+    /**
+     * @return the file name based on the path's last segment
+     */
+    public String getPathName() {
+        if (path == null)
+            return null;
+
+        return path.lastSegment();
+    }
+
+    /**
+     * @return the parent directory represented by the given path
+     */
+    public String getDirectory() {
+        if (path == null)
+            return null;
+
+        return path.removeLastSegments(1).toOSString();
     }
 
     private long computeChecksum( final IFile file ) throws Exception {
@@ -127,40 +143,10 @@ public abstract class VdbEntry implements StringConstants {
      * 
      */
     public void dispose() {
-//        ModelerCore.getWorkspace().removeResourceChangeListener(fileListener);
-        new File(vdb.getFolder(), name.toString()).delete();
+        new File(getVdb().getStagingFolder(), getPath().lastSegment()).delete();
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public final boolean equals( final Object object ) {
-        if (this == object) return true;
-        if (object == null) return false;
-        if (getClass() != object.getClass()) return false;
-        final VdbEntry other = (VdbEntry)object;
-        if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
-        return true;
-    }
-//
-//    final void fileChanged( final IResourceDelta delta ) {
-//        // TODO: Handle renames
-//        if ((delta.getFlags() & (IResourceDelta.REPLACED | IResourceDelta.MOVED_FROM | IResourceDelta.MOVED_TO)) > 0) return; // throw
-//                                                                                                                              // new
-//                                                                                                                              // UnsupportedOperationException(
-//        // toString(delta));
-//        final int kind = delta.getKind();
-//        if (kind == IResourceDelta.REMOVED) setSynchronization(Synchronization.NotApplicable);
-//        else if (kind == IResourceDelta.ADDED || kind == IResourceDelta.CHANGED) {
-//            if (getChecksum() != computeChecksum((IFile)delta.getResource())) setSynchronization(Synchronization.NotSynchronized);
-//            else setSynchronization(Synchronization.Synchronized);
-//        } else throw new UnsupportedOperationException(toString(delta));
-//    }
+ 
 
     /**
      * @return <code>true</code> if the associated file exists
@@ -173,12 +159,12 @@ public abstract class VdbEntry implements StringConstants {
      * @return the associated workspace file, or <code>null</code> if it doesn't exist
      */
     public final IFile findFileInWorkspace() {
-        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(name);
+        IResource resource = ModelerCore.getWorkspace().getRoot().findMember(getPath());
         if (resource == null) {
             // Lets try a little harder since the file may be in the project but not a model resource
-            if (vdb != null && vdb.getFile() != null && vdb.getFile().getProject() != null) {
-                IProject vdbProject = vdb.getFile().getProject();
-                resource = vdbProject.findMember(name);
+            if (getVdb() != null && getVdb().getSourceFile() != null && getVdb().getSourceFile().getProject() != null) {
+                IProject vdbProject = getVdb().getSourceFile().getProject();
+                resource = vdbProject.findMember(getPath());
             }
         }
 
@@ -202,28 +188,6 @@ public abstract class VdbEntry implements StringConstants {
     }
 
     /**
-     * @return description
-     */
-    public String getDescription() {
-        return description.get();
-    }
-
-    /**
-     * @return name
-     */
-    public IPath getName() {
-        return name;
-    }
-    
-    /**
-     * Allows reset of the entry name, for VdbFileEntry
-     * @param name the name path
-     */
-    public void setName(IPath name) {
-        this.name=name;
-    }
-
-    /**
      * @return <code>true</code> if the associated file doesn't exist or this file entry is synchronized with the associated file,
      *         i.e., the entry information matches the file information.
      */
@@ -231,21 +195,29 @@ public abstract class VdbEntry implements StringConstants {
         return synchronization.get();
     }
 
-    /**
-     * @return the VDB containing this entry
-     */
-    public Vdb getVdb() {
-        return vdb;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
+        return result;
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
-    public final int hashCode() {
-        return hashcode;
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VdbEntry other = (VdbEntry)obj;
+        if (this.path == null) {
+            if (other.path != null)
+                return false;
+        } else if (!this.path.equals(other.path))
+            return false;
+        return true;
     }
 
     
@@ -253,16 +225,16 @@ public abstract class VdbEntry implements StringConstants {
      * @param out
      * @throws Exception
      */
-    public void save( final ZipOutputStream out ) throws Exception {
-    	String zipName = name.toString();
+    public void save( final ZipOutputStream out) throws Exception {
+    	String zipName = getName();
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
     	// being located at the file system "root" folder.
     	if( zipName.startsWith("/") ) { //$NON-NLS-1$
     		zipName = zipName.substring(1, zipName.length());
     	}
         final ZipEntry zipEntry = new ZipEntry(zipName);
-        zipEntry.setComment(description.get());
-        save(out, zipEntry, new File(vdb.getFolder(), name.toString()));
+        zipEntry.setComment(getDescription());
+        save(out, zipEntry, new File(getVdb().getStagingFolder(), getName()));
     }
 
     /**
@@ -273,18 +245,8 @@ public abstract class VdbEntry implements StringConstants {
      */
     protected final void save( final ZipOutputStream out,
                                final ZipEntry zipEntry,
-                               final File file ) throws Exception {
+                               final File file) throws Exception {
         ZipUtil.copy(file, zipEntry, out);
-    }
-
-    /**
-     * @param description (never <code>null</code>)
-     */
-    public final void setDescription( String description ) {
-        final String oldDescription = this.description.get();
-        if (StringUtilities.equals(description, oldDescription)) return;
-        this.description.set(description);
-        vdb.setModified(this, ENTRY_DESCRIPTION, oldDescription, description);
     }
 
     /**
@@ -294,13 +256,13 @@ public abstract class VdbEntry implements StringConstants {
         final Synchronization oldSynchronization = getSynchronization();
         if (oldSynchronization == synchronization) return;
         this.synchronization.set(synchronization);
-        vdb.notifyChangeListeners(this, ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
+        setModified(this, Event.ENTRY_SYNCHRONIZATION, oldSynchronization, synchronization);
     }
 
     /**
      * @throws Exception
      */
-    public void synchronize( ) throws Exception {
+    public void synchronize() throws Exception {
         if (synchronization.get() != Synchronization.NotSynchronized) return;
         setSynchronization(synchronizeEntry());
     }
@@ -308,7 +270,7 @@ public abstract class VdbEntry implements StringConstants {
     /*
      * Private since called by constructor and don't want subclasses overriding
      */
-    private Synchronization synchronizeEntry( ) throws Exception {
+    private Synchronization synchronizeEntry() throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null) return Synchronization.NotApplicable;
         long oldChecksum = 0L;
@@ -318,12 +280,12 @@ public abstract class VdbEntry implements StringConstants {
             checksum = computeChecksum(workspaceFile);
             // Copy snapshot of workspace file to VDB folder
             FileUtils.copy(workspaceFile.getLocation().toFile(),
-                           new File(vdb.getFolder(), name.toString()).getParentFile(),
+                           new File(getVdb().getStagingFolder(), getName()).getParentFile(),
                            true);
         } finally {
             checksumLock.writeLock().unlock();
         }
-        vdb.setModified(this, ENTRY_CHECKSUM, oldChecksum, checksum);
+        setModified(this, ENTRY_CHECKSUM, oldChecksum, checksum);
         return Synchronization.Synchronized;
     }
 
@@ -336,29 +298,15 @@ public abstract class VdbEntry implements StringConstants {
     public final String toString() {
         final StringBuilder builder = new StringBuilder(getClass().getSimpleName());
         builder.append("(name="); //$NON-NLS-1$
-        builder.append(name);
+        builder.append(getName());
         builder.append(", synchronization="); //$NON-NLS-1$
         builder.append(synchronization);
         builder.append(", description="); //$NON-NLS-1$
-        builder.append(description);
+        builder.append(getDescription());
         toString(builder);
         builder.append(')');
         return builder.toString();
     }
-//
-//    private String toString( final IResourceDelta delta ) {
-//        final StringBuilder builder = new StringBuilder("file="); //$NON-NLS-1$
-//        builder.append(delta.getFullPath().toString());
-//        builder.append(", kind="); //$NON-NLS-1$
-//        builder.append(delta.getKind());
-//        builder.append(", flags="); //$NON-NLS-1$
-//        builder.append(delta.getFlags());
-//        builder.append(", from="); //$NON-NLS-1$
-//        builder.append(delta.getMovedFromPath());
-//        builder.append(", to="); //$NON-NLS-1$
-//        builder.append(delta.getMovedToPath());
-//        return builder.toString();
-//    }
 
     /**
      * Intended for a subclass to append its properties and their values, in the form ", <name>=<value>, ...", to the supplied
@@ -368,6 +316,7 @@ public abstract class VdbEntry implements StringConstants {
      * @param builder
      */
     protected void toString( final StringBuilder builder ) {
+        // Does Nothing
     }
 
     /**

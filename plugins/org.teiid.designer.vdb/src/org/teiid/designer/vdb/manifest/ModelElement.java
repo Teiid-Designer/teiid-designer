@@ -9,16 +9,18 @@ package org.teiid.designer.vdb.manifest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.vdb.VdbEntry;
-import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 
 /**
  * 
@@ -98,7 +100,7 @@ public class ModelElement extends EntryElement {
      */
     ModelElement( final VdbModelEntry entry ) throws Exception {
         super(entry);
-        final String lastSeg = entry.getName().lastSegment();
+        final String lastSeg = entry.getPath().lastSegment();
         final int ndx = lastSeg.lastIndexOf('.');
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType();
@@ -135,6 +137,52 @@ public class ModelElement extends EntryElement {
         
         if( entry.getSchemaText() != null ) {
         	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getType()));
+        }
+    }
+
+    /**
+     * Used to save a model entry
+     * 
+     * @param model
+     * @throws Exception
+     */
+    ModelElement( final DynamicModel model ) throws Exception {
+        super();
+//        final String lastSeg = entry.getName().lastSegment();
+//        final int ndx = lastSeg.lastIndexOf('.');
+//        name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
+        name = model.getName();
+        type = model.getModelType().toString();
+        visible = model.isVisible();
+        path = model.getName().toString();
+
+        if( model.getDescription() != null && !model.getDescription().isEmpty() ) {
+            description = model.getDescription();
+        }
+
+        for( VdbSource source : model.getSources() ) {
+            getSources().add(new SourceElement(source));
+        }
+
+        final List<PropertyElement> props = getProperties();
+
+        if (model.isMultiSource())
+            props.add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
+
+        if (model.doAddColumn())
+            props.add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(model.doAddColumn())));
+
+        String alias = model.getColumnAlias();
+        if( alias != null && alias.length() > 0 )
+            props.add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
+
+        for (Map.Entry<Object, Object> entry : model.getProperties().entrySet()) {
+            props.add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
+        }
+
+        if( model.getMetadata() != null && model.getMetadata().getSchemaText() != null ) {
+            getMetadata().add(new MetadataElement(
+                    model.getMetadata().getSchemaText(), model.getMetadata().getType().name()));
         }
     }
 

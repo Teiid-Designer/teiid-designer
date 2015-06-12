@@ -15,11 +15,9 @@ import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -356,7 +354,7 @@ public final class TranslatorOverridesPanel extends Composite {
                         return new Object[0];
                     }
 
-                    return translator.getProperties();
+                    return translator.getOverrideProperties();
                 }
 
                 /**
@@ -408,7 +406,7 @@ public final class TranslatorOverridesPanel extends Composite {
             column = new TableViewerColumn(this.propertiesViewer, SWT.LEFT);
             column.getColumn().setText(Util.getString(PREFIX + "valueColumn.text")); //$NON-NLS-1$
             column.setLabelProvider(new PropertyLabelProvider(false));
-            column.setEditingSupport(new TranslatorOverridePropertyEditingSupport(this.propertiesViewer, this.vdb.getFile()));
+            column.setEditingSupport(new TranslatorOverridePropertyEditingSupport(this.propertiesViewer, this.vdb.getSourceFile()));
 
 
             this.propertiesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -517,7 +515,7 @@ public final class TranslatorOverridesPanel extends Composite {
         return (TranslatorOverride)((IStructuredSelection)selection).getFirstElement();
     }
 
-    Set<TranslatorOverride> getTranslatorOverrides() {
+    Collection<TranslatorOverride> getTranslatorOverrides() {
         return this.vdb.getTranslators();
     }
 
@@ -553,7 +551,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // select the new property
             TranslatorPropertyDefinition propDefn = property.getDefinition();
 
-            for (TranslatorOverrideProperty prop : translator.getProperties()) {
+            for (TranslatorOverrideProperty prop : translator.getOverrideProperties()) {
                 if (prop.getDefinition().equals(propDefn)) {
                     this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
                     break;
@@ -586,7 +584,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // select the new property
             TranslatorPropertyDefinition propDefn = property.getDefinition();
 
-            for (TranslatorOverrideProperty prop : translator.getProperties()) {
+            for (TranslatorOverrideProperty prop : translator.getOverrideProperties()) {
                 if (prop.getDefinition().equals(propDefn)) {
                     this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
                     break;
@@ -755,7 +753,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // get properties (server may have modified properties, server may be down, etc.)
             SourceHandler handler = SourceHandlerExtensionManager.getVdbConnectionFinder();
             PropertyDefinition[] propertyDefinitionsFromServer = handler.getTranslatorDefinitions(translator.getType());
-            TranslatorOverrideProperty[] currentProps = translator.getProperties();
+            TranslatorOverrideProperty[] currentProps = translator.getOverrideProperties();
             List<TranslatorOverrideProperty> propsToRemove = new ArrayList<TranslatorOverrideProperty>();
 
             if (propertyDefinitionsFromServer != null) {
@@ -816,7 +814,7 @@ public final class TranslatorOverridesPanel extends Composite {
             // remove orphaned properties that don't have overridden values
             if (!propsToRemove.isEmpty()) {
                 for (TranslatorOverrideProperty property : propsToRemove) {
-                    translator.removeProperty(property.getDefinition().getId(), false);
+                    translator.removeOverrideProperty(property.getDefinition().getId(), false);
                 }
             }
 

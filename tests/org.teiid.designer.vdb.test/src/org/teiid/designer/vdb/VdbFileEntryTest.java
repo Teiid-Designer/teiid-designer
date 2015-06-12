@@ -33,6 +33,8 @@ import org.mockito.ArgumentCaptor;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.workspace.MockFileBuilder;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 
@@ -78,7 +80,7 @@ public class VdbFileEntryTest {
         // put file in workspace
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
         // ensure path can find a file in the workspace
-        when(mockRoot.findMember(name)).thenReturn(iFile);
+        when(mockRoot.findMember(name.toOSString())).thenReturn(iFile);
 
         // construct entry so that checksum will be computed
         entry = vdb.addEntry(name);
@@ -93,10 +95,10 @@ public class VdbFileEntryTest {
         FileInputStream fis1 = new FileInputStream(tempFile1);
         FileInputStream fis2 = new FileInputStream(tempFile2);
         
-        final IPath name = mock(Path.class);
-        when(name.lastSegment()).thenReturn("test.xsd");
+        final IPath path = mock(Path.class);
+        when(path.lastSegment()).thenReturn("test.xsd");
         final IFile iFile = mock(IFile.class);
-        when(iFile.getLocation()).thenReturn(name);
+        when(iFile.getLocation()).thenReturn(path);
         when(iFile.getLocation().toFile()).thenReturn(tempFile1, tempFile2);
         
         // include values for first call and second call
@@ -106,11 +108,11 @@ public class VdbFileEntryTest {
         final IWorkspaceRoot mockRoot = eclipseMock.workspaceRoot();
 
         // construct entry so that checksum will be computed
-        entry = vdb.addEntry(name);
+        entry = vdb.addEntry(path);
 
         // A file entry changes the path according to the file entry type so ensure
         // our mock path can be found in the workspace
-        when(mockRoot.findMember(entry.getName())).thenReturn(iFile);
+        when(mockRoot.findMember(entry.getPath())).thenReturn(iFile);
 
         final long originalChecksum = entry.getChecksum(); // will use first value of iFile.getContents()
 

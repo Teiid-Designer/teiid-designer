@@ -3,15 +3,13 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
+import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
-import org.teiid.designer.vdb.VdbDataRole;
 
 /**
  * 
@@ -48,18 +46,24 @@ public class DataRoleElement implements Serializable {
      */
     public DataRoleElement() {
     }
-    
-    DataRoleElement(VdbDataRole dataRole) {
+
+    /**
+     * @param dataRole
+     */
+    public DataRoleElement(DataRole dataRole) {
     	super();
     	name = dataRole.getName();
     	anyAuthenticated = dataRole.isAnyAuthenticated();
-    	allowCreateTempTables = dataRole.allowCreateTempTables();
-    	grantAll = dataRole.doGrantAll();
+    	allowCreateTempTables = dataRole.isAllowCreateTempTables();
+    	grantAll = dataRole.isGrantAll();
     	description = dataRole.getDescription();
-    	for( Permission perm : dataRole.getPermissions() ) {
-    		getPermissions().add(new PermissionElement(perm));
+    	for( Permission permission : dataRole.getPermissions() ) {
+    		getPermissions().add(new PermissionElement(permission));
     	}
-    	mappedRoleNames = new ArrayList<String>(dataRole.getMappedRoleNames());
+    	mappedRoleNames = new ArrayList<String>(dataRole.getRoleNames().size());
+    	for( String name : dataRole.getRoleNames() ) {
+    		mappedRoleNames.add(name);
+    	}
     }
     
     /**

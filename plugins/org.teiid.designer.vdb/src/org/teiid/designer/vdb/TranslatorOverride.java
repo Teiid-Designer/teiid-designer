@@ -14,10 +14,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
@@ -31,10 +29,15 @@ import org.teiid.designer.vdb.manifest.TranslatorElement;
  *
  * @since 8.0
  */
-public class TranslatorOverride implements Comparable<TranslatorOverride>, PropertyChangeListener {
+public class TranslatorOverride extends VdbUnit implements Comparable<TranslatorOverride>, PropertyChangeListener {
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(TranslatorOverride.class);
 
+    /**
+     * An empty array of translators.
+     */
+    public static final TranslatorOverride[] NO_TRANSLATORS = new TranslatorOverride[0];
+    
     /**
      * @param proposedName the proposed translator name
      * @return an error message or <code>null</code> if name is valid
@@ -88,15 +91,9 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         return null;
     }
 
-    private final AtomicReference<String> description = new AtomicReference<String>();
-
-    private final AtomicReference<String> name = new AtomicReference<String>();
-
-    private final Map<String, TranslatorOverrideProperty> properties;
+    private final Map<String, TranslatorOverrideProperty> overrideProps = new HashMap<String, TranslatorOverrideProperty>();
 
     private final String type;
-
-    private final Vdb vdb;
 
     /**
      * @param name the name of the overridden translator (may not be <code>null</code>)
@@ -110,30 +107,23 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
                                String description ) {
         assert (name != null);
         assert (type != null);
-
-        this.vdb = vdb;
-        this.name.set((name == null) ? StringConstants.EMPTY_STRING : name);
         this.type = type;
-        this.description.set((description == null) ? StringConstants.EMPTY_STRING : description);
-        this.properties = new HashMap<String, TranslatorOverrideProperty>();
+        setVdb(vdb);
+        setName(name == null ? EMPTY_STRING : name);
+        setDescription(description == null ? EMPTY_STRING : description);
     }
 
     /**
      * @param vdb
      * @param element
      */
-    public TranslatorOverride( Vdb vdb,
-                        TranslatorElement element ) {
-        this.vdb = vdb;
-        this.name.set((element.getName() == null) ? StringConstants.EMPTY_STRING : element.getName());
-        this.type = element.getType();
-        this.description.set((element.getDescription() == null) ? StringConstants.EMPTY_STRING : element.getDescription());
-        this.properties = new HashMap<String, TranslatorOverrideProperty>();
+    public TranslatorOverride( Vdb vdb, TranslatorElement element ) {
+        this(vdb, element.getName(), element.getType(), element.getDescription());
 
         for (PropertyElement property : element.getProperties()) {
             TranslatorPropertyDefinition propDefn = new TranslatorPropertyDefinition(property.getName(), property.getValue());
             TranslatorOverrideProperty prop = new TranslatorOverrideProperty(propDefn, property.getValue());
-            this.properties.put(propDefn.getId(), prop);
+            this.overrideProps.put(propDefn.getId(), prop);
             prop.addListener(this);
         }
     }
@@ -155,11 +145,11 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
                              boolean firePropertyEvent ) {
         assert (newProperty != null);
 
-        Object obj = this.properties.put(newProperty.getDefinition().getId(), newProperty);
+        Object obj = this.overrideProps.put(newProperty.getDefinition().getId(), newProperty);
         newProperty.addListener(this);
 
         if (firePropertyEvent) {
-            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, obj, newProperty);
+            setModified(this, Event.TRANSLATOR_PROPERTY, obj, newProperty);
         }
     }
 
@@ -197,29 +187,15 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
     }
 
     /**
-     * @return the description (never <code>null</code> but can be empty)
-     */
-    public String getDescription() {
-        return this.description.get();
-    }
-
-    /**
-     * @return name the name of the overridden translator (never <code>null</code>)
-     */
-    public String getName() {
-        return this.name.get();
-    }
-
-    /**
      * Obtains all the properties of the translator even those properties whose values have not been overridden.
      * 
      * @return all translator properties (never <code>null</code>)
      */
-    public TranslatorOverrideProperty[] getProperties() {
-        TranslatorOverrideProperty[] props = new TranslatorOverrideProperty[this.properties.size()];
+    public TranslatorOverrideProperty[] getOverrideProperties() {
+        TranslatorOverrideProperty[] props = new TranslatorOverrideProperty[this.overrideProps.size()];
         int i = 0;
 
-        for (TranslatorOverrideProperty property : this.properties.values()) {
+        for (TranslatorOverrideProperty property : this.overrideProps.values()) {
             props[i++] = property;
         }
 
@@ -230,7 +206,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
      * @return a list of all property names (never <code>null</code> but can be empty)
      */
     public List<String> getPropertyNames() {
-        return Arrays.asList(this.properties.keySet().toArray(new String[this.properties.size()]));
+        return Arrays.asList(this.overrideProps.keySet().toArray(new String[this.overrideProps.size()]));
     }
 
     /**
@@ -265,7 +241,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
     @Override
     public void propertyChange( PropertyChangeEvent event ) {
         TranslatorOverrideProperty property = (TranslatorOverrideProperty)event.getSource();
-        this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, event.getOldValue(), property);
+        setModified(this, Event.TRANSLATOR_PROPERTY, event.getOldValue(), property);
     }
 
     /**
@@ -274,8 +250,8 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
      * @param propName the name of the property being removed (may not be <code>null</code> or empty)
      * @return <code>true</code> if the property was removed
      */
-    public boolean removeProperty( String propName ) {
-        return removeProperty(propName, true);
+    public boolean removeOverrideProperty( String propName ) {
+        return removeOverrideProperty(propName, true);
     }
 
     /**
@@ -283,67 +259,18 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
      * @param firePropertyEvent <code>true</code> if a VDB property changed event should be fired
      * @return <code>true</code> if the property was removed
      */
-    public boolean removeProperty( String propName,
-                                   boolean firePropertyEvent ) {
+    public boolean removeOverrideProperty( String propName, boolean firePropertyEvent ) {
         assert (propName != null);
-        assert (this.properties.containsKey(propName));
+        assert (this.overrideProps.containsKey(propName));
 
-        TranslatorOverrideProperty prop = this.properties.remove(propName);
+        TranslatorOverrideProperty prop = this.overrideProps.remove(propName);
         prop.removeListener(this);
 
         if (prop.getDefinition().isUserDefined()) {
-            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, prop, null);
+            setModified(this, Event.TRANSLATOR_PROPERTY, prop, null);
         }
 
         return false;
-    }
-
-    /**
-     * Updates the description and fires a VDB property changed event.
-     * 
-     * @param description the new translator override description (may be <code>null</code> or empty)
-     */
-    public void setDescription( String description ) {
-        setDescription(description, true);
-    }
-
-    /**
-     * @param description the new translator override description (may be <code>null</code> or empty)
-     * @param firePropertyEvent <code>true</code> if a VDB property changed event should be fired
-     */
-    public void setDescription( String description,
-                                boolean firePropertyEvent ) {
-        String oldDescription = this.description.get();
-
-        // don't set if nothing has changed
-        if (StringUtilities.equals(description, oldDescription)) {
-            return;
-        }
-
-        // update value and fire event
-        this.description.set(description);
-
-        if (firePropertyEvent) {
-            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, oldDescription, this.description.get());
-        }
-    }
-
-    /**
-     * @param newName the new translator name
-     */
-    public void setName(String newName) {
-        String oldName = this.name.get();
-
-        // don't set if nothing has changed
-        if (StringUtilities.equals(newName, oldName)) {
-            return;
-        }
-
-        // update value and fire event
-        this.name.set(newName);
-
-        // notify listeners
-        this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, oldName, this.name.get());
     }
 
     /**
@@ -366,9 +293,9 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
                                   String newValue,
                                   boolean firePropertyEvent ) {
         assert (propDefn != null);
-        assert (this.properties.containsKey(propDefn.getId()));
+        assert (this.overrideProps.containsKey(propDefn.getId()));
 
-        TranslatorOverrideProperty prop = this.properties.get(propDefn.getId());
+        TranslatorOverrideProperty prop = this.overrideProps.get(propDefn.getId());
         String oldValue = prop.getOverriddenValue();
 
         // don't set if nothing has changed
@@ -379,7 +306,7 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         prop.setValue(newValue);
 
         if (firePropertyEvent) {
-            this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, null, prop);
+            setModified(this, Event.TRANSLATOR_PROPERTY, null, prop);
         }
     }
 
@@ -405,13 +332,13 @@ public class TranslatorOverride implements Comparable<TranslatorOverride>, Prope
         assert (!StringUtilities.isEmpty(propertyName));
         assert (newServerPropDefn != null);
 
-        TranslatorOverrideProperty prop = this.properties.get(propertyName);
+        TranslatorOverrideProperty prop = this.overrideProps.get(propertyName);
 
         if (prop != null) {
             prop.setDefinition(newServerPropDefn);
 
             if (firePropertyEvent) {
-                this.vdb.setModified(this, Event.TRANSLATOR_PROPERTY, null, prop);
+                setModified(this, Event.TRANSLATOR_PROPERTY, null, prop);
             }
         }
     }

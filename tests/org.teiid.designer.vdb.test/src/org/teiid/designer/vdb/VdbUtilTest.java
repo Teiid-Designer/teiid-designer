@@ -11,12 +11,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import java.io.File;
 import java.util.Collection;
-
 import org.junit.Test;
 import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.manifest.MetadataElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.VdbElement;

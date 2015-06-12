@@ -10,37 +10,28 @@ package org.teiid.designer.komodo.vdb.ui.editor;
 import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -69,24 +60,21 @@ import org.eclipse.ui.part.EditorPart;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelWorkspace;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-import org.teiid.designer.komodo.vdb.Model;
-import org.teiid.designer.komodo.vdb.Vdb;
-import org.teiid.designer.komodo.vdb.dynamic.DynamicVdb;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.ui.editor.panels.DescriptionPanel;
 import org.teiid.designer.komodo.vdb.ui.editor.panels.ModelDetailsPanel;
 import org.teiid.designer.komodo.vdb.ui.editor.panels.PropertiesPanel;
 import org.teiid.designer.komodo.vdb.ui.editor.panels.TranslatorOverridesPanel;
 import org.teiid.designer.komodo.vdb.ui.editor.panels.UserDefinedPropertiesPanel;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
-import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -116,7 +104,7 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
     private PropertyChangeListener vdbListener;
 
 //    private DataRolesPanel dataRolesPanel;
-//    VdbDataRoleResolver dataRoleResolver;
+//    DataRoleResolver dataRoleResolver;
     TranslatorOverridesPanel pnlTranslatorOverrides;
 
     @SuppressWarnings( "unused" )
@@ -197,8 +185,7 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
     			throw new PartInitException("File " + dynamicVdbFile.getName() + " is not a dynamic VDB");
     		}
     		
-        		vdb = new DynamicVdb(actualFile);
-        		vdb.load();
+        		vdb = new DynamicVdb(wsFile);
 //        		vdbListener = new PropertyChangeListener() {
 //                /**
 //                 * {@inheritDoc}
@@ -398,7 +385,7 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
         this.modelsViewer.setContentProvider(new IStructuredContentProvider() {
         	@Override
 			public Object[] getElements(Object inputElement) {
-        		return getVdb().getModels();
+        		return getVdb().getDynamicModels().toArray();
         	}
 
         	@Override
@@ -441,16 +428,16 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
 			
 			@Override
 			public String getText(Object element) {
-				if( element instanceof Model ) {
-					return ((Model)element).getName();
+				if( element instanceof DynamicModel ) {
+					return ((DynamicModel)element).getName();
 				}
 				return StringConstants.EMPTY_STRING;
 			}
 			
 			@Override
 			public Image getImage(Object element) {
-				if( element instanceof Model ) {
-					if( ((Model)element).getModelType() == Model.Type.PHYSICAL ) {
+				if( element instanceof DynamicModel ) {
+					if( ((DynamicModel)element).getModelType() == DynamicModel.Type.PHYSICAL ) {
 						return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_SOURCE_MODEL_ID);
 					}
 					return ModelIdentifier.getImage(ModelIdentifier.RELATIONAL_VIEW_MODEL_ID);
@@ -459,7 +446,7 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
 			}
 		});
           
-        this.modelsViewer.setInput(vdb.getModels()); 
+        this.modelsViewer.setInput(vdb.getDynamicModels()); 
         
 //        for( String value : vdb.getAllowedLanguages() ) {
 //        		this.languages.add(value);
@@ -518,14 +505,14 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
 		this.removeModelButton.setEnabled(hasSelection);
 	}
 	
-    private Model getSelectedModel() {
+    private DynamicModel getSelectedModel() {
         IStructuredSelection selection = (IStructuredSelection)this.modelsViewer.getSelection();
 
         if (selection.isEmpty()) {
             return null;
         }
 
-        return (Model)selection.getFirstElement();
+        return (DynamicModel)selection.getFirstElement();
     }
     
     void handleAddModel() {
@@ -562,11 +549,11 @@ public class DynamicVdbEditor extends EditorPart implements IResourceChangeListe
     }
     
     void handleRemoveModel() {
-        Model selectedModel = getSelectedModel();
+        DynamicModel selectedModel = getSelectedModel();
         assert (selectedModel != null);
 
         // update model
-        this.vdb.removeModel(selectedModel.getName());
+        this.vdb.removeDynamicModel(selectedModel.getName());
 
         // update UI
         this.modelsViewer.refresh();

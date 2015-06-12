@@ -40,7 +40,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.hamcrest.core.IsSame;
 import org.junit.After;
@@ -58,6 +57,13 @@ import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbImportVdbEntry;
+import org.teiid.designer.vdb.VdbPlugin;
+import org.teiid.designer.vdb.VdbSchemaEntry;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
 import org.teiid.designer.vdb.file.VdbFileProcessor;
@@ -193,12 +199,12 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void shouldExposeFile() throws Exception {
-        assertThat(vdb.getFile(), is(vdbFile));
+        assertThat(vdb.getSourceFile(), is(vdbFile));
     }
 
     @Test
     public void shouldExposeNameAsFileName() throws Exception {
-        assertThat(vdb.getName(), is(vdbFile.getFullPath()));
+        assertThat(vdb.getSourceFile().getFullPath(), is(vdbFile.getFullPath()));
     }
 
     @Test
@@ -310,22 +316,20 @@ public class VdbTest implements VdbConstants {
     public void testAddingAndRemovingImportVdbEntry() throws Exception {
     	String entryName = "testImportVdbEntry";
     	
-    	vdb.addImportVdb(entryName);
+    	vdb.addImport(entryName);
     	
-    	Collection<VdbImportVdbEntry> entries = vdb.getImportVdbEntries();
+    	Collection<VdbImportVdbEntry> entries = vdb.getImports();
     	assertEquals(1, entries.size());
     	
     	VdbImportVdbEntry entry = entries.iterator().next();
 		assertEquals(entryName, entry.getName());
     	
-    	vdb.removeImportVdb(entry);
-    	assertEquals(0, vdb.getImportVdbEntries().size());
+    	vdb.removeImport(entry);
+    	assertEquals(0, vdb.getImports().size());
     }
 
     @Test
     public void testAddingTypesOfVdbEntry() throws Exception {
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
-
         MockFileBuilder modelFile = new MockFileBuilder("modelFile", ModelFileUtil.EXTENSION_XMI);
         MockFileBuilder schemaFile = new MockFileBuilder("schemaFile", ModelFileUtil.EXTENSION_XSD);
         MockFileBuilder udfFile = new MockFileBuilder("udfFunction", VdbHelper.JAR_EXT);
@@ -391,8 +395,6 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void testOpeningExistingVdb() throws Exception {
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
-
         List<MockFileBuilder> builders = new ArrayList<MockFileBuilder>();
         MockFileBuilder booksDatatypesXSD = new MockFileBuilder(BOOK_DATATYPES_XSD);
         builders.add(booksDatatypesXSD);
@@ -458,8 +460,6 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void testManifestOnVdbSave() throws Exception {
-        IProgressMonitor monitor = mock(IProgressMonitor.class);
-
         /* Copy the test data file as we don't want to overwrite it */
         File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
         File booksVdbCopy = FileUtils.copy(booksVdbFile, tempDir, true);

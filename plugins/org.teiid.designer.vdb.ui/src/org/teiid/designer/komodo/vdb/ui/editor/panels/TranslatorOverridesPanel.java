@@ -15,11 +15,9 @@ import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.EDIT_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.RESTORE_DEFAULT_VALUE;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -31,13 +29,11 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
@@ -60,16 +56,11 @@ import org.teiid.core.designer.properties.PropertyDefinition;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
-import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
-import org.teiid.designer.komodo.vdb.Translator;
-import org.teiid.designer.komodo.vdb.Vdb;
-import org.teiid.designer.komodo.vdb.ui.editor.dialogs.AddPropertyDialog;
-import org.teiid.designer.komodo.vdb.ui.editor.dialogs.AddTranslatorOverrideDialog;
-import org.teiid.designer.komodo.vdb.ui.editor.dialogs.EditTranslatorOverrideDialog;
 import org.teiid.designer.ui.common.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.ui.viewsupport.TranslatorOverridePropertyEditingSupport;
+import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.connections.SourceHandler;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
@@ -146,7 +137,7 @@ public final class TranslatorOverridesPanel extends Composite {
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
-                    return getTranslatorOverrides();
+                    return getTranslatorOverrides().toArray();
                 }
 
                 /**
@@ -175,8 +166,8 @@ public final class TranslatorOverridesPanel extends Composite {
                 public int compare( Viewer viewer,
                                     Object t1,
                                     Object t2 ) {
-                    Translator translator1 = (Translator)t1;
-                    Translator translator2 = (Translator)t2;
+                    TranslatorOverride translator1 = (TranslatorOverride)t1;
+                    TranslatorOverride translator2 = (TranslatorOverride)t2;
 
                     return super.compare(viewer, translator1.getName(), translator2.getName());
                 }
@@ -213,7 +204,7 @@ public final class TranslatorOverridesPanel extends Composite {
                  */
                 @Override
                 public String getText( Object element ) {
-                	Translator translator = (Translator)element;
+                	TranslatorOverride translator = (TranslatorOverride)element;
                     return translator.getName();
                 }
             });
@@ -354,7 +345,7 @@ public final class TranslatorOverridesPanel extends Composite {
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
-                	Translator translator = getSelectedTranslator();
+                	TranslatorOverride translator = getSelectedTranslator();
 
                     if (translator == null) {
                         return new Object[0];
@@ -511,24 +502,24 @@ public final class TranslatorOverridesPanel extends Composite {
         return (TranslatorOverrideProperty)selection.getFirstElement();
     }
 
-    Translator getSelectedTranslator() {
+    TranslatorOverride getSelectedTranslator() {
         ISelection selection = this.translatorsViewer.getSelection();
 
         if (selection.isEmpty()) {
             return null;
         }
 
-        return (Translator)((IStructuredSelection)selection).getFirstElement();
+        return (TranslatorOverride)((IStructuredSelection)selection).getFirstElement();
     }
 
-    Translator[] getTranslatorOverrides() {
+    Collection<TranslatorOverride> getTranslatorOverrides() {
         return this.vdb.getTranslators();
     }
 
     private List<String> getTranslatorOverrideNames() {
-        List<String> names = new ArrayList<String>(this.vdb.getTranslators().length);
+        List<String> names = new ArrayList<String>(this.vdb.getTranslators().size());
 
-        for (Translator translator : this.vdb.getTranslators()) {
+        for (TranslatorOverride translator : this.vdb.getTranslators()) {
             names.add(translator.getName());
         }
 
@@ -603,7 +594,7 @@ public final class TranslatorOverridesPanel extends Composite {
     }
 
     void handleAddTranslatorOverride() {
-    	Translator translatorOverride = null;
+        TranslatorOverride translatorOverride = null;
         String[] translatorTypes = getTranslatorTypes();
 
         MessageDialog.openWarning(getShell(), "NOT YET IMPLEMENTED", "handleAddTranslatorOverride() not yet supported");
@@ -636,7 +627,7 @@ public final class TranslatorOverridesPanel extends Composite {
 
     void handleDescriptionChanged() {
         if (!this.translatorsViewer.getSelection().isEmpty()) {
-        	Translator translator = getSelectedTranslator();
+            TranslatorOverride translator = getSelectedTranslator();
             translator.setDescription(this.txtDescription.getText());
         }
     }
@@ -660,7 +651,7 @@ public final class TranslatorOverridesPanel extends Composite {
         assert (selectedProperty != null);
 
         // update model
-        Translator translator = getSelectedTranslator();
+        TranslatorOverride translator = getSelectedTranslator();
         translator.removeProperty(selectedProperty.getDefinition().getId());
         // TODO need to dirty VDB
 
@@ -711,7 +702,7 @@ public final class TranslatorOverridesPanel extends Composite {
     void handleTranslatorRemoved() {
         assert (!this.translatorsViewer.getSelection().isEmpty());
 
-        Translator translatorOverride = getSelectedTranslator();
+        TranslatorOverride translatorOverride = getSelectedTranslator();
 
         this.vdb.removeTranslator(translatorOverride.getName());
         
@@ -756,7 +747,7 @@ public final class TranslatorOverridesPanel extends Composite {
                 this.addPropertyButton.setEnabled(true);
             }
 
-            Translator translator = getSelectedTranslator();
+            TranslatorOverride translator = getSelectedTranslator();
             assert (translator != null);
 
             // get properties (server may have modified properties, server may be down, etc.)

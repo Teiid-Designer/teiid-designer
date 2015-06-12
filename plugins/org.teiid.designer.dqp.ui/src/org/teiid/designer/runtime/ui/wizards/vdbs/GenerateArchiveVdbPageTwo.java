@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
@@ -28,7 +27,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.komodo.vdb.Model;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -242,8 +241,8 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
 	Object[] getSourceModels() {
 		Collection<String> modelNames = new ArrayList<String>();
 		
-		for( Model model : vdbManager.getDynamicVdb().getModels() ) {
-			if( model.getModelType() == Model.Type.PHYSICAL ) {
+		for( DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels() ) {
+			if( model.getModelType() == DynamicModel.Type.PHYSICAL ) {
 				modelNames.add(model.getName());
 			}
 		}
@@ -254,8 +253,8 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
 	Object[] getViewModels() {
 		Collection<String> modelNames = new ArrayList<String>();
 		
-		for( Model model : vdbManager.getDynamicVdb().getModels() ) {
-			if( model.getModelType() == Model.Type.VIRTUAL ) {
+		for( DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels() ) {
+			if( model.getModelType() == DynamicModel.Type.VIRTUAL ) {
 				modelNames.add(model.getName());
 			}
 		}

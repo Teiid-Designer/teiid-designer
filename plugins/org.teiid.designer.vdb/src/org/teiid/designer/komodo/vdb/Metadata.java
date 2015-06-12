@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.komodo.vdb;
 
+import org.teiid.designer.vdb.VdbUnit;
+
 
 /**
  * 
@@ -25,7 +27,7 @@ package org.teiid.designer.komodo.vdb;
  * @author blafond
  *
  */
-public class Metadata extends VdbObject {
+public class Metadata extends VdbUnit {
 
 	Type type;
 	String schemaText;
@@ -66,8 +68,6 @@ public class Metadata extends VdbObject {
         }
     }
 
-    
-    TeiidType IDENTIFIER = TeiidType.VDB_MODEL_METADATA;
 	/**
 	 * 
 	 */

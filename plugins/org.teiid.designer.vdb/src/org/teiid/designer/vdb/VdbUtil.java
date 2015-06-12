@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +47,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.core.designer.util.StringConstants;
@@ -56,6 +58,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -129,7 +132,7 @@ public class VdbUtil implements VdbConstants {
                     return false;
                 }
 
-                return file.getName().startsWith(Vdb.PREVIEW_PREFIX);
+                return file.getName().startsWith(VdbConstants.PREVIEW_PREFIX);
             }
 
             VdbElement manifest = VdbUtil.getVdbManifest(file);
@@ -457,7 +460,7 @@ public class VdbUtil implements VdbConstants {
      * @return vdb is based on Teiid 7
      */
     public static boolean isVdbTeiidVersion8orGreater( final IFile file) {
-        if (! file.exists())
+        if (file == null || ! file.exists())
             return false;
 
         ValidationVersionCallback callback = new ValidationVersionCallback(file);
@@ -492,11 +495,11 @@ public class VdbUtil implements VdbConstants {
      * @return string of comma separated values
      *
      */
-    public static String buildCommaDelimitedString(Set<String> values) {
+    public static String buildCommaDelimitedString(AllowedLanguages allowedLanguages) {
         StringBuilder sb = new StringBuilder();
         int i=0;
-        int numVal = values.size();
-        for (String val : values) {
+        int numVal = allowedLanguages.size();
+        for (String val : allowedLanguages) {
         	i++;
         	sb.append(val);
         	if( i< numVal ) {
@@ -510,9 +513,28 @@ public class VdbUtil implements VdbConstants {
         return JAXBContext.newInstance(new Class<?>[] {VdbElement.class});
     }
 
-    static Schema getManifestSchema() throws SAXException {
+    /**
+     * @return the vdb xsd as a resource
+     */
+    public static URL getVdbXsd() {
+        return VdbElement.class.getResource(FORWARD_SLASH + VDB_DEPLOYER_XSD);
+    }
+
+    /**
+     * @return the vdb xsd as a resource stream
+     */
+    public static InputStream getVdbXsdStream() {
+        return VdbElement.class.getResourceAsStream(FORWARD_SLASH + VDB_DEPLOYER_XSD);
+    }
+
+    /**
+     * @return the schema for the vdb manifest
+     *
+     * @throws SAXException
+     */
+    public static Schema getManifestSchema() throws SAXException {
         final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        return schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
+        return schemaFactory.newSchema(getVdbXsd());
     }
 
     /**
@@ -669,7 +691,7 @@ public class VdbUtil implements VdbConstants {
 								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName)) ); //$NON-NLS-1$
 					} else {
 						// check same name
-						String resourceName = resource.getFullPath().removeFileExtension().lastSegment();
+						String resourceName = FileUtils.getNameWithoutExtension(resource);
 						if( ! modelName.equals(resourceName) ) {
 							nameChanged = true;
 						}
@@ -785,8 +807,8 @@ public class VdbUtil implements VdbConstants {
 		Set<String> existingPaths = new HashSet<String>();
 		
 		for (VdbEntry model : vdb.getModelEntries()) {
-			String existingName = model.getName().removeFileExtension().lastSegment();
-			IPath path = model.getName();
+			String existingName = model.getPath().removeFileExtension().lastSegment();
+			IPath path = model.getPath();
 			existingNames.put(existingName.toUpperCase(), existingName);
 			existingPaths.add(path.toString().toUpperCase());
 		}
@@ -818,15 +840,15 @@ public class VdbUtil implements VdbConstants {
 		
 		if( theVdb != null ) {
 			for (VdbEntry modelEntry : theVdb.getModelEntries()) {
-				String existingName = modelEntry.getName().removeFileExtension().lastSegment();
-				IPath path = modelEntry.getName();
+				String existingName = modelEntry.getPath().removeFileExtension().lastSegment();
+				IPath path = modelEntry.getPath();
 				existingNames.put(existingName.toUpperCase(), existingName);
 				existingPaths.add(path.toString().toUpperCase());
 			}
 		}
 		
 		// Check target model first
-		String targetModelName = model.getFullPath().removeFileExtension().lastSegment();
+		String targetModelName = FileUtils.getNameWithoutExtension(model);
 		if( existingNames.get(targetModelName.toUpperCase()) != null 
 				&& !existingPaths.contains(model.getFullPath().toString().toUpperCase())) {
 			return false;
@@ -880,7 +902,7 @@ public class VdbUtil implements VdbConstants {
 
         if( foundCheckSum ) {
 	 		for( VdbEntry modelEntry : theVdb.getModelEntries()) {
-				if( modelEntry.getName().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
+				if( modelEntry.getPath().lastSegment().equalsIgnoreCase(theModelFile.getName()) ) {
 	 				return modelEntry.getChecksum() == fileCheckSum;
 	 			}
 	 		}
@@ -965,7 +987,7 @@ public class VdbUtil implements VdbConstants {
 
 	private static VdbModelEntry getVdbModelEntry(ModelElement element, Vdb actualVDB) {
         for( VdbEntry modelEntry : actualVDB.getModelEntries()) {
-            if( modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(element.getName()) ) {
+            if( modelEntry.getPath().removeFileExtension().lastSegment().equalsIgnoreCase(element.getName()) ) {
                 return (VdbModelEntry)modelEntry;
             }
         }
@@ -1205,7 +1227,7 @@ public class VdbUtil implements VdbConstants {
 
                 if (fixThePath || nameWasChanged || addTheUuid) {
                     for (VdbEntry modelEntry : actualVDB.getModelEntries()) {
-                        if (modelEntry.getName().removeFileExtension().lastSegment().equalsIgnoreCase(modelName)) {
+                        if (modelEntry.getPath().removeFileExtension().lastSegment().equalsIgnoreCase(modelName)) {
                             modelsToReplace.add(model);
                             matchingResources.add(resource);
                             break;
@@ -1283,8 +1305,8 @@ public class VdbUtil implements VdbConstants {
      */
     public static Set<String> getDataRoleNames(Vdb theVdb, String targetName) {
     	Set<String> names = new HashSet<String>();
-    	Set<VdbDataRole> entries = theVdb.getDataPolicyEntries();
-    	for( VdbDataRole role : entries) {
+    	Collection<DataRole> entries = theVdb.getDataRoles();
+    	for( DataRole role : entries) {
     		names.add(role.getName());
     	}
     	

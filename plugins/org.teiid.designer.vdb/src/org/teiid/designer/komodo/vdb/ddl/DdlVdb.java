@@ -8,11 +8,10 @@
 package org.teiid.designer.komodo.vdb.ddl;
 
 import java.io.File;
-
 import org.eclipse.core.resources.IFile;
-import org.teiid.designer.komodo.vdb.BasicVdb;
 
-public class DdlVdb extends BasicVdb {
+public class DdlVdb {
+//extends BasicVdb {
 
 	File ddlZipFile;
 	// XMI VDB requires managing (reading & saving) a "*.vdb" archive file
@@ -37,17 +36,8 @@ public class DdlVdb extends BasicVdb {
 		
 	}
 
-	@Override
-	public void load() {
+	public void export(File destination) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void export() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
 }

@@ -9,12 +9,10 @@ package org.teiid.designer.komodo.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -38,13 +36,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.designer.komodo.vdb.ui.editor.dialogs.AddLanguagePropertyDialog;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
-import org.teiid.designer.komodo.vdb.Vdb;
-import org.teiid.designer.komodo.vdb.ui.editor.dialogs.AddLanguagePropertyDialog;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.util.RestVdbUtil;
 
 /**
  *

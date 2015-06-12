@@ -88,12 +88,11 @@ public class VdbModelEntry extends VdbIndexedEntry {
      * {@link #synchronizeModelEntry()} immediately after constructing the model entry.</strong>
      * 
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
-     * @param name the resource path (may not be <code>null</code>)
+     * @param path the resource path (may not be <code>null</code>)
      * @throws Exception
      */
-    public VdbModelEntry( final Vdb vdb,
-                   final IPath name ) throws Exception {
-        super(vdb, name);
+    public VdbModelEntry( final XmiVdb vdb, final IPath path) throws Exception {
+        super(vdb, path);
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
         modelClass = findModelClass(model);
@@ -114,7 +113,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
             // if (emfModel.getModelAnnotation().getDescription() != null)
             // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
-                final String defaultName = createDefaultSourceName(name);
+                final String defaultName = createDefaultSourceName(path);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 String translator = helper.getTranslatorName(mr);
                 if( translator == null ) translator = EMPTY_STRING;
@@ -139,15 +138,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         } else {
         	type = VdbUtil.OTHER;
         }
-        // TODO: Fix This ???
-        /*
-        if (this.translator.get() == null) {
-            this.translator.set(EMPTY_STR);
-        }
-        */
-        if (this.description.get() == null) {
-            this.description.set(EMPTY_STRING);
-        }
+
         schemaText = null;
         metadataType = null;
     }
@@ -230,7 +221,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
      * @param element
      * @throws Exception
      */
-    public VdbModelEntry( final Vdb vdb,
+    public VdbModelEntry( final XmiVdb vdb,
                    final ModelElement element ) throws Exception {
         super(vdb, element);
         this.element = element;
@@ -276,7 +267,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         this.builtIn = builtIn;
         this.modelClass = modelClass;
         
-        getVdb().registerImportVdbs(importVdbNames, this.getName().toString());
+        getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
         
         getVdb().synchronizeUdfJars(udfJars);
     }
@@ -351,6 +342,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
                         }
                     }
                 } catch (ModelWorkspaceException ex) {
+                    // Nothing to do
                 }
             }
         }
@@ -453,7 +445,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
      * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream)
      */
     @Override
-    public final void save( final ZipOutputStream out ) throws Exception {
+    public final void save( final ZipOutputStream out) throws Exception {
         super.save(out);
     }
 
@@ -496,14 +488,14 @@ public class VdbModelEntry extends VdbIndexedEntry {
     }
     
     /**
-     * @return
+     * @return schema text
      */
     public String getSchemaText() {
     	return schemaText;
     }
     
     /**
-     * @return
+     * @return metadata type
      */
     public final String getMetadataType() {
     	return metadataType;
@@ -515,7 +507,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
      */
     public final TranslatorOverride getTranslatorOverride() {
     	if( !this.sourceInfo.isEmpty() ) {
-        	Set<TranslatorOverride> overrides = getVdb().getTranslators();
+        	Collection<TranslatorOverride> overrides = getVdb().getTranslators();
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
@@ -546,7 +538,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
     	
         // If only ONE property and it's "name", then ignore
 
-        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.Translator.NAME_KEY) ) {
+        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.TRANSLATOR_NAME_KEY) ) {
             return;
         }
     	TranslatorOverride to = getTranslatorOverride();
@@ -563,7 +555,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
     		getVdb().addTranslator(to);
     	}
     	
-    	TranslatorOverrideProperty[] toProps = to.getProperties();
+    	TranslatorOverrideProperty[] toProps = to.getOverrideProperties();
     	
         Set<Object> keys = props.keySet();
         for (Object nextKey : keys) {
@@ -688,7 +680,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
 
             // Process for any import VDBs
             // if list is empty, then there may be import VDB's that need to get removed from the VDB
-            getVdb().registerImportVdbs(importVdbNames, this.getName().toString());
+            getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
 
             getVdb().synchronizeUdfJars(udfJars);
         }

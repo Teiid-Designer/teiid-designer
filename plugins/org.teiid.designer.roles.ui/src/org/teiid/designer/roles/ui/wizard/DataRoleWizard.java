@@ -57,6 +57,7 @@ import org.teiid.designer.ui.common.widget.IListPanelController;
 import org.teiid.designer.ui.common.widget.ListPanel;
 import org.teiid.designer.ui.common.widget.ListPanelAdapter;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.vdb.AllowedLanguages;
 
 /**
  * @since 8.0
@@ -124,13 +125,13 @@ public class DataRoleWizard extends AbstractWizard {
 
     String roleNameTextEntry;
     
-    private Set<String> allowedLanguages;
+    private AllowedLanguages allowedLanguages;
     private Set<String> otherDataRoleNames;
 
     /**
      * @since 4.0
      */
-    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, Set<String> allowedLanguages, Set<String> otherDataRoleNames) {
+    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, AllowedLanguages allowedLanguages, Set<String> otherDataRoleNames) {
         super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
         this.tempContainer = tempContainer;
         this.allowedLanguages = allowedLanguages;
@@ -148,10 +149,10 @@ public class DataRoleWizard extends AbstractWizard {
         } else {
             this.dataRoleName = existingDataRole.getName();
             this.description = existingDataRole.getDescription();
-            this.allowCreateTempTables = existingDataRole.allowCreateTempTables();
+            this.allowCreateTempTables = existingDataRole.isAllowCreateTempTables();
             this.anyAuthentication = existingDataRole.isAnyAuthenticated();
-            this.grantAll = existingDataRole.doGrantAll();
-            this.allowSystemTables = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET) != null;
+            this.grantAll = existingDataRole.isGrantAll();
+            this.allowSystemTables = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null;
             this.isEdit = true;
             this.setWindowTitle(EDIT_TITLE);
             this.mappedRoleNames = new HashSet<String>(existingDataRole.getRoleNames());
@@ -517,8 +518,8 @@ public class DataRoleWizard extends AbstractWizard {
     private void loadExistingPermissions() {
         this.dataRoleName = this.existingDataRole.getName();
         this.anyAuthentication = this.existingDataRole.isAnyAuthenticated();
-        this.allowCreateTempTables = this.existingDataRole.allowCreateTempTables();
-        this.grantAll = this.existingDataRole.doGrantAll();
+        this.allowCreateTempTables = this.existingDataRole.isAllowCreateTempTables();
+        this.grantAll = this.existingDataRole.isGrantAll();
         this.dataRoleNameText.setText(this.existingDataRole.getName());
         this.mappedRolesPanel.addItems(this.existingDataRole.getRoleNames().toArray());
         this.descriptionTextEditor.setText(this.existingDataRole.getDescription());
@@ -613,7 +614,7 @@ public class DataRoleWizard extends AbstractWizard {
     	existingDataRole.setDescription(this.description);
     	existingDataRole.setPermissions(this.treeProvider.getPermissions());
     	
-    	Permission systemPerm = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET);
+    	Permission systemPerm = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET);
         if (allowSystemTables ) {
         	if( systemPerm == null ) {
         		existingDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
@@ -642,7 +643,7 @@ public class DataRoleWizard extends AbstractWizard {
     	return this.tempContainer;
     }
     
-    public Set<String> getAllowedLanguages() {
+    public AllowedLanguages getAllowedLanguages() {
     	return allowedLanguages;
     }
 

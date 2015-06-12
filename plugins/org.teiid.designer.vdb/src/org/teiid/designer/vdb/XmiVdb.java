@@ -7,37 +7,25 @@
  */
 package org.teiid.designer.vdb;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -55,6 +43,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
@@ -65,7 +54,6 @@ import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -73,13 +61,7 @@ import org.xml.sax.SAXException;
  * @since 8.0
  */
 @ThreadSafe
-// TODO: File constructor
-public final class XmiVdb implements Vdb, VdbConstants {
-
-    /**
-     * The prefix used before the workspace identifier when creating a Preview VDB name.
-     */
-    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+public final class XmiVdb extends BasicVdb {
 
     /**
      * @param resource the resource whose Preview VDB prefix is being requested (cannot be <code>null</code>)
@@ -107,44 +89,13 @@ public final class XmiVdb implements Vdb, VdbConstants {
         return prefix;
     }
 
-    final IFile file;
-
-    private final File folder;
     final CopyOnWriteArraySet<VdbFileEntry> fileEntries = new CopyOnWriteArraySet<VdbFileEntry>();
     final CopyOnWriteArraySet<VdbFileEntry> udfJarEntries = new CopyOnWriteArraySet<VdbFileEntry>();
     final CopyOnWriteArraySet<VdbSchemaEntry> schemaEntries = new CopyOnWriteArraySet<VdbSchemaEntry>();
     final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
-    final CopyOnWriteArraySet<VdbDataRole> dataPolicyEntries = new CopyOnWriteArraySet<VdbDataRole>();
-    final CopyOnWriteArraySet<VdbImportVdbEntry> importModelEntries = new CopyOnWriteArraySet<VdbImportVdbEntry>();
-    final Set<TranslatorOverride> translatorOverrides = new TreeSet<TranslatorOverride>(new Comparator<TranslatorOverride>() {
-        @Override
-        public int compare( TranslatorOverride translator1,
-                            TranslatorOverride translator2 ) {
-            return translator1.getName().compareTo(translator2.getName());
-        }
-    });
-    final Map<String, String> generalPropertiesMap = new HashMap<String, String>();
-    final Set<String> allowedLanguages = new TreeSet<String>(new Comparator<String>() {
-        @Override
-        public int compare( String str1, String str2 ) {
-            return str1.compareTo(str2);
-        }
-    });
-    private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
-    final AtomicBoolean modified = new AtomicBoolean();
-    private final AtomicReference<String> description = new AtomicReference<String>();
-    private final boolean preview;
-    private int version;
-    private int queryTimeout = DEFAULT_TIMEOUT;
-    private boolean autoGenerateRESTWAR;
-    private Date validateDateTime;
-    private String validationVersion;
-    private String securityDomain;
-    private String gssPattern;
-    private String passwordPattern;
-    private String authenticationType;
-    
-    private VdbModelBuilder builder;
+
+    private VdbModelBuilder builder = new VdbModelBuilder();
+
     private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
 
     /**
@@ -152,18 +103,16 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * @param preview indicates if this is a Preview VDB
      * @throws Exception
      */
-    public XmiVdb( final IFile file,
-                final boolean preview ) throws Exception {
-    	this.builder = new VdbModelBuilder();
-        this.file = file;
+    public XmiVdb( final IFile file, final boolean preview ) throws Exception {
+        super(file);
+
         // Create folder for VDB in state folder
-        folder = VdbPlugin.singleton().getStateLocation().append(file.getFullPath()).toFile();
-        folder.mkdirs();
+        getStagingFolder().mkdirs();
 
         // Open archive and populate model entries
         if (file.getLocation().toFile().length() == 0L) {
-            this.preview = preview;
-            this.version = 1;
+            setPreview(preview);
+            setVersion(1);
             return;
         }
 
@@ -185,6 +134,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
             @Override
             public void doIfFails() {
+                //TODO
             }
 
             @Override
@@ -228,7 +178,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
                             	 */
                             	String[] langs = StringUtilities.parseCommaDelimitedString(value);
                             	for( String lang : langs ) {
-                            		allowedLanguages.add(lang);
+                            		addAllowedLanguage(lang);
                             	}
                             } else if (Xml.VALIDATION_DATETIME.equals(name)) { 
                             	valDateTime[0] = value;
@@ -246,7 +196,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
                             	autoGen[0] = Boolean.parseBoolean(value);
                                 // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else {
-                            	generalPropertiesMap.put(name, value);
+                                setProperty(name, value);
                             }
                         }
                         
@@ -292,98 +242,87 @@ public final class XmiVdb implements Vdb, VdbConstants {
                         
                         // Vdb Import entries
                         for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
-                        	importModelEntries.add(new VdbImportVdbEntry(XmiVdb.this, element));
+                            addImport(new VdbImportVdbEntry(XmiVdb.this, element));
                         }
                         
                         // load translator overrides
                         for (final TranslatorElement translatorElement : manifest.getTranslators()) {
-                            translatorOverrides.add(new TranslatorOverride(XmiVdb.this, translatorElement));
+                            addTranslator(new TranslatorOverride(XmiVdb.this, translatorElement));
                         }
 
                         for (final DataRoleElement element : manifest.getDataPolicies()) {
-                            dataPolicyEntries.add(new VdbDataRole(XmiVdb.this, element));
+                            DataRole dataRole = new DataRole(element);
+                            addDataRole(dataRole);
                         }
                     } else if (! zipEntry.isDirectory()) {
-                        FileUtils.copy(entryStream, new File(getFolder(), zipEntry.getName()));
+                        FileUtils.copy(entryStream, new File(getStagingFolder(), zipEntry.getName()));
                     }
                 }
-                modified.set(false);
+                setChanged(false);
             }
         });
-        this.preview = previewable[0];
-        this.version = vdbVersion[0];
-        this.queryTimeout = queryTimeout[0];
-        this.autoGenerateRESTWAR = autoGen[0];
-        this.securityDomain = secDomain[0];
-        this.gssPattern = gssPatt[0];
-        this.passwordPattern = pwdPatt[0];
-        this.authenticationType = authType[0];
+        setPreview(previewable[0]);
+        setVersion(vdbVersion[0]);
+        setQueryTimeout(queryTimeout[0]);
+        setAutoGenerateRESTWar(autoGen[0]);
+        setSecurityDomain(secDomain[0]);
+        setGssPattern(gssPatt[0]);
+        setPasswordPattern(pwdPatt[0]);
+        setAuthenticationType(authType[0]);
         if( valDateTime[0] != null ) {
-        	SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH);
-            this.validateDateTime = format.parse(valDateTime[0]); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
+        	SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH); //$NON-NLS-1$
+            setValidationDateTime(format.parse(valDateTime[0])); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
         }
-        this.validationVersion = valVersion[0];
+        setValidationVersion(valVersion[0]);
     }
 
     /**
      * @param file
      * @throws Exception
      */
-    public XmiVdb( final IFile file ) throws Exception {
+    public XmiVdb( final IFile file) throws Exception {
         this(file, false);
     }
 
-    /**
-     * @param dataPolicy
-     * @return the new data policy
-     */
-    public final VdbDataRole addDataPolicy(
-    										final DataRole dataPolicy ) {
-        VdbDataRole policy = new VdbDataRole(this, dataPolicy);
-        dataPolicyEntries.add(policy);
-        setModified(this, Event.DATA_POLICY_ADDED, policy, null);
-        return policy;
+    @Override
+    public void export(Writer destination) {
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * @param listener
-     */
-    public final void addChangeListener( final PropertyChangeListener listener ) {
-        listeners.addIfAbsent(listener);
-    }
+     * @param path
 
-    /**
-     * @param name
+     *
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
     @Override
-    public final <T extends VdbEntry> T addEntry( final IPath name) throws Exception {
-        CoreArgCheck.isNotNull(name);
+    public final <T extends VdbEntry> T addEntry( final IPath path) throws Exception {
+        CoreArgCheck.isNotNull(path);
 
-        if (ModelUtil.isXsdFile(name)) {
-           return (T) addSchemaEntry(name);
-        } else if (ModelUtil.isModelFile(name) && !ModelUtil.isXsdFile(name))
-            return (T) addModelEntry(name);
+        if (ModelUtil.isXsdFile(path)) {
+           return (T) addSchemaEntry(path);
+        } else if (ModelUtil.isModelFile(path) && !ModelUtil.isXsdFile(path))
+            return (T) addModelEntry(path);
         else {
-            String fileType = FileUtil.guessFileType(name.toFile());
+            String fileType = FileUtil.guessFileType(path.toFile());
 
             FileEntryType fileEntryType = FileEntryType.UserFile;
             if(VdbHelper.JAR_MIME_TYPE.equals(fileType)) {
                 fileEntryType = FileEntryType.UDFJar;
             }
 
-           return (T) addFileEntry(name, fileEntryType);
+           return (T) addFileEntry(path, fileEntryType);
         }
     }
     
     /**
-     * @param name
+     * @param path
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    private VdbSchemaEntry addSchemaEntry( final IPath name ) throws Exception {
-        VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, name);
+    private VdbSchemaEntry addSchemaEntry( final IPath path) throws Exception {
+        VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, path);
         VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries);
 
         // entry did not exist in VDB
@@ -400,11 +339,12 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @param name
      * @param entryType the type of file entry being added
+
      * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
     private VdbFileEntry addFileEntry( final IPath name,
-                                        final VdbFileEntry.FileEntryType entryType ) throws Exception {
+                                        final VdbFileEntry.FileEntryType entryType) throws Exception {
         CoreArgCheck.isNotNull(entryType);
 
         Set<VdbFileEntry> entries = null;
@@ -419,8 +359,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
         return addEntry(new VdbFileEntry(this, name, entryType), entries);
     }
 
-    private <T extends VdbEntry> T addEntry( final T entry,
-                                             final Set<T> entries) {
+    private <T extends VdbEntry> T addEntry( final T entry, final Set<T> entries) {
         // Return existing entry if it exists
         if (!entries.add(entry)) {
             for (final T existingEntry : entries) {
@@ -436,10 +375,11 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
     /**
      * @param name
+
      * @return the newly added {@link VdbModelEntry model entry}, or the existing entry with the supplied name.
      * @throws Exception
      */
-    private VdbModelEntry addModelEntry( final IPath name ) throws Exception {
+    private VdbModelEntry addModelEntry( final IPath name) throws Exception {
         VdbModelEntry modelEntry = new VdbModelEntry(this, name);
         VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries);
 
@@ -455,76 +395,11 @@ public final class XmiVdb implements Vdb, VdbConstants {
     }
 
     /**
-     * @param translatorOverride the translator override (may not be <code>null</code>)
-     * @return <code>true</code> if successfully added
-     */
-    public final boolean addTranslator( TranslatorOverride translatorOverride ) {
-        if (this.translatorOverrides.add(translatorOverride)) {
-            setModified(this, Event.TRANSLATOR_OVERRIDE_ADDED, null, translatorOverride);
-            return true;
-        }
-
-        return false;
-    }
-    
-    /**
-     * Add an import VDB attribute to this VDB.
-     * 
-     * @param importVdbName
-     * 
-     * @return whether the import vdb attribute was successfully added
-     */
-    public final boolean addImportVdb(String importVdbName) {
-    	if (this.importModelEntries.add(new VdbImportVdbEntry(this, importVdbName))) {
-    		setModified(this, Event.IMPORT_VDB_ENTRY_ADDED, null, importVdbName);
-            return true;
-    	}
-    	
-    	return false;
-    }
-    
-    /**
-     * Add an allowed language property
-     * 
-     * @param name
-     * 
-     * @return whether the import vdb attribute was successfully added
-     */
-    public final boolean addAllowedLanguage(String name) {
-    	if( this.allowedLanguages.add(name) ) {
-    		setModified(this, Event.ALLOWED_LANGUAGES, name, name);
-            return true;
-    	}
-    	return false;
-    }
-
-    /**
-     * add general name-value pair property to VDB
-     * @param key
-     * @param value
-     * @return if value was added or not
-     */
-    public final boolean setGeneralProperty(String key, String value) {
-    	if( value == null ) {
-    		return removeGeneralProperty(key, value);
-    	}
-    	String oldValue = this.generalPropertiesMap.put(key, value);
-    	if( oldValue == null ) {
-    		setModified(this, Event.GENERAL_PROPERTY, null, value);
-    		return true;
-    	} else if( ! oldValue.equals(value)) {
-    		setModified(this, Event.GENERAL_PROPERTY, oldValue, value);
-    		return true;
-    	}
-    	
-    	return false;
-    }
-
-    /**
      * Synchronize the Vdb file entries.  The supplied entries must be included - it's VdbModelEntry
      * may not exist in the vdb yet.
      * @param newJarEntries the supplied new entries which must exist 
      */
+    @Override
     public final void synchronizeUdfJars(Set<VdbFileEntry> newJarEntries) {
         // Init list of all required Udf jars with supplied list
         Set<VdbFileEntry> allRequiredUdfJars = new HashSet<VdbFileEntry>(newJarEntries);
@@ -578,46 +453,23 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * 
      */
+    @Override
     public final void close() {
         fileEntries.clear();
         udfJarEntries.clear();
         schemaEntries.clear();
         modelEntries.clear();
-        listeners.clear();
-        description.set(StringConstants.EMPTY_STRING);
+
         // Clean up state folder
-        FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton().getStateLocation().append(file.getFullPath().segment(0)).toFile());
-        // Mark VDB as unmodified
-        if (isModified()) modified.set(false);
-        // Notify change listeners VDB is closed
-        notifyChangeListeners(this, Event.CLOSED, null, null);
-    }
-    
-    /**
-     * 
-     * @return the immutable set of allowed-languages strings
-     */
-    public final Set<String> getAllowedLanguages() {
-    	return Collections.unmodifiableSet(allowedLanguages);
+        FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton().getStateLocation().append(getSourceFile().getFullPath().segment(0)).toFile());
+
+        super.close();
     }
 
     /**
      * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
      */
-    public final Set<VdbDataRole> getDataPolicyEntries() {
-        return Collections.unmodifiableSet(dataPolicyEntries);
-    }
-
-    /**
-     * @return description
-     */
-    public final String getDescription() {
-        return description.get();
-    }
-
-    /**
-     * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
-     */
+    @Override
     public final Set<VdbEntry> getEntries() {
         Set<VdbEntry> entries = new HashSet<VdbEntry>();
         entries.addAll(schemaEntries);
@@ -630,6 +482,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * Get the current set of schema entries.
      * @return the set of VdbSchemaEntry objects
      */
+    @Override
     public final Set<VdbSchemaEntry> getSchemaEntries() {
         return Collections.unmodifiableSet(schemaEntries);
     }
@@ -638,6 +491,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * Get the current set of UDF jar entries.
      * @return the set of VdbFileEntry UDF jar objects
      */
+    @Override
     public final Set<VdbFileEntry> getUdfJarEntries() {
         return Collections.unmodifiableSet(udfJarEntries);
     }
@@ -646,6 +500,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * Get the current set of UDF jar entries.
      * @return the set of VdbEntry UDF jar objects
      */
+    @Override
     public final Set<String> getUdfJarNames() {
         Set<String> udfJarNames = new HashSet<String>();
         
@@ -662,64 +517,20 @@ public final class XmiVdb implements Vdb, VdbConstants {
      * Get the current set of UserFile entries.
      * @return the set of VdbFileEntry userFile objects
      */
+    @Override
     public final Set<VdbFileEntry> getUserFileEntries() {
         return Collections.unmodifiableSet(fileEntries);
-    }
-    
-    /**
-     * @return the map of general VDB properties
-     */
-    public final Map<String, String> getGeneralProperties() {
-    	return Collections.unmodifiableMap(generalPropertiesMap);
-    }
-
-    /**
-     * @return The workspace file that represents this VDB
-     */
-    public final IFile getFile() {
-        return file;
-    }
-
-    /** (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#getFolder()
-     */
-    @Override
-    public final File getFolder() {
-        return folder;
-    }
-
-    /** (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#getJaxbContext()
-     */
-    @Override
-	public JAXBContext getJaxbContext() throws JAXBException {
-        return JAXBContext.newInstance(new Class<?>[] { VdbElement.class });
-    }
-
-    /** (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#getManifestSchema()
-     */
-    @Override
-	public Schema getManifestSchema() throws SAXException {
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        return schemaFactory.newSchema(VdbElement.class.getResource("/vdb-deployer.xsd")); //$NON-NLS-1$
     }
 
     /**
      * @return the immutable set of model entries within this VDB
      */
+    @Override
     public final Set<VdbEntry> getModelEntries() {
         final Set<VdbEntry> entries = new HashSet<VdbEntry>();
         for (final VdbModelEntry entry : modelEntries)
             if (!entry.isBuiltIn()) entries.add(entry);
         return Collections.unmodifiableSet(entries);
-    }
-    
-    /**
-     * @return the immutable set of import vdb entries within this VDB
-     */
-    public final Collection<VdbImportVdbEntry> getImportVdbEntries() {
-    	 return Collections.unmodifiableSet(importModelEntries);
     }
 
     /**
@@ -730,8 +541,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
         final Collection<File> entryFiles = new ArrayList<File>();
 
         for (VdbEntry entry : entries) {
-            IPath entryPath = new Path(folder.getAbsolutePath() + entry.getName());
-            entryFiles.add(entryPath.toFile());
+            entryFiles.add(new File(getStagingFolder().getAbsolutePath(), entry.getPath().lastSegment()));
         }
 
         return Collections.unmodifiableCollection(entryFiles);
@@ -747,6 +557,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
      *
      * @return the immutable list of model files within this VDB
      */
+    @Override
     public final Collection<File> getModelFiles() {
         return convertEntries(getModelEntries());
     }
@@ -754,23 +565,17 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @return the immutable list of schema files within this VDB
      */
+    @Override
     public final Collection<File> getSchemaFiles() {
         return convertEntries(getSchemaEntries());
     }
 
     /**
-     * @return the name of this VDB
-     */
-    public final IPath getName() {
-        return file.getFullPath();
-    }
-    
-    /**
      * @param vdbName the name of the imported vdb
      * @return the <code>VdbImportVdbEntry</code>
      */
     private final VdbImportVdbEntry getImportVdbEntry(String vdbName) {
-    	for( VdbImportVdbEntry entry : getImportVdbEntries()) {
+    	for( VdbImportVdbEntry entry : getImports()) {
     		if( entry.getName().equalsIgnoreCase(vdbName)) {
     			return entry;
     		}
@@ -791,104 +596,12 @@ public final class XmiVdb implements Vdb, VdbConstants {
     		modelToImportVdbMap.remove(vdbModelEntryName);
     	}
     }
-
-    /**
-     * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save() save}.
-     */
-    public final boolean isModified() {
-        return modified.get();
-    }
-
-    /**
-     * @return <code>true</code> if this is a Preview VDB
-     */
-    public final boolean isPreview() {
-        return preview;
-    }
-
-    /**
-     * @return the problem markers (never <code>null</code>)
-     * @throws Exception if there is a problem obtaining the problem markers
-     */
-    public IMarker[] getProblems() throws Exception {
-        return file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-    }
-
-    /**
-     * @return the immutable set of overridden translators within this VDB (never <code>null</code>)
-     */
-    public final Set<TranslatorOverride> getTranslators() {
-        return Collections.unmodifiableSet(this.translatorOverrides);
-    }
-
-    /**
-     * @return the VDB version
-     */
-    public int getVersion() {
-        return version;
-    }
-
-    /**
-     * @return the query timeout value for this VDB (in seconds)
-     */
-    public int getQueryTimeout() {
-        return queryTimeout;
-    }
-
-    /**
-     * @return the auto generate REST WAR value for this VDB
-     * @since 8.2
-     */
-    public boolean isAutoGenerateRESTWAR() {
-        return autoGenerateRESTWAR;
-    }
-    
-    /**
-     * @return the VDB validation version
-     */
-    public String getValidationVersion() {
-        return validationVersion;
-    }
-    
-    /**
-     * @return the VDB validation date-time
-     */
-    public Date getValidationDateTime() {
-        return validateDateTime;
-    }
-    
-    /**
-     * @return the VDB validation security-domain
-     */
-    public String getSecurityDomain() {
-        return securityDomain;
-    }
-    
-    /**
-     * @return the VDB validation date-time
-     */
-    public String getGssPattern() {
-        return gssPattern;
-    }
-    
-    /**
-     * @return the VDB validation date-time
-     */
-    public String getPasswordPattern() {
-        return passwordPattern;
-    }
-    
-    /**
-     * @return the VDB validation date-time
-     */
-    public String getAuthenticationType() {
-        return authenticationType;
-    }
     
     /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
      *         associated model exists..
      */
+    @Override
     public final boolean isSynchronized() {
         for (final VdbModelEntry entry : modelEntries)
             if (entry.getSynchronization() == Synchronization.NotSynchronized) return false;
@@ -897,30 +610,6 @@ public final class XmiVdb implements Vdb, VdbConstants {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#notifyChangeListeners(java.lang.Object, java.lang.String, java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public void notifyChangeListeners( final Object source,
-                                final String propertyName,
-                                final Object oldValue,
-                                final Object newValue ) {
-        PropertyChangeEvent event = null;
-        if (!isPreview()) {
-            for (final PropertyChangeListener listener : listeners) {
-                if (event == null) event = new PropertyChangeEvent(this, propertyName, oldValue, newValue);
-                listener.propertyChange(event);
-            }
-        }
-    }
-
-    /**
-     * @param listener
-     */
-    public final void removeChangeListener( final PropertyChangeListener listener ) {
-        listeners.remove(listener);
-    }
-    
     /**
      * @param importVdbNames the list of imported vdb names
      * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
@@ -947,121 +636,51 @@ public final class XmiVdb implements Vdb, VdbConstants {
     	// Only add the import if it doesn't already exist
     	for( String importVdbName : importVdbNames ) {
 	    	if( getImportVdbEntry(importVdbName) == null ) {
-	    		addImportVdb(importVdbName);
+	    		addImport(importVdbName);
 	    	}
     	}
     }
     
-    /**
-     * Remove the allowed language from the property list from this VDB
-     * @param name the language name
-     * 
-     * @return whether the property was successfully removed
-     */
-    public final boolean removeAllowedLanguage(String name) {
-    	if (this.allowedLanguages.remove(name) ) {
-    		setModified(this, Event.ALLOWED_LANGUAGES, name, null);
-    		return true;
-    	}
 
-    	return false;
-    }
     
 
     /**
      * @param entry
      */
-    public final void removeEntry( final VdbEntry entry ) {
+    @Override
+    public final boolean removeEntry( final VdbEntry entry ) {
+        boolean removed = false;
         entry.dispose();
         if (entry instanceof VdbModelEntry) {
             String entryName = entry.getName().toString();
-            modelEntries.remove(entry);
+            removed = modelEntries.remove(entry);
 
             synchronizeUdfJars(new HashSet<VdbFileEntry>());
 
             handleRemovedVdbModelEntry(entryName);
         } else if (entry instanceof VdbSchemaEntry) {
             String entryName = entry.getName().toString();
-            schemaEntries.remove(entry);
+            removed = schemaEntries.remove(entry);
             handleRemovedVdbModelEntry(entryName);
         }
         else {
-            fileEntries.remove(entry);
-            udfJarEntries.remove(entry);
-        }
-        setModified(this, Event.ENTRY_REMOVED, entry, null);
-        
-    }
-
-    /**
-     * @param policy
-     */
-    public final void removeDataPolicy( final VdbDataRole policy ) {
-        dataPolicyEntries.remove(policy);
-        setModified(this, Event.DATA_POLICY_REMOVED, policy, null);
-    }
-
-    /**
-     * @param translatorOverride the translator override being removed (may not be <code>null</code>)
-     * @return <code>true</code> if successfully removed
-     */
-    public final boolean removeTranslator( TranslatorOverride translatorOverride ) {
-        if (this.translatorOverrides.remove(translatorOverride)) {
-            setModified(this, Event.TRANSLATOR_OVERRIDE_REMOVED, translatorOverride, null);
-            return true;
+            removed = fileEntries.remove(entry);
+            if (!removed)
+                removed = udfJarEntries.remove(entry);
         }
 
-        return false;
+        if (removed)
+            setModified(this, Event.ENTRY_REMOVED, entry, null);
+
+        return removed;
     }
 
-    /**
-     * Remove the given {@link VdbImportVdbEntry entry} from this VDB
-     * 
-     * @param entry
-     * @return whether the entry was successfully removed
-     */
-    public final boolean removeImportVdb( VdbImportVdbEntry entry ) {
-    	if (this.importModelEntries.remove(entry)) {
-    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
-    		return true;
-    	}
-
-    	return false;
-    }
-    
-    /**
-     * Remove the given {@link VdbImportVdbEntry entry} from this VDB
-     * 
-     */
-    public final void removeAllImportVdbs() {
-    	Collection<VdbImportVdbEntry> entries = new ArrayList<VdbImportVdbEntry>(this.importModelEntries);
-    	for( VdbImportVdbEntry entry : entries ) {
-	    	if (this.importModelEntries.remove(entry)) {
-	    		setModified(this, Event.IMPORT_VDB_ENTRY_REMOVED, entry, null);
-	    	}
-    	}
-    }
-    
-    /**
-     * Remove the given property from this VDB
-     * @param key the property key
-     * @param value the current value to remove
-     * @return whether the property was successfully removed
-     */
-    public final boolean removeGeneralProperty(String key, String value) {
-    	if (this.generalPropertiesMap.remove(key) != null ) {
-    		setModified(this, Event.GENERAL_PROPERTY, value, null);
-    		return true;
-    	}
-
-    	return false;
-    }
-    
     /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
      * 
      * @throws Exception
      */
+    @Override
     public void save() throws Exception {
         // Build JAXB model
         final VdbElement vdbElement = new VdbElement(this);
@@ -1073,6 +692,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
             @Override
             public void doIfFails() {
+                // Do Nothing
             }
 
             @Override
@@ -1082,7 +702,7 @@ public final class XmiVdb implements Vdb, VdbConstants {
 
             @Override
             public void tryToDo() throws Exception {
-                IPath path = file.getFullPath();
+                IPath path = getSourceFile().getFullPath();
                 final File tmpArchive = File.createTempFile(path.removeFileExtension().toString(),
                                                             '.' + path.getFileExtension(),
                                                             tmpFolder);
@@ -1101,8 +721,11 @@ public final class XmiVdb implements Vdb, VdbConstants {
                     out.closeEntry();
                 }
                 // Clear all problem markers on VDB file
-                for (final IMarker marker : file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
-                    marker.delete();
+                IFile file = getSourceFile();
+                if (file != null) {
+                    for (final IMarker marker : file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
+                        marker.delete();
+                }
 
                 // Save entries
                 for (final VdbEntry entry : getEntries())
@@ -1119,145 +742,16 @@ public final class XmiVdb implements Vdb, VdbConstants {
                 if (!tmpArchive.renameTo(archiveFile)) throw new Exception(
                                                                                   VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$
                 // Mark as unmodified
-                if (isModified()) modified.set(false);
+                if (isModified())
+                    setChanged(false);
+
                 // Notify change listeners
                 notifyChangeListeners(this, Event.SAVED, null, null);
             }
         });
     }
 
-    /**
-     * @param description Sets description to the specified value.
-     */
-    public final void setDescription( String description ) {
-        if (StringUtilities.isEmpty(description)) description = null;
-        final String oldDescription = this.description.get();
-        if (StringUtilities.equals(description, oldDescription)) return;
-        this.description.set(description);
-        setModified(this, Event.DESCRIPTION, oldDescription, description);
-    }
-
-    /* (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#setModified(java.lang.Object, java.lang.String, java.lang.Object, java.lang.Object)
-     */
-    @Override
-    public void setModified( final Object source,
-                      final String propertyName,
-                      final Object oldValue,
-                      final Object newValue ) {
-        this.modified.set(true);
-        notifyChangeListeners(source, propertyName, oldValue, newValue);
-    }
-    
-    /**
-     * @param valueInSeconds Sets query time-out to the specified value.
-     */
-    public final void setQueryTimeout( int valueInSeconds ) {
-    	final int oldTimeout = this.queryTimeout;
-    	if( oldTimeout == valueInSeconds ) return;
-    	this.queryTimeout = valueInSeconds;
-    	setModified(this, Event.QUERY_TIMEOUT, oldTimeout, valueInSeconds);
-    }
-    
-    /**
-     * @param intVersion version of vdb
-     */
-    public final void setVersion( int intVersion ) {
-    	final int oldVersion = this.version;
-    	if( oldVersion == intVersion ) return;
-    	this.version = intVersion;
-    	setModified(this, Event.VERSION, oldVersion, intVersion);
-    }
-
-    /**
-     * @param autoGenerateRESTWAR Sets autoGenerateRESTWAR to the specified value.
-     * @since 8.2
-     */
-    public final void setAutoGenerateRESTWAR( boolean autoGenerateRESTWAR ) {
-    	final boolean oldValue = this.autoGenerateRESTWAR;
-    	if( oldValue == autoGenerateRESTWAR ) return;
-    	this.autoGenerateRESTWAR = autoGenerateRESTWAR;
-    	setModified(this, Event.AUTO_GENERATE_REST_WAR, oldValue, autoGenerateRESTWAR);
-    }
-    
-    /**
-     * @param valVersion Sets validatationVersion to the specified value.
-     */
-    public final void setValidationVersion( String valVersion ) {
-    	final String oldVersion = this.validationVersion;
-    	if( StringUtilities.equals(oldVersion, valVersion)) return;
-    	this.validationVersion = valVersion;
-    	setModified(this, Event.GENERAL_PROPERTY, oldVersion, valVersion);
-    }
-    
-    
-    /**
-     * @param dateTime Sets validatationDateTime to the specified value.
-     */
-    public final void setValidationDateTime( Date dateTime ) {
-    	final Date oldDateTime = this.validateDateTime;
-    	if( oldDateTime != null && oldDateTime.equals(dateTime)) return;
-    	this.validateDateTime = dateTime;
-    	setModified(this, Event.GENERAL_PROPERTY, oldDateTime, dateTime);
-    }
-    
-    /**
-     * @param newValue Sets security-domain to the specified value.
-     */
-    public final void setSecurityDomain( String newValue ) {
-    	final String old = this.securityDomain;
-    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
-    	if( newValue.length() == 0 ) {
-    		this.securityDomain = null;
-    	} else {
-    		this.securityDomain = newValue;
-    	}
-    	setModified(this, Event.SECURITY_DOMAIN, old, newValue);
-    }
-    
-    /**
-     * @param newValue Sets gss-pattern to the specified value.
-     */
-    public final void setGssPattern( String newValue ) {
-    	final String old = this.gssPattern;
-    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
-    	if( newValue.length() == 0 ) {
-    		this.gssPattern = null;
-    	} else {
-    		this.gssPattern = newValue;
-    	}
-    	setModified(this, Event.GSS_PATTERN, old, newValue);
-    }
-    
-    /**
-     * @param newValue Sets password-pattern to the specified value.
-     */
-    public final void setPasswordPattern( String newValue ) {
-    	final String old = this.passwordPattern;
-    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
-    	if( newValue.length() == 0 ) {
-    		this.passwordPattern = null;
-    	} else {
-    		this.passwordPattern = newValue;
-    	}
-    	setModified(this, Event.PASSWORD_PATTERN, old, newValue);
-    }
-    
-    /**
-     * @param newValue Sets query time-out to the specified value.
-     */
-    public final void setAuthenticationType( String newValue ) {
-    	final String old = this.authenticationType;
-    	if( (old == null && (newValue == null || newValue.length() == 0)) || newValue.equals(old) ) return;
-    	if( newValue.length() == 0 ) {
-    		this.authenticationType = null;
-    	} else {
-    		this.authenticationType = newValue;
-    	}
-    	setModified(this, Event.AUTHENTICATION_TYPE, old, newValue);
-    }
-
-    private final void synchronize( final Collection<VdbEntry> entries ) throws Exception {
+    private final void synchronize( final Collection<VdbEntry> entries) throws Exception {
         for (final VdbEntry entry : entries)
             if (entry.getSynchronization() == Synchronization.NotSynchronized) entry.synchronize();
     }
@@ -1265,7 +759,8 @@ public final class XmiVdb implements Vdb, VdbConstants {
     /**
      * @throws Exception
      */
-    public final void synchronize( ) throws Exception {
+    @Override
+    public final void synchronize() throws Exception {
     	getBuilder().start();
 
         synchronize(new HashSet<VdbEntry>(modelEntries));
@@ -1294,16 +789,30 @@ public final class XmiVdb implements Vdb, VdbConstants {
 		for( String staleImportVdb : actualStaleImportVdbs ) {
 			VdbImportVdbEntry entry = getImportVdbEntry(staleImportVdb);
 			if( entry != null ) {
-				removeImportVdb(entry);
+				removeImport(entry);
 			}
 		}
     }
-    
-    
+
     /**
      * @return builder
      */
     public VdbModelBuilder getBuilder() {
     	return this.builder;
+    }
+
+    @Override
+    public void addDynamicModel(DynamicModel model) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Collection<DynamicModel> getDynamicModels() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void removeDynamicModel(String modelToRemove) {
+        throw new UnsupportedOperationException();
     }
 }

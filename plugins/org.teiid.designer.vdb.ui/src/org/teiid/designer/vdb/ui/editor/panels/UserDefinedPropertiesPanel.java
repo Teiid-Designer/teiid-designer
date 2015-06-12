@@ -2,11 +2,9 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
+import java.util.Properties;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -37,7 +35,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 /**
  * @author blafond
@@ -64,7 +61,7 @@ public class UserDefinedPropertiesPanel {
 	
 	/**
      * @param parent
-     * @param editor
+	 * @param vdb
      */
     public UserDefinedPropertiesPanel(Composite parent, Vdb vdb) {
     	super();
@@ -97,15 +94,16 @@ public class UserDefinedPropertiesPanel {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-                Map<String, String> props =  vdb.getGeneralProperties();
+                Properties props =  vdb.getProperties();
 
                 if (props.isEmpty()) {
                     return new Object[0];
                 }
                 
                 List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
-                for( String key : props.keySet() ) {
-                	properties.add(new SimpleProperty(key, props.get(key)));
+                for( Object key : props.keySet() ) {
+                    String keyStr = key.toString();
+                	properties.add(new SimpleProperty(keyStr, props.getProperty(keyStr)));
                 }
                 return properties.toArray(new SimpleProperty[0]);
             }
@@ -231,13 +229,13 @@ public class UserDefinedPropertiesPanel {
 
         AddGeneralPropertyDialog dialog = 
         		new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), 
-        				vdb.getGeneralProperties().keySet());
+        				vdb.getProperties());
 
         if (dialog.open() == Window.OK) {
             // update model
             String name = dialog.getName();
             String value = dialog.getValue();
-            vdb.setGeneralProperty(name, value);
+            vdb.setProperty(name, value);
 
             // update UI from model
             this.propertiesViewer.refresh();
@@ -265,7 +263,7 @@ public class UserDefinedPropertiesPanel {
         assert (selectedProperty != null);
 
         // update model
-        this.vdb.removeGeneralProperty(selectedProperty.getName(), selectedProperty.getValue());
+        this.vdb.setProperty(selectedProperty.getName(), selectedProperty.getValue());
 
         // update UI
         this.propertiesViewer.refresh();
@@ -363,8 +361,8 @@ public class UserDefinedPropertiesPanel {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newKey = (String)value;
 					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						vdb.removeGeneralProperty(oldKey, oldValue);
-						vdb.setGeneralProperty(newKey, oldValue);
+						vdb.removeProperty(oldKey);
+						vdb.setProperty(newKey, oldValue);
 						propertiesViewer.refresh();
 					}
 				} else if( columnID == 1 ) {
@@ -372,7 +370,7 @@ public class UserDefinedPropertiesPanel {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						vdb.setGeneralProperty(key, newValue);
+						vdb.setProperty(key, newValue);
 						propertiesViewer.refresh();
 					}
 				}

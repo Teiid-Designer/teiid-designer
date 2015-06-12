@@ -17,13 +17,14 @@ public class Messages  extends NLS {
 
 	public static String GenerateDynamicVdbAction_nothingExportedMessage;
 	public static String GenerateDynamicVdbAction_nothingExportedTitle;
+	public static String GenerateArchiveVdbAction_exceptionTitle;
 	
 	public static String GenerateDynamicVdbWizard_title;
 	public static String GenerateDynamicVdbWizard_validation_versionNotInteger;
 	public static String GenerateDynamicVdbWizard_validation_targetLocationUndefined;
 	public static String GenerateDynamicVdbWizard_validation_vdbFileNameUndefined;
 	public static String GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension;
-	
+
 	public static String GenerateDynamicVdbPageOne_title;
 	public static String GenerateDynamicVdbPageOne_summaryGroupName;
 	public static String GenerateDynamicVdbPageOne_vdb;
@@ -45,7 +46,8 @@ public class Messages  extends NLS {
 	
 	public static String GenerateArchiveVdbAction_nothingExportedMessage;
 	public static String GenerateArchiveVdbAction_nothingExportedTitle;
-	
+	public static String GenerateDynamicVdbAction_exceptionTitle;
+
 	public static String GenerateArchiveVdbWizard_title;
 	public static String GenerateArchiveVdbWizard_validation_versionNotInteger;
 	public static String GenerateArchiveVdbWizard_validation_targetLocationUndefined;

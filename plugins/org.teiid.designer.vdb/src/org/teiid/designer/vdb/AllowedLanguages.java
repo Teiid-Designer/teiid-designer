@@ -5,20 +5,21 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.komodo.vdb;
+package org.teiid.designer.vdb;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
  * @author blafond
  *
  */
-public class AllowedLanguages extends VdbObject {
+public class AllowedLanguages extends VdbUnit implements Iterable<String> {
 	Set<String> languages;
-	
+
 	/**
-	 * 
+	 *
 	 */
 	public AllowedLanguages() {
 		super();
@@ -30,7 +31,6 @@ public class AllowedLanguages extends VdbObject {
 	 */
 	public AllowedLanguages(String inputString) {
 		this();
-		
 		addAllowedLanguage(inputString);
 	}
 	
@@ -39,10 +39,9 @@ public class AllowedLanguages extends VdbObject {
 	 */
 	public AllowedLanguages(String[] values) {
 		this();
-		
 		addAllowedLanguages(values);
 	}
-	
+
 	/**
 	 * @return output string
 	 */
@@ -62,7 +61,7 @@ public class AllowedLanguages extends VdbObject {
 	 * @return array of allowed languages
 	 */
 	public String[] getAllowedLanguageValues() {
-		return (String[])languages.toArray(new String[languages.size()]);
+		return languages.toArray(new String[languages.size()]);
 	}
 	
 	/**
@@ -104,5 +103,24 @@ public class AllowedLanguages extends VdbObject {
 		}
 		return changed;
 	}
+
+	/**
+     * @return is empty
+     */
+    public boolean isEmpty() {
+        return languages.isEmpty();
+    }
+
+    /**
+     * @return size
+     */
+	public int size() {
+	    return languages.size();
+	}
+
+    @Override
+    public Iterator<String> iterator() {
+        return languages.iterator();
+    }
 
 }

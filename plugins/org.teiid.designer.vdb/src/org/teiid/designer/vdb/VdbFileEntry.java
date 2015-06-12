@@ -57,25 +57,34 @@ public final class VdbFileEntry extends VdbEntry {
      */
     public VdbFileEntry( final Vdb vdb,
                   final IPath sourcePath,
-                  final FileEntryType entryType ) throws Exception {
+                  final FileEntryType entryType) throws Exception {
         
         super(vdb, sourcePath);
-        
         this.sourceFilePath = sourcePath;
         this.fileType = entryType;
         
-        // Resets name since this is not a workspace file
-        setName(determinePath(sourcePath,entryType));
-    } 
+        // Resets path since this is not a workspace file
+        setPath(determinePath(sourcePath, entryType));
+    }
+
+    public IPath getTargetPath() {
+        return super.getPath();
+    }
+
+    @Override
+    public IPath getPath() {
+        return getTargetPath();
+    }
     
     /**
      * Constructs a file entry and adds it to the specified VDB. 
      * 
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param element the EntryElement
+     * @throws Exception
      */
     public VdbFileEntry( final Vdb vdb,
-                  final EntryElement element ) throws Exception {
+                  final EntryElement element) throws Exception {
         
         super(vdb, Path.fromPortableString(element.getPath()));
         
@@ -87,10 +96,10 @@ public final class VdbFileEntry extends VdbEntry {
         }
         
         // Resets name since this is not a workspace file
-        setName(determinePath(this.sourceFilePath,this.fileType));
-    } 
+        setPath(determinePath(this.sourceFilePath, this.fileType));
+    }
     
-    private IPath determinePath(IPath sourcePath,FileEntryType entryType) {
+    private IPath determinePath(IPath sourcePath, FileEntryType entryType) {
         String fileName = sourcePath.lastSegment();
         if(entryType==FileEntryType.UDFJar) {
             return new Path(StringConstants.FORWARD_SLASH + VdbFolders.UDF.getWriteFolder() + StringConstants.FORWARD_SLASH + fileName);
@@ -100,7 +109,7 @@ public final class VdbFileEntry extends VdbEntry {
     }
     
     @Override
-    public void save( final ZipOutputStream out ) throws Exception {
+    public void save( final ZipOutputStream out) throws Exception {
         // Name of VDB entry
         String zipName = getName().toString();
         // Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
@@ -109,9 +118,9 @@ public final class VdbFileEntry extends VdbEntry {
             zipName = zipName.substring(1, zipName.length());
         }
         final ZipEntry zipEntry = new ZipEntry(zipName);
-        zipEntry.setComment(description.get());
+        zipEntry.setComment(getDescription());
         
-        IProject vdbProject = getVdb().getFile().getProject();
+        IProject vdbProject = getVdb().getSourceFile().getProject();
         File theFile = findUdfFile(vdbProject);
 
         if(theFile!=null && theFile.exists()) {

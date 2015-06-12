@@ -10,13 +10,11 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry;
@@ -38,11 +36,14 @@ public class EntryElement implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Path of entry
+     */
     @XmlAttribute( name = "path" )
-    private String path;
+    protected String path;
 
     @XmlElement( name = "description" )
-    private String description;
+    protected String description;
 
     @XmlElement( name = "property", type = PropertyElement.class )
     private List<PropertyElement> properties;
@@ -55,7 +56,7 @@ public class EntryElement implements Serializable {
     }
 
     EntryElement( final VdbEntry entry ) {
-        path = entry.getName().toString();
+        path = entry.getPath().toString();
         if( entry.getDescription() != null && !entry.getDescription().isEmpty() ) {
         	description = entry.getDescription();
         }

@@ -16,11 +16,11 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
-import org.teiid.designer.komodo.vdb.dynamic.DynamicVdb;
-import org.teiid.designer.komodo.vdb.xmi.XmiVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 public class GenerateDynamicVdbManager implements UiConstants {
 	
@@ -53,28 +53,17 @@ public class GenerateDynamicVdbManager implements UiConstants {
             StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
             new char[] {'_', '-', '.'});
 	
-	public GenerateDynamicVdbManager(IFile archiveVdbFile) {
+	public GenerateDynamicVdbManager(IFile archiveVdbFile) throws Exception {
 		super();
 		CoreArgCheck.isNotNull(archiveVdbFile);
 		
 		this.archiveVdbFile = archiveVdbFile;
-		
-		loadArchiveVdbManifest();
+		this.archiveVdb = new XmiVdb(archiveVdbFile);
 
 		dynamicVdbName = this.archiveVdb.getName();
 		dynamicVdbFileName = this.archiveVdb.getName() + "-vdb.xml";
 		outputLocation = this.archiveVdbFile.getParent();
 		generateRequired = true;
-	}
-	
-	private void loadArchiveVdbManifest() {
-		archiveVdb = new XmiVdb();
-		try {
-			archiveVdb.load();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public IFile getArchiveVdbFile() {

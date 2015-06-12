@@ -25,11 +25,9 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.teiid.designer.komodo.vdb,
  org.teiid.designer.komodo.vdb.ddl,
- org.teiid.designer.komodo.vdb.dynamic,
- org.teiid.designer.komodo.vdb.manifest,
- org.teiid.designer.komodo.vdb.xmi,
  org.teiid.designer.roles,
  org.teiid.designer.vdb,
  org.teiid.designer.vdb.connections,
+ org.teiid.designer.vdb.dynamic,
  org.teiid.designer.vdb.manifest,
  org.teiid.designer.vdb.refactor

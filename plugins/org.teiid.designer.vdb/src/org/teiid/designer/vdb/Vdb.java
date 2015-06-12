@@ -9,9 +9,10 @@ package org.teiid.designer.vdb;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -20,8 +21,9 @@ import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
-import org.teiid.designer.core.builder.VdbModelBuilder;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.roles.DataRole;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -36,45 +38,38 @@ public interface Vdb extends VdbConstants {
     /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
-    String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+    public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
 
     /**
      * The default query timeout value
      */
     int DEFAULT_TIMEOUT = 0;
-    /**
-     * @param dataPolicy
-     * @return the new data policy
-     */
-    VdbDataRole addDataPolicy( final DataRole dataPolicy );
 
+    /**
+     * @param dataRole
+     * @return TODO
+     */
+    boolean addDataRole(final DataRole dataRole);
 
     /**
      * @param listener
      */
-    void addChangeListener( final PropertyChangeListener listener );
+    void addChangeListener(final PropertyChangeListener listener);
 
     /**
-     * @param name
-     * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied name.
+     * @param path
+     *
+     * @return the newly added {@link VdbEntry entry}, or the existing entry with the supplied path.
      * @throws Exception
      */
-    <T extends VdbEntry> T addEntry( final IPath name) throws Exception;
+    <T extends VdbEntry> T addEntry(final IPath path) throws Exception;
 
     /**
      * @param translatorOverride the translator override (may not be <code>null</code>)
      * @return <code>true</code> if successfully added
      */
-    boolean addTranslator( TranslatorOverride translatorOverride );
-    /**
-     * Add an import VDB attribute to this VDB.
-     * 
-     * @param importVdbName
-     * 
-     * @return whether the import vdb attribute was successfully added
-     */
-    boolean addImportVdb(String importVdbName);
-    
+    boolean addTranslator(TranslatorOverride translatorOverride);
+
     /**
      * Add an allowed language property
      * 
@@ -85,35 +80,27 @@ public interface Vdb extends VdbConstants {
     boolean addAllowedLanguage(String name);
 
     /**
-     * add general name-value pair property to VDB
-     * @param key
-     * @param value
-     * @return if value was added or not
-     */
-    boolean setGeneralProperty(String key, String value);
-
-    /**
      * Synchronize the Vdb file entries.  The supplied entries must be included - it's VdbModelEntry
      * may not exist in the vdb yet.
      * @param newJarEntries the supplied new entries which must exist 
      */
     void synchronizeUdfJars(Set<VdbFileEntry> newJarEntries);
-    
+
     /**
      * 
      */
     void close();
-    
+
     /**
      * 
      * @return the immutable set of allowed-languages strings
      */
-    Set<String> getAllowedLanguages();
+    AllowedLanguages getAllowedLanguages();
 
     /**
      * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
      */
-    Set<VdbDataRole> getDataPolicyEntries();
+    Collection<DataRole> getDataRoles();
 
     /**
      * @return description
@@ -123,7 +110,7 @@ public interface Vdb extends VdbConstants {
     /**
      * @return the immutable set of entries, not including {@link #getModelEntries() model entries}, within this VDB
      */
-    Set<VdbEntry> getEntries();
+    Collection<VdbEntry> getEntries();
 
     /**
      * Get the current set of schema entries.
@@ -136,7 +123,7 @@ public interface Vdb extends VdbConstants {
      * @return the set of VdbFileEntry UDF jar objects
      */
     Set<VdbFileEntry> getUdfJarEntries();
-    
+
     /**
      * Get the current set of UDF jar entries.
      * @return the set of VdbEntry UDF jar objects
@@ -148,23 +135,12 @@ public interface Vdb extends VdbConstants {
      * @return the set of VdbFileEntry userFile objects
      */
     Set<VdbFileEntry> getUserFileEntries();
-    
+
     /**
      * @return the map of general VDB properties
      */
-    Map<String, String> getGeneralProperties();
+    Properties getProperties();
 
-    /**
-     * @return The workspace file that represents this VDB
-     */
-    IFile getFile();
-
-
-    /**
-     * @return the file folder
-     */
-    File getFolder();
-    
     /**
      * @return JAXBContext
      * @throws JAXBException
@@ -181,11 +157,11 @@ public interface Vdb extends VdbConstants {
      * @return the immutable set of model entries within this VDB
      */
     Set<VdbEntry> getModelEntries();
-    
+
     /**
      * @return the immutable set of import vdb entries within this VDB
      */
-    Collection<VdbImportVdbEntry> getImportVdbEntries();
+    Collection<VdbImportVdbEntry> getImports();
 
     /**
      * Method to return the File objects associated with each model in this VDB.
@@ -207,7 +183,7 @@ public interface Vdb extends VdbConstants {
     /**
      * @return the name of this VDB
      */
-    IPath getName();
+    String getName();
 
     /**
      * @return <code>true</code> if this VDB has been modified since its creation of last {@link #save() save}.
@@ -218,6 +194,7 @@ public interface Vdb extends VdbConstants {
      * @return <code>true</code> if this is a Preview VDB
      */
     boolean isPreview();
+
     /**
      * @return the problem markers (never <code>null</code>)
      * @throws Exception if there is a problem obtaining the problem markers
@@ -227,52 +204,48 @@ public interface Vdb extends VdbConstants {
     /**
      * @return the immutable set of overridden translators within this VDB (never <code>null</code>)
      */
-    Set<TranslatorOverride> getTranslators();
+    Collection<TranslatorOverride> getTranslators();
 
     /**
      * @return the VDB version
      */
     int getVersion();
+
     /**
      * @return the query timeout value for this VDB (in seconds)
      */
     int getQueryTimeout();
 
     /**
-     * @return the auto generate REST WAR value for this VDB
-     * @since 8.2
-     */
-    boolean isAutoGenerateRESTWAR();
-    
-    /**
      * @return the VDB validation version
      */
     String getValidationVersion();
-    
+
     /**
      * @return the VDB validation date-time
      */
     Date getValidationDateTime();
-    
+
     /**
      * @return the VDB validation security-domain
      */
     String getSecurityDomain();
-    
+
     /**
      * @return the VDB validation date-time
      */
     String getGssPattern();
-    
+
     /**
      * @return the VDB validation date-time
      */
     String getPasswordPattern();
-    
+
     /**
      * @return the VDB validation date-time
      */
     String getAuthenticationType();
+
     /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
      *         associated model exists..
@@ -285,22 +258,13 @@ public interface Vdb extends VdbConstants {
      * @param oldValue
      * @param newValue
      */
-    void notifyChangeListeners( final Object source,
-                                final String propertyName,
-                                final Object oldValue,
-                                final Object newValue );
+    void notifyChangeListeners(final Object source, final String propertyName, final Object oldValue, final Object newValue);
 
     /**
      * @param listener
      */
-    void removeChangeListener( final PropertyChangeListener listener );
-    
-    /**
-     * @param importVdbNames the list of imported vdb names
-     * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
-     */
-    void registerImportVdbs(Collection<String> importVdbNames, String modelName);
-    
+    void removeChangeListener(final PropertyChangeListener listener);
+
     /**
      * Remove the allowed language from the property list from this VDB
      * @param name the language name
@@ -308,56 +272,64 @@ public interface Vdb extends VdbConstants {
      * @return whether the property was successfully removed
      */
     boolean removeAllowedLanguage(String name);
-    
+
+    /**
+     * @param dataRoleToRemove
+     *        the name of the data role being removed (cannot be empty)
+     * @return <code>true</code> if successfully removed
+     */
+    boolean removeDataRole(final String dataRoleToRemove);
 
     /**
      * @param entry
+     * @return <code>true</code> if successfully removed
      */
-    void removeEntry( final VdbEntry entry );
+    boolean removeEntry(final VdbEntry entry);
 
-    /**
-     * @param policy
-     */
-    void removeDataPolicy( final VdbDataRole policy );
     /**
      * @param translatorOverride the translator override being removed (may not be <code>null</code>)
      * @return <code>true</code> if successfully removed
      */
-    boolean removeTranslator( TranslatorOverride translatorOverride );
+    boolean removeTranslator(TranslatorOverride translatorOverride);
+
+    /**
+     * @param translatorToRemove
+     *        the name of the translator being removed (cannot be empty)
+     * @return <code>true</code> if successfully removed
+     */
+    boolean removeTranslator(final String translatorToRemove);
 
     /**
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
      * 
      * @param entry
-     * @return whether the entry was successfully removed
+     * @return <code>true</code> if successfully removed
      */
-    boolean removeImportVdb( VdbImportVdbEntry entry );
-    
+    boolean removeImport(VdbImportVdbEntry entry);
+
+    /**
+     * @param importToRemove
+     *        the name of the VDB import being removed (cannot be empty)
+     * @return <code>true</code> if successfully removed
+     */
+    boolean removeImport(final String importToRemove);
+
     /**
      * Remove the given {@link VdbImportVdbEntry entry} from this VDB
-     * 
      */
-    void removeAllImportVdbs();
-    
-    /**
-     * Remove the given property from this VDB
-     * @param key the property key
-     * @param value the current value to remove
-     * @return whether the property was successfully removed
-     */
-    boolean removeGeneralProperty(String key, String value);
+    void removeAllImports();
 
     /**
      * Must not be called unless this VDB has been {@link #isModified() modified}
-     * 
+     *
      * @throws Exception
      */
-    void save( ) throws Exception ;
+    void save() throws Exception;
 
     /**
      * @param description Sets description to the specified value.
      */
-    void setDescription( String description );
+    void setDescription(String description);
 
     /**
      * @param source
@@ -365,66 +337,52 @@ public interface Vdb extends VdbConstants {
      * @param oldValue
      * @param newValue
      */
-    void setModified( final Object source,
-                      final String propertyName,
-                      final Object oldValue,
-                      final Object newValue );
-    
+    void setModified(final Object source, final String propertyName, final Object oldValue, final Object newValue);
+
     /**
      * @param valueInSeconds Sets query time-out to the specified value.
      */
-    void setQueryTimeout( int valueInSeconds );
-    
+    void setQueryTimeout(int valueInSeconds);
+
     /**
      * @param intVersion version of vdb
      */
-    void setVersion( int intVersion );
+    void setVersion(int intVersion);
 
-    /**
-     * @param autoGenerateRESTWAR Sets autoGenerateRESTWAR to the specified value.
-     * @since 8.2
-     */
-    void setAutoGenerateRESTWAR( boolean autoGenerateRESTWAR );
-    
     /**
      * @param valVersion Sets validatationVersion to the specified value.
      */
-    void setValidationVersion( String valVersion );
-    
+    void setValidationVersion(String valVersion);
+
     /**
      * @param dateTime Sets validatationDateTime to the specified value.
      */
-    void setValidationDateTime( Date dateTime );
+    void setValidationDateTime(Date dateTime);
 
     /**
      * @param newValue Sets security-domain to the specified value.
      */
-    void setSecurityDomain( String newValue );
-    
+    void setSecurityDomain(String newValue);
+
     /**
      * @param newValue Sets gss-pattern to the specified value.
      */
-    void setGssPattern( String newValue );
-    
+    void setGssPattern(String newValue);
+
     /**
      * @param newValue Sets password-pattern to the specified value.
      */
-    void setPasswordPattern( String newValue );
-    
+    void setPasswordPattern(String newValue);
+
     /**
      * @param newValue Sets query time-out to the specified value.
      */
-    void setAuthenticationType( String newValue );
+    void setAuthenticationType(String newValue);
 
     /**
      * @throws Exception
      */
-    void synchronize( ) throws Exception;
-    
-    /**
-     * @return builder
-     */
-    VdbModelBuilder getBuilder();
+    void synchronize() throws Exception;
 
     /**
      *
@@ -490,7 +448,7 @@ public interface Vdb extends VdbConstants {
          * physical model entry's {@link VdbModelEntry#getSourceInfo() source JNDI name} changes
          */
         String MODEL_JNDI_NAME = "modelEntry.jndiName"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB
          * physical model entry's {@link VdbModelEntry#getSourceInfo() data} changes
@@ -498,16 +456,16 @@ public interface Vdb extends VdbConstants {
         String MODEL_SOURCES = "modelEntry.sources"; //$NON-NLS-1$
 
         /**
-	     * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an data policy is
-	     * added to a VDB
+         * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an data policy is
+         * added to a VDB
          * 
-         * @see #addDataPolicy(DataRole)
+         * @see #addDataRole(DataRole)
          */
         String DATA_POLICY_ADDED = "dataPolicyAdded"; //$NON-NLS-1$
 
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
-         * {@link #removeDataPolicy(VdbDataRole) entry is removed} from a VDB
+         * {@link #removeDataRole(String) entry is removed} from a VDB
          */
         String DATA_POLICY_REMOVED = "dataPolicyRemoved"; //$NON-NLS-1$
 
@@ -516,19 +474,19 @@ public interface Vdb extends VdbConstants {
          * import VDB entry's {@link VdbImportVdbEntry#getVersion version} changes
          */
         String IMPORT_VDB_ENTRY_VERSION = "importVdbEntryVersion"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to  {@link #addChangeListener(PropertyChangeListener) change listeners} when VDB
          * import VDB entry's {@link VdbImportVdbEntry#isImportDataPolicies() data policy flag} changes
          */
-        String IMPORT_VDB_ENTRY_DATA_POLICY =  "importVdbEntryDataPolicies"; //$NON-NLS-1$
-        
+        String IMPORT_VDB_ENTRY_DATA_POLICY = "importVdbEntryDataPolicies"; //$NON-NLS-1$
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when an
          * import VDB entry is added 
          */
         String IMPORT_VDB_ENTRY_ADDED = "importVdbEntryAdded"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a 
          * VDBs udf jar entries are changed.
@@ -541,7 +499,7 @@ public interface Vdb extends VdbConstants {
          * 
          */
         String IMPORT_VDB_ENTRY_REMOVED = "importVdbEntryRemoved"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a VDB is
          * {@link #close() closed}
@@ -574,21 +532,21 @@ public interface Vdb extends VdbConstants {
          * 
          */
         String TRANSLATOR_OVERRIDE_REMOVED = "translatorOverrideRemoved"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the query timeout
          * is changed.
          * 
          */
         String QUERY_TIMEOUT = "queryTimeout"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the vdb version
          * is changed.
          * 
          */
         String VERSION = "version"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when auto-generate REST WAR
          * is changed.
@@ -596,31 +554,31 @@ public interface Vdb extends VdbConstants {
          * 
          */
         String AUTO_GENERATE_REST_WAR = "autoGenerateRESTWAR"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when a general property
          * is changed.
          */
         String GENERAL_PROPERTY = "generalProperty"; //$NON-NLS-1$
-        
+
         /**
          * The property name sent in events to {@link #addChangeListener(PropertyChangeListener) change listeners} when the allowed-languages
          * is changed.
          */
         String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
-        
+
         /**
          */
         String SECURITY_DOMAIN = "securityDomain"; //$NON-NLS-1$
-        
+
         /**
          */
         String GSS_PATTERN = "gssPattern"; //$NON-NLS-1$
-        
+
         /**
          */
         String PASSWORD_PATTERN = "passwordPattern"; //$NON-NLS-1$
-        
+
         /**
          */
         String AUTHENTICATION_TYPE = "authenticationType"; //$NON-NLS-1$
@@ -634,57 +592,179 @@ public interface Vdb extends VdbConstants {
         /**
          */
         String PREVIEW = "preview"; //$NON-NLS-1$
-        
+
         /**
          */
         String QUERY_TIMEOUT = "query-timeout"; //$NON-NLS-1$
-        
+
         /**
          */
         String AUTO_GENERATE_REST_WAR = "{http://teiid.org/rest}auto-generate"; //$NON-NLS-1$
-        
+
         /**
          * 
          */
         String ALLOWED_LANGUAGES = "allowed-languages"; //$NON-NLS-1$
-        
+
         /**
          */
         String VALIDATION_DATETIME = "validationDateTime"; //$NON-NLS-1$
-        
+
         /**
          */
         String VALIDATION_VERSION = "validationVersion"; //$NON-NLS-1$
-        
+
         /*
         <property name="security-domain" value="teiid-spengo" />
-		<property name="gss-pattern" value="{regex}" />
-		<property name="password-pattern" value="{regex}" />
-		<property name="authentication-type" value="GSS or USERPASSWORD" />
+        <property name="gss-pattern" value="{regex}" />
+        <property name="password-pattern" value="{regex}" />
+        <property name="authentication-type" value="GSS or USERPASSWORD" />
          */
-        
+
         /**
          */
         String SECURITY_DOMAIN = "security-domain"; //$NON-NLS-1$
-        
+
         /**
          */
         String GSS_PATTERN = "gss-pattern"; //$NON-NLS-1$
-        
+
         /**
          */
         String PASSWORD_PATTERN = "password-pattern"; //$NON-NLS-1$
-        
+
         /**
          */
         String AUTHENTICATION_TYPE = "authentication-type"; //$NON-NLS-1$
-        
+
         /**
          */
         String AUTHENTICATION_TYPE_GSS = "GSS"; //$NON-NLS-1$
-        
+
         /**
          */
         String AUTHENTICATION_TYPE_USERPASSWORD = "USERPASSWORD"; //$NON-NLS-1$
     }
+
+    /**
+     * @param vdbImport
+     * @return TODO
+     */
+    boolean addImport(VdbImportVdbEntry vdbImport);
+
+    /**
+     * Add an import VDB attribute to this VDB.
+     * 
+     * @param importVdbName
+     * 
+     * @return the newly added import entry
+     */
+    VdbImportVdbEntry addImport(String importVdbName);
+
+    /**
+     * @param model
+     *        the name of the VDB being imported (cannot be empty)
+     */
+    void addDynamicModel(DynamicModel model);
+
+    /**
+         * Represents a VDB XML manifest file.
+         */
+    public interface VdbManifest {
+
+        /**
+         * @return the manifest as an XML document (never <code>null</code>)
+         */
+        Document asDocument();
+
+    }
+
+    /**
+     * @return the value of the <code>connection type</code> property (can be empty)
+     */
+    String getConnectionType();
+
+    /**
+     * @return the VDB models (never <code>null</code> but can be empty)
+     */
+    Collection<DynamicModel> getDynamicModels();
+
+    /**
+     * @return the folder where the workings of the vdb are staged either
+     *                having been loaded from zip or by artifacts copied to it when
+     *                the vdb is synchronized
+     */
+    File getStagingFolder();
+
+    /**
+     * @return source file of the vdb
+     */
+    IFile getSourceFile();
+
+    /**
+     * @return the source file name.
+     *                 Convenience method equivalent to {@link #getSourceFile()}.getName()
+     */
+    String getFileName();
+
+    /**
+     * @param modelToRemove
+     *        the name of the model being removed (cannot be empty)
+     */
+    void removeDynamicModel(final String modelToRemove);
+
+    /**
+     * @param newConnectionType
+     *        the new value of the <code>connection type</code> property
+     */
+    void setConnectionType(final String newConnectionType);
+
+    /**
+     * @param newPreview
+     *        the new value for the <code>preview</code> property
+     * @see #DEFAULT_PREVIEW
+     */
+    void setPreview(final boolean newPreview);
+
+    /**
+     * Sets the name used by Teiid to reference this VDB.
+     *
+     * @param newVdbName
+     *        the new value of the <code>Teiid VDB name</code> property
+     */
+    void setName(final String newVdbName);
+
+    /**
+     * @return value
+     */
+    boolean isAutoGenerateRESTWar();
+
+    /**
+     * @param autoGenerateRESTWar
+     */
+    void setAutoGenerateRESTWar(boolean autoGenerateRESTWar);
+
+    /**
+     * @param properties
+     */
+    void setProperties(Properties properties);
+
+    /**
+     * @param key
+     * @param value
+     */
+    void setProperty(String key, String value);
+
+    /**
+     * @param key
+     * @return removed property
+     */
+    String removeProperty(String key);
+
+    /**
+     * Export vdb to destination writer. If null then use file from {@link #getFilePath()}
+     * @param destination
+     * @throws Exception 
+     */
+    void export(Writer destination) throws Exception;
 }

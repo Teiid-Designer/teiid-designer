@@ -9,11 +9,13 @@ package org.teiid.designer.komodo.vdb;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbUnit;
 
 /**
  * Represents a relational model.
  */
-public class Model extends VdbObject {
+public class DynamicModel extends VdbUnit {
 	
 	/*
 		<xs:complexType>
@@ -34,26 +36,15 @@ public class Model extends VdbObject {
 	Type modelType;
 	boolean isVisible;
 	String path;
-	Map<String, ModelSource> modelSources;
+	Map<String, VdbSource> modelSources;
 	boolean allowMultiSource;
 	boolean addColumn;
 	String columnAlias;
+
 	/**
 	 * The metadata object. Can be null
 	 */
 	Metadata metadata;
-	
-	
-
-    /**
-     * The type identifier.
-     */
-    int TYPE_ID = Model.class.hashCode();
-
-    /**
-     * Identifier of this object
-     */
-    TeiidType IDENTIFIER = TeiidType.MODEL;
 
     /**
      * The type of a model.
@@ -90,12 +81,12 @@ public class Model extends VdbObject {
     
 
     /**
-     * 
+     *
      */
-    public Model() {
+    public DynamicModel() {
 		super();
 		
-		this.modelSources = new HashMap<String, ModelSource>();
+		this.modelSources = new HashMap<String, VdbSource>();
 		this.modelType = Type.PHYSICAL;
 		this.columnAlias = EMPTY_STRING;
     }
@@ -104,7 +95,7 @@ public class Model extends VdbObject {
      * @param name 
      * 
      */
-    public Model(String name) {
+    public DynamicModel(String name) {
 		this();
 		setName(name);
 	}
@@ -113,7 +104,7 @@ public class Model extends VdbObject {
      * @param source
      *        the name of the model source to create (cannot be empty)
      */
-    public void addSource( final ModelSource source) {
+    public void addSource( final VdbSource source) {
     	this.modelSources.put(source.getName(), source);
     }
 
@@ -131,20 +122,20 @@ public class Model extends VdbObject {
      */
     private Type getTypeForString(String type) {
     	if( type.toUpperCase().equals(Type.PHYSICAL.toString())) {
-    		return Model.Type.PHYSICAL;
+    		return DynamicModel.Type.PHYSICAL;
     	}
     	if( type.toUpperCase().equals(Type.VIRTUAL.toString())) {
-    		return Model.Type.VIRTUAL;
+    		return DynamicModel.Type.VIRTUAL;
     	}
     	
-    	return Model.Type.PHYSICAL;
+    	return DynamicModel.Type.PHYSICAL;
     }
 
     /**
      * @return the model sources found in this model (can be empty)
      */
-    public ModelSource[] getSources() {
-    	return (ModelSource[])modelSources.values().toArray(new ModelSource[modelSources.size()]);
+    public VdbSource[] getSources() {
+    	return modelSources.values().toArray(new VdbSource[modelSources.size()]);
     }
 
     /**
@@ -152,7 +143,7 @@ public class Model extends VdbObject {
      *        the name of the model source being deleted (cannot be empty)
      */
     public void removeSource( final String sourceName ) {
-    	ModelSource removed = modelSources.remove(sourceName);
+    	VdbSource removed = modelSources.remove(sourceName);
 		setChanged(removed != null);
     }
 

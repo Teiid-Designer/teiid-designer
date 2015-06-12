@@ -10,9 +10,9 @@ package org.teiid.designer.vdb.ui.translators;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -63,7 +63,7 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
                                           String title,
                                           String message,
                                           String[] translatorTypes,
-                                          Set<TranslatorOverride> existingTranslators ) {
+                                          Collection<TranslatorOverride> existingTranslators ) {
         super(parentShell, title, null, message, MessageDialog.INFORMATION, new String[] { IDialogConstants.OK_LABEL,
                 IDialogConstants.CANCEL_LABEL }, 0);
         this.translatorTypes = ((translatorTypes == null) ? new String[0] : translatorTypes);
@@ -88,7 +88,7 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
      */
     public EditTranslatorOverrideDialog( Shell parentShell,
                                          String[] translatorTypes,
-                                         Set<TranslatorOverride> existingTranslators ) {
+                                         Collection<TranslatorOverride> existingTranslators ) {
         this(parentShell, Util.getString(PREFIX + "newTranslatorTitle"), Util.getString(PREFIX + "newTranslatorInitialMessage"), //$NON-NLS-1$ //$NON-NLS-2$
                 translatorTypes, existingTranslators);
     }
@@ -104,7 +104,7 @@ public final class EditTranslatorOverrideDialog extends MessageDialog {
     public EditTranslatorOverrideDialog( Shell parentShell,
                                          TranslatorOverride translator,
                                          String[] translatorTypes,
-                                         Set<TranslatorOverride> existingTranslators ) {
+                                         Collection<TranslatorOverride> existingTranslators ) {
         this(parentShell, Util.getString(PREFIX + "editTranslatorTitle"), Util.getString(PREFIX + "editTranslatorInitialMessage"), //$NON-NLS-1$ //$NON-NLS-2$
         		translatorTypes, existingTranslators);
         CoreArgCheck.isNotNull(translator, "translator is null"); //$NON-NLS-1$

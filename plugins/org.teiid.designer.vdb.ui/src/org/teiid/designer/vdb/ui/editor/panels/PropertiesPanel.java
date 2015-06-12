@@ -9,10 +9,8 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -41,7 +39,6 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
 import org.teiid.designer.vdb.ui.util.RestVdbUtil;
 
 /**
@@ -193,13 +190,13 @@ public class PropertiesPanel {
     	
     	new Label(propertiesGroup, SWT.NONE);
     	//autGenRESTLabel.setText(i18n("autoGenerateRESTWAR")); //$NON-NLS-1$
-		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup, i18n("autoGenerateRESTWAR"), vdb.isAutoGenerateRESTWAR());  //$NON-NLS-1$
+		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup, i18n("autoGenerateRESTWAR"), vdb.isAutoGenerateRESTWar());  //$NON-NLS-1$
 		autoGenRESTCheckbox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
             	boolean validRestVdb = false;
             	try {
-        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getFile());
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getSourceFile());
         		} catch (Exception ex) {
         			throw new RuntimeException(ex);
         		}
@@ -209,14 +206,14 @@ public class PropertiesPanel {
                             NO_REST_PROCEDURES_TITLE,
                             NO_REST_PROCEDURES_MESSAGE);
             	}
-            	vdb.setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            	vdb.setAutoGenerateRESTWar(((Button)e.getSource()).getSelection());
             }
             
             @Override
             public void widgetSelected( SelectionEvent e ) {
             	boolean validRestVdb = false;
             	try {
-        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getFile());
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getSourceFile());
         		} catch (Exception ex) {
         			throw new RuntimeException(ex);
         		}
@@ -226,7 +223,7 @@ public class PropertiesPanel {
                             NO_REST_PROCEDURES_TITLE,
                             NO_REST_PROCEDURES_MESSAGE);
             	}
-            	vdb.setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            	vdb.setAutoGenerateRESTWar(((Button)e.getSource()).getSelection());
             }
         });
 		

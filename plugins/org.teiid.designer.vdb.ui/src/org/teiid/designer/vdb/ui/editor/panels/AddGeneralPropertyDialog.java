@@ -8,8 +8,7 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Properties;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -36,7 +35,7 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     private static final String PREFIX = I18nUtil.getPropertyPrefix(AddGeneralPropertyDialog.class);
 
     private Button btnOk;
-    private final Set<String> existingNames;
+    private final Properties existingNames;
     private String name;
     private String value;
 
@@ -45,13 +44,13 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
      */
     public AddGeneralPropertyDialog( Shell parentShell,
-                              Set<String> existingPropertyNames ) {
+                              Properties existingPropertyNames ) {
         super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
         if( existingPropertyNames == null ) {
-        	this.existingNames = new HashSet<String>(0);
+        	this.existingNames = new Properties();
         } else {
         	this.existingNames = existingPropertyNames;
         }
@@ -208,11 +207,8 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
 
         if (errorMsg == null) {
             // make sure property ID doesn't already exist
-            for (String existingName : this.existingNames) {
-                if (existingName.equals(this.name)) {
-                    errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
-                    break;
-                }
+            if (this.existingNames.containsKey(this.name)) {
+                errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
             }
         }
 

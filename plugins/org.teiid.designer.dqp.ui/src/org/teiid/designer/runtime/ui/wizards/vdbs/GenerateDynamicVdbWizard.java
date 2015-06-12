@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
@@ -29,7 +28,7 @@ public class GenerateDynamicVdbWizard extends AbstractWizard {
 	GenerateDynamicVdbPageOne page1;
 	GenerateDynamicVdbPageTwo page2;
 
-	public GenerateDynamicVdbWizard(IFile vdbFile) {
+	public GenerateDynamicVdbWizard(IFile vdbFile) throws Exception {
 		super(DqpUiPlugin.getDefault(), TITLE, null);
 		
 		vdbManager = new GenerateDynamicVdbManager(vdbFile);

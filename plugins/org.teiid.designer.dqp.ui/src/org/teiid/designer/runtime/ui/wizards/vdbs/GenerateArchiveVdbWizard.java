@@ -8,14 +8,8 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbench;
-import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
-import org.teiid.designer.transformation.ui.wizards.file.TeiidFlatFileImportOptionsPage;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 
 /**
@@ -34,7 +28,7 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
 	GenerateArchiveVdbPageOne page1;
 	GenerateArchiveVdbPageTwo page2;
 
-	public GenerateArchiveVdbWizard(IFile vdbFile) {
+	public GenerateArchiveVdbWizard(IFile vdbFile) throws Exception {
 		super(DqpUiPlugin.getDefault(), TITLE, null);
 		
 		vdbManager = new GenerateArchiveVdbManager(vdbFile);

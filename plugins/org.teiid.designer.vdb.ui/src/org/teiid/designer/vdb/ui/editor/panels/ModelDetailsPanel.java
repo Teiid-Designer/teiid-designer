@@ -8,12 +8,10 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.DocumentEvent;
@@ -253,13 +251,13 @@ public class ModelDetailsPanel {
 		        
 		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_translatorNameLabel + "            "); //$NON-NLS-1$
-		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer.getTableViewer(), vdb.getFile()));
+		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer.getTableViewer(), vdb.getSourceFile()));
 		        column.setLabelProvider(new BindingDataLabelProvider(1));
 
 
 		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_jndiNameLabel + "          "); //$NON-NLS-1$
-		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer.getTableViewer(), vdb.getFile()));
+		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer.getTableViewer(), vdb.getSourceFile()));
 		        column.setLabelProvider(new BindingDataLabelProvider(2));
 
 		        

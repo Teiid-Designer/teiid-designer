@@ -38,17 +38,20 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbPlugin;
 
 /**
  * 
  */
+@SuppressWarnings( "javadoc" )
 public class VdbModelEntryTest {
 
     private VdbModelEntry entry;
     private String modelResourceFileName;
     private VdbTest vdbTest;
     private ModelWorkspaceMock modelWorkspaceMock;
-    
+
     @Before
     public void before() throws Exception {
         vdbTest = new VdbTest();

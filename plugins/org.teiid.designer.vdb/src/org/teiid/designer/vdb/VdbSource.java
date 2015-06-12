@@ -8,18 +8,13 @@
 package org.teiid.designer.vdb;
 
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
-import static org.teiid.designer.vdb.Vdb.Event.MODEL_SOURCE_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * 
  */
-public class VdbSource {
-	private Vdb vdb;
-	
-    private String name;
+public class VdbSource extends VdbUnit {
 
     private String jndiName;
 
@@ -34,30 +29,11 @@ public class VdbSource {
 	 */
 	public VdbSource(Vdb vdb, String name, String jndiName, String translatorName) {
 		super();
-		this.vdb = vdb;
-		this.name = name;
+		setVdb(vdb);
+		setName(name);
 		this.jndiName = jndiName;
 		this.translatorName = translatorName;
 	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		if( !StringUtilities.equals(this.name, name) )  {
-			this.name = name;
-			vdb.setModified(this, MODEL_SOURCE_NAME, name, this.name);
-		}
-	}
-
 
 	/**
 	 * @return the jndiName
@@ -73,7 +49,7 @@ public class VdbSource {
 	public void setJndiName(String jndiName) {
 		if( !StringUtilities.equals(this.jndiName, jndiName) )  {
 			this.jndiName = jndiName;
-			vdb.setModified(this, MODEL_JNDI_NAME, jndiName, this.jndiName);
+			setModified(this, MODEL_JNDI_NAME, jndiName, this.jndiName);
 		}
 	}
 
@@ -92,7 +68,7 @@ public class VdbSource {
 	public void setTranslatorName(String translatorName) {
 		if( !StringUtilities.equals(this.translatorName, translatorName) )  {
 			this.translatorName = translatorName;
-			vdb.setModified(this, MODEL_TRANSLATOR, translatorName, this.translatorName);
+			setModified(this, MODEL_TRANSLATOR, translatorName, this.translatorName);
 		}
 	}
 
@@ -110,23 +86,34 @@ public class VdbSource {
         return text.toString();
 	}
 	
-    /**
-     * {@inheritDoc}
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
-    public boolean equals( Object object ) {
-        if (this == object) {
-            return true;
-        }
-
-        if ((object == null) || !getClass().equals(object.getClass())) {
-            return false;
-        }
-
-        VdbSource other = (VdbSource)object;
-        return this.vdb.equals(other.vdb) && CoreStringUtil.equals(this.name, other.name) && CoreStringUtil.equals(this.translatorName, other.translatorName) && CoreStringUtil.equals(this.jndiName, other.jndiName) ;
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.jndiName == null) ? 0 : this.jndiName.hashCode());
+        result = prime * result + ((this.translatorName == null) ? 0 : this.translatorName.hashCode());
+        return result;
     }
-	
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VdbSource other = (VdbSource)obj;
+        if (this.jndiName == null) {
+            if (other.jndiName != null)
+                return false;
+        } else if (!this.jndiName.equals(other.jndiName))
+            return false;
+        if (this.translatorName == null) {
+            if (other.translatorName != null)
+                return false;
+        } else if (!this.translatorName.equals(other.translatorName))
+            return false;
+        return true;
+    }
 }

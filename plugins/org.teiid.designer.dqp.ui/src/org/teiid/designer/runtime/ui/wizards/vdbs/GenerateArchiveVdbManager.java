@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.io.IOException;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
@@ -19,11 +18,10 @@ import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
-import org.teiid.designer.komodo.vdb.dynamic.DynamicVdb;
-import org.teiid.designer.komodo.vdb.xmi.XmiVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 public class GenerateArchiveVdbManager implements UiConstants{
 	
@@ -45,24 +43,14 @@ public class GenerateArchiveVdbManager implements UiConstants{
             StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
             new char[] {'_', '-', '.'});
 	
-	public GenerateArchiveVdbManager(IFile dynamicVdbFile) {
+	public GenerateArchiveVdbManager(IFile dynamicVdbFile) throws Exception {
 		super();
 		this.dynamicVdbFile = dynamicVdbFile;
-		loadDynamicVdb();
+		this.dynamicVdb = new DynamicVdb(this.dynamicVdbFile);
 		
 		delegateArchiveVdbName = this.dynamicVdb.getName() + "_1";
 		vdbArchiveFileName = this.dynamicVdb.getName() + ".vdb";
 		outputLocation = this.dynamicVdbFile.getParent();
-	}
-	
-	private void loadDynamicVdb() {
-		dynamicVdb = new DynamicVdb(this.dynamicVdbFile);
-		try {
-			dynamicVdb.load();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public IFile getDynamicVdbFile() {

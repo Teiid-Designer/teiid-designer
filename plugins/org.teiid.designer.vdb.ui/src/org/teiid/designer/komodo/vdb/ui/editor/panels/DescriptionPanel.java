@@ -13,9 +13,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.teiid.designer.komodo.vdb.Vdb;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 
 /**

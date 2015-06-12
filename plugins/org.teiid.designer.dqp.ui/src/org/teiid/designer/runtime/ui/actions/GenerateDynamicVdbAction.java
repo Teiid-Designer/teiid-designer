@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -60,11 +59,17 @@ public class GenerateDynamicVdbAction extends SortableSelectionAction implements
         if (obj instanceof IFile) {
             IFile vdbXmlFile = (IFile)obj;
 
-            GenerateDynamicVdbWizard wizard = new GenerateDynamicVdbWizard(vdbXmlFile);
-            
-    		WizardDialog wd = new WizardDialog(getShell(), wizard);
-    		wd.open();
-    		return;
+            try {
+                GenerateDynamicVdbWizard wizard = new GenerateDynamicVdbWizard(vdbXmlFile);
+
+                WizardDialog wd = new WizardDialog(getShell(), wizard);
+                wd.open();
+                return;
+            } catch (Exception ex) {
+                MessageDialog.openError(iww.getShell(),
+                                        Messages.GenerateDynamicVdbAction_exceptionTitle,
+                                        ex.getLocalizedMessage());
+            }
         }
 
         MessageDialog.openInformation(iww.getShell(), 

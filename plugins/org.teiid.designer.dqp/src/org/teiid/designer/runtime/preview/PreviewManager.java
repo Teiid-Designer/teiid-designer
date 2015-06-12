@@ -55,7 +55,6 @@ import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
@@ -138,11 +137,11 @@ public final class PreviewManager extends JobChangeAdapter
     
     	// merge into project PVDB
         for (IFile previewVdbFile : modelPreviewVdbs) {
-        	if (targetVdb.getFile().equals(previewVdbFile)) continue;
+        	if (targetVdb.getSourceFile().equals(previewVdbFile)) continue;
         	
         	// REMOVE the .vdb extension for the source vdb
 	        String modelPreviewVdbName = previewVdbFile.getFullPath().removeFileExtension().lastSegment().toString();
-	        targetVdb.addImportVdb(modelPreviewVdbName);
+	        targetVdb.addImport(modelPreviewVdbName);
 	    }	
     }
     
@@ -159,7 +158,7 @@ public final class PreviewManager extends JobChangeAdapter
         	ModelResource mr = ModelUtil.getModelResource((IFile)fileInProject, true);
         	if ( mr != null && ModelUtil.isVdbSourceObject(fileInProject) ) {
 	        	String vdbName = getVdbSourceModelVdbName(mr);
-	        	vdb.addImportVdb(vdbName);
+	        	vdb.addImport(vdbName);
         	}
 	    }	
     }
@@ -1456,7 +1455,7 @@ public final class PreviewManager extends JobChangeAdapter
 		            if (projectVdbIFile != null) {
 		            	ITeiidVdb deployedProjectVdb = getPreviewServer().getVdb(projectPreviewVdbName);
 		            	Vdb localProjectVdb = new XmiVdb(projectVdbIFile);
-		            	localProjectVdb.removeAllImportVdbs();
+		            	localProjectVdb.removeAllImports();
 		            	// Add imports for all preview vdbs under project
 		                addPreviewVdbImports(localProjectVdb, localPreviewVdbs);
 		                // Add imports for all VDB source models within this project
@@ -1467,8 +1466,8 @@ public final class PreviewManager extends JobChangeAdapter
 		                	getPreviewServer().undeployVdb(fullProjectVdbName);
 		                }
 		                localProjectVdb.save();
-		                localProjectVdb.getFile().refreshLocal(IResource.DEPTH_INFINITE, null);
-		                getPreviewServer().deployVdb(localProjectVdb.getFile()); 
+		                localProjectVdb.getSourceFile().refreshLocal(IResource.DEPTH_INFINITE, null);
+		                getPreviewServer().deployVdb(localProjectVdb.getSourceFile()); 
 		            }
 	            }
             }

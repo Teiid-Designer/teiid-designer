@@ -15,7 +15,6 @@ import static org.teiid.designer.vdb.Vdb.Event.ENTRY_SYNCHRONIZATION;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_JNDI_NAME;
 import static org.teiid.designer.vdb.Vdb.Event.MODEL_TRANSLATOR;
 import static org.teiid.designer.vdb.ui.preferences.VdbPreferenceConstants.SYNCHRONIZE_WITHOUT_WARNING;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -394,7 +392,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             	}
             }
 
-            boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
+            boolean hasDataRoles = !getVdb().getDataRoles().isEmpty();
             if (okIfModelsDirty && showWarningDialog) {
             	if( hasDataRoles ) {
 	                MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
@@ -440,7 +438,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         }
                         dataRoleResolver.modelSynchronized(element);
                         VdbEditor.this.doSave(new NullProgressMonitor());
-                        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                        showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
                     }
                 });
 
@@ -546,7 +544,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         pnlTranslatorOverrides.refresh();
         packModelsGroup();
 
-        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
 
         schemaGroup.getTable().getViewer().refresh();
         udfJarsGroup.getTable().getViewer().refresh();
@@ -628,7 +626,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         final Shell shell = Display.getCurrent().getActiveShell();
 
         // Get the VDB Project
-        IProject vdbProject = getVdb().getFile().getProject();
+        IProject vdbProject = getVdb().getSourceFile().getProject();
         String fileStr = VdbFileDialogUtil.selectFile(shell, vdbProject, vdbFolder);
 
         if(fileStr == null || fileStr.trim().isEmpty()) {
@@ -662,7 +660,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
             String fileName = filePath.lastSegment();
 
             // Check the selected file name against current entries.  If duplicate name, prompt for overwrite
-            Set<VdbEntry> currentFiles = getVdb().getEntries();
+            Collection<VdbEntry> currentFiles = getVdb().getEntries();
             // Matching entry - prompt user for overwrite
             if (entrySetContainsName(currentFiles, fileName)) {
                 // Prompt user whether to overwrite
@@ -715,7 +713,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     IProject proj = ((IContainer)element).getProject();
 
                     // Get the VDB Project
-                    IProject vdbProject = getVdb().getFile().getProject();
+                    IProject vdbProject = getVdb().getSourceFile().getProject();
 
                     // Can only add Models from the VDB Project
                     if(proj.isOpen() && proj.equals(vdbProject)) {
@@ -987,7 +985,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
-                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
             }
         };
 
@@ -1224,7 +1222,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
-                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
             }
         };
 
@@ -1311,7 +1309,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public String getValue( final VdbEntry element ) {
-                                                      return element.getName().lastSegment();
+                                                      return element.getPathName();
                                                   }
                                               }, this.locationInVdbColumnProvider, this.descriptionColumnProvider);
 
@@ -1462,7 +1460,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 for (final VdbEntry entry : entries) {
                     getVdb().removeEntry(entry);
                 }
-                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
             }
         };
 
@@ -1475,7 +1473,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
      * @param shortName the entry short name
      * @return 'true' if the set contains an entry with the short name, 'false' if not. 
      */
-    boolean entrySetContainsName(Set<VdbEntry> entries, String shortName) {
+    boolean entrySetContainsName(Collection<VdbEntry> entries, String shortName) {
         List<String> currentNames = new ArrayList<String>(entries.size());
 
         for (VdbEntry entry : entries) {
@@ -1584,7 +1582,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 	        projectLabel.setText(Messages.vdbEditor_location);
 	        
 	        Label project = new Label(headerPanel, SWT.NONE);
-	        project.setText(vdb.getFile().getParent().getFullPath().toString());
+	        project.setText(vdb.getSourceFile().getParent().getFullPath().toString());
 	        project.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
 	        
 	        { // Validation Info
@@ -1640,7 +1638,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
         ModelerCore.getWorkspace().addResourceChangeListener(this);
         
-        showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+        showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
         
         scrolledComposite.sizeScrolledPanel();
     }
@@ -1711,7 +1709,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 		break;
                 	}
                 }
-                boolean hasDataRoles = !getVdb().getDataPolicyEntries().isEmpty();
+                boolean hasDataRoles = !getVdb().getDataRoles().isEmpty();
                 if (okIfModelsDirty && showWarningDialog) {
                 	if( hasDataRoles ) {
                         MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(Display.getCurrent().getActiveShell(),
@@ -1761,7 +1759,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             pnlTranslatorOverrides.refresh();
                             dataRoleResolver.allSynchronized();
                             VdbEditor.this.doSave(new NullProgressMonitor());
-                            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                            showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
                             modelDetailsPanel.refreshModelDetails();
                         }
                     });
@@ -1791,7 +1789,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	dialog.open();
                 }
             });
-            showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+            showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
         }
     }
 
@@ -1955,7 +1953,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                */
                                               @Override
                                               public String getValue( final VdbModelEntry element ) {
-                                                  return element.getName().lastSegment();
+                                                  return element.getPathName();
                                               }
                                           }, this.syncColumnProvider,
                                           new CheckBoxColumnProvider<VdbModelEntry>() {
@@ -2086,7 +2084,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                             IProject proj = ((IContainer)element).getProject();
                             
                             // Get the VDB Project
-                            IProject vdbProject = getVdb().getFile().getProject();
+                            IProject vdbProject = getVdb().getSourceFile().getProject();
                             
                             // Can only add Models from the VDB Project
                             if(proj.isOpen() && proj.equals(vdbProject)) {
@@ -2119,7 +2117,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                                                       wsFilter,
                                                                                       getModelSelectionValidator(),
                                                                                       getModelLabelProvider());
-                if (!getVdb().getDataPolicyEntries().isEmpty()) {
+                if (!getVdb().getDataRoles().isEmpty()) {
                     MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
                                                   VdbEditor.CONFIRM_DIALOG_TITLE,
                                                   INFORM_DATA_ROLES_ON_ADD_MESSAGE);
@@ -2173,7 +2171,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 	packModelsGroup();
                 }
                 
-                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
             }
         };
 
@@ -2273,7 +2271,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 
                 udfJarsGroup.getTable().getViewer().refresh();
                 
-                showImportVdbsButton.setEnabled(!getVdb().getImportVdbEntries().isEmpty());
+                showImportVdbsButton.setEnabled(!getVdb().getImports().isEmpty());
             }
         };
 
@@ -2351,7 +2349,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     	vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
         try {
             vdb.save();
-            vdb.getFile().getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+            vdb.getSourceFile().getParent().refreshLocal(IResource.DEPTH_INFINITE, monitor);
         } catch (final Exception error) {
             VdbUiConstants.Util.log(error);
             ErrorHandler.toExceptionDialog(error);
@@ -2550,7 +2548,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                         public boolean visit( IResourceDelta delta ) {
                             IResource resource = delta.getResource();
 
-                            if (resource.equals(getVdb().getFile())
+                            if (resource.equals(getVdb().getSourceFile())
                                 && ((delta.getKind() & IResourceDelta.REMOVED) != 0)) {
                                 Display.getDefault().asyncExec(new Runnable() {
                                     /**

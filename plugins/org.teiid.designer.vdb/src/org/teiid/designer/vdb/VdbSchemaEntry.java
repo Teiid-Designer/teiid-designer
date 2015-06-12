@@ -27,7 +27,7 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
      * @param path the schema path (may not be <code>null</code>)
      * @throws Exception
      */
-    public VdbSchemaEntry( final Vdb vdb, final IPath path ) throws Exception {
+    public VdbSchemaEntry( final XmiVdb vdb, final IPath path) throws Exception {
         super(vdb, path);
     }
 
@@ -38,7 +38,7 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
      * @param element the EntryElement
      * @throws Exception
      */
-    public VdbSchemaEntry( final Vdb vdb, final EntryElement element ) throws Exception {
+    public VdbSchemaEntry( final XmiVdb vdb, final EntryElement element ) throws Exception {
         super(vdb, element);
     }
 

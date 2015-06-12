@@ -8,12 +8,10 @@
 package org.teiid.designer.komodo.vdb.ui.editor.panels;
 
 import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.CellEditor;
@@ -42,10 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.designer.komodo.vdb.Model;
-import org.teiid.designer.komodo.vdb.ModelSource;
-import org.teiid.designer.komodo.vdb.Translator;
-import org.teiid.designer.komodo.vdb.Vdb;
+import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -53,6 +48,9 @@ import org.teiid.designer.ui.common.table.ResourceEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
@@ -75,7 +73,7 @@ public class ModelDetailsPanel {
     Label columnAliaslabel;
     TableViewerBuilder bindingsViewer;
     TableViewerBuilder problemsViewer;
-    Model model;
+    DynamicModel model;
     
     Vdb vdb;
 
@@ -206,7 +204,7 @@ public class ModelDetailsPanel {
 					boolean added = false;
 					while(!added) {
 						String newName = "Name_" + numSources; //$NON-NLS-1$
-						model.addSource(new ModelSource(newName, "JNDI_NAME", "TRANSLATOR_NAME")); //$NON-NLS-1$ //$NON-NLS-2$
+						model.addSource(new VdbSource(model.getVdb(), newName, "JNDI_NAME", "TRANSLATOR_NAME")); //$NON-NLS-1$ //$NON-NLS-2$
 						if(!added) numSources++;
 					}
 					refreshModelDetails();
@@ -225,8 +223,8 @@ public class ModelDetailsPanel {
 				public void widgetSelected(SelectionEvent e) {
 					IStructuredSelection selection = (IStructuredSelection)bindingsViewer.getSelection();
 					for( Object obj : selection.toArray()) {
-						if( obj instanceof ModelSource ) {
-							model.removeSource(((ModelSource)obj).getName());
+						if( obj instanceof VdbSource ) {
+							model.removeSource(((VdbSource)obj).getName());
 							refreshModelDetails();
 						}
 					}
@@ -271,7 +269,7 @@ public class ModelDetailsPanel {
 							boolean enable = true;
 							Object[] objs = sel.toArray();
 							for( Object obj : objs) {
-								if(  !(obj instanceof ModelSource)) {
+								if(  !(obj instanceof VdbSource)) {
 									enable = false;
 									break;
 								}
@@ -417,7 +415,7 @@ public class ModelDetailsPanel {
         	modelDescriptionEditor.setText(model.getDescription());
         	modelDescriptionEditor.getTextViewer().setEditable(true);
         	bindingsViewer.getTable().removeAll();
-        	for( ModelSource vdbSource : model.getSources() ) {
+        	for( VdbSource vdbSource : model.getSources() ) {
         		bindingsViewer.add(vdbSource);
         	}
 //        	problemsViewer.getTable().removeAll();
@@ -445,7 +443,7 @@ public class ModelDetailsPanel {
 	/**
 	 * @param selection the selected VdbModelEntry to set
 	 */
-	public void setModel(Model selection) {
+	public void setModel(DynamicModel selection) {
 		this.model = selection;
 		refreshModelDetails();
 	}
@@ -465,16 +463,16 @@ public class ModelDetailsPanel {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof ModelSource ) {
+			if( element instanceof VdbSource ) {
 				switch (this.columnNumber) {
 					case 0: {
-						return ((ModelSource)element).getName();
+						return ((VdbSource)element).getName();
 					}
 					case 1: {
-						return ((ModelSource)element).getTranslatorName();
+						return ((VdbSource)element).getTranslatorName();
 					}
 					case 2: {
-						return ((ModelSource)element).getJndiName();
+						return ((VdbSource)element).getJndiName();
 					}
 				}
 			}
@@ -569,7 +567,7 @@ public class ModelDetailsPanel {
          */
         @Override
         protected String getElementValue( Object element ) {
-            return ((ModelSource)element).getTranslatorName();
+            return ((VdbSource)element).getTranslatorName();
         }
 
         /**
@@ -588,7 +586,7 @@ public class ModelDetailsPanel {
             }
 
             // add in the translator overrides from the VDB
-            for (Translator translator : vdb.getTranslators()) {
+            for (TranslatorOverride translator : vdb.getTranslators()) {
                 translators.add(translator.getName());
             }
 
@@ -608,7 +606,7 @@ public class ModelDetailsPanel {
                 newValue = ""; //$NON-NLS-1$
             }
 
-            ((ModelSource)element).setTranslatorName(newValue);
+            ((VdbSource)element).setTranslatorName(newValue);
                         
             refreshModelDetails();
             
@@ -653,7 +651,7 @@ public class ModelDetailsPanel {
          */
         @Override
         protected String getElementValue( Object element ) {
-            return ((ModelSource)element).getJndiName();
+            return ((VdbSource)element).getJndiName();
         }
 
         /**
@@ -691,7 +689,7 @@ public class ModelDetailsPanel {
             if (newValue == null) {
                 newValue = ""; //$NON-NLS-1$
             }
-            ((ModelSource)element).setJndiName(newValue);
+            ((VdbSource)element).setJndiName(newValue);
             
             refreshModelDetails();
             
@@ -741,8 +739,8 @@ public class ModelDetailsPanel {
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof ModelSource ) {
-				return ((ModelSource)element).getName();
+			if( element instanceof VdbSource ) {
+				return ((VdbSource)element).getName();
 			}
 			return EMPTY_STRING;
 		}
@@ -755,14 +753,14 @@ public class ModelDetailsPanel {
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof ModelSource ) {
-				String oldValue = ((ModelSource)element).getName();
+			if( element instanceof VdbSource ) {
+				String oldValue = ((VdbSource)element).getName();
 				String newValue = (String)value;
 				if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
 					// Ensure the name is unique
-					String newName = ensureUniqueName(newValue, (ModelSource)element);
+					String newName = ensureUniqueName(newValue, (VdbSource)element);
 					
-					((ModelSource)element).setName(newName);
+					((VdbSource)element).setName(newName);
 					refreshModelDetails();
 		            
 		            // cause a selection event to be fired so that actions can set their enablement
@@ -774,10 +772,10 @@ public class ModelDetailsPanel {
 		/*
 		 * Cannot have duplicate names.  If user tries duplicate, add a suffix
 		 */
-		private String ensureUniqueName(String name, ModelSource currentSource) {
+		private String ensureUniqueName(String name, VdbSource currentSource) {
 			String uniqueName = name;
 			List<String> otherSourceNames = new ArrayList<String>();
-        	for( ModelSource vdbSource : model.getSources() ) {
+        	for( VdbSource vdbSource : model.getSources() ) {
         		if(!vdbSource.equals(currentSource)) {
         			otherSourceNames.add(vdbSource.getName().toLowerCase());
         		}
