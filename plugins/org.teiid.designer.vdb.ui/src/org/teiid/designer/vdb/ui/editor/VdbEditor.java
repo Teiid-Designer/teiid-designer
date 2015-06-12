@@ -85,6 +85,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.EditorPart;
 import org.osgi.service.prefs.BackingStoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -299,7 +300,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
          */
         @Override
         public String getValue( final VdbEntry element ) {
-            return element.getName().removeLastSegments(1).toString();
+            return element.getDirectory();
         }
     };
 
@@ -485,7 +486,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     }
                     
                     // Check for duplicate model and/or user file names
-                   if(  !ModelUtil.isXsdFile(file) && VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
+                   if(  !ModelUtil.isXsdFile(file) && VdbUtil.modelAlreadyExistsInVdb(FileUtils.getNameWithoutExtension(file), file.getFullPath(), getVdb()) ) {
                        return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
                                ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);
                    }
@@ -516,7 +517,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                    }
                    
                    // Check for duplicate model and/or user file names
-                    if( VdbUtil.modelAlreadyExistsInVdb(file.getFullPath().removeFileExtension().lastSegment(), file.getFullPath(), getVdb()) ) {
+                    if( VdbUtil.modelAlreadyExistsInVdb(FileUtils.getNameWithoutExtension(file), file.getFullPath(), getVdb()) ) {
                         return new Status(IStatus.ERROR, VdbUiConstants.PLUGIN_ID, 0, 
                                 ADD_FILE_DIALOG_MODEL_WITH_SAME_NAME_EXISTS_SELECTED_MESSAGE, null);                	}
                 }
@@ -529,12 +530,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
     /**
      * Method which adds models to the VDB.
      * 
-     * @param models
+     * @param modelFiles
      */
-    public void addModels( final List<IFile> models ) {
+    public void addModels( final List<IFile> modelFiles ) {
         try {
-            for (final Object model : models) {
-                vdb.addEntry(((IFile)model).getFullPath());
+            for (final IFile modelFile : modelFiles) {
+                vdb.addEntry(modelFile.getFullPath());
             }
         } catch (Exception ex) {
             ErrorHandler.toExceptionDialog(ex);
@@ -668,7 +669,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                     // Find the matching entry
                     VdbEntry matchingEntry = null;
                     for (VdbEntry entry : currentFiles) {
-                        String entryShortName = entry.getName().lastSegment();
+                        String entryShortName = entry.getPathName();
                         if (entryShortName.equals(fileName)) {
                             matchingEntry = entry;
                             break;
@@ -835,7 +836,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public String getValue( final VdbSchemaEntry element ) {
-                                                      return element.getName().lastSegment();
+                                                      return element.getPathName();
                                                   }
                                               }, this.locationInVdbColumnProvider, this.descriptionColumnProvider);
 
@@ -1072,7 +1073,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public String getValue( final VdbEntry element ) {
-                                                      return element.getName().lastSegment();
+                                                      return element.getPathName();
                                                   }
                                               }, this.locationInVdbColumnProvider, this.descriptionColumnProvider);
 
@@ -1477,8 +1478,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
         List<String> currentNames = new ArrayList<String>(entries.size());
 
         for (VdbEntry entry : entries) {
-            IPath entryPath = entry.getName();
-            String entryName = entryPath.lastSegment();
+            String entryName = entry.getPathName();
             currentNames.add(entryName);
 
         }
@@ -2153,8 +2153,8 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                 if( proceed ) {
 	                try {
                         // add the models
-                        for (final Object model : models) {
-                            getVdb().addEntry(((IFile)model).getFullPath());
+                        for (final Object modelFile : models) {
+                            getVdb().addEntry(((IFile)modelFile).getFullPath());
                         }
                     } catch (Exception ex) {
                         ErrorHandler.toExceptionDialog(ex);
@@ -2577,7 +2577,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                 IFile changedFile = (IFile)resource;
                                 
                                 for (VdbEntry entry : getVdb().getModelEntries()) {
-                                    if (entry.getName().equals(changedFile.getFullPath())) {
+                                    if (entry.getPath().equals(changedFile.getFullPath())) {
                                         entry.setSynchronization(Synchronization.NotSynchronized);
                                         foundIt = true;
                                         break;
@@ -2586,7 +2586,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
 
                                 if (!foundIt) {
                                     for (VdbEntry entry : getVdb().getEntries()) {
-                                        if (entry.getName().equals(changedFile.getFullPath())) {
+                                        if (entry.getPath().equals(changedFile.getFullPath())) {
                                             entry.setSynchronization(Synchronization.NotSynchronized);
                                             // no need to set foundIt to true as it is not needed later
                                             break;

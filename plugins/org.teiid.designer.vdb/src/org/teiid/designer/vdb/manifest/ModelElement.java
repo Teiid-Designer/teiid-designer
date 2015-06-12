@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
-import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 
 /**
  * 
@@ -148,9 +148,6 @@ public class ModelElement extends EntryElement {
      */
     ModelElement( final DynamicModel model ) throws Exception {
         super();
-//        final String lastSeg = entry.getName().lastSegment();
-//        final int ndx = lastSeg.lastIndexOf('.');
-//        name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         name = model.getName();
         type = model.getModelType().toString();
         visible = model.isVisible();

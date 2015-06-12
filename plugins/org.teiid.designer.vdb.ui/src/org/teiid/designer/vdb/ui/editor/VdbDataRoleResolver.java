@@ -74,7 +74,7 @@ public class VdbDataRoleResolver {
 	public void modelEntriesRemoved( Set<VdbEntry> entries ) {
 		Set<String> modelNames = new HashSet<String>(entries.size());
 		for( VdbEntry entry : entries ) {
-			modelNames.add(entry.getName().removeFileExtension().lastSegment());
+			modelNames.add(entry.getName());
 		}
 		
 		removePermissionsForModels(modelNames);
@@ -165,8 +165,8 @@ public class VdbDataRoleResolver {
 	        try {
 	            File modelFile = null;
 	            for( File file : vdb.getModelFiles() ) {
-	            	String entryName = entry.getName().lastSegment();
-	            	if( file.getName().equals(entryName)) {
+	            	String entryFileName = entry.getPathName();
+	            	if( file.getName().equals(entryFileName)) {
 	            		modelFile = file;
 	            		break;
 	            	}

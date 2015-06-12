@@ -73,7 +73,7 @@ public abstract class VdbEntry extends VdbUnit {
     public VdbEntry( final Vdb vdb, final IPath path) throws Exception {
         super(vdb);
         this.path = path;
-        setName(path.lastSegment());
+        setName(path.removeFileExtension().lastSegment());
 
         setSynchronization(synchronizeEntry());
     }

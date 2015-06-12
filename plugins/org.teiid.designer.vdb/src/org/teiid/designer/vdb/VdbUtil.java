@@ -104,8 +104,7 @@ public class VdbUtil implements VdbConstants {
         Collection<IFile> iFiles = new ArrayList<IFile>();
 
         for (VdbEntry modelEntry : theVdb.getModelEntries()) {
-            // IPath modelPath = modelEntry.getName();
-            IResource resource = ModelerCore.getWorkspace().getRoot().findMember(modelEntry.getName());
+            IResource resource = ModelerCore.getWorkspace().getRoot().findMember(modelEntry.getPath());
 
             // if resource has been moved in the workspace since being added to the VDB then it will not be found
             if ((resource != null) && resource.exists()) {

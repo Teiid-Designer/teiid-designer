@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -734,7 +733,7 @@ public final class NewVdbWizard extends AbstractWizard
 			final IEditorPart editor = editors[i].getEditor(false);
 			if (editor instanceof VdbEditor) {
 				final VdbEditor vdbEditor = (VdbEditor) editor;
-				final IPath editorVdbPath = vdbEditor.getVdb().getName();
+				final IPath editorVdbPath = vdbEditor.getVdb().getSourceFile().getFullPath();
 				if (vdbFile.getFullPath().equals(editorVdbPath)) 
 					return vdbEditor;
 

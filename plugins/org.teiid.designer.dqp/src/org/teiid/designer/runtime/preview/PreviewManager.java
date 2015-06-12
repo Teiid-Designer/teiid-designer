@@ -54,6 +54,7 @@ import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
@@ -520,7 +521,7 @@ public final class PreviewManager extends JobChangeAdapter
 	        		modelEntry.setJndiName(0,srcJndiName);
 	        	// Not found - default to original method
 	        	} else {
-	        		String jndiName = this.getPreviewVdbJndiName(previewVdb.getFile().getFullPath());
+	        		String jndiName = this.getPreviewVdbJndiName(previewVdb.getSourceFile().getFullPath());
 	        		// create data source on server if we need to
 	        		if (!previewServer.dataSourceExists(jndiName)) {
 	        			TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
@@ -795,7 +796,7 @@ public final class PreviewManager extends JobChangeAdapter
             return projectVdbName;
         }
 
-        String name = pvdbFile.getFullPath().removeFileExtension().lastSegment();
+        String name = FileUtils.getNameWithoutExtension(pvdbFile);
         String prefix = XmiVdb.getPreviewVdbPrefix(pvdbFile);
         int index = name.indexOf(prefix);
 
@@ -817,7 +818,7 @@ public final class PreviewManager extends JobChangeAdapter
             String prefix = XmiVdb.getPreviewVdbPrefix(projectOrModel);
 
             if (projectOrModel.getFileExtension().equalsIgnoreCase(ITeiidVdb.VDB_EXTENSION)) {
-                String vdbName = projectOrModel.getFullPath().removeFileExtension().lastSegment();
+                String vdbName = FileUtils.getNameWithoutExtension(projectOrModel);
 
                 if (vdbName.startsWith(prefix)) {
                     return projectOrModel.getFullPath().lastSegment();

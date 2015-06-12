@@ -53,14 +53,38 @@ import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
  */
 public class WarArchiveUtil {
 
+    /**
+     * Target Namespace Key
+     */
     public static final String TARGETNS = "targetNs"; //$NON-NLS-1$
+
+    /**
+     * Web Service Name Key
+     */
     public static final String WEBSERVICENAME = "webserviceName"; //$NON-NLS-1$
+
+    /**
+     * Url Root Key
+     */
     public static final String URLROOT = "urlRoot"; //$NON-NLS-1$
+
+    /**
+     * Service Url Key
+     */
     public static final String SERVICEURL = "serviceUrl"; //$NON-NLS-1$
+
+    /**
+     * WSDL File Extension
+     */
     public static final String WSDLFILE_EXT = "wsdl"; //$NON-NLS-1$
+
     private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
 
+    /**
+     * @param path
+     * @return schema
+     */
     public XSDSchema importSchema( String path ) {
         XSDParser parser = new XSDParser(null);
         parser.parse(path);
@@ -71,7 +95,7 @@ public class WarArchiveUtil {
 
     /**
      * @param uri
-     * @return
+     * @return path parameters
      */
     public static ArrayList<String> getPathParameters( String uri ) {
         ArrayList pathParams = new ArrayList();
@@ -90,6 +114,8 @@ public class WarArchiveUtil {
 
     /**
      * Generate a WSDL file using passed in WS Model Resources and user supplied values
+     * @param wsModelResourceList
+     * @param userSuppliedValues 
      * 
      * @since 7.1
      */
@@ -162,7 +188,7 @@ public class WarArchiveUtil {
             Vdb vdb = new XmiVdb(vdbFile);
             Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
 

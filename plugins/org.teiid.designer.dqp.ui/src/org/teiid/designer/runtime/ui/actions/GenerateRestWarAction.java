@@ -34,7 +34,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
@@ -107,7 +106,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
     /**
      * @param selection
-     * @return
+     * @return whether selection is applicable
      */
     @Override
     public boolean isApplicable( ISelection selection ) {
@@ -218,7 +217,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
     /**
      * @param selection
-     * @return
+     * @return if selection was set
      */
     public boolean setSelection(ISelection selection) {
         if (SelectionUtilities.isMultiSelection(selection))
@@ -240,13 +239,13 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             Vdb vdb = new XmiVdb(this.selectedVDB);
             Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
 
                 List<RestProcedure> restfulProcedureArray = findRestProcedures(modelResource);
                 if (restfulProcedureArray.size() > 0) {
-                    String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
+                    String modelName = vdbModelEntry.getName();
                     restfulProcedureMap.put(modelName, restfulProcedureArray);
                     result = true;
                 }

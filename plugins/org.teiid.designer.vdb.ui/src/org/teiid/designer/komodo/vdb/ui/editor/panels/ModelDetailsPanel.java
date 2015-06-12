@@ -66,7 +66,6 @@ public class ModelDetailsPanel {
     }
     
     Text modelNameText;
-    Text modelLocationText;
     StyledTextEditor modelDescriptionEditor;
     Button multiSourceCB, addColumnCB, addButton, deleteButton;
     Text columnAliasText;
@@ -102,15 +101,6 @@ public class ModelDetailsPanel {
 		this.modelNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		this.modelNameText.setBackground(headerPanel.getBackground());
 		this.modelNameText.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
-		
-		label = new Label(headerPanel, SWT.NONE);
-		label.setText("Location"); //$NON-NLS-1$
-
-		this.modelLocationText = new Text(headerPanel, SWT.BORDER | SWT.SINGLE | SWT.READ_ONLY);
-		this.modelLocationText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		this.modelLocationText.setBackground(headerPanel.getBackground());
-		this.modelLocationText.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
-    	
     	
         CTabFolder tabFolder = WidgetFactory.createTabFolder(mainPanel);
         
@@ -331,7 +321,6 @@ public class ModelDetailsPanel {
 	        
         	model = null;
         	modelNameText.setText(Messages.noSelection);
-        	modelLocationText.setText(Messages.noSelection);
         	modelDescriptionEditor.setText(EMPTY_STRING);
         	modelDescriptionEditor.getTextViewer().setEditable(false);
 		}
@@ -397,7 +386,6 @@ public class ModelDetailsPanel {
     public void refreshModelDetails() {
         if (model == null) {
         	modelNameText.setText(Messages.noSelection);
-        	modelLocationText.setText(Messages.noSelection);
         	modelDescriptionEditor.setText(EMPTY_STRING);
         	bindingsViewer.getTable().removeAll();
     		multiSourceCB.setEnabled(false);
@@ -411,7 +399,6 @@ public class ModelDetailsPanel {
     		modelDescriptionEditor.getTextViewer().setEditable(false);
         } else {
         	modelNameText.setText(model.getName());
-        	modelLocationText.setText(model.getName());
         	modelDescriptionEditor.setText(model.getDescription());
         	modelDescriptionEditor.getTextViewer().setEditable(true);
         	bindingsViewer.getTable().removeAll();

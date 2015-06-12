@@ -414,8 +414,8 @@ public class ModelDetailsPanel {
     		problemsViewer.getTable().removeAll();
     		modelDescriptionEditor.getTextViewer().setEditable(false);
         } else {
-        	modelNameText.setText(selectedVdbModelEntry.getName().lastSegment());
-        	modelLocationText.setText(selectedVdbModelEntry.getName().removeLastSegments(1).toString());
+        	modelNameText.setText(selectedVdbModelEntry.getName());
+        	modelLocationText.setText(selectedVdbModelEntry.getPath().toOSString());
         	modelDescriptionEditor.setText(selectedVdbModelEntry.getDescription());
         	modelDescriptionEditor.getTextViewer().setEditable(true);
         	bindingsViewer.getTable().removeAll();

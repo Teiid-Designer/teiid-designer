@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -54,6 +53,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
@@ -853,7 +853,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			if (selections[0] instanceof IFile) {
     				IFile modelFile = (IFile) selections[0];
     				viewModelFolder = modelFile.getParent();
-    				String modelName = modelFile.getFullPath().removeFileExtension().lastSegment();
+    				String modelName = FileUtils.getNameWithoutExtension(modelFile);
     				viewModelName = modelName;
     				viewModelFileText.setText(modelName);
     				viewModelContainerText.setText(viewModelFolder.toString());

@@ -10,7 +10,6 @@ package org.teiid.designer.vdb.refactor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -30,7 +29,6 @@ import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
@@ -195,7 +193,7 @@ public class VdbResourceChange extends ResourceChange {
             Vdb actualVdb = new XmiVdb(vdbFile);
             for (VdbEntry entry : actualVdb.getModelEntries()) {
                 for (PathPair pathPair : replacements) {
-                    if (entry.getName().equals(pathPair.getSourcePath())) {
+                    if (entry.getPath().equals(pathPair.getSourcePath())) {
                         actualVdb.removeEntry(entry);
                         actualVdb.save();
                     }

@@ -400,7 +400,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         for (final PropertyElement property : element.getProperties()) {
             if (ModelElement.IMPORTS.equals(property.getName())) {
             	for (final VdbEntry entry : getVdb().getModelEntries()) {
-	                if (property.getValue().equals(entry.getName().toString())) {
+	                if (property.getValue().equals(entry.getPath().toOSString())) {
 	                    ((VdbModelEntry)entry).importedBy.add(this);
 	                    imports.add(entry);
 	                    break;
@@ -662,7 +662,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
                         VdbEntry importedEntry = null;
 
                         for (final VdbEntry entry : getVdb().getModelEntries()) {
-                            if (name.equals(entry.getName())) {
+                            if (name.equals(entry.getPath())) {
                                 importedEntry = entry;
                                 break;
                             }

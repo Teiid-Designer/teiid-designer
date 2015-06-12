@@ -413,7 +413,7 @@ public final class XmiVdb extends BasicVdb {
         // Create map of required jarName to its jar entry
         Map<String,VdbFileEntry> allRequiredJarsMap = new HashMap<String,VdbFileEntry>();
         for(VdbFileEntry fileEntry: allRequiredUdfJars) {
-            allRequiredJarsMap.put(fileEntry.getName().toString(), fileEntry);
+            allRequiredJarsMap.put(fileEntry.getPath().toOSString(), fileEntry);
         }
         
         // Get the current Udf jar names for this vdb
@@ -422,7 +422,7 @@ public final class XmiVdb extends BasicVdb {
         boolean jarsAdded = false;
         // Add any missing Udf jars to the vdb that are required
         for(VdbFileEntry modelUdfJar: allRequiredUdfJars) {
-            if(!currentUdfJarNames.contains(modelUdfJar.getName().toString())) {
+            if(!currentUdfJarNames.contains(modelUdfJar.getPath().toString())) {
                 udfJarEntries.add(modelUdfJar);
                 jarsAdded = true;
             }
@@ -435,8 +435,8 @@ public final class XmiVdb extends BasicVdb {
             Set<String> allRequiredJarNames = allRequiredJarsMap.keySet();
             if(!allRequiredJarNames.contains(currentJarName)) {
                 for(VdbEntry entry: udfJarEntries) {
-                    String entryName = entry.getName().toString();
-                    if(entryName!=null && entryName.equals(currentJarName)) {
+                    String entryPath = entry.getPath().toOSString();
+                    if(entryPath!=null && entryPath.equals(currentJarName)) {
                         udfJarEntries.remove(entry);
                         break;
                     }
@@ -507,8 +507,8 @@ public final class XmiVdb extends BasicVdb {
         // The list of UserFiles are those that begin with the UDF path prefix
         for(VdbFileEntry entry: udfJarEntries) {
             // Name of VDB entry
-            String entryName = entry.getName().toString();
-            udfJarNames.add(entryName);
+            String entryPath = entry.getPath().toOSString();
+            udfJarNames.add(entryPath);
         }
         return Collections.unmodifiableSet(udfJarNames);
     }
@@ -652,14 +652,14 @@ public final class XmiVdb extends BasicVdb {
         boolean removed = false;
         entry.dispose();
         if (entry instanceof VdbModelEntry) {
-            String entryName = entry.getName().toString();
+            String entryPath = entry.getPath().toOSString();
             removed = modelEntries.remove(entry);
 
             synchronizeUdfJars(new HashSet<VdbFileEntry>());
 
-            handleRemovedVdbModelEntry(entryName);
+            handleRemovedVdbModelEntry(entryPath);
         } else if (entry instanceof VdbSchemaEntry) {
-            String entryName = entry.getName().toString();
+            String entryName = entry.getPath().toOSString();
             removed = schemaEntries.remove(entry);
             handleRemovedVdbModelEntry(entryName);
         }
@@ -737,7 +737,7 @@ public final class XmiVdb extends BasicVdb {
                 out.close();
                 out = null;
                 // Replace archive in workspace with temporary archive
-                final File archiveFile = ModelerCore.getWorkspace().getRoot().findMember(getName()).getLocation().toFile();
+                final File archiveFile = ModelerCore.getWorkspace().getRoot().findMember(getSourceFile().getFullPath()).getLocation().toFile();
                 if (!archiveFile.delete()) throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
                 if (!tmpArchive.renameTo(archiveFile)) throw new Exception(
                                                                                   VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$

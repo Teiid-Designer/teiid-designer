@@ -9,7 +9,6 @@ package org.teiid.designer.runtime.ui.actions;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.PLUGIN_ID;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -35,6 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.teiid.core.designer.util.FileUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
@@ -138,17 +137,17 @@ public class DeployDynamicVdbAction extends Action implements ISelectionListener
 
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
         
-        for (IFile nextVDB : this.selectedVDBs) {
-            boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDB);
+        for (IFile nextVDBFile : this.selectedVDBs) {
+            boolean doDeploy = VdbRequiresSaveChecker.insureOpenVdbSaved(nextVDBFile);
 
             if( doDeploy ) {
-            	doDeploy = VdbAgeChecker.doDeploy(nextVDB, teiidServer.getServerVersion());
+            	doDeploy = VdbAgeChecker.doDeploy(nextVDBFile, teiidServer.getServerVersion());
             }
             
             if (doDeploy) {
-            	boolean deploySuccess = deployVdb(teiidServer, nextVDB);
+            	boolean deploySuccess = deployVdb(teiidServer, nextVDBFile);
 
-            	String vdbName = nextVDB.getFullPath().removeFileExtension().lastSegment();
+            	String vdbName = FileUtils.getNameWithoutExtension(nextVDBFile);
                 try {
                     // make sure deployment worked before going on to the next one
                     if (! teiidServer.hasVdb(vdbName)) {
@@ -200,7 +199,7 @@ public class DeployDynamicVdbAction extends Action implements ISelectionListener
 		        	deployVdb(teiidServer, vdb, true);
 		        }
 		        
-			    String vdbName = vdb.getFullPath().removeFileExtension().lastSegment();
+			    String vdbName = FileUtils.getNameWithoutExtension(vdb);
 		        try {
 		            if( teiidServer.hasVdb(vdbName) && doCreateDS  ) {
 		                createVdbDataSource(vdb, jndiName, jndiName);
@@ -345,7 +344,7 @@ public class DeployDynamicVdbAction extends Action implements ISelectionListener
     private void createVdbDataSource(Object vdbOrVdbFile, String displayName, String jndiName) throws Exception {
     	Vdb vdb = ((vdbOrVdbFile instanceof IFile) ? new XmiVdb((IFile) vdbOrVdbFile) : (Vdb) vdbOrVdbFile);
     	ITeiidServer teiidServer = getServerManager().getDefaultServer();
-	    String vdbName = vdb.getFile().getFullPath().removeFileExtension().lastSegment();
+	    String vdbName = vdb.getName();
     	teiidServer.createVdbDataSource(vdbName, displayName, jndiName);
     }
     

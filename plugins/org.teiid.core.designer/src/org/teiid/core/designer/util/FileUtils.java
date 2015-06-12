@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-
+import org.eclipse.core.resources.IResource;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
@@ -703,5 +703,16 @@ public class FileUtils {
             }
             copy(source, destination);
         }
+    }
+
+    /**
+     * @param resource
+     * @return the name of the resource without any extension
+     */
+    public static String getNameWithoutExtension(IResource resource) {
+        if (resource == null)
+            return null;
+
+        return resource.getFullPath().removeFileExtension().lastSegment();
     }
 }
