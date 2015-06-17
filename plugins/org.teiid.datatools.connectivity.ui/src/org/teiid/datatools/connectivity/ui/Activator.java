@@ -126,7 +126,7 @@ public class Activator extends AbstractUIPlugin {
      * 
      * @param exception
      */
-    public static void log(Exception exception) {
+    public static void log(Throwable exception) {
         IStatus status = new Status(
                                     IStatus.ERROR, 
                                     PLUGIN_ID,

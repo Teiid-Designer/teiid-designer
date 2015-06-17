@@ -254,8 +254,13 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
      */
     private void createPlanHTMLTab(TabFolder folderParent) {
         Composite tabPanel = createHTMLViewerPanel(folderParent);
-        TabItem planHTMLTab = new TabItem(folderParent, SWT.NONE);
+        if (tabPanel == null) {
+            // An error occurred getting the browser widget
+            // Do not show this tab if no panel available
+            return;
+        }
 
+        TabItem planHTMLTab = new TabItem(folderParent, SWT.NONE);
         planHTMLTab.setControl(tabPanel);
         planHTMLTab.setText(Messages.getString(PREFIX + "planViewerHTMLTab.name")); //$NON-NLS-1$
     }
@@ -286,7 +291,15 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
      * Create the Panel which defines the plan text view tab
      */
     private Composite createHTMLViewerPanel( Composite parent ) {
-        visualisation = new Browser(parent, SWT.NONE);
+        try {
+            visualisation = new Browser(parent, SWT.NONE);
+        } catch (Throwable ex) {
+            //
+            // Exception occurred while trying to initialise browser object
+            //
+            Activator.log(ex);
+        }
+
         return visualisation;
     }
 
@@ -550,6 +563,9 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     }
 
     private void displayNoExecPlanMessage() {
+        if (visualisation == null)
+            return; // No visualisation component so nothing to do
+
         try {
             File noPlanFile = new File(ExecutionPlanConverter.TEMP_DIRECTORY, "NoExecutionPlan.html");  //$NON-NLS-1$
             if (! noPlanFile.exists()) {
@@ -568,6 +584,9 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
     }
 
     private void displayHTMLExecPlan(String execPlan) {
+        if (visualisation == null)
+            return; // No visualisation component so nothing to do
+
         try {
             ExecutionPlanConverter converter = new ExecutionPlanConverter();
             String url = converter.convert(execPlan);
