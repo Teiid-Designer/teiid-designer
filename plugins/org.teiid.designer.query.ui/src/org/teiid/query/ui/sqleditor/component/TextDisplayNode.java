@@ -7,6 +7,7 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
+
 /**
  * The <code>TextDisplayNode</code> class is used to represent text display nodes.
  *
@@ -57,7 +58,13 @@ public class TextDisplayNode extends DisplayNode {
      */
     @Override
     public String toDisplayString() {
-        return (isVisible() ? this.textStr : BLANK);
+        if (! isVisible())
+            return BLANK;
+
+        if (textStr.equals("\u0000")) //$NON-NLS-1$
+            return "\\u0000"; //$NON-NLS-1$
+
+        return this.textStr;
     }
     
     /**
