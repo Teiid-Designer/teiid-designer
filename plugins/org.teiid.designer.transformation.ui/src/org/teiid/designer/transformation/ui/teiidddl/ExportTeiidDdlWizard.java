@@ -1,7 +1,6 @@
 package org.teiid.designer.transformation.ui.teiidddl;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -20,11 +19,6 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
-//import org.teiid.designer.core.xslt.Style;
-//import org.teiid.designer.core.xslt.StyleRegistry;
-//import org.teiid.designer.ddl.DdlOptions;
-//import org.teiid.designer.ddl.DdlPlugin;
-//import org.teiid.designer.ddl.DdlWriter;
 
 public class ExportTeiidDdlWizard extends AbstractWizard implements
 		FileUtils.Constants, IExportWizard, InternalUiConstants.Widgets, CoreStringUtil.Constants, UiConstants {

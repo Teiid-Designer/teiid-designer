@@ -145,5 +145,9 @@ public class Crud {
         sb.append("\n\t").append("a = " + a.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
         return sb.toString();
     }
-    
+
+    @Override
+    public Crud clone() {
+        return new Crud(c, r, u, d, e, a);
+    }
 }

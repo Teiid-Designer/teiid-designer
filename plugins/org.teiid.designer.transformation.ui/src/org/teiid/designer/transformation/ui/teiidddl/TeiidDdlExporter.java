@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -24,6 +23,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.transformation.ddl.TeiidModelToDdlGenerator;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -165,9 +165,8 @@ public class TeiidDdlExporter {
 
 			// At this point we have either a relational source or view model
 			// If Source model, we can expect to walk the table, procedure and function objects
-			TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator(this);
-			
-			ddl = generator.generate();
+			TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
+			ddl = generator.generate(getModelResource());
 			
 		} catch (ModelWorkspaceException e) {
 			// TODO ADD ERROR STATUS

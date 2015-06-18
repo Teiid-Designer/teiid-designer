@@ -16,12 +16,24 @@ import org.teiid.core.designer.util.StringUtilities;
  */
 public abstract class AbstractVdbObject implements StringConstants {
 
+    /**
+     * Name of vdb object
+     */
     private String name = EMPTY_STRING;
 
+    /**
+     * Description of vdb object
+     */
     private String description = EMPTY_STRING;
 
+    /**
+     * Properties of vdb object
+     */
     private Properties properties = new Properties();
 
+    /**
+     * Changed flag of vdb object
+     */
     private boolean changed;
 
     /**

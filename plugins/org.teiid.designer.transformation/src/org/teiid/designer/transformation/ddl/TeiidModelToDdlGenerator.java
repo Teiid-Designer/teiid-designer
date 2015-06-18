@@ -1,22 +1,20 @@
-package org.teiid.designer.transformation.ui.teiidddl;
+package org.teiid.designer.transformation.ddl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.ModelType;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.container.Container.OPTIONS;
 import org.teiid.designer.core.util.ModelContents;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Procedure;
@@ -24,15 +22,12 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
-import org.teiid.designer.transformation.ui.UiPlugin;
+import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 
-
-public class TeiidModelToDdlGenerator implements DataTypeManager, TeiidDDLConstants, TeiidReservedConstants  {
+public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReservedConstants  {
 	
-	private TeiidDdlExporter exporter;
-
-
 	private StringBuilder ddlBuffer = new StringBuilder();
 
     private boolean includeTables = true;
@@ -50,9 +45,8 @@ public class TeiidModelToDdlGenerator implements DataTypeManager, TeiidDDLConsta
     private List<IStatus> issues;
 
 
-    public TeiidModelToDdlGenerator(TeiidDdlExporter exporter) {
+    public TeiidModelToDdlGenerator() {
 		super();
-		this.exporter = exporter;
 		this.issues = new ArrayList<IStatus>();
 	}
     
@@ -80,41 +74,24 @@ public class TeiidModelToDdlGenerator implements DataTypeManager, TeiidDDLConsta
 
         return precisionDataTypes;
     }
-
-	@Override
-	public DataTypeName getDataTypeName(String dataTypeId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<String> getAllDataTypeNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
     
-	public String generate() throws ModelWorkspaceException {
-//		final Resource emfResource = exporter.getModelResource().getEmfResource();
-//		final ModelEditor editor = ModelerCore.getModelEditor();
-//		final String modelName = editor.getModelName(exporter.getModelResource());
-//		final String modelFilename = exporter.getModelResource().getPath().toString();
-		final ModelContents contents = ModelContents.getModelContents(exporter.getModelResource());
-		isVirtual = exporter.getModelResource().getModelType().getValue() == ModelType.VIRTUAL;
-		
+	public String generate(ModelResource modelResource) throws ModelWorkspaceException {
+	    CoreArgCheck.isNotNull(modelResource);
+
+		final ModelContents contents = ModelContents.getModelContents(modelResource);
+		isVirtual = modelResource.getModelType().getValue() == ModelType.VIRTUAL;
+
 		append(StringConstants.NEW_LINE);
 		
 		for( Object obj : contents.getAllRootEObjects() ) {
 			String statement = getStatement((EObject)obj);
 			if( ! StringUtilities.isEmpty(statement) ) {
-				System.out.println(" >>>> Statement = \n" + statement);
 				append(statement);
 				append(StringConstants.NEW_LINE);
 			}
 		}
 		
 		return ddlBuffer.toString();
-//				"-- DDL EXAMPLE --" +
-//				"\nCREATE TABLE productdata (\n\tid string(255),\n\tname string(255),\n\tvalue long\n)";
 	}
 	
 	private String getStatement(EObject eObj) {
@@ -188,7 +165,7 @@ public class TeiidModelToDdlGenerator implements DataTypeManager, TeiidDDLConsta
     	try {
 			return ModelerCore.getModelEditor().getDescription(eObj);
 		} catch (ModelerCoreException e) {
-			issues.add(new Status(IStatus.ERROR, UiPlugin.PLUGIN_ID, "Error finding description for " + getName(eObj), e));
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding description for " + getName(eObj), e));
 		}
     	
     	return null;

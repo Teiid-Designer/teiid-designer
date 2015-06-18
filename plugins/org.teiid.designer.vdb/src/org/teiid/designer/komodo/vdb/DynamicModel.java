@@ -33,18 +33,17 @@ public class DynamicModel extends VdbUnit {
 		</xs:complexType>
 	 */
 
-	Type modelType;
-	boolean isVisible;
-	String path;
-	Map<String, VdbSource> modelSources;
-	boolean allowMultiSource;
-	boolean addColumn;
-	String columnAlias;
+    private Type modelType = Type.DEFAULT_VALUE;
+	private boolean isVisible = true;
+	private Map<String, VdbSource> modelSources = new HashMap<String, VdbSource>();
+	private boolean allowMultiSource;
+	private boolean addColumn;
+	private String columnAlias = EMPTY_STRING;
 
 	/**
 	 * The metadata object. Can be null
 	 */
-	Metadata metadata;
+	private Metadata metadata;
 
     /**
      * The type of a model.
@@ -76,6 +75,15 @@ public class DynamicModel extends VdbUnit {
         public String toString() {
             return getType();
         }
+
+        public static Type fromString(String typeId) {
+            for (Type type : Type.values()) {
+                if (type.getType().equalsIgnoreCase(typeId))
+                    return type;
+            }
+
+            return null;
+        }
     }
     
     
@@ -85,10 +93,6 @@ public class DynamicModel extends VdbUnit {
      */
     public DynamicModel() {
 		super();
-		
-		this.modelSources = new HashMap<String, VdbSource>();
-		this.modelType = Type.PHYSICAL;
-		this.columnAlias = EMPTY_STRING;
     }
     
     /**
@@ -106,6 +110,7 @@ public class DynamicModel extends VdbUnit {
      */
     public void addSource( final VdbSource source) {
     	this.modelSources.put(source.getName(), source);
+    	source.setVdb(getVdb());
     }
 
     /**

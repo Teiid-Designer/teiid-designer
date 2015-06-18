@@ -9,7 +9,6 @@ package org.teiid.designer.vdb;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.Writer;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
@@ -32,9 +31,22 @@ import org.xml.sax.SAXException;
  * @since 8.0
  */
 @ThreadSafe
-// TODO: File constructor
 public interface Vdb extends VdbConstants {
 
+    /**
+     * Type of vdb
+     */
+    enum VdbType {
+        /**
+         * XML DDL based vdb
+         */
+        DYNAMIC,
+
+        /**
+         * XMI Archive based vdb
+         */
+        XMI;
+    }
     /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
@@ -762,9 +774,13 @@ public interface Vdb extends VdbConstants {
     String removeProperty(String key);
 
     /**
-     * Export vdb to destination writer. If null then use file from {@link #getFilePath()}
-     * @param destination
+     * Convert this vdb into the given type of vdb
+     * 
+     * @param vdb type
+     * @return vdb converted to this type. If the type is the same type
+     *                 as this vdb then this will be returned.
      * @throws Exception 
+     *
      */
-    void export(Writer destination) throws Exception;
+    <V extends Vdb> V convert(VdbType vdb) throws Exception;
 }

@@ -343,4 +343,7 @@ public class TranslatorOverride extends VdbUnit implements Comparable<Translator
         }
     }
 
+    public TranslatorOverride clone() {
+        return new TranslatorOverride(getVdb(), getName(), getType(), getDescription());
+    }
 }

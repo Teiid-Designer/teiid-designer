@@ -80,10 +80,10 @@ public class Metadata extends VdbUnit {
 	 * @param schemaText
 	 * @param type
 	 */
-	public Metadata(String schemaText, String type) {
+	public Metadata(String schemaText, Metadata.Type type) {
 		this();
 		this.schemaText = schemaText;
-		this.type = getTypeForString(type);
+		this.type = type;
 	}
 
 	/**

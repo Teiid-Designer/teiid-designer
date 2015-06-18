@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -26,6 +27,7 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.teiid.designer.vdb.manifest.VdbElement;
 import org.xml.sax.SAXException;
 
@@ -70,7 +72,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 	<xs:attribute name="name" type="xs:string" use="required"/>
 	 	<xs:attribute name="version" type="xs:int" use="required"/>
 	 */
-	private int version;
+	private int version = 1;
 	
 	/* Elements:
 		<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -93,7 +95,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 */
 	private boolean preview;
 	private int queryTimeout = DEFAULT_TIMEOUT;
-	private AllowedLanguages allowedLanguages = new AllowedLanguages();
+	private AllowedLanguages allowedLanguages = new AllowedLanguages(this);
 	private String securityDomain;
 	private String gssPattern;
 	private String passwordPattern;
@@ -105,9 +107,15 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	private KeyInValueHashMap<String, VdbImportVdbEntry> importVdbs = new KeyInValueHashMap<String, VdbImportVdbEntry>(new ImportVdbKeyAdapter());
 	private KeyInValueHashMap<String, TranslatorOverride> translatorOverrides = new KeyInValueHashMap<String, TranslatorOverride>(new TranslatorOverrideKeyAdapter());
 	private KeyInValueHashMap<String, DataRole> dataRoles = new KeyInValueHashMap<String, DataRole>(new DataRoleKeyAdapter());
-	private KeyInValueHashMap<String, VdbEntry> entries = new KeyInValueHashMap<String, VdbEntry>(new VdbEntryKeyAdapter());
 
 	private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+
+	/**
+	 * Default constructor
+	 */
+	protected BasicVdb() {
+	    super();
+	}
 
 	/**
 	 * @param sourceFile the source file of the vdb
@@ -115,16 +123,34 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 * <p>
 	 * <li>The name of the vdb is the source file name WITHOUT the extension
      * <li>The file name ({@link #getFileName()}) is the source file name WITH the extension
-     * <li> The path of the vdb can be extracted from {@link #getSourceFile()}
+     * <li>The path of the vdb can be extracted from {@link #getSourceFile()}
+	 * @throws Exception
 	 */
-	protected BasicVdb(IFile sourceFile) {
+	protected BasicVdb(IFile sourceFile) throws Exception {
 		super();
 		this.sourceFile = sourceFile;
+
 		setName(FileUtils.getNameWithoutExtension(sourceFile));
-		this.version = 1;
-		this.allowedLanguages.setVdb(this);
+
+		// Create folder for VDB in state folder
+        File stagingFolder = getStagingFolder();
+        if (stagingFolder != null)
+            stagingFolder.mkdirs();
+
+		read(sourceFile);
+
 		setChanged(false);
 	}
+
+	/**
+     * This will import the contents of the vdb from the given file and
+     * replace the point this vdb at the given file
+     *
+     * @param file
+     *
+     * @throws Exception
+     */
+    public abstract void read(final IFile file) throws Exception;
 
 	@Override
 	public void setDescription(String newDescription) {
@@ -172,6 +198,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	@Override
     public boolean addImport(VdbImportVdbEntry vdbImport) {
 		if (importVdbs.add(vdbImport)) {
+		    vdbImport.setVdb(this);
 		    setModified(this, Event.IMPORT_VDB_ENTRY_ADDED, null, vdbImport);
 		    return true;
 		}
@@ -184,6 +211,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	@Override
 	public boolean addTranslator(final TranslatorOverride translatorOverride) {
         if (this.translatorOverrides.add(translatorOverride)) {
+            translatorOverride.setVdb(this);
             setModified(this, Event.TRANSLATOR_OVERRIDE_ADDED, null, translatorOverride);
             return true;
         }
@@ -223,14 +251,6 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	@Override
 	public Collection<DataRole> getDataRoles() {
 		return Collections.unmodifiableCollection(dataRoles.values());
-	}
-
-	/** (non-Javadoc)
-	 * @see org.teiid.designer.vdb.Vdb#getEntries()
-	 */
-	@Override
-	public Collection<VdbEntry> getEntries() {
-        return Collections.unmodifiableCollection(entries.values());
 	}
 
 	/** (non-Javadoc)
@@ -666,5 +686,80 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
             return new IMarker[0];
 
         return file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+    }
+
+    /**
+     * Populate the given vdb with the basic properties and settings
+     *
+     * @param vdb
+     */
+    protected void populateVdb(BasicVdb vdb) {
+        vdb.setName(getName());
+        vdb.setDescription(getDescription());
+
+        for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
+            vdb.setProperty(entry.getKey().toString(), entry.getValue().toString());
+        }
+
+        vdb.setFile(sourceFile);
+
+        vdb.setVersion(getVersion());
+
+        vdb.setConnectionType(getConnectionType());
+        vdb.setPreview(isPreview());
+        vdb.setQueryTimeout(getQueryTimeout());
+
+        for (String language : getAllowedLanguages().getAllowedLanguageValues()) {
+            vdb.addAllowedLanguage(language);
+        }
+
+        vdb.setSecurityDomain(getSecurityDomain());
+        vdb.setGssPattern(getGssPattern());
+        vdb.setPasswordPattern(getPasswordPattern());
+        vdb.setAuthenticationType(getAuthenticationType());
+        vdb.setValidationDateTime(getValidationDateTime());
+        vdb.setValidationVersion(getValidationVersion());
+        vdb.setAutoGenerateRESTWar(isAutoGenerateRESTWar());
+
+        for (VdbImportVdbEntry entry : getImports()) {
+            VdbImportVdbEntry clone = entry.clone();
+            vdb.addImport(clone);
+        }
+        
+        for (TranslatorOverride translator : getTranslators()) {
+            TranslatorOverride clone = translator.clone();
+            vdb.addTranslator(clone);
+        }
+
+        for (DataRole dataRole : getDataRoles()) {
+            DataRole clone = dataRole.clone();
+            vdb.addDataRole(clone);
+        }
+
+        vdb.setChanged(isChanged());
+    }
+
+    /**
+     * @return an {@link XmiVdb} of this vdb
+     * @throws Exception 
+     */
+    public abstract XmiVdb xmiVdbConvert() throws Exception;
+
+    /**
+     * @return a {@link DynamicVdb} of this vdb
+     * @throws Exception 
+     */
+    public abstract DynamicVdb dynVdbConvert() throws Exception;
+
+    @Override
+    public Vdb convert(VdbType vdbType) throws Exception {
+        switch (vdbType) {
+            case DYNAMIC:
+                return dynVdbConvert();
+            case XMI:
+                return xmiVdbConvert();
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 }

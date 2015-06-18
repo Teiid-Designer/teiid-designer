@@ -116,4 +116,11 @@ public class VdbSource extends VdbUnit {
             return false;
         return true;
     }
+
+    @Override
+    public VdbSource clone() {
+        VdbSource clone = new VdbSource(getVdb(), getName(), getJndiName(), getTranslatorName());
+        clone.setDescription(getDescription());
+        return clone;
+    }
 }

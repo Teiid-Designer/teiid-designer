@@ -1,4 +1,4 @@
-package org.teiid.designer.transformation.ui.teiidddl;
+package org.teiid.designer.transformation.ddl;
 
 import org.teiid.core.designer.util.StringConstants;
 

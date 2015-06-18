@@ -20,6 +20,12 @@ import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -27,7 +33,7 @@ import javax.xml.validation.Validator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.teiid.core.designer.util.OperationUtil;
-import org.teiid.core.designer.util.OperationUtil.ReturningUnreliable;
+import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.komodo.vdb.VdbManagementException;
@@ -38,8 +44,10 @@ import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbFileEntry;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
@@ -50,6 +58,7 @@ import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.SourceElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
+import org.w3c.dom.Document;
 
 /**
  * Dynamic VDB needs to manage a *-vdb.xml file
@@ -61,7 +70,14 @@ import org.teiid.designer.vdb.manifest.VdbElement;
 public class DynamicVdb extends BasicVdb {
 
     private Map<String, DynamicModel> models = new HashMap<String, DynamicModel>();
-	
+
+    /**
+     * Default constructor
+     */
+    public DynamicVdb() {
+        super();
+    }
+
 	/**
 	 * Constructor for Eclipse-based use-cases where an IResource/IFile is available
 	 *
@@ -70,22 +86,16 @@ public class DynamicVdb extends BasicVdb {
 	 */
 	public DynamicVdb(IFile file) throws Exception {
 	    super(file);
-        importVdb(file);
+        read(file);
 	}
 
-	/**
-	 * This will import the contents of the vdb from the given file and
-	 * replace the point this vdb at the given file
-	 *
-	 * @param file
-	 *
-	 * @return the new instance
-	 * @throws Exception
-	 */
-	public DynamicVdb importVdb(final IFile file) throws Exception {
+	@Override
+    public void read(final IFile file) throws Exception {
 	    if( file == null || ! file.exists() ) {
             throw new VdbManagementException("File " + file.getFullPath() + " does not exist"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+
+	    setFile(file);
 
 	    final File dynVdbFile = file.getFullPath().toFile();
         InputStream xml = null;
@@ -97,12 +107,7 @@ public class DynamicVdb extends BasicVdb {
                 xml.close();
         }
 
-        //
-        // Point this vdb at the new file
-        //
-        setFile(file);
-
-        return OperationUtil.perform(new ReturningUnreliable() {
+        OperationUtil.perform(new Unreliable() {
 
             InputStream fileStream = null;
 
@@ -118,7 +123,7 @@ public class DynamicVdb extends BasicVdb {
             }
 
             @Override
-            public DynamicVdb tryToDo() throws Exception {
+            public void tryToDo() throws Exception {
                 try {
                     fileStream = new FileInputStream(dynVdbFile);
 
@@ -251,8 +256,6 @@ public class DynamicVdb extends BasicVdb {
                         }
                     }
 
-                    return vdb;
-
                 } finally {
                     if (fileStream != null)
                         fileStream.close();
@@ -266,7 +269,7 @@ public class DynamicVdb extends BasicVdb {
 	 * @return true if vdb file is valid
 	 * @throws Exception 
      */
-    private static boolean validate(InputStream xml) throws Exception {
+    private boolean validate(InputStream xml) throws Exception {
         InputStream xsd = VdbElement.class.getResourceAsStream(VDB_DEPLOYER_XSD);
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
@@ -277,11 +280,12 @@ public class DynamicVdb extends BasicVdb {
         return true;
     }
 
-    /** (non-Javadoc)
-	 * @see org.teiid.designer.vdb.Vdb#export(Writer)
-	 */
-	@Override
-	public void export(Writer destination) throws Exception {
+    /**
+     * Export vdb to destination writer. If null then use source file}
+     * @param destination
+     * @throws Exception 
+     */
+	public void write(Writer destination) throws Exception {
 	    if( destination == null ) {
 	        File destFile = getSourceFile().getFullPath().toFile();
 	        destination = new FileWriter(destFile);
@@ -293,7 +297,24 @@ public class DynamicVdb extends BasicVdb {
 	        final Marshaller marshaller = getJaxbContext().createMarshaller();
 	        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 	        marshaller.setSchema(getManifestSchema());
-	        marshaller.marshal(vdbElement, destination);
+
+	        //
+            // To get around the lack of CDATA support in jaxb, first marshall
+            // to a DOM then use an XSL transformer to include the CDATA pragmas
+            //
+	        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+	        Document document = docBuilderFactory.newDocumentBuilder().newDocument();
+
+	        // Marshall the feed object into the empty document.
+	        marshaller.marshal(vdbElement, document);
+
+	        // Transform the DOM to the output stream
+	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	        Transformer transformer = transformerFactory.newTransformer();
+	        transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
+	        transformer.setOutputProperty(OutputKeys.CDATA_SECTION_ELEMENTS, "metadata"); //$NON-NLS-1$
+	        transformer.transform(new DOMSource(document), new StreamResult(destination));
+
 	    } finally {
 	        destination.close();
 	    }
@@ -313,6 +334,7 @@ public class DynamicVdb extends BasicVdb {
     @Override
     public void addDynamicModel(DynamicModel model) {
         DynamicModel existing = models.put(model.getName(), model);
+        model.setVdb(this);
         setChanged(existing != null);
     }
 
@@ -329,8 +351,7 @@ public class DynamicVdb extends BasicVdb {
 
     @Override
     public void save() throws Exception {
-        //TODO
-        // write the vdb out to file
+        write(null);
     }
 
     /** (non-Javadoc)
@@ -373,7 +394,12 @@ public class DynamicVdb extends BasicVdb {
     }
 
     @Override
-    public Set<VdbEntry> getModelEntries() {
+    public Collection<VdbEntry> getEntries() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Set<VdbModelEntry> getModelEntries() {
         throw new UnsupportedOperationException();
     }
 
@@ -392,5 +418,13 @@ public class DynamicVdb extends BasicVdb {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public DynamicVdb dynVdbConvert() {
+        return this;
+    }
 
+    @Override
+    public XmiVdb xmiVdbConvert() {
+        throw new UnsupportedOperationException();
+    }
 }

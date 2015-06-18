@@ -8,9 +8,9 @@
 package org.teiid.designer.vdb;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +28,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -42,11 +44,15 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.core.util.VdbHelper;
+import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.komodo.vdb.DynamicModel;
+import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.transformation.ddl.TeiidModelToDdlGenerator;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.EntryElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
@@ -63,6 +69,7 @@ import org.teiid.designer.vdb.manifest.VdbElement;
 @ThreadSafe
 public final class XmiVdb extends BasicVdb {
 
+    private static final String WORKING_FILES = "working-files"; //$NON-NLS-1$
     /**
      * @param resource the resource whose Preview VDB prefix is being requested (cannot be <code>null</code>)
      * @return the Preview VDB prefix (never <code>null</code>)
@@ -89,14 +96,22 @@ public final class XmiVdb extends BasicVdb {
         return prefix;
     }
 
-    final CopyOnWriteArraySet<VdbFileEntry> fileEntries = new CopyOnWriteArraySet<VdbFileEntry>();
-    final CopyOnWriteArraySet<VdbFileEntry> udfJarEntries = new CopyOnWriteArraySet<VdbFileEntry>();
-    final CopyOnWriteArraySet<VdbSchemaEntry> schemaEntries = new CopyOnWriteArraySet<VdbSchemaEntry>();
-    final CopyOnWriteArraySet<VdbModelEntry> modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
+    //
+    // All lazily initialised through their own internal methods
+    //
+    private CopyOnWriteArraySet<VdbFileEntry> fileEntries;
+    private CopyOnWriteArraySet<VdbFileEntry> udfJarEntries;
+    private CopyOnWriteArraySet<VdbSchemaEntry> schemaEntries;
+    private CopyOnWriteArraySet<VdbModelEntry> modelEntries;
+    private VdbModelBuilder builder;
+    private Map<String, Set<String>> modelToImportVdbMap;
 
-    private VdbModelBuilder builder = new VdbModelBuilder();
-
-    private Map<String, Set<String>> modelToImportVdbMap = new HashMap<String, Set<String>>();
+    /**
+     * Default constructor
+     */
+    public XmiVdb() {
+        super();
+    }
 
     /**
      * @param file
@@ -105,16 +120,69 @@ public final class XmiVdb extends BasicVdb {
      */
     public XmiVdb( final IFile file, final boolean preview ) throws Exception {
         super(file);
+        setPreview(preview);
+    }
 
-        // Create folder for VDB in state folder
-        getStagingFolder().mkdirs();
+    /**
+     * @param file
+     * @throws Exception
+     */
+    public XmiVdb( final IFile file) throws Exception {
+        this(file, false);
+    }
 
+    
+
+    private Set<VdbFileEntry> fileEntries() {
+        if (fileEntries == null)
+            fileEntries = new CopyOnWriteArraySet<VdbFileEntry>();
+
+        return fileEntries;
+    }
+
+    private Set<VdbFileEntry> udfJarEntries() {
+        if (udfJarEntries == null)
+            udfJarEntries = new CopyOnWriteArraySet<VdbFileEntry>();
+
+        return udfJarEntries;
+    }
+
+    private Set<VdbSchemaEntry> schemaEntries() {
+        if (schemaEntries == null)
+            schemaEntries = new CopyOnWriteArraySet<VdbSchemaEntry>();
+
+        return schemaEntries;
+    }
+
+    private Set<VdbModelEntry> modelEntries() {
+        if (modelEntries == null)
+            modelEntries = new CopyOnWriteArraySet<VdbModelEntry>();
+
+        return modelEntries;
+    }
+
+    private Map<String, Set<String>> modelToImportVdbMap() {
+        if (modelToImportVdbMap == null)
+            modelToImportVdbMap = new HashMap<String, Set<String>>();
+
+        return modelToImportVdbMap;
+    }
+
+    private VdbModelBuilder builder() {
+        if (builder == null)
+            builder = new VdbModelBuilder();
+
+        return builder;
+    }
+
+    @Override
+    public void read(final IFile file) throws Exception {
         // Open archive and populate model entries
         if (file.getLocation().toFile().length() == 0L) {
-            setPreview(preview);
-            setVersion(1);
             return;
         }
+
+        setFile(file);
 
         final boolean[] previewable = new boolean[1];
         final int[] vdbVersion = new int[1];
@@ -145,6 +213,8 @@ public final class XmiVdb extends BasicVdb {
 
             @Override
             public void tryToDo() throws Exception {
+                XmiVdb vdb = XmiVdb.this;
+
                 archive = new ZipFile(file.getLocation().toString());
                 for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
                     final ZipEntry zipEntry = iter.nextElement();
@@ -162,7 +232,7 @@ public final class XmiVdb extends BasicVdb {
                             final String value = property.getValue();
                             
                             if (Xml.PREVIEW.equals(name)) {
-                            	previewable[0] = Boolean.parseBoolean(value);
+                                previewable[0] = Boolean.parseBoolean(value);
                                 // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else if (Xml.QUERY_TIMEOUT.equals(name)) { 
                                 int timeoutMillis = Integer.parseInt(value);
@@ -170,18 +240,18 @@ public final class XmiVdb extends BasicVdb {
                                     queryTimeout[0] = timeoutMillis / 1000;
                                 }
                             } else if(Xml.ALLOWED_LANGUAGES.equals(name) ) {
-                            	/*
-                            	 *  EXAMPLE XML FRAGMENT
-                            	 *  multiple properties allowed with SAME KEY different values
-                            	 *  Need to discover and treat these differently
-								    <property name="allowed-languages" value="javascript, perl, php"/>
-                            	 */
-                            	String[] langs = StringUtilities.parseCommaDelimitedString(value);
-                            	for( String lang : langs ) {
-                            		addAllowedLanguage(lang);
-                            	}
+                                /*
+                                 *  EXAMPLE XML FRAGMENT
+                                 *  multiple properties allowed with SAME KEY different values
+                                 *  Need to discover and treat these differently
+                                    <property name="allowed-languages" value="javascript, perl, php"/>
+                                 */
+                                String[] langs = StringUtilities.parseCommaDelimitedString(value);
+                                for( String lang : langs ) {
+                                    addAllowedLanguage(lang);
+                                }
                             } else if (Xml.VALIDATION_DATETIME.equals(name)) { 
-                            	valDateTime[0] = value;
+                                valDateTime[0] = value;
                             } else if (Xml.VALIDATION_VERSION.equals(name)) { 
                                 valVersion[0] = value;
                             } else if (Xml.SECURITY_DOMAIN.equals(name)) { 
@@ -193,7 +263,7 @@ public final class XmiVdb extends BasicVdb {
                             } else if (Xml.AUTHENTICATION_TYPE.equals(name)) { 
                                 authType[0] = value;
                             } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
-                            	autoGen[0] = Boolean.parseBoolean(value);
+                                autoGen[0] = Boolean.parseBoolean(value);
                                 // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
                             } else {
                                 setProperty(name, value);
@@ -203,19 +273,19 @@ public final class XmiVdb extends BasicVdb {
                         for (final ModelElement element : manifest.getModels()) {
                             IPath path = null;
                             if( element.getPath() != null ) {
-                            	path = Path.fromPortableString(element.getPath());
+                                path = Path.fromPortableString(element.getPath());
                             }
                             /* Allows migration from old vdbs where xsd files were considered models */
                             if (path != null && ModelUtil.isXsdFile(path)) {
                                 VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
-                                schemaEntries.add(vdbSchemaEntry);
+                                schemaEntries().add(vdbSchemaEntry);
                             } else {
-                                modelEntries.add(new VdbModelEntry(XmiVdb.this, element));
+                                modelEntries().add(new VdbModelEntry(XmiVdb.this, element));
                             }
                         }
 
                         // Initialize model entry imports only after all model entries have been created
-                        for (final VdbModelEntry entry : modelEntries) {
+                        for (final VdbModelEntry entry : modelEntries()) {
                             entry.initializeImports();
                         }
                                                 
@@ -227,15 +297,15 @@ public final class XmiVdb extends BasicVdb {
                              */
                             if (ModelUtil.isXsdFile(path)) {
                                 VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
-                                schemaEntries.add(vdbSchemaEntry);
+                                schemaEntries().add(vdbSchemaEntry);
                             } else {
                                 VdbFileEntry vdbFileEntry = new VdbFileEntry(XmiVdb.this, element);
                                 switch (vdbFileEntry.getFileType()) {
                                     case UDFJar:
-                                        udfJarEntries.add(vdbFileEntry);
+                                        udfJarEntries().add(vdbFileEntry);
                                         break;
                                     case UserFile:
-                                        fileEntries.add(vdbFileEntry);
+                                        fileEntries().add(vdbFileEntry);
                                 }
                             }
                         }
@@ -270,23 +340,10 @@ public final class XmiVdb extends BasicVdb {
         setPasswordPattern(pwdPatt[0]);
         setAuthenticationType(authType[0]);
         if( valDateTime[0] != null ) {
-        	SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH); //$NON-NLS-1$
+            SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", java.util.Locale.ENGLISH); //$NON-NLS-1$
             setValidationDateTime(format.parse(valDateTime[0])); //new Date(valDateTime[0]); //DateUtil.convertStringToDate(valDateTime[0]);
         }
         setValidationVersion(valVersion[0]);
-    }
-
-    /**
-     * @param file
-     * @throws Exception
-     */
-    public XmiVdb( final IFile file) throws Exception {
-        this(file, false);
-    }
-
-    @Override
-    public void export(Writer destination) {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -323,7 +380,7 @@ public final class XmiVdb extends BasicVdb {
      */
     private VdbSchemaEntry addSchemaEntry( final IPath path) throws Exception {
         VdbSchemaEntry schemaEntry = new VdbSchemaEntry(this, path);
-        VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries);
+        VdbSchemaEntry addedEntry = addEntry(schemaEntry, schemaEntries());
 
         // entry did not exist in VDB
         if (schemaEntry == addedEntry) {
@@ -350,10 +407,10 @@ public final class XmiVdb extends BasicVdb {
         Set<VdbFileEntry> entries = null;
         switch (entryType) {
             case UDFJar:
-                entries = udfJarEntries;
+                entries = udfJarEntries();
                 break;
             case UserFile:
-                entries = fileEntries;
+                entries = fileEntries();
         }
 
         return addEntry(new VdbFileEntry(this, name, entryType), entries);
@@ -381,7 +438,7 @@ public final class XmiVdb extends BasicVdb {
      */
     private VdbModelEntry addModelEntry( final IPath name) throws Exception {
         VdbModelEntry modelEntry = new VdbModelEntry(this, name);
-        VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries);
+        VdbModelEntry addedEntry = addEntry(modelEntry, modelEntries());
 
         // entry did not exist in VDB
         if (modelEntry == addedEntry) {
@@ -405,7 +462,7 @@ public final class XmiVdb extends BasicVdb {
         Set<VdbFileEntry> allRequiredUdfJars = new HashSet<VdbFileEntry>(newJarEntries);
         
         // Add other Udf jars used by current Model entries
-        for(VdbModelEntry entry: modelEntries) {
+        for(VdbModelEntry entry: modelEntries()) {
             Set<VdbFileEntry> jarEntries = entry.getUdfJars();
             allRequiredUdfJars.addAll(jarEntries);
         }
@@ -423,7 +480,7 @@ public final class XmiVdb extends BasicVdb {
         // Add any missing Udf jars to the vdb that are required
         for(VdbFileEntry modelUdfJar: allRequiredUdfJars) {
             if(!currentUdfJarNames.contains(modelUdfJar.getPath().toString())) {
-                udfJarEntries.add(modelUdfJar);
+                udfJarEntries().add(modelUdfJar);
                 jarsAdded = true;
             }
         }
@@ -434,10 +491,10 @@ public final class XmiVdb extends BasicVdb {
         for(String currentJarName: currentUdfJarNames) {
             Set<String> allRequiredJarNames = allRequiredJarsMap.keySet();
             if(!allRequiredJarNames.contains(currentJarName)) {
-                for(VdbEntry entry: udfJarEntries) {
+                for(VdbEntry entry: udfJarEntries()) {
                     String entryPath = entry.getPath().toOSString();
                     if(entryPath!=null && entryPath.equals(currentJarName)) {
-                        udfJarEntries.remove(entry);
+                        udfJarEntries().remove(entry);
                         break;
                     }
                 }
@@ -455,10 +512,10 @@ public final class XmiVdb extends BasicVdb {
      */
     @Override
     public final void close() {
-        fileEntries.clear();
-        udfJarEntries.clear();
-        schemaEntries.clear();
-        modelEntries.clear();
+        fileEntries().clear();
+        udfJarEntries().clear();
+        schemaEntries().clear();
+        modelEntries().clear();
 
         // Clean up state folder
         FileUtils.removeDirectoryAndChildren(VdbPlugin.singleton().getStateLocation().append(getSourceFile().getFullPath().segment(0)).toFile());
@@ -472,9 +529,9 @@ public final class XmiVdb extends BasicVdb {
     @Override
     public final Set<VdbEntry> getEntries() {
         Set<VdbEntry> entries = new HashSet<VdbEntry>();
-        entries.addAll(schemaEntries);
-        entries.addAll(fileEntries);
-        entries.addAll(udfJarEntries);
+        entries.addAll(schemaEntries());
+        entries.addAll(fileEntries());
+        entries.addAll(udfJarEntries());
         return Collections.unmodifiableSet(entries);
     }
 
@@ -484,7 +541,7 @@ public final class XmiVdb extends BasicVdb {
      */
     @Override
     public final Set<VdbSchemaEntry> getSchemaEntries() {
-        return Collections.unmodifiableSet(schemaEntries);
+        return Collections.unmodifiableSet(schemaEntries());
     }
 
     /**
@@ -493,7 +550,7 @@ public final class XmiVdb extends BasicVdb {
      */
     @Override
     public final Set<VdbFileEntry> getUdfJarEntries() {
-        return Collections.unmodifiableSet(udfJarEntries);
+        return Collections.unmodifiableSet(udfJarEntries());
     }
     
     /**
@@ -505,7 +562,7 @@ public final class XmiVdb extends BasicVdb {
         Set<String> udfJarNames = new HashSet<String>();
         
         // The list of UserFiles are those that begin with the UDF path prefix
-        for(VdbFileEntry entry: udfJarEntries) {
+        for(VdbFileEntry entry: udfJarEntries()) {
             // Name of VDB entry
             String entryPath = entry.getPath().toOSString();
             udfJarNames.add(entryPath);
@@ -519,16 +576,16 @@ public final class XmiVdb extends BasicVdb {
      */
     @Override
     public final Set<VdbFileEntry> getUserFileEntries() {
-        return Collections.unmodifiableSet(fileEntries);
+        return Collections.unmodifiableSet(fileEntries());
     }
 
     /**
      * @return the immutable set of model entries within this VDB
      */
     @Override
-    public final Set<VdbEntry> getModelEntries() {
-        final Set<VdbEntry> entries = new HashSet<VdbEntry>();
-        for (final VdbModelEntry entry : modelEntries)
+    public final Set<VdbModelEntry> getModelEntries() {
+        final Set<VdbModelEntry> entries = new HashSet<VdbModelEntry>();
+        for (final VdbModelEntry entry : modelEntries())
             if (!entry.isBuiltIn()) entries.add(entry);
         return Collections.unmodifiableSet(entries);
     }
@@ -587,13 +644,13 @@ public final class XmiVdb extends BasicVdb {
     private final void handleRemovedVdbModelEntry(String vdbModelEntryName) {
     	// Clean up import VDBs
     	// Assume that any registered vdb names for the model entry are stale
-    	Set<String> existingSet = modelToImportVdbMap.get(vdbModelEntryName);
+    	Set<String> existingSet = modelToImportVdbMap().get(vdbModelEntryName);
     	
     	
     	// If Set does not exist for modelName, create it
     	if( existingSet != null ) {
     		unregisterStaleImportVdbs(existingSet);
-    		modelToImportVdbMap.remove(vdbModelEntryName);
+    		modelToImportVdbMap().remove(vdbModelEntryName);
     	}
     }
     
@@ -603,7 +660,7 @@ public final class XmiVdb extends BasicVdb {
      */
     @Override
     public final boolean isSynchronized() {
-        for (final VdbModelEntry entry : modelEntries)
+        for (final VdbModelEntry entry : modelEntries())
             if (entry.getSynchronization() == Synchronization.NotSynchronized) return false;
         for (final VdbEntry entry : getEntries())
             if (entry.getSynchronization() == Synchronization.NotSynchronized) return false;
@@ -615,13 +672,13 @@ public final class XmiVdb extends BasicVdb {
      * @param modelName the model name (<code>IPath</code>) from the <code>VdbModelEntry</code>
      */
     public final void registerImportVdbs(Collection<String> importVdbNames, String modelName) {
-    	Set<String> existingSet = modelToImportVdbMap.get(modelName);
+    	Set<String> existingSet = modelToImportVdbMap().get(modelName);
     	Set<String> staleImportVdbs = new HashSet<String>();
     	
     	// If Set does not exist for modelName, create it
     	if( existingSet == null ) {
     		existingSet = new HashSet<String>();
-    		modelToImportVdbMap.put(modelName, existingSet);
+    		modelToImportVdbMap().put(modelName, existingSet);
     	} else { // If set exists, then need to check collect any potential stale import vdb names
     		for( String importVdb : existingSet ) {
     			if( !importVdbNames.contains(importVdb)) {
@@ -653,20 +710,20 @@ public final class XmiVdb extends BasicVdb {
         entry.dispose();
         if (entry instanceof VdbModelEntry) {
             String entryPath = entry.getPath().toOSString();
-            removed = modelEntries.remove(entry);
+            removed = modelEntries().remove(entry);
 
             synchronizeUdfJars(new HashSet<VdbFileEntry>());
 
             handleRemovedVdbModelEntry(entryPath);
         } else if (entry instanceof VdbSchemaEntry) {
             String entryName = entry.getPath().toOSString();
-            removed = schemaEntries.remove(entry);
+            removed = schemaEntries().remove(entry);
             handleRemovedVdbModelEntry(entryName);
         }
         else {
-            removed = fileEntries.remove(entry);
+            removed = fileEntries().remove(entry);
             if (!removed)
-                removed = udfJarEntries.remove(entry);
+                removed = udfJarEntries().remove(entry);
         }
 
         if (removed)
@@ -730,7 +787,7 @@ public final class XmiVdb extends BasicVdb {
                 // Save entries
                 for (final VdbEntry entry : getEntries())
                     entry.save(out);
-                for (final VdbModelEntry entry : modelEntries)
+                for (final VdbModelEntry entry : modelEntries())
                     entry.save(out);
 
                 // Close zip output stream so its fully writen and any locks are removed.
@@ -763,7 +820,7 @@ public final class XmiVdb extends BasicVdb {
     public final void synchronize() throws Exception {
     	getBuilder().start();
 
-        synchronize(new HashSet<VdbEntry>(modelEntries));
+        synchronize(new HashSet<VdbEntry>(modelEntries()));
         synchronize(getEntries());
 
         getBuilder().stop();
@@ -773,8 +830,8 @@ public final class XmiVdb extends BasicVdb {
     	Set<String> actualStaleImportVdbs = new HashSet<String>();
 		for( String importVdb : proposedStaleImportVdbs ) {
 			boolean keep = true;
-			for( String modelName : modelToImportVdbMap.keySet() ) {
-				Set<String> importVdbSet = modelToImportVdbMap.get(modelName);
+			for( String modelName : modelToImportVdbMap().keySet() ) {
+				Set<String> importVdbSet = modelToImportVdbMap().get(modelName);
 				if( importVdbSet.contains(importVdb)) {
 					keep = false;
 					break;
@@ -798,7 +855,7 @@ public final class XmiVdb extends BasicVdb {
      * @return builder
      */
     public VdbModelBuilder getBuilder() {
-    	return this.builder;
+    	return this.builder();
     }
 
     @Override
@@ -814,5 +871,93 @@ public final class XmiVdb extends BasicVdb {
     @Override
     public void removeDynamicModel(String modelToRemove) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public XmiVdb xmiVdbConvert() throws Exception {
+        return this;
+    }
+
+    @Override
+    public DynamicVdb dynVdbConvert() throws Exception {
+        DynamicVdb dynVdb = new DynamicVdb();
+
+        //
+        // Populate the new vdb with the basic specification
+        //
+        populateVdb(dynVdb);
+
+        //
+        // Cannot append:
+        // * udf jar files
+        // * other files
+        // * schema files
+        //
+
+        //
+        // Convert model entries to DynamicModels
+        //
+        for (VdbModelEntry entry : getModelEntries()) {
+            VdbSourceInfo sourceInfo = entry.getSourceInfo();
+
+            DynamicModel model = new DynamicModel();
+            model.setName(entry.getName());
+            model.setDescription(entry.getDescription());
+
+            for (Map.Entry<Object, Object> prop : getProperties().entrySet()) {
+                model.setProperty(prop.getKey().toString(), prop.getValue().toString());
+            }
+
+            DynamicModel.Type type = DynamicModel.Type.fromString(entry.getType());
+            model.setModelType(type);
+            model.setAllowMultiSource(sourceInfo.isMultiSource());
+            model.setAddColumn(sourceInfo.isAddColumn());
+            model.setColumnAlias(sourceInfo.getColumnAlias());
+
+            for (VdbSource source : sourceInfo.getSources()) {
+                VdbSource clone = source.clone();
+                model.addSource(clone);
+            }
+
+            TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
+
+            IFile entryFile = null;
+            if (Synchronization.Synchronized == entry.getSynchronization()) {
+                entryFile = entry.findFileInWorkspace();
+            } else {
+                entryFile = createEntryFile(entry);
+            }
+            
+            ModelResource modelResource = ModelUtil.getModelResource(entryFile, true);
+            if (modelResource == null)
+                throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
+
+            String ddl = generator.generate(modelResource);
+            Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
+            model.setMetadata(metadata);
+
+            dynVdb.addDynamicModel(model);
+        }
+
+        return dynVdb;
+    }
+
+    private IFile createEntryFile(VdbModelEntry entry) throws Exception {
+        File realFile = new File(getStagingFolder(), entry.getPath().toOSString());
+        if (! realFile.exists()) {
+            throw new FileNotFoundException(realFile.getAbsolutePath());
+        }
+
+        IProject vdbProject = getSourceFile().getProject();
+        IFolder workingFolder = vdbProject.getFolder(WORKING_FILES);
+        if (!workingFolder.exists())
+            workingFolder.create(IResource.HIDDEN, true, null);
+
+        IFile entryFile = workingFolder.getFile(entry.getPathName());
+        if (entryFile.exists())
+            entryFile.delete(true, null);
+
+        entryFile.createLink(entry.getPath(), IResource.HIDDEN, null);
+        return entryFile;
     }
 }

@@ -16,14 +16,14 @@ import java.util.Set;
  *
  */
 public class AllowedLanguages extends VdbUnit implements Iterable<String> {
-	Set<String> languages;
+
+    private Set<String> languages = new HashSet<String>();
 
 	/**
 	 *
 	 */
 	public AllowedLanguages() {
 		super();
-		this.languages = new HashSet<String>();
 	}
 	
 	/**
@@ -40,6 +40,14 @@ public class AllowedLanguages extends VdbUnit implements Iterable<String> {
 	public AllowedLanguages(String[] values) {
 		this();
 		addAllowedLanguages(values);
+	}
+
+	/**
+	 * @param vdb
+	 */
+	public AllowedLanguages(Vdb vdb) {
+	    this();
+	    setVdb(vdb);
 	}
 
 	/**

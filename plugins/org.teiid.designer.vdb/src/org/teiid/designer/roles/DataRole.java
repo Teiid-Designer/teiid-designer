@@ -196,7 +196,7 @@ public class DataRole extends VdbUnit {
         if (permissions != null) {
             for (Permission next : permissions) {
                 // Need to create new instance of this permission
-                Permission perm = new Permission(next);
+                Permission perm = next.clone();
                 this.permissions.put(perm.getTargetName(), perm);
             }
         }
@@ -328,5 +328,24 @@ public class DataRole extends VdbUnit {
             this.allowCreateTempTables = newAllowCreateTempTables;
             setChanged(true);
         }
+    }
+
+    @Override
+    public DataRole clone() {
+        DataRole clone = new DataRole(getName());
+        clone.setDescription(getDescription());
+        clone.setAnyAuthenticated(isAnyAuthenticated());
+        clone.setAllowCreateTempTables(isAllowCreateTempTables());
+        clone.setGrantAll(isGrantAll());
+
+        for (String roleName : getRoleNames()) {
+            clone.addRoleName(roleName);
+        }
+
+        for (Permission permission : getPermissions()) {
+            clone.addPermission(permission.clone());
+        }
+
+        return clone;
     }
 }

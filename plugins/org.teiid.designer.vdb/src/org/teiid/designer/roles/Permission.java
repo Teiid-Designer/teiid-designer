@@ -117,21 +117,7 @@ public class Permission extends VdbUnit {
 		super();
 		setName(targetName);
 	}
-	
-	/**
-	 * @param permission
-	 */
-	public Permission(Permission permission) {
-		super();
-		setName(permission.getName());
-		this.crud = permission.getCRUD();
-		this.allowLanguage = permission.isAllowLanguage();
-		this.condition = permission.getCondition();
-		this.mask = permission.getMask();
-		setCanFilter(permission.canFilter());
-		setCanMask(permission.canMask());
-	}
-	
+
 	/**
 	 * @param targetName
 	 * @param createAllowed
@@ -503,6 +489,21 @@ public class Permission extends VdbUnit {
 	public void setCanFilter(boolean canFilter) {
 		this.canFilter = canFilter;
 	}
-	
-	
+
+	public Permission clone() {
+	    Permission clone = new Permission(getName());
+
+        clone.setDescription(getDescription());
+        clone.crud = getCRUD().clone();
+        clone.setPrimary(isPrimary());
+        clone.setConstraint(isConstraint());
+        clone.setCondition(getCondition());
+        clone.setOrder(getOrder());
+        clone.setMask(getMask());
+        clone.setAllowLanguage(isAllowLanguage());
+        clone.setCanFilter(canFilter());
+        clone.setCanMask(canMask());
+
+        return clone;
+	}
 }
