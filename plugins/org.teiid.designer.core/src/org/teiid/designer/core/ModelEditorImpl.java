@@ -150,7 +150,6 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public static final String XML_SCHEMA_METAMODEL_URI = XSDPackage.eNS_URI;
 
-    private static final String NAME_FEATURE_NAME = "name"; //$NON-NLS-1$
     private static final String ESTRING_MAP_NAME = "EStringToStringMapEntry"; //$NON-NLS-1$
 
     protected static final String NEW = ModelerCore.Util.getString("ModelEditorImpl.New_1"); //$NON-NLS-1$
@@ -1602,15 +1601,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     @Override
 	public EStructuralFeature getNameFeature( final EObject eObject ) {
-        CoreArgCheck.isNotNull(eObject);
-        final EClass eClass = eObject.eClass();
-        for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
-            final EStructuralFeature feature = (EStructuralFeature)iter.next();
-            if (NAME_FEATURE_NAME.equalsIgnoreCase(feature.getName())) {
-                return feature;
-            }
-        }
-        return null;
+        return ModelUtil.getNameFeature(eObject);
     }
 
     /**
@@ -1618,13 +1609,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     @Override
 	public String getName( final EObject eObject ) {
-        CoreArgCheck.isNotNull(eObject);
-        final EStructuralFeature nameFeature = getNameFeature(eObject);
-        if (nameFeature == null) {
-            return null;
-        }
-        final Object value = eObject.eGet(nameFeature);
-        return value != null ? value.toString() : null;
+        return ModelUtil.getName(eObject);
     }
 
     /**

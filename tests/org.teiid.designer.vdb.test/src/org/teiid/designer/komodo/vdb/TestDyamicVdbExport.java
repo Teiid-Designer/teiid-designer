@@ -7,115 +7,156 @@
  */
 package org.teiid.designer.komodo.vdb;
 
-import static org.mockito.Mockito.mock;
-import java.io.File;
-import java.io.FileWriter;
-import org.eclipse.core.resources.IFile;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.teiid.core.designer.util.StringConstants;
-import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.core.designer.EclipseMock;
+import org.teiid.designer.core.ModelWorkspaceMock;
+import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.Vdb.VdbType;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbImportVdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbSourceInfo;
+import org.teiid.designer.vdb.VdbTestUtils;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
+import org.w3c.dom.Document;
 
 @SuppressWarnings( "javadoc" )
-public class TestDyamicVdbExport implements StringConstants {
+public class TestDyamicVdbExport implements VdbConstants {
 
-    private static final String DYNAMIC_VDBS = "dynamic_vdbs";
+    private EclipseMock eclipseMock;
 
-	private File portfolioVdb = SmartTestDesignerSuite.getTestDataFile(getClass(), DYNAMIC_VDBS + File.separator + "portfolio-vdb.xml");
+    private ModelWorkspaceMock modelWorkspaceMock;
 
-	private DynamicVdb setupPortfolioExample() throws Exception {
-	    IFile vdbFile = mock(IFile.class);
-        DynamicVdb vdb = new DynamicVdb(vdbFile);
-        vdb.setName("Portfolio");
-        vdb.setVersion(1);
-        vdb.setDescription("The Portfolio Dynamic VDB");
-
-        vdb.setProperty("UseConnectorMetadata", "true");
-
-        DynamicModel marketData = new DynamicModel("MarketData");
-        marketData.addSource(new VdbSource(vdb, "text-connector", "java:/marketdata-file" , "file"));
-        vdb.addDynamicModel(marketData);
-
-        DynamicModel accounts = new DynamicModel("Accounts");
-        accounts.setProperty("importer.useFullSchemaName", "false");
-        accounts.addSource(new VdbSource(vdb, "h2-connector", "java:/accounts-ds" , "h2"));
-
-        DynamicModel valuations = new DynamicModel("PersonalValuations");
-        valuations.setProperty("importer.headerRowNumber", "1");
-        valuations.setProperty("importer.ExcelFileName", "otherholdings.xls");
-        valuations.addSource(new VdbSource(vdb, "excelconnector", "java:/excel-file" , "excel"));
-        String metadataText = EMPTY_STRING +
-        "SET NAMESPACE 'http://www.teiid.org/translator/excel/2014' AS teiid_excel;" + NEW_LINE +
-        NEW_LINE +
-        "CREATE FOREIGN TABLE Sheet1 (" + NEW_LINE +
-        "ROW_ID integer OPTIONS (SEARCHABLE 'All_Except_Like', \"teiid_excel:CELL_NUMBER\" 'ROW_ID')," + NEW_LINE +
-        "ACCOUNT_ID integer OPTIONS (SEARCHABLE 'Unsearchable', \"teiid_excel:CELL_NUMBER\" '1')," + NEW_LINE +
-        "PRODUCT_TYPE string OPTIONS (SEARCHABLE 'Unsearchable', \"teiid_excel:CELL_NUMBER\" '2')," + NEW_LINE +
-        "PRODUCT_VALUE string OPTIONS (SEARCHABLE 'Unsearchable', \"teiid_excel:CELL_NUMBER\" '3')," + NEW_LINE +
-        "CONSTRAINT PK0 PRIMARY KEY(ROW_ID)" + NEW_LINE +
-        ") OPTIONS (\"teiid_excel:FILE\" 'otherholdings.xls', \"teiid_excel:FIRST_DATA_ROW_NUMBER\" '2');";
-        valuations.setMetadata(new Metadata(metadataText, Metadata.Type.DDL.toString()));
-
-        DynamicModel stocks = new DynamicModel("Stocks");
-        stocks.setModelType(DynamicModel.Type.VIRTUAL);
-        metadataText = EMPTY_STRING +
-        "CREATE VIEW StockPrices (" + NEW_LINE +
-        "symbol string," + NEW_LINE +
-        "price bigdecimal" + NEW_LINE +
-        ")" + NEW_LINE +
-        "AS" + NEW_LINE +
-        "SELECT SP.symbol, SP.price" + NEW_LINE +
-        "FROM (EXEC MarketData.getTextFiles('*.txt')) AS f," + NEW_LINE +
-        "TEXTTABLE(f.file COLUMNS symbol string, price bigdecimal HEADER) AS SP;" + NEW_LINE +
-        NEW_LINE +
-        NEW_LINE +
-        "CREATE VIEW Stock (" + NEW_LINE +
-        "product_id integer," + NEW_LINE +
-        "symbol string," + NEW_LINE +
-        "price bigdecimal," + NEW_LINE +
-        "company_name   varchar(256)" + NEW_LINE +
-        ")" + NEW_LINE +
-        "AS" + NEW_LINE +
-        "SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME" + NEW_LINE +
-        "FROM StockPrices AS S, Accounts.PRODUCT AS A" + NEW_LINE +
-        "WHERE S.symbol = A.SYMBOL;";
-        stocks.setMetadata(new Metadata(metadataText, Metadata.Type.DDL.toString()));
-
-        DynamicModel stocksMatModel = new DynamicModel("StocksMatModel");
-        stocksMatModel.setModelType(DynamicModel.Type.VIRTUAL);
-        metadataText = EMPTY_STRING +
-        "CREATE view stockPricesMatView" + NEW_LINE +
-        "(" + NEW_LINE +
-        "product_id integer," + NEW_LINE +
-        "symbol string," + NEW_LINE +
-        "price bigdecimal," + NEW_LINE +
-        "company_name   varchar(256)" + NEW_LINE +
-        ") OPTIONS (MATERIALIZED 'TRUE', UPDATABLE 'TRUE'," + NEW_LINE +
-        "MATERIALIZED_TABLE 'Accounts.h2_stock_mat'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_TTL\" 120000," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT\" 'execute accounts.native(''truncate table h2_stock_mat'');'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT\"  'execute accounts.native('''')'," + NEW_LINE +
-        "\"teiid_rel:ON_VDB_DROP_SCRIPT\" 'DELETE FROM Accounts.status WHERE Name=''stock'' AND schemaname = ''Stocks'''," + NEW_LINE +
-        "\"teiid_rel:MATERIALIZED_STAGE_TABLE\" 'Accounts.h2_stock_mat'," + NEW_LINE +
-        "\"teiid_rel:ALLOW_MATVIEW_MANAGEMENT\" 'true'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_STATUS_TABLE\" 'status'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_SHARE_SCOPE\" 'NONE'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_ONERROR_ACTION\" 'THROW_EXCEPTION')" + NEW_LINE +
-        "AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME" + NEW_LINE +
-        "FROM Stocks.StockPrices AS S, Accounts.PRODUCT AS A" + NEW_LINE +
-        "WHERE S.symbol = A.SYMBOL;";
-        stocksMatModel.setMetadata(new Metadata(metadataText, Metadata.Type.DDL.toString()));
-
-        return vdb;
+    @Before
+    public void before() throws Exception {
+        eclipseMock = new EclipseMock();
+        modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
     }
 
-	@Test
-	public void testExportDynamicVdb() throws Exception {
-		DynamicVdb vdb = setupPortfolioExample();
-		File destination = File.createTempFile("portfolio-vdb", DOT + XML);
-		vdb.export(new FileWriter(destination));
-		
-	}
+    @After
+    public void after() {
+        modelWorkspaceMock.dispose();
+        eclipseMock.dispose();
+    }
 
+    @Test
+    public void testWriteDynamicVdb() throws Exception {
+        DynamicVdb vdb = VdbTestUtils.mockPortfolioDynamicVdb();
+
+        StringWriter destination = new StringWriter();
+        vdb.write(destination);
+        
+        Document vdbDoc = VdbTestUtils.readDocument(destination.toString());
+        assertNotNull(vdbDoc);
+
+        Document controlDoc = VdbTestUtils.readDocument(VdbTestUtils.PORTFOLIO_VDB_FILE);
+        assertNotNull(controlDoc);
+
+        VdbTestUtils.compareDocuments(controlDoc, vdbDoc);
+    }
+
+    @Test
+    public void convertXmiVdbToDynamicVdb() throws Exception {
+        Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
+
+        DynamicVdb dynVdb = booksVdb.convert(VdbType.DYNAMIC);
+        assertNotNull(dynVdb);
+
+        assertEquals(booksVdb.getName(), dynVdb.getName());
+        assertEquals(booksVdb.getDescription(), dynVdb.getDescription());
+
+        for (Map.Entry<Object, Object> entry : booksVdb.getProperties().entrySet()) {
+            assertEquals(entry.getValue(), dynVdb.getProperties().getProperty(entry.getKey().toString()));
+        }
+
+        assertEquals(booksVdb.getSourceFile(), dynVdb.getSourceFile());
+        assertEquals(booksVdb.getVersion(), dynVdb.getVersion());
+
+        assertEquals(booksVdb.getConnectionType(), dynVdb.getConnectionType());
+        assertEquals(booksVdb.isPreview(), dynVdb.isPreview());
+        assertEquals(booksVdb.getQueryTimeout(), dynVdb.getQueryTimeout());
+
+        assertEquals(booksVdb.getAllowedLanguages().size(), dynVdb.getAllowedLanguages().size());
+        List<String> dynLanguageValues = Arrays.asList(dynVdb.getAllowedLanguages().getAllowedLanguageValues());
+        for (String language : booksVdb.getAllowedLanguages().getAllowedLanguageValues()) {
+            assertTrue(dynLanguageValues.contains(language));
+        }
+
+        assertEquals(booksVdb.getSecurityDomain(), dynVdb.getSecurityDomain());
+        assertEquals(booksVdb.getGssPattern(), dynVdb.getGssPattern());
+        assertEquals(booksVdb.getPasswordPattern(), dynVdb.getPasswordPattern());
+        assertEquals(booksVdb.getAuthenticationType(), dynVdb.getAuthenticationType());
+        assertEquals(booksVdb.getValidationDateTime(), dynVdb.getValidationDateTime());
+        assertEquals(booksVdb.getValidationVersion(), dynVdb.getValidationVersion());
+        assertEquals(booksVdb.isAutoGenerateRESTWar(), dynVdb.isAutoGenerateRESTWar());
+
+        assertEquals(booksVdb.getImports().size(), dynVdb.getImports().size());
+        for (VdbImportVdbEntry entry : booksVdb.getImports()) {
+            assertTrue(dynVdb.getImports().contains(entry));
+        }
+
+        assertEquals(booksVdb.getTranslators().size(), dynVdb.getTranslators().size());
+        for (TranslatorOverride translator : booksVdb.getTranslators()) {
+            assertTrue(dynVdb.getTranslators().contains(translator));
+        }
+
+        assertEquals(booksVdb.getDataRoles().size(), dynVdb.getDataRoles().size());
+        for (DataRole role : booksVdb.getDataRoles()) {
+            assertTrue(dynVdb.getDataRoles().contains(role));
+        }
+
+        assertEquals(booksVdb.getModelEntries().size(), dynVdb.getDynamicModels().size());
+        for (VdbModelEntry entry : booksVdb.getModelEntries()) {
+            VdbSourceInfo sourceInfo = entry.getSourceInfo();
+            DynamicModel dynModel = null;
+
+            Collection<DynamicModel> dynamicModels = dynVdb.getDynamicModels();
+            for (DynamicModel model : dynamicModels) {
+                if (model.getName().equals(entry.getName()))
+                    dynModel = model;
+            }
+            assertNotNull(dynModel);
+
+            assertEquals(entry.getDescription(), dynModel.getDescription());
+
+            for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
+                assertEquals(prop.getValue(), dynModel.getProperties().getProperty(prop.getKey().toString()));
+            }
+
+            assertEquals(entry.getType(), dynModel.getModelType().toString());
+            assertEquals(sourceInfo.isMultiSource(), dynModel.isMultiSource());
+            assertEquals(sourceInfo.isAddColumn(), dynModel.doAddColumn());
+            assertEquals(sourceInfo.getColumnAlias(), dynModel.getColumnAlias());
+
+            assertEquals(sourceInfo.getSources().size(), dynModel.getSources().length);
+            List<VdbSource> dynSources = Arrays.asList(dynModel.getSources());
+            for (VdbSource source : sourceInfo.getSources()) {
+                assertTrue(dynSources.contains(source));
+            }
+
+            //
+            // TODO
+            // Separate unit tests for testing the generator. Assume its done its job correctly.
+            //
+
+            if (dynModel.getName().equals(VdbTestUtils.BOOKS_MODEL)) {
+                Metadata metadata = dynModel.getMetadata();
+                assertEquals(Metadata.Type.DDL, metadata.getType());
+                assertEquals(VdbTestUtils.BOOKS_MODEL_DDL, metadata.getSchemaText());
+            }
+        }
+    }
 }

@@ -27,10 +27,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.zip.Checksum;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -72,32 +70,9 @@ import org.teiid.designer.vdb.manifest.VdbElement;
 @SuppressWarnings( "javadoc" )
 public class VdbTest implements VdbConstants {
 
-    private static final String BOOKS_VDB_PROJECT = "books.vdb.project";
-
-    private static final String RUNTIME_INF = "runtime-inf";
-
-    private static final String TEST_2120  = "Test_TEIIDDES_2120";
-
-    private static final String TEST_UDF  = "TestUDF";
-
-    private static final String TEST_PROJECT = BOOKS_VDB_PROJECT + File.separator + TEST_2120 + File.separator;
-
     private Vdb vdb;
     private EclipseMock eclipseMock;
     private ModelWorkspaceMock modelWorkspaceMock;
-
-    private File booksVdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books.vdb");
-
-    private File books77VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-7.7.x.vdb");
-
-    private File books84VdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "books-8.4.x.vdb");
-
-    private File udfVdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), "TestUDF.vdb");
-
-    private File BOOK_DATATYPES_XSD = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "BookDatatypes.xsd");
-    private File BOOKS_XMI = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "Books.xmi");
-    private File BOOKS_XSD = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "Books.xsd");
-    private File BOOKSXML_XMI = SmartTestDesignerSuite.getTestDataFile(getClass(), TEST_PROJECT + "BooksXML.xmi");
 
     @Mock
     private IFile vdbFile;
@@ -393,30 +368,10 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void testOpeningExistingVdb() throws Exception {
-        List<MockFileBuilder> builders = new ArrayList<MockFileBuilder>();
-        MockFileBuilder booksDatatypesXSD = new MockFileBuilder(BOOK_DATATYPES_XSD);
-        builders.add(booksDatatypesXSD);
-        MockFileBuilder booksXMI = new MockFileBuilder(BOOKS_XMI);
-        builders.add(booksXMI);
-        MockFileBuilder booksXSD = new MockFileBuilder(BOOKS_XSD);
-        builders.add(booksXSD);
-        MockFileBuilder booksXMLXMI = new MockFileBuilder(BOOKSXML_XMI);
-        builders.add(booksXMLXMI);
-
-        /*
-         * Need to ensure that the paths provided by the vdb point to the same file in the workspace
-         * so need to mock the workspace finder and point the vdb paths to the testdata files.
-         */
-        for (MockFileBuilder builder : builders) {
-            IPath path = new Path(File.separator + TEST_2120 + File.separator + builder.getName());
-            when(getEclipseMock().workspaceRoot().findMember(path)).thenReturn(builder.getResourceFile());
-        }
-
-        MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
-        Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
+        Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
 
         assertEquals("books", booksVdb.getName());
-        assertEquals(booksVdbFile.getCanonicalPath(), booksVdb.getSourceFile().getFullPath().toOSString());
+        assertEquals(VdbTestUtils.BOOKS_VDB_FILE.getCanonicalPath(), booksVdb.getSourceFile().getFullPath().toOSString());
         assertEquals(2, booksVdb.getModelEntries().size());
         assertEquals(2, booksVdb.getSchemaEntries().size());
         assertEquals(0, booksVdb.getUdfJarEntries().size());
@@ -428,8 +383,8 @@ public class VdbTest implements VdbConstants {
 
             /* Get the expected index file from the test data directory */
             File expIdxFile = SmartTestDesignerSuite.getTestDataFile(getClass(),
-                                                   BOOKS_VDB_PROJECT + File.separator +
-                                                   RUNTIME_INF + File.separator +
+                                                   VdbTestUtils.BOOKS_VDB_PROJECT + File.separator +
+                                                   VdbTestUtils.RUNTIME_INF + File.separator +
                                                    ((VdbModelEntry)modelEntry).getIndexName());
             assertTrue(expIdxFile.exists());
 
@@ -445,8 +400,8 @@ public class VdbTest implements VdbConstants {
 
             /* Get the expected index file from the test data directory */
             File expIdxFile = SmartTestDesignerSuite.getTestDataFile(getClass(),
-                                                   BOOKS_VDB_PROJECT + File.separator +
-                                                   RUNTIME_INF + File.separator +
+                                                   VdbTestUtils.BOOKS_VDB_PROJECT + File.separator +
+                                                   VdbTestUtils.RUNTIME_INF + File.separator +
                                                    schemaEntry.getIndexName());
             assertTrue(expIdxFile.exists());
 
@@ -461,7 +416,7 @@ public class VdbTest implements VdbConstants {
     public void testManifestOnVdbSave() throws Exception {
         /* Copy the test data file as we don't want to overwrite it */
         File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
-        File booksVdbCopy = FileUtils.copy(booksVdbFile, tempDir, true);
+        File booksVdbCopy = FileUtils.copy(VdbTestUtils.BOOKS_VDB_FILE, tempDir, true);
         assertTrue(booksVdbCopy.exists());
 
         /* Use the copy to test saving and checking out the manifest of the vdb */
@@ -494,7 +449,7 @@ public class VdbTest implements VdbConstants {
                 assertFalse(ModelUtil.isXsdFile(path));
 
                 /* Ensure the models are still under the project folder */
-                assertEquals(TEST_2120, path.segment(path.segmentCount() - 2));
+                assertEquals(VdbTestUtils.TEST_2120, path.segment(path.segmentCount() - 2));
             }
 
             assertEquals(2, manifest.getEntries().size());
@@ -503,7 +458,7 @@ public class VdbTest implements VdbConstants {
                 assertTrue(ModelUtil.isXsdFile(path));
 
                 /* Ensure the xsd are still under the project folder */
-                assertEquals(TEST_2120, path.segment(path.segmentCount() - 2));
+                assertEquals(VdbTestUtils.TEST_2120, path.segment(path.segmentCount() - 2));
                 for (PropertyElement prop : element.getProperties()) {
                     assertTrue(EntryElement.CHECKSUM.equals(prop.getName()) ||
                                EntryElement.INDEX_NAME.equals(prop.getName()));
@@ -523,7 +478,7 @@ public class VdbTest implements VdbConstants {
     public void testSaveOfUdfVdb() throws Exception {
         /* Copy the test data file as we don't want to overwrite it */
         File tempDir = VdbPlugin.singleton().getStateLocation().toFile();
-        File udfVdbCopy = FileUtils.copy(udfVdbFile, tempDir, true);
+        File udfVdbCopy = FileUtils.copy(VdbTestUtils.UDF_VDB_FILE, tempDir, true);
         assertTrue(udfVdbCopy.exists());
 
         /* Use the copy to test saving and checking out the manifest of the vdb */
@@ -559,7 +514,7 @@ public class VdbTest implements VdbConstants {
                     assertFalse(ModelUtil.isXsdFile(path));
 
                     /* Ensure the models are still under the project folder */
-                    assertEquals(TEST_UDF, path.segment(path.segmentCount() - 2));
+                    assertEquals(VdbTestUtils.TEST_UDF, path.segment(path.segmentCount() - 2));
                 }
 
                 assertEquals(1, manifest.getEntries().size());
@@ -599,7 +554,7 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void testVdbVersionCallback() throws Exception {
-        MockFileBuilder booksVdbBuilder = new MockFileBuilder(booksVdbFile);
+        MockFileBuilder booksVdbBuilder = new MockFileBuilder(VdbTestUtils.BOOKS_VDB_FILE);
         when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
         ValidationVersionCallback callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
         VdbFileProcessor processor = new VdbFileProcessor(callback);
@@ -608,7 +563,7 @@ public class VdbTest implements VdbConstants {
         assertFalse(callback.hasException());
         assertNull(callback.getValidationVersion());
 
-        booksVdbBuilder = new MockFileBuilder(books77VdbFile);
+        booksVdbBuilder = new MockFileBuilder(VdbTestUtils.BOOKS_77_VDB_FILE);
         when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
         callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
         processor = new VdbFileProcessor(callback);
@@ -616,7 +571,7 @@ public class VdbTest implements VdbConstants {
         assertFalse(callback.hasException());
         assertEquals(Version.TEIID_7_7.get(), callback.getValidationVersion());
 
-        booksVdbBuilder = new MockFileBuilder(books84VdbFile);
+        booksVdbBuilder = new MockFileBuilder(VdbTestUtils.BOOKS_84_VDB_FILE);
         when(booksVdbBuilder.getResourceFile().exists()).thenReturn(true);
         callback = new ValidationVersionCallback(booksVdbBuilder.getResourceFile());
         processor = new VdbFileProcessor(callback);

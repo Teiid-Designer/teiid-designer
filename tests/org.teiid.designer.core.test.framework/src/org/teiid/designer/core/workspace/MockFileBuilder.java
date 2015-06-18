@@ -12,6 +12,8 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileInputStream;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
@@ -25,11 +27,11 @@ import org.teiid.designer.metamodels.core.ModelType;
  */
 public class MockFileBuilder implements StringConstants {
 
-    private final String baseName;
-    private final String extension;
-    private final File realFile;
-    private final IPath path;
-    private final IFile resourceFile;
+    private String baseName;
+    private String extension;
+    private File realFile;
+    private IPath path;
+    private IResource resource;
     private URI uri;
     private EmfResource emfModel;
 
@@ -39,9 +41,16 @@ public class MockFileBuilder implements StringConstants {
      */
     public MockFileBuilder(final File realFile) throws Exception {
         this.realFile = realFile;
+        if (realFile.isDirectory())
+            mockDirectory();
+        else
+            mockFile();
+    }
 
+    private void mockPath() {
         String fileName = realFile.getName();
         IPath absFileNameNoExt = new Path(realFile.getAbsolutePath());
+
         if(fileName.lastIndexOf(DOT) > 0) {
             this.extension = fileName.substring(fileName.lastIndexOf(DOT) + 1);
             this.baseName = fileName.substring(0, fileName.lastIndexOf(DOT));
@@ -52,22 +61,29 @@ public class MockFileBuilder implements StringConstants {
         }
 
         path = new Path(realFile.getAbsolutePath());
-        resourceFile = mock(IFile.class);
+    }
 
-//        when(path.getFileExtension()).thenReturn(getExtension());
-//        when(path.toFile()).thenReturn(realFile);
-//        when(path.toString()).thenReturn(realFile.getAbsolutePath());
-//        when(path.toOSString()).thenReturn(realFile.getAbsolutePath());
-//        when(path.toPortableString()).thenReturn(realFile.getAbsolutePath());
-//        when(path.lastSegment()).thenReturn(realFile.getName());
-//        when(path.removeFileExtension()).thenReturn(absFileNameNoExt);
+    private void mockResource() {
+        when(resource.getName()).thenReturn(realFile.getName());
+        when(resource.getLocation()).thenReturn(path);
+        when(resource.getFullPath()).thenReturn(path);
+    }
 
-        when(resourceFile.getName()).thenReturn(realFile.getName());
-        when(resourceFile.getLocation()).thenReturn(path);
-        when(resourceFile.getFullPath()).thenReturn(path);
+    private void mockDirectory() throws Exception {
+        mockPath();
 
-        if (realFile.isFile())
-            when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
+        resource = mock(IFolder.class);
+        mockResource();
+    }
+
+    private void mockFile() throws Exception {
+        mockPath();
+
+        resource = mock(IFile.class);
+        mockResource();
+
+        IFile resourceFile = getResourceFile();
+        when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
 
         if (ModelUtil.isModelFile(path)) {
             emfModel = mock(EmfResource.class);
@@ -92,7 +108,7 @@ public class MockFileBuilder implements StringConstants {
      * @param modelWorkspace
      */
     public void addToModelWorkspace(ModelWorkspaceMock modelWorkspace) {
-        when(modelWorkspace.getEclipseMock().workspaceRoot().findMember(path)).thenReturn(resourceFile);
+        when(modelWorkspace.getEclipseMock().workspaceRoot().findMember(path)).thenReturn(resource);
         when(modelWorkspace.getFinder().findByURI(getURI(), false)).thenReturn(emfModel);
     }
 
@@ -128,7 +144,20 @@ public class MockFileBuilder implements StringConstants {
      * @return the resourceFile
      */
     public IFile getResourceFile() {
-        return this.resourceFile;
+        if (this.resource instanceof IFile)
+            return (IFile) this.resource;
+
+        return null;
+    }
+
+    /**
+     * @return the resourceFolder
+     */
+    public IFolder getResourceFolder() {
+        if (this.resource instanceof IFolder)
+            return (IFolder) this.resource;
+
+        return null;
     }
 
     /**
@@ -143,7 +172,7 @@ public class MockFileBuilder implements StringConstants {
      */
     public URI getURI() {
         if (uri == null)
-            uri = URI.createFileURI(resourceFile.getLocation().toString());
+            uri = URI.createFileURI(resource.getLocation().toString());
 
         return uri;
     }

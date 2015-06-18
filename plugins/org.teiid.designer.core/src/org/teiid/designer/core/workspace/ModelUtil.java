@@ -28,7 +28,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xsd.XSDPackage;
@@ -43,6 +45,7 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
+import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
@@ -455,6 +458,39 @@ public class ModelUtil {
         final ModelResource model = getModel(object);
         if (model != null && !model.isReadOnly()) return model;
         return null;
+    }
+
+    /**
+     * This method currently looks for a feature with a name that case-insensitively matches "name".
+     * @param eObject
+     *
+     * @return feature
+     *
+     */
+    public static EStructuralFeature getNameFeature(final EObject eObject) {
+        CoreArgCheck.isNotNull(eObject);
+        final EClass eClass = eObject.eClass();
+        for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
+            final EStructuralFeature feature = (EStructuralFeature)iter.next();
+            if (ModelEditor.NAME_FEATURE_NAME.equalsIgnoreCase(feature.getName())) {
+                return feature;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param eObject
+     * @return name of the object
+     */
+    public static String getName( final EObject eObject ) {
+        CoreArgCheck.isNotNull(eObject);
+        final EStructuralFeature nameFeature = getNameFeature(eObject);
+        if (nameFeature == null) {
+            return null;
+        }
+        final Object value = eObject.eGet(nameFeature);
+        return value != null ? value.toString() : null;
     }
 
     public static String getName( final ModelResource modelResource ) {

@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <vdb name="Portfolio" version="1">
  
+    <!-- 
+        The defaults for attributes included for test comparison purposes
+     -->
+ 
     <description>The Portfolio Dynamic VDB</description>
+ 
+    <property name="preview" value="false" />
  
     <!--
       Setting to use connector supplied metadata. Can be "true" or "cached".
@@ -21,7 +27,7 @@
       the same connector binding and will be treated as the same source at
       runtime.
     -->
-    <model name="MarketData">
+    <model name="MarketData" path="MarketData" type="PHYSICAL" visible="true">
         <!--
             Each source represents a translator and data source. There are
             pre-defined translators, or you can create one.
@@ -29,7 +35,7 @@
         <source name="text-connector" translator-name="file" connection-jndi-name="java:/marketdata-file"/>
     </model>
  
-    <model name="Accounts">
+    <model name="Accounts" path="Accounts" type="PHYSICAL" visible="true">
         <!--
           JDBC Import settings
  
@@ -49,7 +55,7 @@
  
     </model>
  
-    <model name="PersonalValuations">
+    <model name="PersonalValuations" path="PersonalValuations" type="PHYSICAL" visible="true">
         <property name="importer.headerRowNumber" value="1"/>
         <property name="importer.ExcelFileName" value="otherholdings.xls"/>
         <source name="excelconnector" translator-name="excel"  connection-jndi-name="java:/excel-file"/>
@@ -65,10 +71,10 @@
         CONSTRAINT PK0 PRIMARY KEY(ROW_ID)
         ) OPTIONS ("teiid_excel:FILE" 'otherholdings.xls', "teiid_excel:FIRST_DATA_ROW_NUMBER" '2');
      
-         ]]> </metadata>
+         ]]></metadata>
     </model>
  
-    <model name="Stocks" type="VIRTUAL">
+    <model name="Stocks" path="Stocks" type="VIRTUAL" visible="true">
         <metadata type="DDL"><![CDATA[
                  
         CREATE VIEW StockPrices (
@@ -93,10 +99,10 @@
                     WHERE S.symbol = A.SYMBOL;
  
                   
-        ]]> </metadata>
+        ]]></metadata>
     </model>
  
-    <model name="StocksMatModel" type="VIRTUAL">
+    <model name="StocksMatModel" path="StocksMatModel" type="VIRTUAL" visible="true">
     <metadata type="DDL"><![CDATA[
     CREATE view stockPricesMatView
         (
@@ -118,8 +124,7 @@
         AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME
                     FROM Stocks.StockPrices AS S, Accounts.PRODUCT AS A
                     WHERE S.symbol = A.SYMBOL;
-    ]]>
-       </metadata>
+    ]]></metadata>
     </model>  
  
 </vdb>
