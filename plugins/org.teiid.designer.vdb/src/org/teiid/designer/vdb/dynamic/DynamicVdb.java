@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.XMLConstants;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,7 +27,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -47,6 +45,7 @@ import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
@@ -69,7 +68,7 @@ import org.w3c.dom.Document;
  */
 public class DynamicVdb extends BasicVdb {
 
-    private Map<String, DynamicModel> models = new HashMap<String, DynamicModel>();
+    private Map<String, DynamicModel> models;
 
     /**
      * Default constructor
@@ -86,7 +85,13 @@ public class DynamicVdb extends BasicVdb {
 	 */
 	public DynamicVdb(IFile file) throws Exception {
 	    super(file);
-        read(file);
+	}
+
+	private Map<String, DynamicModel> models() {
+	    if (models == null)
+	        models = new HashMap<String, DynamicModel>();
+
+	    return models;
 	}
 
 	@Override
@@ -97,7 +102,7 @@ public class DynamicVdb extends BasicVdb {
 
 	    setFile(file);
 
-	    final File dynVdbFile = file.getFullPath().toFile();
+	    final File dynVdbFile = file.getLocation().toFile();
         InputStream xml = null;
         try {
             xml = new FileInputStream(dynVdbFile);
@@ -270,10 +275,10 @@ public class DynamicVdb extends BasicVdb {
 	 * @throws Exception 
      */
     private boolean validate(InputStream xml) throws Exception {
-        InputStream xsd = VdbElement.class.getResourceAsStream(VDB_DEPLOYER_XSD);
-        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        if (xml == null)
+            return false;
 
-        Schema schema = factory.newSchema(new StreamSource(xsd));
+        Schema schema = VdbUtil.getManifestSchema();
         Validator validator = schema.newValidator();
         validator.validate(new StreamSource(xml));
 
@@ -325,7 +330,7 @@ public class DynamicVdb extends BasicVdb {
      */
     @Override
     public Collection<DynamicModel> getDynamicModels() {
-        return Collections.unmodifiableCollection(models.values());
+        return Collections.unmodifiableCollection(models().values());
     }
 
 	/** (non-Javadoc)
@@ -333,7 +338,7 @@ public class DynamicVdb extends BasicVdb {
      */
     @Override
     public void addDynamicModel(DynamicModel model) {
-        DynamicModel existing = models.put(model.getName(), model);
+        DynamicModel existing = models().put(model.getName(), model);
         model.setVdb(this);
         setChanged(existing != null);
     }
@@ -359,7 +364,7 @@ public class DynamicVdb extends BasicVdb {
      */
     @Override
     public void removeDynamicModel(String modelToRemove) {
-        DynamicModel removed = models.remove(modelToRemove);
+        DynamicModel removed = models().remove(modelToRemove);
         setChanged(removed != null);
     }
 

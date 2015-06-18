@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -33,20 +34,6 @@ import org.xml.sax.SAXException;
 @ThreadSafe
 public interface Vdb extends VdbConstants {
 
-    /**
-     * Type of vdb
-     */
-    enum VdbType {
-        /**
-         * XML DDL based vdb
-         */
-        DYNAMIC,
-
-        /**
-         * XMI Archive based vdb
-         */
-        XMI;
-    }
     /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
@@ -776,11 +763,11 @@ public interface Vdb extends VdbConstants {
     /**
      * Convert this vdb into the given type of vdb
      * 
-     * @param vdb type
+     * @param vdbType the class of the vdb required (should be either {@link DynamicVdb} or {@link XmiVdb})
      * @return vdb converted to this type. If the type is the same type
      *                 as this vdb then this will be returned.
      * @throws Exception 
      *
      */
-    <V extends Vdb> V convert(VdbType vdb) throws Exception;
+    public <V extends Vdb> V convert(Class<V> vdbType) throws Exception;
 }

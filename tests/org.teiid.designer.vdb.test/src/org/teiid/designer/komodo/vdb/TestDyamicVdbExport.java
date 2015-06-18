@@ -23,7 +23,6 @@ import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.Vdb.VdbType;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
@@ -72,7 +71,7 @@ public class TestDyamicVdbExport implements VdbConstants {
     public void convertXmiVdbToDynamicVdb() throws Exception {
         Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
 
-        DynamicVdb dynVdb = booksVdb.convert(VdbType.DYNAMIC);
+        DynamicVdb dynVdb = booksVdb.convert(DynamicVdb.class);
         assertNotNull(dynVdb);
 
         assertEquals(booksVdb.getName(), dynVdb.getName());

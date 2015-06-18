@@ -7,19 +7,16 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IProject;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -27,37 +24,32 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.Messages;
+import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegion;
+import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegionAnalyzer;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
-import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
-import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
-import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 
-public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements DqpUiConstants {
+/**
+ * Page 2 of the Generate Dynamic Vdb Wizard
+ */
+public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements DqpUiConstants, StringConstants {
 
-	private final String EMPTY = StringConstants.EMPTY_STRING;
-
-    private Label dynamicVdbLocationText;
-    private Text dynamicVdbFileName;
-    
-	Font monospaceFont;
-    private Text xmlContentsBox;
+	private Font monospaceFont;
+    private StyledText xmlContentsBox;
     private Button exportXmlToFileSystemButton;
 		
 	private GenerateDynamicVdbManager vdbManager;
 
 	/**
 	 * ShowDDlPage constructor
-     * @param importManager the ImportManager
+	 * @param vdbManager the vdb manager
 	 * @since 8.1
 	 */
 	public GenerateDynamicVdbPageTwo(GenerateDynamicVdbManager vdbManager) {
@@ -65,11 +57,29 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
         this.vdbManager = vdbManager;
         setTitle(Messages.GenerateDynamicVdbPageTwo_title);
 	}
-	
+
+	private Font monospaceFont(Composite composite) {
+	    if (monospaceFont == null) {
+	        monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL);  //$NON-NLS-1$
+	        composite.addDisposeListener(new DisposeListener() {
+                
+                @Override
+                public void widgetDisposed(DisposeEvent e) {
+                    if (monospaceFont == null)
+                        return;
+
+                    monospaceFont.dispose();
+                }
+            });
+	    }
+
+	    return monospaceFont;
+    }
 
 	@Override
 	public void createControl(Composite parent) {
-        monospaceFont = new Font(null, "Monospace", 10, SWT.BOLD);  //$NON-NLS-1$
+        monospaceFont(parent);
+
 		// Create page
 		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
@@ -78,82 +88,118 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
 		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		setControl(mainPanel);
-		
-        // Dynamic VDB Output GROUP
-        {
-            Composite summaryGroup = WidgetFactory.createGroup(mainPanel, 
-            		Messages.GenerateDynamicVdbPageTwo_title, SWT.NO_SCROLL, 1);
-            summaryGroup.setLayout(new GridLayout(3, false));
-            GridDataFactory.fillDefaults().grab(true,  false).applyTo(summaryGroup);
-	        
-	        // Workspace Location: MyProject/dynamic_vdbs (EDITABLE TEXT FIELD && ... Picker)
-            Label locationLabel = new Label(summaryGroup, SWT.NONE);
-            locationLabel.setText(Messages.GenerateDynamicVdbPageTwo_location);
 
-            dynamicVdbLocationText = new Label(summaryGroup, SWT.NONE);
-            GridDataFactory.fillDefaults().grab(true,  false).applyTo(dynamicVdbLocationText);
-            if( vdbManager.getOutputLocation() != null ) {
-            	dynamicVdbLocationText.setText(vdbManager.getOutputLocation().getFullPath().toString());
-            }
-
-            Button browseButton = new Button(summaryGroup, SWT.PUSH);
-            GridData buttonGridData = new GridData();
-            browseButton.setLayoutData(buttonGridData);
-            browseButton.setText(Messages.GenerateDynamicVdbPageTwo_browse); 
-            browseButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( SelectionEvent e ) {
-                    handleBrowse();
-                }
-            });
-            
-	        // File Name: ABC-xml.vdb  (EDITABLE TEXT FIELD && ... Picker)
-            WidgetFactory.createLabel(summaryGroup, GridData.VERTICAL_ALIGN_CENTER, 
-            		Messages.GenerateDynamicVdbPageTwo_dynamicVdbFileName);
-            dynamicVdbFileName = WidgetFactory.createTextField(summaryGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
-            GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(dynamicVdbFileName);
-            dynamicVdbFileName.setText(vdbManager.getDynamicVdbFileName());
-            dynamicVdbFileName.setToolTipText(Messages.GenerateDynamicVdbPageTwo_dynamicVdbFileNameToolTip);
-            dynamicVdbFileName.addModifyListener(new ModifyListener() {
-                @Override
-    			public void modifyText( final ModifyEvent event ) {
-                	vdbManager.setDynamicVdbFileName(dynamicVdbFileName.getText());
-                    validatePage();
-                }
-            });
-        }
-	    
 	    // Create DDL display group
 		createXMLDisplayGroup(mainPanel);
         
 		setPageComplete(false);
 	}
-	
+
+	/**
+	 * Taken from
+	 * https://vzurczak.wordpress.com/2012/09/07/xml-syntax-highlighting-with-a-styled-text
+	 * BSD Licensed
+	 *
+	 * Computes style ranges from XML regions.
+	 * @param regions an ordered list of XML regions
+	 * @return an ordered list of style ranges for SWT styled text
+	 */
+    private List<StyleRange> computeStyleRanges(List<XmlRegion> regions) {
+
+        List<StyleRange> styleRanges = new ArrayList<StyleRange>();
+        if (regions == null)
+            return styleRanges;
+
+        for (XmlRegion xr : regions) {
+
+            // The style itself depends on the region type
+            // In this example, we use colors from the system
+            StyleRange sr = new StyleRange();
+            switch (xr.getXmlRegionType()) {
+                case MARKUP:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
+                    sr.fontStyle = SWT.BOLD;
+                    break;
+                case ATTRIBUTE:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED);
+                    break;
+                case ATTRIBUTE_VALUE:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE);
+                    break;
+                case MARKUP_VALUE:
+                case COMMENT:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
+                    break;
+                case INSTRUCTION:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
+                    break;
+                case CDATA:
+                    sr.foreground = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+                    sr.fontStyle = SWT.BOLD;
+                    break;
+                case WHITESPACE:
+                    break;
+                default:
+                    break;
+            }
+
+            // Define the position and limit
+            sr.start = xr.getStart();
+            sr.length = xr.getEnd() - xr.getStart();
+            styleRanges.add(sr);
+        }
+
+        return styleRanges;
+    }
+
+    /**
+     * Set the xml content string of the style text box and
+     * compute the highlighting colouration using the
+     * {@link XmlRegionAnalyzer}
+     *
+     * @param xml
+     */
+    private void setXmlContents(String xml) {
+        if (xml == null)
+            xml = EMPTY_STRING;
+
+        this.xmlContentsBox.setText(xml);
+
+        if (xml.length() > 0) {
+            XmlRegionAnalyzer analyzer = new XmlRegionAnalyzer();
+            List<XmlRegion> xmlRegions = analyzer.analyzeXml(xml);
+            List<StyleRange> styleRanges = computeStyleRanges(xmlRegions);
+            this.xmlContentsBox.setStyleRanges(styleRanges.toArray(new StyleRange[0]));
+        }
+    }
+
     /*
      * Create the Group containing the DDL Contents (not editable)
      */
     private void createXMLDisplayGroup( Composite parent ) {
-    	createButtonPanel(parent);
-    	
         Group theGroup = WidgetFactory.createGroup(parent, Messages.GenerateDynamicVdbPageTwo_fileContents,  GridData.FILL_BOTH, 1);
         GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(10,  10).applyTo(theGroup);
-        GridDataFactory.fillDefaults().span(2, 1).grab(true,  true).applyTo(theGroup);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(theGroup);
 
-        xmlContentsBox = WidgetFactory.createTextBox(theGroup);
-        
+        xmlContentsBox = new StyledText(theGroup, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(xmlContentsBox);
+
         xmlContentsBox.setEditable(false);
-        xmlContentsBox.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-
         xmlContentsBox.setFont(monospaceFont);
+
+        createButtonPanel(parent);
     }
-    
+
     /*
-     * Create the VDB Deploy button 
+     * Create the VDB Export to file button 
      */
     private void createButtonPanel(Composite parent) {
         Composite buttonPanel = new Composite(parent,SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(buttonPanel);
         GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(10,  10).applyTo(buttonPanel);
-        GridDataFactory.fillDefaults().span(2, 1).applyTo(buttonPanel);
+
+        WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, 
+                                  Messages.GenerateDynamicVdbPageTwo_exportXmlLabel);
 
         exportXmlToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
         exportXmlToFileSystemButton.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlTitle);
@@ -166,28 +212,31 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
             public void widgetSelected(SelectionEvent e) {
                handleExportDDLToFileSystem();
             }
-
         });
- 
     }
 
 
     @Override
     public void setVisible( boolean visible ) {
         if (visible) {
-//            if( vdbManager.isGenerateRequired() ) {
-//            	vdbManager.generate();
-//            }
-            String xml = vdbManager.getOutputXml() == null ? GenerateDynamicVdbManager.SAMPLE_XML : vdbManager.getOutputXml();
-            this.xmlContentsBox.setText(xml);
-            
-            validatePage();
-            
-            getControl().setVisible(visible);
-            
-        } else {
-            super.setVisible(visible);
+            try {
+                vdbManager.generate();
+
+                String xml = vdbManager.getOutputXml();
+                setXmlContents(xml);
+
+                validatePage();
+            } catch (Exception ex) {
+                //
+                // want to avoid validating the page here since
+                // we need to see this exception
+                //
+                this.setErrorMessage(ex.getLocalizedMessage());
+                this.setPageComplete(false);
+            }
         }
+
+        super.setVisible(visible);
     }
 
     /* 
@@ -205,7 +254,7 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
             this.setPageComplete(true);
         } else {
         	setErrorMessage(null);
-        	setThisPageComplete(EMPTY, NONE);
+        	setThisPageComplete(EMPTY_STRING, NONE);
         }
 	}
 
@@ -221,66 +270,25 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
 			monospaceFont.dispose();
 		}
 	}
-	
-    void handleBrowse() {
-    	IProject project = vdbManager.getArchiveVdbFile().getProject();
-        final IContainer folder = WidgetUtil.showFolderSelectionDialog(project,
-                                                                       new SingleProjectOrFolderFilter(project),
-                                                                       new ModelProjectSelectionStatusValidator());
-
-        if (folder != null && dynamicVdbLocationText != null) {
-        	vdbManager.setOutputLocation(folder);
-        	dynamicVdbLocationText.setText(folder.getFullPath().makeRelative().toString());
-        }
-
-        validatePage();
-    }
     
     /**
      * Export the current string content of the XML display to a user-selected file on file system
      */
     public void handleExportDDLToFileSystem() {
-        FileDialog dlg = new FileDialog(getShell(), SWT.SAVE);
-        dlg.setFilterExtensions(new String[] {"*.*"}); //$NON-NLS-1$ 
+        DirectoryDialog dlg = new DirectoryDialog(getShell(), SWT.SAVE);
         dlg.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlDialogTitle);
-        dlg.setFileName(vdbManager.getDynamicVdbFileName());
-        String fileStr = dlg.open();
-        
-        // Export to the file
-        exportXmlToFile(fileStr);
-    }
-    
-    /**
-     * Export the current XML to the supplied file
-     * @param fileStr
-     */
-    private void exportXmlToFile(String fileStr) {
-        if (fileStr != null) {
-            FileWriter fw = null;
-            BufferedWriter out = null;
-            PrintWriter pw = null;
-            try {
-                fw = new FileWriter(fileStr);
-                out = new BufferedWriter(fw);
-                pw = new PrintWriter(out);
-                String ddl = xmlContentsBox.getText();
-                pw.write(ddl);
+        String directory = dlg.open();
 
-            } catch (Exception e) {
-                MessageDialog.openError(getShell(), 
-                		Messages.GenerateDynamicVdbPageTwo_exportXmlErrorMessages, e.getMessage());
-            } finally {
-                pw.close();
-                try {
-                    out.close();
-                } catch (java.io.IOException e) {
-                }
-                try {
-                    fw.close();
-                } catch (java.io.IOException e) {
-                }
-            }
+        if (directory == null)
+            return;
+
+        // Export to the file
+        try {
+            vdbManager.export(directory);
+        } catch (Exception ex) {
+            this.setErrorMessage(ex.getLocalizedMessage());
         }
     }
 
+    
 }

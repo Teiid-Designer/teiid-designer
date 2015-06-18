@@ -7,7 +7,10 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
+import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
@@ -23,11 +26,15 @@ public class GenerateDynamicVdbWizard extends AbstractWizard {
 
     private static final String TITLE = Messages.GenerateDynamicVdbWizard_title;
 
-	GenerateDynamicVdbManager vdbManager;
+	private final GenerateDynamicVdbManager vdbManager;
 	
-	GenerateDynamicVdbPageOne page1;
-	GenerateDynamicVdbPageTwo page2;
+	private GenerateDynamicVdbPageOne page1;
+	private GenerateDynamicVdbPageTwo page2;
 
+	/**
+	 * @param vdbFile
+	 * @throws Exception
+	 */
 	public GenerateDynamicVdbWizard(IFile vdbFile) throws Exception {
 		super(DqpUiPlugin.getDefault(), TITLE, null);
 		
@@ -44,9 +51,25 @@ public class GenerateDynamicVdbWizard extends AbstractWizard {
 
 	@Override
 	public boolean finish() {
-		vdbManager.generate();
-		return true;
-	}
 
+	    IRunnableWithProgress runnable = new IRunnableWithProgress() {
+
+            @Override
+            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+                try {
+                    vdbManager.write(monitor);
+                } catch (Exception ex) {
+                    throw new InvocationTargetException(ex);
+                }
+            }
+        };
+
+	    try {
+            getContainer().run(false, false, runnable);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+	}
 }
 
