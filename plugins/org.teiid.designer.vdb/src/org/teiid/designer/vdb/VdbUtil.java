@@ -61,6 +61,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Xml;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
@@ -596,7 +597,8 @@ public class VdbUtil implements VdbConstants {
             statuses.add( new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationWarning_differentValidationVersions", validationVersion, defaultTeiidVersion)) ); //$NON-NLS-1$    
 
-        if (validationVersion.isGreaterThan(maxDesignerVersion))
+        ITeiidServerVersion maxMmVersion = new TeiidServerVersion(maxDesignerVersion.getMajor(), maxDesignerVersion.getMinor(), ITeiidServerVersion.WILDCARD);
+        if (validationVersion.isGreaterThan(maxMmVersion))
             /* Vdb version is greater than the tested Designer Teiid Version which means all bets are off! */
             statuses.add( new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID,
                                      VdbPlugin.UTIL.getString("vdbValidationError_validationVersionUnsupported")) ); //$NON-NLS-1$

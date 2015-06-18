@@ -311,21 +311,21 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        ITeiidServerVersion myMaxVersion = getMaximumVersion();
-        ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
+        ITeiidServerVersion myMinVersion = getMinimumVersion();
+        ITeiidServerVersion otherMaxVersion = otherVersion.getMaximumVersion();
 
-        int majCompResult = isOtherNumberGreaterThan(myMaxVersion.getMajor(), otherMinVersion.getMajor());
+        int majCompResult = isOtherNumberGreaterThan(myMinVersion.getMajor(), otherMaxVersion.getMajor());
         if (majCompResult > 0)
             return true;
         
-        int minCompResult = isOtherNumberGreaterThan(myMaxVersion.getMinor(), otherMinVersion.getMinor());
+        int minCompResult = isOtherNumberGreaterThan(myMinVersion.getMinor(), otherMaxVersion.getMinor());
         if (majCompResult == 0 && minCompResult > 0)
             return true;
 
-        int micCompResult = isOtherNumberGreaterThan(myMaxVersion.getMicro(), otherMinVersion.getMicro());
+        int micCompResult = isOtherNumberGreaterThan(myMinVersion.getMicro(), otherMaxVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
             return true;
-            
+
         return false;
     }
 
