@@ -42,6 +42,7 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
@@ -186,7 +187,7 @@ public class WarArchiveUtil {
         boolean result = false;
         try {
             Vdb vdb = new XmiVdb(vdbFile);
-            Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
+            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))

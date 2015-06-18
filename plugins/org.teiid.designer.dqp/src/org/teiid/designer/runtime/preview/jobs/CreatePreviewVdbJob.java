@@ -9,11 +9,9 @@
 package org.teiid.designer.runtime.preview.jobs;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
-
 import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -174,7 +172,7 @@ public final class CreatePreviewVdbJob extends WorkspacePreviewVdbJob {
                     pvdb.addEntry(this.model.getFullPath());
                 }
                 // Determine if the vdb contains a FunctionModel or Relational ViewMdl with procedure source
-                Set<VdbEntry> entries = pvdb.getModelEntries();
+                Set<VdbModelEntry> entries = pvdb.getModelEntries();
                 for(VdbEntry modelEntry: entries) {
                     resourceContainsUdf = ((VdbModelEntry)modelEntry).containsUdf();
                     if(resourceContainsUdf) {

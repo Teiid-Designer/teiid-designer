@@ -156,7 +156,7 @@ public interface Vdb extends VdbConstants {
     /**
      * @return the immutable set of model entries within this VDB
      */
-    Set<VdbEntry> getModelEntries();
+    Set<VdbModelEntry> getModelEntries();
 
     /**
      * @return the immutable set of import vdb entries within this VDB

@@ -55,7 +55,7 @@ import org.teiid.designer.ui.actions.ISelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.XmiVdb;
 
 
@@ -237,8 +237,8 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         boolean result = false;
         try {
             Vdb vdb = new XmiVdb(this.selectedVDB);
-            Set<VdbEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbEntry vdbModelEntry : modelEntrySet) {
+            Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
+            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;

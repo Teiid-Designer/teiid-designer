@@ -1902,7 +1902,7 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                */
                                               @Override
                                               public VdbModelEntry[] getElements() {
-                                                  final Set<VdbEntry> modelEntries = getVdb().getModelEntries();
+                                                  final Set<VdbModelEntry> modelEntries = getVdb().getModelEntries();
                                                   return modelEntries.toArray(new VdbModelEntry[modelEntries.size()]);
                                               }
 

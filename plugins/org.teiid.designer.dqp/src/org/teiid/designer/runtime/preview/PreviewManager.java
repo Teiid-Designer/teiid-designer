@@ -100,7 +100,6 @@ import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.spi.TeiidExecutionException;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
@@ -176,7 +175,7 @@ public final class PreviewManager extends JobChangeAdapter
         assert (ModelUtil.isVdbArchiveFile(pvdbFile)) : "IFile is not a VDB"; //$NON-NLS-1$
         
         Vdb pvdb = new XmiVdb(pvdbFile);
-        Set<VdbEntry> models = pvdb.getModelEntries();
+        Set<VdbModelEntry> models = pvdb.getModelEntries();
         // project PVDB has no entries
         if (!models.isEmpty()) {
             IFile file = models.iterator().next().findFileInWorkspace();
@@ -360,7 +359,7 @@ public final class PreviewManager extends JobChangeAdapter
      */
     IStatus checkPreviewVdbForErrors( Vdb pvdb ) {
         // a PVDB will have either zero entries (if a project PVDB) or one model entry
-        Set<VdbEntry> modelEntries = pvdb.getModelEntries();
+        Set<VdbModelEntry> modelEntries = pvdb.getModelEntries();
 
         if (!modelEntries.isEmpty()) {
             try {
