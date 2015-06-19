@@ -93,6 +93,7 @@ import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.DebuggingStopwatch;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
 import org.teiid.designer.core.association.AbstractAssociationDescriptor;
@@ -2651,7 +2652,7 @@ public class ModelEditorImpl implements ModelEditor {
                         cloneFolder(originalProject, origFile, modelToReferenceMap, genRefMap, tester);
                     }
                 } else {
-                    if (name.endsWith(ModelUtil.DOT_EXTENSION_XMI)) {
+                    if (name.endsWith(StringConstants.DOT_XMI)) {
                         cloneFile(originalProject, origFile, modelToReferenceMap, genRefMap, tester);
                     }
                 }
@@ -2676,7 +2677,7 @@ public class ModelEditorImpl implements ModelEditor {
                         cloneFolder2(originalProject, origFile, modelToReferenceMap, genRefMap, clonedFile, tester);
                     }
                 } else {
-                    if (name.endsWith(ModelUtil.DOT_EXTENSION_XMI) || name.endsWith(ModelUtil.DOT_EXTENSION_XSD)) {
+                    if (name.endsWith(StringConstants.DOT_XMI) || name.endsWith(StringConstants.DOT_XSD)) {
                         clonedFolder.mkdirs();
                         cloneFile2(originalProject, origFile, modelToReferenceMap, genRefMap, clonedFile, tester);
                     }
@@ -2977,7 +2978,7 @@ public class ModelEditorImpl implements ModelEditor {
             boolean uuid = false;
             int prevBufLen = 0;
             int outBufNdx = 0;
-            boolean xsd = originalFile.getName().endsWith(ModelUtil.DOT_EXTENSION_XSD);
+            boolean xsd = originalFile.getName().endsWith(StringConstants.DOT_XSD);
             try {
                 for (int bufLen = in.read(buf, 0, BUFFER_LENGTH); bufLen > prevBufLen; bufLen = prevBufLen
                                                                                                 + in.read(buf,

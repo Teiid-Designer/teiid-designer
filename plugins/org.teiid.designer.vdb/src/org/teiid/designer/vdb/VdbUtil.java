@@ -565,7 +565,7 @@ public class VdbUtil implements VdbConstants {
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
 			if (manifest != null) {
 				for (ModelElement model : manifest.getModels()) {
-					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					String modelName = model.getName()+ StringConstants.DOT_XMI;
 					if (modelName.equalsIgnoreCase(theModelFile.getName())) {
 						// We found the model, now replace the path
 						return true;
@@ -950,7 +950,7 @@ public class VdbUtil implements VdbConstants {
 			VdbElement manifest = VdbUtil.getVdbManifest(theVdb);
 			if (manifest != null) {
 				for (ModelElement model : manifest.getModels()) {
-					String modelName = model.getName()+ ModelUtil.DOT_EXTENSION_XMI;
+					String modelName = model.getName()+ StringConstants.DOT_XMI;
 					Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
 					if( resources.size() == 1 ) {
 						String path = model.getPath();
@@ -1098,7 +1098,7 @@ public class VdbUtil implements VdbConstants {
             } else {
                 // Find my model name
                 Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(model.getName()
-                                                                                                 + ModelUtil.DOT_EXTENSION_XMI,
+                                                                                                 + StringConstants.DOT_XMI,
                                                                                                  theProject);
                 if (resources.size() == 1) {
                     resource = resources.iterator().next();

@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import org.apache.xerces.util.EncodingMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -174,8 +173,8 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDParser;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.eclipse.xsd.util.XSDSwitch;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.xsd.XsdResourceFactory;
 import org.teiid.designer.metamodels.xsd.ui.XsdUiPlugin;
@@ -386,8 +385,8 @@ public class XsdEditor extends MultiPageEditorPart
         // Register our xsd resource factory for this context.
         //
         Map map = editingDomain.getResourceSet().getResourceFactoryRegistry().getExtensionToFactoryMap();
-        if (!map.containsKey(ModelUtil.EXTENSION_XSD)) {
-            map.put(ModelUtil.EXTENSION_XSD, new XsdResourceFactory());
+        if (!map.containsKey(StringConstants.XSD)) {
+            map.put(StringConstants.XSD, new XsdResourceFactory());
         }
     }
 

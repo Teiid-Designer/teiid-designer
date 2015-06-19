@@ -9,16 +9,15 @@ package org.teiid.designer.ui.viewsupport;
 
 import java.util.HashSet;
 import org.eclipse.core.resources.IResource;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.workspace.ModelUtil;
 
 
 /** 
  * @since 8.0
  */
-public class ModelFileCache {
-    private static final String XMI = "xmi";  //$NON-NLS-1$
-    private static final String XSD = "xsd";  //$NON-NLS-1$
-    
+public class ModelFileCache implements StringConstants {
+
     private HashSet modelFileCache;
     
     /**

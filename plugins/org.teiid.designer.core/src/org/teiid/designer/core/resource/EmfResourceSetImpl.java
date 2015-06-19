@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
@@ -29,6 +28,7 @@ import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.id.InvalidIDException;
 import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
@@ -42,7 +42,6 @@ import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.util.BasicUriPathConverter;
 import org.teiid.designer.core.util.UriPathConverter;
 import org.teiid.designer.core.workspace.ModelFileUtil;
-import org.teiid.designer.core.workspace.ModelUtil;
 
 /**
  * @since 8.0
@@ -478,7 +477,7 @@ public class EmfResourceSetImpl extends ResourceSetImpl implements EmfResourceSe
                 // Register the same Resource.Factory used with .xmi model files
                 // for this extension ...
                 if (header.getUUID() != null) {
-                    Resource.Factory factory = (Resource.Factory)extensionToFactoryMap.get(ModelUtil.EXTENSION_XMI);
+                    Resource.Factory factory = (Resource.Factory)extensionToFactoryMap.get(StringConstants.XMI);
                     if (factory != null) {
                         extensionToFactoryMap.put(extension, factory);
                     } else {

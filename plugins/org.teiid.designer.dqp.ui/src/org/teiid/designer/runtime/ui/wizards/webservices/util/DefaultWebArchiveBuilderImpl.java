@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.tools.Diagnostic;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.DiagnosticCollector;
-import java.util.Properties;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -221,7 +221,7 @@ public class DefaultWebArchiveBuilderImpl implements WebArchiveBuilder, WebServi
             final File webInfDirectory = new File(webInfDirectoryName);
             webInfDirectory.mkdir();
            //  Create the WEB-INF/wsdl directory.
-            final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + WSDL;
+            final String webInfWsdlDirectoryName = webInfDirectoryName + File.separator + WebServiceLibConstants.WSDL;
             final File webInfWsdlDirectory = new File(webInfWsdlDirectoryName);
             webInfWsdlDirectory.mkdir();
             // Create the classes directory.

@@ -43,6 +43,7 @@ import org.teiid.core.designer.util.FileSeparatorUtil;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xsd.XsdHeader;
 import org.teiid.designer.common.xsd.XsdHeaderReader;
 import org.teiid.designer.core.ModelEditor;
@@ -61,40 +62,23 @@ import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.CoreMetamodelPlugin;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.core.extension.ExtensionPackage;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 
 
 /**
  * @since 8.0
  */
-public class ModelUtil {
+public class ModelUtil implements StringConstants {
 
     /**
      * Path to vdb.xml located in vdb files
      */
     public static final String META_INF_VDB_XML = "META-INF/vdb.xml"; //$NON-NLS-1$
 
-    public static final String DOT_PROJECT = ModelFileUtil.DOT_PROJECT;
-    public static final String FILE_COLON = ModelFileUtil.FILE_COLON;
-
     private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelUtil.class);
 
-    public static final String EXTENSION_XML = ModelFileUtil.EXTENSION_XML;
-
-    public static final String EXTENSION_XMI = ModelFileUtil.EXTENSION_XMI;
-    public static final String EXTENSION_XSD = ModelFileUtil.EXTENSION_XSD;
-    public static final String EXTENSION_VDB = ModelFileUtil.EXTENSION_VDB;
-    public static final String EXTENSION_ECORE = ModelFileUtil.EXTENSION_ECORE;
-    public static final String EXTENSION_WSDL = ModelFileUtil.EXTENSION_WSDL;
-    public static final String DOT_EXTENSION_XML = ".xml"; //$NON-NLS-1$
-
-    public static final String DOT_EXTENSION_XMI = ".xmi"; //$NON-NLS-1$
-    public static final String DOT_EXTENSION_XSD = ".xsd"; //$NON-NLS-1$
-    public static final String DOT_EXTENSION_VDB = ".vdb"; //$NON-NLS-1$
-    public static final String DOT_EXTENSION_ECORE = ".ecore"; //$NON-NLS-1$
-    public static final String DOT_EXTENSION_WSDL = ".wsdl"; //$NON-NLS-1$
-    
     public static final String MODEL_CLASS_RELATIONAL = "Relational"; //$NON-NLS-1$
-    public static final String MODEL_CLASS_XML = "XML"; //$NON-NLS-1$
+    public static final String MODEL_CLASS_XML = XML;
     public static final String MODEL_CLASS_XML_SCHEMA = "XML Schema (XSD)"; //$NON-NLS-1$
     public static final String MODEL_CLASS_WEB_SERVICE = "Web Service"; //$NON-NLS-1$
     public static final String MODEL_CLASS_FUNCTION = "Function (Deprecated)"; //$NON-NLS-1$
@@ -115,7 +99,7 @@ public class ModelUtil {
     
     private static String LOCKED_NAME_KEY = "core:locked"; //$NON-NLS-1$
     
-    private static final String[] EXTENSIONS = new String[] {EXTENSION_XML, EXTENSION_XMI};
+    private static final String[] EXTENSIONS = new String[] {XML, XMI};
 
     private static XmiHeaderCache cache;
 
@@ -632,7 +616,7 @@ public class ModelUtil {
                     // So, we do a quick check, and if NOT WINDOWS, just set the default "root" to '/'
                     if (Platform.getOS().equals(Platform.OS_WIN32)) {
                         deviceLocation = baseURI.substring(0, index - 1);
-                        if (deviceLocation.startsWith(ModelFileUtil.FILE_COLON)) deviceLocation = deviceLocation.substring(6)
+                        if (deviceLocation.startsWith(FILE_COLON)) deviceLocation = deviceLocation.substring(6)
                                                                                                   + fileSep;
                     } else deviceLocation = File.separator;
                 } else projectPath = projectPath.append(FileUtils.normalizeFileName(pathSegments[i]));
@@ -890,7 +874,7 @@ public class ModelUtil {
      */
     public static boolean isVdbArchiveFile( final IPath path ) {
         // Check that the resource has the correct lower-case extension
-        if (path != null && path.getFileExtension() != null) if (ModelFileUtil.EXTENSION_VDB.equals(path.getFileExtension())) return true;
+        if (path != null && path.getFileExtension() != null) if (ITeiidVdb.VDB_EXTENSION.equals(path.getFileExtension())) return true;
         return false;
     }
 
@@ -902,7 +886,7 @@ public class ModelUtil {
      */
     public static boolean isVdbArchiveFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_VDB.equals(resource.getFileExtension())) return true;
+        if (ITeiidVdb.VDB_EXTENSION.equals(resource.getFileExtension())) return true;
         return false;
     }
 
@@ -918,7 +902,7 @@ public class ModelUtil {
             final URI uri = resource.getURI();
             if (uri != null) {
                 final String fileName = uri.lastSegment();
-                if (fileName.endsWith(ModelFileUtil.EXTENSION_VDB)) return true;
+                if (fileName.endsWith(ITeiidVdb.VDB_EXTENSION)) return true;
             }
         }
         return false;
@@ -1024,7 +1008,7 @@ public class ModelUtil {
      */
     public static boolean isXmiFile( final File resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XMI.equals(ModelFileUtil.getFileExtension(resource))) {
+        if (XMI.equals(getFileExtension(resource))) {
 
             // If the file does not yet exist then the only thing
             // we can do is to check the name and extension.
@@ -1053,7 +1037,7 @@ public class ModelUtil {
      */
     public static boolean isXmiFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XMI.equals(resource.getFileExtension())) {
+        if (XMI.equals(resource.getFileExtension())) {
             final XMIHeader header = getXmiHeader(resource);
             // If the header is not null then we know the file is, at least,
             // a well formed xml document.
@@ -1090,7 +1074,7 @@ public class ModelUtil {
      */
     public static boolean isXsdFile( final IPath path ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XSD.equals(path.getFileExtension())) return true;
+        if (XSD.equals(path.getFileExtension())) return true;
         return false;
     }
 
@@ -1102,7 +1086,7 @@ public class ModelUtil {
      */
     public static boolean isXsdFile( final IResource resource ) {
         // Check that the resource has the correct lower-case extension
-        if (ModelFileUtil.EXTENSION_XSD.equals(resource.getFileExtension())) return true;
+        if (XSD.equals(resource.getFileExtension())) return true;
         return false;
     }
 
@@ -1119,7 +1103,7 @@ public class ModelUtil {
             final URI uri = resource.getURI();
             if (uri != null) {
                 final String fileName = uri.lastSegment();
-                if (fileName.endsWith(ModelFileUtil.EXTENSION_XSD)) return true;
+                if (fileName.endsWith(XSD)) return true;
             }
         }
         return false;
@@ -1130,7 +1114,7 @@ public class ModelUtil {
             // Check that the resource has the correct lower-case extension
             final String fileName = file.getName();
             if (fileName != null) {
-                if (fileName.endsWith(ModelFileUtil.EXTENSION_XSD)) return true;
+                if (fileName.endsWith(XSD)) return true;
             }
         }
         return false;

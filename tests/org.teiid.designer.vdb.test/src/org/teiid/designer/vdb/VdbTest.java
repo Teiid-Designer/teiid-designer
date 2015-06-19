@@ -48,12 +48,12 @@ import org.mockito.Mock;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.MockFileBuilder;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
@@ -303,8 +303,8 @@ public class VdbTest implements VdbConstants {
 
     @Test
     public void testAddingTypesOfVdbEntry() throws Exception {
-        MockFileBuilder modelFile = new MockFileBuilder("modelFile", ModelFileUtil.EXTENSION_XMI);
-        MockFileBuilder schemaFile = new MockFileBuilder("schemaFile", ModelFileUtil.EXTENSION_XSD);
+        MockFileBuilder modelFile = new MockFileBuilder("modelFile", StringConstants.XMI);
+        MockFileBuilder schemaFile = new MockFileBuilder("schemaFile", StringConstants.XSD);
         MockFileBuilder udfFile = new MockFileBuilder("udfFunction", VdbHelper.JAR_EXT);
         MockFileBuilder userFile = new MockFileBuilder("otherFile", "txt");
 

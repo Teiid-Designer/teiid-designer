@@ -12,13 +12,15 @@ import java.io.InputStream;
 import org.teiid.core.designer.CoreModelerPlugin;
 import org.teiid.core.designer.TeiidDesignerException;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 
 /**
  * @since 8.0
  */
-public class ModelFileUtil {
+public class ModelFileUtil implements StringConstants {
 
 /**
  * @since 8.0
@@ -30,15 +32,6 @@ public class ModelFileUtil {
                                   XMIHeader header );
     }
 
-    public static final String DOT_PROJECT = ".project"; //$NON-NLS-1$
-    public static final String FILE_COLON = "file:"; //$NON-NLS-1$
-    public static final String EXTENSION_XML = "xml"; //$NON-NLS-1$
-    public static final String EXTENSION_XMI = "xmi"; //$NON-NLS-1$
-    public static final String EXTENSION_XSD = "xsd"; //$NON-NLS-1$
-    public static final String EXTENSION_VDB = "vdb"; //$NON-NLS-1$
-    public static final String EXTENSION_ECORE = "ecore"; //$NON-NLS-1$
-    public static final String EXTENSION_WSDL = "wsdl"; //$NON-NLS-1$
-    
     public static final String UML_MODEL_URI = "http://www.eclipse.org/uml2/3.0.0/UML"; //$NON-NLS-1$
     public static final String XML_SERVICE_MODEL_URI = "http://www.metamatrix.com/metamodels/XmlService"; //$NON-NLS-1$
     public static final String RELATIONSHIP_MODEL_URI = "http://www.metamatrix.com/metamodels/Relationship"; //$NON-NLS-1$
@@ -79,7 +72,7 @@ public class ModelFileUtil {
         }
 
         // If the resource does not have the correct lower-case extension then return false
-        if (!EXTENSION_XMI.equals(getFileExtension(resource))) {
+        if (!XMI.equals(getFileExtension(resource))) {
             return false;
         }
 
@@ -122,7 +115,7 @@ public class ModelFileUtil {
      */
     public static boolean isXsdFile( final File resource ) {
         // Check that the resource has the correct lower-case extension
-        if (EXTENSION_XSD.equals(getFileExtension(resource))) {
+        if (XSD.equals(getFileExtension(resource))) {
             return true;
         }
         return false;
@@ -136,7 +129,7 @@ public class ModelFileUtil {
      */
     public static boolean isVdbArchiveFile( final File resource ) {
         // Check that the resource has the correct lower-case extension
-        if (EXTENSION_VDB.equals(getFileExtension(resource))) {
+        if (ITeiidVdb.VDB_EXTENSION.equals(getFileExtension(resource))) {
             return true;
         }
         return false;
@@ -178,13 +171,13 @@ public class ModelFileUtil {
         }
 
         final String exten = (caseSensitive ? extension : extension.toLowerCase());
-        if (EXTENSION_XMI.equals(exten)) {
+        if (XMI.equals(exten)) {
             return true;
         }
-        if (EXTENSION_XSD.equals(exten)) {
+        if (XSD.equals(exten)) {
             return true;
         }
-        if (EXTENSION_VDB.equals(exten)) {
+        if (ITeiidVdb.VDB_EXTENSION.equals(exten)) {
             return false;
         }
         return false;

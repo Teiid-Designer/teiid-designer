@@ -194,8 +194,8 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         		String restMethod = dialog.getRestMethodValue();
         		IContainer folder = dialog.getViewModelFolder();
         		String modelName = dialog.getViewModelName();
-        		if( !modelName.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
-        			modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+        		if( !modelName.toUpperCase().endsWith(StringConstants.DOT_XMI.toUpperCase())) {
+        			modelName = modelName + StringConstants.DOT_XMI;
         		}
         		
         		if( selectedViewsAndTables.length > 0 ) {

@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,10 +39,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.AbstractElementListSelectionDialog;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.search.ModelWorkspaceSearch;
 import org.teiid.designer.core.search.runtime.ResourceObjectRecord;
-import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.UiConstants;
 
 /**
@@ -52,7 +52,7 @@ import org.teiid.designer.ui.UiConstants;
  * 
  * @since 8.0
  */
-public class ModelObjectSelectionDialog extends AbstractElementListSelectionDialog {
+public class ModelObjectSelectionDialog extends AbstractElementListSelectionDialog implements StringConstants {
 
     private static final String TITLE = UiConstants.Util.getString("ModelObjectSelectionDialog.title"); //$NON-NLS-1$
 
@@ -517,10 +517,10 @@ public class ModelObjectSelectionDialog extends AbstractElementListSelectionDial
             String sContainerLabel = fQualifierRenderer.getText(oSelected);
             String sContainerLabelLowerCase = sContainerLabel.toLowerCase();
 
-            if (sContainerLabelLowerCase.endsWith(DOT + ModelUtil.EXTENSION_XMI)
-                || sContainerLabelLowerCase.endsWith(DOT + ModelUtil.EXTENSION_XML)
-                || sContainerLabelLowerCase.endsWith(DOT + ModelUtil.EXTENSION_XSD)
-                || sContainerLabelLowerCase.endsWith(DOT + ModelUtil.EXTENSION_VDB)) {
+            if (sContainerLabelLowerCase.endsWith(DOT_XMI)
+                || sContainerLabelLowerCase.endsWith(DOT_XML)
+                || sContainerLabelLowerCase.endsWith(DOT_XSD)
+                || sContainerLabelLowerCase.endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
 
                 getOkButton().setEnabled(false);
             }

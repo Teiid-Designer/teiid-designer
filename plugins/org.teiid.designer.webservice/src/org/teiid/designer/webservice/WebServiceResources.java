@@ -19,7 +19,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDResourceFactoryImpl;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.metamodels.wsdl.Definitions;
 import org.teiid.designer.metamodels.wsdl.WsdlPackage;
 import org.teiid.designer.metamodels.wsdl.io.DelegatingResourceSet;
@@ -31,7 +31,7 @@ import org.teiid.designer.metamodels.wsdl.io.WsdlResourceImpl;
 /** 
  * @since 8.0
  */
-public class WebServiceResources {
+public class WebServiceResources implements StringConstants {
 
     private final ResourceSet resourceSet;
     
@@ -62,12 +62,12 @@ public class WebServiceResources {
         final Resource.Factory.Registry registry = this.resourceSet.getResourceFactoryRegistry();
         
         Map map = registry.getExtensionToFactoryMap();
-        if (!map.containsKey(ModelUtil.EXTENSION_WSDL)) {
-            map.put(ModelUtil.EXTENSION_WSDL, new WsdlResourceFactoryImpl());
+        if (!map.containsKey(WSDL)) {
+            map.put(WSDL, new WsdlResourceFactoryImpl());
         }
         
-        if (!map.containsKey(ModelUtil.EXTENSION_XSD)) {
-            map.put(ModelUtil.EXTENSION_XSD, new XSDResourceFactoryImpl());
+        if (!map.containsKey(XSD)) {
+            map.put(XSD, new XSDResourceFactoryImpl());
         }
         
         registry.getProtocolToFactoryMap().put(WsdlPackage.eNS_URI, new WsdlResourceFactoryImpl());

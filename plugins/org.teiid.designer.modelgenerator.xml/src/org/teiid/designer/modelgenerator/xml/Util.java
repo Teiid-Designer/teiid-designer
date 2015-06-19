@@ -12,8 +12,9 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.PlatformUI;
-import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.core.workspace.ModelUtil;
 
@@ -31,7 +32,7 @@ public class Util extends PluginUtilImpl {
     public static final String[] FILE_DIALOG_XSD_EXTENSIONS;
     static {
         // create XSD file dialog extension array
-        FILE_DIALOG_XSD_EXTENSIONS = new String[] {createFileDialogExtension(ModelUtil.EXTENSION_XSD)};
+        FILE_DIALOG_XSD_EXTENSIONS = new String[] {createFileDialogExtension(StringConstants.XSD)};
     }
 
     public Util() {
