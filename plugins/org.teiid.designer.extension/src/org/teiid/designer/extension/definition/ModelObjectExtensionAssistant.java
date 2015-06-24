@@ -10,6 +10,7 @@ package org.teiid.designer.extension.definition;
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
+import org.eclipse.core.resources.IResource;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 
 /**
@@ -165,4 +166,8 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
      */
     public abstract boolean supportsMyNamespace( Object modelObject ) throws Exception;
 
+    @Override
+    public void applyMedIfNecessary(IResource model) throws Exception {
+        // Do nothing by default
+    }
 }

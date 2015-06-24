@@ -11,9 +11,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
@@ -28,8 +31,16 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelEditor;
@@ -48,7 +59,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
-
 /**
  *
  */
@@ -174,8 +184,60 @@ public class VdbTestUtils implements StringConstants {
         return booksVdb;
     }
 
-    public static DynamicVdb mockPortfolioDynamicVdb() throws Exception {
-        MockFileBuilder portfolio = new MockFileBuilder(PORTFOLIO_VDB_FILE);
+    public static DynamicVdb mockPortfolioDynamicVdb(ModelWorkspaceMock modelWksp) throws Exception {
+        //
+        // Required to avoid DDL Importer throwing NPE when validating name of model
+        //
+        EclipseMock eclipseMock = modelWksp.getEclipseMock();
+        when(eclipseMock.workspace().validateName(isA(String.class), anyInt())).thenReturn(Status.OK_STATUS);
+
+        File portfolioCopy = File.createTempFile("Portfolio", DOT_XML);
+        portfolioCopy.deleteOnExit();
+
+        //
+        // Avoid using the test data original
+        //
+        FileUtils.copy(new FileInputStream(PORTFOLIO_VDB_FILE), portfolioCopy);
+        assertTrue(portfolioCopy.exists() && portfolioCopy.length() > 0);
+
+        final MockFileBuilder portfolio = new MockFileBuilder(portfolioCopy);
+        portfolio.enableProject();
+        portfolio.enableExtensionRegistry();
+
+        //
+        // Override workspaceRoot.findMember since essential when creating index files
+        //
+        IWorkspaceRoot wkspRoot = modelWksp.getEclipseMock().workspaceRoot();
+        when(wkspRoot.findMember(isA(IPath.class))).thenAnswer(new Answer<IResource>() {
+            @Override
+             public IResource answer(InvocationOnMock invocation) throws Throwable {
+                 Object[] args = invocation.getArguments();
+                 IPath path = (IPath) args[0];
+
+                 IProject project = portfolio.getProject();
+                IPath projectPath = project.getFullPath();
+                 IResource resource = null;
+                 if (path.isEmpty()) {
+                     //
+                     // Workspace root path
+                     //
+                     resource = mock(IResource.class);
+                     when(resource.exists()).thenReturn(true);
+                 } else if (projectPath.equals(path) || projectPath.makeRelative().equals(path)) {
+                     //
+                     // project name
+                     //
+                     resource = portfolio.getProject();
+                 } else if (projectPath.isPrefixOf(path)) {
+                     //
+                     // Path could be inside mocked project so defer to project
+                     //
+                     resource = project.getFile(path.makeRelativeTo(projectPath));
+                 }
+
+                 return resource;
+             } 
+         });
 
         DynamicVdb vdb = new DynamicVdb();
         vdb.setFile(portfolio.getResourceFile());
@@ -247,16 +309,7 @@ public class VdbTestUtils implements StringConstants {
         "price bigdecimal," + NEW_LINE +
         "company_name   varchar(256)" + NEW_LINE +
         ") OPTIONS (MATERIALIZED 'TRUE', UPDATABLE 'TRUE'," + NEW_LINE +
-        "MATERIALIZED_TABLE 'Accounts.h2_stock_mat'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_TTL\" 120000," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT\" 'execute accounts.native(''truncate table h2_stock_mat'');'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT\"  'execute accounts.native('''')'," + NEW_LINE +
-        "\"teiid_rel:ON_VDB_DROP_SCRIPT\" 'DELETE FROM Accounts.status WHERE Name=''stock'' AND schemaname = ''Stocks'''," + NEW_LINE +
-        "\"teiid_rel:MATERIALIZED_STAGE_TABLE\" 'Accounts.h2_stock_mat'," + NEW_LINE +
-        "\"teiid_rel:ALLOW_MATVIEW_MANAGEMENT\" 'true'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_STATUS_TABLE\" 'status'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_SHARE_SCOPE\" 'NONE'," + NEW_LINE +
-        "\"teiid_rel:MATVIEW_ONERROR_ACTION\" 'THROW_EXCEPTION')" + NEW_LINE +
+        "MATERIALIZED_TABLE 'Accounts.h2_stock_mat')" + NEW_LINE +
         "AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME" + NEW_LINE +
         "FROM Stocks.StockPrices AS S, Accounts.PRODUCT AS A" + NEW_LINE +
         "WHERE S.symbol = A.SYMBOL;";

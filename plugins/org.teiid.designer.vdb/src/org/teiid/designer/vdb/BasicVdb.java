@@ -752,10 +752,10 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     public abstract DynamicVdb dynVdbConvert() throws Exception;
 
     @Override
-    public <V extends Vdb> V convert(Class<V> vdbVype) throws Exception {
-        if (DynamicVdb.class.equals(vdbVype))
+    public <V extends Vdb> V convert(Class<V> vdbType) throws Exception {
+        if (DynamicVdb.class.equals(vdbType))
             return (V) dynVdbConvert();
-        else if (XmiVdb.class.equals(vdbVype))
+        else if (XmiVdb.class.equals(vdbType))
             return (V) xmiVdbConvert();
 
         throw new UnsupportedOperationException();

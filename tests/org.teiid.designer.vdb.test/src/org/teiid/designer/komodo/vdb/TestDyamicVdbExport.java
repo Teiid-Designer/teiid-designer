@@ -53,7 +53,7 @@ public class TestDyamicVdbExport implements VdbConstants {
 
     @Test
     public void testWriteDynamicVdb() throws Exception {
-        DynamicVdb vdb = VdbTestUtils.mockPortfolioDynamicVdb();
+        DynamicVdb vdb = VdbTestUtils.mockPortfolioDynamicVdb(modelWorkspaceMock);
 
         StringWriter destination = new StringWriter();
         vdb.write(destination);
@@ -124,8 +124,10 @@ public class TestDyamicVdbExport implements VdbConstants {
 
             Collection<DynamicModel> dynamicModels = dynVdb.getDynamicModels();
             for (DynamicModel model : dynamicModels) {
-                if (model.getName().equals(entry.getName()))
+                if (model.getName().equals(entry.getName())) {
                     dynModel = model;
+                    break;
+                }
             }
             assertNotNull(dynModel);
 

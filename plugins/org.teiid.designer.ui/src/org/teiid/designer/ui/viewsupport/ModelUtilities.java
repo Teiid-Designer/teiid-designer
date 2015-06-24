@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -31,6 +30,7 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.AdapterFactoryItemDelegator;
+import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -579,9 +579,15 @@ public abstract class ModelUtilities implements UiConstants {
      */
     public static void addNotifyChangedListener( INotifyChangedListener listener ) {
         try {
-        	if( getWorkspaceContainer().getChangeNotifier().contains(listener) ) return;
-    	
-            getWorkspaceContainer().getChangeNotifier().addListener(listener);
+            Container workspaceContainer = getWorkspaceContainer();
+            if (workspaceContainer == null) return;
+
+            ChangeNotifier changeNotifier = workspaceContainer.getChangeNotifier();
+            if (changeNotifier == null) return;
+
+            if( changeNotifier.contains(listener) ) return;
+
+            changeNotifier.addListener(listener);
             //System.out.println("    >>>  ModelUtilities.addNotifyChangedListener()  Adding New Listener = " + listener.getClass().getSimpleName());
         } catch (CoreException e) {
             e.printStackTrace(System.err);

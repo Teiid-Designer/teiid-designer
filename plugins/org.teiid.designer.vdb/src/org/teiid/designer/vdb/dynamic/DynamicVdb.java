@@ -28,13 +28,27 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.builder.ModelBuildUtil;
+import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
+import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
+import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.komodo.vdb.DynamicModel;
+import org.teiid.designer.komodo.vdb.DynamicModel.Type;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.komodo.vdb.VdbManagementException;
+import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.vdb.BasicVdb;
@@ -45,6 +59,7 @@ import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.manifest.ConditionElement;
@@ -429,7 +444,135 @@ public class DynamicVdb extends BasicVdb {
     }
 
     @Override
-    public XmiVdb xmiVdbConvert() {
-        throw new UnsupportedOperationException();
+    public XmiVdb xmiVdbConvert() throws Exception {
+        XmiVdb xmiVdb = new XmiVdb();
+
+        //
+        // Populate the new vdb with the basic specification
+        //
+        populateVdb(xmiVdb);
+
+        //
+        // No external files coming from dynamic vdb so
+        // no file entries to populate
+        //
+        NullProgressMonitor monitor = new NullProgressMonitor();
+
+        for (DynamicModel dynModel : getDynamicModels()) {
+            IFile sourceFile = this.getSourceFile();
+            IContainer parent = sourceFile.getParent();
+
+            String fileName = dynModel.getName() + DOT_XMI;
+            IPath modelPath = parent.getLocation().append(fileName);
+            ModelResource modelResource = null;
+
+            //
+            // Create the empty model
+            //
+            IFile modelFile = parent.getFile(modelPath);
+            if (modelFile.exists())
+                modelFile.delete(true, monitor);
+
+            modelResource = ModelerCore.create(modelFile);
+            if (modelResource == null)
+                throw new Exception("Failed to create model resource"); //$NON-NLS-1$
+
+            //
+            // Apply the model annotation
+            //
+            ModelAnnotation annotation = modelResource.getModelAnnotation();
+            annotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+            annotation.setModelType(ModelType.get(dynModel.getModelType().getType()));
+
+            //
+            // Inject the source properties into the model
+            //
+            VdbSource[] sources = dynModel.getSources();
+            if (sources != null) {
+                for (VdbSource source : sources) {
+                    String translatorProperty = IConnectionInfoHelper.TRANSLATOR_NAMESPACE + IConnectionInfoHelper.TRANSLATOR_NAME_KEY;
+                    ModelUtil.setModelAnnotationPropertyValue(modelResource, translatorProperty, source.getTranslatorName());
+                    
+                    String jndiProperty = IConnectionInfoHelper.CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID;
+                    ModelUtil.setModelAnnotationPropertyValue(modelResource, jndiProperty, source.getJndiName());
+                }
+            }
+
+            //
+            // Save the resource
+            //
+            modelResource.save(monitor, true);
+
+            //
+            // If we have a some DDL then importer it into the model resource
+            //
+            Metadata metadata = dynModel.getMetadata();
+            if (metadata != null) {
+                IProject project = parent.getProject();
+
+                DdlImporter importer = new DdlImporter(new IProject[] {project});
+
+                // Set the destination the model file
+                importer.setModelFolder(parent);
+                importer.setModelName(fileName);
+
+                // Set some options
+                importer.setOptToCreateModelEntitiesForUnsupportedDdl(true);
+                importer.setOptToSetModelEntityDescription(true);
+
+                // Auto-select dialect
+                importer.setSpecifiedParser("TEIID"); //$NON-NLS-1$
+
+                // Set the model type
+                Type dynModelType = dynModel.getModelType();
+                String modelType = dynModelType.toString();
+                importer.setModelType(ModelType.get(modelType));
+                importer.setGenerateDefaultSQL(Type.VIRTUAL.equals(dynModelType));
+
+                // Not actually used by the importer but better to
+                // just populate it in case used in the future.
+                importer.setDdlFileName(getSourceFile().getLocation().toOSString());
+
+                //
+                // Import the ddl
+                //
+                importer.importDdl(metadata.getSchemaText(), monitor, 1);
+
+                if (importer.hasParseError()) {
+                    throw new Exception(importer.getParseErrorMessage());
+                }
+
+                if (!importer.noDdlImported()) {
+                    importer.save(monitor, 1);
+                }
+
+                modelResource = importer.model();
+            }
+
+            ModelBuildUtil.indexResources(monitor, Collections.singleton(modelResource.getCorrespondingResource()));
+
+            VdbModelEntry modelEntry = xmiVdb.addEntry(modelPath);
+
+            //
+            // Set any model properties
+            //
+            for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
+                modelEntry.setProperty(prop.getKey().toString(), prop.getValue().toString());
+            }
+
+            VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
+            sourceInfo.setIsMultiSource(dynModel.isMultiSource());
+            sourceInfo.setAddColumn(dynModel.doAddColumn());
+            sourceInfo.setColumnAlias(dynModel.getColumnAlias());
+
+            //
+            // Check to ensure the sources are added to the VdbModelEntry
+            //
+            for (VdbSource source : dynModel.getSources()) {
+                sourceInfo.add(source.getName(), source.getJndiName(), source.getTranslatorName());
+            }
+        }
+
+        return xmiVdb;
     }
 }

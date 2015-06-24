@@ -111,16 +111,7 @@
             price bigdecimal,
             company_name   varchar(256)
         ) OPTIONS (MATERIALIZED 'TRUE', UPDATABLE 'TRUE',
-               MATERIALIZED_TABLE 'Accounts.h2_stock_mat',
-               "teiid_rel:MATVIEW_TTL" 120000,
-               "teiid_rel:MATVIEW_BEFORE_LOAD_SCRIPT" 'execute accounts.native(''truncate table h2_stock_mat'');',
-               "teiid_rel:MATVIEW_AFTER_LOAD_SCRIPT"  'execute accounts.native('''')',
-               "teiid_rel:ON_VDB_DROP_SCRIPT" 'DELETE FROM Accounts.status WHERE Name=''stock'' AND schemaname = ''Stocks''',
-               "teiid_rel:MATERIALIZED_STAGE_TABLE" 'Accounts.h2_stock_mat',
-               "teiid_rel:ALLOW_MATVIEW_MANAGEMENT" 'true',
-               "teiid_rel:MATVIEW_STATUS_TABLE" 'status',
-               "teiid_rel:MATVIEW_SHARE_SCOPE" 'NONE',
-               "teiid_rel:MATVIEW_ONERROR_ACTION" 'THROW_EXCEPTION')
+               MATERIALIZED_TABLE 'Accounts.h2_stock_mat')
         AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME
                     FROM Stocks.StockPrices AS S, Accounts.PRODUCT AS A
                     WHERE S.symbol = A.SYMBOL;

@@ -7,82 +7,137 @@
  */
 package org.teiid.designer.komodo.vdb;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import org.eclipse.core.resources.IFile;
-import org.teiid.core.util.SmartTestDesignerSuite;
+import org.eclipse.core.resources.IProject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.teiid.core.designer.EclipseMock;
+import org.teiid.designer.core.ModelWorkspaceMock;
+import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbImportVdbEntry;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbSource;
+import org.teiid.designer.vdb.VdbSourceInfo;
+import org.teiid.designer.vdb.VdbTestUtils;
+import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
+
 
 @SuppressWarnings( "javadoc" )
-public class TestDyamicVdbImport {
+public class TestDyamicVdbImport implements VdbConstants {
 
-    private static final String DYNAMIC_VDBS = "dynamic_vdbs";
+    private EclipseMock eclipseMock;
 
-    private File PRODUCT_VIEW_DYNAMIC_VDB = SmartTestDesignerSuite.getTestDataFile(getClass(), DYNAMIC_VDBS + File.separator + "product-view-vdb.xml");
+    private ModelWorkspaceMock modelWorkspaceMock;
 
-	private File portfolioVdbFile = SmartTestDesignerSuite.getTestDataFile(getClass(), DYNAMIC_VDBS + File.separator + "portfolio-vdb.xml");
+    @Before
+    public void before() throws Exception {
+        eclipseMock = new EclipseMock();
+        modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
+    }
 
-	private IFile portfolioVdbEclipseFile;
+    @After
+    public void after() {
+        modelWorkspaceMock.dispose();
+        eclipseMock.dispose();
+    }
 
-//	@Before
-//	public void setup() {
-//	    initMocks(this);
-//
-//	    final IPath name = mock(Path.class);
-//        when(name.
-//        portfolioVdbEclipseFile = mock(IFile.class);
-//        when(portfolioVdbEclipseFile.getLocation()).thenReturn(name);
-//        when(portfolioVdbEclipseFile.getLocation().toFile()).thenReturn(tempFile);
-//        when(portfolioVdbEclipseFile.getContents()).thenReturn(fileInputStream);
-//	}
-//
-//    @Test
-//	public void testLoad_1() throws Exception {
-//		Collection<String> modelNames = new ArrayList<String>();
-//		modelNames.add("MarketData");
-//		modelNames.add("Accounts");
-//		modelNames.add("PersonalValuations");
-//		modelNames.add("Stocks");
-//		modelNames.add("StocksMatModel");
-//		
-//		DynamicVdb vdb = new DynamicVdb(portfolioVdbFile);
-//		
-//		assertNotNull(vdb.getName());
-//		assertEquals(5, vdb.getDynamicModels().size());
-//		
-//		for( DynamicModel model : vdb.getDynamicModels()) {
-//			assertTrue( modelNames.contains(model.getName()) );
-//			if( model.getName().equalsIgnoreCase("Stocks")) {
-//				assertNotNull(model.getMetadata());
-//				assertEquals(Type.DDL, model.getMetadata().getType());
-//				System.out.println("CDATA for model = " + model.getName() + "\n\n" +
-//						model.getMetadata().getSchemaText() );
-//			}
-//		}
-//		
-//		
-//	}
-//	
-//	@Test
-//	public void testExport_1() throws Exception {
-//		DynamicVdb vdb = new DynamicVdb(portfolioVdbFile);
-//		vdb.export(null);
-//		
-//	}
-//	
-//	@Test
-//	public void testExport_2() throws Exception {
-//        IPath fullPath = new Path(portfolioVdbFile.getAbsolutePath());
-//
-//        IPath locationPath = fullPath.removeLastSegments(1);
-//        IPath tempPath = locationPath.append("DynamicVdbTest-vdb.xml");
-//		DynamicVdb vdb = new DynamicVdb("DynamicVdbTest");
-//		vdb.setFilePath(tempPath);
-//		
-//		DynamicModel model = new DynamicModel("TestModel_1");
-//		model.setMetadata(new Metadata("CREATE VIEW ABCDEFG (C1 integer, C2 integer) AS SELECT * FROM TABLE_B;", "DDL"));
-//		model.setModelType("VIRTUAL");
-//		vdb.addDynamicModel(model);
-//
-//		vdb.export(null);
-//	}
+    @Test
+    public void convertDynamicVdbToXmiVdb() throws Exception {
+        DynamicVdb dynVdb = VdbTestUtils.mockPortfolioDynamicVdb(modelWorkspaceMock);
+        assertNotNull(dynVdb);
 
+        IFile dynVdbSrcFile = dynVdb.getSourceFile();
+        IProject parent = dynVdbSrcFile.getProject();
+        assertNotNull(parent);
+
+        XmiVdb xmiVdb = dynVdb.convert(XmiVdb.class);
+
+        assertEquals(dynVdb.getName(), xmiVdb.getName());
+        assertEquals(dynVdb.getDescription(), xmiVdb.getDescription());
+
+        for (Map.Entry<Object, Object> entry : dynVdb.getProperties().entrySet()) {
+            assertEquals(entry.getValue(), xmiVdb.getProperties().getProperty(entry.getKey().toString()));
+        }
+
+        assertEquals(dynVdb.getSourceFile(), xmiVdb.getSourceFile());
+        assertEquals(dynVdb.getVersion(), xmiVdb.getVersion());
+
+        assertEquals(dynVdb.getConnectionType(), xmiVdb.getConnectionType());
+        assertEquals(dynVdb.isPreview(), xmiVdb.isPreview());
+        assertEquals(dynVdb.getQueryTimeout(), xmiVdb.getQueryTimeout());
+
+        assertEquals(dynVdb.getAllowedLanguages().size(), xmiVdb.getAllowedLanguages().size());
+        List<String> dynLanguageValues = Arrays.asList(xmiVdb.getAllowedLanguages().getAllowedLanguageValues());
+        for (String language : dynVdb.getAllowedLanguages().getAllowedLanguageValues()) {
+            assertTrue(dynLanguageValues.contains(language));
+        }
+
+        assertEquals(dynVdb.getSecurityDomain(), xmiVdb.getSecurityDomain());
+        assertEquals(dynVdb.getGssPattern(), xmiVdb.getGssPattern());
+        assertEquals(dynVdb.getPasswordPattern(), xmiVdb.getPasswordPattern());
+        assertEquals(dynVdb.getAuthenticationType(), xmiVdb.getAuthenticationType());
+        assertEquals(dynVdb.getValidationDateTime(), xmiVdb.getValidationDateTime());
+        assertEquals(dynVdb.getValidationVersion(), xmiVdb.getValidationVersion());
+        assertEquals(dynVdb.isAutoGenerateRESTWar(), xmiVdb.isAutoGenerateRESTWar());
+
+        assertEquals(dynVdb.getImports().size(), xmiVdb.getImports().size());
+        for (VdbImportVdbEntry entry : dynVdb.getImports()) {
+            assertTrue(xmiVdb.getImports().contains(entry));
+        }
+
+        assertEquals(dynVdb.getTranslators().size(), xmiVdb.getTranslators().size());
+        for (TranslatorOverride translator : dynVdb.getTranslators()) {
+            assertTrue(xmiVdb.getTranslators().contains(translator));
+        }
+
+        assertEquals(dynVdb.getDataRoles().size(), xmiVdb.getDataRoles().size());
+        for (DataRole role : dynVdb.getDataRoles()) {
+            assertTrue(xmiVdb.getDataRoles().contains(role));
+        }
+
+        assertEquals(dynVdb.getDynamicModels().size(), xmiVdb.getModelEntries().size());
+        for (DynamicModel dynModel : dynVdb.getDynamicModels()) {
+
+            VdbModelEntry modelEntry = null;
+            Collection<VdbModelEntry> entries = xmiVdb.getModelEntries();
+            for (VdbModelEntry entry : entries) {
+                if (dynModel.getName().equals(entry.getName())) {
+                    modelEntry = entry;
+                    break;
+                }
+            }
+            assertNotNull(modelEntry);
+
+            assertEquals(dynModel.getDescription(), modelEntry.getDescription());
+
+            for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
+                assertEquals(prop.getValue(), modelEntry.getProperties().getProperty(prop.getKey().toString()));
+            }
+
+            VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
+
+            assertEquals(dynModel.getModelType().toString(), modelEntry.getType());            
+            assertEquals(dynModel.isMultiSource(), sourceInfo.isMultiSource());
+            assertEquals(dynModel.doAddColumn(), sourceInfo.isAddColumn());
+            assertEquals(dynModel.getColumnAlias(), sourceInfo.getColumnAlias());
+
+            assertEquals(dynModel.getSources().length, sourceInfo.getSources().size());
+            List<VdbSource> entrySources = new ArrayList<VdbSource>(sourceInfo.getSources());
+            for (VdbSource source : dynModel.getSources()) {
+                assertTrue(entrySources.contains(source));
+            }
+        }
+    }
 }

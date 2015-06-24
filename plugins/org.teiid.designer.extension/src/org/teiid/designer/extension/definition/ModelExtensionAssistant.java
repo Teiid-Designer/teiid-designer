@@ -8,7 +8,7 @@
 package org.teiid.designer.extension.definition;
 
 import java.util.Set;
-
+import org.eclipse.core.resources.IResource;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.extension.ExtensionConstants;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
@@ -22,7 +22,7 @@ import org.teiid.designer.extension.properties.Translation;
  *
  * @since 8.0
  */
-public class ModelExtensionAssistant implements ExtensionConstants {
+public abstract class ModelExtensionAssistant implements ExtensionConstants {
 
     private ModelExtensionDefinition definition;
 
@@ -170,4 +170,10 @@ public class ModelExtensionAssistant implements ExtensionConstants {
         return true;
     }
 
+    /**
+     * Saves the relational MED to a model if necessary.
+     * @param model the model being checked (can be <code>null</code>)
+     * @throws Exception if there is an error applying MED
+     */
+    public abstract void applyMedIfNecessary(final IResource model) throws Exception;
 }

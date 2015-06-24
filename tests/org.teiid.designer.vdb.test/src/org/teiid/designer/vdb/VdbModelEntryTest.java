@@ -31,6 +31,7 @@ import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelObjectAnnotations;
@@ -93,7 +94,10 @@ public class VdbModelEntryTest {
         when(annotation.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
         
         final EmfResource model = mock(EmfResource.class);
-        when(modelWorkspaceMock.getFinder().findByURI(isA(URI.class), eq(false))).thenReturn(model);
+        ResourceFinder finder = mock(ResourceFinder.class);
+        when(finder.findByURI(isA(URI.class), eq(false))).thenReturn(model);
+        modelWorkspaceMock.setFinder(finder);
+
         when(model.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
         when(model.getModelAnnotation()).thenReturn(annotation);
         

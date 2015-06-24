@@ -234,15 +234,19 @@ public abstract class VdbIndexedEntry extends VdbEntry {
 
         problems.clear();
         // Synchronize model problems
-        for (final IMarker marker : workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)) {
-            Object attr = marker.getAttribute(IMarker.SEVERITY);
-            if (attr == null) {
-                continue;
-            }
-            // Asserting attr is an Integer...
-            final int severity = ((Integer)attr).intValue();
-            if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
-                problems.add(new Problem(marker));
+
+        IMarker[] markers = workspaceFile.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+        if (markers != null) {
+            for (final IMarker marker : markers) {
+                Object attr = marker.getAttribute(IMarker.SEVERITY);
+                if (attr == null) {
+                    continue;
+                }
+                // Asserting attr is an Integer...
+                final int severity = ((Integer)attr).intValue();
+                if (severity == IMarker.SEVERITY_ERROR || severity == IMarker.SEVERITY_WARNING) {
+                    problems.add(new Problem(marker));
+                }
             }
         }
     }

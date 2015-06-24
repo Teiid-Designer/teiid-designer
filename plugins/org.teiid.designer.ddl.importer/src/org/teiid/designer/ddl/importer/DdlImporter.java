@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -41,6 +40,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
 import org.teiid.designer.ddl.importer.node.EmfModelGenerator;
@@ -123,8 +123,6 @@ public class DdlImporter {
     void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork ) throws Exception {
     	ddlString = null;
     	importManager.getImportMessages().clear();
-    	
-        int workUnit = totalWork / 3;
 
         // ------------------------------------------------------------------------------
         // Parse the DDL from the file
@@ -135,13 +133,27 @@ public class DdlImporter {
         StringBuilder builder = new StringBuilder();
         for (int charTot = reader.read(buf); charTot >= 0; charTot = reader.read(buf))
             builder.append(buf, 0, charTot);
+
+        importDdl(builder.toString(), monitor, totalWork);
+    }
+
+    /**
+     * @param ddl
+     * @param monitor
+     * @param totalWork
+     * @throws Exception
+     */
+    public void importDdl(String ddl, IProgressMonitor monitor, int totalWork) throws Exception {
+        this.ddlString = ddl;
+
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+        int workUnit = totalWork / 3;
 
         // Use specified parser if it has been set
         AstNode rootNode = null;
         DdlParsers parsers = new DdlParsers();
-        ddlString = builder.toString();
-        
+
         if( CoreStringUtil.isEmpty(ddlString) ) {
         	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
         	this.noDdlImported = true;
@@ -284,7 +296,14 @@ public class DdlImporter {
     public DifferenceReport getDifferenceReport() {
     	return diffReport;
     }
-    
+
+    /**
+     * @return created model
+     */
+    public ModelResource model() {
+        return model;
+    }
+
     /**
      * @return modelFile
      */
@@ -442,8 +461,12 @@ public class DdlImporter {
                     if (!ModelUtil.isModelFile(resource)) throw new IllegalArgumentException(
                                                                                              DdlImporterI18n.MODEL_NAME_IS_NON_MODEL_FILE_MSG);
                     // Verify name is not a non-relational model
-                    if (!RelationalPackage.eNS_URI.equals(ModelUtil.getXmiHeader(resource).getPrimaryMetamodelURI())) throw new IllegalArgumentException(
+                    if (resource.exists()) {
+                        XMIHeader xmiHeader = ModelUtil.getXmiHeader(resource);
+                        if (xmiHeader == null || !RelationalPackage.eNS_URI.equals(xmiHeader.getPrimaryMetamodelURI())) throw new IllegalArgumentException(
                                                                                                                                                          DdlImporterI18n.MODEL_NAME_IS_NON_RELATIONAL_MODEL_MSG);
+                    }
+
                     modelFile = (IFile)resource;
                 }
             } else modelFile = root.getFile(modelPath);

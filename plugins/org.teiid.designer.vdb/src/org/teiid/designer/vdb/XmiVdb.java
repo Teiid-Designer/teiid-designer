@@ -598,7 +598,7 @@ public final class XmiVdb extends BasicVdb {
         final Collection<File> entryFiles = new ArrayList<File>();
 
         for (VdbEntry entry : entries) {
-            entryFiles.add(new File(getStagingFolder().getAbsolutePath(), entry.getPath().lastSegment()));
+            entryFiles.add(new File(getStagingFolder().getAbsolutePath(), entry.getPath().toOSString()));
         }
 
         return Collections.unmodifiableCollection(entryFiles);

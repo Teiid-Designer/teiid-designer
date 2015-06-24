@@ -614,7 +614,7 @@ public class VdbModelEntry extends VdbIndexedEntry {
         final Resource model = findModel();
         if (ModelUtil.isPhysical(model)) {
             if (!this.getSourceInfo().isMultiSource()) {
-                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
+                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
 
                 final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
