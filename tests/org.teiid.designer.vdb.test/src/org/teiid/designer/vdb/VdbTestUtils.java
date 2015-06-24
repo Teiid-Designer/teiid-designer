@@ -30,7 +30,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -43,12 +42,9 @@ import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
-import org.teiid.designer.core.workspace.ModelFolderImpl;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
@@ -141,9 +137,6 @@ public class VdbTestUtils implements StringConstants {
      * @throws Exception
      */
     public static Vdb mockBooksVdb(ModelWorkspaceMock modelWksp) throws Exception {
-
-        MockFileBuilder testData = new MockFileBuilder(TEST_DATA_DIR);
-
         List<MockFileBuilder> builders = new ArrayList<MockFileBuilder>();
         MockFileBuilder booksDatatypesXSD = new MockFileBuilder(BOOK_DATATYPES_XSD);
         builders.add(booksDatatypesXSD);
@@ -164,22 +157,8 @@ public class VdbTestUtils implements StringConstants {
         }
 
         MockFileBuilder booksVdbBuilder = new MockFileBuilder(BOOKS_VDB_FILE);
+        booksVdbBuilder.enableProject();
         Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
-
-        IFolder testDataFolder = testData.getResourceFolder();
-        when(testDataFolder.getFile(new Path(booksXMI.getName()))).thenReturn(booksXMI.getResourceFile());
-        when(testDataFolder.getFile(new Path(booksXMLXMI.getName()))).thenReturn(booksXMLXMI.getResourceFile());
-
-        ModelFolderImpl tdModelFolder = new ModelFolderImpl(testDataFolder, null);
-        ModelResourceImpl booksXmiMResource = new ModelResourceImpl(tdModelFolder, booksXMI.getName());
-        ModelResourceImpl booksXmlXmiMResource = new ModelResourceImpl(tdModelFolder, booksXMLXMI.getName());
-
-        ModelEditor modelEditor = modelWksp.getModelEditor();
-        when(modelEditor.findModelResource(booksXMI.getResourceFile())).thenReturn(booksXmiMResource);
-        when(modelEditor.findModelResource(booksXMLXMI.getResourceFile())).thenReturn(booksXmlXmiMResource);
-
-        assertTrue(booksXmiMResource.getAllRootEObjects().size() > 0);
-        assertTrue(booksXmlXmiMResource.getAllRootEObjects().size() > 0);
 
         return booksVdb;
     }
@@ -240,7 +219,7 @@ public class VdbTestUtils implements StringConstants {
          });
 
         DynamicVdb vdb = new DynamicVdb();
-        vdb.setFile(portfolio.getResourceFile());
+        vdb.setSourceFile(portfolio.getResourceFile());
         vdb.setName("Portfolio");
         vdb.setVersion(1);
         vdb.setDescription("The Portfolio Dynamic VDB");

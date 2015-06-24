@@ -764,10 +764,11 @@ public interface Vdb extends VdbConstants {
      * Convert this vdb into the given type of vdb
      * 
      * @param vdbType the class of the vdb required (should be either {@link DynamicVdb} or {@link XmiVdb})
+     * @param destination location for the conversion
      * @return vdb converted to this type. If the type is the same type
      *                 as this vdb then this will be returned.
      * @throws Exception 
      *
      */
-    public <V extends Vdb> V convert(Class<V> vdbType) throws Exception;
+    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination) throws Exception;
 }

@@ -177,12 +177,17 @@ public final class XmiVdb extends BasicVdb {
 
     @Override
     public void read(final IFile file) throws Exception {
+        CoreArgCheck.isNotNull(file);
+
+        if (! file.exists())
+            return;
+
         // Open archive and populate model entries
         if (file.getLocation().toFile().length() == 0L) {
             return;
         }
 
-        setFile(file);
+        setSourceFile(file);
 
         final boolean[] previewable = new boolean[1];
         final int[] vdbVersion = new int[1];
@@ -779,9 +784,12 @@ public final class XmiVdb extends BasicVdb {
                 }
                 // Clear all problem markers on VDB file
                 IFile file = getSourceFile();
-                if (file != null) {
-                    for (final IMarker marker : file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE))
-                        marker.delete();
+                if (file != null && file.exists()) {
+                    IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                    if (markers != null) {
+                        for (final IMarker marker : markers)
+                            marker.delete();
+                    }
                 }
 
                 // Save entries
@@ -794,8 +802,12 @@ public final class XmiVdb extends BasicVdb {
                 out.close();
                 out = null;
                 // Replace archive in workspace with temporary archive
-                final File archiveFile = ModelerCore.getWorkspace().getRoot().findMember(getSourceFile().getFullPath()).getLocation().toFile();
-                if (!archiveFile.delete()) throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
+                File archiveFile = getSourceFile().getLocation().toFile();
+                if (archiveFile.exists()) {
+                    if (!archiveFile.delete())
+                        throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", archiveFile)); //$NON-NLS-1$
+                }
+
                 if (!tmpArchive.renameTo(archiveFile)) throw new Exception(
                                                                                   VdbPlugin.UTIL.getString("unableToRename", tmpArchive, archiveFile)); //$NON-NLS-1$
                 // Mark as unmodified
@@ -874,13 +886,16 @@ public final class XmiVdb extends BasicVdb {
     }
 
     @Override
-    public XmiVdb xmiVdbConvert() throws Exception {
+    public XmiVdb xmiVdbConvert(IFile destination) throws Exception {
+        //
+        // TODO copy this vdb to the new destination
+        //
         return this;
     }
 
     @Override
-    public DynamicVdb dynVdbConvert() throws Exception {
-        DynamicVdb dynVdb = new DynamicVdb();
+    public DynamicVdb dynVdbConvert(IFile destination) throws Exception {
+        DynamicVdb dynVdb = new DynamicVdb(destination);
 
         //
         // Populate the new vdb with the basic specification

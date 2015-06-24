@@ -277,6 +277,13 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 		return sourceFile;
 	}
 
+	/** (non-Javadoc)
+     * @param file
+     */
+    protected void setSourceFile(IFile file) {
+        this.sourceFile = file;
+    }
+
 	@Override
     public String getFileName() {
 	    if (sourceFile == null)
@@ -389,13 +396,6 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 			this.connectionType = newConnectionType;
 			setChanged(true);
 		}
-	}
-
-	/** (non-Javadoc)
-	 * @param file
-	 */
-	protected void setFile(IFile file) {
-		this.sourceFile = file;
 	}
 
 	/** (non-Javadoc)
@@ -701,7 +701,8 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
             vdb.setProperty(entry.getKey().toString(), entry.getValue().toString());
         }
 
-        vdb.setFile(sourceFile);
+        if (vdb.getSourceFile() == null)
+            vdb.setSourceFile(sourceFile);
 
         vdb.setVersion(getVersion());
 
@@ -740,23 +741,25 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     }
 
     /**
+     * @param destination location for the conversion
      * @return an {@link XmiVdb} of this vdb
      * @throws Exception 
      */
-    public abstract XmiVdb xmiVdbConvert() throws Exception;
+    public abstract XmiVdb xmiVdbConvert(IFile destination) throws Exception;
 
     /**
+     * @param destination location for the conversion
      * @return a {@link DynamicVdb} of this vdb
      * @throws Exception 
      */
-    public abstract DynamicVdb dynVdbConvert() throws Exception;
+    public abstract DynamicVdb dynVdbConvert(IFile destination) throws Exception;
 
     @Override
-    public <V extends Vdb> V convert(Class<V> vdbType) throws Exception {
+    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination) throws Exception {
         if (DynamicVdb.class.equals(vdbType))
-            return (V) dynVdbConvert();
+            return (V) dynVdbConvert(destination);
         else if (XmiVdb.class.equals(vdbType))
-            return (V) xmiVdbConvert();
+            return (V) xmiVdbConvert(destination);
 
         throw new UnsupportedOperationException();
     }

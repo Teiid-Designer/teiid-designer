@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.StringConstants;
@@ -92,7 +94,19 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager implem
         //
         // This will convert the dynamic vdb and build the xmi vdb
         //
-        setArchiveVdb(getDynamicVdb().convert(XmiVdb.class));
+        XmiVdb xmiVdb = getDynamicVdb().convert(XmiVdb.class, getDestination());
+
+        //
+        // Save the vdb
+        //
+        xmiVdb.save();
+
+        //
+        // Refresh to display the vdb
+        //
+        getOutputLocation().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+
+        setArchiveVdb(xmiVdb);
 	}
 	
 	/**

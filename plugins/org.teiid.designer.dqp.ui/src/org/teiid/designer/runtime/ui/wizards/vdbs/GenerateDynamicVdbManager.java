@@ -67,7 +67,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
         //
         // This will convert the xmi vdb and build the dynamic vdb
         //
-        setDynamicVdb(getArchiveVdb().convert(DynamicVdb.class));
+        setDynamicVdb(getArchiveVdb().convert(DynamicVdb.class, getDestination()));
     }
 
     @Override

@@ -10,6 +10,7 @@ package org.teiid.designer.komodo.vdb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import java.io.File;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelWorkspaceMock;
+import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbConstants;
@@ -71,7 +74,10 @@ public class TestDyamicVdbExport implements VdbConstants {
     public void convertXmiVdbToDynamicVdb() throws Exception {
         Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
 
-        DynamicVdb dynVdb = booksVdb.convert(DynamicVdb.class);
+        File destFile = File.createTempFile(booksVdb.getName(), ITeiidVdb.DYNAMIC_VDB_SUFFIX);
+        MockFileBuilder destination = new MockFileBuilder(destFile);
+
+        DynamicVdb dynVdb = booksVdb.convert(DynamicVdb.class, destination.getResourceFile());
         assertNotNull(dynVdb);
 
         assertEquals(booksVdb.getName(), dynVdb.getName());
@@ -81,7 +87,7 @@ public class TestDyamicVdbExport implements VdbConstants {
             assertEquals(entry.getValue(), dynVdb.getProperties().getProperty(entry.getKey().toString()));
         }
 
-        assertEquals(booksVdb.getSourceFile(), dynVdb.getSourceFile());
+        assertEquals(destination.getResourceFile(), dynVdb.getSourceFile());
         assertEquals(booksVdb.getVersion(), dynVdb.getVersion());
 
         assertEquals(booksVdb.getConnectionType(), dynVdb.getConnectionType());

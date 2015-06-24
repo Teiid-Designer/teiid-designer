@@ -34,6 +34,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
@@ -46,7 +47,6 @@ import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.DynamicModel.Type;
 import org.teiid.designer.komodo.vdb.Metadata;
-import org.teiid.designer.komodo.vdb.VdbManagementException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
@@ -112,11 +112,13 @@ public class DynamicVdb extends BasicVdb {
 
 	@Override
     public void read(final IFile file) throws Exception {
-	    if( file == null || ! file.exists() ) {
-            throw new VdbManagementException("File " + file.getFullPath() + " does not exist"); //$NON-NLS-1$ //$NON-NLS-2$
+	    CoreArgCheck.isNotNull(file);
+
+	    if(! file.exists() ) {
+            return;
         }
 
-	    setFile(file);
+	    setSourceFile(file);
 
 	    final File dynVdbFile = file.getLocation().toFile();
         InputStream xml = null;
@@ -440,13 +442,25 @@ public class DynamicVdb extends BasicVdb {
     }
 
     @Override
-    public DynamicVdb dynVdbConvert() {
-        return this;
+    public DynamicVdb dynVdbConvert(IFile destination) throws Exception {
+        CoreArgCheck.isNotNull(destination);
+
+        File newVdbFile = destination.getLocation().toFile();
+        FileWriter writer = null;
+        try {
+             writer = new FileWriter(newVdbFile);
+            this.write(writer);
+            DynamicVdb vdb = new DynamicVdb(destination);
+            return vdb;
+        } finally {
+            if (writer != null)
+                writer.close();
+        }
     }
 
     @Override
-    public XmiVdb xmiVdbConvert() throws Exception {
-        XmiVdb xmiVdb = new XmiVdb();
+    public XmiVdb xmiVdbConvert(IFile destination) throws Exception {
+        XmiVdb xmiVdb = new XmiVdb(destination);
 
         //
         // Populate the new vdb with the basic specification
@@ -464,7 +478,6 @@ public class DynamicVdb extends BasicVdb {
             IContainer parent = sourceFile.getParent();
 
             String fileName = dynModel.getName() + DOT_XMI;
-            IPath modelPath = parent.getLocation().append(fileName);
             ModelResource modelResource = null;
 
             //
@@ -552,7 +565,7 @@ public class DynamicVdb extends BasicVdb {
 
             ModelBuildUtil.indexResources(monitor, Collections.singleton(modelResource.getCorrespondingResource()));
 
-            VdbModelEntry modelEntry = xmiVdb.addEntry(modelPath);
+            VdbModelEntry modelEntry = xmiVdb.addEntry(modelFile.getFullPath());
 
             //
             // Set any model properties
