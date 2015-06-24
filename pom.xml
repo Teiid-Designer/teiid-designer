@@ -22,7 +22,7 @@
 
 		<td.tpc.groupId>org.jboss.tools.integration-stack</td.tpc.groupId>
 		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
-		<td.tpc.version>4.2.5.Final</td.tpc.version>
+		<td.tpc.version>4.2.6.Final</td.tpc.version>
 		<td.tpc.type>target</td.tpc.type>
 		<td.tpc.classifier>base</td.tpc.classifier>
 
@@ -160,4 +160,5 @@
 	</build>
 
 </project>
+
 
