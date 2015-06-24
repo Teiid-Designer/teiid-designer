@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.designer.core.ModelerCore;
@@ -469,7 +470,7 @@ public class DynamicVdb extends BasicVdb {
             //
             // Create the empty model
             //
-            IFile modelFile = parent.getFile(modelPath);
+            IFile modelFile = parent.getFile(new Path(fileName));
             if (modelFile.exists())
                 modelFile.delete(true, monitor);
 

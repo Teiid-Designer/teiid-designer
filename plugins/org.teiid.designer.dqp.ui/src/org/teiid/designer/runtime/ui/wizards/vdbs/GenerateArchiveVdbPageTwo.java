@@ -39,9 +39,10 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 
-public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements DqpUiConstants {
-
-	private final String EMPTY = StringConstants.EMPTY_STRING;
+/**
+ * Page 2 of Generate Archive Wizard
+ */
+public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements DqpUiConstants, StringConstants {
 
     private Text vdbArchiveNameFld;
     private Text vdbArchiveFileNameFld;
@@ -53,11 +54,11 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
 
 	/**
 	 * ShowDDlPage constructor
-     * @param importManager the ImportManager
+     * @param vdbManager the Manager
 	 * @since 8.1
 	 */
 	public GenerateArchiveVdbPageTwo(GenerateArchiveVdbManager vdbManager) {
-        super(GenerateArchiveVdbPageTwo.class.getSimpleName(), ""); //$NON-NLS-N$
+        super(GenerateArchiveVdbPageTwo.class.getSimpleName(), EMPTY_STRING);
         this.vdbManager = vdbManager;
         setTitle(Messages.GenerateArchiveVdbPageTwo_title);
 	}
@@ -119,7 +120,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         });
         
         Label vdbVersionLabel = WidgetFactory.createLabel(vdbInfoGroup, 
-        		Messages.GenerateArchiveVdbPageTwo_version); //$NON-NLS-1$
+        		Messages.GenerateArchiveVdbPageTwo_version);
     	GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
     	
     	final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
@@ -155,12 +156,12 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         		Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileName);
         vdbArchiveFileNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
         GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbArchiveFileNameFld);
-        vdbArchiveFileNameFld.setText(vdbManager.getVdbArchiveFileName());
+        vdbArchiveFileNameFld.setText(vdbManager.getOutputName());
         vdbArchiveFileNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip);
         vdbArchiveFileNameFld.addModifyListener(new ModifyListener() {
             @Override
 			public void modifyText( final ModifyEvent event ) {
-            	vdbManager.setVdbArchiveFileName(vdbArchiveFileNameFld.getText());
+            	vdbManager.setOutputName(vdbArchiveFileNameFld.getText());
                 validatePage();
             }
         });
@@ -230,14 +231,10 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
             this.setPageComplete(true);
         } else {
         	setErrorMessage(null);
-        	setThisPageComplete(EMPTY, NONE);
+        	WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
         }
 	}
 
-	private void setThisPageComplete(String message, int severity) {
-		WizardUtil.setPageComplete(this, message, severity);
-	}
-	
 	Object[] getSourceModels() {
 		Collection<String> modelNames = new ArrayList<String>();
 		

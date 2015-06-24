@@ -8,9 +8,11 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.core.resources.IFile;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /**
  * This wizard provides the user interface to generate a VDB archive/zip file from an existing VDB XML file in the workspace
@@ -23,31 +25,41 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
 
     private static final String TITLE = Messages.GenerateArchiveVdbWizard_title;
 
-	GenerateArchiveVdbManager vdbManager;
-	
-	GenerateArchiveVdbPageOne page1;
-	GenerateArchiveVdbPageTwo page2;
+    private GenerateArchiveVdbManager vdbManager;
 
-	public GenerateArchiveVdbWizard(IFile vdbFile) throws Exception {
-		super(DqpUiPlugin.getDefault(), TITLE, null);
-		
-		vdbManager = new GenerateArchiveVdbManager(vdbFile);
-	}
-	
-	@Override
-	public void addPages() {
-		page1 = new GenerateArchiveVdbPageOne(vdbManager);
+    private GenerateArchiveVdbPageOne page1;
+
+    private GenerateArchiveVdbPageTwo page2;
+
+    /**
+     * @param vdbFile
+     * @throws Exception
+     */
+    public GenerateArchiveVdbWizard(IFile vdbFile) throws Exception {
+        super(DqpUiPlugin.getDefault(), TITLE, null);
+
+        vdbManager = new GenerateArchiveVdbManager(vdbFile);
+    }
+
+    @Override
+    public void addPages() {
+        page1 = new GenerateArchiveVdbPageOne(vdbManager);
         addPage(page1);
-        
-		page2 = new GenerateArchiveVdbPageTwo(vdbManager);
-        addPage(page2);
-	}
 
-	@Override
-	public boolean finish() {
-		vdbManager.generate();
-		return true;
-	}
+        page2 = new GenerateArchiveVdbPageTwo(vdbManager);
+        addPage(page2);
+    }
+
+    @Override
+    public boolean finish() {
+        try {
+            vdbManager.generate();
+            return true;
+        } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            ErrorHandler.toExceptionDialog(ex);
+            return false;
+        }
+    }
 
 }
-

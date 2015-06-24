@@ -52,7 +52,7 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
 	 * @since 8.1
 	 */
 	public GenerateDynamicVdbPageOne(GenerateDynamicVdbManager vdbManager) {
-        super(GenerateDynamicVdbPageOne.class.getSimpleName(), ""); //$NON-NLS-1$
+        super(GenerateDynamicVdbPageOne.class.getSimpleName(), EMPTY_STRING);
         this.vdbManager = vdbManager;
         setTitle(Messages.GenerateDynamicVdbPageOne_title);
 	}
@@ -116,12 +116,12 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             		Messages.GenerateDynamicVdbPageOne_dynamicVdbName);
             dynamicVdbName = WidgetFactory.createTextField(summaryGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
             GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(dynamicVdbName);
-            dynamicVdbName.setText(vdbManager.getDynamicVdbName());
+            dynamicVdbName.setText(vdbManager.getOutputName());
             dynamicVdbName.setToolTipText(Messages.GenerateDynamicVdbPageOne_dynamicVdbNameTooltip);
             dynamicVdbName.addModifyListener(new ModifyListener() {
                 @Override
     			public void modifyText( final ModifyEvent event ) {
-                	vdbManager.setDynamicVdbName(dynamicVdbName.getText());
+                	vdbManager.setOutputName(dynamicVdbName.getText());
                     validatePage();
                 }
             });
@@ -177,12 +177,12 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                     Messages.GenerateDynamicVdbPageOne_dynamicVdbFileName);
             dynamicVdbFileName = WidgetFactory.createTextField(summaryGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
             GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(dynamicVdbFileName);
-            dynamicVdbFileName.setText(vdbManager.getDynamicVdbFileName());
+            dynamicVdbFileName.setText(vdbManager.getOutputName());
             dynamicVdbFileName.setToolTipText(Messages.GenerateDynamicVdbPageOne_dynamicVdbFileNameToolTip);
             dynamicVdbFileName.addModifyListener(new ModifyListener() {
                 @Override
                 public void modifyText( final ModifyEvent event ) {
-                    vdbManager.setDynamicVdbFileName(dynamicVdbFileName.getText());
+                    vdbManager.setOutputName(dynamicVdbFileName.getText());
                     validatePage();
                 }
             });

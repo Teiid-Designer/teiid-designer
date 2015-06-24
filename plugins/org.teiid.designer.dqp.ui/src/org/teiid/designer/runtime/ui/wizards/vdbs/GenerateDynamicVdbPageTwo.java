@@ -222,7 +222,7 @@ public class GenerateDynamicVdbPageTwo  extends AbstractWizardPage implements Dq
             try {
                 vdbManager.generate();
 
-                String xml = vdbManager.getOutputXml();
+                String xml = vdbManager.getDynamicVdbXml();
                 setXmlContents(xml);
 
                 validatePage();

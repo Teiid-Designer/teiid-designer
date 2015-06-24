@@ -7,140 +7,111 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
-import java.io.IOException;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
-public class GenerateArchiveVdbManager implements UiConstants{
+/**
+ * Manager for generation of the archive vdb
+ */
+public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager implements UiConstants, StringConstants {
 	
-	IFile  dynamicVdbFile;
+	private IFile  dynamicVdbFile;
+
+	private String delegateArchiveVdbName;
 	
-	DynamicVdb dynamicVdb;
-	
-	String vdbArchiveFileName;
-	String delegateArchiveVdbName;
-	String version = "1";
-	
-//	XmiVdb archiveVdb;
-	
-	IContainer outputLocation;
-	
-	IStatus status = Status.OK_STATUS;
-	
-    private static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
-            StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
-            new char[] {'_', '-', '.'});
-	
+    /**
+	 * @param dynamicVdbFile
+	 * @throws Exception
+	 */
 	public GenerateArchiveVdbManager(IFile dynamicVdbFile) throws Exception {
 		super();
 		this.dynamicVdbFile = dynamicVdbFile;
-		this.dynamicVdb = new DynamicVdb(this.dynamicVdbFile);
-		
-		delegateArchiveVdbName = this.dynamicVdb.getName() + "_1";
-		vdbArchiveFileName = this.dynamicVdb.getName() + ".vdb";
-		outputLocation = this.dynamicVdbFile.getParent();
+		setDynamicVdb(new DynamicVdb(this.dynamicVdbFile));
+
+		String dynName = getDynamicVdb().getName();
+		delegateArchiveVdbName = dynName + UNDERSCORE + getVersion();
+		setOutputName(dynName + ITeiidVdb.VDB_DOT_EXTENSION);
+		setOutputLocation(this.dynamicVdbFile.getParent());
 	}
 
+	 /**
+     * @return dynamic vdb name
+     */
 	public IFile getDynamicVdbFile() {
 		return dynamicVdbFile;
 	}
 
+	/**
+	 * @param dynamicVdbFile
+	 */
 	public void setDynamicVdbFile(IFile dynamicVdbFile) {
 		this.dynamicVdbFile = dynamicVdbFile;
 	}
 
+	/**
+	 * @return proposed archive vdb name
+	 */
 	public String getDelegateArchiveVdbName() {
 		return delegateArchiveVdbName;
 	}
 
+	/**
+	 * @param delegateArchiveVdbName
+	 */
 	public void setDelegateArchiveVdbName(String delegateArchiveVdbName) {
 		this.delegateArchiveVdbName = delegateArchiveVdbName;
 	}
 
-	public String getVdbArchiveFileName() {
-		return vdbArchiveFileName;
-	}
+	/**
+     * @return whether archive vdb generation is required
+     */
+    public boolean isGenerateRequired() {
+        return getArchiveVdb() == null;
+    }
 
-	public void setVdbArchiveFileName(String vdbArchiveFileName) {
-		this.vdbArchiveFileName = vdbArchiveFileName;
-	}
+	/**
+     * Generate the archive vdb from the dynamic vdb
+     * @throws Exception if error occurs
+     */
+	public void generate() throws Exception {
+	    if (!isGenerateRequired())
+            return;
 
-	public DynamicVdb getDynamicVdb() {
-		return dynamicVdb;
-	}
+        if (getDynamicVdb() == null)
+            return;
 
-	public void setDynamicVdb(DynamicVdb dynamicVdb) {
-		this.dynamicVdb = dynamicVdb;
-	}
-
-//	public XmiVdb getArchiveVdb() {
-//		return archiveVdb;
-//	}
-//
-//	public void setArchiveVdb(XmiVdb archiveVdb) {
-//		this.archiveVdb = archiveVdb;
-//	}
-	
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getXmlFileAsString() {
-        if (dynamicVdbFile != null) {
-
-            try {
-
-            	return FileUtil.readSafe(dynamicVdbFile.getLocation().toFile());
-            } catch (final IOException error) {
-                UiConstants.Util.log(error);
-            }
-        }
-        return StringConstants.EMPTY_STRING;
+        //
+        // This will convert the dynamic vdb and build the xmi vdb
+        //
+        setArchiveVdb(getDynamicVdb().convert(XmiVdb.class));
 	}
 	
-	public IContainer getOutputLocation() {
-		return outputLocation;
-	}
-
-	public void setOutputLocation(IContainer outputLocation) {
-		this.outputLocation = outputLocation;
-	}
-	
-	public void generate() {
-		// TODO: perform the archive generation
-		MessageDialog.openInformation(Display.getCurrent().getActiveShell(), "GenerateArchiveVdbWizard", "finish() not yet implemented");
-	}
-	
+	/**
+     * Validate the manager's settings
+     */
 	public void validate() {
-		status = Status.OK_STATUS;
+		setStatus(Status.OK_STATUS);
 		
 		// Check dynamic vdb name
-		String proposedVdbName = getVdbArchiveFileName();
+		String proposedVdbName = getOutputName();
 		String validationMessage = nameValidator.checkValidName(proposedVdbName);
 		if( validationMessage != null ) {
-            status = new Status(IStatus.ERROR, PLUGIN_ID, validationMessage);
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
             return;
         } 
 		
         validationMessage = ModelUtilities.vdbNameReservedValidation(proposedVdbName);
         if( validationMessage != null ) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, validationMessage);
+        	setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
         	return;
         }
         
@@ -148,35 +119,30 @@ public class GenerateArchiveVdbManager implements UiConstants{
         try {
         	Integer.parseInt(getVersion());
         } catch (NumberFormatException nfe) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
-        			NLS.bind(Messages.GenerateArchiveVdbWizard_validation_versionNotInteger, getVersion()));
+        	setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+        			NLS.bind(Messages.GenerateArchiveVdbWizard_validation_versionNotInteger, getVersion())));
         	return;
         }
         
 		// output location can't be null
-        if( outputLocation == null ) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, Messages.
-        			GenerateArchiveVdbWizard_validation_targetLocationUndefined);
+        if( getOutputLocation() == null ) {
+        	setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.
+        			GenerateArchiveVdbWizard_validation_targetLocationUndefined));
         	return;
         }
         
         // vdb archive file name
         // can't be null && must end with -vdb.xml
-        if( vdbArchiveFileName == null ) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
-        			Messages.GenerateArchiveVdbWizard_validation_vdbFileNameUndefined);
+        if( getOutputName() == null ) {
+        	setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+        			Messages.GenerateArchiveVdbWizard_validation_vdbFileNameUndefined));
         	return;
         }
         
-        if( vdbArchiveFileName.contains(".") && ! vdbArchiveFileName.toLowerCase().endsWith(".vdb")) {
-        	status = new Status(IStatus.ERROR, PLUGIN_ID, 
-        			Messages.GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension);
+        if( getOutputName().contains(DOT) && ! getOutputName().toLowerCase().endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
+        	setStatus(new Status(IStatus.ERROR, PLUGIN_ID, 
+        			Messages.GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension));
         	return;
         }
-	}
-	
-
-	public IStatus getStatus() {
-		return status;
 	}
 }

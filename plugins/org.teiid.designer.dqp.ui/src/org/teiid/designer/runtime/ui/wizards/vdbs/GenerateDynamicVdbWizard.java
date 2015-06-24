@@ -7,13 +7,13 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
-import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.util.ErrorHandler;
 
 /**
  * This wizard provides the user interface to generate a Dynamic VDB XML file from an existing VDB archive/zip file.
@@ -52,22 +52,12 @@ public class GenerateDynamicVdbWizard extends AbstractWizard {
 	@Override
 	public boolean finish() {
 
-	    IRunnableWithProgress runnable = new IRunnableWithProgress() {
-
-            @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException {
-                try {
-                    vdbManager.write(monitor);
-                } catch (Exception ex) {
-                    throw new InvocationTargetException(ex);
-                }
-            }
-        };
-
 	    try {
-            getContainer().run(false, false, runnable);
+            vdbManager.write(new NullProgressMonitor());
             return true;
         } catch (Exception ex) {
+            DqpPlugin.Util.log(ex);
+            ErrorHandler.toExceptionDialog(ex);
             return false;
         }
 	}
