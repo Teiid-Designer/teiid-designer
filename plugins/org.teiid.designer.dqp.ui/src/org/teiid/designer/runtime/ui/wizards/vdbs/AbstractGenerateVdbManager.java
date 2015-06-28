@@ -10,21 +10,156 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 import java.io.StringWriter;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.osgi.util.NLS;
+import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.runtime.ui.Messages;
+import org.teiid.designer.transformation.ui.UiConstants;
+import org.teiid.designer.ui.common.util.CompositeProgressMonitor;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.vdb.BasicVdb;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 /**
  *
  */
-public abstract class AbstractGenerateVdbManager {
+public abstract class AbstractGenerateVdbManager implements UiConstants, StringConstants {
 
-    protected static final StringNameValidator nameValidator = new StringNameValidator(StringNameValidator.DEFAULT_MINIMUM_LENGTH,
+    private class GenerateRunnable implements IRunnableWithProgress {
+
+        private final GeneratorCallback callback;
+
+        private final String jobName;
+
+        public GenerateRunnable(GeneratorCallback callback) {
+            CoreArgCheck.isNotNull(callback);
+            this.callback = callback;
+            this.jobName = VdbPlugin.UTIL.getString(BasicVdb.class.getSimpleName() + DOT + "convertJobName", //$NON-NLS-1$
+                                                    callback.getSourceVdb().getClass().getSimpleName(),
+                                                    callback.getTargetType().getSimpleName());
+        }
+
+        @Override
+        public void run(final IProgressMonitor wizardMonitor) {
+            WorkspaceJob job = new WorkspaceJob(jobName) {
+                @Override
+                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                    CompositeProgressMonitor compositeMonitor = new CompositeProgressMonitor(wizardMonitor, monitor);
+                    try {
+                        compositeMonitor.beginTask(jobName, 1);
+
+                        callback.execute();
+
+                        compositeMonitor.worked(1);
+
+                        return Status.OK_STATUS;
+                    } catch (Exception ex) {
+                        throw toCoreException(ex);
+                    } finally {
+                        compositeMonitor.done();
+                    }
+                }
+            };
+
+            job.addJobChangeListener(new JobChangeAdapter() {
+                @Override
+                public void done(final IJobChangeEvent event) {
+                    //
+                    // Refresh to display the vdb
+                    //
+                    try {
+                        refreshOutputLocation();
+                    } catch (CoreException ex) {
+                        // Nothing to do
+                    }
+
+                    callback.onCompletion(event.getResult());
+                }
+            });
+
+            job.schedule();
+
+            //
+            // Hold up this thread until the end of the job
+            //
+            try {
+                job.join();
+            } catch (InterruptedException ex) {
+                CoreException coreException = toCoreException(ex);
+                callback.onCompletion(coreException.getStatus());
+
+                // Something went wrong. Eliminate the job just in case
+                job.cancel();
+            }
+
+            Runnable swtRunnable = new Runnable() {
+
+                @Override
+                public void run() {
+                    wizard.getContainer().updateButtons();
+                }
+            };
+
+            UiUtil.runInSwtThread(swtRunnable, true);
+        }
+    }
+
+    protected abstract class GeneratorCallback<V extends Vdb> {
+
+        private V vdb;
+
+        /**
+         * Execute the generation
+         */
+        protected void execute() throws Exception {
+            vdb = getSourceVdb().convert(getTargetType(), getDestination());
+        }
+
+        /**
+         * @param status the status of the execution
+         */
+        public abstract void onCompletion(IStatus status);
+
+        /**
+         * @return the source vdb to be generated
+         */
+        public abstract Vdb getSourceVdb();
+
+        /**
+         * @return the target vdb type
+         */
+        public abstract Class<V> getTargetType();
+
+        protected final V getResult() {
+            return vdb;
+        }
+    }
+
+    protected static final StringNameValidator nameValidator = new StringNameValidator(
+                                                                                       StringNameValidator.DEFAULT_MINIMUM_LENGTH,
                                                                                        StringNameValidator.DEFAULT_MAXIMUM_LENGTH,
                                                                                        new char[] {'_', '-', '.'});
+
+    private final AbstractWizard wizard;
 
     private DynamicVdb dynamicVdb;
 
@@ -39,10 +174,17 @@ public abstract class AbstractGenerateVdbManager {
     private String outputName;
 
     /**
+     * @param wizard
+     */
+    public AbstractGenerateVdbManager(AbstractWizard wizard) {
+        this.wizard = wizard;
+    }
+
+    /**
      * @return dynamic vdb
      */
     public DynamicVdb getDynamicVdb() {
-    	return dynamicVdb;
+        return dynamicVdb;
     }
 
     /**
@@ -56,7 +198,7 @@ public abstract class AbstractGenerateVdbManager {
      * @return archive vdb
      */
     public XmiVdb getArchiveVdb() {
-    	return archiveVdb;
+        return archiveVdb;
     }
 
     /**
@@ -78,6 +220,16 @@ public abstract class AbstractGenerateVdbManager {
      */
     protected void setOutputLocation(IContainer outputLocation) {
         this.outputLocation = outputLocation;
+    }
+
+    protected void refreshOutputLocation() throws CoreException {
+        if (getOutputLocation() == null)
+            return;
+
+        if (!getOutputLocation().exists())
+            return;
+
+        getOutputLocation().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
     }
 
     /**
@@ -105,14 +257,14 @@ public abstract class AbstractGenerateVdbManager {
      * @return version
      */
     public String getVersion() {
-    	return version;
+        return version;
     }
 
     /**
      * @param version
      */
     public void setVersion(String version) {
-    	this.version = version;
+        this.version = version;
     }
 
     /**
@@ -133,7 +285,7 @@ public abstract class AbstractGenerateVdbManager {
      * @return status
      */
     public IStatus getStatus() {
-    	return status;
+        return status;
     }
 
     /**
@@ -142,4 +294,89 @@ public abstract class AbstractGenerateVdbManager {
     protected void setStatus(IStatus status) {
         this.status = status;
     }
+
+    /**
+     * Validate the values of the wizard
+     */
+    protected void validate() {
+        setStatus(Status.OK_STATUS);
+
+        // Check ouptut vdb name
+        String proposedVdbName = getOutputName();
+        String validationMessage = nameValidator.checkValidName(proposedVdbName);
+        if (validationMessage != null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
+            return;
+        }
+
+        validationMessage = ModelUtilities.vdbNameReservedValidation(proposedVdbName);
+        if (validationMessage != null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
+            return;
+        }
+
+        // Check Version # is an integer
+        try {
+            Integer.parseInt(getVersion());
+        } catch (NumberFormatException nfe) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID,
+                                 NLS.bind(Messages.GenerateVdbWizard_validation_versionNotInteger, getVersion())));
+            return;
+        }
+
+        // output location can't be null
+        if (getOutputLocation() == null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetLocationUndefined));
+            return;
+        }
+
+        if (!getOutputLocation().exists()) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetLocationNotExist));
+            return;
+        }
+
+        if (getOutputName() == null) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_vdbFileNameUndefined));
+            return;
+        }
+
+        IFile destination = getDestination();
+        if (destination.exists()) {
+            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetFileAlreadyExists));
+            return;
+        }
+
+    }
+
+    protected void generateVdbJob(final GeneratorCallback callback) {
+        GenerateRunnable runnable = new GenerateRunnable(callback);
+        try {
+            wizard.getContainer().run(true, true, runnable);
+        } catch (Exception ex) {
+            CoreException coreException = toCoreException(ex);
+            callback.onCompletion(coreException.getStatus());
+        } finally {
+            wizard.getContainer().updateButtons();
+        }
+    }
+
+    protected CoreException toCoreException(Throwable throwable) {
+        if (throwable instanceof CoreException)
+            return (CoreException)throwable;
+
+        String message = VdbPlugin.UTIL.getStringOrKey(BasicVdb.class.getSimpleName() + DOT + "vdbExceptionThrown"); //$NON-NLS-1$ 
+
+        MultiStatus status = new MultiStatus(VdbConstants.PLUGIN_ID, IStatus.ERROR, message, null);
+        do {
+            status.add(new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, " * " + throwable.getLocalizedMessage())); //$NON-NLS-1$
+            throwable = throwable.getCause();
+        } while (throwable != null);
+
+        return new CoreException(status);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public abstract void write() throws Exception;
 }

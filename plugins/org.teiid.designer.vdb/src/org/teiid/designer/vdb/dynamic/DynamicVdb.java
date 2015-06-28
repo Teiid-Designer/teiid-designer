@@ -58,6 +58,7 @@ import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbFileEntry;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.VdbSchemaEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
@@ -460,133 +461,144 @@ public class DynamicVdb extends BasicVdb {
 
     @Override
     public XmiVdb xmiVdbConvert(IFile destination) throws Exception {
-        XmiVdb xmiVdb = new XmiVdb(destination);
-
-        //
-        // Populate the new vdb with the basic specification
-        //
-        populateVdb(xmiVdb);
-
-        //
-        // No external files coming from dynamic vdb so
-        // no file entries to populate
-        //
         NullProgressMonitor monitor = new NullProgressMonitor();
 
-        for (DynamicModel dynModel : getDynamicModels()) {
-            IFile sourceFile = this.getSourceFile();
-            IContainer parent = sourceFile.getParent();
+        try {
+            //
+            // Broadcast that a conversion is underway
+            //
+            VdbPlugin.singleton().setConversionInProgress(true);
 
-            String fileName = dynModel.getName() + DOT_XMI;
-            ModelResource modelResource = null;
+            XmiVdb xmiVdb = new XmiVdb(destination);
 
             //
-            // Create the empty model
+            // Populate the new vdb with the basic specification
             //
-            IFile modelFile = parent.getFile(new Path(fileName));
-            if (modelFile.exists())
-                modelFile.delete(true, monitor);
-
-            modelResource = ModelerCore.create(modelFile);
-            if (modelResource == null)
-                throw new Exception("Failed to create model resource"); //$NON-NLS-1$
+            populateVdb(xmiVdb);
 
             //
-            // Apply the model annotation
+            // No external files coming from dynamic vdb so
+            // no file entries to populate
             //
-            ModelAnnotation annotation = modelResource.getModelAnnotation();
-            annotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
-            annotation.setModelType(ModelType.get(dynModel.getModelType().getType()));
 
-            //
-            // Inject the source properties into the model
-            //
-            VdbSource[] sources = dynModel.getSources();
-            if (sources != null) {
-                for (VdbSource source : sources) {
-                    String translatorProperty = IConnectionInfoHelper.TRANSLATOR_NAMESPACE + IConnectionInfoHelper.TRANSLATOR_NAME_KEY;
-                    ModelUtil.setModelAnnotationPropertyValue(modelResource, translatorProperty, source.getTranslatorName());
-                    
-                    String jndiProperty = IConnectionInfoHelper.CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID;
-                    ModelUtil.setModelAnnotationPropertyValue(modelResource, jndiProperty, source.getJndiName());
-                }
-            }
+            for (DynamicModel dynModel : getDynamicModels()) {
+                IFile sourceFile = this.getSourceFile();
+                IContainer parent = sourceFile.getParent();
 
-            //
-            // Save the resource
-            //
-            modelResource.save(monitor, true);
-
-            //
-            // If we have a some DDL then importer it into the model resource
-            //
-            Metadata metadata = dynModel.getMetadata();
-            if (metadata != null) {
-                IProject project = parent.getProject();
-
-                DdlImporter importer = new DdlImporter(new IProject[] {project});
-
-                // Set the destination the model file
-                importer.setModelFolder(parent);
-                importer.setModelName(fileName);
-
-                // Set some options
-                importer.setOptToCreateModelEntitiesForUnsupportedDdl(true);
-                importer.setOptToSetModelEntityDescription(true);
-
-                // Auto-select dialect
-                importer.setSpecifiedParser("TEIID"); //$NON-NLS-1$
-
-                // Set the model type
-                Type dynModelType = dynModel.getModelType();
-                String modelType = dynModelType.toString();
-                importer.setModelType(ModelType.get(modelType));
-                importer.setGenerateDefaultSQL(Type.VIRTUAL.equals(dynModelType));
-
-                // Not actually used by the importer but better to
-                // just populate it in case used in the future.
-                importer.setDdlFileName(getSourceFile().getLocation().toOSString());
+                String fileName = dynModel.getName() + DOT_XMI;
+                ModelResource modelResource = null;
 
                 //
-                // Import the ddl
+                // Create the empty model
                 //
-                importer.importDdl(metadata.getSchemaText(), monitor, 1);
+                IFile modelFile = parent.getFile(new Path(fileName));
+                if (modelFile.exists())
+                    modelFile.delete(true, monitor);
 
-                if (importer.hasParseError()) {
-                    throw new Exception(importer.getParseErrorMessage());
+                modelResource = ModelerCore.create(modelFile);
+                if (modelResource == null)
+                    throw new Exception("Failed to create model resource"); //$NON-NLS-1$
+
+                //
+                // Apply the model annotation
+                //
+                ModelAnnotation annotation = modelResource.getModelAnnotation();
+                annotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
+                annotation.setModelType(ModelType.get(dynModel.getModelType().getType()));
+
+                //
+                // Inject the source properties into the model
+                //
+                VdbSource[] sources = dynModel.getSources();
+                if (sources != null) {
+                    for (VdbSource source : sources) {
+                        String translatorProperty = IConnectionInfoHelper.TRANSLATOR_NAMESPACE
+                                                    + IConnectionInfoHelper.TRANSLATOR_NAME_KEY;
+                        ModelUtil.setModelAnnotationPropertyValue(modelResource, translatorProperty, source.getTranslatorName());
+
+                        String jndiProperty = IConnectionInfoHelper.CONNECTION_NAMESPACE + IJBossDsProfileConstants.JNDI_PROP_ID;
+                        ModelUtil.setModelAnnotationPropertyValue(modelResource, jndiProperty, source.getJndiName());
+                    }
                 }
 
-                if (!importer.noDdlImported()) {
-                    importer.save(monitor, 1);
+                //
+                // Save the resource
+                //
+                modelResource.save(monitor, false);
+
+                //
+                // Index the resource
+                //
+                ModelBuildUtil.indexResources(monitor, Collections.singleton(modelResource.getCorrespondingResource()));
+
+                //
+                // If we have a some DDL then importer it into the model resource
+                //
+                Metadata metadata = dynModel.getMetadata();
+                if (metadata != null) {
+                    IProject project = parent.getProject();
+
+                    DdlImporter importer = new DdlImporter(new IProject[] {project});
+
+                    // Set the destination the model file
+                    importer.setModelFolder(parent);
+                    importer.setModelName(fileName);
+
+                    // Set some options
+                    importer.setOptToCreateModelEntitiesForUnsupportedDdl(false);
+                    importer.setOptToSetModelEntityDescription(true);
+
+                    // Set the model type
+                    Type dynModelType = dynModel.getModelType();
+                    String modelType = dynModelType.toString();
+                    importer.setModelType(ModelType.get(modelType));
+                    importer.setGenerateDefaultSQL(Type.VIRTUAL.equals(dynModelType));
+
+                    // Not actually used by the importer but better to
+                    // just populate it in case used in the future.
+                    importer.setDdlFileName(getSourceFile().getLocation().toOSString());
+
+                    //
+                    // Import the ddl
+                    //
+                    importer.importDdl(metadata.getSchemaText(), monitor, 1);
+
+                    if (importer.hasParseError()) {
+                        throw new Exception(importer.getParseErrorMessage());
+                    }
+
+                    if (!importer.noDdlImported()) {
+                        importer.save(monitor, 1);
+                    }
+
+                    modelResource = importer.model();
                 }
 
-                modelResource = importer.model();
+                VdbModelEntry modelEntry = xmiVdb.addEntry(modelFile.getFullPath());
+
+                //
+                // Set any model properties
+                //
+                for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
+                    modelEntry.setProperty(prop.getKey().toString(), prop.getValue().toString());
+                }
+
+                VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
+                sourceInfo.setIsMultiSource(dynModel.isMultiSource());
+                sourceInfo.setAddColumn(dynModel.doAddColumn());
+                sourceInfo.setColumnAlias(dynModel.getColumnAlias());
+
+                //
+                // Check to ensure the sources are added to the VdbModelEntry
+                //
+                for (VdbSource source : dynModel.getSources()) {
+                    sourceInfo.add(source.getName(), source.getJndiName(), source.getTranslatorName());
+                }
             }
 
-            ModelBuildUtil.indexResources(monitor, Collections.singleton(modelResource.getCorrespondingResource()));
-
-            VdbModelEntry modelEntry = xmiVdb.addEntry(modelFile.getFullPath());
-
-            //
-            // Set any model properties
-            //
-            for (Map.Entry<Object, Object> prop : dynModel.getProperties().entrySet()) {
-                modelEntry.setProperty(prop.getKey().toString(), prop.getValue().toString());
-            }
-
-            VdbSourceInfo sourceInfo = modelEntry.getSourceInfo();
-            sourceInfo.setIsMultiSource(dynModel.isMultiSource());
-            sourceInfo.setAddColumn(dynModel.doAddColumn());
-            sourceInfo.setColumnAlias(dynModel.getColumnAlias());
-
-            //
-            // Check to ensure the sources are added to the VdbModelEntry
-            //
-            for (VdbSource source : dynModel.getSources()) {
-                sourceInfo.add(source.getName(), source.getJndiName(), source.getTranslatorName());
-            }
+            return xmiVdb;
+        } finally {
+            VdbPlugin.singleton().setConversionInProgress(false);
         }
-
-        return xmiVdb;
     }
 }

@@ -895,66 +895,75 @@ public final class XmiVdb extends BasicVdb {
 
     @Override
     public DynamicVdb dynVdbConvert(IFile destination) throws Exception {
-        DynamicVdb dynVdb = new DynamicVdb(destination);
+        try {
+            //
+            // Broadcast that a conversion is underway
+            //
+            VdbPlugin.singleton().setConversionInProgress(true);
 
-        //
-        // Populate the new vdb with the basic specification
-        //
-        populateVdb(dynVdb);
+            DynamicVdb dynVdb = new DynamicVdb(destination);
 
-        //
-        // Cannot append:
-        // * udf jar files
-        // * other files
-        // * schema files
-        //
+            //
+            // Populate the new vdb with the basic specification
+            //
+            populateVdb(dynVdb);
 
-        //
-        // Convert model entries to DynamicModels
-        //
-        for (VdbModelEntry entry : getModelEntries()) {
-            VdbSourceInfo sourceInfo = entry.getSourceInfo();
+            //
+            // Cannot append:
+            // * udf jar files
+            // * other files
+            // * schema files
+            //
 
-            DynamicModel model = new DynamicModel();
-            model.setName(entry.getName());
-            model.setDescription(entry.getDescription());
+            //
+            // Convert model entries to DynamicModels
+            //
+            for (VdbModelEntry entry : getModelEntries()) {
+                VdbSourceInfo sourceInfo = entry.getSourceInfo();
 
-            for (Map.Entry<Object, Object> prop : getProperties().entrySet()) {
-                model.setProperty(prop.getKey().toString(), prop.getValue().toString());
+                DynamicModel model = new DynamicModel();
+                model.setName(entry.getName());
+                model.setDescription(entry.getDescription());
+
+                for (Map.Entry<Object, Object> prop : getProperties().entrySet()) {
+                    model.setProperty(prop.getKey().toString(), prop.getValue().toString());
+                }
+
+                DynamicModel.Type type = DynamicModel.Type.fromString(entry.getType());
+                model.setModelType(type);
+                model.setAllowMultiSource(sourceInfo.isMultiSource());
+                model.setAddColumn(sourceInfo.isAddColumn());
+                model.setColumnAlias(sourceInfo.getColumnAlias());
+
+                for (VdbSource source : sourceInfo.getSources()) {
+                    VdbSource clone = source.clone();
+                    model.addSource(clone);
+                }
+
+                TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
+
+                IFile entryFile = null;
+                if (Synchronization.Synchronized == entry.getSynchronization()) {
+                    entryFile = entry.findFileInWorkspace();
+                } else {
+                    entryFile = createEntryFile(entry);
+                }
+
+                ModelResource modelResource = ModelUtil.getModelResource(entryFile, true);
+                if (modelResource == null)
+                    throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
+
+                String ddl = generator.generate(modelResource);
+                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
+                model.setMetadata(metadata);
+
+                dynVdb.addDynamicModel(model);
             }
 
-            DynamicModel.Type type = DynamicModel.Type.fromString(entry.getType());
-            model.setModelType(type);
-            model.setAllowMultiSource(sourceInfo.isMultiSource());
-            model.setAddColumn(sourceInfo.isAddColumn());
-            model.setColumnAlias(sourceInfo.getColumnAlias());
-
-            for (VdbSource source : sourceInfo.getSources()) {
-                VdbSource clone = source.clone();
-                model.addSource(clone);
-            }
-
-            TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
-
-            IFile entryFile = null;
-            if (Synchronization.Synchronized == entry.getSynchronization()) {
-                entryFile = entry.findFileInWorkspace();
-            } else {
-                entryFile = createEntryFile(entry);
-            }
-            
-            ModelResource modelResource = ModelUtil.getModelResource(entryFile, true);
-            if (modelResource == null)
-                throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
-
-            String ddl = generator.generate(modelResource);
-            Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
-            model.setMetadata(metadata);
-
-            dynVdb.addDynamicModel(model);
+            return dynVdb;
+        } finally {
+            VdbPlugin.singleton().setConversionInProgress(false);
         }
-
-        return dynVdb;
     }
 
     private IFile createEntryFile(VdbModelEntry entry) throws Exception {

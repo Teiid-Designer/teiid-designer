@@ -8,7 +8,6 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.runtime.ui.Messages;
@@ -26,40 +25,40 @@ public class GenerateDynamicVdbWizard extends AbstractWizard {
 
     private static final String TITLE = Messages.GenerateDynamicVdbWizard_title;
 
-	private final GenerateDynamicVdbManager vdbManager;
-	
-	private GenerateDynamicVdbPageOne page1;
-	private GenerateDynamicVdbPageTwo page2;
+    private final GenerateDynamicVdbManager vdbManager;
 
-	/**
-	 * @param vdbFile
-	 * @throws Exception
-	 */
-	public GenerateDynamicVdbWizard(IFile vdbFile) throws Exception {
-		super(DqpUiPlugin.getDefault(), TITLE, null);
-		
-		vdbManager = new GenerateDynamicVdbManager(vdbFile);
-	}
+    private GenerateDynamicVdbPageOne page1;
+    private GenerateDynamicVdbPageTwo page2;
 
-	@Override
-	public void addPages() {
-		page1 = new GenerateDynamicVdbPageOne(vdbManager);
+    /**
+     * @param vdbFile
+     * @throws Exception
+     */
+    public GenerateDynamicVdbWizard(IFile vdbFile) throws Exception {
+        super(DqpUiPlugin.getDefault(), TITLE, null);
+        this.setNeedsProgressMonitor(true);
+
+        vdbManager = new GenerateDynamicVdbManager(this, vdbFile);
+    }
+
+    @Override
+    public void addPages() {
+        page1 = new GenerateDynamicVdbPageOne(vdbManager);
         addPage(page1);
-		page2 = new GenerateDynamicVdbPageTwo(vdbManager);
+        page2 = new GenerateDynamicVdbPageTwo(vdbManager);
         addPage(page2);
-	}
+    }
 
-	@Override
-	public boolean finish() {
+    @Override
+    public boolean finish() {
 
-	    try {
-            vdbManager.write(new NullProgressMonitor());
+        try {
+            vdbManager.write();
             return true;
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
             ErrorHandler.toExceptionDialog(ex);
             return false;
         }
-	}
+    }
 }
-

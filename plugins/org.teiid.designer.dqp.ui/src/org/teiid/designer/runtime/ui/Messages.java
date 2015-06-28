@@ -19,12 +19,13 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbAction_nothingExportedTitle;
     public static String GenerateArchiveVdbAction_exceptionTitle;
 
+    public static String GenerateVdbWizard_validation_versionNotInteger;
+    public static String GenerateVdbWizard_validation_targetLocationUndefined;
+    public static String GenerateVdbWizard_validation_vdbFileNameUndefined;
+    public static String GenerateVdbWizard_validation_targetLocationNotExist;
+    public static String GenerateVdbWizard_validation_targetFileAlreadyExists;
+
     public static String GenerateDynamicVdbWizard_title;
-    public static String GenerateDynamicVdbWizard_validation_versionNotInteger;
-    public static String GenerateDynamicVdbWizard_validation_targetLocationUndefined;
-    public static String GenerateDynamicVdbWizard_validation_targetLocationNotExist;
-    public static String GenerateDynamicVdbWizard_validation_targetFileAlreadyExists;
-    public static String GenerateDynamicVdbWizard_validation_vdbFileNameUndefined;
     public static String GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension;
     public static String GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated;
     public static String GenerateDynamicVdbWizard_exportLocationAlreadyExists;
@@ -57,10 +58,9 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbAction_exceptionTitle;
 
     public static String GenerateArchiveVdbWizard_title;
-    public static String GenerateArchiveVdbWizard_validation_versionNotInteger;
-    public static String GenerateArchiveVdbWizard_validation_targetLocationUndefined;
-    public static String GenerateArchiveVdbWizard_validation_vdbFileNameUndefined;
     public static String GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension;
+    public static String GenerateArchiveVdbWizard_validation_noArchiveVdbGenerated;
+    public static String GenerateArchiveVdbWizard_cancelJobName;
 
     public static String GenerateArchiveVdbPageOne_title;
     public static String GenerateArchiveVdbPageOne_dynamicVdbFile;
@@ -79,6 +79,9 @@ public class Messages extends NLS {
     public static String GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip;
     public static String GenerateArchiveVdbPageTwo_sourceModels;
     public static String GenerateArchiveVdbPageTwo_viewModels;
+
+    public static String GenerateVdbButton_Title;
+    public static String GenerateVdbButton_Tooltip;
 
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$

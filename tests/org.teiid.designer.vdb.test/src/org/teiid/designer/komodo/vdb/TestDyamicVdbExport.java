@@ -104,7 +104,6 @@ public class TestDyamicVdbExport implements VdbConstants {
         assertEquals(booksVdb.getGssPattern(), dynVdb.getGssPattern());
         assertEquals(booksVdb.getPasswordPattern(), dynVdb.getPasswordPattern());
         assertEquals(booksVdb.getAuthenticationType(), dynVdb.getAuthenticationType());
-        assertEquals(booksVdb.getValidationDateTime(), dynVdb.getValidationDateTime());
         assertEquals(booksVdb.getValidationVersion(), dynVdb.getValidationVersion());
         assertEquals(booksVdb.isAutoGenerateRESTWar(), dynVdb.isAutoGenerateRESTWar());
 

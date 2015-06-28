@@ -37,8 +37,9 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
      */
     public GenerateArchiveVdbWizard(IFile vdbFile) throws Exception {
         super(DqpUiPlugin.getDefault(), TITLE, null);
+        this.setNeedsProgressMonitor(true);
 
-        vdbManager = new GenerateArchiveVdbManager(vdbFile);
+        vdbManager = new GenerateArchiveVdbManager(this, vdbFile);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
     @Override
     public boolean finish() {
         try {
-            vdbManager.generate();
+            vdbManager.write();
             return true;
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
@@ -62,4 +63,10 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
         }
     }
 
+    @Override
+    public boolean performCancel() {
+        vdbManager.cancel();
+
+        return super.performCancel();
+    }
 }

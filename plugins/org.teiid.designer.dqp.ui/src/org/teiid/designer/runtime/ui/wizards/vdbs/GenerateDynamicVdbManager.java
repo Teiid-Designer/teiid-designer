@@ -12,32 +12,31 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.Messages;
-import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 /**
  * Manager for generation of the dynamic vdb
  */
-public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implements UiConstants, StringConstants {
+public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
     private IFile archiveVdbFile;
 
     /**
+     * @param wizard
      * @param archiveVdbFile
      * @throws Exception
      */
-    public GenerateDynamicVdbManager(IFile archiveVdbFile) throws Exception {
-        super();
+    public GenerateDynamicVdbManager(AbstractWizard wizard, IFile archiveVdbFile) throws Exception {
+        super(wizard);
         CoreArgCheck.isNotNull(archiveVdbFile);
 
         this.archiveVdbFile = archiveVdbFile;
@@ -55,9 +54,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
 
     /**
      * Generate the dynamic xml from the xmi vdb
-     * @throws Exception if error occurs
      */
-    public void generate() throws Exception {
+    public void generate() {
         if (!isGenerateRequired())
             return;
 
@@ -67,7 +65,26 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
         //
         // This will convert the xmi vdb and build the dynamic vdb
         //
-        setDynamicVdb(getArchiveVdb().convert(DynamicVdb.class, getDestination()));
+        GeneratorCallback<DynamicVdb> callback = new GeneratorCallback<DynamicVdb>() {
+
+            @Override
+            public XmiVdb getSourceVdb() {
+                return getArchiveVdb();
+            }
+
+            @Override
+            public Class<DynamicVdb> getTargetType() {
+                return DynamicVdb.class;
+            }
+
+            @Override
+            public void onCompletion(IStatus status) {
+                if (status.isOK())
+                    setDynamicVdb(getResult());
+            }
+        };
+
+        generateVdbJob(callback);
     }
 
     @Override
@@ -87,27 +104,28 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
 
         checkDynamicVdbGenerated();
 
-
         File export = new File(directory, getOutputName());
         if (export.exists())
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists, 
-                                                                             getOutputName(), directory));
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
+                                         getOutputName(),
+                                         directory));
 
-        if (! export.createNewFile())
-            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile, 
-                                         getOutputName(), directory));
+        if (!export.createNewFile())
+            throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile,
+                                         getOutputName(),
+                                         directory));
 
         FileWriter writer = new FileWriter(export);
         getDynamicVdb().write(writer);
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    public void write(IProgressMonitor monitor) throws Exception {
+    @Override
+    public void write() throws Exception {
         checkDynamicVdbGenerated();
-        
+
         StringWriter writer = new StringWriter();
         getDynamicVdb().write(writer);
 
@@ -116,7 +134,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
         IFile destination = getDestination();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8")); //$NON-NLS-1$
 
-        destination.create(inputStream, true, monitor);
+        destination.create(inputStream, true, new NullProgressMonitor());
     }
 
     /**
@@ -129,62 +147,19 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager implem
     /**
      * Validate the manager's settings
      */
+    @Override
     public void validate() {
-        setStatus(Status.OK_STATUS);
+        super.validate();
 
-        // Check dynamic vdb name
-        String proposedVdbName = getOutputName();
-        String validationMessage = nameValidator.checkValidName(proposedVdbName);
-        if (validationMessage != null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
-            return;
-        }
-
-        validationMessage = ModelUtilities.vdbNameReservedValidation(proposedVdbName);
-        if (validationMessage != null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
-            return;
-        }
-
-        // Check Version # is an integer
-        try {
-            Integer.parseInt(getVersion());
-        } catch (NumberFormatException nfe) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID,
-                                NLS.bind(Messages.GenerateDynamicVdbWizard_validation_versionNotInteger, getVersion())));
-            return;
-        }
-
-        // dynamic vdb file name
-        // can't be null && must end with -vdb.xml
-        if (getOutputName() == null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbFileNameUndefined));
-            return;
-        }
+        if (! Status.OK_STATUS.equals(getStatus()))
+            return; // Something already wrong - no need to check further
 
         if (!getOutputName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension));
             return;
         }
 
-        // output location can't be null
-        if (getOutputLocation() == null) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_targetLocationUndefined));
-            return;
-        }
-
-        if (!getOutputLocation().exists()) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_targetLocationNotExist));
-            return;
-        }
-
-        IFile destination = getDestination();
-        if (destination.exists()) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_targetFileAlreadyExists));
-            return;
-        }
-
-        if (! isGenerateRequired() && getDynamicVdb() == null) {
+        if (!isGenerateRequired() && getDynamicVdb() == null) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_noDynamicVdbGenerated));
             return;
         }

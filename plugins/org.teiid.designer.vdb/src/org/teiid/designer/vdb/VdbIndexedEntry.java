@@ -265,11 +265,13 @@ public abstract class VdbIndexedEntry extends VdbEntry {
         if (!getVdb().isPreview()) {
             // Convert problems for this model entry to markers on the VDB file
             final IFile vdbFile = getVdb().getSourceFile();
-            for (final Problem problem : getProblems()) {
-                final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
-                marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
-                marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
-                marker.setAttribute(IMarker.LOCATION, getPath().toString() + '/' + problem.getLocation());
+            if (vdbFile.exists()) {
+                for (final Problem problem : getProblems()) {
+                    final IMarker marker = vdbFile.createMarker(IMarker.PROBLEM);
+                    marker.setAttribute(IMarker.SEVERITY, problem.getSeverity());
+                    marker.setAttribute(IMarker.MESSAGE, problem.getMessage());
+                    marker.setAttribute(IMarker.LOCATION, getPath().toString() + '/' + problem.getLocation());
+                }
             }
         }
     }

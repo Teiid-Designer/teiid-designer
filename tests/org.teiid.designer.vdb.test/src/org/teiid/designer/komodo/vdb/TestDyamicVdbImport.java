@@ -95,7 +95,6 @@ public class TestDyamicVdbImport implements VdbConstants {
         assertEquals(dynVdb.getPasswordPattern(), xmiVdb.getPasswordPattern());
         assertEquals(dynVdb.getAuthenticationType(), xmiVdb.getAuthenticationType());
         assertEquals(dynVdb.getValidationDateTime(), xmiVdb.getValidationDateTime());
-        assertEquals(dynVdb.getValidationVersion(), xmiVdb.getValidationVersion());
         assertEquals(dynVdb.isAutoGenerateRESTWar(), xmiVdb.isAutoGenerateRESTWar());
 
         assertEquals(dynVdb.getImports().size(), xmiVdb.getImports().size());

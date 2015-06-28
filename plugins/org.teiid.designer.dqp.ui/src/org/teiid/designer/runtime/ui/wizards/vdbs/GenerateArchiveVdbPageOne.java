@@ -38,28 +38,28 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
  */
 public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements DqpUiConstants, StringConstants {
 
-	private Font monospaceFont;
+    private Font monospaceFont;
 
     private StyledText xmlContentsBox;
-		
-	private GenerateArchiveVdbManager vdbManager;
 
-	/**
-	 * ShowDDlPage constructor
+    private GenerateArchiveVdbManager vdbManager;
+
+    /**
+     * ShowDDlPage constructor
      * @param vdbManager the manager
-	 * @since 8.1
-	 */
-	public GenerateArchiveVdbPageOne(GenerateArchiveVdbManager vdbManager) {
+     * @since 8.1
+     */
+    public GenerateArchiveVdbPageOne(GenerateArchiveVdbManager vdbManager) {
         super(GenerateArchiveVdbPageOne.class.getSimpleName(), EMPTY_STRING);
         this.vdbManager = vdbManager;
         setTitle(Messages.GenerateArchiveVdbPageOne_title);
-	}
-	
-	private Font monospaceFont(Composite composite) {
+    }
+
+    private Font monospaceFont(Composite composite) {
         if (monospaceFont == null) {
-            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL);  //$NON-NLS-1$
+            monospaceFont = new Font(composite.getDisplay(), "Monospace", 12, SWT.NORMAL); //$NON-NLS-1$
             composite.addDisposeListener(new DisposeListener() {
-                
+
                 @Override
                 public void widgetDisposed(DisposeEvent e) {
                     if (monospaceFont == null)
@@ -73,53 +73,53 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements Dqp
         return monospaceFont;
     }
 
-	@Override
-	public void createControl(Composite parent) {
-	    monospaceFont(parent);
+    @Override
+    public void createControl(Composite parent) {
+        monospaceFont(parent);
 
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+        // Create page
+        final Composite mainPanel = new Composite(parent, SWT.NONE);
 
-		mainPanel.setLayout(new GridLayout(1, false));
-		mainPanel.setLayoutData(new GridData()); 
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        mainPanel.setLayout(new GridLayout(1, false));
+        mainPanel.setLayoutData(new GridData());
+        mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		setControl(mainPanel);
-		
+        setControl(mainPanel);
+
         Composite summaryPanel = WidgetFactory.createPanel(mainPanel, SWT.NO_SCROLL, 1);
-        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(10,  10).applyTo(summaryPanel);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(summaryPanel);
+        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(10, 10).applyTo(summaryPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryPanel);
         // ----------------------------------------
         // XML File controls 
         // ----------------------------------------
         WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageOne_dynamicVdbFile);
 
         Label dynamicVdbFileName = new Label(summaryPanel, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(dynamicVdbFileName);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(dynamicVdbFileName);
         dynamicVdbFileName.setText(vdbManager.getDynamicVdbFile().getName());
         dynamicVdbFileName.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
-        
+
         WidgetFactory.createLabel(summaryPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageOne_vdbName);
         Label vdbNameFld = new Label(summaryPanel, SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(vdbNameFld);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(vdbNameFld);
         vdbNameFld.setText(vdbManager.getDynamicVdb().getName());
         vdbNameFld.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
-	    
-	    // Create DDL display group
-		createXMLDisplayGroup(mainPanel);
-        
-		setPageComplete(false);
-	}
 
-	   /**
-     * Taken from
-     * https://vzurczak.wordpress.com/2012/09/07/xml-syntax-highlighting-with-a-styled-text
-     * BSD Licensed
-     *
-     * Computes style ranges from XML regions.
-     * @param regions an ordered list of XML regions
-     * @return an ordered list of style ranges for SWT styled text
-     */
+        // Create DDL display group
+        createXMLDisplayGroup(mainPanel);
+
+        setPageComplete(false);
+    }
+
+    /**
+    * Taken from
+    * https://vzurczak.wordpress.com/2012/09/07/xml-syntax-highlighting-with-a-styled-text
+    * BSD Licensed
+    *
+    * Computes style ranges from XML regions.
+    * @param regions an ordered list of XML regions
+    * @return an ordered list of style ranges for SWT styled text
+    */
     private List<StyleRange> computeStyleRanges(List<XmlRegion> regions) {
 
         List<StyleRange> styleRanges = new ArrayList<StyleRange>();
@@ -192,9 +192,12 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements Dqp
     /*
      * Create the Group containing the DDL Contents (not editable)
      */
-    private void createXMLDisplayGroup( Composite parent ) {
-        Group theGroup = WidgetFactory.createGroup(parent, Messages.GenerateArchiveVdbPageOne_vdbXmlContents,  GridData.FILL_BOTH, 1);
-        GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(10,  10).applyTo(theGroup);
+    private void createXMLDisplayGroup(Composite parent) {
+        Group theGroup = WidgetFactory.createGroup(parent,
+                                                   Messages.GenerateArchiveVdbPageOne_vdbXmlContents,
+                                                   GridData.FILL_BOTH,
+                                                   1);
+        GridLayoutFactory.fillDefaults().numColumns(1).equalWidth(false).margins(10, 10).applyTo(theGroup);
         GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(theGroup);
 
         xmlContentsBox = new StyledText(theGroup, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -211,17 +214,17 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements Dqp
     public void setDDL(String ddlText) {
         xmlContentsBox.setText(ddlText);
     }
-    
+
     /**
      * Get the DDL display contents
      * @return the DDL display contents
      */
     public String getDDL() {
         return xmlContentsBox.getText();
-    } 
+    }
 
     @Override
-    public void setVisible( boolean visible ) {
+    public void setVisible(boolean visible) {
         if (visible) {
 
             try {
@@ -247,20 +250,17 @@ public class GenerateArchiveVdbPageOne extends AbstractWizardPage implements Dqp
     /* 
      * Validate the page
      */
-	private boolean validatePage() {
-	    WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
-		return true;
-	}
+    private boolean validatePage() {
+        WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
+        return true;
+    }
 
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		if(!monospaceFont.isDisposed() ) {
-			monospaceFont.dispose();
-		}
-	}
-	
-	
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (!monospaceFont.isDisposed()) {
+            monospaceFont.dispose();
+        }
+    }
 
 }

@@ -20,7 +20,7 @@ public interface VdbConstants extends StringConstants {
 	/**
 	 * The plugin id
 	 */
-    String PLUGIN_ID = "org.teiid.designer.vdb"; //$NON-NLS-1$
+    String PLUGIN_ID = VdbPlugin.class.getPackage().getName();
 
     /**
      * The package id for this plugin
@@ -78,4 +78,9 @@ public interface VdbConstants extends StringConstants {
      * Translator name key
      */
     String TRANSLATOR_NAME_KEY = "name"; //$NON-NLS-1$
+
+    /**
+     * Preference indicating that a vdb conversion is in progress
+     */
+    String CONVERSION_IN_PROGRESS = "conversion-in-progress"; //$NON-NLS-1$
 }

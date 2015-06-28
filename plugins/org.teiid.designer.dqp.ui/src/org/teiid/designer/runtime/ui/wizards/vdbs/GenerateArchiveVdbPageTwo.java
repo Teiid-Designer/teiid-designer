@@ -45,57 +45,64 @@ import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements DqpUiConstants, StringConstants {
 
     private Text vdbArchiveNameFld;
-    private Text vdbArchiveFileNameFld;
-    private Label vdbArchiveLocationText;
-    ListViewer sourceModelsViewer;
-    ListViewer viewModelsViewer;
-		
-	private GenerateArchiveVdbManager vdbManager;
 
-	/**
-	 * ShowDDlPage constructor
+    private Text vdbArchiveFileNameFld;
+
+    private Label vdbArchiveLocationText;
+
+    private ListViewer sourceModelsViewer;
+
+    private ListViewer viewModelsViewer;
+
+    private final GenerateArchiveVdbManager vdbManager;
+
+    /**
+     * ShowDDlPage constructor
      * @param vdbManager the Manager
-	 * @since 8.1
-	 */
-	public GenerateArchiveVdbPageTwo(GenerateArchiveVdbManager vdbManager) {
+     * @since 8.1
+     */
+    public GenerateArchiveVdbPageTwo(GenerateArchiveVdbManager vdbManager) {
         super(GenerateArchiveVdbPageTwo.class.getSimpleName(), EMPTY_STRING);
         this.vdbManager = vdbManager;
         setTitle(Messages.GenerateArchiveVdbPageTwo_title);
-	}
-	
+    }
 
-	@Override
-	public void createControl(Composite parent) {
-		// Create page
-		final Composite mainPanel = new Composite(parent, SWT.NONE);
+    @Override
+    public void createControl(Composite parent) {
+        // Create page
+        final Composite mainPanel = new Composite(parent, SWT.NONE);
 
-		mainPanel.setLayout(new GridLayout(2, false));
-		mainPanel.setLayoutData(new GridData()); 
-		mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        mainPanel.setLayout(new GridLayout(2, false));
+        mainPanel.setLayoutData(new GridData());
+        mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-		setControl(mainPanel);
+        setControl(mainPanel);
 
-		createHeaderPanel(mainPanel);
-	    
-	    // Create Source Models List group //$NON-NLS-1$
-	    createSourceModelsGroup(mainPanel);
-	    
-	    createViewModelsGroup(mainPanel);
-        
-		setPageComplete(false);
-	}
-	
-	private void createHeaderPanel(Composite parent) {
-		
+        createHeaderPanel(mainPanel);
+
+        // Create Source Models List group //$NON-NLS-1$
+        createSourceModelsGroup(mainPanel);
+
+        createViewModelsGroup(mainPanel);
+
+        createGenerateButtonPanel(mainPanel);
+
+        setPageComplete(false);
+    }
+
+    private void createHeaderPanel(Composite parent) {
+
         Composite vdbInfoGroup = WidgetFactory.createGroup(parent,
-        		Messages.GenerateArchiveVdbPageTwo_vdbDetails, GridData.FILL_HORIZONTAL);
+                                                           Messages.GenerateArchiveVdbPageTwo_vdbDetails,
+                                                           GridData.FILL_HORIZONTAL);
         vdbInfoGroup.setLayout(new GridLayout(3, false));
-        GridDataFactory.fillDefaults().grab(true,  false).span(2, 1).applyTo(vdbInfoGroup);
+        GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(vdbInfoGroup);
 
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER,
-        		Messages.GenerateArchiveVdbPageTwo_originalVdbName);
+        WidgetFactory.createLabel(vdbInfoGroup,
+                                  GridData.VERTICAL_ALIGN_CENTER,
+                                  Messages.GenerateArchiveVdbPageTwo_originalVdbName);
         Label vdbNameFld = new Label(vdbInfoGroup, SWT.NONE);
-        GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbNameFld);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbNameFld);
         vdbNameFld.setText(vdbManager.getDynamicVdb().getName());
         vdbNameFld.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
 
@@ -103,175 +110,202 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         locationLabel.setText(Messages.GenerateArchiveVdbPageTwo_location);
 
         vdbArchiveLocationText = new Label(vdbInfoGroup, SWT.NONE);
-        GridDataFactory.fillDefaults().grab(true,  false).applyTo(vdbArchiveLocationText);
-        if( vdbManager.getOutputLocation() != null ) {
-        	vdbArchiveLocationText.setText(vdbManager.getOutputLocation().getFullPath().toString());
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(vdbArchiveLocationText);
+        if (vdbManager.getOutputLocation() != null) {
+            vdbArchiveLocationText.setText(vdbManager.getOutputLocation().getFullPath().toString());
         }
-        
+
         Button browseButton = new Button(vdbInfoGroup, SWT.PUSH);
         GridData buttonGridData = new GridData();
         browseButton.setLayoutData(buttonGridData);
-        browseButton.setText(Messages.GenerateArchiveVdbPageTwo_browse); 
+        browseButton.setText(Messages.GenerateArchiveVdbPageTwo_browse);
         browseButton.addSelectionListener(new SelectionAdapter() {
             @Override
-            public void widgetSelected( SelectionEvent e ) {
+            public void widgetSelected(SelectionEvent e) {
                 handleBrowse();
             }
         });
-        
-        Label vdbVersionLabel = WidgetFactory.createLabel(vdbInfoGroup, 
-        		Messages.GenerateArchiveVdbPageTwo_version);
-    	GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
-    	
-    	final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
-    	GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
-    	((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
-    	
-    	vdbVersionText.addModifyListener(new ModifyListener() {
-			
-			@Override
-			public void modifyText(ModifyEvent e) {
+
+        Label vdbVersionLabel = WidgetFactory.createLabel(vdbInfoGroup, Messages.GenerateArchiveVdbPageTwo_version);
+        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
+
+        final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
+        GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
+        ((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
+
+        vdbVersionText.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
                 vdbManager.setVersion(vdbVersionText.getText());
                 validatePage();
-			}
-		});
-    	
-    	vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
+            }
+        });
 
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, 
-        		Messages.GenerateArchiveVdbPageTwo_archiveVdbName);
-        vdbArchiveNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
-        GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbArchiveNameFld);
+        vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
+
+        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageTwo_archiveVdbName);
+        vdbArchiveNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveNameFld);
         vdbArchiveNameFld.setText(vdbManager.getDelegateArchiveVdbName());
         vdbArchiveNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_archiveVdbNameTooltip);
         vdbArchiveNameFld.addModifyListener(new ModifyListener() {
             @Override
-			public void modifyText( final ModifyEvent event ) {
-            	vdbManager.setDelegateArchiveVdbName(vdbArchiveNameFld.getText());
+            public void modifyText(final ModifyEvent event) {
+                vdbManager.setDelegateArchiveVdbName(vdbArchiveNameFld.getText());
                 validatePage();
             }
         });
-        
-        WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, 
-        		Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileName);
-        vdbArchiveFileNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL) ;
-        GridDataFactory.fillDefaults().span(2, 1).grab(true,  false).applyTo(vdbArchiveFileNameFld);
+
+        WidgetFactory.createLabel(vdbInfoGroup,
+                                  GridData.VERTICAL_ALIGN_CENTER,
+                                  Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileName);
+        vdbArchiveFileNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveFileNameFld);
         vdbArchiveFileNameFld.setText(vdbManager.getOutputName());
         vdbArchiveFileNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip);
         vdbArchiveFileNameFld.addModifyListener(new ModifyListener() {
             @Override
-			public void modifyText( final ModifyEvent event ) {
-            	vdbManager.setOutputName(vdbArchiveFileNameFld.getText());
+            public void modifyText(final ModifyEvent event) {
+                vdbManager.setOutputName(vdbArchiveFileNameFld.getText());
                 validatePage();
             }
         });
-	}
-	
-    private void createSourceModelsGroup( Composite parent ) {
+    }
 
-		Group group = WidgetFactory.createGroup(parent, 
-				Messages.GenerateArchiveVdbPageTwo_sourceModels, SWT.FILL, 1, 1);
-		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
-		GridData gd_2 = new GridData(GridData.FILL_BOTH);
-		gd_2.widthHint = 220;
-		group.setLayoutData(gd_2);
-		// Add a simple list box entry form with String contents
-    	this.sourceModelsViewer = new ListViewer(group, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    private void createSourceModelsGroup(Composite parent) {
+
+        Group group = WidgetFactory.createGroup(parent, Messages.GenerateArchiveVdbPageTwo_sourceModels, SWT.FILL, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
+        GridData gd_2 = new GridData(GridData.FILL_BOTH);
+        gd_2.widthHint = 220;
+        group.setLayoutData(gd_2);
+        // Add a simple list box entry form with String contents
+        this.sourceModelsViewer = new ListViewer(group, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan=1;
+        data.horizontalSpan = 1;
         this.sourceModelsViewer.getControl().setLayoutData(data);
-        
-        for( Object model : getSourceModels()) {
-        	this.sourceModelsViewer.add(model);
+
+        for (Object model : getSourceModels()) {
+            this.sourceModelsViewer.add(model);
         }
     }
-    
-    private void createViewModelsGroup( Composite parent ) {
 
-		Group group = WidgetFactory.createGroup(parent, 
-				Messages.GenerateArchiveVdbPageTwo_viewModels, SWT.FILL, 1, 1);
-		GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
-		GridData gd_2 = new GridData(GridData.FILL_BOTH);
-		gd_2.widthHint = 220;
-		group.setLayoutData(gd_2);
-		// Add a simple list box entry form with String contents
-    	this.viewModelsViewer = new ListViewer(group, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    private void createViewModelsGroup(Composite parent) {
+
+        Group group = WidgetFactory.createGroup(parent, Messages.GenerateArchiveVdbPageTwo_viewModels, SWT.FILL, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(group);
+        GridData gd_2 = new GridData(GridData.FILL_BOTH);
+        gd_2.widthHint = 220;
+        group.setLayoutData(gd_2);
+        // Add a simple list box entry form with String contents
+        this.viewModelsViewer = new ListViewer(group, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         GridData data = new GridData(GridData.FILL_BOTH);
-        data.horizontalSpan=1;
+        data.horizontalSpan = 1;
         this.viewModelsViewer.getControl().setLayoutData(data);
 
-        for( Object model : getViewModels()) {
-        	this.viewModelsViewer.add(model);
+        for (Object model : getViewModels()) {
+            this.viewModelsViewer.add(model);
         }
+    }
+
+    private void createGenerateButtonPanel(Composite parent) {
+        Composite buttonPanel = new Composite(parent, SWT.NONE);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(buttonPanel);
+        GridLayoutFactory.fillDefaults().numColumns(1).margins(50, 10).applyTo(buttonPanel);
+
+        final Button genButton = new Button(buttonPanel, SWT.PUSH);
+        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).applyTo(genButton);
+        genButton.setText(Messages.GenerateVdbButton_Title);
+        genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
+        genButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                vdbManager.generate();
+                genButton.setEnabled(vdbManager.isGenerateRequired());
+            }
+        });
     }
 
     @Override
-    public void setVisible( boolean visible ) {
-        if (visible) {
-
+    public void setVisible(boolean visible) {
+        if (visible)
             validatePage();
-            getControl().setVisible(visible);
-        } else {
-            super.setVisible(visible);
-        }
+
+        super.setVisible(visible);
     }
 
     /* 
      * Validate the page
      */
-	private void validatePage() {
-		this.vdbManager.validate();
-		IStatus status = vdbManager.getStatus();
-		if( status.getSeverity() == IStatus.ERROR ) {
+    private void validatePage() {
+        this.vdbManager.validate();
+        IStatus status = vdbManager.getStatus();
+        if (status.getSeverity() == IStatus.ERROR) {
             this.setErrorMessage(status.getMessage());
             this.setPageComplete(false);
             return;
-        } else if(status.getSeverity() == IStatus.WARNING) { 
-        	this.setErrorMessage(status.getMessage());
+        } else if (status.getSeverity() == IStatus.WARNING) {
+            this.setErrorMessage(status.getMessage());
             this.setPageComplete(true);
         } else {
-        	setErrorMessage(null);
-        	WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
+            setErrorMessage(null);
+            WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
         }
-	}
+    }
 
-	Object[] getSourceModels() {
-		Collection<String> modelNames = new ArrayList<String>();
-		
-		for( DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels() ) {
-			if( model.getModelType() == DynamicModel.Type.PHYSICAL ) {
-				modelNames.add(model.getName());
-			}
-		}
-		
-		return modelNames.toArray();
-	}
-	
-	Object[] getViewModels() {
-		Collection<String> modelNames = new ArrayList<String>();
-		
-		for( DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels() ) {
-			if( model.getModelType() == DynamicModel.Type.VIRTUAL ) {
-				modelNames.add(model.getName());
-			}
-		}
-		
-		return modelNames.toArray();
-	}
-	
+    Object[] getSourceModels() {
+        Collection<String> modelNames = new ArrayList<String>();
+
+        for (DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels()) {
+            if (model.getModelType() == DynamicModel.Type.PHYSICAL) {
+                modelNames.add(model.getName());
+            }
+        }
+
+        return modelNames.toArray();
+    }
+
+    Object[] getViewModels() {
+        Collection<String> modelNames = new ArrayList<String>();
+
+        for (DynamicModel model : vdbManager.getDynamicVdb().getDynamicModels()) {
+            if (model.getModelType() == DynamicModel.Type.VIRTUAL) {
+                modelNames.add(model.getName());
+            }
+        }
+
+        return modelNames.toArray();
+    }
+
     void handleBrowse() {
-    	IProject project = vdbManager.getDynamicVdbFile().getProject();
+        IProject project = vdbManager.getDynamicVdbFile().getProject();
         final IContainer folder = WidgetUtil.showFolderSelectionDialog(project,
                                                                        new SingleProjectOrFolderFilter(project),
                                                                        new ModelProjectSelectionStatusValidator());
 
         if (folder != null && vdbArchiveLocationText != null) {
-        	vdbManager.setOutputLocation(folder);
-        	vdbArchiveLocationText.setText(folder.getFullPath().makeRelative().toString());
+            vdbManager.setOutputLocation(folder);
+            vdbArchiveLocationText.setText(folder.getFullPath().makeRelative().toString());
         }
-        
 
         validatePage();
+    }
+
+    @Override
+    public boolean isPageComplete() {
+        if (vdbManager.isGenerateRequired())
+            return false;
+
+        return super.isPageComplete();
+    }
+
+    @Override
+    public boolean canFlipToNextPage() {
+        if (vdbManager.isGenerateRequired())
+            return false;
+
+        return super.canFlipToNextPage();
     }
 
 }

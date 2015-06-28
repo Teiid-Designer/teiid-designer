@@ -22,8 +22,10 @@ import javax.xml.validation.Schema;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
 import org.teiid.designer.roles.DataRole;
@@ -696,6 +698,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     protected void populateVdb(BasicVdb vdb) {
         vdb.setName(getName());
         vdb.setDescription(getDescription());
+        vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
 
         for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
             vdb.setProperty(entry.getKey().toString(), entry.getValue().toString());
@@ -719,7 +722,6 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
         vdb.setPasswordPattern(getPasswordPattern());
         vdb.setAuthenticationType(getAuthenticationType());
         vdb.setValidationDateTime(getValidationDateTime());
-        vdb.setValidationVersion(getValidationVersion());
         vdb.setAutoGenerateRESTWar(isAutoGenerateRESTWar());
 
         for (VdbImportVdbEntry entry : getImports()) {
@@ -755,7 +757,10 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     public abstract DynamicVdb dynVdbConvert(IFile destination) throws Exception;
 
     @Override
-    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination) throws Exception {
+    public <V extends Vdb> V convert(final Class<V> vdbType, final IFile destination) throws Exception {
+        CoreArgCheck.isNotNull(vdbType);
+        CoreArgCheck.isNotNull(destination);
+
         if (DynamicVdb.class.equals(vdbType))
             return (V) dynVdbConvert(destination);
         else if (XmiVdb.class.equals(vdbType))
