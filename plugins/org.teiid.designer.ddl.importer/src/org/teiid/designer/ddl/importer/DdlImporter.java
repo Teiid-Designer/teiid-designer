@@ -247,12 +247,26 @@ public class DdlImporter {
     }
     
     /**
-     * @return the failure message
+     * @return the failure error index
      */
     public int getParseErrorIndex() {
     	return importManager.getImportMessages().getParseErrorIndex();
     }
-    
+
+    /**
+     * @return the failure column number
+     */
+    public int getParseErrorColNumber() {
+        return importManager.getImportMessages().getParseErrorColNumber();
+    }
+
+    /**
+     * @return the failure line number
+     */
+    public int getParseErrorLineNumber() {
+        return importManager.getImportMessages().getParseErrorLineNumber();
+    }
+
     /**
      * Add a progress message
      * @param message the progress message

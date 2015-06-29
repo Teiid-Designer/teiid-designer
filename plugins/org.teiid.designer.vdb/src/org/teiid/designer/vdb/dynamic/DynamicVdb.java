@@ -558,13 +558,29 @@ public class DynamicVdb extends BasicVdb {
                     // just populate it in case used in the future.
                     importer.setDdlFileName(getSourceFile().getLocation().toOSString());
 
+                    // Limit the importer to Teiid-only syntax
+                    importer.setSpecifiedParser("TEIID"); //$NON-NLS-1$
+
                     //
                     // Import the ddl
                     //
                     importer.importDdl(metadata.getSchemaText(), monitor, 1);
 
                     if (importer.hasParseError()) {
-                        throw new Exception(importer.getParseErrorMessage());
+                        StringBuffer buffer = new StringBuffer();
+                        buffer.append("Error Message:").append(TAB); //$NON-NLS-1$
+                        buffer.append(importer.getParseErrorMessage().trim()).append(NEW_LINE);
+
+                        buffer.append(TAB).append(TAB).append(SPACE).append(SPACE).append("Error Line Number:").append(TAB); //$NON-NLS-1$
+                        buffer.append(importer.getParseErrorLineNumber()).append(NEW_LINE);
+
+                        buffer.append(TAB).append(TAB).append(SPACE).append(SPACE).append("Error Column Number:").append(TAB); //$NON-NLS-1$
+                        buffer.append(importer.getParseErrorColNumber()).append(NEW_LINE);
+
+                        buffer.append(TAB).append(TAB).append(SPACE).append(SPACE).append("Error Index:").append(TAB); //$NON-NLS-1$
+                        buffer.append(importer.getParseErrorIndex()).append(NEW_LINE);
+
+                        throw new Exception(buffer.toString());
                     }
 
                     if (!importer.noDdlImported()) {
