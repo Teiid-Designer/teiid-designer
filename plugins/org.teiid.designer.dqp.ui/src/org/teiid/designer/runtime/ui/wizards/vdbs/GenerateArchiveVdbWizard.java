@@ -69,4 +69,11 @@ public class GenerateArchiveVdbWizard extends AbstractWizard {
 
         return super.performCancel();
     }
+
+    @Override
+    public void dispose() {
+        vdbManager.dispose();
+
+        super.dispose();
+    }
 }

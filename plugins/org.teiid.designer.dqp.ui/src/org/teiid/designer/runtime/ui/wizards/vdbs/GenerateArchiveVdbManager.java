@@ -7,19 +7,27 @@
 */
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
+import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.vdb.VdbConstants;
-import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
@@ -27,6 +35,55 @@ import org.teiid.designer.vdb.dynamic.DynamicVdb;
  * Manager for generation of the archive vdb
  */
 public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
+
+    private class ResourceRecorder implements IResourceChangeListener {
+
+        private final Set<IResource> resources = new HashSet<IResource>();
+
+        private void addResource(IResourceDelta resourceDelta) {
+            if (resourceDelta == null)
+                return;
+
+            for (IResourceDelta childDelta : resourceDelta.getAffectedChildren()) {
+                addResource(childDelta);
+            }
+
+            if (IResourceDelta.ADDED != resourceDelta.getKind())
+                return;
+
+            IResource resource = resourceDelta.getResource();
+            if (! ModelUtil.isModelFile(resource))
+                return;
+
+            if (getOutputLocation().getFullPath().isPrefixOf(resource.getFullPath()))
+                resources.add(resourceDelta.getResource());
+        }
+
+        @Override
+        public void resourceChanged(IResourceChangeEvent event) {
+            IResourceDelta delta = event.getDelta();
+            if (delta == null)
+                return;
+
+            addResource(delta);
+        }
+
+        /**
+         * @return unmodifiable set of changed resources
+         */
+        public Set<IResource> getResources() {
+            return Collections.unmodifiableSet(resources);
+        }
+
+        /**
+         * Clear the recorded resources
+         */
+        public void clear() {
+            resources .clear();
+        }
+    }
+
+    private final ResourceRecorder resourceRecorder = new ResourceRecorder();
 
     private IFile dynamicVdbFile;
 
@@ -90,6 +147,8 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         if (!isGenerateRequired())
             return;
 
+        resourceRecorder.clear();
+
         if (getDynamicVdb() == null)
             return;
 
@@ -106,11 +165,26 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
             }
 
             @Override
-            public void onCompletion(IStatus status) {
-                XmiVdb xmiVdb = getResult();
+            public void aboutToRun() {
+                ModelerCore.getWorkspace().addResourceChangeListener(resourceRecorder,
+                                                                     IResourceChangeEvent.POST_CHANGE
+                                                                     | IResourceChangeEvent.PRE_CLOSE
+                                                                     | IResourceChangeEvent.PRE_BUILD
+                                                                     | IResourceChangeEvent.POST_BUILD
+                                                                     | IResourceChangeEvent.PRE_REFRESH);
+            }
 
-                if (status.isOK())
-                    setArchiveVdb(xmiVdb);
+            @Override
+            public void onCompletion(IStatus status) {
+                try {
+                    XmiVdb xmiVdb = getResult();
+
+                    if (status.isOK())
+                        setArchiveVdb(xmiVdb);
+
+                } finally {
+                    ModelerCore.getWorkspace().removeResourceChangeListener(resourceRecorder);
+                }
             }
         };
 
@@ -154,36 +228,29 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
      * Wizard being cancelled so cleanup and remove created models
      */
     public void cancel() {
-        if (isGenerateRequired())
-            return; // nothing already generated
-
         String name = Messages.GenerateArchiveVdbWizard_cancelJobName;
+        final Set<IResource> resources = resourceRecorder.getResources();
+        if (resources.isEmpty())
+            return;
 
         WorkspaceJob job = new WorkspaceJob(name) {
 
             @Override
             public IStatus runInWorkspace(IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
-                XmiVdb xmiVdb = getArchiveVdb();
-                Set<VdbModelEntry> modelEntries = xmiVdb.getModelEntries();
-                if (modelEntries == null || modelEntries.isEmpty())
-                    return status;
 
-                for (VdbModelEntry entry : modelEntries) {
-                    IFile entryFile = entry.findFileInWorkspace();
-                    if (entryFile == null || !entryFile.exists())
+                for (IResource resource : resources) {
+                    if (resource == null || ! resource.exists())
                         continue;
 
                     try {
-                        entryFile.delete(true, monitor);
+                        resource.delete(true, monitor);
                     } catch (CoreException ex) {
                         if (status == Status.OK_STATUS)
                             status = new MultiStatus(VdbConstants.PLUGIN_ID, IStatus.ERROR, EMPTY_STRING, null);
 
                         ((MultiStatus)status).add(ex.getStatus());
                     }
-
-                    entry.dispose();
                 }
 
                 return status;
@@ -191,5 +258,16 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         };
 
         job.schedule();
+    }
+
+    /**
+     * Dispose the manager
+     */
+    public void dispose() {
+        IWorkspace workspace = ModelerCore.getWorkspace();
+        if (workspace == null)
+            return;
+
+        workspace.removeResourceChangeListener(resourceRecorder);
     }
 }

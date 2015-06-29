@@ -81,6 +81,12 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
             };
 
             job.addJobChangeListener(new JobChangeAdapter() {
+
+                @Override
+                public void aboutToRun(IJobChangeEvent event) {
+                    callback.aboutToRun();
+                }
+
                 @Override
                 public void done(final IJobChangeEvent event) {
                     //
@@ -126,6 +132,13 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     protected abstract class GeneratorCallback<V extends Vdb> {
 
         private V vdb;
+
+        /**
+         * Execute prior callback execution
+         */
+        public void aboutToRun() {
+            // Do nothing by default
+        }
 
         /**
          * Execute the generation
