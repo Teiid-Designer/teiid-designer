@@ -9,4 +9,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.mapping.ui.actions
 Bundle-Localization: plugin
 Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.designer.sdt;bundle-version="[9.0.0,10.0.0)"
+ org.teiid.designer.sdt;bundle-version="[9.0.2,10.0.0)"

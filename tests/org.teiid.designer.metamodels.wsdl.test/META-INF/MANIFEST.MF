@@ -8,6 +8,6 @@ Fragment-Host: org.teiid.designer.metamodels.wsdl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.core.designer.test.framework;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.sdt;bundle-version="[9.0.0,10.0.0)"
+ org.teiid.core.designer.test.framework;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.sdt;bundle-version="[9.0.2,10.0.0)"
 Export-Package: org.teiid.designer.metamodels.wsdl
