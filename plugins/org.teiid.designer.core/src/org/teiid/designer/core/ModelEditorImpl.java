@@ -1688,6 +1688,9 @@ public class ModelEditorImpl implements ModelEditor {
 
     /**
      * Should only be called by the model container's EMF content adapter.
+     * @param owner command owner
+     * @param cmd command to be post executed
+     * @throws ModelerCoreException
      * 
      * @see org.teiid.designer.core.ModelEditor#executeCommand(org.eclipse.emf.ecore.EObject,
      *      org.eclipse.emf.common.command.Command)
@@ -1698,7 +1701,6 @@ public class ModelEditorImpl implements ModelEditor {
         executeAsTransaction(new TransactionRunnable() {
             @Override
 			public Object run( UnitOfWork uow ) throws ModelerCoreException {
-                ((UnitOfWorkImpl)uow).setAlreadyExecuted(true);
                 executeCommandInTransaction(uow, owner, cmd);
                 return null;
             }
