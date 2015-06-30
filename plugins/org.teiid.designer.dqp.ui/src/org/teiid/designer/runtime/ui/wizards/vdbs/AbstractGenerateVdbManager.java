@@ -27,6 +27,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
@@ -55,9 +56,10 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
         public GenerateRunnable(GeneratorCallback callback) {
             CoreArgCheck.isNotNull(callback);
             this.callback = callback;
-            this.jobName = VdbPlugin.UTIL.getString(BasicVdb.class.getSimpleName() + DOT + "convertJobName", //$NON-NLS-1$
-                                                    callback.getSourceVdb().getClass().getSimpleName(),
-                                                    callback.getTargetType().getSimpleName());
+            this.jobName = NLS.bind(Messages.GenerateVdbWizard_ConvertJobName,
+                                    StringUtilities.fromCamelCase(callback.getSourceVdb().getClass().getSimpleName()),
+                                    StringUtilities.fromCamelCase(callback.getTargetType().getSimpleName())
+            );
         }
 
         @Override

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -305,6 +304,35 @@ public class StringUtilities implements StringConstants {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Converts camel case string into 'normal' words-and-spaces, eg. BasicVdb -> Basic Vdb
+     * <p>
+     * <li>lowercase -> lowercase
+     * <li>Class -> Class
+     * <li>MyClass -> My Class
+     * <li>HTML -> HTML
+     * <li>PDFLoader -> PDF Loader
+     * <li>AString -> A String
+     * <li>SimpleXMLParser -> Simple XML Parser
+     * <li>GL11Version -> GL 11 Version
+     * <li>99Bottles -> 99 Bottles
+     * <li>May5 -> May 5
+     * <li>BFG9000 -> BFG 9000
+     *</p>
+     *
+     * @param value
+     * @return spaced version of camel case word
+     */
+    public static String fromCamelCase(final String value) {
+        if (value == null)
+            return EMPTY_STRING;
+
+        String regexp = String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",  //$NON-NLS-1$//$NON-NLS-2$
+                                                                                   "(?<=[^A-Z])(?=[A-Z])", //$NON-NLS-1$
+                                                                                   "(?<=[A-Za-z])(?=[^A-Za-z])"); //$NON-NLS-1$
+        return value.replaceAll(regexp, SPACE);
     }
     
     public static String getUniqueName(String baseName, Set<String> otherNames, boolean appendInteger, boolean appendWithSpace, int countLimit) {

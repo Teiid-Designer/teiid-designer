@@ -83,6 +83,8 @@ public class Messages extends NLS {
     public static String GenerateVdbButton_Title;
     public static String GenerateVdbButton_Tooltip;
 
+    public static String GenerateVdbWizard_ConvertJobName;
+
     static {
         NLS.initializeMessages("org.teiid.designer.runtime.ui.messages", Messages.class); //$NON-NLS-1$
     }
