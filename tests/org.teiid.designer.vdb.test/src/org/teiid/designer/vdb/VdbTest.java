@@ -11,7 +11,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -48,10 +47,8 @@ import org.mockito.Mock;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.ChecksumUtil;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelWorkspaceMock;
-import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -117,7 +114,9 @@ public class VdbTest implements VdbConstants {
     @After
     public void after() {
         modelWorkspaceMock.dispose();
+        modelWorkspaceMock = null;
         eclipseMock.dispose();
+        eclipseMock = null;
     }
 
     /**
@@ -302,76 +301,11 @@ public class VdbTest implements VdbConstants {
     }
 
     @Test
-    public void testAddingTypesOfVdbEntry() throws Exception {
-        MockFileBuilder modelFile = new MockFileBuilder("modelFile", StringConstants.XMI);
-        MockFileBuilder schemaFile = new MockFileBuilder("schemaFile", StringConstants.XSD);
-        MockFileBuilder udfFile = new MockFileBuilder("udfFunction", VdbHelper.JAR_EXT);
-        MockFileBuilder userFile = new MockFileBuilder("otherFile", "txt");
-
-        modelFile.addToModelWorkspace(modelWorkspaceMock);
-        when(modelFile.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
-        when(modelFile.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
-
-        schemaFile.addToModelWorkspace(modelWorkspaceMock);
-        when(schemaFile.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
-        when(schemaFile.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
-
-        udfFile.addToModelWorkspace(modelWorkspaceMock);
-
-        VdbEntry vdbEntry = vdb.addEntry(modelFile.getPath());
-        assertTrue(vdbEntry instanceof VdbModelEntry);
-        assertEquals(modelFile.getPath(), vdbEntry.getPath());
-        VdbModelEntry vdbModelEntry = (VdbModelEntry) vdbEntry;
-        assertNotNull(vdbModelEntry.getIndexFile());
-
-        assertEquals(1, vdb.getModelEntries().size());
-        assertEquals(0, vdb.getSchemaEntries().size());
-        /* Model entries are not included in the entries collection */
-        assertEquals(0, vdb.getEntries().size());
-
-        vdbEntry = vdb.addEntry(schemaFile.getPath());
-        assertTrue(vdbEntry instanceof VdbSchemaEntry);
-        assertEquals(schemaFile.getPath(), vdbEntry.getPath());
-        VdbSchemaEntry vdbSchemaEntry = (VdbSchemaEntry) vdbEntry;
-        assertNotNull(vdbSchemaEntry.getIndexFile());
-
-        /* Schemas are added to their own collection as no longer models */
-        assertEquals(1, vdb.getModelEntries().size());
-        assertEquals(1, vdb.getSchemaEntries().size());
-        /* Schemas are included in the entries collection */
-        assertEquals(1, vdb.getEntries().size());
-        
-        vdbEntry = vdb.addEntry(udfFile.getPath());
-        assertTrue(vdbEntry instanceof VdbFileEntry);
-        /* UDF Jars are stored in the lib directory of the vdb */
-        String udfJarName = "/lib/" + udfFile.getName();
-        assertEquals(udfJarName, vdbEntry.getPath().toString());
-
-        assertEquals(1, vdb.getModelEntries().size());
-        assertEquals(1, vdb.getSchemaEntries().size());
-        assertEquals(1, vdb.getUdfJarEntries().size());
-        assertEquals(2, vdb.getEntries().size());
-        assertTrue(vdb.getUdfJarNames().contains(udfJarName));
-
-        vdbEntry = vdb.addEntry(userFile.getPath());
-        assertTrue(vdbEntry instanceof VdbFileEntry);
-        /* UDF Jars are stored in the other files directory of the vdb */
-        String userFileName = "/otherFiles/" + userFile.getName();
-        assertEquals(userFileName, vdbEntry.getPath().toString());
-
-        assertEquals(1, vdb.getModelEntries().size());
-        assertEquals(1, vdb.getSchemaEntries().size());
-        assertEquals(1, vdb.getUdfJarEntries().size());
-        assertEquals(1, vdb.getUserFileEntries().size());
-        assertEquals(3, vdb.getEntries().size());
-    }
-
-    @Test
     public void testOpeningExistingVdb() throws Exception {
         Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
 
         assertEquals("books", booksVdb.getName());
-        assertEquals(VdbTestUtils.BOOKS_VDB_FILE.getCanonicalPath(), booksVdb.getSourceFile().getFullPath().toOSString());
+        assertEquals(VdbTestUtils.BOOKS_VDB_FILE.getCanonicalPath(), booksVdb.getSourceFile().getLocation().toOSString());
         assertEquals(2, booksVdb.getModelEntries().size());
         assertEquals(2, booksVdb.getSchemaEntries().size());
         assertEquals(0, booksVdb.getUdfJarEntries().size());

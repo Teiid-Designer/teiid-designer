@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -79,6 +80,15 @@ public class MockFileBuilder implements StringConstants {
         this.realFile = realFile;
         this.location = new Path(realFile.getAbsolutePath());
 
+        String fileName = realFile.getName();
+        if(fileName.lastIndexOf(DOT) > 0) {
+            this.extension = fileName.substring(fileName.lastIndexOf(DOT) + 1);
+            this.baseName = fileName.substring(0, fileName.lastIndexOf(DOT));
+        } else {
+            this.extension = EMPTY_STRING;
+            this.baseName = fileName;
+        }
+
         if (realFile.isDirectory())
             mockDirectory();
         else
@@ -94,31 +104,24 @@ public class MockFileBuilder implements StringConstants {
         extensionRegistry = ExtensionPlugin.getInstance().getRegistry();
     }
 
-    /**
-     * Enable the mocking of the parent of this file as a project
-     */
-    public void enableProject() {
-        String fileName = realFile.getName();
-        IPath absFileNameNoExt = new Path(realFile.getAbsolutePath());
-
-        if(fileName.lastIndexOf(DOT) > 0) {
-            this.extension = fileName.substring(fileName.lastIndexOf(DOT) + 1);
-            this.baseName = fileName.substring(0, fileName.lastIndexOf(DOT));
-            absFileNameNoExt = absFileNameNoExt.removeFileExtension();
-        } else {
-            this.extension = EMPTY_STRING;
-            this.baseName = fileName;
-        }
-
-        location = new Path(realFile.getAbsolutePath());
-    }
-
     private void mockFileProperties(IResource resource, File realFile, IPath wkspPath, int resourceType) {
         when(resource.getName()).thenReturn(realFile.getName());
         when(resource.getLocation()).thenReturn(new Path(realFile.getAbsolutePath()));
         when(resource.getFullPath()).thenReturn(wkspPath);
         when(resource.getFileExtension()).thenReturn(wkspPath.getFileExtension());
         when(resource.getType()).thenReturn(resourceType);
+        when(resource.exists()).thenReturn(realFile.exists());
+    }
+
+    private void mockProjectFileProperties(IProject project, final IFile file) {
+        if (file == null)
+            return;
+
+        when(file.getParent()).thenReturn(project);
+        when(file.getProject()).thenReturn(project);
+        IPath filePath = file.getFullPath();
+        IPath projectPath = project.getFullPath();
+        when(file.getProjectRelativePath()).thenReturn(filePath.makeRelativeTo(projectPath));
     }
 
     private void addProjectChild(IFile file) throws Exception {
@@ -127,7 +130,6 @@ public class MockFileBuilder implements StringConstants {
 
     private IFile mockProjectFile(IProject project, IPath projectPath) throws CoreException, Exception {
         File realFile;
-        IPath wkspProjectLocation = project.getFullPath();
         final IFile file = mock(IFile.class);
 
         if (project.getLocation().isPrefixOf(projectPath))
@@ -142,10 +144,7 @@ public class MockFileBuilder implements StringConstants {
             wkspPath = project.getFullPath().append(projectPath);
 
         mockFileProperties(file, realFile, wkspPath, IResource.FILE);
-        when(file.getParent()).thenReturn(project);
-        when(file.getProject()).thenReturn(project);
-        when(file.getProjectRelativePath()).thenReturn(wkspPath.makeRelativeTo(wkspProjectLocation));
-        when(file.exists()).thenReturn(realFile.exists());
+        mockProjectFileProperties(project, file);
 
         //
         // Allow writing of contents to IFile to be sent to the real file
@@ -218,6 +217,11 @@ public class MockFileBuilder implements StringConstants {
             }
         });
 
+        //
+        // Not forgetting this file
+        //
+        mockProjectFileProperties(project, getResourceFile());
+
         when(project.members()).thenReturn(projectChildren.toArray(new IResource[0]));
 
         // The .project file        
@@ -244,7 +248,8 @@ public class MockFileBuilder implements StringConstants {
 
     private void mockFile() throws Exception {
         resource = mock(IFile.class);
-        mockFileProperties(resource, realFile, location, IResource.FILE);
+        final Path wkspPath = new Path(File.separator + new File(realFile.getParent()).getName() + File.separator + realFile.getName());
+        mockFileProperties(resource, realFile, wkspPath, IResource.FILE);
 
         IFile resourceFile = getResourceFile();
         when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
@@ -268,6 +273,11 @@ public class MockFileBuilder implements StringConstants {
      */
     public void addToModelWorkspace(ModelWorkspaceMock modelWorkspace) {
         when(modelWorkspace.getEclipseMock().workspaceRoot().findMember(location)).thenReturn(resource);
+
+        if (resource instanceof IFile)
+            when(modelWorkspace.getEclipseMock().workspaceRoot().getFileForLocation(location)).thenReturn((IFile) resource);
+        else if (resource instanceof IContainer)
+            when(modelWorkspace.getEclipseMock().workspaceRoot().getContainerForLocation(location)).thenReturn((IContainer) resource);
     }
 
     /**

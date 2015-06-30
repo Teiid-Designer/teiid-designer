@@ -38,7 +38,7 @@ import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 
 @SuppressWarnings( "javadoc" )
-public class TestDyamicVdbImport implements VdbConstants {
+public class TestDynamicVdbImport implements VdbConstants {
 
     private EclipseMock eclipseMock;
 

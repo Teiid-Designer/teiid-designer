@@ -46,6 +46,7 @@ import org.teiid.designer.core.builder.VdbModelBuilder;
 import org.teiid.designer.core.util.VdbHelper;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.roles.DataRole;
@@ -949,7 +950,8 @@ public final class XmiVdb extends BasicVdb {
                     entryFile = createEntryFile(entry);
                 }
 
-                ModelResource modelResource = ModelUtil.getModelResource(entryFile, true);
+                ModelWorkspaceManager workspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
+                ModelResource modelResource = (ModelResource) workspaceManager.findModelWorkspaceItem(entryFile, true);
                 if (modelResource == null)
                     throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
 

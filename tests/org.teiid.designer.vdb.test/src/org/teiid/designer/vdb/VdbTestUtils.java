@@ -157,7 +157,6 @@ public class VdbTestUtils implements StringConstants {
         }
 
         MockFileBuilder booksVdbBuilder = new MockFileBuilder(BOOKS_VDB_FILE);
-        booksVdbBuilder.enableProject();
         Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
 
         return booksVdb;
@@ -180,7 +179,6 @@ public class VdbTestUtils implements StringConstants {
         assertTrue(portfolioCopy.exists() && portfolioCopy.length() > 0);
 
         final MockFileBuilder portfolio = new MockFileBuilder(portfolioCopy);
-        portfolio.enableProject();
         portfolio.enableExtensionRegistry();
 
         //

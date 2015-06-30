@@ -95,7 +95,13 @@ public class VdbPlugin extends Plugin implements VdbConstants {
     public void setConversionInProgress(boolean value) throws Exception {
         try {
             IWorkspace workspace = ModelerCore.getWorkspace();
+            if (workspace == null)
+                return;
+
             IWorkspaceDescription description = workspace.getDescription();
+            if (description == null)
+                return;
+
             description.setAutoBuilding(! value);
             workspace.setDescription(description);
         } finally {

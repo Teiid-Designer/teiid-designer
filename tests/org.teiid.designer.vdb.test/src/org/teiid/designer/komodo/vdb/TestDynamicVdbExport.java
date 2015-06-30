@@ -36,7 +36,7 @@ import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.w3c.dom.Document;
 
 @SuppressWarnings( "javadoc" )
-public class TestDyamicVdbExport implements VdbConstants {
+public class TestDynamicVdbExport implements VdbConstants {
 
     private EclipseMock eclipseMock;
 
@@ -104,7 +104,6 @@ public class TestDyamicVdbExport implements VdbConstants {
         assertEquals(booksVdb.getGssPattern(), dynVdb.getGssPattern());
         assertEquals(booksVdb.getPasswordPattern(), dynVdb.getPasswordPattern());
         assertEquals(booksVdb.getAuthenticationType(), dynVdb.getAuthenticationType());
-        assertEquals(booksVdb.getValidationVersion(), dynVdb.getValidationVersion());
         assertEquals(booksVdb.isAutoGenerateRESTWar(), dynVdb.isAutoGenerateRESTWar());
 
         assertEquals(booksVdb.getImports().size(), dynVdb.getImports().size());

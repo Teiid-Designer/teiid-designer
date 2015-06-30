@@ -115,13 +115,16 @@ public class DynamicVdb extends BasicVdb {
     public void read(final IFile file) throws Exception {
 	    CoreArgCheck.isNotNull(file);
 
+	    setSourceFile(file);
+
 	    if(! file.exists() ) {
             return;
         }
 
-	    setSourceFile(file);
-
 	    final File dynVdbFile = file.getLocation().toFile();
+	    if (dynVdbFile.length() == 0)
+	        return; // file is empty so don't bother reading
+
         InputStream xml = null;
         try {
             xml = new FileInputStream(dynVdbFile);
