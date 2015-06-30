@@ -10,7 +10,9 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 import java.io.StringWriter;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -391,5 +393,16 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     /**
      * @throws Exception
      */
-    public abstract void write() throws Exception;
+    protected void write() throws Exception {
+        //
+        // Refresh the output location
+        //
+        refreshOutputLocation();
+
+        //
+        // Perform a clean build on the project
+        //
+        IProject project = getOutputLocation().getProject();
+        project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
+    }
 }

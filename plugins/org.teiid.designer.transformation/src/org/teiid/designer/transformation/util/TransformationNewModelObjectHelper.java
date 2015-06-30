@@ -10,7 +10,6 @@ package org.teiid.designer.transformation.util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
@@ -29,7 +28,32 @@ import org.teiid.designer.transformation.validation.TransformationValidator;
  */
 public class TransformationNewModelObjectHelper implements INewModelObjectHelper {
 
+    /**
+     * Property used by {@link #helpCreate(Object, Map, List)} to determine whether
+     * to generate default sql in the transformation
+     */
+    public static final String CREATE_OBJECT_GENERATE_DEFAULT_SQL_PROPERTY = "generateDefaultSQL"; //$NON-NLS-1$
+
+    /**
+     * Property used by {@link #helpCreate(Object, Map, List)} to determine whether
+     * to validate the sql in the transformation
+     */
+    public static final String CREATE_OBJECT_VALIDATE_PROPERTY = "validate"; //$NON-NLS-1$
+
+    /**
+     * Property used by {@link #helpCreate(Object, Map, List)} to carry any
+     * sql to insert in the transformation
+     */
+    public static final String CREATE_OBJECT_PROVIDED_SQL_PROPERTY = "providedSQL"; //$NON-NLS-1$
+
+    /**
+     *
+     */
     public static final String VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE = "clearSupportsUpdate"; //$NON-NLS-1$
+
+    /**
+     *
+     */
     public static final String VIRTUAL_PROCEDURE_TEMPLATE_SQL = "CREATE VIRTUAL PROCEDURE\nBEGIN\n <--insert SQL here-->;\nEND"; //$NON-NLS-1$
 
     /**
@@ -63,10 +87,26 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
     }
 
     /**
-     * 
+     * @param newTarget
+     * @param tableAspect
      */
-    public Object getTransactionSetting() {
-        return null;
+    private String generateDefaultSQL(EObject newTarget, SqlTableAspect tableAspect) {
+        List columns = tableAspect.getColumns(newTarget);
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        if (!columns.isEmpty()) {
+            sb.append("SELECT"); //$NON-NLS-1$
+            for (Object col : columns) {
+                String colName = ModelerCore.getModelEditor().getName((EObject)col);
+                if (count > 0)
+                    sb.append(',');
+                String seg = " null AS " + colName; //$NON-NLS-1$
+                sb.append(seg);
+                count++;
+            }
+        }
+
+        return sb.toString();
     }
 
     /*
@@ -80,93 +120,86 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
                                List<EObject> references ) {
         CoreArgCheck.isNotNull(newObject);
         if (properties==null) properties = new HashMap();
-        boolean defineDefaultTableSQL = properties.get("generateDefaultSQL") != null;
-        boolean doValidate = properties.get("validate") != null;
+        boolean defineDefaultTableSQL = properties.get(CREATE_OBJECT_GENERATE_DEFAULT_SQL_PROPERTY) != null;
+        boolean doValidate = properties.get(CREATE_OBJECT_VALIDATE_PROPERTY) != null;
+        String providedSQL = (String) properties.get(CREATE_OBJECT_PROVIDED_SQL_PROPERTY);
 
-        if (newObject instanceof EObject) {
-            EObject newTarget = (EObject)newObject;
-            if (TransformationHelper.isVirtual(newTarget)  ){
-                // If the createdObject is VirtualTable, set supportsUpdate to false & create T-Root if it doesn't exist
-                MetamodelAspect aspect = AspectManager.getSqlAspect(newTarget);
-                if (aspect != null && aspect instanceof SqlTableAspect) {
-                    // Add T-Root
-                	SqlTableAspect tableAspect = (SqlTableAspect)aspect;
-                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
-	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-	                    // Add Sql Mapping Helper under it.
-	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
-	                    // defect 19675 - allow a straight-up copy of a table if desired
-	                    if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
-	                        tableAspect.setSupportsUpdate(newTarget, false);
-	                    }
-	                    if( defineDefaultTableSQL ) {
-	                    	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
-							List columns = tableAspect.getColumns(newTarget);
-							int count = 0;
-	                    	StringBuilder sb = new StringBuilder();
-	                    	if( !columns.isEmpty() ) {
-		                    	sb.append("SELECT");
-		                    	for( Object col : columns ) {
-		                    		String colName = ModelerCore.getModelEditor().getName((EObject)col);
-		                    		if( count > 0 ) sb.append(',');
-		                    		String seg = " null AS " + colName;
-		                    		sb.append(seg);
-		                    		count++;
-		                    	}
-		                    	TransformationHelper.setSelectSqlString(tRoot, sb.toString(), false, this);
-		                        TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, null);
-		                        TransformationMappingHelper.reconcileTargetAttributes(tRoot, null);
-	                    	}
-	                    	
-	                    	if(doValidate) {
-	                    		QueryValidator validator = new TransformationValidator((SqlTransformationMappingRoot)tRoot);
-	                            
-	                            validator.validateSql(sb.toString(), QueryValidator.SELECT_TRNS, true);
-	                    		//SqlMappingRootCache.getSqlTransformationStatus((SqlTransformationMappingRoot)tRoot, QueryValidator.SELECT_TRNS, true, (ValidationContext)null);
-	                    	}
-	                    }
-	                    return true;
-                	} else if( defineDefaultTableSQL ) {
-                    	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
-						List columns = tableAspect.getColumns(newTarget);
-						int count = 0;
-						StringBuilder sb = new StringBuilder();
-                    	if( !columns.isEmpty() ) {
-	                    	sb.append("SELECT");
-	                    	for( Object col : columns ) {
-	                    		String colName = ModelerCore.getModelEditor().getName((EObject)col);
-	                    		if( count > 0 ) sb.append(',');
-	                    		String seg = " null AS " + colName;
-	                    		sb.append(seg);
-	                    		count++;
-	                    	}
-	                    	TransformationHelper.setSelectSqlString(tRoot, sb.toString(), false, this);
-	                        TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, null);
-	                        TransformationMappingHelper.reconcileTargetAttributes(tRoot, null);
-                    	}
-                    	if(doValidate) {
-                    		QueryValidator validator = new TransformationValidator((SqlTransformationMappingRoot)tRoot);
-                            
-                            validator.validateSql(sb.toString(), QueryValidator.SELECT_TRNS, true);
-                    		//SqlMappingRootCache.getSqlTransformationStatus((SqlTransformationMappingRoot)tRoot, QueryValidator.SELECT_TRNS, true, (ValidationContext)null);
-                    	}
-                    }
-                } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
-                	// Add T-Root
-                	if( !TransformationHelper.hasSqlTransformationMappingRoot(newTarget) ) {
-	                    EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
-	                    // Add Sql Mapping Helper under it.
-	                    ModelResourceContainerFactory.addMappingHelper(newRoot);
+        if (! (newObject instanceof EObject))
+            return false;
 
-                	}
-                	if( defineDefaultTableSQL ) {
-	                	EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
-	                    TransformationHelper.setSelectSqlString(tRoot, VIRTUAL_PROCEDURE_TEMPLATE_SQL, false, this);
-                	}
-                    return true;
+        EObject newTarget = (EObject)newObject;
+        if (! TransformationHelper.isVirtual(newTarget))
+            return false;
+
+        // If the createdObject is VirtualTable, set supportsUpdate to false & create T-Root if it doesn't exist
+        MetamodelAspect aspect = AspectManager.getSqlAspect(newTarget);
+        if (aspect != null && aspect instanceof SqlTableAspect) {
+            // Add T-Root
+            SqlTableAspect tableAspect = (SqlTableAspect)aspect;
+            if (!TransformationHelper.hasSqlTransformationMappingRoot(newTarget)) {
+                EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
+                // Add Sql Mapping Helper under it.
+                ModelResourceContainerFactory.addMappingHelper(newRoot);
+                // defect 19675 - allow a straight-up copy of a table if desired
+                if (isMapValueTrue(VIRTUAL_TABLE_CLEAR_SUPPORTS_UPDATE, properties, true)) { // default to clear
+                    tableAspect.setSupportsUpdate(newTarget, false);
                 }
-            }            
+            }
+
+            EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
+
+            String selectSql = TransformationHelper.getSelectSqlString(tRoot);
+            if (selectSql != null)
+                return true; // Already have an sql statement
+
+            if (defineDefaultTableSQL)
+                selectSql = generateDefaultSQL(newTarget, tableAspect);
+            else if (providedSQL != null) {
+                selectSql = providedSQL;
+            }
+
+            if (selectSql == null)
+                return false;
+
+            TransformationHelper.setSelectSqlString(tRoot, selectSql, false, this);
+            TransformationMappingHelper.reconcileMappingsOnSqlChange(tRoot, null);
+            TransformationMappingHelper.reconcileTargetAttributes(tRoot, null);
+
+            if (doValidate) {
+                QueryValidator validator = new TransformationValidator((SqlTransformationMappingRoot)tRoot);
+                validator.validateSql(selectSql, QueryValidator.SELECT_TRNS, true);
+            }
+
+            return true;
+
+        } else if (TransformationHelper.isSqlProcedure(newTarget) && !TransformationHelper.isOperation(newTarget)) {
+            // Add T-Root
+            if (!TransformationHelper.hasSqlTransformationMappingRoot(newTarget)) {
+                EObject newRoot = ModelResourceContainerFactory.createNewSqlTransformationMappingRoot(newTarget, false, this);
+                // Add Sql Mapping Helper under it.
+                ModelResourceContainerFactory.addMappingHelper(newRoot);
+
+            }
+
+            EObject tRoot = TransformationHelper.getMappingRoot(newTarget);
+
+            String selectSql = TransformationHelper.getSelectSqlString(tRoot);
+            if (selectSql != null)
+                return true; // Already have an sql statement
+
+            if (defineDefaultTableSQL)
+                selectSql = VIRTUAL_PROCEDURE_TEMPLATE_SQL;
+            else if (providedSQL != null) {
+                selectSql = providedSQL;
+            }
+
+            if (selectSql == null)
+                return false;
+
+            TransformationHelper.setSelectSqlString(tRoot, selectSql, false, this);
+            return true;
         }
+
         return false;
     }
 

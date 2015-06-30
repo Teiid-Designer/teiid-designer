@@ -73,7 +73,6 @@ public class DdlImporter {
     private ModelResource model;
     private String ddlString;
     private IStatus importStatus;
-    private boolean generateDefaultSQL;
     private boolean noDdlImported;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
@@ -358,11 +357,12 @@ public class DdlImporter {
 
         // If Virtual Model, then find all created Tables, Procedures and Views and call help create to get the transformations set correctly
         if(importManager.getModelType() == ModelType.VIRTUAL_LITERAL ) {
-        	Properties props = new Properties();
-        	if( doGenerateDefaultSQL() ) {
-	        	props.put("generateDefaultSQL", generateDefaultSQL); //$NON-NLS-1$
-	        	props.put("validate", generateDefaultSQL); //$NON-NLS-1$
-        	}
+            Properties props = new Properties();
+            boolean doGenerateDefaultSQL = importManager.optToGenerateDefaultSQL();
+            if (doGenerateDefaultSQL) {
+                props.put("generateDefaultSQL", doGenerateDefaultSQL); //$NON-NLS-1$
+                props.put("validate", doGenerateDefaultSQL); //$NON-NLS-1$
+            }
         	
         	Collection<EObject> targets = new ArrayList<EObject>();
         	
@@ -513,14 +513,7 @@ public class DdlImporter {
      * @param value
      */
     public void setGenerateDefaultSQL(boolean value) {
-    	this.generateDefaultSQL = value;
-    }
-    
-    /**
-     * @return generateDefaultSQL
-     */
-    public boolean doGenerateDefaultSQL() {
-    	return this.generateDefaultSQL;
+        importManager.optToGenerateDefaultSQL(value);
     }
 
     /**

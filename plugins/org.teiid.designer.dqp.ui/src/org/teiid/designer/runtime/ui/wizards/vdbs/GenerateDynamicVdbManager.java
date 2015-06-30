@@ -135,6 +135,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8")); //$NON-NLS-1$
 
         destination.create(inputStream, true, new NullProgressMonitor());
+
+        super.write();
     }
 
     /**

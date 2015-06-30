@@ -221,7 +221,8 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
             return;
 
         getArchiveVdb().save();
-        refreshOutputLocation();
+
+        super.write();
     }
 
     /**
