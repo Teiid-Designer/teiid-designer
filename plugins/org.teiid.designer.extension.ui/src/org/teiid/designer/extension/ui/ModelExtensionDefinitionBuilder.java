@@ -309,6 +309,9 @@ public final class ModelExtensionDefinitionBuilder extends AbstractTeiidProjectB
      * @return 'true' if the MED contains properties that reference 'com.metamatrix' class names, 'false' if not.
      */
     private boolean medHasLegacyClassnames( ModelExtensionDefinition theMed ) {
+        if (theMed == null)
+            return false;
+
         boolean hasLegacyClassnames = false;
         Map<String, Collection<ModelExtensionPropertyDefinition>> propMap = theMed.getPropertyDefinitions();
         Set<String> mapKeys = propMap.keySet();
