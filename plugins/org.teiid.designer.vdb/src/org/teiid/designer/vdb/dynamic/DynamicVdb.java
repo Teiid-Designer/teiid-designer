@@ -12,9 +12,11 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.bind.Marshaller;
@@ -46,6 +48,7 @@ import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.ddl.importer.DdlImporter;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.DynamicModel.Type;
+import org.teiid.designer.komodo.vdb.DynamicModelComparator;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -484,7 +487,11 @@ public class DynamicVdb extends BasicVdb {
             // no file entries to populate
             //
 
-            for (DynamicModel dynModel : getDynamicModels()) {
+            List<DynamicModel> dynamicModels = new ArrayList<DynamicModel>(getDynamicModels());
+            if (! dynamicModels.isEmpty())
+                Collections.sort(dynamicModels, new DynamicModelComparator());
+
+            for (DynamicModel dynModel : dynamicModels) {
                 IFile sourceFile = this.getSourceFile();
                 IContainer parent = sourceFile.getParent();
 

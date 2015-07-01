@@ -29,15 +29,16 @@ import org.teiid.designer.vdb.VdbUnit;
  */
 public class Metadata extends VdbUnit {
 
-	Type type;
-	String schemaText;
-    /**
+	private Type type;
+
+	private String schemaText;
+
+	/**
      * The type of a model.
      */
 	@SuppressWarnings("javadoc")
     public enum Type {
 
-        
 		DDL,
         DDL_FILE,
         NATIVE,
@@ -147,4 +148,8 @@ public class Metadata extends VdbUnit {
 		this.schemaText = newSchemaText;
 	}
 
+    @Override
+    public String toString() {
+        return "Metadata [type=" + this.type + ", schemaText=" + this.schemaText + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
 }
