@@ -11,12 +11,12 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -46,6 +46,8 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
     private Text dynamicVdbFileName;
 
     private GenerateDynamicVdbManager vdbManager;
+    
+    Button excludeSourceDdlButton;
 
     /**
      * ShowDDlPage constructor
@@ -60,13 +62,9 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
 
     @Override
     public void createControl(Composite parent) {
-
-        // Create page
         final Composite mainPanel = new Composite(parent, SWT.NONE);
-
-        mainPanel.setLayout(new GridLayout(1, false));
-        mainPanel.setLayoutData(new GridData());
-        mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+        mainPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        mainPanel.setLayout(new GridLayout(2, false));
 
         setControl(mainPanel);
 
@@ -77,9 +75,9 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             Composite summaryGroup = WidgetFactory.createGroup(mainPanel,
                                                                Messages.GenerateDynamicVdbPageOne_summaryGroupName,
                                                                SWT.NO_SCROLL,
-                                                               1);
+                                                               2);
             summaryGroup.setLayout(new GridLayout(2, false));
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryGroup);
+            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(summaryGroup);
 
             Label nameLabel = new Label(summaryGroup, SWT.NONE);
             nameLabel.setText(Messages.GenerateDynamicVdbPageOne_vdb);
@@ -105,15 +103,17 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             GridDataFactory.fillDefaults().grab(true, false).applyTo(vdbVersion);
             vdbVersion.setText(Integer.toString(vdbManager.getArchiveVdb().getVersion()));
             vdbVersion.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+            
+            ((GridData)summaryGroup.getLayoutData()).widthHint = 400;
         }
 
         {
             Composite summaryGroup = WidgetFactory.createGroup(mainPanel,
                                                                Messages.GenerateDynamicVdbPageOne_dynamicVdbDefinition,
                                                                SWT.NO_SCROLL,
-                                                               1);
+                                                               2);
             summaryGroup.setLayout(new GridLayout(3, false));
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryGroup);
+            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(summaryGroup);
 
             // VDB Name: products_info
             WidgetFactory.createLabel(summaryGroup,
@@ -154,9 +154,9 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             Composite summaryGroup = WidgetFactory.createGroup(mainPanel,
                                                                Messages.GenerateDynamicVdbPageOne_dynamicVdbDestination,
                                                                SWT.NO_SCROLL,
-                                                               1);
+                                                               2);
             summaryGroup.setLayout(new GridLayout(3, false));
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(summaryGroup);
+            GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(summaryGroup);
 
             // Workspace Location: MyProject/dynamic_vdbs (EDITABLE TEXT FIELD && ... Picker)
             Label locationLabel = new Label(summaryGroup, SWT.NONE);
@@ -195,24 +195,43 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                 }
             });
         }
-
+        
+        // Dynamic VDB Output GROUP
         {
-            Composite buttonPanel = new Composite(mainPanel, SWT.NONE);
-            GridDataFactory.fillDefaults().grab(true, true).applyTo(buttonPanel);
-            GridLayoutFactory.fillDefaults().numColumns(1).margins(50, 10).applyTo(buttonPanel);
+            Composite optionsGroup = WidgetFactory.createGroup(mainPanel, 
+                    Messages.GenerateDynamicVdbPageOne_options, SWT.NO_SCROLL, 1);
+            optionsGroup.setLayout(new GridLayout(2, false));
+            GridDataFactory.fillDefaults().grab(true,  false).span(2, 1).applyTo(optionsGroup);
+            
+            excludeSourceDdlButton = new Button(optionsGroup, SWT.CHECK);
+            excludeSourceDdlButton.setText("Exclude source DDL metadata");
+            excludeSourceDdlButton.addSelectionListener(new SelectionListener() {
 
-            final Button genButton = new Button(buttonPanel, SWT.PUSH);
-            GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).applyTo(genButton);
-            genButton.setText(Messages.GenerateVdbButton_Title);
-            genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
-            genButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    vdbManager.generate();
-                    genButton.setEnabled(vdbManager.isGenerateRequired());
-                }
-            });
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					vdbManager.setExcludeSourceMetadata(excludeSourceDdlButton.getSelection());
+					validatePage();
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+				}
+			});
         }
+
+
+//        final Button genButton = new Button(mainPanel, SWT.PUSH);
+//        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(false, false).applyTo(genButton);
+//        genButton.setText(Messages.GenerateVdbButton_Title);
+//        genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
+//        genButton.addSelectionListener(new SelectionAdapter() {
+//            @Override
+//            public void widgetSelected(SelectionEvent e) {
+//                vdbManager.generate();
+//                genButton.setEnabled(vdbManager.isGenerateRequired());
+//            }
+//        });
+        
         setPageComplete(false);
     }
 
@@ -260,8 +279,8 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
 
     @Override
     public boolean canFlipToNextPage() {
-        if (vdbManager.isGenerateRequired())
-            return false;
+//        if (vdbManager.isGenerateRequired())
+//            return false;
 
         return super.canFlipToNextPage();
     }

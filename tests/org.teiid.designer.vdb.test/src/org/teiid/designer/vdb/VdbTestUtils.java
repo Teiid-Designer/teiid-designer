@@ -15,6 +15,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -23,6 +24,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -30,6 +32,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -42,9 +46,12 @@ import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
+import org.teiid.designer.core.workspace.ModelFolderImpl;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
@@ -121,6 +128,16 @@ public class VdbTestUtils implements StringConstants {
 
     public static final File BOOKSXML_XMI = SmartTestDesignerSuite.getTestDataFile(VdbTestUtils.class, TEST_PROJECT + "BooksXML.xmi");
 
+    public static final String CUSTOMERS_VDB_PROJECT = "customers.vdb.project";
+    public static final String CUSTOMER_ACCOUNTS  = "Customer_Accounts";
+    public static final String CUSTOMER_ACCOUNTS_MODEL = "CustomerAccounts";
+    public static final String CUSTOMER_TEST_PROJECT = CUSTOMERS_VDB_PROJECT + File.separator + CUSTOMER_ACCOUNTS + File.separator;
+    public static final File CUSTOMERS_VDB_FILE = SmartTestDesignerSuite.getTestDataFile(VdbTestUtils.class, "CustomersVDB.vdb");
+    public static final File CUSTOMER_ACCOUNTS_XMI = SmartTestDesignerSuite.getTestDataFile(VdbTestUtils.class, CUSTOMER_TEST_PROJECT + "CustomerAccounts.xmi");
+    public static final File CUSTOMER_VIEWS_XMI = SmartTestDesignerSuite.getTestDataFile(VdbTestUtils.class, CUSTOMER_TEST_PROJECT + "CustomerViews.xmi");
+    public static final String CUSTOMER_SUPPORT_DATA_ROLE = "CustomerSupport";
+    public static final String CUSTOMER_SUPPORT_DATA_ROLE_DESCRIPTION = "Customer support data role";
+    
     public static ModelResource mockModelResource(IPath path) {
         ModelResource parent = mock(ModelResource.class);
         when(parent.getPath()).thenReturn(path.removeLastSegments(1));
@@ -160,6 +177,35 @@ public class VdbTestUtils implements StringConstants {
         Vdb booksVdb = new XmiVdb(booksVdbBuilder.getResourceFile());
 
         return booksVdb;
+    }
+    
+    /**
+     * @return a mocked books vdb based on the testdata
+     * @throws Exception
+     */
+    public static Vdb mockCustomersVdb(ModelWorkspaceMock modelWksp) throws Exception {
+
+//        MockFileBuilder testData = new MockFileBuilder(TEST_DATA_DIR);
+
+        List<MockFileBuilder> builders = new ArrayList<MockFileBuilder>();
+        MockFileBuilder customerAccountsXMI = new MockFileBuilder(CUSTOMER_ACCOUNTS_XMI);
+        builders.add(customerAccountsXMI);
+        MockFileBuilder customerViewsXMI = new MockFileBuilder(CUSTOMER_VIEWS_XMI);
+        builders.add(customerViewsXMI);
+
+        /*
+         * Need to ensure that the paths provided by the vdb point to the same file in the workspace
+         * so need to mock the workspace finder and point the vdb paths to the testdata files.
+         */
+        for (MockFileBuilder builder : builders) {
+            IPath path = new Path(File.separator + CUSTOMER_ACCOUNTS + File.separator + builder.getName());
+            when(modelWksp.getEclipseMock().workspaceRoot().findMember(path)).thenReturn(builder.getResourceFile());
+        }
+
+        MockFileBuilder vdbBuilder = new MockFileBuilder(CUSTOMERS_VDB_FILE);
+        Vdb customerVdb = new XmiVdb(vdbBuilder.getResourceFile());
+
+        return customerVdb;
     }
 
     public static DynamicVdb mockPortfolioDynamicVdb(ModelWorkspaceMock modelWksp) throws Exception {

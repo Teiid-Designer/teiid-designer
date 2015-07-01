@@ -289,7 +289,7 @@ public class DataRole extends VdbUnit {
      * @param roleNames
      */
     public void setRoleNames(Collection<String> roleNames) {
-        CoreArgCheck.isNotEmpty(roleNames, "roleNames"); //$NON-NLS-1$
+        CoreArgCheck.isNotNull(roleNames, "roleNames"); //$NON-NLS-1$
         this.roleNames = new HashSet<String>(roleNames);
     }
 
@@ -330,6 +330,10 @@ public class DataRole extends VdbUnit {
         }
     }
 
+
+    /** 
+     * @see java.lang.Object#clone()
+     */
     @Override
     public DataRole clone() {
         DataRole clone = new DataRole(getName());

@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.ModelType;
 import org.teiid.core.designer.util.OperationUtil;
 import org.teiid.core.designer.util.OperationUtil.Unreliable;
 import org.teiid.core.designer.util.StringConstants;
@@ -106,6 +107,8 @@ public final class XmiVdb extends BasicVdb {
     private CopyOnWriteArraySet<VdbModelEntry> modelEntries;
     private VdbModelBuilder builder;
     private Map<String, Set<String>> modelToImportVdbMap;
+
+    private boolean excludeSourceMetadata;
 
     /**
      * Default constructor
@@ -871,6 +874,20 @@ public final class XmiVdb extends BasicVdb {
     	return this.builder();
     }
 
+    /**
+     * @return
+     */
+    public boolean excludeSourceMetadata() {
+		return excludeSourceMetadata;
+	}
+
+	/**
+	 * @param excludeSourceMetadata
+	 */
+	public void setExcludeSourceMetadata(boolean excludeSourceMetadata) {
+		this.excludeSourceMetadata = excludeSourceMetadata;
+	}
+
     @Override
     public void addDynamicModel(DynamicModel model) {
         throw new UnsupportedOperationException();
@@ -909,6 +926,14 @@ public final class XmiVdb extends BasicVdb {
             //
             populateVdb(dynVdb);
 
+        // Remove non-relevant VDB properties
+        // preview true/false 
+        
+        dynVdb.getProperties().remove(Xml.PREVIEW);
+        this.getProperties().remove(Xml.PREVIEW);
+        
+
+
             //
             // Cannot append:
             // * udf jar files
@@ -941,25 +966,29 @@ public final class XmiVdb extends BasicVdb {
                     model.addSource(clone);
                 }
 
-                TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
-
-                IFile entryFile = null;
-                if (Synchronization.Synchronized == entry.getSynchronization()) {
-                    entryFile = entry.findFileInWorkspace();
-                } else {
-                    entryFile = createEntryFile(entry);
-                }
-
-                ModelWorkspaceManager workspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
-                ModelResource modelResource = (ModelResource) workspaceManager.findModelWorkspaceItem(entryFile, true);
-                if (modelResource == null)
-                    throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
-
-                String ddl = generator.generate(modelResource);
-                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
-                model.setMetadata(metadata);
-
-                dynVdb.addDynamicModel(model);
+				if( entry.getType().equals(ModelType.Type.VIRTUAL.getName()) || !excludeSourceMetadata ) {
+	
+	                TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
+	
+	                IFile entryFile = null;
+	                if (Synchronization.Synchronized == entry.getSynchronization()) {
+	                    entryFile = entry.findFileInWorkspace();
+	                } else {
+	                    entryFile = createEntryFile(entry);
+	                }
+	                
+	                ModelWorkspaceManager workspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
+	                ModelResource modelResource = (ModelResource) workspaceManager.findModelWorkspaceItem(entryFile, true);
+	                
+	                if (modelResource == null)
+	                    throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
+	
+	                String ddl = generator.generate(modelResource);
+	                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
+	                model.setMetadata(metadata);
+	
+	                dynVdb.addDynamicModel(model);
+	            }
             }
 
             return dynVdb;

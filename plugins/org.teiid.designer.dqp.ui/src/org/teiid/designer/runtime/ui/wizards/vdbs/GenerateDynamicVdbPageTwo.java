@@ -9,6 +9,7 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -34,6 +35,7 @@ import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegion;
 import org.teiid.designer.runtime.ui.wizards.vdbs.style.XmlRegionAnalyzer;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WizardUtil;
+import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 
 /**
@@ -43,6 +45,7 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
 
     private Font monospaceFont;
     private StyledText xmlContentsBox;
+    private Button generateXmlButton;
     private Button exportXmlToFileSystemButton;
 
     private GenerateDynamicVdbManager vdbManager;
@@ -87,11 +90,13 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
         mainPanel.setLayoutData(new GridData());
         mainPanel.setSize(mainPanel.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
-        setControl(mainPanel);
+        createButtonPanel(mainPanel);
 
         // Create DDL display group
         createXMLDisplayGroup(mainPanel);
 
+        setControl(mainPanel);
+        
         setPageComplete(false);
     }
 
@@ -160,16 +165,17 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
      * @param xml
      */
     private void setXmlContents(String xml) {
-        if (xml == null)
-            xml = EMPTY_STRING;
-
-        this.xmlContentsBox.setText(xml);
-
-        if (xml.length() > 0) {
-            XmlRegionAnalyzer analyzer = new XmlRegionAnalyzer();
-            List<XmlRegion> xmlRegions = analyzer.analyzeXml(xml);
-            List<StyleRange> styleRanges = computeStyleRanges(xmlRegions);
-            this.xmlContentsBox.setStyleRanges(styleRanges.toArray(new StyleRange[0]));
+        if (xml == null) {
+        	this.xmlContentsBox.setText(EMPTY_STRING);
+        } else {
+	        this.xmlContentsBox.setText(xml);
+	
+	        if (xml.length() > 0) {
+	            XmlRegionAnalyzer analyzer = new XmlRegionAnalyzer();
+	            List<XmlRegion> xmlRegions = analyzer.analyzeXml(xml);
+	            List<StyleRange> styleRanges = computeStyleRanges(xmlRegions);
+	            this.xmlContentsBox.setStyleRanges(styleRanges.toArray(new StyleRange[0]));
+	        }
         }
     }
 
@@ -182,57 +188,81 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
         GridDataFactory.fillDefaults().grab(true, true).applyTo(theGroup);
 
         xmlContentsBox = new StyledText(theGroup, SWT.READ_ONLY | SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(xmlContentsBox);
+        GridDataFactory.fillDefaults().grab(true, true).minSize(400, 300).applyTo(xmlContentsBox);
 
         xmlContentsBox.setEditable(false);
         xmlContentsBox.setFont(monospaceFont);
 
-        createButtonPanel(parent);
     }
 
     /*
      * Create the VDB Export to file button 
      */
     private void createButtonPanel(Composite parent) {
-        Composite buttonPanel = new Composite(parent, SWT.NONE);
-        GridDataFactory.fillDefaults().applyTo(buttonPanel);
-        GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).margins(10, 10).applyTo(buttonPanel);
+        {
+            Composite buttonPanel = new Composite(parent, SWT.NONE);
+            GridLayoutFactory.fillDefaults().numColumns(4).margins(10, 10).applyTo(buttonPanel);
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
-        WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateDynamicVdbPageTwo_exportXmlLabel);
+            generateXmlButton = new Button(buttonPanel, SWT.PUSH);
+            GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).grab(false, false).applyTo(generateXmlButton);
+            generateXmlButton.setText(Messages.GenerateVdbButton_Title);
+            generateXmlButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
+            generateXmlButton.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    vdbManager.generate();
+                    refreshXml();
+                }
+            });
 
-        exportXmlToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
-        exportXmlToFileSystemButton.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlTitle);
-        exportXmlToFileSystemButton.setToolTipText(Messages.GenerateDynamicVdbPageTwo_exportXmlTooltip);
-        exportXmlToFileSystemButton.setLayoutData(new GridData());
-        exportXmlToFileSystemButton.setEnabled(true);
-        exportXmlToFileSystemButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                handleExportDDLToFileSystem();
-            }
-        });
+            Label spacer = WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, " ");
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(spacer);
+            
+	        WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateDynamicVdbPageTwo_exportXmlLabel);
+	
+	        exportXmlToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
+	        exportXmlToFileSystemButton.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlTitle);
+	        exportXmlToFileSystemButton.setToolTipText(Messages.GenerateDynamicVdbPageTwo_exportXmlTooltip);
+	        exportXmlToFileSystemButton.setLayoutData(new GridData());
+	        exportXmlToFileSystemButton.setEnabled(true);
+	        exportXmlToFileSystemButton.addSelectionListener(new SelectionAdapter() {
+	
+	            @Override
+	            public void widgetSelected(SelectionEvent e) {
+	                handleExportDDLToFileSystem();
+	            }
+	        });
+        }
     }
 
     @Override
     public void setVisible(boolean visible) {
         if (visible) {
-            try {
-                String xml = vdbManager.getDynamicVdbXml();
-                setXmlContents(xml);
+        	refreshXml();
 
-                validatePage();
-            } catch (Exception ex) {
-                //
-                // want to avoid validating the page here since
-                // we need to see this exception
-                //
-                this.setErrorMessage(ex.getLocalizedMessage());
-                this.setPageComplete(false);
-            }
+            validatePage();
         }
 
         super.setVisible(visible);
+    }
+    
+    private void refreshXml() {
+        try {
+
+            String xml = vdbManager.getDynamicVdbXml();
+            setXmlContents(xml);
+        } catch (Exception ex) {
+            //
+            // want to avoid validating the page here since
+            // we need to see this exception
+            //
+            this.setErrorMessage(ex.getLocalizedMessage());
+            this.setPageComplete(false);
+            setXmlContents(EMPTY_STRING);
+        }
+        
+        generateXmlButton.setEnabled(vdbManager.isGenerateRequired());
     }
 
     /* 

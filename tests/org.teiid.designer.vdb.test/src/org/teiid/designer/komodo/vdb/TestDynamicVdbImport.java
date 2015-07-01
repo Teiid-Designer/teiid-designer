@@ -10,12 +10,14 @@ package org.teiid.designer.komodo.vdb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.junit.After;
@@ -25,8 +27,10 @@ import org.teiid.core.designer.EclipseMock;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.roles.Permission;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;

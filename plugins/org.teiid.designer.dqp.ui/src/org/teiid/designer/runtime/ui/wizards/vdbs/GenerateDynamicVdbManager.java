@@ -11,12 +11,14 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
@@ -29,6 +31,8 @@ import org.teiid.designer.vdb.dynamic.DynamicVdb;
 public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
     private IFile archiveVdbFile;
+    
+    private boolean excludeSourceMetadata;
 
     /**
      * @param wizard
@@ -61,6 +65,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
         if (getArchiveVdb() == null)
             return;
+        
+        getArchiveVdb().setExcludeSourceMetadata(excludeSourceMetadata);
 
         //
         // This will convert the xmi vdb and build the dynamic vdb
@@ -79,8 +85,11 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
             @Override
             public void onCompletion(IStatus status) {
-                if (status.isOK())
-                    setDynamicVdb(getResult());
+                if (status.isOK()) {
+                	DynamicVdb vdb = getResult();
+                	vdb.setVersion(Integer.parseInt(getVersion()));
+                    setDynamicVdb(vdb);
+                }
             }
         };
 
@@ -166,4 +175,42 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
             return;
         }
     }
+    
+    
+    
+    @Override
+	protected void setOutputName(String outputName) {
+		if( StringUtilities.areDifferent(outputName,  getOutputName())) {
+			setDynamicVdb(null);
+		}
+		super.setOutputName(outputName);
+	}
+
+	@Override
+	public void setVersion(String version) {
+		if( StringUtilities.areDifferent(version,  getVersion())) {
+			setDynamicVdb(null);
+		}
+		super.setVersion(version);
+	}
+
+	/**
+     * 
+     * @return exclude source DDL value
+     */
+
+    public boolean isExcludeSourceMetadata() {
+		return excludeSourceMetadata;
+	}
+ 
+     /**
+     * 
+     * @param setExcludeSourceDdl
+     */
+	public void setExcludeSourceMetadata(boolean excludeSourceMetadata) {
+		if( excludeSourceMetadata != this.excludeSourceMetadata ) {
+			if( !isGenerateRequired() ) setDynamicVdb(null);
+			this.excludeSourceMetadata = excludeSourceMetadata;
+		}
+	}
 }

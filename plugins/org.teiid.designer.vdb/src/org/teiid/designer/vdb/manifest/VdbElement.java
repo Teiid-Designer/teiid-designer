@@ -115,7 +115,9 @@ public class VdbElement implements Serializable {
         for (final DataRole dataPolicyEntry : vdb.getDataRoles())
             getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
 
-        getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+        if( vdb instanceof XmiVdb) {
+        	getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+        }
         // The Vdb object stores timeout in seconds, but we will persist to Vdb manifest in millis for teiid.
         if( vdb.getQueryTimeout() > 0 ) {
             int timeoutMillis = vdb.getQueryTimeout() * 1000;

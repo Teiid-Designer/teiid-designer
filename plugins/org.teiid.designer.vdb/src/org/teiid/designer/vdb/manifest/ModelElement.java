@@ -71,10 +71,10 @@ public class ModelElement extends EntryElement {
     @XmlAttribute( name = "name", required = true )
     private String name;
 
-    @XmlAttribute( name = "type", required = true )
+    @XmlAttribute( name = "type", required = false )
     private String type = "PHYSICAL"; //$NON-NLS-1$
 
-    @XmlAttribute( name = "visible", required = true )
+    @XmlAttribute( name = "visible", required = false )
     private boolean visible = true;
 
     @XmlElement( name = "source", type = SourceElement.class )

@@ -172,7 +172,7 @@ public class VdbUtil implements VdbConstants {
 	            try {
 					manifest = VdbUtil.getVdbManifest(file.getLocation().toFile());
 				} catch (Exception ex) {
-					VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Problem loading VDB manifest for VDB = " + file.getName());
+					result = false; //VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Problem loading VDB manifest for VDB = " + file.getName());
 				}
 	            
 	            if (manifest != null) {
@@ -495,11 +495,11 @@ public class VdbUtil implements VdbConstants {
      * @return string of comma separated values
      *
      */
-    public static String buildCommaDelimitedString(AllowedLanguages allowedLanguages) {
+    public static String buildCommaDelimitedString(AllowedLanguages values) {
         StringBuilder sb = new StringBuilder();
         int i=0;
-        int numVal = allowedLanguages.size();
-        for (String val : allowedLanguages) {
+        int numVal = values.size();
+        for (String val : values) {
         	i++;
         	sb.append(val);
         	if( i< numVal ) {

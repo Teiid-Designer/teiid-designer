@@ -117,7 +117,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
         sb.append(getName(col));
         sb.append(SPACE);
-        sb.append(getColumnDatatypeDdl(getName(col.getType()), col.getLength(), col.getPrecision(), col.getScale()));
+        EObject dataType = col.getType();
+        String runtimeTypeName = ModelerCore.getBuiltInTypesManager().getRuntimeTypeName(dataType);
+        sb.append(getColumnDatatypeDdl(runtimeTypeName, col.getLength(), col.getPrecision(), col.getScale()));
         
         String options = getColumnOptions(col);
         if( !StringUtilities.isEmpty(options) ) sb.append(SPACE).append(options);

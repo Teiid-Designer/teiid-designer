@@ -40,6 +40,7 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbPageOne_dynamicVdbName;
     public static String GenerateDynamicVdbPageOne_dynamicVdbNameTooltip;
     public static String GenerateDynamicVdbPageOne_dynamicVdbDestination;
+    public static String GenerateDynamicVdbPageOne_options;
     public static String GenerateDynamicVdbPageOne_location;
     public static String GenerateDynamicVdbPageOne_browse;
     public static String GenerateDynamicVdbPageOne_dynamicVdbFileName;
