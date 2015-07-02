@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.zip.ZipEntry;
@@ -904,7 +905,7 @@ public final class XmiVdb extends BasicVdb {
     }
 
     @Override
-    public XmiVdb xmiVdbConvert(IFile destination) throws Exception {
+    public XmiVdb xmiVdbConvert(IFile destination, Properties options) throws Exception {
         //
         // TODO copy this vdb to the new destination
         //
@@ -912,7 +913,7 @@ public final class XmiVdb extends BasicVdb {
     }
 
     @Override
-    public DynamicVdb dynVdbConvert(IFile destination) throws Exception {
+    public DynamicVdb dynVdbConvert(IFile destination, Properties options) throws Exception {
         try {
             //
             // Broadcast that a conversion is underway

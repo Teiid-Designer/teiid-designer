@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -57,6 +58,7 @@ import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.vdb.BasicVdb;
 import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbFileEntry;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
@@ -449,7 +451,7 @@ public class DynamicVdb extends BasicVdb {
     }
 
     @Override
-    public DynamicVdb dynVdbConvert(IFile destination) throws Exception {
+    public DynamicVdb dynVdbConvert(IFile destination, Properties properties) throws Exception {
         CoreArgCheck.isNotNull(destination);
 
         File newVdbFile = destination.getLocation().toFile();
@@ -466,7 +468,7 @@ public class DynamicVdb extends BasicVdb {
     }
 
     @Override
-    public XmiVdb xmiVdbConvert(IFile destination) throws Exception {
+    public XmiVdb xmiVdbConvert(IFile destination, Properties options) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
 
         try {
@@ -556,7 +558,9 @@ public class DynamicVdb extends BasicVdb {
 
                     // Set some options
                     importer.setOptToCreateModelEntitiesForUnsupportedDdl(false);
-                    importer.setOptToSetModelEntityDescription(true);
+
+                    String ddlAsDescriptionOption = options.getProperty(Vdb.SET_DDL_AS_DESCRIPTION, Boolean.FALSE.toString());
+                    importer.setOptToSetModelEntityDescription(Boolean.parseBoolean(ddlAsDescriptionOption));
 
                     // Set the model type
                     Type dynModelType = dynModel.getModelType();

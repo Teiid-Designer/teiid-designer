@@ -80,6 +80,8 @@ public class Messages extends NLS {
     public static String GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip;
     public static String GenerateArchiveVdbPageTwo_sourceModels;
     public static String GenerateArchiveVdbPageTwo_viewModels;
+    public static String GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionLabel;
+    public static String GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionTooltip;
 
     public static String GenerateVdbButton_Title;
     public static String GenerateVdbButton_Tooltip;

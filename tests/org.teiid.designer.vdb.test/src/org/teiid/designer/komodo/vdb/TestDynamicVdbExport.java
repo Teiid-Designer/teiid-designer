@@ -10,14 +10,13 @@ package org.teiid.designer.komodo.vdb;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,6 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbTestUtils;
-import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.w3c.dom.Document;
 
@@ -81,7 +79,7 @@ public class TestDynamicVdbExport implements VdbConstants {
         File destFile = File.createTempFile(booksVdb.getName(), ITeiidVdb.DYNAMIC_VDB_SUFFIX);
         MockFileBuilder destination = new MockFileBuilder(destFile);
 
-        DynamicVdb dynVdb = booksVdb.convert(DynamicVdb.class, destination.getResourceFile());
+        DynamicVdb dynVdb = booksVdb.convert(DynamicVdb.class, destination.getResourceFile(), new Properties());
         assertNotNull(dynVdb);
 
         assertEquals(booksVdb.getName(), dynVdb.getName());
@@ -176,7 +174,7 @@ public class TestDynamicVdbExport implements VdbConstants {
         File destFile = File.createTempFile(mockVdb.getName(), ITeiidVdb.DYNAMIC_VDB_SUFFIX);
         MockFileBuilder destination = new MockFileBuilder(destFile);
         
-        DynamicVdb dynVdb = mockVdb.convert(DynamicVdb.class, destination.getResourceFile());
+        DynamicVdb dynVdb = mockVdb.convert(DynamicVdb.class, destination.getResourceFile(), new Properties());
         assertNotNull(dynVdb);
 
         assertEquals(mockVdb.getName(), dynVdb.getName());

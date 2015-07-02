@@ -38,6 +38,7 @@ import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
+import org.teiid.designer.vdb.Vdb;
 
 /**
  * Page 2 of Generate Archive Wizard
@@ -53,6 +54,8 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
     private ListViewer sourceModelsViewer;
 
     private ListViewer viewModelsViewer;
+
+    private Button ddlAsDescriptionOption;
 
     private final GenerateArchiveVdbManager vdbManager;
 
@@ -169,6 +172,23 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
             public void modifyText(final ModifyEvent event) {
                 vdbManager.setOutputName(vdbArchiveFileNameFld.getText());
                 validatePage();
+            }
+        });
+
+        // Spacer component
+        new Label(vdbInfoGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
+
+        ddlAsDescriptionOption = WidgetFactory.createButton(vdbInfoGroup,
+                                                            Messages.GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionLabel,
+                                                            GridData.FILL_HORIZONTAL, 2, SWT.CHECK);
+
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveNameFld);
+
+        ddlAsDescriptionOption.setToolTipText(Messages.GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionTooltip);
+        ddlAsDescriptionOption.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                vdbManager.addConversionOption(Vdb.SET_DDL_AS_DESCRIPTION, Boolean.toString(ddlAsDescriptionOption.getSelection()));
             }
         });
     }

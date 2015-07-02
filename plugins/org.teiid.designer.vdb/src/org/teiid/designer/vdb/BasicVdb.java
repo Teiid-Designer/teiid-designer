@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -744,27 +745,29 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 
     /**
      * @param destination location for the conversion
+     * @param options options being passed to the conversion implimentations
      * @return an {@link XmiVdb} of this vdb
      * @throws Exception 
      */
-    public abstract XmiVdb xmiVdbConvert(IFile destination) throws Exception;
+    public abstract XmiVdb xmiVdbConvert(IFile destination, Properties options) throws Exception;
 
     /**
      * @param destination location for the conversion
+     * @param options options being passed to the conversion implimentations
      * @return a {@link DynamicVdb} of this vdb
      * @throws Exception 
      */
-    public abstract DynamicVdb dynVdbConvert(IFile destination) throws Exception;
+    public abstract DynamicVdb dynVdbConvert(IFile destination, Properties options) throws Exception;
 
     @Override
-    public <V extends Vdb> V convert(final Class<V> vdbType, final IFile destination) throws Exception {
+    public <V extends Vdb> V convert(final Class<V> vdbType, final IFile destination, Properties options) throws Exception {
         CoreArgCheck.isNotNull(vdbType);
         CoreArgCheck.isNotNull(destination);
 
         if (DynamicVdb.class.equals(vdbType))
-            return (V) dynVdbConvert(destination);
+            return (V) dynVdbConvert(destination, options);
         else if (XmiVdb.class.equals(vdbType))
-            return (V) xmiVdbConvert(destination);
+            return (V) xmiVdbConvert(destination, options);
 
         throw new UnsupportedOperationException();
     }

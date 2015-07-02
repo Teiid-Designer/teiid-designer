@@ -35,6 +35,12 @@ import org.xml.sax.SAXException;
 public interface Vdb extends VdbConstants {
 
     /**
+     * Option for telling the ddl importer during {@link #convert(Class, IFile, Properties)}
+     * whether to include the original ddl string as the description
+     */
+    public static final String SET_DDL_AS_DESCRIPTION = "setDDLAsDescription"; //$NON-NLS-1$
+
+    /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
@@ -765,10 +771,11 @@ public interface Vdb extends VdbConstants {
      * 
      * @param vdbType the class of the vdb required (should be either {@link DynamicVdb} or {@link XmiVdb})
      * @param destination location for the conversion
+     * @param options any option settings to apply within the conversion
      * @return vdb converted to this type. If the type is the same type
      *                 as this vdb then this will be returned.
      * @throws Exception 
      *
      */
-    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination) throws Exception;
+    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination, Properties options) throws Exception;
 }

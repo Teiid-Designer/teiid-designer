@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.wizards.vdbs;
 
 import java.io.StringWriter;
+import java.util.Properties;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -148,7 +149,7 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
          * Execute the generation
          */
         protected void execute() throws Exception {
-            vdb = getSourceVdb().convert(getTargetType(), getDestination());
+            vdb = getSourceVdb().convert(getTargetType(), getDestination(), conversionOptions);
         }
 
         /**
@@ -189,6 +190,8 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     private IContainer outputLocation;
 
     private String outputName;
+
+    private Properties conversionOptions = new Properties();
 
     /**
      * @param wizard
@@ -310,6 +313,10 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
      */
     protected void setStatus(IStatus status) {
         this.status = status;
+    }
+
+    protected void addConversionOption(String name, String value) {
+        conversionOptions.setProperty(name, value);
     }
 
     /**
