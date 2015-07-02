@@ -176,7 +176,6 @@ public class StandardImporter extends AbstractImporter {
 	 */
 	protected void initialize(RelationalReference entity, AstNode node, String name) {
 		entity.setName(name);
-		entity.setNameInSource(name);
 
 		// descriptions must wait to be set until container and model type has been set
 		if (getImporterManager().optToSetModelEntityDescription()) {

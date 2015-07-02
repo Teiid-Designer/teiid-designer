@@ -114,7 +114,19 @@ public class SqlServerModelProcessor extends RelationalModelProcessorImpl {
         }
 
         return super.findType(jdbcType, typeName, length, precision, scale, problems);
-    } 
+    }
+    
+    /**
+     * @return True if the specified type should be considered fixed-length.
+     * @since 4.2
+     */
+    @Override
+    protected boolean isFixedLength( final int type,
+                                     final String typeName ) {
+    	if( typeName.toUpperCase().startsWith(IMAGE_TYPE_NAME) ) return false;
+    	
+        return super.isFixedLength(type, typeName);
+    }
     
     /**
      * @see org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl#setColumnInfo(org.teiid.designer.metamodels.relational.Column,

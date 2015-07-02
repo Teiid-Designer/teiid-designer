@@ -32,7 +32,6 @@ import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -46,7 +45,6 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
-import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.model.RelationalViewTable;
 
 
@@ -103,6 +101,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		String TINYINT = "TINYINT"; //$NON-NLS-1$
 		String VARBINARY = "VARBINARY"; //$NON-NLS-1$
 		String VARCHAR = "VARCHAR"; //$NON-NLS-1$
+		String IMAGE = "IMAGE"; //$NON-NLS-1$
 	}
 	
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
@@ -305,6 +304,10 @@ public class TeiidDdlImporter extends StandardImporter {
 	@Override
 	protected RelationalColumn createColumn(AstNode node, RelationalTable table) throws Exception {
 		RelationalColumn column = super.createColumn(node, table);
+		
+		// StandardImporter sets the native type to datatype. Need to unset this because Teiid defines it in the OPTIONS() clause
+		// or it's null
+		column.setNativeType(RelationalColumn.DEFAULT_NATIVE_TYPE);
 
 		// Handle Teiid-specific properties and options
 		Object prop = node.getProperty(TeiidDdlLexicon.CreateTable.AUTO_INCREMENT);
@@ -849,20 +852,13 @@ public class TeiidDdlImporter extends StandardImporter {
 		
 		// Not enough info in DDL to determine if fixed length data type so calling it here
 		column.setLengthFixed(isFixedLength(column.getNativeType()));
-		
-		// From RelationalModelProcessor....
-        if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.ALL_EXCEPT_LIKE) ) {
-            column.setCaseSensitive(false);
-        } else if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.SEARCHABLE) ) {
-            column.setCaseSensitive(true);
-        } else {
-            column.setCaseSensitive(false);
-        }
 	}
 	
     /**
      * Method that can identify if a data type is fixed length or not
      * (See <code>org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl</code> used for JDBC import)
+     * 
+     * Note that SQL Server has an IMAGE native type that is treated like a blob, so is NOT fixed length
      * @param typeName 
      * @return True if the specified type should be considered fixed-length.
      * @since 4.2
@@ -874,7 +870,8 @@ public class TeiidDdlImporter extends StandardImporter {
         		TYPES_UPPER.VARCHAR.equalsIgnoreCase(typeName) || 
         		TYPES_UPPER.ARRAY.equalsIgnoreCase(typeName) || 
         		TYPES_UPPER.BLOB.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.CLOB.equalsIgnoreCase(typeName));
+        		TYPES_UPPER.CLOB.equalsIgnoreCase(typeName) || 
+        		TYPES_UPPER.IMAGE.equalsIgnoreCase(typeName));
     }
 
 	/**
