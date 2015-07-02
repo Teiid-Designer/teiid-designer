@@ -121,12 +121,12 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                                       Messages.GenerateDynamicVdbPageOne_dynamicVdbName);
             dynamicVdbName = WidgetFactory.createTextField(summaryGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
             GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(dynamicVdbName);
-            dynamicVdbName.setText(vdbManager.getOutputName());
+            dynamicVdbName.setText(vdbManager.getOutputVdbName());
             dynamicVdbName.setToolTipText(Messages.GenerateDynamicVdbPageOne_dynamicVdbNameTooltip);
             dynamicVdbName.addModifyListener(new ModifyListener() {
                 @Override
                 public void modifyText(final ModifyEvent event) {
-                    vdbManager.setOutputName(dynamicVdbName.getText());
+                    vdbManager.setOutputVdbName(dynamicVdbName.getText());
                     validatePage();
                 }
             });
@@ -185,12 +185,12 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                                       Messages.GenerateDynamicVdbPageOne_dynamicVdbFileName);
             dynamicVdbFileName = WidgetFactory.createTextField(summaryGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
             GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(dynamicVdbFileName);
-            dynamicVdbFileName.setText(vdbManager.getOutputName());
+            dynamicVdbFileName.setText(vdbManager.getOutputVdbFileName());
             dynamicVdbFileName.setToolTipText(Messages.GenerateDynamicVdbPageOne_dynamicVdbFileNameToolTip);
             dynamicVdbFileName.addModifyListener(new ModifyListener() {
                 @Override
                 public void modifyText(final ModifyEvent event) {
-                    vdbManager.setOutputName(dynamicVdbFileName.getText());
+                    vdbManager.setOutputVdbFileName(dynamicVdbFileName.getText());
                     validatePage();
                 }
             });

@@ -201,6 +201,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			if( count < nColumns ) sb.append(COMMA + NEW_LINE);
 		}
 		sb.append(NEW_LINE + CLOSE_BRACKET);
+		
+		String options = getTableOptions(table);
+		if( !StringUtilities.isEmpty(options)) {
+			sb.append(SPACE).append(options);
+		}
+		
+		sb.append(NEW_LINE);
 
 		return sb.toString();
     }
@@ -304,9 +311,25 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	options.add(SIGNED, Boolean.toString(col.isSigned()));
     	options.add(CURRENCY, Boolean.toString(col.isCurrency()));
     	options.add(FIXED_LENGTH, Boolean.toString(col.isFixedLength()));
-    	options.add(ANNOTATION,  getDescription(col));
+    	String desc = getDescription(col);
+    	if( !StringUtilities.isEmpty(desc) ) {
+    		options.add(ANNOTATION, desc);
+    	}
     	if( !col.getSearchability().equals(SearchabilityType.SEARCHABLE) ) {
     		options.add(SEARCHABLE, col.getSearchability().getLiteral());
+    	}
+
+    	return options.toString();
+    }
+    
+    private String getTableOptions(Table table) {
+    	OptionsStatement options = new OptionsStatement();
+    	options.add(NAMEINSOURCE, table.getNameInSource());
+    	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()));
+    	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()));
+    	String desc = getDescription(table);
+    	if( !StringUtilities.isEmpty(desc) ) {
+    		options.add(ANNOTATION, desc);
     	}
 
     	return options.toString();

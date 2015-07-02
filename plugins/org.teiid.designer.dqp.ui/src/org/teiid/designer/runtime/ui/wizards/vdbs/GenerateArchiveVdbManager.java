@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -87,7 +88,7 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
 
     private IFile dynamicVdbFile;
 
-    private String delegateArchiveVdbName;
+//    private String delegateArchiveVdbName;
 
     /**
      * @param wizard 
@@ -100,8 +101,9 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         setDynamicVdb(new DynamicVdb(this.dynamicVdbFile));
 
         String dynName = getDynamicVdb().getName();
-        delegateArchiveVdbName = dynName + UNDERSCORE + getVersion();
-        setOutputName(dynName + ITeiidVdb.VDB_DOT_EXTENSION);
+        setOutputVdbName(dynName);
+//        delegateArchiveVdbName = dynName + UNDERSCORE + getVersion();
+        setOutputVdbFileName(dynName + ITeiidVdb.VDB_DOT_EXTENSION);
         setOutputLocation(this.dynamicVdbFile.getParent());
     }
 
@@ -119,19 +121,19 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         this.dynamicVdbFile = dynamicVdbFile;
     }
 
-    /**
-     * @return proposed archive vdb name
-     */
-    public String getDelegateArchiveVdbName() {
-        return delegateArchiveVdbName;
-    }
-
-    /**
-     * @param delegateArchiveVdbName
-     */
-    public void setDelegateArchiveVdbName(String delegateArchiveVdbName) {
-        this.delegateArchiveVdbName = delegateArchiveVdbName;
-    }
+//    /**
+//     * @return proposed archive vdb name
+//     */
+//    public String getDelegateArchiveVdbName() {
+//        return delegateArchiveVdbName;
+//    }
+//
+//    /**
+//     * @param delegateArchiveVdbName
+//     */
+//    public void setDelegateArchiveVdbName(String delegateArchiveVdbName) {
+//        this.delegateArchiveVdbName = delegateArchiveVdbName;
+//    }
 
     /**
      * @return whether archive vdb generation is required
@@ -201,7 +203,7 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         if (! Status.OK_STATUS.equals(getStatus()))
             return; // Something already wrong - no need to check further
 
-        if (getOutputName().contains(DOT) && !getOutputName().toLowerCase().endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
+        if (getOutputVdbFileName().contains(DOT) && !getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension));
             return;
         }

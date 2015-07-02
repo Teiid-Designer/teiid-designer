@@ -189,7 +189,9 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
 
     private IContainer outputLocation;
 
-    private String outputName;
+    private String outputVdbFileName;
+    
+    private String outputVdbName;
 
     private Properties conversionOptions = new Properties();
 
@@ -234,6 +236,14 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     public IContainer getOutputLocation() {
         return outputLocation;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    public String getOutputVdbName() {
+        return this.outputVdbName;
+    }
 
     /**
      * @param outputLocation
@@ -255,22 +265,29 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     /**
      * @return the outputName
      */
-    public String getOutputName() {
-        return this.outputName;
+    public String getOutputVdbFileName() {
+        return this.outputVdbFileName;
     }
 
     /**
      * @return destination file
      */
     public IFile getDestination() {
-        return outputLocation.getFile(new Path(getOutputName()));
+        return outputLocation.getFile(new Path(getOutputVdbFileName()));
     }
 
     /**
      * @param outputName the outputName to set
      */
-    protected void setOutputName(String outputName) {
-        this.outputName = outputName;
+    protected void setOutputVdbFileName(String outputName) {
+        this.outputVdbFileName = outputName;
+    }
+    
+    /**
+     * @param outputName the outputVdbName to set
+     */
+    protected void setOutputVdbName(String outputVdbName) {
+        this.outputVdbName = outputVdbName;
     }
 
     /**
@@ -326,7 +343,7 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
         setStatus(Status.OK_STATUS);
 
         // Check ouptut vdb name
-        String proposedVdbName = getOutputName();
+        String proposedVdbName = getOutputVdbFileName();
         String validationMessage = nameValidator.checkValidName(proposedVdbName);
         if (validationMessage != null) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, validationMessage));
@@ -359,7 +376,7 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
             return;
         }
 
-        if (getOutputName() == null) {
+        if (getOutputVdbFileName() == null) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_vdbFileNameUndefined));
             return;
         }

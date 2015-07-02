@@ -236,6 +236,7 @@ public final class XmiVdb extends BasicVdb {
                         final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
                         setDescription(manifest.getDescription());
                         vdbVersion[0] = manifest.getVersion();
+                        vdb.setName(manifest.getName());
                         // VDB properties
                         for (final PropertyElement property : manifest.getProperties()) {
                             final String name = property.getName();

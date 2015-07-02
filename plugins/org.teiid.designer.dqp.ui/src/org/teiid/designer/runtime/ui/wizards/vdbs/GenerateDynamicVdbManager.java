@@ -47,7 +47,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         setArchiveVdb(new XmiVdb(archiveVdbFile));
 
         String vdbName = getArchiveVdb().getName();
-        setOutputName(vdbName + ITeiidVdb.DYNAMIC_VDB_SUFFIX);
+        setOutputVdbName(vdbName);
+        setOutputVdbFileName(vdbName + ITeiidVdb.DYNAMIC_VDB_SUFFIX);
         setOutputLocation(this.archiveVdbFile.getParent());
     }
 
@@ -88,6 +89,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                 if (status.isOK()) {
                 	DynamicVdb vdb = getResult();
                 	vdb.setVersion(Integer.parseInt(getVersion()));
+                	vdb.setName(getOutputVdbName());
                     setDynamicVdb(vdb);
                 }
             }
@@ -113,15 +115,15 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 
         checkDynamicVdbGenerated();
 
-        File export = new File(directory, getOutputName());
+        File export = new File(directory, getOutputVdbFileName());
         if (export.exists())
             throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
-                                         getOutputName(),
+            		getOutputVdbFileName(),
                                          directory));
 
         if (!export.createNewFile())
             throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile,
-                                         getOutputName(),
+            		getOutputVdbFileName(),
                                          directory));
 
         FileWriter writer = new FileWriter(export);
@@ -165,7 +167,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         if (! Status.OK_STATUS.equals(getStatus()))
             return; // Something already wrong - no need to check further
 
-        if (!getOutputName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
+        if (!getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension));
             return;
         }
@@ -179,12 +181,22 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     
     
     @Override
-	protected void setOutputName(String outputName) {
-		if( StringUtilities.areDifferent(outputName,  getOutputName())) {
+	protected void setOutputVdbFileName(String outputName) {
+		if( StringUtilities.areDifferent(outputName,  getOutputVdbFileName())) {
 			setDynamicVdb(null);
 		}
-		super.setOutputName(outputName);
+		super.setOutputVdbFileName(outputName);
 	}
+    
+    /**
+     * @param outputName the outputVdbName to set
+     */
+    protected void setOutputVdbName(String outputVdbName) {
+		if( StringUtilities.areDifferent(outputVdbName,  getOutputVdbName())) {
+			setDynamicVdb(null);
+		}
+        super.setOutputVdbName(outputVdbName);
+    }
 
 	@Override
 	public void setVersion(String version) {

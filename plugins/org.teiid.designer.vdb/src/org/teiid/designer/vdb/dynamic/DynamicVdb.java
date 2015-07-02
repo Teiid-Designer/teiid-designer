@@ -167,6 +167,7 @@ public class DynamicVdb extends BasicVdb {
                     final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(fileStream);
                     vdb.setDescription(manifest.getDescription());
                     vdb.setVersion(manifest.getVersion());
+                    vdb.setName(manifest.getName());
                     // VDB properties
                     for (final PropertyElement property : manifest.getProperties()) {
                         final String name = property.getName();

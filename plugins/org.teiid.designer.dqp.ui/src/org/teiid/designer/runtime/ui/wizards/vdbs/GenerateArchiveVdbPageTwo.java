@@ -45,7 +45,7 @@ import org.teiid.designer.vdb.Vdb;
  */
 public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements DqpUiConstants, StringConstants {
 
-    private Text vdbArchiveNameFld;
+    private Text ouputVdbNameFld;
 
     private Text vdbArchiveFileNameFld;
 
@@ -148,14 +148,14 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
 
         WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageTwo_archiveVdbName);
-        vdbArchiveNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
-        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveNameFld);
-        vdbArchiveNameFld.setText(vdbManager.getDelegateArchiveVdbName());
-        vdbArchiveNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_archiveVdbNameTooltip);
-        vdbArchiveNameFld.addModifyListener(new ModifyListener() {
+        ouputVdbNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(ouputVdbNameFld);
+        ouputVdbNameFld.setText(vdbManager.getOutputVdbName());
+        ouputVdbNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_archiveVdbNameTooltip);
+        ouputVdbNameFld.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(final ModifyEvent event) {
-                vdbManager.setDelegateArchiveVdbName(vdbArchiveNameFld.getText());
+                vdbManager.setOutputVdbName(ouputVdbNameFld.getText());
                 validatePage();
             }
         });
@@ -165,12 +165,12 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
                                   Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileName);
         vdbArchiveFileNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
         GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveFileNameFld);
-        vdbArchiveFileNameFld.setText(vdbManager.getOutputName());
+        vdbArchiveFileNameFld.setText(vdbManager.getOutputVdbFileName());
         vdbArchiveFileNameFld.setToolTipText(Messages.GenerateArchiveVdbPageTwo_vdbArchiveFileNameTooltip);
         vdbArchiveFileNameFld.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(final ModifyEvent event) {
-                vdbManager.setOutputName(vdbArchiveFileNameFld.getText());
+                vdbManager.setOutputVdbFileName(vdbArchiveFileNameFld.getText());
                 validatePage();
             }
         });
@@ -182,7 +182,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
                                                             Messages.GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionLabel,
                                                             GridData.FILL_HORIZONTAL, 2, SWT.CHECK);
 
-        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(vdbArchiveNameFld);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(ddlAsDescriptionOption);
 
         ddlAsDescriptionOption.setToolTipText(Messages.GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionTooltip);
         ddlAsDescriptionOption.addSelectionListener(new SelectionAdapter() {
@@ -231,11 +231,11 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
 
     private void createGenerateButtonPanel(Composite parent) {
         Composite buttonPanel = new Composite(parent, SWT.NONE);
-        GridDataFactory.fillDefaults().span(2, 1).grab(true, true).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(buttonPanel);
         GridLayoutFactory.fillDefaults().numColumns(1).margins(50, 10).applyTo(buttonPanel);
 
         final Button genButton = new Button(buttonPanel, SWT.PUSH);
-        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(true, true).applyTo(genButton);
+        GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, true).applyTo(genButton);
         genButton.setText(Messages.GenerateVdbButton_Title);
         genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
         genButton.addSelectionListener(new SelectionAdapter() {
