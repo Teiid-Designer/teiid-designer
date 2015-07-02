@@ -928,12 +928,11 @@ public final class XmiVdb extends BasicVdb {
             //
             populateVdb(dynVdb);
 
-        // Remove non-relevant VDB properties
-        // preview true/false 
-        
-        dynVdb.getProperties().remove(Xml.PREVIEW);
-        this.getProperties().remove(Xml.PREVIEW);
-        
+            // Remove non-relevant VDB properties
+            // preview true/false
+
+            dynVdb.getProperties().remove(Xml.PREVIEW);
+            this.getProperties().remove(Xml.PREVIEW);
 
 
             //

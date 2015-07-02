@@ -15,7 +15,6 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -24,7 +23,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -32,8 +30,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -46,12 +42,9 @@ import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
-import org.teiid.designer.core.workspace.ModelFolderImpl;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelResourceImpl;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
@@ -493,7 +486,7 @@ public class VdbTestUtils implements StringConstants {
         return false;
     }
 
-    private static String printDocument(Document document) throws Exception {
+    public static String printDocument(Document document) throws Exception {
         StringWriter writer = new StringWriter();
 
         try {

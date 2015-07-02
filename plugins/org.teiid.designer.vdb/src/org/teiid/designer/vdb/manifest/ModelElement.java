@@ -15,12 +15,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 
 /**
  * 
@@ -72,10 +74,12 @@ public class ModelElement extends EntryElement {
     private String name;
 
     @XmlAttribute( name = "type", required = false )
+    @XmlJavaTypeAdapter (XmlVdbAdapters.ModelTypeAttributeAdapter.class)
     private String type = "PHYSICAL"; //$NON-NLS-1$
 
     @XmlAttribute( name = "visible", required = false )
-    private boolean visible = true;
+    @XmlJavaTypeAdapter (XmlVdbAdapters.VisibleAttributeAdapter.class)
+    private Boolean visible = true;
 
     @XmlElement( name = "source", type = SourceElement.class )
     private List<SourceElement> sources;
@@ -151,7 +155,7 @@ public class ModelElement extends EntryElement {
         name = model.getName();
         type = model.getModelType().toString();
         visible = model.isVisible();
-        path = model.getName().toString();
+        path = null; // Not used by dynamic vdbs
 
         if( model.getDescription() != null && !model.getDescription().isEmpty() ) {
             description = model.getDescription();

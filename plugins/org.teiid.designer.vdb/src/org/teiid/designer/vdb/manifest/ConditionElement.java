@@ -8,12 +8,13 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 
 /**
  *
@@ -25,6 +26,7 @@ public class ConditionElement implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @XmlAttribute( name = "constraint", required = true )
+    @XmlJavaTypeAdapter(XmlVdbAdapters.ConstraintAttributeAdapter.class)
     private Boolean constraint;
     
     @XmlValue
