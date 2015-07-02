@@ -8,17 +8,31 @@
 package org.teiid.designer.vdb.manifest.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.teiid.designer.komodo.vdb.DynamicModel.Type;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbPlugin;
 
 /**
  *
  */
 public class XmlVdbAdapters {
 
+    private static abstract class AbstractPreferenceAdapter<V, B> extends XmlAdapter<V, B> {
+
+        /**
+         * @return whether to suppress default-value attributes
+         */
+        protected boolean isSuppressEnabled() {
+            final IEclipsePreferences preferences = VdbPlugin.singleton().getPreferences();
+            return preferences.getBoolean(Vdb.SUPPRESS_XML_DEFAULT_ATTRIBUTES, true);
+        }
+    }
+
     /**
      * Attribute adapter that allows manipulation of Boolean attribute
      */
-    private static abstract class BooleanAttributeAdapter extends XmlAdapter<Boolean, Boolean> {
+    private static abstract class BooleanAttributeAdapter extends AbstractPreferenceAdapter<Boolean, Boolean> {
 
         private boolean inverse;
 
@@ -36,6 +50,9 @@ public class XmlVdbAdapters {
 
         @Override
         public Boolean marshal(Boolean value) throws Exception {
+            if (! isSuppressEnabled())
+                return value;
+
             if ((value && ! inverse) || (! value && inverse))
                 return null;
 
@@ -64,7 +81,7 @@ public class XmlVdbAdapters {
      * Adapter for the model elements model type attribute, eg. <model type="PHYSICAL">
      * Default value: "PHYSICAL" 
      */
-    public static class ModelTypeAttributeAdapter extends XmlAdapter<String, String> {
+    public static class ModelTypeAttributeAdapter extends AbstractPreferenceAdapter<String, String> {
 
         @Override
         public String unmarshal(String value) throws Exception {
@@ -73,6 +90,9 @@ public class XmlVdbAdapters {
 
         @Override
         public String marshal(String value) throws Exception {
+            if (! isSuppressEnabled())
+                return value;
+
             if (Type.PHYSICAL.toString().equals(value))
                 return null;
 

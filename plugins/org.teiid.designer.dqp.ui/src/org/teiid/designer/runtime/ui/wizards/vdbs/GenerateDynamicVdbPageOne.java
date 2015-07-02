@@ -10,13 +10,13 @@ package org.teiid.designer.runtime.ui.wizards.vdbs;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -33,6 +33,8 @@ import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
+import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbPlugin;
 
 /**
  * Page 1 of the Generate Dynamic Vdb Wizard
@@ -47,7 +49,9 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
 
     private GenerateDynamicVdbManager vdbManager;
     
-    Button excludeSourceDdlButton;
+    private Button excludeSourceDdlButton;
+
+    private Button suppressDefaultAttributesOption;
 
     /**
      * ShowDDlPage constructor
@@ -200,23 +204,40 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
         {
             Composite optionsGroup = WidgetFactory.createGroup(mainPanel, 
                     Messages.GenerateDynamicVdbPageOne_options, SWT.NO_SCROLL, 1);
-            optionsGroup.setLayout(new GridLayout(2, false));
+            optionsGroup.setLayout(new GridLayout(1, false));
             GridDataFactory.fillDefaults().grab(true,  false).span(2, 1).applyTo(optionsGroup);
             
             excludeSourceDdlButton = new Button(optionsGroup, SWT.CHECK);
-            excludeSourceDdlButton.setText("Exclude source DDL metadata");
-            excludeSourceDdlButton.addSelectionListener(new SelectionListener() {
+            excludeSourceDdlButton.setText(Messages.GenerateDynamicVdbPageOne_excludeSourceDdlMetadata);
+            excludeSourceDdlButton.addSelectionListener(new SelectionAdapter() {
 
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					vdbManager.setExcludeSourceMetadata(excludeSourceDdlButton.getSelection());
 					validatePage();
 				}
-				
-				@Override
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-				}
 			});
+
+            suppressDefaultAttributesOption = WidgetFactory.createButton(optionsGroup,
+                                                                Messages.GenerateDynamicVdbPageOne_suppressDefaultAttributesOption,
+                                                                GridData.FILL_HORIZONTAL, 1, SWT.CHECK);
+
+            GridDataFactory.fillDefaults().grab(true, false).applyTo(suppressDefaultAttributesOption);
+
+            final IEclipsePreferences preferences = VdbPlugin.singleton().getPreferences();
+            suppressDefaultAttributesOption.setSelection(preferences.getBoolean(Vdb.SUPPRESS_XML_DEFAULT_ATTRIBUTES, true));
+            suppressDefaultAttributesOption.setToolTipText(Messages.GenerateDynamicVdbPageOne_suppressDefaultAttributesOptionTooltip);
+            suppressDefaultAttributesOption.addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    preferences.putBoolean(Vdb.SUPPRESS_XML_DEFAULT_ATTRIBUTES, suppressDefaultAttributesOption.getSelection());
+
+                    //
+                    // Reset the dynamic vdb
+                    //
+                    vdbManager.setDynamicVdb(null);
+                }
+            });
         }
 
 

@@ -45,6 +45,9 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbPageOne_browse;
     public static String GenerateDynamicVdbPageOne_dynamicVdbFileName;
     public static String GenerateDynamicVdbPageOne_dynamicVdbFileNameToolTip;
+    public static String GenerateDynamicVdbPageOne_excludeSourceDdlMetadata;
+    public static String GenerateDynamicVdbPageOne_suppressDefaultAttributesOption;
+    public static String GenerateDynamicVdbPageOne_suppressDefaultAttributesOptionTooltip;
 
     public static String GenerateDynamicVdbPageTwo_title;
     public static String GenerateDynamicVdbPageTwo_fileContents;

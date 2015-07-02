@@ -41,9 +41,16 @@ public interface Vdb extends VdbConstants {
     public static final String SET_DDL_AS_DESCRIPTION = "setDDLAsDescription"; //$NON-NLS-1$
 
     /**
+     * Option to determine whether to suppress xml attributes that retain default values
+     * when writing out vdb xml
+     */
+    public static final String SUPPRESS_XML_DEFAULT_ATTRIBUTES = "suppressXmlDefaultAttributes"; //$NON-NLS-1$
+
+    /**
      * The prefix used before the workspace identifier when creating a Preview VDB name.
      */
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
+
 
     /**
      * The default query timeout value
