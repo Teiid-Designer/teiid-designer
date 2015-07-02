@@ -726,4 +726,16 @@ public class VdbModelEntry extends VdbIndexedEntry {
         }
         builder.append(']');
     }
+
+    @Override
+    public VdbModelEntry clone() {
+        try {
+            VdbModelEntry clone = new VdbModelEntry(getVdb(), getPath());
+            cloneVdbObject(clone);
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
+    }
 }

@@ -131,4 +131,14 @@ public class AllowedLanguages extends VdbUnit implements Iterable<String> {
         return languages.iterator();
     }
 
+    @Override
+    public AllowedLanguages clone() {
+        AllowedLanguages clone = new AllowedLanguages();
+        for (String language : languages)
+            clone.addAllowedLanguage(language);
+
+        cloneVdbObject(clone);
+
+        return clone;
+    }
 }

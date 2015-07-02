@@ -56,6 +56,7 @@ import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.vdb.AbstractVdbObject;
 import org.teiid.designer.vdb.BasicVdb;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
@@ -449,6 +450,19 @@ public class DynamicVdb extends BasicVdb {
     @Override
     public boolean removeEntry(VdbEntry entry) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DynamicVdb clone() {
+        DynamicVdb clone = new DynamicVdb();
+        populateVdb(clone);
+
+        for (DynamicModel dynModel : getDynamicModels()) {
+            DynamicModel cloneModel = dynModel.clone();
+            clone.addDynamicModel(cloneModel);
+        }
+
+        return clone;
     }
 
     @Override

@@ -492,8 +492,8 @@ public class Permission extends VdbUnit {
 
 	public Permission clone() {
 	    Permission clone = new Permission(getName());
+	    cloneVdbObject(clone);
 
-        clone.setDescription(getDescription());
         clone.crud = getCRUD().clone();
         clone.setPrimary(isPrimary());
         clone.setConstraint(isConstraint());

@@ -152,4 +152,12 @@ public class Metadata extends VdbUnit {
     public String toString() {
         return "Metadata [type=" + this.type + ", schemaText=" + this.schemaText + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
+
+    @Override
+    public Metadata clone() {
+        Metadata clone = new Metadata(getSchemaText(), getType());
+        cloneVdbObject(clone);
+
+        return clone;
+    }
 }

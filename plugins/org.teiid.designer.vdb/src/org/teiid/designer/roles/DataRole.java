@@ -337,7 +337,7 @@ public class DataRole extends VdbUnit {
     @Override
     public DataRole clone() {
         DataRole clone = new DataRole(getName());
-        clone.setDescription(getDescription());
+        cloneVdbObject(clone);
         clone.setAnyAuthenticated(isAnyAuthenticated());
         clone.setAllowCreateTempTables(isAllowCreateTempTables());
         clone.setGrantAll(isGrantAll());

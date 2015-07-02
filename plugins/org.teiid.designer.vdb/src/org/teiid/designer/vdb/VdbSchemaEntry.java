@@ -62,4 +62,16 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
     public void synchronizeSchemaEntry() throws Exception {
         synchronizeIndex();
     }
+
+    @Override
+    public VdbSchemaEntry clone() {
+        try {
+            VdbSchemaEntry clone = new VdbSchemaEntry(getVdb(), getPath());
+            cloneVdbObject(clone);
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
+    }
 }

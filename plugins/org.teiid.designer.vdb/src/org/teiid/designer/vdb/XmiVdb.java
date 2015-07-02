@@ -1017,4 +1017,15 @@ public final class XmiVdb extends BasicVdb {
         entryFile.createLink(entry.getPath(), IResource.HIDDEN, null);
         return entryFile;
     }
+
+    @Override
+    public XmiVdb clone() {
+        try {
+            XmiVdb clone = new XmiVdb(getSourceFile());
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
+    }
 }

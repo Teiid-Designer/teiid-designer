@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.vdb;
 
+import java.util.Map;
 import java.util.Properties;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
@@ -190,4 +191,21 @@ public abstract class AbstractVdbObject implements StringConstants {
             return false;
         return true;
     }
+
+    protected void cloneVdbObject(AbstractVdbObject clone) {
+        if (StringUtilities.areDifferent(name, clone.getName()))
+            clone.setName(name);
+
+        if (StringUtilities.areDifferent(description, clone.getDescription()))
+            clone.setDescription(description);
+
+        for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
+            clone.setProperty(entry.getKey().toString(), entry.getValue().toString());
+        }
+    }
+
+    /**
+     * Clone this object
+     */
+    public abstract AbstractVdbObject clone();
 }

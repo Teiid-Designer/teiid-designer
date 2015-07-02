@@ -251,4 +251,23 @@ public class DynamicModel extends VdbUnit {
 		this.columnAlias = columnAlias;
 	}
 
+	@Override
+	public DynamicModel clone() {
+	    DynamicModel clone = new DynamicModel();
+	    cloneVdbObject(clone);
+	    clone.setModelType(getModelType());
+	    clone.setVisible(isVisible());
+	    clone.setAllowMultiSource(allowMultiSource());
+	    clone.setAddColumn(doAddColumn());
+	    clone.setColumnAlias(getColumnAlias());
+
+	    if (getMetadata() != null)
+	        clone.setMetadata(getMetadata().clone());
+
+	    for (VdbSource source : modelSources.values()) {
+	        clone.addSource(source.clone());
+	    }
+
+	    return clone;
+	}
 }

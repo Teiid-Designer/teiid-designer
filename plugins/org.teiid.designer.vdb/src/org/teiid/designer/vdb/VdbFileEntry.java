@@ -254,5 +254,16 @@ public final class VdbFileEntry extends VdbEntry {
 
       throw new FileNotFoundException("Cannot save vdb file entry '" + sourceFilePath + "' to vdb file");  //$NON-NLS-1$//$NON-NLS-2$        
     }
-    
+
+    @Override
+    public VdbFileEntry clone() {
+        try {
+            VdbFileEntry clone = new VdbFileEntry(getVdb(), sourceFilePath, fileType);
+            cloneVdbObject(clone);
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
+    }
 }

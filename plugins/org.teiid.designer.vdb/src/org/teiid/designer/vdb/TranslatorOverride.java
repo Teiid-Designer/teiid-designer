@@ -343,7 +343,19 @@ public class TranslatorOverride extends VdbUnit implements Comparable<Translator
         }
     }
 
+    @Override
     public TranslatorOverride clone() {
-        return new TranslatorOverride(getVdb(), getName(), getType(), getDescription());
+        TranslatorOverride clone = new TranslatorOverride(getVdb(), getName(), getType(), getDescription());
+        cloneVdbObject(clone);
+
+        for (TranslatorOverrideProperty property : overrideProps.values()) {
+            TranslatorPropertyDefinition definition = property.getDefinition();
+            TranslatorPropertyDefinition cloneDefn = new TranslatorPropertyDefinition(definition.getId(), definition.getDefaultValue());
+
+            TranslatorOverrideProperty cloneProp = new TranslatorOverrideProperty(cloneDefn, property.getOverriddenValue());
+            clone.addProperty(cloneProp, false);
+        }
+
+        return clone;
     }
 }

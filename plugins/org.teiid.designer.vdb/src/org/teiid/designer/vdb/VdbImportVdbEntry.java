@@ -112,11 +112,12 @@ public class VdbImportVdbEntry extends VdbUnit {
         return true;
     }
 
-	@Override
-	protected VdbImportVdbEntry clone() {
+    @Override
+    public VdbImportVdbEntry clone() {
         VdbImportVdbEntry clone = new VdbImportVdbEntry(getVdb(), getName());
+        cloneVdbObject(clone);
         clone.setImportDataPolicies(isImportDataPolicies());
         clone.setVersion(getVersion());
         return clone;
-	}
+    }
 }
