@@ -706,8 +706,10 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
 
     /**
      * Returns the info for the element.
+     * @param item
+     * @return item info
      */
-    public Object getInfo( final ModelWorkspaceItem item ) {
+    public ModelWorkspaceItemInfo getInfo( final ModelWorkspaceItem item ) {
         return this.cache.getInfo(item);
     }
 
@@ -901,7 +903,7 @@ public class ModelWorkspaceManager implements XmiHeaderCache {
      * @param value
      */
     public void putInfo( final ModelWorkspaceItem item,
-                         final Object info ) {
+                         final ModelWorkspaceItemInfo info ) {
         this.cache.putInfo(item, info);
     }
 

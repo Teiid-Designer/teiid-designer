@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -147,7 +146,6 @@ public class ModelWorkspaceImpl extends OpenableImpl implements ModelWorkspace {
     @Override
     protected boolean generateInfos( final OpenableModelWorkspaceItemInfo info,
                                      final IProgressMonitor pm,
-                                     final Map newElements,
                                      final IResource underlyingResource ) {
 
         ModelWorkspaceManager.getModelWorkspaceManager().putInfo(this, info);
