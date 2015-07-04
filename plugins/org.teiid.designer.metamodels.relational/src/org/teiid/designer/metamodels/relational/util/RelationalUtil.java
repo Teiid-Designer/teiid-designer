@@ -8,7 +8,6 @@
 package org.teiid.designer.metamodels.relational.util;
 
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,6 +23,8 @@ import org.teiid.designer.metamodels.relational.Catalog;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.Index;
+import org.teiid.designer.metamodels.relational.LogicalRelationship;
+import org.teiid.designer.metamodels.relational.LogicalRelationshipEnd;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
@@ -32,6 +33,7 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
+import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
 
@@ -413,7 +415,7 @@ public class RelationalUtil {
             } else if (child instanceof ForeignKey) {
                 ((BaseTable)parent).getForeignKeys().add(child);
             } else if (child instanceof UniqueConstraint) {
-                ((BaseTable)parent).getUniqueConstraints().add(child);
+                ((BaseTable)parent).getUniqueConstraints().add((UniqueConstraint) child);
             } else if (child instanceof AccessPattern) {
                 ((BaseTable)parent).getAccessPatterns().add(child);
             } else {

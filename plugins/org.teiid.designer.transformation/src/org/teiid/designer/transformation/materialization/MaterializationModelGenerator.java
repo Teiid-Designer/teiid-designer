@@ -38,6 +38,7 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.transformation.TransformationPlugin;
 
@@ -211,7 +212,7 @@ public class MaterializationModelGenerator {
             if(nextKey instanceof PrimaryKey) {
                 ((BaseTable)mv).setPrimaryKey( (PrimaryKey)newKey);
             }else {
-                ((BaseTable)mv).getUniqueConstraints().add( newKey);
+                ((BaseTable)mv).getUniqueConstraints().add((UniqueConstraint) newKey);
             }
             
             copyUniqueKeyValues(nextKey, newKey);
