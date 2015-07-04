@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -16,16 +17,23 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.NullableType;
+import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 
+/**
+ * Generator for converting a teiid xmi model into DDL
+ */
 public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReservedConstants  {
 	
 	private StringBuilder ddlBuffer = new StringBuilder();
@@ -34,21 +42,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     private boolean includeProcedures = true;
 
-    private boolean includeFunctions = true;
-
     private Set<String> lengthDataTypes;
 
     private Set<String> precisionDataTypes;
     
     private boolean isVirtual = false;
     
-    private List<IStatus> issues;
-
-
-    public TeiidModelToDdlGenerator() {
-		super();
-		this.issues = new ArrayList<IStatus>();
-	}
+    private List<IStatus> issues = new ArrayList<IStatus>();
     
     private Set<String> getLengthDataTypes() {
         if (lengthDataTypes == null) {
@@ -75,6 +75,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         return precisionDataTypes;
     }
     
+	/**
+	 * @param modelResource
+	 * @return the generated DDL for the given model
+	 * @throws ModelWorkspaceException
+	 */
 	public String generate(ModelResource modelResource) throws ModelWorkspaceException {
 	    CoreArgCheck.isNotNull(modelResource);
 
@@ -120,7 +125,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         EObject dataType = col.getType();
         String runtimeTypeName = ModelerCore.getBuiltInTypesManager().getRuntimeTypeName(dataType);
         sb.append(getColumnDatatypeDdl(runtimeTypeName, col.getLength(), col.getPrecision(), col.getScale()));
-        
+
+        String properties = getColumnProperties(col);
+        if (! StringUtilities.isEmpty(properties)) sb.append(SPACE).append(properties);
+
         String options = getColumnOptions(col);
         if( !StringUtilities.isEmpty(options) ) sb.append(SPACE).append(options);
         
@@ -167,7 +175,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	try {
 			return ModelerCore.getModelEditor().getDescription(eObj);
 		} catch (ModelerCoreException e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding description for " + getName(eObj), e));
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding description for " + getName(eObj), e)); //$NON-NLS-1$
 		}
     	
     	return null;
@@ -300,7 +308,65 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
 		return sb.toString();
     }
-    
+
+    private String getColumnProperties(Column col) {
+        StringBuffer sb = new StringBuffer();
+
+        //
+        // NULLABLE / NOT NULL
+        //
+        NullableType nullableType = col.getNullable();
+        if (nullableType.equals(NullableType.NO_NULLS_LITERAL))
+            sb.append(NOT_NULL).append(SPACE);
+
+        //
+        // DEFAULT
+        //
+        String defaultValue = col.getDefaultValue();
+        if (defaultValue != null)
+            sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
+
+        //
+        // AUTO_INCREMENT
+        //
+        boolean autoIncremented = col.isAutoIncremented();
+        if (autoIncremented)
+            sb.append(AUTO_INCREMENT).append(SPACE);
+
+        if (col.getOwner() instanceof BaseTable) {
+            BaseTable table = (BaseTable) col.getOwner();
+
+            //
+            // PRIMARY KEY
+            //
+            PrimaryKey key = table.getPrimaryKey();
+            EList columns = key.getColumns();
+            if (columns != null && columns.contains(col))
+                sb.append(PRIMARY_KEY).append(SPACE);
+
+            //
+            // UNIQUE
+            //
+            EList<UniqueConstraint> uniqueConstraints = table.getUniqueConstraints();
+            if (uniqueConstraints != null && ! uniqueConstraints.isEmpty()) {
+                for (UniqueConstraint uc : uniqueConstraints) {
+                    if (uc.getColumns().contains(col)) {
+                        sb.append(TeiidSQLConstants.Reserved.UNIQUE).append(SPACE);
+                        break; // Don't care if column is in more than 1 unique constraint
+                    }
+                }
+            }
+
+            //
+            // INDEX
+            //
+            if (! col.getIndexes().isEmpty())
+                sb.append(TeiidSQLConstants.NonReserved.INDEX).append(SPACE);
+        }
+
+        return sb.toString();
+    }
+
     private String getColumnOptions(Column col) {
     	OptionsStatement options = new OptionsStatement();
     	options.add(NAMEINSOURCE, col.getNameInSource());
@@ -334,13 +400,6 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     	return options.toString();
     }
-    
-    private void tab(int nTabs) {
-    	for(int i=0; i<nTabs; i++) {
-    		append(TAB);
-    	}
-    }
-    
 
     private String escapeStringValue(String str, String tick) {
         return StringUtilities.replaceAll(str, tick, tick + tick);
@@ -395,7 +454,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
     	}
     	
-    	public String toString() {
+    	@Override
+        public String toString() {
     		sb.append(CLOSE_BRACKET);
     		
     		if( !hasOptions) return null;

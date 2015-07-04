@@ -37,6 +37,7 @@ import org.teiid.designer.core.ModelEditorImpl.AddCommandFactory;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.resource.MMXmiResource;
+import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.transaction.UnitOfWork;
 import org.teiid.designer.core.util.ModelContents;
@@ -141,6 +142,28 @@ public class ModelEditorMock {
                 Object[] args = invocation.getArguments();
                 ModelResource resource = (ModelResource) args[0];
                 return ModelContents.getModelContents(resource);
+            }
+        });
+
+        when(modelEditor.getModelContents(isA(EObject.class))).thenAnswer(new Answer<ModelContents>() {
+            @Override
+            public ModelContents answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                EObject eObject = (EObject) args[0];
+                return modelEditor.getModelContents(eObject.eResource());
+            }
+        });
+
+        when(modelEditor.getModelContents(isA(Resource.class))).thenAnswer(new Answer<ModelContents>() {
+            @Override
+            public ModelContents answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                Resource resource = (Resource) args[0];
+                if (resource instanceof MtkXmiResourceImpl) {
+                  return ((MtkXmiResourceImpl)resource).getModelContents();
+                }
+                final ModelResource modelResource = modelEditor.findModelResource(resource);
+                return modelEditor.getModelContents(modelResource);
             }
         });
 
