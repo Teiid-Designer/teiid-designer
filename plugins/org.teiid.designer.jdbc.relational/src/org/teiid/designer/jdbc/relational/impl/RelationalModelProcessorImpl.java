@@ -1333,26 +1333,15 @@ public class RelationalModelProcessorImpl implements ModelerJdbcRelationalConsta
         }
 
         // Set the searchability ...
-        final SearchabilityType searchability = this.typeMapping != null && datatype != null ? this.typeMapping.getSearchabilityType(datatype) : SearchabilityType.UNSEARCHABLE_LITERAL;
+        final SearchabilityType searchability = SearchabilityType.SEARCHABLE_LITERAL; // = this.typeMapping != null && datatype != null ? this.typeMapping.getSearchabilityType(datatype) : SearchabilityType.UNSEARCHABLE_LITERAL;
         column.setSearchability(searchability);
-        // Set the length, precision and scale ...
-        if (searchability.getValue() == SearchabilityType.ALL_EXCEPT_LIKE) {
-            column.setCaseSensitive(false);
-            column.setPrecision(columnSize);
-            column.setLength(0);
-        } else if (searchability.getValue() == SearchabilityType.SEARCHABLE) {
-            column.setLength(columnSize);
-            column.setPrecision(0);
-            column.setCaseSensitive(true);
-        } else {
-            column.setCaseSensitive(false);
-            column.setPrecision(0);
-            column.setLength(columnSize);
-        }
+
         // Set the length for character types
         if (type == Types.CHAR) {
             column.setLength(columnSize);
             column.setPrecision(0);
+        } else {
+        	column.setLength(columnSize);
         }
         column.setScale(numDecDigits);
 

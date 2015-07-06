@@ -102,6 +102,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		String VARBINARY = "VARBINARY"; //$NON-NLS-1$
 		String VARCHAR = "VARCHAR"; //$NON-NLS-1$
 		String IMAGE = "IMAGE"; //$NON-NLS-1$
+		String TEXT = "TEXT"; //$NON-NLS-1$
 	}
 	
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
@@ -871,7 +872,8 @@ public class TeiidDdlImporter extends StandardImporter {
         		TYPES_UPPER.ARRAY.equalsIgnoreCase(typeName) || 
         		TYPES_UPPER.BLOB.equalsIgnoreCase(typeName) || 
         		TYPES_UPPER.CLOB.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.IMAGE.equalsIgnoreCase(typeName));
+        		TYPES_UPPER.IMAGE.equalsIgnoreCase(typeName) ||
+        		TYPES_UPPER.TEXT.equalsIgnoreCase(typeName));
     }
 
 	/**

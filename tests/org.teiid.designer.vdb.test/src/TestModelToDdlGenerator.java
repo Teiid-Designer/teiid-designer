@@ -98,7 +98,7 @@ public class TestModelToDdlGenerator implements StringConstants {
         return modelBuilder;
     }
 
-    private ModelResource createModelResource(String ddl) throws Exception {
+    private ModelResource createModelResource(String ddl, boolean isVirtual) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
 
         MockFileBuilder modelBuilder = createEmptyXmiFile();
@@ -128,7 +128,11 @@ public class TestModelToDdlGenerator implements StringConstants {
         DdlImporter importer = new DdlImporter(new IProject[] { modelBuilder.getProject() });
         importer.setModelFolder(modelBuilder.getProject());
         importer.setModelName(modelBuilder.getName());
-        importer.setModelType(ModelType.VIRTUAL_LITERAL);
+        if( isVirtual ) {
+        	importer.setModelType(ModelType.VIRTUAL_LITERAL);
+        } else {
+        	importer.setModelType(ModelType.PHYSICAL_LITERAL);
+        }
         importer.importDdl(ddl, monitor, 1);
 
         assertFalse(importer.noDdlImported());
@@ -143,8 +147,8 @@ public class TestModelToDdlGenerator implements StringConstants {
         return mResource;
     }
 
-    private String roundTrip(String ddl) throws Exception, ModelWorkspaceException {
-        ModelResource modelResource = createModelResource(ddl);
+    private String roundTrip(String ddl, boolean isVirtual) throws Exception, ModelWorkspaceException {
+        ModelResource modelResource = createModelResource(ddl, isVirtual);
         String generatedDdl = generator.generate(modelResource);
         generatedDdl = removeWhitespace(generatedDdl);
         return generatedDdl;
@@ -164,7 +168,7 @@ public class TestModelToDdlGenerator implements StringConstants {
                                              "price bigdecimal" +
                                              ") AS SELECT * FROM Stock;"; 
 
-        String generatedDdl = roundTrip(ddl);
+        String generatedDdl = roundTrip(ddl, true);
         assertEquals(expectedDdl, generatedDdl);
     }
 
@@ -186,7 +190,87 @@ public class TestModelToDdlGenerator implements StringConstants {
                                              "companyID string(10) NOT NULL INDEX" +
                                              ") AS SELECT * FROM Stock;"; 
 
-        String generatedDdl = roundTrip(ddl);
+        String generatedDdl = roundTrip(ddl, true);
+        assertEquals(expectedDdl, generatedDdl);
+    }
+    
+    @Test
+    public void testBqt2ColumnProperties() throws Exception {
+        String ddl = "CREATE FOREIGN TABLE ALL_TYPES (" +
+	"type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE + 
+	"type_integer integer OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_smallint short OPTIONS(NAMEINSOURCE '\"type_smallint\"', NATIVE_TYPE 'smallint', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_tinyint byte OPTIONS(NAMEINSOURCE '\"type_tinyint\"', NATIVE_TYPE 'tinyint', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_decimal bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_decimal_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_decimal_5_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal_5_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_double_precision float OPTIONS(NAMEINSOURCE '\"type_double_precision\"', NATIVE_TYPE 'float', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_float float OPTIONS(NAMEINSOURCE '\"type_float\"', NATIVE_TYPE 'float', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_float_10 float OPTIONS(NAMEINSOURCE '\"type_float_10\"', NATIVE_TYPE 'real', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_numeric bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_numeric_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_numeric_5_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_real float OPTIONS(NAMEINSOURCE '\"type_real\"', NATIVE_TYPE 'real', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_bit boolean OPTIONS(NAMEINSOURCE '\"type_bit\"', NATIVE_TYPE 'bit', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_character char(1) OPTIONS(NAMEINSOURCE '\"type_character\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_character_10 string(10) OPTIONS(NAMEINSOURCE '\"type_character_10\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_char char(1) OPTIONS(NAMEINSOURCE '\"type_char\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_char_10 string(10) OPTIONS(NAMEINSOURCE '\"type_char_10\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_nchar string(1) OPTIONS(NAMEINSOURCE '\"type_nchar\"', NATIVE_TYPE 'nchar', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_nchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_nchar_10\"', NATIVE_TYPE 'nchar', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_varchar string(1) OPTIONS(NAMEINSOURCE '\"type_varchar\"', NATIVE_TYPE 'varchar')" + COMMA + NEW_LINE +
+	"type_varchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_varchar_10\"', NATIVE_TYPE 'varchar')" + COMMA + NEW_LINE +
+	"type_long_nvarchar string(1) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_long_nvarchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar_10\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH true)" + COMMA + NEW_LINE +
+	"type_text clob(2147483647) OPTIONS(NAMEINSOURCE '\"type_text\"', NATIVE_TYPE 'text', CASE_SENSITIVE false, SEARCHABLE 'LIKE_ONLY')" + COMMA + NEW_LINE +
+	"type_money bigdecimal OPTIONS(NAMEINSOURCE '\"type_money\"', NATIVE_TYPE 'money', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_smallmoney bigdecimal OPTIONS(NAMEINSOURCE '\"type_smallmoney\"', NATIVE_TYPE 'smallmoney', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_datetime timestamp OPTIONS(NAMEINSOURCE '\"type_datetime\"', NATIVE_TYPE 'datetime', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + NEW_LINE +
+	"type_binary object(1) OPTIONS(NAMEINSOURCE '\"type_binary\"', NATIVE_TYPE 'binary', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'UNSEARCHABLE')" + COMMA + NEW_LINE +
+	"type_binary_2 object(2) OPTIONS(NAMEINSOURCE '\"type_binary_2\"', NATIVE_TYPE 'binary', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'UNSEARCHABLE')" + COMMA + NEW_LINE +
+	"type_image blob(2147483647) OPTIONS(NAMEINSOURCE '\"type_image\"', NATIVE_TYPE 'image', CASE_SENSITIVE false, SEARCHABLE 'UNSEARCHABLE')" + COMMA + NEW_LINE +
+	"type_varbinary string(1) OPTIONS(NAMEINSOURCE '\"type_varbinary\"', NATIVE_TYPE 'varbinary')" + 
+") OPTIONS(NAMEINSOURCE '\"bqt2\".\"BQT2\".\"ALL_TYPES\"')";
+
+        
+
+        String expectedDdl =  "CREATE FOREIGN TABLE ALL_TYPES (" +
+        		"type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE + 
+        		"type_integer integer OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_smallint short OPTIONS(NAMEINSOURCE '\"type_smallint\"', NATIVE_TYPE 'smallint', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_tinyint byte OPTIONS(NAMEINSOURCE '\"type_tinyint\"', NATIVE_TYPE 'tinyint', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_decimal bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_decimal_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_decimal_5_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_decimal_5_5\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_double_precision float OPTIONS(NAMEINSOURCE '\"type_double_precision\"', NATIVE_TYPE 'float', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_float float OPTIONS(NAMEINSOURCE '\"type_float\"', NATIVE_TYPE 'float', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_float_10 float OPTIONS(NAMEINSOURCE '\"type_float_10\"', NATIVE_TYPE 'real', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_numeric bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_numeric_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_numeric_5_5 bigdecimal OPTIONS(NAMEINSOURCE '\"type_numeric_5_5\"', NATIVE_TYPE 'numeric', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_real float OPTIONS(NAMEINSOURCE '\"type_real\"', NATIVE_TYPE 'real', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_bit boolean OPTIONS(NAMEINSOURCE '\"type_bit\"', NATIVE_TYPE 'bit', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_character char(1) OPTIONS(NAMEINSOURCE '\"type_character\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_character_10 string(10) OPTIONS(NAMEINSOURCE '\"type_character_10\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_char char(1) OPTIONS(NAMEINSOURCE '\"type_char\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_char_10 string(10) OPTIONS(NAMEINSOURCE '\"type_char_10\"', NATIVE_TYPE 'char', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_nchar string(1) OPTIONS(NAMEINSOURCE '\"type_nchar\"', NATIVE_TYPE 'nchar', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_nchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_nchar_10\"', NATIVE_TYPE 'nchar', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_varchar string(1) OPTIONS(NAMEINSOURCE '\"type_varchar\"', NATIVE_TYPE 'varchar')" + COMMA + SPACE +
+        		"type_varchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_varchar_10\"', NATIVE_TYPE 'varchar')" + COMMA + SPACE +
+        		"type_long_nvarchar string(1) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_long_nvarchar_10 string(10) OPTIONS(NAMEINSOURCE '\"type_long_nvarchar_10\"', NATIVE_TYPE 'nvarchar', FIXED_LENGTH true)" + COMMA + SPACE +
+        		"type_text clob(2147483647) OPTIONS(NAMEINSOURCE '\"type_text\"', NATIVE_TYPE 'text', CASE_SENSITIVE false, SEARCHABLE 'LIKE_ONLY')" + COMMA + SPACE +
+        		"type_money bigdecimal OPTIONS(NAMEINSOURCE '\"type_money\"', NATIVE_TYPE 'money', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_smallmoney bigdecimal OPTIONS(NAMEINSOURCE '\"type_smallmoney\"', NATIVE_TYPE 'smallmoney', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_datetime timestamp OPTIONS(NAMEINSOURCE '\"type_datetime\"', NATIVE_TYPE 'datetime', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'ALL_EXCEPT_LIKE')" + COMMA + SPACE +
+        		"type_binary object(1) OPTIONS(NAMEINSOURCE '\"type_binary\"', NATIVE_TYPE 'binary', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'UNSEARCHABLE')" + COMMA + SPACE +
+        		"type_binary_2 object(2) OPTIONS(NAMEINSOURCE '\"type_binary_2\"', NATIVE_TYPE 'binary', CASE_SENSITIVE false, FIXED_LENGTH true, SEARCHABLE 'UNSEARCHABLE')" + COMMA + SPACE +
+        		"type_image blob(2147483647) OPTIONS(NAMEINSOURCE '\"type_image\"', NATIVE_TYPE 'image', CASE_SENSITIVE false, SEARCHABLE 'UNSEARCHABLE')" + COMMA + SPACE +
+        		"type_varbinary string(1) OPTIONS(NAMEINSOURCE '\"type_varbinary\"', NATIVE_TYPE 'varbinary')"+
+        	") OPTIONS(NAMEINSOURCE '\"bqt2\".\"BQT2\".\"ALL_TYPES\"')";
+
+        String generatedDdl = roundTrip(ddl, false);
         assertEquals(expectedDdl, generatedDdl);
     }
 }
