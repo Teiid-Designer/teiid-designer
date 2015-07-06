@@ -340,9 +340,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             // PRIMARY KEY
             //
             PrimaryKey key = table.getPrimaryKey();
-            EList columns = key.getColumns();
-            if (columns != null && columns.contains(col))
-                sb.append(PRIMARY_KEY).append(SPACE);
+            if (key != null) {
+                EList columns = key.getColumns();
+                if (columns != null && columns.contains(col))
+                    sb.append(PRIMARY_KEY).append(SPACE);
+            }
 
             //
             // UNIQUE
@@ -364,25 +366,25 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
                 sb.append(TeiidSQLConstants.NonReserved.INDEX).append(SPACE);
         }
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     private String getColumnOptions(Column col) {
     	OptionsStatement options = new OptionsStatement();
-    	options.add(NAMEINSOURCE, col.getNameInSource());
-    	options.add(NATIVE_TYPE, col.getNativeType());
-    	options.add(CASE_SENSITIVE, Boolean.toString(col.isCaseSensitive()));
-    	options.add(SELECTABLE, Boolean.toString(col.isSelectable()));
-    	options.add(UPDATABLE, Boolean.toString(col.isUpdateable()));
-    	options.add(SIGNED, Boolean.toString(col.isSigned()));
-    	options.add(CURRENCY, Boolean.toString(col.isCurrency()));
-    	options.add(FIXED_LENGTH, Boolean.toString(col.isFixedLength()));
+    	options.add(NAMEINSOURCE, col.getNameInSource(), null);
+    	options.add(NATIVE_TYPE, col.getNativeType(), null);
+    	options.add(CASE_SENSITIVE, Boolean.toString(col.isCaseSensitive()), Boolean.TRUE.toString());
+    	options.add(SELECTABLE, Boolean.toString(col.isSelectable()), Boolean.TRUE.toString());
+    	options.add(UPDATABLE, Boolean.toString(col.isUpdateable()), Boolean.TRUE.toString());
+    	options.add(SIGNED, Boolean.toString(col.isSigned()), Boolean.TRUE.toString());
+    	options.add(CURRENCY, Boolean.toString(col.isCurrency()), Boolean.FALSE.toString());
+    	options.add(FIXED_LENGTH, Boolean.toString(col.isFixedLength()), Boolean.FALSE.toString());
     	String desc = getDescription(col);
     	if( !StringUtilities.isEmpty(desc) ) {
-    		options.add(ANNOTATION, desc);
+    		options.add(ANNOTATION, desc, EMPTY_STRING);
     	}
     	if( !col.getSearchability().equals(SearchabilityType.SEARCHABLE) ) {
-    		options.add(SEARCHABLE, col.getSearchability().getLiteral());
+    		options.add(SEARCHABLE, col.getSearchability().getLiteral(), SearchabilityType.SEARCHABLE_LITERAL.toString());
     	}
 
     	return options.toString();
@@ -390,12 +392,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private String getTableOptions(Table table) {
     	OptionsStatement options = new OptionsStatement();
-    	options.add(NAMEINSOURCE, table.getNameInSource());
-    	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()));
-    	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()));
+    	options.add(NAMEINSOURCE, table.getNameInSource(), null);
+    	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
+    	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
     	String desc = getDescription(table);
     	if( !StringUtilities.isEmpty(desc) ) {
-    		options.add(ANNOTATION, desc);
+    		options.add(ANNOTATION, desc, EMPTY_STRING);
     	}
 
     	return options.toString();
@@ -434,9 +436,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     		sb.append(Reserved.OPTIONS).append(OPEN_BRACKET);
     	}
     	
-    	public void add(String key, String value) {
+    	public void add(String key, String value, String defaultValue) {
     		if( StringUtilities.isEmpty(value) ) return;
-    			
+
+    		if(! StringUtilities.areDifferent(value, defaultValue)) return;
+
     		if( hasOptions ) sb.append(COMMA + SPACE);
     		
     		hasOptions = true;

@@ -304,7 +304,7 @@ public class VdbTest implements VdbConstants {
     public void testOpeningExistingVdb() throws Exception {
         Vdb booksVdb = VdbTestUtils.mockBooksVdb(modelWorkspaceMock);
 
-        assertEquals("books", booksVdb.getName());
+        assertEquals("Books_2120", booksVdb.getName());
         assertEquals(VdbTestUtils.BOOKS_VDB_FILE.getCanonicalPath(), booksVdb.getSourceFile().getLocation().toOSString());
         assertEquals(2, booksVdb.getModelEntries().size());
         assertEquals(2, booksVdb.getSchemaEntries().size());

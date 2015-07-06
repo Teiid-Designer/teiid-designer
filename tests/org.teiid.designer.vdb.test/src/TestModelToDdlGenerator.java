@@ -55,10 +55,6 @@ public class TestModelToDdlGenerator implements StringConstants {
                         "primaryMetamodelUri=\"http://www.metamatrix.com/metamodels/Relational\"/>" + NEW_LINE +
             "</xmi:XMI>";
 
-    private static final String DEFAULT_COLUMN_OPTIONS_CLAUSE = EMPTY_STRING +
-            "OPTIONS(CASE_SENSITIVE true, SELECTABLE true, UPDATABLE true, " + 
-            "SIGNED true, CURRENCY false, FIXED_LENGTH false, SEARCHABLE 'SEARCHABLE')";
-
     private String resourceName = "testModel";
 
     private TeiidModelToDdlGenerator generator;
@@ -66,8 +62,6 @@ public class TestModelToDdlGenerator implements StringConstants {
     private EclipseMock eclipseMock;
 
     private ModelWorkspaceMock modelWorkspaceMock;
-
-    private String defaultOptionsClause;
 
     @Before
     public void setup() throws Exception {
@@ -166,8 +160,8 @@ public class TestModelToDdlGenerator implements StringConstants {
         // TODO
         // Should these column option clauses be included if all the values are defaults???
         String expectedDdl = "CREATE VIEW StockPrices (" +
-                                             "symbol string(10) " + DEFAULT_COLUMN_OPTIONS_CLAUSE + COMMA + SPACE +
-                                             "price bigdecimal " + DEFAULT_COLUMN_OPTIONS_CLAUSE +
+                                             "symbol string(10)" + COMMA + SPACE +
+                                             "price bigdecimal" +
                                              ") AS SELECT * FROM Stock;"; 
 
         String generatedDdl = roundTrip(ddl);
@@ -186,10 +180,10 @@ public class TestModelToDdlGenerator implements StringConstants {
         
 
         String expectedDdl = "CREATE VIEW StockPrices (" +
-                                             "symbol string(10) NOT NULL AUTO_INCREMENT PRIMARY KEY " + DEFAULT_COLUMN_OPTIONS_CLAUSE + COMMA + SPACE +
-                                             "price bigdecimal DEFAULT 10 " + DEFAULT_COLUMN_OPTIONS_CLAUSE + COMMA + SPACE +
-                                             "company string(10) NOT NULL UNIQUE " + DEFAULT_COLUMN_OPTIONS_CLAUSE + COMMA + SPACE +
-                                             "companyID string(10) NOT NULL INDEX " + DEFAULT_COLUMN_OPTIONS_CLAUSE +
+                                             "symbol string(10) NOT NULL AUTO_INCREMENT PRIMARY KEY" + COMMA + SPACE +
+                                             "price bigdecimal DEFAULT 10" + COMMA + SPACE +
+                                             "company string(10) NOT NULL UNIQUE" + COMMA + SPACE +
+                                             "companyID string(10) NOT NULL INDEX" +
                                              ") AS SELECT * FROM Stock;"; 
 
         String generatedDdl = roundTrip(ddl);
