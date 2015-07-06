@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -422,7 +421,7 @@ public class VdbUtil implements VdbConstants {
                 public void tryToDo() throws Exception {
                     final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
                     unmarshaller.setSchema(getManifestSchema());
-                    InputStream fileStream = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8));
+                    InputStream fileStream = new ByteArrayInputStream(xmlString.getBytes("UTF-8")); //$NON-NLS-1$
                     
                     manifest[0] = (VdbElement)unmarshaller.unmarshal(fileStream);
                 }
