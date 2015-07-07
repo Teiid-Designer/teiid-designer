@@ -94,29 +94,4 @@ public abstract class VdbUnit extends AbstractVdbObject {
         setModified(this, Event.GENERAL_PROPERTY, property, null);
         return property;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((this.vdb == null) ? 0 : this.vdb.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        VdbUnit other = (VdbUnit)obj;
-        if (this.vdb == null) {
-            if (other.vdb != null)
-                return false;
-        } else if (!this.vdb.equals(other.vdb))
-            return false;
-        return true;
-    }
 }

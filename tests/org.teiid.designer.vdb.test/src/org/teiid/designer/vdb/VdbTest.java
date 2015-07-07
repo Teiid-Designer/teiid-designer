@@ -52,6 +52,7 @@ import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.util.VdbHelper.VdbFolders;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
@@ -512,5 +513,19 @@ public class VdbTest implements VdbConstants {
         processor.process();
         assertFalse(callback.hasException());
         assertEquals(Version.TEIID_8_4.get(), callback.getValidationVersion());
+    }
+
+    @Test
+    public void testRemoveDataRole() {
+        DataRole role = new DataRole("TestDataRole");
+
+        XmiVdb vdb = new XmiVdb();
+
+        assertTrue(vdb.addDataRole(role));
+        assertTrue(vdb.getDataRoles().contains(role));
+
+        assertTrue(vdb.removeDataRole(role.getName()));
+        assertFalse(vdb.getDataRoles().contains(role));
+        assertTrue(vdb.getDataRoles().isEmpty());
     }
 }
