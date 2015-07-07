@@ -167,14 +167,9 @@ public class DataRolesPanel {
                     ModelEditorImpl.setContainer(null);
                 }
 
-                DataRole dataPolicy = new DataRole(dataRole.getName(), dataRole.getDescription(),
-                                                   dataRole.isAnyAuthenticated(), dataRole.isAllowCreateTempTables(),
-                                                   dataRole.isGrantAll(),
-                                                   dataRole.getRoleNames(), dataRole.getPermissions());
-
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
                 Set<String> roleNames = VdbUtil.getDataRoleNames(vdbEditor.getVdb(), dataRole.getName());
-                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataPolicy, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataRole, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);

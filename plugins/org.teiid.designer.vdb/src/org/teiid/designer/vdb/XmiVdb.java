@@ -987,9 +987,9 @@ public final class XmiVdb extends BasicVdb {
 	                String ddl = generator.generate(modelResource);
 	                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
 	                model.setMetadata(metadata);
-	
-	                dynVdb.addDynamicModel(model);
 	            }
+				
+                dynVdb.addDynamicModel(model);
             }
 
             return dynVdb;
