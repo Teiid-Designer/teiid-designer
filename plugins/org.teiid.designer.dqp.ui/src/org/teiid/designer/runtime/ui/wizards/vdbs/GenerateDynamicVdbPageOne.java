@@ -141,6 +141,8 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             final Text vdbVersionText = WidgetFactory.createTextField(summaryGroup);
             GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
             ((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
+            vdbVersionText.setText(vdbManager.getVersion());
+            
             vdbVersionText.addModifyListener(new ModifyListener() {
 
                 @Override
@@ -149,8 +151,6 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                     validatePage();
                 }
             });
-
-            vdbVersionText.setText(vdbManager.getVersion());
         }
 
         // Dynamic VDB Output GROUP
@@ -239,19 +239,6 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                 }
             });
         }
-
-
-//        final Button genButton = new Button(mainPanel, SWT.PUSH);
-//        GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).grab(false, false).applyTo(genButton);
-//        genButton.setText(Messages.GenerateVdbButton_Title);
-//        genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
-//        genButton.addSelectionListener(new SelectionAdapter() {
-//            @Override
-//            public void widgetSelected(SelectionEvent e) {
-//                vdbManager.generate();
-//                genButton.setEnabled(vdbManager.isGenerateRequired());
-//            }
-//        });
         
         setPageComplete(false);
     }

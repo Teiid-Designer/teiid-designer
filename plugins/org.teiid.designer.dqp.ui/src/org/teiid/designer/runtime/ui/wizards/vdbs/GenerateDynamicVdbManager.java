@@ -50,6 +50,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         setOutputVdbName(vdbName);
         setOutputVdbFileName(vdbName + ITeiidVdb.DYNAMIC_VDB_SUFFIX);
         setOutputLocation(this.archiveVdbFile.getParent());
+        setVersion(Integer.toString(getArchiveVdb().getVersion()));
     }
 
     private void checkDynamicVdbGenerated() throws Exception {
