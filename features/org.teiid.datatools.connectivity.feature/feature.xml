@@ -15,7 +15,7 @@
 <feature
       id="org.teiid.datatools.connectivity.feature"
       label="Teiid DataTools Connectivity"
-      version="9.0.2.qualifier"
+      version="9.0.3.qualifier"
       provider-name="%providerName">
 
    <description url="http://www.teiid.org/">
