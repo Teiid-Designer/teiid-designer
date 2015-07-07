@@ -324,9 +324,13 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	 */
 	@Override
 	public boolean removeDataRole(String dataRoleToRemove) {
-		DataRole removed = this.dataRoles.remove(dataRoleToRemove);
-		if (removed != null) {
-		    setModified(this, Event.DATA_POLICY_REMOVED, removed, null);
+	    DataRole dataRole = this.dataRoles.get(dataRoleToRemove);
+		if (dataRole == null)
+		    return false;
+
+		dataRole = this.dataRoles.remove(dataRole);
+		if (dataRole != null) {
+		    setModified(this, Event.DATA_POLICY_REMOVED, dataRole, null);
 		    return true;
 		}
 
