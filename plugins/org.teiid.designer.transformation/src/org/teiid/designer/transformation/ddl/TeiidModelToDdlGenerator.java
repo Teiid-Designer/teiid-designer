@@ -150,7 +150,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		StringBuilder sb = new StringBuilder();
 		sb.append(name);
 		if( getLengthDataTypes().contains(name.toUpperCase()) ) {
-			sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
+			if( length > 0 ) {
+				sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
+			}
 		} else if( getPrecisionDataTypes().contains(name.toUpperCase())  ) {
 			sb.append(OPEN_BRACKET).append(precision).append(CLOSE_BRACKET);
 		}
@@ -162,7 +164,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         StringBuilder sb = new StringBuilder();
         sb.append(getName(param));
         sb.append(SPACE);
-        sb.append(getParameterDatatypeDdl(getName(param.getType()), param.getLength(), param.getPrecision(), param.getScale()));
+        String runtimeTypeName = ModelerCore.getBuiltInTypesManager().getRuntimeTypeName(param.getType());
+        sb.append(getParameterDatatypeDdl(runtimeTypeName, param.getLength(), param.getPrecision(), param.getScale()));
         
 		return sb.toString();
 	}
