@@ -190,9 +190,15 @@
 						relational objects. Press <emphasis role="bold">Finish</emphasis> 
 						to complete.</para>
 						<figure>
-							<title>Specify Import Options Dialog</title>
+							<title>Specify Import Options Dialog - Relational Model Definition</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/jdbc-importer-page-5.png"/>
+							<imagedata fileref="images/screencaps/jdbc-importer-page-5A.png"/>
+							</imageobject></mediaobject>
+						</figure>
+						<figure>
+							<title>Specify Import Options Dialog - Object Naming Options </title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/jdbc-importer-page-5B.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
@@ -1348,8 +1354,7 @@
 						<guilabel>New Connection Profile</guilabel> dialog or <guibutton>
 						Edit...</guibutton> to modify/change an existing connection 
 						profile prior to selection.</para>
-					</listitem>
-					<listitem>
+
 						<para>Name your new REST Connection Profile and click the 
 						<guibutton>Next &gt;</guibutton></para>
 						<figure>
@@ -1376,7 +1381,9 @@
 						properties are correct. Click <guibutton>Next &gt;</guibutton> to 
 						see a summary of your properties or click <guibutton>
 						Finish</guibutton>.</para>
-						<para>After selecting or creating a new <emphasis role="bold">
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 4</emphasis> - After selecting or creating a new <emphasis role="bold">
 						Connection Profile</emphasis>, the REST XML result from the 
 						connection profile will be displayed in the <emphasis role="bold">
 						Available Data Files</emphasis> panel. Check the data file you 
@@ -1384,10 +1391,16 @@
 						custom import options, will be used to construct a view table 
 						with the required SQL transformation for querying your data and 
 						returning a result set.</para>
-						<para>Lastly enter a unique source model name in the 
-						<emphasis role="bold">Source Model Definition</emphasis> section 
-						at the bottom of the page or select an existing source model 
-						using the browse button.</para>
+						<para>When finished with this page, click <emphasis role="bold">
+						Next&gt;</emphasis>.</para>
+						<figure>
+							<title>REST Web Service Source Selection</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/teiid-rest-source-page-2.png"/>
+							</imageobject></mediaobject>
+						</figure>
+						<para>Next enter or select unique source and view model names in their
+						respective sections and a name for your generated virtual procedure</para>
 						<note>
 							<para>The <emphasis role="bold">Model Status</emphasis> section 
 							which will indicate the validity of the model name, whether the 
@@ -1400,12 +1413,12 @@
 						<figure>
 							<title>REST Result Data File Source Selection Page</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-2.png"/>
+							<imagedata fileref="images/screencaps/teiid-rest-source-page-3.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 4</emphasis> - The primary 
+						<para><emphasis role="bold">Step 5</emphasis> - The primary 
 						purpose of this importer is to help you create a view procedure 
 						containing the transformations required to query the user-defined 
 						data file. The panel contains an XML tree view of your result 
@@ -1430,33 +1443,108 @@
 							default value. See the Teiid User&apos;s Guide for details on 
 							the XMLTABLE() function.</para>
 						</note>
-						<para>When finished with this page, click <emphasis role="bold">
-						Next&gt;</emphasis>.</para>
+						<para>Press <emphasis role="bold">Finish</emphasis> to generate 
+						your models and finish the wizard.</para>
 						<figure>
 							<title>REST Service Columns Selection Page</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-3.png"/>
+							<imagedata fileref="images/screencaps/teiid-rest-source-page-4.png"/>
+							</imageobject></mediaobject>
+						</figure>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<!-- 
+		####### SOAP WEB SERVICE IMPORTER 
+		#########################################
+	 -->
+	<section id="soap-web-service-import-section">
+		<title>Import Data From SOAP Service</title>
+		<itemizedlist>
+			<listitem>
+				<para>In addition to REST web services, Teiid supports SOAP web 
+				services as data sources. Using the steps below you will define 
+				your SOAP web service data source, select the elements to include 
+				in your generated view table and generate a source model containing 
+				the required Teiid procedure.</para>
+				<para>To import from your target SOAP web service source:</para>
+				<itemizedlist>
+					<listitem>
+						<para><emphasis role="bold">Step 1</emphasis> - In 
+						<emphasis role="bold">Model Explorer</emphasis> choose the 
+						<emphasis role="bold">File &gt; Import</emphasis> action 
+						<inlinemediaobject><imageobject>
+						<imagedata fileref="images/icons/import-wiz.png"/>
+						</imageobject></inlinemediaobject> in the toolbar or select a 
+						project, folder or model in the tree and choose 
+						<emphasis role="bold">Import...</emphasis></para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 2</emphasis> - Select the import 
+						option <emphasis role="bold">Teiid Designer &gt; Web Service 
+						Source &gt;&gt; Source and View Model (SOAP)</emphasis> and click 
+						<guibutton>Next&gt;</guibutton></para>
+						<figure>
+							<title>Import from SOAP Web Service Source</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/teiid-designer-import-options.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
 					<listitem>
-						<para><emphasis role="bold">Step 6</emphasis> - On the 
-						<emphasis role="bold">View Model Definition</emphasis> page, 
-						select the target folder location where your new view model will 
-						be created. You can also select an existing model for your new 
-						view tables.</para>
-						<note>
-							<para>The <emphasis role="bold">Model Status</emphasis> section 
-							which will indicate the validity of the model name, whether the 
-							model exists or not. Lastly, enter a unique, valid view table 
-							name.</para>
-						</note>
-						<para>Press <emphasis role="bold">Finish</emphasis> to generate 
-						your models and finish the wizard.</para>
+						<para><emphasis role="bold">Step 3</emphasis> - On the first page of the wizard, select an existing 
+						or previous connection profile from the drop-down selector or 
+						press <guibutton>New...</guibutton> button to launch the 
+						<guilabel>New Connection Profile</guilabel> dialog or <guibutton>
+						Edit...</guibutton> to modify/change an existing connection 
+						profile prior to selection.</para>
 						<figure>
-							<title>View Model Definition Page</title>
+							<title>Source and WSDL Operations Definition</title>
 							<mediaobject><imageobject>
-							<imagedata fileref="images/screencaps/teiid-rest-source-page-4.png"/>
+							<imagedata fileref="images/screencaps/import-web-service-soap-page-1.png"/>
+							</imageobject></mediaobject>
+						</figure>
+
+						<para>Name your new SOAP Connection Profile and click the 
+						<guibutton>Next &gt;</guibutton></para>
+						<figure>
+							<title>New SOAP Connection Profile</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/create-web-service-soap-profile.png"/>
+							</imageobject></mediaobject>
+						</figure>
+						<para>Set your Connection URL from either your workspace, your local file system or define 
+						a remote URL. Click <guibutton>Next &gt;</guibutton> and select an endpoint and binding type,  click <guibutton>
+						Finish</guibutton>.</para>
+						<figure>
+							<title>New SOAP Connection Profile Endpoint Definition</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/create-web-service-soap-profile-page2.png"/>
+							</imageobject></mediaobject>
+						</figure>
+						<para>Once the connection profile is defined, you can view the WSDL URL and validate it via the <guibutton>Validate WSDL</guibutton> button.
+						Select Service Model and desired WSDL Operations and click <guibutton>Next &gt;</guibutton></para>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 4</emphasis> - On the <emphasis role="bold">Models Definition</emphasis>
+						page, define your source and view model names and locations and click <guibutton>Next &gt;</guibutton></para>
+						<figure>
+							<title>Models Definition</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/import-web-service-soap-page-2.png"/>
+							</imageobject></mediaobject>
+						</figure>
+					</listitem>
+					<listitem>
+						<para><emphasis role="bold">Step 5</emphasis> - On the <emphasis role="bold">Procedure Definition</emphasis>
+						page, defined your request and response elements for each operation selected previously.
+						When all operations are sufficiently defined click <guibutton>Finish</guibutton></para>
+						<figure>
+							<title>Procedure Definition</title>
+							<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/import-web-service-soap-page-3.png"/>
 							</imageobject></mediaobject>
 						</figure>
 					</listitem>
