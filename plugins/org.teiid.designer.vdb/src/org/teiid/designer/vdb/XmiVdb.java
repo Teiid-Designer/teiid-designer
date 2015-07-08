@@ -1013,7 +1013,7 @@ public final class XmiVdb extends BasicVdb {
         if (entryFile.exists())
             entryFile.delete(true, null);
 
-        entryFile.createLink(entry.getPath(), IResource.HIDDEN, null);
+        entryFile.createLink(new Path(realFile.getAbsolutePath()), IResource.HIDDEN, null);
         return entryFile;
     }
 
