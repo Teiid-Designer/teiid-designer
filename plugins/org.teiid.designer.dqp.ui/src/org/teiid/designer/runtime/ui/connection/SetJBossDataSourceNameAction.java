@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
@@ -89,17 +91,20 @@ public class SetJBossDataSourceNameAction extends SortableSelectionAction  imple
         String existingName = connectionInfoHelper.getJndiProperty(mr);
         
         // Strip off "java:/"
-        String nameOnly = existingName;
+        String nameOnly = StringConstants.EMPTY_STRING;
 
-        if( existingName.startsWith(JNDI_PREFIX)) {
-        	nameOnly = existingName.substring(6);
+        if( !StringUtilities.isEmpty(existingName) ) {
+        	nameOnly = existingName;
+        	if( existingName.startsWith(JNDI_PREFIX) ) {
+        		nameOnly = existingName.substring(6);
+        	}
         }
         
         // Query User for Translator name
 
         String newJNDIName = queryUserForJNDIName(nameOnly);
         
-        if( !existingName.equals(newJNDIName)) {
+        if( existingName == null || !existingName.equals(newJNDIName)) {
         	setJNDINameInTxn(mr, JNDI_PREFIX + newJNDIName);
         }
     }
