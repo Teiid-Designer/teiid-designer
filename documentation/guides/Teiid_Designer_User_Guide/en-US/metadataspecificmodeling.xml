@@ -458,6 +458,12 @@
 											<entry>Yes</entry>
 										</row>
 										<row>
+											<entry>Description</entry>
+											<entry>Optional property that describes the procedure. This value 
+											is used by Swagger when documenting the REST API.</entry>
+											<entry>No</entry>
+										</row>
+										<row>
 											<entry>CHARSET</entry>
 											<entry>Optional property for procedures that return a Blob 
 											with content type that is text-based. This character set to 
@@ -681,7 +687,16 @@
 						is defined as /{war_context}/{model_name}/{resource} for XML 
 						input/output and /{war_context}/{model_name}/json/{resource} for 
 						JSON input/output.</para>
-						<para>Using your REST URL, you can use any testing tool with REST 
+						<para><emphasis role="bold">Swagger</emphasis> is a framework that exposes REST APIs and it is embedded 
+						in the generated REST WAR. This allows you to execute your methods 
+						directly from the deployed WAR. It is available at the root of the WAR (http://{host:port}/{context}).</para>
+						<figure>
+						<title>REST Test Page</title>
+						<mediaobject><imageobject>
+							<imagedata fileref="images/screencaps/rest-test-page.png"/>
+							</imageobject></mediaobject>
+						</figure>
+						<para>Using your REST URL, you can also use any testing tool with REST 
 						support such as the Web Service Tester included with JBDS and 
 						JBoss Tools or an external tool like soapUI or cURL.</para>
 					</listitem>
