@@ -22,6 +22,7 @@ import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
@@ -117,11 +118,17 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         checkDynamicVdbGenerated();
 
         File export = new File(directory, getOutputVdbFileName());
-        if (export.exists())
+
+        if (export.exists()) {
+        	if(overwriteExistingFiles() ) {
+                if (!export.delete())
+                    throw new Exception(VdbPlugin.UTIL.getString("unableToDelete", export)); //$NON-NLS-1$
+        	}
             throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationAlreadyExists,
             		getOutputVdbFileName(),
                                          directory));
-
+        }
+        
         if (!export.createNewFile())
             throw new Exception(NLS.bind(Messages.GenerateDynamicVdbWizard_exportLocationFailedToCreateFile,
             		getOutputVdbFileName(),
@@ -144,6 +151,9 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
         String xml = writer.toString();
 
         IFile destination = getDestination();
+        if( overwriteExistingFiles() && destination.exists() ) {
+        	destination.delete(true, new NullProgressMonitor());
+        }
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes("UTF-8")); //$NON-NLS-1$
 
         destination.create(inputStream, true, new NullProgressMonitor());
@@ -165,8 +175,8 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
     public void validate() {
         super.validate();
 
-        if (! Status.OK_STATUS.equals(getStatus()))
-            return; // Something already wrong - no need to check further
+	    if (getStatus().getSeverity() > IStatus.WARNING)
+	        return;
 
         if (!getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.DYNAMIC_VDB_SUFFIX)) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateDynamicVdbWizard_validation_vdbMissingXmlExtension));

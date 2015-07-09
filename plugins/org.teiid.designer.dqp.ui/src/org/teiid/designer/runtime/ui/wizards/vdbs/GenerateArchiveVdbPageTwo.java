@@ -56,6 +56,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
     private ListViewer viewModelsViewer;
 
     private Button ddlAsDescriptionOption;
+    private Button generateButton;
 
     private final GenerateArchiveVdbManager vdbManager;
 
@@ -133,6 +134,7 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.CENTER).applyTo(vdbVersionLabel);
 
         final Text vdbVersionText = WidgetFactory.createTextField(vdbInfoGroup);
+        vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
         GridDataFactory.fillDefaults().span(2, 1).align(SWT.LEFT, SWT.CENTER).applyTo(vdbVersionText);
         ((GridData)vdbVersionText.getLayoutData()).widthHint = 40;
 
@@ -144,8 +146,6 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
                 validatePage();
             }
         });
-
-        vdbVersionText.setText(Integer.toString(vdbManager.getDynamicVdb().getVersion()));
 
         WidgetFactory.createLabel(vdbInfoGroup, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateArchiveVdbPageTwo_archiveVdbName);
         ouputVdbNameFld = WidgetFactory.createTextField(vdbInfoGroup, SWT.NONE, GridData.FILL_HORIZONTAL);
@@ -232,17 +232,35 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
     private void createGenerateButtonPanel(Composite parent) {
         Composite buttonPanel = new Composite(parent, SWT.NONE);
         GridDataFactory.fillDefaults().span(2, 1).grab(true, false).applyTo(buttonPanel);
-        GridLayoutFactory.fillDefaults().numColumns(1).margins(50, 10).applyTo(buttonPanel);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(50, 10).applyTo(buttonPanel);
 
-        final Button genButton = new Button(buttonPanel, SWT.PUSH);
-        GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, true).applyTo(genButton);
-        genButton.setText(Messages.GenerateVdbButton_Title);
-        genButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
-        genButton.addSelectionListener(new SelectionAdapter() {
+        final Button overwriteExistingOption = WidgetFactory.createButton(buttonPanel,
+                                                            Messages.GenerateArchiveVdbPageTwo_overwriteFilesOptionLabel,
+                                                            GridData.FILL_HORIZONTAL, 2, SWT.CHECK);
+        overwriteExistingOption.setSelection(vdbManager.overwriteExistingFiles());
+
+        GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(overwriteExistingOption);
+
+        overwriteExistingOption.setToolTipText(Messages.GenerateArchiveVdbPageTwo_overwriteVDBAndModelsOptionTooltip);
+        overwriteExistingOption.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                vdbManager.setOverwriteExistingFiles(overwriteExistingOption.getSelection());
+
+                validatePage();
+            }
+        });
+        
+        generateButton = new Button(buttonPanel, SWT.PUSH);
+        GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.CENTER).grab(true, true).applyTo(generateButton);
+        generateButton.setText(Messages.GenerateVdbButton_Title);
+        generateButton.setToolTipText(Messages.GenerateVdbButton_Tooltip);
+        generateButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 vdbManager.generate();
-                genButton.setEnabled(vdbManager.isGenerateRequired());
+                generateButton.setEnabled(vdbManager.isGenerateRequired() );
+                validatePage();
             }
         });
     }
@@ -264,13 +282,20 @@ public class GenerateArchiveVdbPageTwo extends AbstractWizardPage implements Dqp
         if (status.getSeverity() == IStatus.ERROR) {
             this.setErrorMessage(status.getMessage());
             this.setPageComplete(false);
+            generateButton.setEnabled(false);
             return;
         } else if (status.getSeverity() == IStatus.WARNING) {
-            this.setErrorMessage(status.getMessage());
-            this.setPageComplete(true);
+    		setErrorMessage(null);
+    		setMessage(Messages.GenerateArchiveVdbPageTwo_clickFinishToSaveVdbAndModels, NONE);
+    		this.setPageComplete(true);
+            generateButton.setEnabled(vdbManager.isGenerateRequired() );
         } else {
             setErrorMessage(null);
-            WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
+//            WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);
+            generateButton.setEnabled(vdbManager.isGenerateRequired() );
+    		setErrorMessage(null);
+    		setMessage(Messages.GenerateArchiveVdbPageTwo_clickFinishToSaveVdbAndModels, NONE);
+    		this.setPageComplete(true);
         }
     }
 

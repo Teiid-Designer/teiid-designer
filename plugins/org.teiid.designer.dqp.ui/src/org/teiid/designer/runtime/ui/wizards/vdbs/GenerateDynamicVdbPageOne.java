@@ -238,6 +238,22 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
                     vdbManager.setDynamicVdb(null);
                 }
             });
+            
+            final Button overwriteExistingOption = WidgetFactory.createButton(optionsGroup,
+                    Messages.GenerateDynamicVdbPageOne_overwriteFilesOptionLabel,
+                    GridData.FILL_HORIZONTAL, 2, SWT.CHECK);
+            overwriteExistingOption.setSelection(vdbManager.overwriteExistingFiles());
+            
+			GridDataFactory.fillDefaults().span(1, 1).grab(true, false).applyTo(overwriteExistingOption);
+			
+			overwriteExistingOption.setToolTipText(Messages.GenerateDynamicVdbPageOne_overwriteVDBOptionTooltip);
+			overwriteExistingOption.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+				vdbManager.setOverwriteExistingFiles(overwriteExistingOption.getSelection());
+				validatePage();
+				}
+			});
         }
         
         setPageComplete(false);
@@ -277,8 +293,8 @@ public class GenerateDynamicVdbPageOne extends AbstractWizardPage implements Dqp
             this.setPageComplete(false);
             return;
         } else if (status.getSeverity() == IStatus.WARNING) {
-            this.setErrorMessage(status.getMessage());
-            this.setPageComplete(true);
+            this.setErrorMessage(null);
+            WizardUtil.setPageComplete(this, status.getMessage(), IStatus.WARNING);
         } else {
             setErrorMessage(null);
             WizardUtil.setPageComplete(this, EMPTY_STRING, NONE);

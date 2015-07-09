@@ -121,20 +121,6 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
         this.dynamicVdbFile = dynamicVdbFile;
     }
 
-//    /**
-//     * @return proposed archive vdb name
-//     */
-//    public String getDelegateArchiveVdbName() {
-//        return delegateArchiveVdbName;
-//    }
-//
-//    /**
-//     * @param delegateArchiveVdbName
-//     */
-//    public void setDelegateArchiveVdbName(String delegateArchiveVdbName) {
-//        this.delegateArchiveVdbName = delegateArchiveVdbName;
-//    }
-
     /**
      * @return whether archive vdb generation is required
      */
@@ -200,8 +186,8 @@ public class GenerateArchiveVdbManager extends AbstractGenerateVdbManager {
     public void validate() {
         super.validate();
 
-        if (! Status.OK_STATUS.equals(getStatus()))
-            return; // Something already wrong - no need to check further
+	    if (getStatus().getSeverity() > IStatus.WARNING)
+	        return;
 
         if (getOutputVdbFileName().contains(DOT) && !getOutputVdbFileName().toLowerCase().endsWith(ITeiidVdb.VDB_DOT_EXTENSION)) {
             setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateArchiveVdbWizard_validation_vdbMissingVdbExtension));

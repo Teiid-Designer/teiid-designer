@@ -48,6 +48,8 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbPageOne_excludeSourceDdlMetadata;
     public static String GenerateDynamicVdbPageOne_suppressDefaultAttributesOption;
     public static String GenerateDynamicVdbPageOne_suppressDefaultAttributesOptionTooltip;
+    public static String GenerateDynamicVdbPageOne_overwriteFilesOptionLabel;
+    public static String GenerateDynamicVdbPageOne_overwriteVDBOptionTooltip;
 
     public static String GenerateDynamicVdbPageTwo_title;
     public static String GenerateDynamicVdbPageTwo_fileContents;
@@ -56,6 +58,8 @@ public class Messages extends NLS {
     public static String GenerateDynamicVdbPageTwo_exportXmlLabel;
     public static String GenerateDynamicVdbPageTwo_exportXmlDialogTitle;
     public static String GenerateDynamicVdbPageTwo_exportXmlErrorMessages;
+    public static String GenerateDynamicVdbPageTwo_clickGenerateToCreateVdb;
+    public static String GenerateDynamicVdbPageTwo_clickFinishToSaveVdb;
 
     public static String GenerateArchiveVdbAction_nothingExportedMessage;
     public static String GenerateArchiveVdbAction_nothingExportedTitle;
@@ -85,6 +89,9 @@ public class Messages extends NLS {
     public static String GenerateArchiveVdbPageTwo_viewModels;
     public static String GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionLabel;
     public static String GenerateArchiveVdbPageTwo_ddlAsDescriptionOptionTooltip;
+    public static String GenerateArchiveVdbPageTwo_overwriteFilesOptionLabel;
+    public static String GenerateArchiveVdbPageTwo_overwriteVDBAndModelsOptionTooltip;
+    public static String GenerateArchiveVdbPageTwo_clickFinishToSaveVdbAndModels;
 
     public static String GenerateVdbButton_Title;
     public static String GenerateVdbButton_Tooltip;

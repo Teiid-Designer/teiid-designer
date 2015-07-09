@@ -194,6 +194,8 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
     private String outputVdbName;
 
     private Properties conversionOptions = new Properties();
+    
+    private boolean overwriteExistingFiles = true;;
 
     /**
      * @param wizard
@@ -332,8 +334,30 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
         this.status = status;
     }
 
+    /**
+     * 
+     * @param name
+     * @param value
+     */
     protected void addConversionOption(String name, String value) {
         conversionOptions.setProperty(name, value);
+    }
+    
+    /**
+     * 
+     * @param key
+     * @return
+     */
+    protected String getConversionOption(String key) {
+    	return conversionOptions.getProperty(key);
+    }
+    
+    protected void setOverwriteExistingFiles(boolean overwrite) {
+    	this.overwriteExistingFiles = overwrite;
+    }
+    
+    protected boolean overwriteExistingFiles() {
+    	return this.overwriteExistingFiles;
     }
 
     /**
@@ -383,7 +407,8 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
 
         IFile destination = getDestination();
         if (destination.exists()) {
-            setStatus(new Status(IStatus.ERROR, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetFileAlreadyExists));
+        	int severity = overwriteExistingFiles ? IStatus.WARNING : IStatus.ERROR;
+            setStatus(new Status(severity, PLUGIN_ID, Messages.GenerateVdbWizard_validation_targetFileAlreadyExists));
             return;
         }
 

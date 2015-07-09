@@ -46,7 +46,7 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
     private Font monospaceFont;
     private StyledText xmlContentsBox;
     private Button generateXmlButton;
-    private Button exportXmlToFileSystemButton;
+//    private Button exportXmlToFileSystemButton;
 
     private GenerateDynamicVdbManager vdbManager;
 
@@ -213,26 +213,27 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
                 public void widgetSelected(SelectionEvent e) {
                     vdbManager.generate();
                     refreshXml();
+                    validatePage();
                 }
             });
 
-            Label spacer = WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, " ");
-            GridDataFactory.fillDefaults().grab(true, false).applyTo(spacer);
-            
-	        WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateDynamicVdbPageTwo_exportXmlLabel);
-	
-	        exportXmlToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
-	        exportXmlToFileSystemButton.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlTitle);
-	        exportXmlToFileSystemButton.setToolTipText(Messages.GenerateDynamicVdbPageTwo_exportXmlTooltip);
-	        exportXmlToFileSystemButton.setLayoutData(new GridData());
-	        exportXmlToFileSystemButton.setEnabled(true);
-	        exportXmlToFileSystemButton.addSelectionListener(new SelectionAdapter() {
-	
-	            @Override
-	            public void widgetSelected(SelectionEvent e) {
-	                handleExportDDLToFileSystem();
-	            }
-	        });
+//            Label spacer = WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, " ");
+//            GridDataFactory.fillDefaults().grab(true, false).applyTo(spacer);
+//            
+//	        WidgetFactory.createLabel(buttonPanel, GridData.VERTICAL_ALIGN_CENTER, Messages.GenerateDynamicVdbPageTwo_exportXmlLabel);
+//	
+//	        exportXmlToFileSystemButton = new Button(buttonPanel, SWT.PUSH);
+//	        exportXmlToFileSystemButton.setText(Messages.GenerateDynamicVdbPageTwo_exportXmlTitle);
+//	        exportXmlToFileSystemButton.setToolTipText(Messages.GenerateDynamicVdbPageTwo_exportXmlTooltip);
+//	        exportXmlToFileSystemButton.setLayoutData(new GridData());
+//	        exportXmlToFileSystemButton.setEnabled(true);
+//	        exportXmlToFileSystemButton.addSelectionListener(new SelectionAdapter() {
+//	
+//	            @Override
+//	            public void widgetSelected(SelectionEvent e) {
+//	                handleExportDDLToFileSystem();
+//	            }
+//	        });
         }
     }
 
@@ -276,16 +277,25 @@ public class GenerateDynamicVdbPageTwo extends AbstractWizardPage implements Dqp
             this.setPageComplete(false);
             return;
         } else if (status.getSeverity() == IStatus.WARNING) {
-            this.setErrorMessage(status.getMessage());
-            this.setPageComplete(true);
+            this.setErrorMessage(null);
+            if( vdbManager.isGenerateRequired() ) {
+                setErrorMessage(Messages.GenerateDynamicVdbPageTwo_clickGenerateToCreateVdb);
+                this.setPageComplete(false);
+            } else {
+        		setErrorMessage(null);
+        		setMessage(Messages.GenerateDynamicVdbPageTwo_clickFinishToSaveVdb, NONE);
+        		this.setPageComplete(true);
+            }
         } else {
-            setErrorMessage(null);
-            setThisPageComplete(EMPTY_STRING, NONE);
+        	if( vdbManager.isGenerateRequired() ) {
+                setErrorMessage(Messages.GenerateDynamicVdbPageTwo_clickGenerateToCreateVdb);
+                this.setPageComplete(false);
+        	} else {
+        		setErrorMessage(null);
+        		setMessage(Messages.GenerateDynamicVdbPageTwo_clickFinishToSaveVdb, NONE);
+        		this.setPageComplete(true);
+        	}
         }
-    }
-
-    private void setThisPageComplete(String message, int severity) {
-        WizardUtil.setPageComplete(this, message, severity);
     }
 
     @Override
