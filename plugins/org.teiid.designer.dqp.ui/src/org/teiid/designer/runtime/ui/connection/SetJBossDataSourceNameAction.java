@@ -1,7 +1,12 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.designer.runtime.ui.connection;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,22 +21,18 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
-import org.teiid.designer.runtime.connection.TranslatorUtils;
-import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidTranslator;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.actions.IConnectionAction;
@@ -45,20 +46,17 @@ import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-
-/**
- * @since 8.0
- */
-public class SetTranslatorNameAction extends SortableSelectionAction  implements IConnectionAction {
-    private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetTranslatorNameAction.title"); //$NON-NLS-1$
-    private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.title"); //$NON-NLS-1$
+public class SetJBossDataSourceNameAction extends SortableSelectionAction  implements IConnectionAction {
+    private static final String ACTION_TITLE = DqpUiConstants.UTIL.getString("SetJBossDataSourceNameAction.title"); //$NON-NLS-1$
+    private static final String DIALOG_TITLE = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.title"); //$NON-NLS-1$
     private static final String SPACE = " "; //$NON-NLS-1$
+    private static final String JNDI_PREFIX = "java:/";  //$NON-NLS-1$
     private ConnectionInfoHelper connectionInfoHelper;
 
     /**
      * @since 5.0
      */
-    public SetTranslatorNameAction() {
+    public SetJBossDataSourceNameAction() {
         super(ACTION_TITLE, SWT.DEFAULT);
         setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SET_CONNECTION_ICON));
         this.connectionInfoHelper = new ConnectionInfoHelper();
@@ -90,26 +88,36 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         IFile modelFile = (IFile)SelectionUtilities.getSelectedObjects(getSelection()).get(0);
         ModelResource mr = ModelUtilities.getModelResourceForIFile(modelFile, true);
         
-        String existingName = connectionInfoHelper.getTranslatorName(mr);
+        String existingName = connectionInfoHelper.getJndiProperty(mr);
+        
+        // Strip off "java:/"
+        String nameOnly = StringConstants.EMPTY_STRING;
+
+        if( !StringUtilities.isEmpty(existingName) ) {
+        	nameOnly = existingName;
+        	if( existingName.startsWith(JNDI_PREFIX) ) {
+        		nameOnly = existingName.substring(6);
+        	}
+        }
         
         // Query User for Translator name
 
-        String newTranslatorName = queryUserForTranslatorName(existingName);
+        String newJNDIName = queryUserForJNDIName(nameOnly);
         
-        if( !existingName.equals(newTranslatorName)) {
-        	setTranslatorNameInTxn(mr, newTranslatorName);
+        if( existingName == null || !existingName.equals(newJNDIName)) {
+        	setJNDINameInTxn(mr, JNDI_PREFIX + newJNDIName);
         }
     }
     
-    private void setTranslatorNameInTxn(ModelResource modelResource, String translatorName) {
-        boolean requiredStart = ModelerCore.startTxn(true, true, "Set Translator Name", this); //$NON-NLS-1$
+    private void setJNDINameInTxn(ModelResource modelResource, String newJNDIName) {
+        boolean requiredStart = ModelerCore.startTxn(true, true, "Set Data Source JNDI Name", this); //$NON-NLS-1$
         boolean succeeded = false;
         try {
             ModelEditor editor = ModelEditorManager.getModelEditorForFile((IFile)modelResource.getCorrespondingResource(), true);
             if (editor != null) {
                 boolean isDirty = editor.isDirty();
 
-                connectionInfoHelper.setTranslatorName(modelResource, translatorName);
+                connectionInfoHelper.setJNDIName(modelResource, newJNDIName);
 
                 if (!isDirty && editor.isDirty()) {
                     editor.doSave(new NullProgressMonitor());
@@ -137,9 +145,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
     }
     
 
-    public String queryUserForTranslatorName( String existingName ) {
+    public String queryUserForJNDIName( String existingName ) {
 
-        EnterTranslatorNameDialog dialog = new EnterTranslatorNameDialog(Display.getCurrent().getActiveShell(), existingName);
+    	EnterDataSourceJNDINameDialog dialog = new EnterDataSourceJNDINameDialog(Display.getCurrent().getActiveShell(), existingName);
 
         dialog.open();
 
@@ -162,7 +170,8 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
     @SuppressWarnings("rawtypes")
 	private boolean sourceModelSelected( ISelection theSelection ) {
         boolean result = false;
-        List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
+
+		List allObjs = SelectionUtilities.getSelectedObjects(theSelection);
         if (!allObjs.isEmpty() && allObjs.size() == 1) {
             Iterator iter = allObjs.iterator();
             result = true;
@@ -181,7 +190,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         return result;
     }
     
-    class EnterTranslatorNameDialog extends Dialog {
+    class EnterDataSourceJNDINameDialog extends Dialog {
         //============================================================================================================================
         // Constants
         private static final int COLUMN_COUNT = 2;
@@ -189,12 +198,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         //============================================================================================================================
         // Variables
         
-        private Text translatorField;
+        private Text jndiNameField;
         
-        private String translatorName;
-        
-        private Collection<String> translatorNames = new ArrayList<String>();
-        private Combo translatorNameCombo;
+        private String jndiName;
 
         //============================================================================================================================
         // Constructors
@@ -205,9 +211,9 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
          * @param title
          * @since 4.0
          */
-        public EnterTranslatorNameDialog(final Shell shell, final String existingName) {
+        public EnterDataSourceJNDINameDialog(final Shell shell, final String existingName) {
             super(shell, DIALOG_TITLE);
-            this.translatorName = existingName;
+            this.jndiName = existingName;
         }
         
         //============================================================================================================================
@@ -220,8 +226,6 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
          */
         @Override
         protected Control createDialogArea(final Composite parent) {
-        	ITeiidServer server = TranslatorUtils.getDefaultServer();
-        	boolean serverAvailable =  (server != null && server.isConnected());
         	
             final Composite dlgPanel = (Composite)super.createDialogArea(parent);
             GridData pgd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
@@ -230,89 +234,33 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
             dlgPanel.setLayoutData(pgd);
             ((GridLayout)dlgPanel.getLayout()).numColumns = COLUMN_COUNT;
             
-            String message = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.message"); //$NON-NLS-1$
-            if( serverAvailable ) {
-            	message = DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.selectTranslatorMessage"); //$NON-NLS-1$
-            }
+            String message = DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.message"); //$NON-NLS-1$
+
             Label msgLabel = WidgetFactory.createLabel(dlgPanel, message);
             GridData gd = new GridData(SWT.BEGINNING, SWT.CENTER, true, true);
             gd.horizontalSpan = 2;
             msgLabel.setLayoutData(gd);
             
-            
-            if( !serverAvailable ) {
-	            WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterTranslatorNameDialog.nameLabel") + SPACE); //$NON-NLS-1$
-	            this.translatorField = WidgetFactory.createTextField(dlgPanel);
-	            if( this.translatorName != null && this.translatorName.length() > 0 ) {
-	            	this.translatorField.setText(this.translatorName);
-	            }
-	            this.translatorField.addModifyListener(new ModifyListener() {
-	    			
-	    			@Override
-	    			public void modifyText(ModifyEvent e) {
-	    				if( translatorField.getText() != null && translatorField.getText().length() > 0 ) {
-	    					getButton(IDialogConstants.OK_ID).setEnabled(true);
-	    					translatorName = translatorField.getText();
-	    				} else {
-	    					translatorName = ""; //$NON-NLS-1$
-	    					getButton(IDialogConstants.OK_ID).setEnabled(false);
-	    				}
-	    				
-	    			}
-	    		});
-            } else {
-            	// -------------------------------------
-                // Combo for Translator selection
-                // -------------------------------------
-
-                Label translatorLabel = new Label(dlgPanel,SWT.NONE);
-                translatorLabel.setText("Translator");
-                
-                /*
-                 * Refresh the list of currently available translators on the server
-                 */
-                try {
-                    translatorNames.clear();
-                    Collection<ITeiidTranslator> availableTranslators = TranslatorUtils.getTranslators();
-                    for(ITeiidTranslator translator: availableTranslators) {
-                        translatorNames.add(translator.getName());
-                    }
-                } catch (Exception ex) {
-                    translatorNames.clear();
-                    DqpUiPlugin.UTIL.log(ex);
-                }
-                
-                this.translatorNameCombo = WidgetFactory.createCombo(dlgPanel,
-                                                                         SWT.READ_ONLY,
-                                                                         GridData.FILL_HORIZONTAL,
-                                                                         translatorNames.toArray());
-				this.translatorNameCombo.setVisibleItemCount(8);
-				this.translatorNameCombo.addSelectionListener(new SelectionListener() {
-					
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-			            int selIndex = translatorNameCombo.getSelectionIndex();
-			            translatorName = translatorNameCombo.getItem(selIndex);
-					}
-					
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-				});
-		    	if( translatorName != null ) {
-		            // walk through the metamodel classes and select the matching type
-		            String[] names = translatorNameCombo.getItems();
-		            for (int i = 0; i < names.length; i++) {
-		                if (names[i].equalsIgnoreCase(translatorName)) {
-		                	translatorNameCombo.select(i);
-		                    break;
-		                }
-		            }
-		           
-		    	} else {
-		    		translatorNameCombo.select(-1);
-		    	}
+            WidgetFactory.createLabel(dlgPanel, DqpUiConstants.UTIL.getString("EnterDataSourceJNDINameDialog.nameLabel") + SPACE); //$NON-NLS-1$
+            this.jndiNameField = WidgetFactory.createTextField(dlgPanel);
+            if( this.jndiName != null && this.jndiName.length() > 0 ) {
+            	this.jndiNameField.setText(this.jndiName);
             }
+            this.jndiNameField.addModifyListener(new ModifyListener() {
+    			
+    			@Override
+    			public void modifyText(ModifyEvent e) {
+    				if( jndiNameField.getText() != null && jndiNameField.getText().length() > 0 ) {
+    					getButton(IDialogConstants.OK_ID).setEnabled(true);
+    					jndiName = jndiNameField.getText();
+    				} else {
+    					jndiName = ""; //$NON-NLS-1$
+    					getButton(IDialogConstants.OK_ID).setEnabled(false);
+    				}
+    				
+    			}
+    		});
+            
 
             return dlgPanel;
         }
@@ -325,7 +273,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
         @Override
         public void create() {
             super.create();
-            getButton(IDialogConstants.OK_ID).setEnabled(this.translatorName != null);
+            getButton(IDialogConstants.OK_ID).setEnabled(this.jndiName != null);
         }
         
         /**<p>
@@ -343,7 +291,7 @@ public class SetTranslatorNameAction extends SortableSelectionAction  implements
     	 * @return password
     	 */
     	public String getTranslatorName() {
-    		return translatorName;
+    		return jndiName;
     	}
         
         
