@@ -8,33 +8,37 @@
 		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
-	<artifactId>org.teiid.designer.webservice.lib</artifactId> 
+	<artifactId>org.teiid.designer.webservice.lib</artifactId>
 	<version>9.1.0-SNAPSHOT</version>
 	<packaging>eclipse-plugin</packaging>
 	<properties>
 		<war.lib.dir>webapps/WEB-INF/lib</war.lib.dir>
 		<version.activation>1.1</version.activation>
-		<version.commons-codec>1.3</version.commons-codec>
+		<version.commons-codec>1.4</version.commons-codec>
 		<version.commons-logging>1.1.1</version.commons-logging>
-		<version.httpclient>4.0.3</version.httpclient>
-		<version.httpcore>4.0.1</version.httpcore>
-		<version.jackson>1.8.3</version.jackson>
-		<version.javassist>3.12.1.GA</version.javassist>
+		<version.guava>11.0.2</version.guava>
+		<version.httpclient>4.1.2</version.httpclient>
+		<version.httpcore>4.1.2</version.httpcore>
+		<version.jackson.module>2.0.0</version.jackson.module>
+		<version.jackson.schema>2.1.0</version.jackson.schema>
+		<version.jackson.core>2.1.5</version.jackson.core>
+		<version.javassist>3.16.1-GA</version.javassist>
 		<version.jcip-annotations>1.0</version.jcip-annotations>
 		<version.jettison>1.2</version.jettison>
 		<version.json>1.0</version.json>
 		<version.jsr250-api>1.0</version.jsr250-api>
-		<version.resteasy>2.2.0.GA</version.resteasy>
+		<version.jsr311>1.1.1</version.jsr311>
+		<version.resteasy>2.3.5.Final</version.resteasy>
 		<version.saxonhe>9.2.1.5</version.saxonhe>
 		<version.scannotation>1.0.3</version.scannotation>
 		<version.sjsxp>1.0.1</version.sjsxp>
 		<version.wss4j>1.6.17</version.wss4j>
-		<swagger-version>1.3.0</swagger-version>
-		<scala-lang-version>2.9.1-1</scala-lang-version>
-		<json4s-jackson-version>3.2.4</json4s-jackson-version>
-		<json4s-core-version>3.0.0</json4s-core-version>
-		<paranamer-version>2.5.2</paranamer-version>
-		<fasterxml-json-version>2.2.2</fasterxml-json-version>
+		<version.swagger>1.3.12</version.swagger>
+		<version.scala-lang>2.10.0</version.scala-lang>
+		<version.json4s-core>3.2.5</version.json4s-core>
+		<version.paranamer>2.5.2</version.paranamer>
+		<version.fasterxml-json>2.2.2</version.fasterxml-json>
+		<version.reflections>0.9.9</version.reflections>
 	</properties>
 	<build>
 		<plugins>
@@ -66,7 +70,7 @@
 									<version>${version.activation}</version>
 								</artifactItem>
 								<artifactItem>
-									<groupId>org.apache.commons</groupId>
+									<groupId>commons-codec</groupId>
 									<artifactId>commons-codec</artifactId>
 									<version>${version.commons-codec}</version>
 								</artifactItem>
@@ -85,23 +89,58 @@
 									<artifactId>httpcore</artifactId>
 									<version>${version.httpcore}</version>
 								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
+							<!-- 	<artifactItem> (moved to core)
+									<groupId>com.fasterxml.jackson</groupId>
 									<artifactId>jackson-core-asl</artifactId>
 									<version>${version.jackson}</version>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
+								</artifactItem>  -->
+							<!-- 	<artifactItem> (moved to jackson-jaxrs-json-provider)
+									<groupId>com.fasterxml.jackson</groupId>
 									<artifactId>jackson-jaxrs</artifactId>
 									<version>${version.jackson}</version>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.codehaus.jackson</groupId>
+								</artifactItem> -->
+							<!-- 	<artifactItem> (moved to databind)
+									<groupId>com.fasterxml.jackson</groupId>
 									<artifactId>jackson-mapper-asl</artifactId>
 									<version>${version.jackson}</version>
+								</artifactItem>  -->
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.jaxrs</groupId>
+									<artifactId>jackson-jaxrs-json-provider</artifactId>
+									<version>${version.jackson.module}</version>
 								</artifactItem>
 								<artifactItem>
-									<groupId>javassist</groupId>
+									<groupId>com.fasterxml.jackson.module</groupId>
+									<artifactId>jackson-module-jaxb-annotations</artifactId>
+									<version>${version.jackson.module}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.module</groupId>
+									<artifactId>jackson-module-jsonSchema</artifactId>
+									<version>${version.jackson.schema}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.module</groupId>
+									<artifactId>jackson-module-scala_2.10</artifactId>
+									<version>${version.jackson.core}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-databind</artifactId>
+									<version>${version.fasterxml-json}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-core</artifactId>
+									<version>${version.fasterxml-json}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-annotations</artifactId>
+									<version>${version.fasterxml-json}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.javassist</groupId>
 									<artifactId>javassist</artifactId>
 									<version>${version.javassist}</version>
 								</artifactItem>
@@ -162,59 +201,84 @@
 								</artifactItem>
 								<!-- swagger -->
 								<artifactItem>
-									<groupId>com.wordnik</groupId>
-									<artifactId>swagger-jersey-jaxrs_2.9.1</artifactId>
-									<version>${swagger-version}</version>
+									<groupId>com.google.guava</groupId>
+									<artifactId>guava</artifactId>
+									<version>${version.guava}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.wordnik</groupId>
-									<artifactId>swagger-annotations_2.9.1</artifactId>
-									<version>${swagger-version}</version>
+									<artifactId>swagger-annotations</artifactId>
+									<version>${version.swagger}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.wordnik</groupId>
-									<artifactId>swagger-core_2.9.1</artifactId>
-									<version>${swagger-version}</version>
+									<artifactId>swagger-core_2.10</artifactId>
+									<version>${version.swagger}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>javax.ws.rs</groupId>
+									<artifactId>jsr311-api</artifactId>
+									<version>${version.jsr311}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.wordnik</groupId>
-									<artifactId>swagger-jaxrs_2.9.1</artifactId>
-									<version>${swagger-version}</version>
+									<artifactId>swagger-core_2.10</artifactId>
+									<version>${version.swagger}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.wordnik</groupId>
+									<artifactId>swagger-jaxrs_2.10</artifactId>
+									<version>${version.swagger}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.reflections</groupId>
+									<artifactId>reflections</artifactId>
+									<version>${version.reflections}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.scala-lang</groupId>
 									<artifactId>scala-library</artifactId>
-									<version>${scala-lang-version}</version>
+									<version>${version.scala-lang}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.scala-lang</groupId>
+									<artifactId>scala-reflect</artifactId>
+									<version>${version.scala-lang}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.json4s</groupId>
-									<artifactId>json4s-jackson_2.9.1-1</artifactId>
-									<version>${json4s-jackson-version}</version>
+									<artifactId>json4s-jackson_2.10</artifactId>
+									<version>${version.json4s-core}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.json4s</groupId>
-									<artifactId>json4s-core_2.9.2</artifactId>
-									<version>${json4s-core-version}</version>
-								</artifactItem>
-									<artifactItem>
-									<groupId>com.fasterxml.jackson.core</groupId>
-									<artifactId>jackson-databind</artifactId>
-									<version>${fasterxml-json-version}</version>
+									<artifactId>json4s-core_2.10</artifactId>
+									<version>${version.json4s-core}</version>
 								</artifactItem>
 								<artifactItem>
-									<groupId>com.fasterxml.jackson.core</groupId>
-									<artifactId>jackson-core</artifactId>
-									<version>${fasterxml-json-version}</version>
+									<groupId>org.json4s</groupId>
+									<artifactId>json4s-ast_2.10</artifactId>
+									<version>${version.json4s-core}</version>
 								</artifactItem>
 								<artifactItem>
-									<groupId>com.fasterxml.jackson.core</groupId>
-									<artifactId>jackson-annotations</artifactId>
-									<version>${fasterxml-json-version}</version>
+									<groupId>org.json4s</groupId>
+									<artifactId>json4s-ext_2.10</artifactId>
+									<version>${version.json4s-core}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.json4s</groupId>
+									<artifactId>json4s-jackson_2.10</artifactId>
+									<version>${version.json4s-core}</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.json4s</groupId>
+									<artifactId>json4s-native_2.10</artifactId>
+									<version>${version.json4s-core}</version>
 								</artifactItem>
 								<artifactItem>
 									<groupId>com.thoughtworks.paranamer</groupId>
 									<artifactId>paranamer</artifactId>
-									<version>${paranamer-version}</version>
+									<version>${version.paranamer}</version>
 								</artifactItem>
 							</artifactItems>
 							<skip>false</skip>
