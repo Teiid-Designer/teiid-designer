@@ -51,43 +51,49 @@ public interface WebServiceLibConstants {
 
     String HTTP_CORE_JAR = "httpcore.jar"; //$NON-NLS-1$
 
-    String JACKSON_CORE_ASL_JAR = "jackson-core-asl.jar"; //$NON-NLS-1$
+    String JACKSON_CORE_JAR = "jackson-core.jar"; //$NON-NLS-1$
 
     String JACKSON_JAXRS_JAR = "jackson-jaxrs.jar"; //$NON-NLS-1$
 
-    String JACKSON_MAPPER_ASL_JAR = "jackson-mapper-asl.jar"; //$NON-NLS-1$
+    String JACKSON_DATABIND_JAR = "jackson-databind.jar"; //$NON-NLS-1$
+    
+    String JACKSON_JAXRS_JSON_PROVIDER_JAR = "jackson-jaxrs-json-provider.jar"; //$NON-NLS-1$
 
+    String JACKSON_MODULE_JSON_SCHEMA_JAR = "jackson-module-jsonSchema.jar"; //$NON-NLS-1$
+    
     String JAVASSIST_JAR = "javassist.jar"; //$NON-NLS-1$
 
     String JAXRS_API_JAR = "jaxrs-api.jar"; //$NON-NLS-1$
 
     String JCIP_ANNOTATIONS_JAR = "jcip-annotations.jar"; //$NON-NLS-1$
 
-    String JETTISON_JAR = "jettison.jar"; //$NON-NLS-1$
-
     String JSON_JAR = "json.jar"; //$NON-NLS-1$
-
-    String JSR250_API_JAR = "jsr250-api.jar"; //$NON-NLS-1$
 
     String RESTEASY_JAXB_PROVIDER_JAR = "resteasy-jaxb-provider.jar"; //$NON-NLS-1$
 
-    String RESTEASY_JAXRS_JAR = "resteasy-jaxrs.jar"; //$NON-NLS-1$
+    String RESTEASY_JAXRS_JAR = "resteasy-jaxrs.Final.jar"; //$NON-NLS-1$
 
-    String RESTEASY_JETTISON_PROVIDER_JAR = "resteasy-jettison-provider.jar"; //$NON-NLS-1$
-
-    String SAXONHE_JAR = "saxonhe.jar"; //$NON-NLS-1$
+    String RESTEASY_JETTISON_PROVIDER_JAR = "resteasy-jettison-provider-2.3.5.jar"; //$NON-NLS-1$
 
     String SCANANNOTATION_JAR = "scannotation.jar"; //$NON-NLS-1$
 
-    String SJSXP_JAR = "sjsxp.jar"; //$NON-NLS-1$
+    String SWAGGER_ANNOTATIONS_JAR = "swagger-annotations.jar"; //$NON-NLS-1$
     
-    String SWAGGER_JERSEYS_JAR = "swagger-jersey-jaxrs_2.9.1.jar"; //$NON-NLS-1$
+    String SWAGGER_CORE_JAR = "swagger-core_2.10.jar"; //$NON-NLS-1$
     
-    String SWAGGER_ANNOTATIONS_JAR = "swagger-annotations_2.9.1.jar"; //$NON-NLS-1$
+    String SWAGGER_JAXRS_JAR = "swagger-jaxrs_2.10.jar"; //$NON-NLS-1$
     
-    String SWAGGER_CORE_JAR = "swagger-core_2.9.1.jar"; //$NON-NLS-1$
+    String SERVLET_API = "servlet-api.jar"; //$NON-NLS-1$
     
-    String SWAGGER_JAXRS_JAR = "swagger-jaxrs_2.9.1.jar"; //$NON-NLS-1$
+    String REFLECTIONS = "reflections.jar"; //$NON-NLS-1$
+    
+    String SCALA_LIBRARY = "scala-library-2.10.0.jar"; //$NON-NLS-1$
+    
+    String GUAVA = "guava.jar"; //$NON-NLS-1$
+    
+    String JSR250_API = "jsr250_api.jar"; //$NON-NLS-1$
+    
+    String JSR305_API = "jsr305_api.jar"; //$NON-NLS-1$
     
     /* Soap Related */
 
