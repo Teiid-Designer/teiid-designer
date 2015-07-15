@@ -81,6 +81,7 @@ public class JdbcManagerImpl implements JdbcManager {
     private final static String DATATOOLS_ORACLE_CP = "org.eclipse.datatools.enablement.oracle.connectionProfile"; //$NON-NLS-1$
     private final static String DATATOOLS_CONNECTION_PROPS_KEY = "org.eclipse.datatools.connectivity.db.connectionProperties"; //$NON-NLS-1$
     private final static String ORACLE_INCLUDE_SYNONYMS_PROP = "includeSynonyms";  //$NON-NLS-1$
+    private final static String DATATOOLS_CONNECTION_PROPS_PASSWORD = "org.eclipse.datatools.connectivity.db.password"; //$NON-NLS-1$
 
     /**
      * @since 5.0
@@ -172,7 +173,7 @@ public class JdbcManagerImpl implements JdbcManager {
         }
 
         final String factoryId = profile.getProvider().getConnectionFactory("java.sql.Connection").getId(); //$NON-NLS-1$
-        // override the pw in the ConnectionProfile with one supplied in the importer.
+
         // IConnection connection = profile.createConnection(factoryId, jdbcSource.getUsername(), password);
 
         // ------------------------------------------------
@@ -181,17 +182,23 @@ public class JdbcManagerImpl implements JdbcManager {
         String providerId = profile.getProviderId();
         if(providerId!=null && providerId.equalsIgnoreCase(DATATOOLS_ORACLE_CP)) {
             Properties baseProps = profile.getBaseProperties();
+            
             String connectionProps = baseProps.getProperty(DATATOOLS_CONNECTION_PROPS_KEY);
+            
             // No connection properties - set new 'includeSynonyms=true'
             if(CoreStringUtil.isEmpty(connectionProps)) {
                 baseProps.setProperty(DATATOOLS_CONNECTION_PROPS_KEY, ORACLE_INCLUDE_SYNONYMS_PROP+"=true"); //$NON-NLS-1$
-                profile.setBaseProperties(baseProps);
             // Has connection properties - append 'includeSynonyms=true' if not found
             } else if(connectionProps.indexOf(ORACLE_INCLUDE_SYNONYMS_PROP)==-1) {
                 connectionProps = connectionProps+","+ORACLE_INCLUDE_SYNONYMS_PROP+"=true"; //$NON-NLS-1$ //$NON-NLS-2$
                 baseProps.setProperty(DATATOOLS_CONNECTION_PROPS_KEY, connectionProps);
-                profile.setBaseProperties(baseProps);
+
             }
+            // override the pw in the ConnectionProfile with one supplied in the importer.
+            if( !CoreStringUtil.isEmpty(password) ) {
+            	baseProps.setProperty(DATATOOLS_CONNECTION_PROPS_PASSWORD, password);
+            }
+            profile.setBaseProperties(baseProps);
         }
         
         final IConnection connection = profile.createConnection(factoryId);
