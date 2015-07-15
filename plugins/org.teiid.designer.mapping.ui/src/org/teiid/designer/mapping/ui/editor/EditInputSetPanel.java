@@ -1,10 +1,10 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
 package org.teiid.designer.mapping.ui.editor;
 
 import java.util.Collection;
@@ -13,6 +13,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor.PropertyValueWrapper;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
@@ -26,12 +28,10 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -59,35 +59,30 @@ import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
-/**
- * InputSetPanel
- *
- * @since 8.0
- */
-public class InputSetPanel extends SashForm implements SelectionListener, UiConstants {
+public class EditInputSetPanel extends Composite implements SelectionListener, UiConstants {
 
     // Style Contants
     private static final int BUTTON_GRID_STYLE = GridData.HORIZONTAL_ALIGN_FILL | GridData.HORIZONTAL_ALIGN_CENTER;
 
-    private static final String ATTRIBUTE_COL_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.attributeCol.text"); //$NON-NLS-1$
-    private static final String BINDING_COL_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.bindingCol.text"); //$NON-NLS-1$
-    private static final String NEW_BUTTON_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.newButton.text"); //$NON-NLS-1$
-    private static final String NEW_BUTTON_TOOLTIP = UiConstants.Util.getString("InputSetObjectEditorPage.newButton.toolTip"); //$NON-NLS-1$
-    private static final String BIND_BUTTON_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.bindButton.text"); //$NON-NLS-1$
-    private static final String BIND_BUTTON_TOOLTIP = UiConstants.Util.getString("InputSetObjectEditorPage.bindButton.toolTip"); //$NON-NLS-1$
-    private static final String UNBIND_BUTTON_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.unbindButton.text"); //$NON-NLS-1$
-    private static final String UNBIND_BUTTON_TOOLTIP = UiConstants.Util.getString("InputSetObjectEditorPage.unbindButton.toolTip"); //$NON-NLS-1$
-    private static final String DELETE_BUTTON_TEXT = UiConstants.Util.getString("InputSetObjectEditorPage.deleteButton.text"); //$NON-NLS-1$
-    private static final String DELETE_BUTTON_TOOLTIP = UiConstants.Util.getString("InputSetObjectEditorPage.deleteButton.toolTip"); //$NON-NLS-1$
-    private static final String TREE_TOOLTIP = UiConstants.Util.getString("InputSetObjectEditorPage.tree.toolTip"); //$NON-NLS-1$
+    private static final String ATTRIBUTE_COL_TEXT = UiConstants.Util.getString("EditInputSetPanel.attributeCol.text"); //$NON-NLS-1$
+    private static final String BINDING_COL_TEXT = UiConstants.Util.getString("EditInputSetPanel.bindingCol.text"); //$NON-NLS-1$
+    private static final String NEW_BUTTON_TEXT = UiConstants.Util.getString("EditInputSetPanel.newButton.text"); //$NON-NLS-1$
+    private static final String NEW_BUTTON_TOOLTIP = UiConstants.Util.getString("EditInputSetPanel.newButton.toolTip"); //$NON-NLS-1$
+    private static final String BIND_BUTTON_TEXT = UiConstants.Util.getString("EditInputSetPanel.bindButton.text"); //$NON-NLS-1$
+    private static final String BIND_BUTTON_TOOLTIP = UiConstants.Util.getString("EditInputSetPanel.bindButton.toolTip"); //$NON-NLS-1$
+    private static final String UNBIND_BUTTON_TEXT = UiConstants.Util.getString("EditInputSetPanel.unbindButton.text"); //$NON-NLS-1$
+    private static final String UNBIND_BUTTON_TOOLTIP = UiConstants.Util.getString("EditInputSetPanel.unbindButton.toolTip"); //$NON-NLS-1$
+    private static final String DELETE_BUTTON_TEXT = UiConstants.Util.getString("EditInputSetPanel.deleteButton.text"); //$NON-NLS-1$
+    private static final String DELETE_BUTTON_TOOLTIP = UiConstants.Util.getString("EditInputSetPanel.deleteButton.toolTip"); //$NON-NLS-1$
+    private static final String TREE_TOOLTIP = UiConstants.Util.getString("EditInputSetPanel.tree.toolTip"); //$NON-NLS-1$
 
-    private static final String UNDO_NEW = UiConstants.Util.getString("InputSetPanel.undoNew"); //$NON-NLS-1$
-    private static final String UNDO_BIND = UiConstants.Util.getString("InputSetPanel.undoBind"); //$NON-NLS-1$
-    private static final String UNDO_UNBIND = UiConstants.Util.getString("InputSetPanel.undoUnbind"); //$NON-NLS-1$
-    private static final String UNDO_DELETE = UiConstants.Util.getString("InputSetPanel.undoDelete"); //$NON-NLS-1$
-    private static final String UNDO_DELETE_MANY = UiConstants.Util.getString("InputSetPanel.undoDeleteMany"); //$NON-NLS-1$
+    private static final String UNDO_NEW = UiConstants.Util.getString("EditInputSetPanel.undoNew"); //$NON-NLS-1$
+    private static final String UNDO_BIND = UiConstants.Util.getString("EditInputSetPanel.undoBind"); //$NON-NLS-1$
+    private static final String UNDO_UNBIND = UiConstants.Util.getString("EditInputSetPanel.undoUnbind"); //$NON-NLS-1$
+    private static final String UNDO_DELETE = UiConstants.Util.getString("EditInputSetPanel.undoDelete"); //$NON-NLS-1$
+    private static final String UNDO_DELETE_MANY = UiConstants.Util.getString("EditInputSetPanel.undoDeleteMany"); //$NON-NLS-1$
 
-    private static final String PARAM_BASE_NAME = UiConstants.Util.getString("InputSetObjectEditorPage.inputParamBaseName.text"); //$NON-NLS-1$
+    private static final String PARAM_BASE_NAME = UiConstants.Util.getString("EditInputSetPanel.inputParamBaseName.text"); //$NON-NLS-1$
 
     private Table table;
     TableViewer tableViewer;
@@ -96,7 +91,6 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
     private Button btnUnbindButton;
     private Button btnDeleteButton;
 
-    private Composite pnlTreePanel;
     private TreeViewer tvTreeViewer;
     private TreeContentProvider treeContentProvider;
 
@@ -114,9 +108,9 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
      * 
      * @param parent Parent of this control
      */
-    public InputSetPanel( Composite parent ) {
-        super(parent, SWT.VERTICAL);
-        createControl(this);
+    public EditInputSetPanel( Composite parent ) {
+        super(parent, SWT.NONE);
+        createControl();
     }
 
     /**
@@ -155,7 +149,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         setButtonStates();
 
         if (mappingAdapter != null) {
-            Collection parentMappingClasses = mappingAdapter.getParentMappingClasses(isoInputSetObject.getInputSet().getMappingClass(),
+            @SuppressWarnings("unchecked")
+			Collection<MappingClass> parentMappingClasses = mappingAdapter.getParentMappingClasses(isoInputSetObject.getInputSet().getMappingClass(),
                                                                                      this.mappableTree,
                                                                                      false);
             tvTreeViewer.setInput(parentMappingClasses);
@@ -184,38 +179,22 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
     /**
      * @See org.teiid.designer.ui.editors.ModelObjectEditor#createControl(org.eclipse.swt.widgets.Composite)
      */
-    public void createControl( Composite parent ) {
+    private void createControl() {
 
         // ------------------------------
         // Set layout for the SashForm
         // ------------------------------
-        GridLayout gridLayout = new GridLayout();
-        this.setLayout(gridLayout);
-        gridLayout.numColumns = 1;
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.widthHint = 600;
-        gridData.heightHint = 400;
-        this.setLayoutData(gridData);
-
-        // --------------------------------------------------
-        // Init the weighting for the top and bottom panels
-        // --------------------------------------------------
-
-        SashForm splitter = new SashForm(parent, SWT.HORIZONTAL);
+        GridLayoutFactory.swtDefaults().numColumns(3).applyTo(this);
+        GridDataFactory.swtDefaults().grab(true,  true).hint(600, 250).applyTo(this);
 
         // 1. Create the table
-        createTableViewerPanel(splitter);
-
-        Composite outerComposite = new Composite(splitter, SWT.NONE);
-        gridLayout = new GridLayout();
-        outerComposite.setLayout(gridLayout);
-        gridLayout.numColumns = 2;
+        createTableViewerPanel(this);
 
         // 2. Create the button panel
-        createControlButtonPanel(outerComposite);
+        createControlButtonPanel(this);
 
         // 3. Create the tree
-        createTree(outerComposite);
+        createTreeViewerPanel(this);
 
     }
 
@@ -279,11 +258,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         TableLayout layout = new TableLayout();
         table.setLayout(layout);
 
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        gridData.grabExcessVerticalSpace = true;
-        gridData.grabExcessHorizontalSpace = true;
-        table.setLayoutData(gridData);
-
+        GridDataFactory.swtDefaults().grab(true,  true).hint(250, 250).applyTo(table);
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
 
@@ -335,12 +310,9 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
      * 
      * @param theParent
      */
-    protected void createTree( Composite theParent ) {
-        pnlTreePanel = new Composite(theParent, SWT.NONE);
-        pnlTreePanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-        pnlTreePanel.setLayout(new FillLayout());
+    protected void createTreeViewerPanel( Composite theParent ) {
 
-        tvTreeViewer = createTreeViewer(pnlTreePanel);
+        tvTreeViewer = createTreeViewer(theParent);
 
         Tree tree = tvTreeViewer.getTree();
         tree.addSelectionListener(new SelectionListener() {
@@ -359,11 +331,19 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
     }
 
     public TreeViewer createTreeViewer( Composite parent ) {
-        TreeViewer viewer = new TreeViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+        TreeViewer treeViewer = new TreeViewer(parent, SWT.BORDER | SWT.SINGLE | SWT.FILL | SWT.H_SCROLL | SWT.V_SCROLL);
+
+        final GridData gridData = new GridData(GridData.FILL_BOTH);
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.widthHint = 220;
+        treeViewer.getControl().setLayoutData(gridData);
+        
         treeContentProvider = new TreeContentProvider();
-        viewer.setContentProvider(treeContentProvider);
-        viewer.setLabelProvider(ModelUtilities.getEMFLabelProvider());
-        return viewer;
+        treeViewer.setContentProvider(treeContentProvider);
+        treeViewer.setLabelProvider(ModelUtilities.getEMFLabelProvider());
+        treeViewer.setUseHashlookup(true);
+        
+        return treeViewer;
     }
 
     /**
@@ -375,7 +355,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
 
     void handleTableSelection() {
         setButtonStates();
-        List tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
+        List<Object> tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
         if (tableSelection.size() == 1) {
             BindingAdapter binding = (BindingAdapter)tableSelection.get(0);
             Object mapping = binding.getMapping();
@@ -481,7 +461,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
                 boolean tryAgain = true;
                 while (tryAgain) {
                     tryAgain = false;
-                    for (Iterator iter = inputSet.getInputParameters().iterator(); iter.hasNext();) {
+                    for (@SuppressWarnings("rawtypes")
+					Iterator iter = inputSet.getInputParameters().iterator(); iter.hasNext();) {
                         if (name.equals(((InputParameter)iter.next()).getName())) {
                             name = PARAM_BASE_NAME + (++nameIndex);
                             tryAgain = true;
@@ -520,7 +501,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
      * Handler for delete Button
      */
     void deleteButtonPressed() {
-        List tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
+        List<Object> tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
         boolean started = false;
         boolean succeeded = false;
         if (tableSelection.size() == 1) {
@@ -529,7 +510,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
             started = ModelerCore.startTxn(UNDO_DELETE_MANY, this);
         }
         try {
-            for (Iterator iter = tableSelection.iterator(); iter.hasNext();) {
+            for (@SuppressWarnings("rawtypes")
+			Iterator iter = tableSelection.iterator(); iter.hasNext();) {
                 BindingAdapter binding = (BindingAdapter)iter.next();
                 binding.delete();
                 getBindingList().remove(binding);
@@ -574,7 +556,7 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
 
             // enable the bind button only if a single valid object is selected in both the table and tree
             enable = false;
-            List tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
+            List<Object> tableSelection = SelectionUtilities.getSelectedObjects(tableViewer.getSelection());
             if (tableSelection.size() == 1) {
                 BindingAdapter binding = (BindingAdapter)tableSelection.get(0);
                 if (!binding.isBound()) {
@@ -657,7 +639,8 @@ public class InputSetPanel extends SashForm implements SelectionListener, UiCons
         }
 
         // Return the bindings as an array of Objects
-        @Override
+        @SuppressWarnings("rawtypes")
+		@Override
 		public Object[] getElements( Object parent ) {
             return ((Collection)parent).toArray();
         }
