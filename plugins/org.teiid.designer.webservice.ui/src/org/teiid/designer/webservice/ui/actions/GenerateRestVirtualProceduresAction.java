@@ -893,6 +893,26 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				}
 			}
 			
+			// check the selected model is a view model
+			IPath modelPath = viewModelFolder.getFullPath().append(viewModelName + ".xmi");
+			if (ModelUtil.isModelFile(modelPath)) {
+				ModelResource theModel = null;
+				try {
+		    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		    		if(item != null && item.exists()){
+						IResource iRes = item.getCorrespondingResource();
+						theModel = ModelUtilities.getModelResource(iRes);
+		    		}
+				} catch (Exception ex) {
+					ModelerCore.Util.log(ex);
+				}
+				if (theModel != null && !ModelIdentifier.isRelationalViewModel(theModel)) {
+					setErrorMessage(getString("msg.selectedModelMustBeViewModel")); //$NON-NLS-1$
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+					return;
+				}
+			}
+			
 			deselectAllButton.setEnabled( checkedItems > 0 );
 			selectAllButton.setEnabled(checkedItems < maxItems);
 			if( checkedItems == 0 ) {
