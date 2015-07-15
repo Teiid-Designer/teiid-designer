@@ -529,7 +529,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
                                  + "ResourceTemplate.java"); //$NON-NLS-1$
 
         File restPlugin = new File(webInfClassesDirectory.getCanonicalPath() + pathToPlugin + File.separator + "RestPlugin.java"); //$NON-NLS-1$
-
+        
         File teiidProvider = new File(webInfClassesDirectory.getCanonicalPath() + pathToResource + File.separator
                                       + teiidProviderJavaFile + ".java"); //$NON-NLS-1$
 
@@ -548,16 +548,18 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
         if (compilerTool != null) {
             StandardJavaFileManager fileManager = compilerTool.getStandardFileManager(null, null, null);
 
-            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_CORE_ASL_JAR;
+            String pathToJar1 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_CORE_JAR;
             String pathToJar2 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_JAXRS_JAR;
-            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_MAPPER_ASL_JAR;
-            String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + JSON_JAR;
-            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + JAXRS_API_JAR;
-            String pathToJar6 = webInfLibDirectory.getCanonicalPath() + File.separator + SAXONHE_JAR;
-            String pathToJar7 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_ANNOTATIONS_JAR;
-            String pathToJar8 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_CORE_JAR;
-            String pathToJar9 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_JAXRS_JAR;
-            String pathToJar10 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_JERSEYS_JAR;
+            String pathToJar3 = webInfLibDirectory.getCanonicalPath() + File.separator + JSON_JAR;
+            String pathToJar4 = webInfLibDirectory.getCanonicalPath() + File.separator + JAXRS_API_JAR;
+            String pathToJar5 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_ANNOTATIONS_JAR;
+            String pathToJar6 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_CORE_JAR;
+            String pathToJar7 = webInfLibDirectory.getCanonicalPath() + File.separator + SWAGGER_JAXRS_JAR;
+            String pathToJar8 = webInfLibDirectory.getCanonicalPath() + File.separator + SERVLET_API;
+            String pathToJar9 = webInfLibDirectory.getCanonicalPath() + File.separator + REFLECTIONS;
+            String pathToJar10 = webInfLibDirectory.getCanonicalPath() + File.separator + SCALA_LIBRARY;
+            String pathToJar11 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_CORE_JAR;
+            String pathToJar12 = webInfLibDirectory.getCanonicalPath() + File.separator + JACKSON_DATABIND_JAR;
             
             FileUtils.copy(spiFile, webInfLibDirectory, true);
             FileUtils.copy(runtimeFile, webInfLibDirectory, true);
@@ -573,6 +575,8 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             classPaths.add(new File(pathToJar8));
             classPaths.add(new File(pathToJar9));
             classPaths.add(new File(pathToJar10));
+            classPaths.add(new File(pathToJar11));
+            classPaths.add(new File(pathToJar12));
 
             classPaths.add(runtimeFile);
             classPaths.add(spiFile);
@@ -612,9 +616,9 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             if (!includeJars) {
             	File tempFolder = new File(webInfClassesDirectory+"/tmp"); //$NON-NLS-1$
                 File jsonJar = new File(pathToJar4);
-                File saxonJar = new File(pathToJar6);
+            //    File saxonJar = new File(pathToJar6);
                 List<File> jarsToAdd = new ArrayList<File>();
-                jarsToAdd.add(saxonJar);
+            //    jarsToAdd.add(saxonJar);
                 jarsToAdd.add(jsonJar);
                 jarsToAdd.add(spiFile);
                 jarsToAdd.add(runtimeFile);
