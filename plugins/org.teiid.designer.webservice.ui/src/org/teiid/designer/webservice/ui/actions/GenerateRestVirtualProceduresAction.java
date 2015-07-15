@@ -107,6 +107,8 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	private static final String getString(String key) {
 		return UTIL.getString("generateRestVirtualProceduresAction." + key);
 	}
+	
+	private IContainer viewModelFolder;
 
     public GenerateRestVirtualProceduresAction() {
         super();
@@ -529,7 +531,6 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 
         
     	private Text viewModelContainerText;
-    	private IContainer viewModelFolder;
         String viewModelName;
     	private Text viewModelFileText;
 
@@ -543,7 +544,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
             this.modelResource = resource;
             this.allTablesAndViews = getTables(modelResource);
             if( ModelIdentifier.isRelationalViewModel(resource) ) {
-            	this.viewModelFolder = (IContainer)resource.getResource().getParent();
+            	viewModelFolder = (IContainer)resource.getResource().getParent();
             	this.viewModelName = resource.getResource().getFullPath().removeFileExtension().lastSegment();
             }
         }
@@ -570,7 +571,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 
         		viewModelContainerText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
         		if( viewModelFolder != null ) {
-        			viewModelContainerText.setText(this.viewModelFolder.getName());
+        			viewModelContainerText.setText(viewModelFolder.getName());
         		}
         		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         		viewModelContainerText.setLayoutData(gridData);
@@ -829,7 +830,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     				new ModelProjectSelectionStatusValidator());
     		
             if (folder != null) {
-                this.viewModelContainerText.setText(folder.toString());
+                this.viewModelContainerText.setText(folder.getFullPath().toString());
                 viewModelFolder = folder;
             } else {
                 this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
@@ -875,7 +876,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 			
 			// Validate view model location
 			
-			if( this.viewModelFolder == null ) {
+			if( viewModelFolder == null ) {
 				setErrorMessage(getString("viewFileLocationMustBeSpecified")); //$NON-NLS-1$
 				getButton(IDialogConstants.OK_ID).setEnabled(false);
 				return;
@@ -888,6 +889,26 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 			} else {
 				if(viewModelName.contains(StringUtilities.SPACE)){
 					setErrorMessage(getString("viewModelNameCannotContainSpaces")); //$NON-NLS-1$
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+					return;
+				}
+			}
+			
+			// check the selected model is a view model
+			IPath modelPath = viewModelFolder.getFullPath().append(viewModelName + ".xmi");
+			if (ModelUtil.isModelFile(modelPath)) {
+				ModelResource theModel = null;
+				try {
+		    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		    		if(item != null && item.exists()){
+						IResource iRes = item.getCorrespondingResource();
+						theModel = ModelUtilities.getModelResource(iRes);
+		    		}
+				} catch (Exception ex) {
+					ModelerCore.Util.log(ex);
+				}
+				if (theModel != null && !ModelIdentifier.isRelationalViewModel(theModel)) {
+					setErrorMessage(getString("msg.selectedModelMustBeViewModel")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
@@ -1109,15 +1130,17 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				boolean projectOpen = ((IResource) element).getProject().isOpen();
 				if (projectOpen) {
 					// Show open projects
-					if (element instanceof IProject) {
+					if(element instanceof IContainer) {
+						if( viewModelFolder != null ) {
+							doSelect = ((IContainer)element).getProject() == viewModelFolder.getProject();
+						} else doSelect = true;
+						// Show webservice model files, and not .xsd files
+					} else if( element instanceof IProject) {
 						try {
 		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
 		                } catch (CoreException e) {
 		                	ModelerCore.Util.log(e);
 		                }
-					} else if (element instanceof IContainer) {
-						doSelect = true;
-						// Show webservice model files, and not .xsd files
 					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
 						ModelResource theModel = null;
 						try {
