@@ -1908,8 +1908,8 @@ public class MappingDiagramModelFactory extends TransformationDiagramModelFactor
     }
 
     private void addEditInputSetImage( DiagramModelNode diagramNode ) {
-        Image image = UiPlugin.getDefault().getImage(UiConstants.Images.EDIT_OBJECT_ICON);
-        if (image != null) diagramNode.setFirstOverlayImage(image, PluginConstants.INPUT_SET_EDITOR_ID);
+//        Image image = UiPlugin.getDefault().getImage(UiConstants.Images.EDIT_OBJECT_ICON);
+//        if (image != null) diagramNode.setFirstOverlayImage(image, PluginConstants.INPUT_SET_EDITOR_ID);
     }
 
     /**

@@ -136,6 +136,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
     private MappingAction cloneAction;
     private RenameAction renameAction;
     private AddInputSetParameterAction addInputSetParameterAction;
+    private EditInputSetAction editInputSetAction;
 
     // actions map is needed since we want to override the default print action
     private ModelerGlobalActionsMap actionsMap;
@@ -315,8 +316,10 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
                         addInputSetParameterAction.setInputSet(selectionHelper.getSingleEObject());
                         theMenuMgr.add(addInputSetParameterAction);
                     }
-                    final IAction editAction = getAction(ModelerGlobalActions.EDIT);
-                    if (editAction != null) theMenuMgr.add(editAction);
+//                    final IAction editAction = getAction(ModelerGlobalActions.EDIT);
+//                    if (editAction != null) theMenuMgr.add(editAction);
+                    this.editInputSetAction.setDiagramEditor((DiagramEditor)getEditorPage());
+                    theMenuMgr.add(editInputSetAction);
                     theMenuMgr.add(new Separator());
                     theMenuMgr.add(new GroupMarker(T_MARKER));
                     theMenuMgr.appendToGroup(T_MARKER, this.clearSourcesAction);
@@ -965,6 +968,7 @@ public class MappingDiagramActionAdapter extends DiagramActionAdapter implements
         }
 
         this.addInputSetParameterAction = new AddInputSetParameterAction();
+        this.editInputSetAction = new EditInputSetAction();
     }
 
     private boolean isDetailedMapping() {

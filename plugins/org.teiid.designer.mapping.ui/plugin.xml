@@ -54,14 +54,6 @@
       </diagramType>
    </extension>
    <extension
-         id="InputSetObjectEditorPage"
-         name="Input Set Object Editor"
-         point="org.teiid.designer.ui.modelObjectEditorPage">
-      <class
-            name="org.teiid.designer.mapping.ui.editor.InputSetObjectEditorPage">
-      </class>
-   </extension>
-   <extension
          id="RecursionObjectEditorPage"
          name="Recursion Object Editor"
          point="org.teiid.designer.ui.modelObjectEditorPage">
