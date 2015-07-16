@@ -31,6 +31,8 @@ public class Permission {
 	private boolean allowLanguage;
 	private boolean canFilter;
 	private boolean canMask;
+	
+	private String NULL = "null"; //$NON-NLS-1$
 
 	public Permission(String targetName) {
 		super();
@@ -188,6 +190,7 @@ public class Permission {
 		if( parentValue == null ) return true;
 		if( parentValue == Boolean.TRUE && childValue == null) return false;
 		if( parentValue == Boolean.TRUE && childValue == Boolean.TRUE) return false;
+		if( parentValue == Boolean.FALSE && childValue == Boolean.FALSE) return false; 
 		
 		return true;
 	}
@@ -233,12 +236,37 @@ public class Permission {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Permission: ").append(this.targetName); //$NON-NLS-1$
-		sb.append("\n\t").append("c = " + this.crud.c.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append("\n\t").append("r = " + this.crud.r.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append("\n\t").append("u = " + this.crud.u.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append("\n\t").append("d = " + this.crud.d.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append("\n\t").append("e = " + this.crud.e.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
-		sb.append("\n\t").append("a = " + this.crud.a.booleanValue()); //$NON-NLS-1$ //$NON-NLS-2$
+		String value = NULL;
+		if( this.crud.c != null ) {
+			value = Boolean.toString(this.crud.c.booleanValue());
+		}
+		sb.append("\n\t").append("c = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+		value = NULL;
+		if( this.crud.r != null ) {
+			value = Boolean.toString(this.crud.r.booleanValue());
+		}
+		sb.append("\n\t").append("r = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+		value = NULL;
+		if( this.crud.u != null ) {
+			value = Boolean.toString(this.crud.u.booleanValue());
+		}
+		sb.append("\n\t").append("u = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+		value = NULL;
+		if( this.crud.d != null ) {
+			value = Boolean.toString(this.crud.d.booleanValue());
+		}
+		sb.append("\n\t").append("d = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+		value = NULL;
+		if( this.crud.e != null ) {
+			value = Boolean.toString(this.crud.e.booleanValue());
+		}
+		sb.append("\n\t").append("e = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+		value = NULL;
+		if( this.crud.a != null ) {
+			value = Boolean.toString(this.crud.a.booleanValue());
+		}
+		sb.append("\n\t").append("a = " + value); //$NON-NLS-1$ //$NON-NLS-2$
+
 		sb.append("\n\t").append("allow-language = " + allowLanguage); //$NON-NLS-1$ //$NON-NLS-2$
 		return sb.toString();
 	}
