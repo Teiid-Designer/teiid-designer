@@ -202,6 +202,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
     @Override
     public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
         RefactoringStatus status = new RefactoringStatus();
+        clearChanges();
 
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("DeleteRefactoring.finalConditions"), 2); //$NON-NLS-1$
