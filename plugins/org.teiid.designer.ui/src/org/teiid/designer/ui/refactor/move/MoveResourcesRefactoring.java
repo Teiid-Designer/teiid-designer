@@ -97,6 +97,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
             }
 
             TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(relatedFile, relativePathPairs);
+            for( PathPair pair : relativePathPairs ) {
+                RefactorResourcesUtils.calculateModelImportsElementLChanges(relatedFile, pair, textFileChange);
+            }
             if (addTextChange(relatedFile, textFileChange)) {
                 // Calculate the effect on any vdbs containing this modified related file
                 RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
