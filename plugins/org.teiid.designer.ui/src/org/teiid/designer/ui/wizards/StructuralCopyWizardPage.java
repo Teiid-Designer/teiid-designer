@@ -21,6 +21,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.widget.INodeDescendantsDeselectionHandler;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 
@@ -44,6 +45,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 	private TreeViewerWizardPanel panel;
 	private MetamodelDescriptor metamodelDescriptor;
 	protected boolean targetIsVirtual;
+	protected boolean sourceIsPhysical;
 	
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Constructors
@@ -90,8 +92,11 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
             }
         }
         
+        if( selectedResource != null ) {
+        	sourceIsPhysical = ModelIdentifier.isPhysicalModelType(selectedResource);
+        }
 		panel = new TreeViewerWizardPanel(parent, this, metamodelDescriptor, 
-				selectedResource, targetIsVirtual);
+				selectedResource, sourceIsPhysical, targetIsVirtual);
 		setControl(panel);
 	}
 	

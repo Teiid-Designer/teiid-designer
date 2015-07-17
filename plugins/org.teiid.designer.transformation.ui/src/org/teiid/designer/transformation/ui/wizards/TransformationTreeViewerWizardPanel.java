@@ -57,8 +57,9 @@ public class TransformationTreeViewerWizardPanel extends TreeViewerWizardPanel i
     											WizardPage wizardPage,
                                                         MetamodelDescriptor metamodelDescriptor,
                                                         ModelResource selection,
+                                                        boolean sourceIsPhysical,
                                                         boolean targetIsVirtual ) {
-        super(parent, wizardPage, metamodelDescriptor, selection, targetIsVirtual);
+        super(parent, wizardPage, metamodelDescriptor, selection, sourceIsPhysical, targetIsVirtual );
 
         // add types whose checked state can't be changed
         unsupportedClasses = new ArrayList();
