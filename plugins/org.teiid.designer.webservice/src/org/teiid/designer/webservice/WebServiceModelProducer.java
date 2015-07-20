@@ -211,7 +211,7 @@ public class WebServiceModelProducer implements ModelProducer {
              * to the project in the workspace. We need to add the absolute path component for the project location in order to be
              * able to physically create the XSD's in the proper location.
              */
-            final IPath absoluteProjectPath = builder.getParentResource().getLocation();
+            final IPath absoluteProjectPath = builder.getParentResource().getProject().getLocation();
 
             final IPath absoluteDestPath = absoluteProjectPath.append(destPath);
 
@@ -242,7 +242,7 @@ public class WebServiceModelProducer implements ModelProducer {
             final XSDSchema schema = xsdDest.getSchema();
 
             // Get the destination ModelResource ...
-            final IFile file = ((IContainer)builder.getParentResource()).getFile(destProjectRelativePath);
+            final IFile file = ((IContainer)builder.getParentResource().getProject()).getFile(destProjectRelativePath);
 
             if (file == null) {
                 // record a problem ...
