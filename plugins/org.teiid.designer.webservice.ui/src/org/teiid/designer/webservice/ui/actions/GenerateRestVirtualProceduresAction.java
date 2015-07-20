@@ -230,14 +230,19 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         		}
 
         		if( !cancelled ) {
-	        		String modelName = dialog.getViewModelName();
-	        		if( !modelName.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
-	        			modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
-	        		}
-	        		
-	        		if( selectedViewsAndTables.length > 0 ) {
-	        			generateRestProcedures(modelName, folder, procedureInfos, restMethod);
-	        		}
+	        		try {
+						String modelName = modelResource.getUnderlyingResource().getFullPath().removeFileExtension().lastSegment();
+						String modelNameWithExtension = dialog.getViewModelName();;
+						if( !modelNameWithExtension.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
+							modelNameWithExtension = modelNameWithExtension + ModelUtil.DOT_EXTENSION_XMI;
+						}
+						
+						if( selectedViewsAndTables.length > 0 ) {
+							generateRestProcedures(modelNameWithExtension, modelName, folder, procedureInfos, restMethod);
+						}
+					} catch (ModelWorkspaceException e) {
+						UTIL.log(e);
+					}
         		}
         	}
         } else {
@@ -250,7 +255,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         return service.getReservedWords();
     }
     
-    private void generateRestProcedures(String modelName, IContainer folder, Collection<RestProcedureInfo> procedureInfos, String restMethod) {
+    private void generateRestProcedures(String modelNameWithExtension, String modelName, IContainer folder, Collection<RestProcedureInfo> procedureInfos, String restMethod) {
     	String[] columnNames = null;
     	
     	Set<String> reservedWords = getAllSQLReservedWords();
@@ -270,6 +275,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			pkColumns = getPKColumns((BaseTable)eObj);
     		} 
     		String viewName = getName(eObj);
+    		String viewQualifiedName = modelName + '.' + getName(eObj);
     		String procName = viewName + RESTPROC_SUFFIX;
     		if( columnNames.length > 0 ) {
     			String colStr = getColumnsString(columnNames, reservedWords);
@@ -317,7 +323,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			viewProcedure.setRestEnabled(true);
     			viewProcedure.setRestUri(restURI);
     			
-    			String generatedSql = getRestProcedureDdl(procName, viewXmlTag, columnXmlTag, colStr, viewName, viewName, reservedWords, paramToColumnMap);
+    			String generatedSql = getRestProcedureDdl(procName, viewXmlTag, columnXmlTag, colStr, viewQualifiedName, viewName, reservedWords, paramToColumnMap);
     			
     			viewProcedure.setTransformationSQL(generatedSql);
     			viewProcedure.setRestMethod(restMethod);
@@ -328,7 +334,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	}
     	
     	if( !viewProcedures.isEmpty() ) {
-    		createViewProceduresInTxn(modelName, folder, viewProcedures);
+    		createViewProceduresInTxn(modelNameWithExtension, folder, viewProcedures);
     	}
     }
     
