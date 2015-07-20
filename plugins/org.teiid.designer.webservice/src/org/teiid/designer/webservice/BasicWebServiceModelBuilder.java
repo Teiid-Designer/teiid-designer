@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -586,6 +587,8 @@ public class BasicWebServiceModelBuilder implements IWebServiceModelBuilder {
             } else {
                 if (workspacePathForXsd == null) {
                     match = existing.segmentCount() == 0;
+                } else if( !existing.toFile().exists() ) {
+                	match = false;
                 } else {
                     match = existing.makeAbsolute().equals(workspacePathForXsd.makeAbsolute());
                 }
