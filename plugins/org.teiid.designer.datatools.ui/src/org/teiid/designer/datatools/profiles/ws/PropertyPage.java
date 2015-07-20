@@ -503,7 +503,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     		String keyStr = (String)key;
     		if( keyStr.startsWith(Parameter.PREFIX)) {
     			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
-    			parameterMap.put(newParam.getName(), newParam);
+    			parameterMap.put(Parameter.PREFIX+newParam.getName(), newParam);
     		}
     	}
     }
