@@ -7,8 +7,10 @@
 */
 package org.teiid.designer.datatools.profiles.ws;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,6 +35,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -66,6 +69,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
     TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
+	Button upPropertyButton, downPropertyButton;
 	private Map<String, Parameter> parameterMap;
 	private int visibleTableRows;
 	private WSProfileDetailsWizardPage wsProfileDetailsWizardPage;
@@ -117,7 +121,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
         // add toolbar above the table
         //
         
-        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 2);
+        Composite toolbarPanel = WidgetFactory.createPanel(panel, SWT.NONE, GridData.VERTICAL_ALIGN_BEGINNING, 1, 4);
         ((GridLayout)toolbarPanel.getLayout()).marginHeight = 0;
         
         this.addPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
@@ -150,6 +154,38 @@ public class ParameterPanel implements DatatoolsUiConstants {
 			}
 		});
         this.removePropertyButton.setEnabled(false);
+        
+        this.upPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.upPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.UP_PROPERTY_ICON));
+        this.upPropertyButton.setToolTipText(UTIL.getString("ParametersPanel_upParameterButton_tooltip"));  //$NON-NLS-1$
+        this.upPropertyButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				
+				handleMoveColumnUp();
+			}
+    		
+		});
+        
+        this.upPropertyButton.setEnabled(false);
+        
+        this.downPropertyButton = WidgetFactory.createButton(toolbarPanel, GridData.FILL);
+        this.downPropertyButton.setImage(DatatoolsUiPlugin.getDefault().getImage(Images.DOWN_PROPERTY_ICON));
+        this.downPropertyButton.setToolTipText(UTIL.getString("ParametersPanel_downParameterButton_tooltip"));  //$NON-NLS-1$
+        this.downPropertyButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				handleMoveColumnDown();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
+        
+        this.downPropertyButton.setEnabled(false);
 
         this.propertiesViewer = new TableViewerBuilder(panel, (SWT.V_SCROLL | SWT.H_SCROLL | SWT.FULL_SELECTION | SWT.BORDER));
         GridDataFactory.fillDefaults().grab(true, true).span(3, 1).hint(360,  100).applyTo(propertiesViewer.getTableComposite());
@@ -252,6 +288,59 @@ public class ParameterPanel implements DatatoolsUiConstants {
 	void handlePropertySelected() {
 		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
 		this.removePropertyButton.setEnabled(hasSelection);
+		boolean  sel = this.propertiesViewer.getTable().getSelectionIndex()>0;
+		this.upPropertyButton.setEnabled(sel);
+		this.downPropertyButton.setEnabled(this.propertiesViewer.getTable().getSelectionIndex()+1<this.propertiesViewer.getTable().getItemCount());
+	}
+	
+	public void handleMoveColumnUp() {
+		int startIndex = this.propertiesViewer.getTable().getSelectionIndex();
+		if( startIndex > 0 ) {
+			// Make Copy of List & get columnInfo of startIndex-1
+			TableItem[] existingColumns = this.propertiesViewer.getTable().getItems();
+			TableItem priorColumn = existingColumns[startIndex-1];
+			existingColumns[startIndex-1] = this.propertiesViewer.getTable().getItem(startIndex);
+			existingColumns[startIndex] = priorColumn;
+			
+			List<TableItem> newColumns = new ArrayList<TableItem>(existingColumns.length);
+			Map<String, Parameter> oldParameterMap = new LinkedHashMap<String, Parameter>(parameterMap);
+			this.parameterMap.clear();
+			for( TableItem info : existingColumns) {
+				newColumns.add(info);
+				this.parameterMap.put(Parameter.PREFIX+((Parameter)info.getData()).getName(), oldParameterMap.get(Parameter.PREFIX+((Parameter)info.getData()).getName()));
+			}
+			
+			this.propertiesViewer.getTable().setData(newColumns);
+			this.propertiesViewer.refresh();
+			updatePreviewUrl();
+			handlePropertySelected();
+			
+		}
+	}
+	
+	public void handleMoveColumnDown() {
+		int startIndex = this.propertiesViewer.getTable().getSelectionIndex();
+		if( startIndex < this.propertiesViewer.getTable().getItems().length) {
+			// Make Copy of List & get columnInfo of startIndex+1
+			TableItem[] existingColumns = this.propertiesViewer.getTable().getItems();
+			TableItem afterColumn = existingColumns[startIndex+1];
+			existingColumns[startIndex+1] = this.propertiesViewer.getTable().getItem(startIndex);
+			existingColumns[startIndex] = afterColumn;
+			
+			List<TableItem> newColumns = new ArrayList<TableItem>(existingColumns.length);
+			Map<String, Parameter> oldParameterMap = new LinkedHashMap<String, Parameter>(parameterMap);
+			this.parameterMap.clear();
+			for( TableItem info : existingColumns) {
+				newColumns.add(info);
+				this.parameterMap.put(Parameter.PREFIX+((Parameter)info.getData()).getName(), oldParameterMap.get(Parameter.PREFIX+((Parameter)info.getData()).getName()));
+			}
+			
+			this.propertiesViewer.getTable().setData(newColumns);
+			this.propertiesViewer.refresh();
+			updatePreviewUrl();
+			handlePropertySelected();
+			
+		}
 	}
 	
     private Parameter getSelectedProperty() {
@@ -303,23 +392,29 @@ public class ParameterPanel implements DatatoolsUiConstants {
                 this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
             }
             
-            if (this.wsProfileDetailsWizardPage!=null){
-            	for( Object key : this.parameterMap.keySet() )  {
-            		Parameter para = (Parameter)this.parameterMap.get(key);
-            		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
-            	}
-            	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
-            	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
-            }else{
-            	for( Object key : this.parameterMap.keySet() )  {
-            		Parameter para = (Parameter)this.parameterMap.get(key);
-            		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
-            	}
-            	propertyPage.setParameterMap(this.parameterMap);
-            	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
-            }
+            updatePreviewUrl();
         }
     }
+	/**
+	 * 
+	 */
+	private void updatePreviewUrl() {
+		if (this.wsProfileDetailsWizardPage!=null){
+			for( Object key : this.parameterMap.keySet() )  {
+				Parameter para = (Parameter)this.parameterMap.get(key);
+				wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+			}
+			wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
+			wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+		}else{
+			for( Object key : this.parameterMap.keySet() )  {
+				Parameter para = (Parameter)this.parameterMap.get(key);
+				propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+			}
+			propertyPage.setParameterMap(this.parameterMap);
+			propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
+		}
+	}
     
     void handleRemoveProperty() {
     	Parameter selectedProperty = getSelectedProperty();
@@ -331,17 +426,9 @@ public class ParameterPanel implements DatatoolsUiConstants {
         // update UI
         this.propertiesViewer.refresh();
         
-        if (this.wsProfileDetailsWizardPage!=null){
-        	wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
-        	wsProfileDetailsWizardPage.getProfileProperties().remove(Parameter.PREFIX+selectedProperty.getName());
-        	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
-        }else{
-        	propertyPage.setParameterMap(this.parameterMap);
-        	propertyPage.getExtraProperties().remove(Parameter.PREFIX+selectedProperty.getName());
-        	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
-        }
+        updatePreviewUrl();
     }
-	
+    
 	class PropertyLabelProvider extends ColumnLabelProvider {
 
         private final int columnID;
@@ -377,7 +464,6 @@ public class ParameterPanel implements DatatoolsUiConstants {
         public ParameterTypeComboEditingSupport( ColumnViewer viewer ) {
             super(viewer);
         }
-
 
         @Override
         protected String getElementValue( Object element ) {
@@ -482,7 +568,26 @@ public class ParameterPanel implements DatatoolsUiConstants {
 						propertiesViewer.refresh(element);
 					}
 				}
+				
 			}
+			
+			if (wsProfileDetailsWizardPage!=null){
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	wsProfileDetailsWizardPage.setParameterMap(parameterMap);
+            	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+            }else{
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	propertyPage.setParameterMap(parameterMap);
+            	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
+            }
+			
+			
 		}
 
 	}
@@ -671,6 +776,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
         void handleTypeChanged(Object type) {
             this.type = (String)type;
             updateState();
+            updatePreviewUrl();
         }
 
         private void updateState() {
@@ -736,7 +842,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
             // make sure only letters
             for (char c : proposedName.toCharArray()) {
                 if ( ! isValidChar(c)) {
-                    return UTIL.getString("AddParameterDialog_invalidParametersName");  //$NON-NLS-1$
+                    return UTIL.getString("AddParameterDialog_invalidParameterName");  //$NON-NLS-1$
                 }
             }
 
