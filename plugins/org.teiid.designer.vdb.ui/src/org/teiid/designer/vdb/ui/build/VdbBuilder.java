@@ -191,7 +191,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("Teiid validation version of the VDB could not be found") > 0 ) { //$NON-NLS-1$
                         createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.NO_VALIDATION_VERSION);
                     }
-    				if( iStatus.getMessage().indexOf("different than the current default teiid instance") > 0 ) { //$NON-NLS-1$
+    				if( iStatus.getMessage().indexOf("different than the current default") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DIFFERENT_VALIDATION_VERSION);
     				}
     				if( iStatus.getMessage().indexOf("no JNDI name defined") > 0 ) { //$NON-NLS-1$

@@ -32,7 +32,7 @@ public class DataRoleElement implements Serializable {
     private boolean allowCreateTempTables;
     
     @XmlAttribute( name = "grant-all", required = false )
-    private boolean grantAll;
+    private Boolean grantAll;
     
     @XmlElement( name = "description" )
     private String description;
@@ -54,7 +54,11 @@ public class DataRoleElement implements Serializable {
     	name = dataRole.getName();
     	anyAuthenticated = dataRole.isAnyAuthenticated();
     	allowCreateTempTables = dataRole.allowCreateTempTables();
-    	grantAll = dataRole.doGrantAll();
+    	
+    	if( dataRole.doGrantAll() ) {
+    		grantAll = Boolean.TRUE;
+    	} else grantAll = null;
+    	
     	description = dataRole.getDescription();
     	for( Permission perm : dataRole.getPermissions() ) {
     		getPermissions().add(new PermissionElement(perm));
@@ -110,6 +114,9 @@ public class DataRoleElement implements Serializable {
      * @return grantAll
      */
     public boolean doGrantAll() {
+    	if( grantAll == null ) {
+    		return false;
+    	}
     	return grantAll;
     }
 }
