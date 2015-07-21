@@ -11,13 +11,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
@@ -42,7 +46,7 @@ public class VdbDataRole {
     
     private final boolean allowCreateTempTables;
     
-    private final boolean grantAll;
+    private boolean grantAll;
     
     final AtomicReference<String> description = new AtomicReference<String>();
     private List<Permission> permissions = new ArrayList<Permission>();
@@ -59,7 +63,16 @@ public class VdbDataRole {
     	 name = dataRole.getName();
     	 anyAuthenticated = dataRole.isAnyAuthenticated();
     	 allowCreateTempTables = dataRole.allowCreateTempTables();
-    	 grantAll = dataRole.doGrantAll();
+    	 // Check server version, if no server, assume grantAll is supported
+    	 // If server version < 8.7, then grant all is NOT supported and set to false;
+    	 grantAll = false;
+    	 if( ModelerCore.getTeiidServerManager().getDefaultServer() != null ) {
+    		 if( ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7.get())) {
+    			 grantAll = false;
+    		 } else {
+    			 grantAll = dataRole.doGrantAll();
+    		 }
+    	 }
     	 permissions = new ArrayList<Permission>(dataRole.getPermissions());
     	 mappedRoleNames = new ArrayList<String>(dataRole.getRoleNames());
          this.description.set(dataRole.getDescription() == null ? StringUtilities.EMPTY_STRING : dataRole.getDescription());
@@ -72,7 +85,15 @@ public class VdbDataRole {
     	 this.name = element.getName();
     	 this.anyAuthenticated = element.isAnyAuthenticated();
     	 this.allowCreateTempTables = element.allowCreateTempTables();
-    	 this.grantAll = element.doGrantAll();
+
+    	 grantAll = false;
+    	 if( ModelerCore.getTeiidServerManager().getDefaultServer() != null ) {
+    		 if( ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7.get())) {
+    			 grantAll = false;
+    		 } else {
+    			 grantAll = element.doGrantAll();
+    		 }
+    	 }
     	 
          this.description.set(element.getDescription() == null ? StringUtilities.EMPTY_STRING : element.getDescription());
     	 

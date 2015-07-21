@@ -37,7 +37,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.DataRole;
@@ -48,6 +51,7 @@ import org.teiid.designer.roles.ui.wizard.panels.AllowedLanguagesPanel;
 import org.teiid.designer.roles.ui.wizard.panels.ColumnMaskingPanel;
 import org.teiid.designer.roles.ui.wizard.panels.CrudPanel;
 import org.teiid.designer.roles.ui.wizard.panels.RowBasedSecurityPanel;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -62,7 +66,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizard;
  * @since 8.0
  */
 public class DataRoleWizard extends AbstractWizard {
-    private static final String I18N_PREFIX = "NewDataRoleWizard."; //$NON-NLS-1$
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DataRoleWizard.class);
 
     private static final String TITLE = Messages.dataRoleWizardTitle;
     private static final String EDIT_TITLE = Messages.editDataRoleWizardEditTitle;
@@ -126,6 +130,8 @@ public class DataRoleWizard extends AbstractWizard {
     
     private Set<String> allowedLanguages;
     private Set<String> otherDataRoleNames;
+    
+    private boolean disableGrantAll = false;
 
     /**
      * @since 4.0
@@ -157,6 +163,7 @@ public class DataRoleWizard extends AbstractWizard {
             this.mappedRoleNames = new HashSet<String>(existingDataRole.getRoleNames());
         }
         
+        disableGrantAll = ModelerCore.getTeiidServerManager().getDefaultServer() == null || ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7.get());
     }
 
     /**
@@ -443,12 +450,18 @@ public class DataRoleWizard extends AbstractWizard {
         });
         
         grantAllCheckBox = WidgetFactory.createCheckBox( miscOptionsGroup, getString("grantAllCheckBox.label"), GridData.FILL_HORIZONTAL, 1, grantAll); //$NON-NLS-1$
-        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent event) {
-				grantAll = grantAllCheckBox.getSelection();
-			}
-		});
+   	 	if( disableGrantAll ) {
+   	   	 	grantAllCheckBox.setEnabled(false);
+   	   	 	grantAllCheckBox.setText(getString("grantAllCheckBox.label") + StringConstants.SPACE + getString("grantAllCheckBoxDisabled.tooltip") );	//$NON-NLS-1$ //$NON-NLS-2$
+    	} else {
+	        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent event) {
+					grantAll = grantAllCheckBox.getSelection();
+				}
+			});
+    	}
+
         
         final Group sysTablesGroup = WidgetFactory.createGroup(miscOptionsGroup,
                 getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
@@ -558,7 +571,9 @@ public class DataRoleWizard extends AbstractWizard {
         this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
         this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
         this.mappedRolesPanel.setEnabled(!anyAuthentication);
-        this.grantAllCheckBox.setEnabled(true);
+        if( !disableGrantAll ) {
+        	this.grantAllCheckBox.setEnabled(true);
+        }
 
         refreshAll();
 
