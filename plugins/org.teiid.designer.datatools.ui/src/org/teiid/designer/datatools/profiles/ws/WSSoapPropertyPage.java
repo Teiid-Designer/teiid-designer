@@ -142,13 +142,13 @@ public class WSSoapPropertyPage extends ProfileDetailsPropertyPage implements IC
 
         endPointNameLabel = new Label(scrolled, SWT.NONE);
         endPointNameLabel.setText(UTIL.getString("WSSoapPropertyPage.endPointNameName")); //$NON-NLS-1$
-        endPointNameLabel.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointName.ToolTip")); //$NON-NLS-1$
+        endPointNameLabel.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPoint.ToolTip")); //$NON-NLS-1$
         gd = new GridData();
         gd.verticalAlignment = GridData.BEGINNING;
         endPointNameLabel.setLayoutData(gd);
 
         endPointNameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        endPointNameText.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPointName.ToolTip")); //$NON-NLS-1$
+        endPointNameText.setToolTipText(UTIL.getString("WSSoapPropertyPage.endPoint.ToolTip")); //$NON-NLS-1$
         gd = new GridData();
         gd.horizontalAlignment = GridData.FILL;
         gd.verticalAlignment = GridData.BEGINNING;

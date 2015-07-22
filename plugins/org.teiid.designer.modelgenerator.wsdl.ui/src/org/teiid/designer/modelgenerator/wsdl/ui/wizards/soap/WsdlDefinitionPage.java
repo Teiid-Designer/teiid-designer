@@ -56,6 +56,7 @@ import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
+import org.teiid.designer.datatools.profiles.ws.WSConnectionInfoProvider;
 import org.teiid.designer.datatools.ui.dialogs.ConnectionProfileWorker;
 import org.teiid.designer.datatools.ui.dialogs.IProfileChangedListener;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
@@ -63,6 +64,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels.WsdlOperationsPanel;
+import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.UiConstants.ConnectionProfileIds;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -113,6 +115,8 @@ public class WsdlDefinitionPage extends WizardPage
 	private ILabelProvider profileLabelProvider;
 
 	private ConnectionProfileWorker profileWorker;
+	
+	private Properties previousProperties ;
 
 	boolean synchronizing = false;
 	
@@ -177,6 +181,7 @@ public class WsdlDefinitionPage extends WizardPage
 			MessageDialog.openInformation(getShell(),
 					Messages.WsdlDefinitionPage_validationResultsTitle, 
 					Messages.WsdlDefinitionPage_validationResultsOkMessage);
+			this.wsdlStatus = null;
 		} else {
 			// if there is a wsdl selection, enable validation button
 			if (this.importManager.getWSDLFileUri() != null) {
@@ -291,6 +296,7 @@ public class WsdlDefinitionPage extends WizardPage
 
 			@Override
 			public void widgetSelected(final SelectionEvent event) {
+				previousProperties = profileWorker.getConnectionProfile().getBaseProperties();
 				profileWorker.edit();
 			}
 		});
@@ -712,8 +718,8 @@ public class WsdlDefinitionPage extends WizardPage
 			connectionProfilesCombo.select(cpIndex);
 			IConnectionProfile profile = profileWorker.getProfile(connectionProfilesCombo.getText());
 			this.profileWorker.setSelection(profile);
-			IConnectionProfile currentProfile = this.importManager.getConnectionProfile();
-			if( profile != currentProfile ) {
+			//Compare CP properties
+			if(!teiidRelatedPropertiesAreEqual(profile.getBaseProperties(), previousProperties)) {
 				profileChanged = true;
 				setConnectionProfileInternal(profile);
 			}
@@ -726,6 +732,50 @@ public class WsdlDefinitionPage extends WizardPage
 		this.operationsPanel.notifyWsdlChanged(profileChanged);
 		return profileChanged;
 	}
+	
+	private boolean teiidRelatedPropertiesAreEqual(
+			Properties firstProps, Properties secondProps) {
+        
+		if (firstProps==null || secondProps == null) return true;
+		
+        String firstPassword = firstProps.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+        String secondPassword = secondProps.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
+        if (firstPassword != null && secondPassword != null) {
+        	if (!firstPassword.equals(secondPassword)){
+        	return false;
+        }}
+        
+        String firstWSDLUrl = firstProps.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+        String secondWSDLUrl = secondProps.getProperty(IWSProfileConstants.WSDL_URI_PROP_ID);
+        if (firstWSDLUrl != null && secondWSDLUrl != null) {
+        if (!firstWSDLUrl.equals(secondWSDLUrl)){
+        	return false;
+        }}
+        
+        String firstEndpoint = firstProps.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
+        String secondEndpoint = secondProps.getProperty(IWSProfileConstants.END_POINT_URI_PROP_ID);
+        if (firstEndpoint != null && secondEndpoint != null) {
+        if (!firstEndpoint.equals(secondEndpoint)){
+        	return false;
+        }}
+        
+        String firstSecType = firstProps.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+        String secondSecType = secondProps.getProperty(IWSProfileConstants.SECURITY_TYPE_ID);
+        if (firstSecType != null && secondSecType != null) {
+        if (!firstSecType.equals(secondSecType)){
+        	return false;
+        }}
+        
+        String firstUsername = firstProps.getProperty(IWSProfileConstants.USERNAME_PROP_ID);
+        String secondUsername = secondProps.getProperty(IWSProfileConstants.USERNAME_PROP_ID);
+        if (firstUsername != null && secondUsername != null) {
+        if (!firstUsername.equals(secondUsername)){
+        	return false;
+        }}
+       
+        return true;
+    }
+
 	
 	private void setConnectionProfileInternal(final IConnectionProfile profile) {
         this.importManager.setConnectionProfile(profile);
