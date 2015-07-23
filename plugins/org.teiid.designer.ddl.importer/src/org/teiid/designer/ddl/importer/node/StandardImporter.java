@@ -54,15 +54,8 @@ public class StandardImporter extends AbstractImporter {
 		}
 
 		protected void init(AstNode node, RelationalModel model) throws Exception {
-			String name = node.getName();
-			int ndx = name.lastIndexOf('.');
-			if (ndx >= 0) {
-				schema = null;
-				this.name = removeLeadingTrailingTicks(name.substring(ndx+1));
-			} else {
-				schema = null;
-				this.name = removeLeadingTrailingTicks(name);
-			}
+			schema = null;
+			this.name = node.getName();
 		}
 
 		protected String removeLeadingTrailingTicks(String name) {
