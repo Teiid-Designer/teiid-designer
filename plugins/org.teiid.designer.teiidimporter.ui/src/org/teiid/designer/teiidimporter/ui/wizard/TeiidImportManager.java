@@ -296,14 +296,8 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         return getServerImportManager().createDynamicVdbString(getCurrentImportVdbName(), dataSourceName, translatorName, getOptionalImportProps());
     }
 
-    private String getTimeoutPrefSecs() {
-        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        try {
-			Integer.parseInt(timeoutStr);
-		} catch (NumberFormatException ex1) {
-			timeoutStr = PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT;
-		}
-        return timeoutStr;
+    private int getTimeoutPrefSecs() {
+        return DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
     }
     
     /**
