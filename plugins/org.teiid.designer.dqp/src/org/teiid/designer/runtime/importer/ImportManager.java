@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,7 +42,6 @@ public final class ImportManager implements IExecutionConfigurationListener {
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
     private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
-    private static final int VDB_LOADING_TIMEOUT_SEC = 120;
     
     /**
      * The Teiid Instance being used for importers (may be <code>null</code>).
@@ -195,14 +193,8 @@ public final class ImportManager implements IExecutionConfigurationListener {
         workRemaining -= 10;
 
         // Wait until vdb is done loading, up to timeout sec
-        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        int timeoutSec = 0;
-        try {
-			timeoutSec = Integer.parseInt(timeoutStr);
-		} catch (NumberFormatException ex1) {
-			timeoutSec = VDB_LOADING_TIMEOUT_SEC;
-		}
-        
+        int timeoutSec = DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+
         boolean finishedLoading = false;
         try {
             finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);

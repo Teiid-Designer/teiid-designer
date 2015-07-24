@@ -58,6 +58,11 @@
             categoryId="dqpUiPreferenceCategory"
             class="org.teiid.designer.runtime.ui.preferences.EnableQueryPlanPreferenceContributor">
       </preference>
+      <preference
+            categoryId="dqpUiPreferenceCategory"
+            class="org.teiid.designer.runtime.ui.preferences.JBossRequestTimeoutPreferenceContributor"
+            id="jbossRequestTimeoutPreferenceContributor">
+      </preference>
   </extension>
 <!-- Actions contributed to the object/model generation -->
    <extension

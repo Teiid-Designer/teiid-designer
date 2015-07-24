@@ -24,18 +24,17 @@ import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor;
 
 /**
- * Allows setting the timeout preference for Teiid Importer timeout
- * @since 8.2
+ * Allows setting the timeout preference for Jboss request execution timeout
+ * @since 9.0.3
  */
-public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPreferencePageContributor, DqpUiConstants {
+public class JBossRequestTimeoutPreferenceContributor implements IGeneralPreferencePageContributor, DqpUiConstants {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidImporterTimeoutPreferenceContributor.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(JBossRequestTimeoutPreferenceContributor.class);
 
     private Spinner timeoutSecTextField;
 
     /**
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#createPreferenceEditor(org.eclipse.swt.widgets.Composite)
-     * @since 5.0
      */
     @Override
     public void createPreferenceEditor(Composite theParent) {
@@ -45,7 +44,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
 
         this.timeoutSecTextField = new Spinner(pnl, SWT.BORDER);
         this.timeoutSecTextField.setToolTipText(getToolTip());
-        this.timeoutSecTextField.setMaximum(300);
+        this.timeoutSecTextField.setMaximum(180);
         this.timeoutSecTextField.setMinimum(10);
 
         Label label = new Label(pnl, SWT.NONE);
@@ -98,7 +97,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      */
     @Override
     public boolean performDefaults() {
-        this.timeoutSecTextField.setSelection(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+        this.timeoutSecTextField.setSelection(PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT);
 
         // save
         try {
@@ -117,7 +116,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
     public boolean performOk() {
         IEclipsePreferences prefs = getPreferences();
         int timeout = this.timeoutSecTextField.getSelection();
-        prefs.putInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, timeout);
+        prefs.putInt(PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT, timeout);
 
         // save
         try {
@@ -135,8 +134,8 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
     @Override
     public void refresh() {
         IEclipsePreferences prefs = getPreferences();
-        int timeoutSec = prefs.getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC,
-                                      PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+        int timeoutSec = prefs.getInt(PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT,
+                                      PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT);
         this.timeoutSecTextField.setSelection(timeoutSec);
     }
 
