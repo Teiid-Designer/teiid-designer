@@ -77,6 +77,12 @@ public interface JdbcNode {
     public int TABLE_TYPE       = 107;
     public int PROCEDURE_TYPE   = 108;
     
+    /*
+     * Database product name constants
+     */
+    
+    public String INFORMIX = "INFORMIX"; //$NON-NLS-1$
+    
     /**
      * Return the {@link JdbcDatabase} object that contains this node.
      * @return the database; may not be null
