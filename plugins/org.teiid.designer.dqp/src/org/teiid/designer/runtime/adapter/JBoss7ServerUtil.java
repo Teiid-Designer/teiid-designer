@@ -12,17 +12,22 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
+import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.designer.runtime.DebugConstants;
 import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
@@ -62,8 +67,26 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      */
     private static ModelNode executeRequest(IServer parentServer, JBoss7Server jboss7Server, ModelNode request) throws Exception {
         String requestString = request.toJSONString(true);
-        
-        String resultString = JBoss7ManagerUtil.getService(parentServer).execute(new AS7ManagementDetails(parentServer), requestString);
+
+        //
+        // Provide the jboss execution request timeout property
+        // from the preferences
+        //
+        IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences();
+        int timeout = preferences.getInt(PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT,
+                                                                PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT);
+        if (timeout < 100) {
+            // timeout preference is in seconds and the jboss property is in ms
+            timeout = timeout * 1000;
+        }
+
+        //
+        // Add the timeout to a properties map
+        //
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(IAS7ManagementDetails.PROPERTY_TIMEOUT, timeout);
+
+        String resultString = JBoss7ManagerUtil.getService(parentServer).execute(new AS7ManagementDetails(parentServer, props), requestString);
         return ModelNode.fromJSONString(resultString);
     }
 
