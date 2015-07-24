@@ -8,6 +8,7 @@
 package org.teiid.designer.jdbc.metadata.impl;
 
 import java.sql.DatabaseMetaData;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -95,6 +96,25 @@ public class JdbcTableImpl extends JdbcNodeImpl implements JdbcTable {
         final String unqualName = getUnqualifiedName();
         sb.append(unqualName);
         return sb.toString(); // empty string
+    }
+    
+    /* (non-Javadoc)
+     * @See org.teiid.designer.jdbc.metadata.JdbcNode#getQualifedNameDelimiter()
+     */
+    @Override
+    protected String getQualifedNameDelimiter() {
+    	// Informix DB doesn't use a single NIS delimiter. The Catalog delimiter is ":" while the table delimiter is a "."
+    	// We're checking specifically for INFORMIX and overriding for table only
+    	try {
+        	String productName = this.getJdbcDatabase().getDatabaseInfo().getProductName();
+        	if( productName.toUpperCase().indexOf(INFORMIX) > -1) {
+        		return DEFAULT_QUALIFIED_NAME_DELIMITER;
+        	}
+        } catch (JdbcException e) {
+            JdbcPlugin.Util.log(e); // not expected, but log just in case
+        }
+    	
+        return super.getQualifedNameDelimiter();
     }
 
     /* (non-Javadoc)
