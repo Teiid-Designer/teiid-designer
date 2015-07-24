@@ -24,16 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
+import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.adminapi.Admin;
@@ -418,8 +417,15 @@ public class ExecutionAdmin implements IExecutionAdmin {
         try {
             String requestString = request.toJSONString(true);
             IServer parentServer = getServer().getParent();
-            
-            AS7ManagementDetails as7ManagementDetails = new AS7ManagementDetails(parentServer);
+
+            //
+            // Add the timeout to a properties map
+            //
+            int timeout = teiidServer.getParentRequestTimeout();
+            Map<String, Object> props = new HashMap<String, Object>();
+            props.put(IAS7ManagementDetails.PROPERTY_TIMEOUT, timeout);
+
+            AS7ManagementDetails as7ManagementDetails = new AS7ManagementDetails(parentServer, props);
             String resultString = JBoss7ManagerUtil.getService(parentServer).execute(as7ManagementDetails, requestString);
             ModelNode operationResult = ModelNode.fromJSONString(resultString);
 
