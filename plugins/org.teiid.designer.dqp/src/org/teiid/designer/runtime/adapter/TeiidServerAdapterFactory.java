@@ -303,4 +303,14 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
         }
         return null;
     }
+
+    /**
+     * @param server
+     * @return the request execution timeout value. The server parameter is not currently
+     *                 necessary but may be in the future is different server implementations require
+     *                 different timeouts.
+     */
+    public int getParentRequestExecutionTimeout(IServer server) {
+        return DqpPlugin.getInstance().getJbossRequestTimeout();
+    }
 }

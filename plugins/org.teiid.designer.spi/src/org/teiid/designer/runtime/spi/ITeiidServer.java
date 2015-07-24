@@ -152,4 +152,8 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
      */
     void update(ITeiidServer otherServer);
 
+    /**
+     * @return the request execution timeout value for the parent server
+     */
+    int getParentRequestTimeout();
 }

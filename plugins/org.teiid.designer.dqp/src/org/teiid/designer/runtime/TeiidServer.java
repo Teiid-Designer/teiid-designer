@@ -532,7 +532,12 @@ public class TeiidServer implements ITeiidServer {
 	public String getParentName() {
     	return this.parentServer.getName();
     }
-    
+
+    @Override
+    public int getParentRequestTimeout() {
+        return getAdapterFactory().getParentRequestExecutionTimeout(parentServer);
+    }
+
     /**
      * {@inheritDoc}
      * 
