@@ -58,4 +58,14 @@ public interface PreferenceConstants {
      * The default value for the {@link #PREVIEW_TEIID_CLEANUP_ENABLED} preference. Default value is {@value} .
      */
     boolean PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT = true;
+
+    /**
+     * The name of the preference for the timeout value for jboss server requests
+     */
+    String JBOSS_REQUEST_EXECUTION_TIMEOUT = ".preferences.JbossRequestExecutionTimeout"; //$NON-NLS-1$
+
+    /**
+     * The default value for the {@link #JBOSS_REQUEST_EXECUTION_TIMEOUT} preference. Default value is {@value} .
+     */
+    int JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT = 10;
 }
