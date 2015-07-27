@@ -17,6 +17,8 @@ public class Messages extends NLS {
     public static String Browse;
     public static String Edit;
     public static String EditColumnTitle;
+    public static String EditParameterTitle;
+    public static String EditingParameterInformation;
     public static String EditingColumnInformation;
     public static String Name;
     public static String Path;
