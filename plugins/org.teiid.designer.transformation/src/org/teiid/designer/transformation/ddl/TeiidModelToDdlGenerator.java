@@ -1,9 +1,17 @@
+/*
+ * JBoss, Home of Professional Open Source.
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
 package org.teiid.designer.transformation.ddl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
@@ -30,6 +38,7 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
+//import org.teiid.query.ui.sqleditor.component.QueryDisplayFormatter;
 
 /**
  * Generator for converting a teiid xmi model into DDL
@@ -60,7 +69,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             lengthDataTypes.add(DataTypeName.XML.name());
             lengthDataTypes.add(DataTypeName.STRING.name());
             lengthDataTypes.add(DataTypeName.VARBINARY.name());
-            lengthDataTypes.add(DataTypeName.BIG_INTEGER.name());
+            lengthDataTypes.add(DataTypeName.BIGINTEGER.name());
         }
 
         return lengthDataTypes;
@@ -69,7 +78,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private Set<String> getPrecisionDataTypes() {
         if (precisionDataTypes == null) {
             precisionDataTypes = new HashSet<String>();
-            precisionDataTypes.add(DataTypeName.BIG_DECIMAL.name());
+            precisionDataTypes.add(DataTypeName.BIGDECIMAL.name());
+            precisionDataTypes.add(DataTypeName.DECIMAL.name());
         }
 
         return precisionDataTypes;
@@ -141,7 +151,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( getLengthDataTypes().contains(name.toUpperCase()) ) {
 			sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
 		} else if( getPrecisionDataTypes().contains(name.toUpperCase())  ) {
-			sb.append(OPEN_BRACKET).append(precision).append(CLOSE_BRACKET);
+			sb.append(OPEN_BRACKET).append(precision);
+			if( scale > 0 ) {
+				sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);
+			} else {
+				sb.append(CLOSE_BRACKET);
+			}
 		}
 		return sb.toString();
 	}
@@ -154,7 +169,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
 			}
 		} else if( getPrecisionDataTypes().contains(name.toUpperCase())  ) {
-			sb.append(OPEN_BRACKET).append(precision).append(CLOSE_BRACKET);
+			sb.append(OPEN_BRACKET).append(precision);
+			if( scale > 0 ) {
+				sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);
+			} else {
+				sb.append(CLOSE_BRACKET);
+			}
 		}
 		return sb.toString();
 	}
@@ -252,6 +272,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
 		String sqlString = TransformationHelper.getSelectSqlString(tRoot);
 		if( sqlString != null ) {
+//			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
+//			String formatedSQL = formatter.getFormattedSql();
+//			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
 			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB + TAB).append(sqlString);
 			sb.append(SEMI_COLON + NEW_LINE);
 		}
