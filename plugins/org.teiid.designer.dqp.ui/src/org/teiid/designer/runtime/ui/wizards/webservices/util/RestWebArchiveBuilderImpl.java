@@ -520,6 +520,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             AntTasks.replace(resourceJavaFile, "${httpMethods}", methods); //$NON-NLS-1$
             AntTasks.replace(indexHtml, "${title}", vdbName); //$NON-NLS-1$
             AntTasks.replace(indexHtml, "${context}", context); //$NON-NLS-1$
+            AntTasks.replace(indexHtml, "${modelName}", resource); //$NON-NLS-1$
 
             singletonSb.append(NEWLINE + "singletons.add(new org.teiid.rest.services." + resource + "());"); //$NON-NLS-1$ //$NON-NLS-2$
 
