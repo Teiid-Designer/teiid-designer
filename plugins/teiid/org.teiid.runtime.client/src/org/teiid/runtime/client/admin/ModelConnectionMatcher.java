@@ -17,7 +17,7 @@ public class ModelConnectionMatcher {
      */
     public static final String PREVIEW_PREFIX = "PREVIEW_"; //$NON-NLS-1$
     
-    public Collection<ITeiidDataSource> findTeiidDataSources( Collection<String> names) throws Exception {
+    public Collection<ITeiidDataSource> findTeiidDataSources( Collection<String> names) {
         Collection<ITeiidDataSource> dataSources = new ArrayList<ITeiidDataSource>();
 
         for (String name : names) {

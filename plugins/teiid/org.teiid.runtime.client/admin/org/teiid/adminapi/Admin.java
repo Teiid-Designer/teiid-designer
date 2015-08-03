@@ -25,12 +25,16 @@ package org.teiid.adminapi;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.runtime.client.admin.ModelConnectionMatcher;
 
 public interface Admin {
 
@@ -247,7 +251,7 @@ public interface Admin {
      * @throws AdminException
      */
     @Since(Version.TEIID_8_7)
-    Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException;
+    Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type, Collection<? extends Translator> translators) throws AdminException;
     
 
     /**
@@ -371,23 +375,23 @@ public interface Admin {
      * @param properties - properties
      * @throws AdminException
      */
-    void createDataSource(String deploymentName, String templateName, Properties properties) throws AdminException;
-
+    void createDataSource(String deploymentName, String templateName,  Collection<String> dsNames, Properties properties) throws AdminException;
+    
     /**
-     * Given the deployed name of the data source, this will return all the configuration properties
-     * used to create the datasource. If sensitive information like passwords are masked, they will NOT
-     * be decrypted. "driver-name" property on the returned properties defines the template name used
-     * to create this data source.
+     * Returns a map of data source objects
+     * @param connectionMatcher
+     * @return map of data source objects
+     * @throws AdminException
      */
-    Properties getDataSource(String deployedName) throws AdminException;
+    Map<String, ITeiidDataSource> getDataSources(ModelConnectionMatcher connectionMatcher) throws AdminException;
 
     /**
      * Delete data source.
      * @param deployedName
      * @throws AdminException
      */
-    void deleteDataSource(String deployedName) throws AdminException;
-
+    void deleteDataSource(String deployedName,  Collection<String> dsNames) throws AdminException;
+    
     /**
      * Returns the all names of all the data sources available in the configuration.
      */
