@@ -1005,7 +1005,8 @@ public class Admin8Factory {
 	                    }
 	                }
 				}
-				
+				dSource.getProperties().clear();
+				dSource.getProperties().putAll(dsProperties);
 				dataSourcesMap.put(dSource.getName(), dSource);
 			}
 	        return dataSourcesMap;
