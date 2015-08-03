@@ -152,7 +152,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     public void deleteDataSource( String dsName ) throws Exception {
         // Check if exists, return false
         if (this.dataSourceNames.contains(dsName)) {
-            this.admin.deleteDataSource(dsName, this.dataSourceNames);
+            this.admin.deleteDataSource(dsName);
 
             ITeiidDataSource tds = this.dataSourceByNameMap.get(dsName);
             
@@ -370,9 +370,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
             }
         }
 
-        ITeiidTranslator teiidTranslator = getTranslator(typeName);
         this.admin.createDataSource(dsName, typeName, this.dataSourceNames, properties);
 
+        // call admin.refresh() to clear cached resource info
+        this.admin.refresh();
+        
         refreshDataSources();
 
         // Check that local name list contains new dsName
@@ -465,6 +467,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
                     }
                     try {
                         adminSpec.deploy(admin, fileName, iStream);
+                        
+                        // call admin.refresh() to clear cached resource info
+                        this.admin.refresh();
+                        
                     } catch (Exception ex) {
                         // Jar deployment failed
                         TeiidRuntimePlugin.logError(getClass().getSimpleName(), ex, Messages.getString(Messages.ExecutionAdmin.jarDeploymentFailed, theFile.getPath()));
@@ -495,6 +501,10 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 }
                 try {
                     adminSpec.deploy(admin, fileName, iStream);
+                    
+                    // call admin.refresh() to clear cached resource info
+                    this.admin.refresh();
+                    
                     refreshDataSourceTypes();
                 } catch (Exception ex) {
                     // Jar deployment failed
@@ -531,12 +541,13 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public Set<String> getDataSourceTemplateNames() throws Exception {
-        return this.admin.getDataSourceTemplateNames();
+        return this.dataSourceTypeNames;
     }
     
     @SuppressWarnings("unchecked")
 	@Override
     public Collection<TeiidPropertyDefinition> getTemplatePropertyDefns(String templateName) throws Exception {
+    	
         Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(templateName);
 
         Collection<TeiidPropertyDefinition> teiidPropDefns = new ArrayList<TeiidPropertyDefinition>();
@@ -679,7 +690,9 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if refreshing admin connection fails
      */
     public void refresh() throws Exception {
-
+    	// Clears any cached data source or translator info prior to reloading
+    	this.admin.refresh();
+    	
         // populate data source type names set
         refreshDataSourceTypes();
 
@@ -697,15 +710,21 @@ public class ExecutionAdmin implements IExecutionAdmin {
     
     protected void refreshDataSources() throws Exception {
         this.dataSourceByNameMap.clear();
-        this.dataSourceNames.clear();
+        this.dataSourceNames = new ArrayList<String>(this.admin.getDataSourceNames());
         
-        Map<String, ITeiidDataSource> actualDataSources = this.admin.getDataSources(connectionMatcher);
-        
-        for( String dsName : actualDataSources.keySet() ) {
-        	ITeiidDataSource ds = actualDataSources.get(dsName);
-        	
-        	this.dataSourceByNameMap.put(dsName, ds);
-        	this.dataSourceNames.add(dsName);
+        Collection<ITeiidDataSource> tdsList = connectionMatcher.findTeiidDataSources(this.dataSourceNames);
+        for (ITeiidDataSource ds : tdsList) {
+            if (!isLessThanTeiidEight()) {
+                /* Not done in Teiid 7.7 */
+                // Get Properties for the source
+                Properties dsProps = this.admin.getDataSource(ds.getName());
+                // Transfer properties to the ITeiidDataSource
+                ds.getProperties().clear();
+                ds.getProperties().putAll(dsProps);
+            }
+
+        	// put ds into map
+            this.dataSourceByNameMap.put(ds.getName(), ds);
         }
     }
 
