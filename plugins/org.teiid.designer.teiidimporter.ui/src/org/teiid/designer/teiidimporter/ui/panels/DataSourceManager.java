@@ -268,6 +268,9 @@ public class DataSourceManager implements UiConstants {
      */
     public List<PropertyItem> getDriverPropertyItems(String driverName) {
         List<PropertyItem> propertyItemList = new ArrayList<PropertyItem>();
+        
+        if( driverName == null ) return propertyItemList;
+        
         Collection<TeiidPropertyDefinition> propDefns;
         try {
             // Get the driver template properties
