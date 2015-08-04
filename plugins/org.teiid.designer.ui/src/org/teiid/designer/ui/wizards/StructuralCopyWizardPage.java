@@ -96,7 +96,7 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
         	sourceIsPhysical = ModelIdentifier.isPhysicalModelType(selectedResource);
         }
 		panel = new TreeViewerWizardPanel(parent, this, metamodelDescriptor, 
-				selectedResource, sourceIsPhysical, targetIsVirtual);
+				selectedResource, sourceIsPhysical, targetIsVirtual, false);
 		setControl(panel);
 	}
 	

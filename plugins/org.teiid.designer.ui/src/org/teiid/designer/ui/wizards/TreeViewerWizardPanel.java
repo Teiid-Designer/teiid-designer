@@ -64,6 +64,7 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
     private ModelResource selectorDialogResult = null;
     protected boolean sourceIsPhysical;
     protected boolean targetIsVirtual;
+    protected boolean isTransform;
     private boolean firstTimeVisible = true;
     private boolean copyEntire;
 
@@ -72,13 +73,15 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
                                   MetamodelDescriptor metamodelDescriptor,
                                   ModelResource selection,
                                   boolean sourceIsPhysical,
-                                  boolean targetIsVirtual ) {
+                                  boolean targetIsVirtual,
+                                  boolean isTransform) {
         super(parent, SWT.NULL);
         this.wizardPage = wizardPage;
         this.metamodelDescriptor = metamodelDescriptor;
         this.selectorDialogResult = selection;
         this.sourceIsPhysical = sourceIsPhysical;
         this.targetIsVirtual = targetIsVirtual;
+        this.isTransform = isTransform;
         initialize();
     }
 
@@ -143,7 +146,7 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
      */
     protected void addOptions( Composite parent ) {
     	
-    	if( !targetIsVirtual || (targetIsVirtual && !sourceIsPhysical) ) {
+    	if( !targetIsVirtual || !isTransform ) {
 	        // add a checkbox to copy descriptions (annotations).
 	        copyAllDescriptions = new Button(this, SWT.CHECK);
 	        copyAllDescriptions.setSelection(true);
