@@ -90,7 +90,7 @@ public class TransformationLinkWizardPage extends WizardPage implements UiConsta
         }
 
     	panel = new TransformationTreeViewerWizardPanel(parent, this,
-    			metamodelDescriptor, selectedResource, sourceIsPhysical, targetIsVirtual );
+    			metamodelDescriptor, selectedResource, sourceIsPhysical, targetIsVirtual, true);
         super.setControl(panel);
     }
     
