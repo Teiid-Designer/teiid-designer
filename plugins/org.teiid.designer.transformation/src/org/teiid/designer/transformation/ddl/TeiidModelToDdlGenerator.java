@@ -269,6 +269,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		}
 		sb.append(NEW_LINE + CLOSE_BRACKET);
 		
+		String options = getTableOptions(table);
+		if( !StringUtilities.isEmpty(options)) {
+			sb.append(SPACE).append(options);
+		}
+		
 		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
 		String sqlString = TransformationHelper.getSelectSqlString(tRoot);
 		if( sqlString != null ) {
@@ -418,12 +423,20 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private String getTableOptions(Table table) {
     	OptionsStatement options = new OptionsStatement();
+    	
     	options.add(NAMEINSOURCE, table.getNameInSource(), null);
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
     	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
+    	if( table.getCardinality() > 0 ) {
+    		options.add(CARDINALITY, Integer.toString(table.getCardinality()), Integer.toString(0));
+    	}
+    	if( table.getMaterializedTable() != null ) {
+    		options.add(MATERIALIZED_TABLE, table.getMaterializedTable().getName(), null);
+    	}
+
     	String desc = getDescription(table);
     	if( !StringUtilities.isEmpty(desc) ) {
-    		options.add(ANNOTATION, desc, EMPTY_STRING);
+    		options.add(ANNOTATION, desc, null);
     	}
 
     	return options.toString();
@@ -473,7 +486,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     		
             sb.append(escapeSinglePart(key)).append(SPACE);
             if (Reserved.FALSE.equalsIgnoreCase(value) || Reserved.TRUE.equalsIgnoreCase(value)) {
-                sb.append(value);
+                sb.append(QUOTE_MARK + value.toUpperCase() + QUOTE_MARK);
                 return;
             }
 
