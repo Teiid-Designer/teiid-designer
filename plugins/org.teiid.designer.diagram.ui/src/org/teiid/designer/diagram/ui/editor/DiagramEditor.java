@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -55,11 +56,15 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -76,6 +81,8 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.loading.ComponentLoadingManager;
+import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -128,7 +135,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 public class DiagramEditor extends GraphicalEditor
     implements ModelEditorPage, AutoLayout, ZoomableEditor, INotifyChangedListener, ISelectionChangedListener,
     NotationChangeListener, ILabelProviderListener, IPartListener, IInitializationCompleteNotifier, INavigationLocationProvider,
-    INavigationSupported, IGotoMarker, IInlineRenameable, DiagramUiConstants, UiConstants {
+    INavigationSupported, IGotoMarker, IInlineRenameable, DiagramUiConstants, UiConstants, IManagedLoading {
 
     private static final String THIS_CLASS = "DiagramEditor"; //$NON-NLS-1$
     boolean initializeModelPackage = true;
@@ -172,6 +179,8 @@ public class DiagramEditor extends GraphicalEditor
     private static HashMap hmapModelTreeStates;
 
     private Collection completionListeners;
+    
+    private Control cntl;
 
     // cache adapters so that they can be reused
     private final Map adapterMap = new HashMap();
@@ -367,7 +376,23 @@ public class DiagramEditor extends GraphicalEditor
         // remove the extra keyhandler to prevent duplicate invocations:
         // viewer.setKeyHandler(new DiagramKeyHandler(viewer));
         // System.out.println("  -->>  DE.createGraphicalViewer(END) DVF.isDisposed() = " + diagramViewForm.isDisposed());
+
     }
+    
+    /**
+     * 
+     */
+    @Override
+	public void manageLoad(Properties args) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+            	internalCreatePartControl();
+            }
+        };
+
+        UiUtil.runInSwtThread(runnable, true);
+	}
 
     /**
      * @see org.teiid.designer.ui.editors.INavigationSupported
@@ -436,7 +461,15 @@ public class DiagramEditor extends GraphicalEditor
      */
     @Override
     public void createPartControl( final Composite parent ) {
-        // System.out.println("  -->>  DE.createPartControl() Creating ViewForm and ToolBar() ");
+    	this.cntl = parent;
+        
+        ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
+        manager.manageLoading(this);
+    }
+    
+    private void internalCreatePartControl() {
+    	Composite parent = (Composite)this.cntl;
+    	
         diagramViewForm = new DiagramViewForm(parent, SWT.BORDER);
         toolBar = new ToolBar(diagramViewForm, SWT.FLAT | SWT.WRAP | SWT.VERTICAL);
         // toolBar.setLayout(new GridLayout());
@@ -458,7 +491,6 @@ public class DiagramEditor extends GraphicalEditor
                 if (dController != null) dController.dispose();
             }
         });
-        // System.out.println("  -->>  DE.createPartControl() ViewForm.isDisposed() = " + diagramViewForm.isDisposed());
     }
 
     protected void createSelectionHandler( final Diagram diagram,

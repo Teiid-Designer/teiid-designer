@@ -13,7 +13,9 @@ import java.util.EventObject;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.commands.operations.IUndoContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -59,15 +61,20 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -99,6 +106,7 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.operations.UndoActionHandler;
+import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.PluginTransfer;
 import org.eclipse.ui.part.ResourceTransfer;
@@ -113,6 +121,8 @@ import org.teiid.core.designer.event.EventObjectListener;
 import org.teiid.core.designer.event.EventSourceException;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.loading.ComponentLoadingManager;
+import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
@@ -169,7 +179,7 @@ import org.teiid.designer.ui.viewsupport.StatusBarUpdater;
  * @since 8.0
  */
 public class ModelExplorerResourceNavigator extends ResourceNavigator
-    implements IModelerActionConstants, IGotoMarker, ModelViewer, UiConstants {
+    implements IModelerActionConstants, IGotoMarker, ModelViewer, UiConstants, IManagedLoading {
 
     static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ModelExplorerResourceNavigator.class);
 
@@ -271,6 +281,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Label defaultTeiidVersionLabel;
     private Label defaultServerStatusLabel;
     private Label defaultTeiidStatusLabel;
+    
+    private Control ctrl;
 
     /* Listen for change in default teiid instance */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
@@ -367,12 +379,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         super();
     }
 
-    /**
-     * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-     * @since 4.0
-     */
-    @Override
-    public void createPartControl( final Composite parent ) {
+
+    private void internalCreatePartControl( ) {
+    	Composite parent = (Composite)this.ctrl;
         /* Set the parent's layout to grid layout to allow the two components */
         GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
         GridLayoutFactory.fillDefaults().applyTo(parent);
@@ -553,6 +562,19 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         for( IContributionItem item : itemsToRemove ) {
         	bars.getToolBarManager().remove(item);
         }
+    }
+    
+    /**
+     * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+     * @since 4.0
+     */
+    @Override   
+    public void createPartControl( final Composite parent ) {
+    	
+    	this.ctrl = parent;
+        
+        ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
+        manager.manageLoading(this);
     }
 
     /**
@@ -963,6 +985,20 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             return propertySourceProvider.getPropertySheetPage();
         }
         return super.getAdapter(key);
+    }
+    
+    /**
+     * Returns the <code>IShowInSource</code> for this view.
+     */
+    protected IShowInSource getShowInSource() {
+        return new IShowInSource() {
+            public ShowInContext getShowInContext() {
+            	if( getViewer() == null ) return null;
+            	
+                return new ShowInContext(getViewer().getInput(), getViewer()
+                        .getSelection());
+            }
+        };
     }
     
     /**
@@ -1775,8 +1811,20 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         treeViewer.setSelection(newSelection, true);
     }
+    
+    @Override
+	public void manageLoad(Properties args) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+            	internalCreatePartControl();
+            }
+        };
 
-    protected class ShowImportsAction extends Action {
+        UiUtil.runInSwtThread(runnable, true);
+	}
+
+	protected class ShowImportsAction extends Action {
         public ShowImportsAction() {
             super(Util.getString(I18N_PREFIX + "showImportsAction"), IAction.AS_CHECK_BOX); //$NON-NLS-1$
             this.setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.IMPORT_CONTAINER));
