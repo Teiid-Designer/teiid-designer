@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -49,6 +51,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.EditorPart;
+import org.teiid.designer.core.loading.ComponentLoadingManager;
+import org.teiid.designer.core.loading.IManagedLoading;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
@@ -62,7 +66,7 @@ import org.teiid.designer.ui.undo.IUndoManager;
  *
  * @since 8.0
  */
-public abstract class MultiPageModelEditor extends EditorPart implements IGotoMarker {
+public abstract class MultiPageModelEditor extends EditorPart implements IGotoMarker, IManagedLoading {
 
     /** The panel for ModelObjectEditors. */
     protected ModelObjectEditorPanel editorContainer;
@@ -93,6 +97,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
     private boolean ignoreInternalFocus = false;
     
     private boolean tabFolderSelectionInProgress = false;
+    
+    private Composite primaryParent;
 
     /**
      * Creates an empty multi-page editor with no pages.
@@ -484,17 +490,36 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
      */
     @Override
     public final void createPartControl( Composite parent ) {
-        // System.out.println("MultiPageModelEditor.createPartControl()"); //$NON-NLS-1$
-        createContainer(parent);
+    	this.primaryParent = parent;
+        
+        ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
+        manager.manageLoading(this);
+
+    }
+    
+    private void internalCreatePartControl() {
+        createContainer(primaryParent);
         createPages();
         // set the active page (page 0 by default), unless it has already been done
         if (getActivePage() == -1) setActivePage(0);
 
         initializeObjectEditors();
 
-        new DropTarget(parent, DND.DROP_NONE);
-
+        new DropTarget(primaryParent, DND.DROP_NONE);
     }
+    
+    
+    @Override
+	public void manageLoad(Properties args) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+            	internalCreatePartControl();
+            }
+        };
+
+        UiUtil.runInSwtThread(runnable, true);
+	}
 
     /**
      * Creates the site for the given nested editor. The <code>MultiPageEditorPart</code> implementation of this method creates an
