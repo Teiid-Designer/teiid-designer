@@ -51,7 +51,8 @@ public class EditParameterDialog extends TitleAreaDialog {
 	// =============================================================
 	// Instance variables
 	// =============================================================
-	RelationalParameter parameter;
+	RelationalParameter origParameter;
+	RelationalParameter tempParameter;
 	
 	// =============================================================
 	// Constructors
@@ -68,7 +69,12 @@ public class EditParameterDialog extends TitleAreaDialog {
 	 */
 	public EditParameterDialog(Shell parent, RelationalParameter parameter) {
 		super(parent);
-		this.parameter = parameter;
+		this.origParameter = parameter;
+		tempParameter = new RelationalParameter();
+		tempParameter.setDatatype(origParameter.getDatatype());
+		tempParameter.setName(origParameter.getName());
+		tempParameter.setLength(origParameter.getLength());
+		tempParameter.setDirection(origParameter.getDirection());
 	}
 
 	@Override
@@ -95,7 +101,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		setTitle(Messages.EditParameterTitle);
-		setMessage(NLS.bind(Messages.EditingParameterInformation, parameter.getName()), IMessageProvider.INFORMATION);
+		setMessage(NLS.bind(Messages.EditingParameterInformation, origParameter.getName()), IMessageProvider.INFORMATION);
 
 		Composite dialogComposite = (Composite) super.createDialogArea(parent);
 
@@ -123,7 +129,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		label.setLayoutData(new GridData());
 
 		final Text columnNameText = new Text(composite, SWT.BORDER | SWT.NONE);
-		columnNameText.setText(parameter.getName());
+		columnNameText.setText(origParameter.getName());
 		columnNameText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		columnNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -134,7 +140,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				parameter.setName(value);
+				tempParameter.setName(value);
 				validate();
 			}
 		});
@@ -165,12 +171,12 @@ public class EditParameterDialog extends TitleAreaDialog {
 		String[] datatypes = dTypes.toArray(new String[dTypes.size()]);
 		datatypeCombo.setItems(datatypes);
 		GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(datatypeCombo);
-		datatypeCombo.setText(parameter.getDatatype());
+		datatypeCombo.setText(origParameter.getDatatype());
 		datatypeCombo.redraw();
 		datatypeCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				parameter.setDatatype(datatypeCombo.getText());
+				tempParameter.setDatatype(datatypeCombo.getText());
 				validate();
 			}
 		});
@@ -183,7 +189,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 		label1.setLayoutData(new GridData());
 
 		final Text lengthValueText = new Text(composite, SWT.BORDER | SWT.NONE);
-		lengthValueText.setText(String.valueOf(parameter.getLength()));
+		lengthValueText.setText(String.valueOf(origParameter.getLength()));
 		lengthValueText.setForeground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_BLUE));
 		lengthValueText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -194,7 +200,7 @@ public class EditParameterDialog extends TitleAreaDialog {
 				if (value == null) {
 					value = EMPTY_STRING;
 				}
-				parameter.setLength(Integer.parseInt(value));
+				tempParameter.setLength(Integer.parseInt(value));
 				validate();
 			}
 		});
@@ -211,12 +217,12 @@ public class EditParameterDialog extends TitleAreaDialog {
 				SWT.COLOR_DARK_BLUE));
 		directionCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true));
 		directionCombo.setItems(DIRECTION.AS_ARRAY);
-		directionCombo.setText(parameter.getDirection());
+		directionCombo.setText(origParameter.getDirection());
 		directionCombo.redraw();
 		directionCombo.addModifyListener(new ModifyListener() {
 			@Override
 			public void modifyText(final ModifyEvent event) {
-				parameter.setDirection(directionCombo.getText());
+				tempParameter.setDirection(directionCombo.getText());
 				validate();
 			}
 		});
@@ -238,7 +244,10 @@ public class EditParameterDialog extends TitleAreaDialog {
 
 	@Override
 	protected void okPressed() {
-
+		origParameter.setDatatype(tempParameter.getDatatype());
+		origParameter.setName(tempParameter.getName());
+		origParameter.setLength(tempParameter.getLength());
+		origParameter.setDirection(tempParameter.getDirection());
 		super.okPressed();
 	}
 
