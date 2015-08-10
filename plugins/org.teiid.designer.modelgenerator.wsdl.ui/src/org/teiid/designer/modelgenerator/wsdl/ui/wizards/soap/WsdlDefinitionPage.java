@@ -200,6 +200,7 @@ public class WsdlDefinitionPage extends WizardPage
 	 */
 	@Override
 	public void createControl(Composite theParent) {
+		initializing = true;
 		//
 		// create main container
 		//
@@ -235,6 +236,8 @@ public class WsdlDefinitionPage extends WizardPage
         setControl(hostPanel);
 		// Set the initial page status
 		setPageStatus();
+		
+		initializing = false;
 	}
 
 	/**
@@ -598,7 +601,9 @@ public class WsdlDefinitionPage extends WizardPage
 			WizardUtil.setPageComplete(this);
 		}
 
-		getContainer().updateButtons();
+		if( ! initializing ) {
+			getContainer().updateButtons();
+		}
 	}
 
 	/**
