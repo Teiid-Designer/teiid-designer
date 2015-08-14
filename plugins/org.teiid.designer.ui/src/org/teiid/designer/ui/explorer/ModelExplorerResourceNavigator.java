@@ -53,6 +53,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -1166,7 +1167,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
      * @param newAction new action to add
      * @throws CoreException
      */
-    private void overrideAction(IMenuManager theMenu, final String ActionId, IAction newAction) throws CoreException {
+    @SuppressWarnings("deprecation")
+	private void overrideAction(IMenuManager theMenu, final String ActionId, IAction newAction) throws CoreException {
         if (theMenu.find(ActionId) == null)
             return;
 
@@ -1177,6 +1179,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
             ((BaseSelectionListenerAction) newAction).selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
         } else if (newAction instanceof SelectionProviderAction) {
             ((SelectionProviderAction) newAction).selectionChanged((IStructuredSelection)getTreeViewer().getSelection());
+        } else if( newAction instanceof ISelectionChangedListener) {
+        	((ISelectionChangedListener) newAction).selectionChanged(new SelectionChangedEvent( getTreeViewer(), getTreeViewer().getSelection() ));
         }
     }
 
