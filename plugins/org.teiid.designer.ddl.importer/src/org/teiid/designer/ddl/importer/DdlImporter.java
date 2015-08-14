@@ -96,9 +96,11 @@ public class DdlImporter {
     /**
      * @param monitor
      * @param totalWork
+     * @param options 
      * @throws Exception
      */
-    public void importDdl(final IProgressMonitor monitor, final int totalWork ) throws Exception {
+    public void importDdl(final IProgressMonitor monitor, final int totalWork, final Properties options) throws Exception {
+
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;
@@ -115,12 +117,12 @@ public class DdlImporter {
             @Override
             public void tryToDo() throws Exception {
                 reader = new FileReader(ddlFileName());
-                importDdl(reader, monitor, totalWork);
+                importDdl(reader, monitor, totalWork, options);
             }
         });
     }
 
-    void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork ) throws Exception {
+    void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
     	ddlString = null;
     	importManager.getImportMessages().clear();
     	
@@ -203,7 +205,7 @@ public class DdlImporter {
             throw new Exception(DdlImporterPlugin.i18n("noDDLImporterRegisteredMsg", parserId)); //$NON-NLS-1$
 
         importManager.setNodeImporter(nodeImporter);
-        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager);
+        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager, options);
         
         if (monitor.isCanceled())
             throw new OperationCanceledException();

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -46,7 +47,6 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
-import org.teiid.designer.relational.model.RelationalView;
 import org.teiid.designer.relational.model.RelationalViewTable;
 
 
@@ -383,7 +383,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @throws Exception
 	 */
 	@Override
-	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
+	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager, Properties props) throws Exception {
 
 		setImporterManager(importManager);
 
@@ -417,6 +417,14 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		// Now process all the 'deferred' nodes.  These are nodes which reference other nodes (which are required to exist first)
 		createDeferredObjects(deferredCreateMap,model);
+		
+		String doFilterStr = (String)props.get(TeiidDDLConstants.FILTER_CONSTAINTS);
+		if( doFilterStr != null ) {
+			boolean doIt = Boolean.parseBoolean(doFilterStr);
+			
+			if( doIt ) removeRedundantConstraints(model);
+		}
+
 
 		return model;
 	}
@@ -911,6 +919,38 @@ public class TeiidDdlImporter extends StandardImporter {
 				}
 			}
 			nodeIter.remove();
+		}
+	}
+	
+	private void removeRedundantConstraints(RelationalModel model) {
+		// walk the model's tables
+		
+		for( RelationalReference child : model.getChildren()) {
+			if( child instanceof RelationalTable ) {
+				RelationalPrimaryKey pk = ((RelationalTable) child).getPrimaryKey();
+				RelationalUniqueConstraint deleteThisConstraint = null;
+				if( pk != null ) {
+					Collection<RelationalUniqueConstraint> constraints =  ((RelationalTable) child).getUniqueConstraints();
+					for( RelationalUniqueConstraint uc : constraints ) {
+						boolean same = true;
+						if( pk.getColumns().size() == uc.getColumns().size() ) {
+							// need to check all columns
+							for(RelationalColumn col : pk.getColumns()) {
+								if( !uc.getColumns().contains(col) ) {
+									same = false;
+								}
+							}
+						}
+						if( same ) {
+							deleteThisConstraint = uc;
+						}
+					}
+				}
+				
+				if( deleteThisConstraint != null ) {
+					((RelationalTable) child).removeUniqueConstraint(deleteThisConstraint);
+				}
+			}
 		}
 	}
 	

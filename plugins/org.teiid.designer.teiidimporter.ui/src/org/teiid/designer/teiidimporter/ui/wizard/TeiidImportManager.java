@@ -83,6 +83,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
     private boolean createConnectionProfile = true;
+    private boolean filterRedundantUniqueConstraints = true;
     private TranslatorOverride translatorOverride;
     
     IStatus vdbDeploymentStatus = null;
@@ -552,6 +553,22 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 	 */
 	public void setCreateConnectionProfile(boolean createConnectionProfile) {
 		this.createConnectionProfile = createConnectionProfile;
+	}
+	
+    /**
+     * Get the CreateConnectionProfile flag
+	 * @return 'true' if a connection profile is to be created, 'false' if not.
+	 */
+	public boolean isFilterRedundantUniqueConstraints() {
+		return this.filterRedundantUniqueConstraints;
+	}
+
+	/**
+	 * Set the filterRedundantUniqueConstraints status flag
+	 * @param doFilter 'true' if a connection profile is to be created
+	 */
+	public void setFilterRedundantUniqueConstraints(boolean doFilter) {
+		this.filterRedundantUniqueConstraints = doFilter;
 	}
 
     /**

@@ -73,6 +73,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     private Text targetModelContainerText;
     private Text targetModelFileText;
     private Text targetModelInfoText;
+    private Button filterRedundantUCsCB;
     private Button createConnProfileCB;
     private Button showVdbXMLButton;
 
@@ -250,8 +251,13 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         targetModelInfoText.setLayoutData(gd);
         
         // CheckBox for Connection Profile - defaults to checked
+        filterRedundantUCsCB = WidgetFactory.createCheckBox(sourceGroup, Messages.SelectTargetPage_FilterRedundantUCsCB_Label, SWT.NONE, 3);
+        filterRedundantUCsCB.setToolTipText(Messages.SelectTargetPage_FilterRedundantUCsCB_ToolTip);
+        filterRedundantUCsCB.setSelection(true);
+        
+        // CheckBox for Connection Profile - defaults to checked
         createConnProfileCB = WidgetFactory.createCheckBox(sourceGroup, Messages.SelectTargetPage_CreateConnectionProfileCB_Label, SWT.NONE, 3);
-        createConnProfileCB.setToolTipText(Messages.SelectTargetPage_CreateConnectionProfileCB_Label);
+        createConnProfileCB.setToolTipText(Messages.SelectTargetPage_CreateConnectionProfileCB_ToolTip);
         createConnProfileCB.setSelection(true);
 
     }
@@ -455,6 +461,18 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     	boolean isChecked = false;
     	if(this.createConnProfileCB != null) {
     		isChecked = this.createConnProfileCB.getSelection();
+    	}
+    	return isChecked;
+    }
+    
+    /**
+     * Gets the filter redundant UC's status
+     * @return 'true' if the filter checkbox is checked, 'false' if not.
+     */
+    public boolean isFilterRedundantUniqueConstraints() {
+    	boolean isChecked = false;
+    	if(this.filterRedundantUCsCB != null) {
+    		isChecked = this.filterRedundantUCsCB.getSelection();
     	}
     	return isChecked;
     }
