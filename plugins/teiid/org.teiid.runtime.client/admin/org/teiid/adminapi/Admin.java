@@ -248,7 +248,7 @@ public interface Admin {
      * @throws AdminException
      */
     @Since(Version.TEIID_8_7)
-    Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type, Collection<? extends Translator> translators) throws AdminException;
+    Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException;
     
 
     /**
@@ -372,7 +372,7 @@ public interface Admin {
      * @param properties - properties
      * @throws AdminException
      */
-    void createDataSource(String deploymentName, String templateName,  Collection<String> dsNames, Properties properties) throws AdminException;
+    void createDataSource(String deploymentName, String templateName, Properties properties) throws AdminException;
 
     /**
      * Given the deployed name of the data source, this will return all the configuration properties

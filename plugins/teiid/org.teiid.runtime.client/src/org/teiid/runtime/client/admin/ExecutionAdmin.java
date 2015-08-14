@@ -370,7 +370,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
             }
         }
 
-        this.admin.createDataSource(dsName, typeName, this.dataSourceNames, properties);
+        this.admin.createDataSource(dsName, typeName, properties);
 
         // call admin.refresh() to clear cached resource info
         this.admin.refresh();
@@ -693,16 +693,35 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	// Clears any cached data source or translator info prior to reloading
     	this.admin.refresh();
     	
-        // populate data source type names set
-        refreshDataSourceTypes();
+        // populate data source type names
+    	Exception resultException = null;
+    	try {
+    		refreshDataSourceTypes();
+    	} catch (Exception ex) {
+    		resultException = ex;
+    	}
 
-        refreshDataSources();
+    	try {
+    		refreshDataSources();
+    	} catch (Exception ex) {
+    		resultException = ex;
+    	}
         
         // populate translator map
-        refreshTranslators();
+    	try {
+    		refreshTranslators();
+    	} catch (Exception ex) {
+    		resultException = ex;
+    	}
 
         // populate VDBs and source bindings
-        refreshVDBs();
+    	try {
+    		refreshVDBs();
+    	} catch (Exception ex) {
+    		resultException = ex;
+    	}
+
+    	if(resultException!=null) throw resultException;
 
         // notify listeners
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this.teiidServer));
@@ -747,11 +766,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
                 } else { // TEIID SERVER VERSION 8.7 AND HIGHER
                 	Collection<? extends PropertyDefinition> propDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE, translators);
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
                 	Collection<? extends PropertyDefinition> importPropDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT, translators);
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
                 	Collection<? extends PropertyDefinition> extPropDefs  = 
-                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA, translators);
+                			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
                 	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer));
                 }
             }
