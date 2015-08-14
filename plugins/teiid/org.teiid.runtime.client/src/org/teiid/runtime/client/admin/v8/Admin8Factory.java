@@ -216,6 +216,8 @@ public class Admin8Factory {
     	private Set<String> deployedResourceAdaptorNames;
     	private HashSet<String> installedJdbcDrivers;
     	private HashMap<String, String> connectionFactoryNames;
+    	private Collection<String> dsNames;
+    	private Collection<String> xaDsNames;
 
         /**
          * @param teiidVersion
@@ -485,9 +487,10 @@ public class Admin8Factory {
 		}
 
 		@Override
-		public void createDataSource(String deploymentName,	String templateName, Collection<String> dsNames, Properties properties)	throws AdminException {
+		public void createDataSource(String deploymentName,	String templateName, Properties properties)	throws AdminException {
 			deploymentName = removeJavaContext(deploymentName);
 
+			Collection<String> dsNames = getDataSourceNames();
 			if (dsNames.contains(deploymentName)) {
 				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70003, deploymentName));
 			}
@@ -960,8 +963,8 @@ public class Admin8Factory {
 		public Collection<String> getDataSourceNames() throws AdminException {
 			if( this.dataSourceNames == null ) {
 				Set<String> datasourceNames = new HashSet<String>();
-				datasourceNames.addAll(getChildNodeNames("datasources", "data-source"));
-				datasourceNames.addAll(getChildNodeNames("datasources", "xa-data-source"));
+				datasourceNames.addAll(getDSNames());
+				datasourceNames.addAll(getXaDSNames());
 				datasourceNames.addAll(getConnectionFactoryNames().keySet());
 	
 				dataSourceNames = new HashSet<String>();
@@ -978,6 +981,23 @@ public class Admin8Factory {
 	        return this.dataSourceNames;
 		}
 		
+		private Collection<String> getDSNames() throws AdminException {
+			if (this.dsNames == null) {
+				dsNames = new HashSet<String>();
+				dsNames.addAll(getChildNodeNames("datasources", "data-source"));
+			}
+			return dsNames;
+		}
+
+		private Collection<String> getXaDSNames() throws AdminException {
+			if (this.xaDsNames == null) {
+				xaDsNames = new HashSet<String>();
+				xaDsNames.addAll(getChildNodeNames("datasources",
+						"xa-data-source"));
+			}
+			return xaDsNames;
+		}
+		
 		@Override
 		public Properties getDataSource(String deployedName) throws AdminException {
 			deployedName = removeJavaContext(deployedName);
@@ -989,20 +1009,18 @@ public class Admin8Factory {
 
 			Properties dsProperties = new Properties();
 
-			// check regular data-source
-			cliCall("read-resource",
-					new String[] { "subsystem", "datasources", "data-source", deployedName}, null,
-					new DataSourceProperties(dsProperties));
-
-			// check xa connections
-			if (dsProperties.isEmpty()) {
+			// Regular DataSource
+			if(getDSNames().contains(deployedName)) {
 				cliCall("read-resource",
-						new String[] {"subsystem", "datasources", "xa-data-source", deployedName}, null,
-						new DataSourceProperties(dsProperties));
-			}
-
-			// check connection factories
-			if (dsProperties.isEmpty()) {
+							new String[] { "subsystem", "datasources", "data-source", deployedName}, null,
+							new DataSourceProperties(dsProperties));
+			// Xa DataSource
+			} else if(getXaDSNames().contains(deployedName)) {
+			 				cliCall("read-resource",
+			 						new String[] {"subsystem", "datasources", "xa-data-source", deployedName}, null,
+			 						new DataSourceProperties(dsProperties));
+			// Connection Factory
+			} else if(getConnectionFactoryNames().keySet().contains(deployedName)) {
 				Map<String, String> raDSMap = getConnectionFactoryNames();
 				// deployed rar name, may be it is == deployedName or if server restarts it will be rar name or rar->[1..n] name
 				String rarName = raDSMap.get(deployedName);
@@ -1271,11 +1289,12 @@ public class Admin8Factory {
 		
 		@Override
         @Since(Version.TEIID_8_7)
-        public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type, Collection<? extends Translator> translators) throws AdminException{
+        public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException{
 			requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7.get());
 
 		    BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
 
+		    Collection<? extends Translator> translators = getTranslators();
             for (Translator t:translators) {
                 if (t.getName().equalsIgnoreCase(translatorName)) {
                     cliCall("read-translator-properties", new String[] {"subsystem", "teiid"}, new String[] {"translator-name", translatorName, "type", type.name()}, builder);
