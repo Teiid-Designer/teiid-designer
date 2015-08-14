@@ -61,6 +61,7 @@ public abstract class AbstractRefactorAction implements IWorkbenchWindowActionDe
         }
 
         run(getRefactoringWizard(selectedResources, window), window.getShell());
+        selectedResources = null;
     }
 
     @Override
