@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
@@ -574,11 +575,12 @@ public class StandardImporter extends AbstractImporter {
 	 * Perform the import
 	 * @param rootNode the rootNode of the DDL
 	 * @param importManager the import manager which maintains import options
+	 * 	 * @param props the custom properties for import
 	 * @return the RelationalModel created
 	 * @throws Exception
 	 */
 	@Override
-	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
+	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager, Properties props) throws Exception {
 
 		setImporterManager(importManager);
 

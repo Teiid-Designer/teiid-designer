@@ -96,6 +96,8 @@ public class Messages extends NLS {
     
     public static String SelectTargetPage_title;
     public static String SelectTargetPage_TgtModelDefnGroup;
+    public static String SelectTargetPage_FilterRedundantUCsCB_Label;
+    public static String SelectTargetPage_FilterRedundantUCsCB_ToolTip;
     public static String SelectTargetPage_CreateConnectionProfileCB_Label;
     public static String SelectTargetPage_CreateConnectionProfileCB_ToolTip;
     public static String SelectTargetPage_Location;

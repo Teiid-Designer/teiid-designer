@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.ddl;
 
+import java.util.Properties;
+
 import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.designer.relational.model.RelationalModel;
 
@@ -21,9 +23,10 @@ public interface DdlNodeImporter {
      *
      * @param rootNode
      * @param importManager
+     * @param properties
      * @return the RelationalModel
      * @throws Exception 
      */
-    RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception;
+    RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager, Properties props) throws Exception;
 
 }

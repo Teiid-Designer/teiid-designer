@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
@@ -61,6 +62,7 @@ import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ddl.importer.DdlImporter;
+import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -104,6 +106,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
     private Button generateDefaultSQLCheckBox;
     private Button optToSetModelEntityDescriptionCheckBox;
     private Button optToCreateModelEntitiesForUnsupportedDdlCheckBox;
+    Button filterRedundantUCsCB;
     private Text ddlFileContentsBox;
     
     private TabItem modelDefinitionTab;
@@ -112,19 +115,23 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
 
     private String initDlgFolderName;
     private boolean generateModelName = true;
+    Properties options;
 
     /**
      * DdlImporterPage constructor
      * @param importer the DdlImporter
      * @param projects current workspace projects
      * @param selection current selection
+     * @param options 
      */
     DdlImporterPage( final DdlImporter importer,
                      final IProject[] projects,
-                     final IStructuredSelection selection ) {
+                     final IStructuredSelection selection,
+                     final Properties options) {
         super(DdlImporterPage.class.getSimpleName(), DdlImporterUiI18n.PAGE_TITLE, null);
         this.importer = importer;
         this.projects = projects;
+        this.options = options;
         final Set<IContainer> selectedContainers = new HashSet<IContainer>();
         for (final Iterator<?> iter = selection.iterator(); iter.hasNext();) {
             final Object resource = iter.next();
@@ -602,6 +609,18 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         
         // make sure importer has restored setting
         optToCreateModelEntitiesForUnsupportedDdlModified();
+        
+        // CheckBox for Connection Profile - defaults to checked
+        filterRedundantUCsCB = WidgetFactory.createCheckBox(mainPanel, DdlImporterUiI18n.FILTER_UCS_FOR_DEFINED_PKS_LABEL, 0, PANEL_GRID_SPAN, true);
+        filterRedundantUCsCB.setSelection(true);
+        filterRedundantUCsCB.addSelectionListener(new SelectionAdapter() {
+	        @Override
+	        public void widgetSelected( final SelectionEvent event ) {
+	            options.put(TeiidDDLConstants.FILTER_CONSTAINTS, Boolean.toString(filterRedundantUCsCB.getSelection()));
+	        }
+	    });
+        
+        
 
         return mainPanel;
     }

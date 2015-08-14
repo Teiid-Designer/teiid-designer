@@ -12,8 +12,10 @@ import static org.teiid.designer.ddl.importer.DdlImporterPlugin.i18n;
 /**
  * i18n constants
  */
+@SuppressWarnings("javadoc")
 public interface DdlImporterI18n {
-    String CREATING_CHANGE_REPORT_MSG = i18n("creatingChangeReportMsg"); //$NON-NLS-1$
+
+	String CREATING_CHANGE_REPORT_MSG = i18n("creatingChangeReportMsg"); //$NON-NLS-1$
     String CREATING_MODEL_MSG = i18n("creatingModelMsg"); //$NON-NLS-1$
     String DDL_FILE_NOT_FOUND_MSG = i18n("ddlFileNotFoundMsg"); //$NON-NLS-1$
     String ENTITY_NOT_FOUND_MSG = i18n("entityNotFoundMsg"); //$NON-NLS-1$
