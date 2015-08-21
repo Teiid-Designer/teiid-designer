@@ -757,13 +757,19 @@ public class ExecutionAdmin implements IExecutionAdmin {
     	Collection<? extends Translator> translators = this.admin.getTranslators();
         for (Translator translator : translators ) {
             if (translator.getName() != null) {
+            	TeiidTranslator teiidTranslator = null;
+            	
                 if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
                 	Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
-                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
+                	teiidTranslator =  new TeiidTranslator(translator, propDefs, teiidServer);
+                	
+                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
                 } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7.get())) {
                 	@SuppressWarnings("deprecation")
 					Collection<? extends PropertyDefinition> propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
-                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, teiidServer));
+                	teiidTranslator =   new TeiidTranslator(translator, propDefs, teiidServer);
+                	
+                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
                 } else { // TEIID SERVER VERSION 8.7 AND HIGHER
                 	Collection<? extends PropertyDefinition> propDefs  = 
                 			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.OVERRIDE);
@@ -771,7 +777,8 @@ public class ExecutionAdmin implements IExecutionAdmin {
                 			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.IMPORT);
                 	Collection<? extends PropertyDefinition> extPropDefs  = 
                 			this.admin.getTranslatorPropertyDefinitions(translator.getName(), Admin.TranlatorPropertyType.EXTENSION_METADATA);
-                	this.translatorByNameMap.put(translator.getName(), new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer));
+                	teiidTranslator = new TeiidTranslator(translator, propDefs, importPropDefs, extPropDefs, teiidServer);
+                	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
                 }
             }
         }

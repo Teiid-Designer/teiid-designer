@@ -218,6 +218,9 @@ public class Admin8Factory {
     	private HashMap<String, String> connectionFactoryNames;
     	private Collection<String> dsNames;
     	private Collection<String> xaDsNames;
+    	private HashMap<String, String> rarToModuleNames;
+    	private HashMap<String, String> rarToRAModuleNames;
+    	private HashMap<String, Collection<PropertyDefinition>> translatorTempPropDefs;
 
         /**
          * @param teiidVersion
@@ -250,6 +253,9 @@ public class Admin8Factory {
         	deployedResourceAdaptorNames = null;
         	installedJdbcDrivers = null;
         	connectionFactoryNames = null;
+        	dsNames = null;
+        	xaDsNames = null;
+        	rarToModuleNames = null;
 			
 		}
 
@@ -405,6 +411,13 @@ public class Admin8Factory {
 		private String getResourceAdapterModuleName(String rarName)
 				throws AdminException {
 			final List<String> props = new ArrayList<String>();
+			
+			if( rarToModuleNames == null ) {
+				this.rarToModuleNames = new HashMap<String, String>();
+			}
+			String value = this.rarToModuleNames.get(rarName);
+			if( value != null ) return value;
+			
 			cliCall("read-resource",
 					new String[] { "subsystem", "resource-adapters", "resource-adapter", rarName},
 					null, new ResultCallback() {
@@ -423,7 +436,12 @@ public class Admin8Factory {
 			        		}
 						}
 					});
-			return props.get(0);
+			value = props.get(0);
+				
+			if( value != null ) {
+				rarToModuleNames.put(rarName, value);
+			}
+			return value;
 		}
 
 		class AbstractMetadatMapper implements MetadataMapper<String>{
@@ -1032,19 +1050,38 @@ public class Admin8Factory {
 
 				// figure out driver-name
                 if (dsProperties.getProperty("driver-name") == null) {
-                    String moduleName = getResourceAdapterModuleName(rarName);
-                    Set<String> installedRars = getResourceAdapterNames();
-                    for (String installedRar:installedRars) {
-                        if (getResourceAdapterModuleName(installedRar).equals(moduleName)) {
-                            dsProperties.setProperty("driver-name", installedRar);
-                            break;
-                        }
-                    }
+                	String matchingInstalledRar = getRarToModuleNames().get(rarName);
+                	if( matchingInstalledRar != null ) {
+                		dsProperties.setProperty("driver-name", matchingInstalledRar);
+                	} else {
+	                    String moduleName = getResourceAdapterModuleName(rarName);
+	                    Set<String> installedRars = getResourceAdapterNames();
+	                    for (String installedRar:installedRars) {
+	                    	String resAdaptModuleName = getResourceAdapterModuleName(installedRar);
+	                        if (resAdaptModuleName.equals(moduleName)) {
+//	                        	getRarToModuleNames().put(rarName, installedRar);
+	                            dsProperties.setProperty("driver-name", installedRar);
+	                            break;
+	                        } 
+//	                        else {
+//	                        	getRarToModuleNames().put(installedRar, resAdaptModuleName);
+//	                        }
+	                    }
+                	}
                 }
 			}
 
 			return dsProperties;
 		}
+		
+		private Map<String, String> getRarToModuleNames() throws AdminException {
+			if( this.rarToModuleNames == null ) {
+				this.rarToModuleNames = new HashMap<String, String>();
+			}
+			
+			return this.rarToModuleNames;
+		}
+
 
 		private Map<String, String> getConnectionFactoryNames() throws AdminException {
 			if( this.connectionFactoryNames == null ) {
@@ -1235,28 +1272,40 @@ public class Admin8Factory {
 		 */
 		@Override
 		public Collection<PropertyDefinition> getTemplatePropertyDefinitions(String templateName) throws AdminException {
-			BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+			if( translatorTempPropDefs == null ) {
+				this.translatorTempPropDefs = new HashMap<String, Collection<PropertyDefinition>>();
+			}
+			
+			Collection<PropertyDefinition> props = this.translatorTempPropDefs.get(templateName);
+			
+			if(  props == null ) {
+				BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+				
+				// RAR properties
+				Set<String> resourceAdapters = getResourceAdapterNames();
+	        	if (resourceAdapters.contains(templateName)) {
+	        		cliCall("read-rar-description", new String[] {"subsystem", "teiid"}, new String[] {"rar-name", templateName}, builder);
+	        		buildResourceAdapterProperties(templateName, builder);
+			        props = builder.getPropertyDefinitions();
+	        	} else {
+		
+		        	// get JDBC properties
+		    		cliCall("read-resource-description", new String[] {"subsystem", "datasources", "data-source", templateName}, null, builder);
+		
+			        // add driver specific properties
+			        PropertyDefinitionMetadata cp = new PropertyDefinitionMetadata();
+			        cp.setName("connection-properties");
+			        cp.setDisplayName("Addtional Driver Properties");
+			        cp.setDescription("The connection-properties element allows you to pass in arbitrary connection properties to the Driver.connect(url, props) method. Supply comma separated name-value pairs"); //$NON-NLS-1$
+			        cp.setRequired(false);
+			        cp.setAdvanced(true);
+			        props = builder.getPropertyDefinitions();
+			        props.add(cp);
+	        	}
+	        					
+	        	this.translatorTempPropDefs.put(templateName, props);
+			}
 
-			// RAR properties
-			Set<String> resourceAdapters = getResourceAdapterNames();
-        	if (resourceAdapters.contains(templateName)) {
-        		cliCall("read-rar-description", new String[] {"subsystem", "teiid"}, new String[] {"rar-name", templateName}, builder);
-        		buildResourceAdapterProperties(templateName, builder);
-		        return builder.getPropertyDefinitions();
-        	}
-
-        	// get JDBC properties
-    		cliCall("read-resource-description", new String[] {"subsystem", "datasources", "data-source", templateName}, null, builder);
-
-	        // add driver specific properties
-	        PropertyDefinitionMetadata cp = new PropertyDefinitionMetadata();
-	        cp.setName("connection-properties");
-	        cp.setDisplayName("Addtional Driver Properties");
-	        cp.setDescription("The connection-properties element allows you to pass in arbitrary connection properties to the Driver.connect(url, props) method. Supply comma separated name-value pairs"); //$NON-NLS-1$
-	        cp.setRequired(false);
-	        cp.setAdvanced(true);
-	        ArrayList<PropertyDefinition> props = builder.getPropertyDefinitions();
-	        props.add(cp);
 	        return props;
 		}
 
@@ -1580,7 +1629,8 @@ public class Admin8Factory {
 			return request;
 		}
 
-		private void cliCall(String operationName, String[] address, String[] params, ResultCallback callback) throws AdminException {
+		private void cliCall(String operationName, String[] address, String[] params, ResultCallback callback) throws AdminException {			
+
 			DefaultOperationRequestBuilder builder = new DefaultOperationRequestBuilder();
 	        final ModelNode request;
 	        try {
