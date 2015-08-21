@@ -230,4 +230,12 @@ public class TeiidPropertyDefinition {
     public void setOwner(String owner) {
         setProperty(OWNER, owner);
     }
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(this.getClass().getSimpleName());
+		sb.append("\n\tNAME = ").append(getName()).append("   Properties: ").append(properties.toString());
+		return sb.toString();
+	}
+    
 }
