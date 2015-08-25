@@ -174,7 +174,7 @@ public class CreateVdbDataSourceAction  extends SortableSelectionAction implemen
     public static void doCreateDataSource(String vdbName, ITeiidServer teiidServer, boolean withDeployment) throws Exception {
     	final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
     	
-        VdbDataSourceInfo info = new VdbDataSourceInfo(vdbName, vdbName, vdbName);
+        VdbDataSourceInfo info = new VdbDataSourceInfo(vdbName, vdbName, vdbName, teiidServer);
         
         info.setPassword(teiidServer.getTeiidJdbcInfo().getPassword());
         info.setUsername(teiidServer.getTeiidJdbcInfo().getUsername());
