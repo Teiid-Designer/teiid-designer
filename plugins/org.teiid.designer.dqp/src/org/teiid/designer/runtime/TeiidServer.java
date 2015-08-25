@@ -497,9 +497,10 @@ public class TeiidServer implements ITeiidServer {
     }
     
     private String getVdbDataSourceConnectionUrl(String vdbName) {
-    	String host = this.teiidAdminInfo.getHostProvider().getHost();
-		String port = this.teiidAdminInfo.getPort();
-		return "jdbc:teiid:" + vdbName + "@mm://"+host+':'+port;  //$NON-NLS-1$ //$NON-NLS-2$
+    	String host = this.teiidJdbcInfo.getHostProvider().getHost();
+		String port = this.teiidJdbcInfo.getPort();
+		String protocol = this.teiidJdbcInfo.isSecure() ? "@mms" : "@mm";
+		return "jdbc:teiid:" + vdbName + protocol+"://"+host+":"+port;  //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     @Override
