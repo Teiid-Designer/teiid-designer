@@ -9,6 +9,8 @@ package org.teiid.designer.runtime.ui.connection;
 
 import java.util.Properties;
 
+import org.teiid.designer.runtime.spi.ITeiidServer;
+
 
 /**
  *
@@ -23,6 +25,10 @@ public class VdbDataSourceInfo {
 	private static final String TEIID_DRIVER_CLASS_NAME = "org.teiid.jdbc.TeiidDriver"; //$NON-NLS-1$
 	private static final String TEIID_JDBC_URL_PREFIX = "jdbc:teiid:"; //$NON-NLS-1$
 	private static final char SEMI_COLON = ';';
+	private static final String PROTOCOL = "@mm";
+	private static final String DELIMITER = "//";
+	private static final String SECURE_PROTOCOL = "@mms";
+	private static final char COLON = ':';
 	private static final char EQUALS = '=';
 	private static final String TRUE_VALUE = "\"true\""; //$NON-NLS-1$
 	private String vdbName;
@@ -30,6 +36,7 @@ public class VdbDataSourceInfo {
     private String jndiName;
     private String username;
     private String password;
+    private ITeiidServer teiidServer;
     private boolean passThroughAuthentication;
 
     public VdbDataSourceInfo() {
@@ -45,11 +52,13 @@ public class VdbDataSourceInfo {
      */
     public VdbDataSourceInfo(   String vdbName,
     							String displayName,
-                                String jndiName) {
+                                String jndiName,
+                                ITeiidServer teiidServer) {
         super();
         this.vdbName = vdbName;
         this.displayName = displayName;
         this.jndiName = jndiName;
+        this.teiidServer = teiidServer;
     }
 
     /**
@@ -132,6 +141,10 @@ public class VdbDataSourceInfo {
     public String getUrl() {
     	StringBuilder sb = new StringBuilder();
     	sb.append(TEIID_JDBC_URL_PREFIX).append(this.vdbName);
+    	String host = this.teiidServer.getTeiidJdbcInfo().getHostProvider().getHost();
+		String port = this.teiidServer.getTeiidJdbcInfo().getPort();
+		String protocol = this.teiidServer.getTeiidJdbcInfo().isSecure() ? SECURE_PROTOCOL : PROTOCOL;
+		sb.append(protocol).append(COLON).append(DELIMITER).append(host).append(COLON).append(port);
     	if( isPassThroughAuthentication() ) {
     		sb.append(SEMI_COLON).append(PASS_THROUGH_KEY).append(EQUALS).append(TRUE_VALUE).append(SEMI_COLON);
     	}
