@@ -1,6 +1,7 @@
 package org.teiid.designer.type;
 
 import java.util.Set;
+
 import org.teiid.designer.annotation.Since;
 /*
  * JBoss, Home of Professional Open Source.
@@ -211,6 +212,31 @@ public interface IDataTypeManagerService {
      * @return true if the conversion is implicit;
      */
     boolean isImplicitConversion(String sourceTypeName, String targetTypeName);
+
+    /**
+     * Is the given data type variable length
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports length value
+     */
+    boolean isLengthDataType(String dataTypeName);
+    
+    /**
+     * Is the given data type support precision and scale
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports precision and scale
+     */
+    boolean isPrecisionDataType(String dataTypeName);
+    
+    /**
+     * Is the given data type support scale
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports scale
+     */
+
+	public boolean isScaleDataType(String dataTypeName);
     
     /**
      * Can a value transformation between the sourceType with given name
