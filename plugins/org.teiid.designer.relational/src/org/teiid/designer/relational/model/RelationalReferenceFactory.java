@@ -735,5 +735,13 @@ public class RelationalReferenceFactory implements RelationalConstants {
     public RelationalViewTable createViewTable( ) {
     	return new RelationalViewTable();
     }
+    
+    /**
+     * Create a RelationalTable
+     * @return the new object
+     */
+    public RelationalViewProcedure createViewProcedure( ) {
+    	return new RelationalViewProcedure();
+    }
         
 }

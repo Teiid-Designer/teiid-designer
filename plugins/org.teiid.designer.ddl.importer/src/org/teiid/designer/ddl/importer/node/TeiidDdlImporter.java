@@ -14,21 +14,27 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlConstants;
 import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
+import org.teiid.designer.ddl.importer.DdlImporterPlugin;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
+import org.teiid.designer.ddl.importer.node.StandardImporter.Info;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
@@ -45,6 +51,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.model.RelationalViewTable;
 
 
@@ -353,6 +360,68 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		return procedure;
 	}
+	
+	protected RelationalProcedure createVirtualProcedure(AstNode procedureNode, RelationalModel model) throws Exception {
+		RelationalViewProcedure procedure = getFactory().createViewProcedure();
+		Info info = createInfo(procedureNode, model);
+		if (info.getSchema() == null)
+			model.addChild(procedure);
+		else {
+			info.getSchema().getProcedures().add(procedure);
+			procedure.setParent(info.getSchema());
+		}
+
+		initialize(procedure, procedureNode, info.getName());
+		// TODO: determine how to handle Procedure StatementOption
+		// TODO: determine how to handle Procedure Statement
+
+		if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
+			RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+			procedure.setResultSet(result);
+			initialize(result, procedureNode);
+		}
+
+		List<AstNode> procOptionNodes = new ArrayList<AstNode>();
+
+		for (AstNode child : procedureNode) {
+			if (is(child, TeiidDdlLexicon.CreateProcedure.PARAMETER)) {
+				createProcedureParameter(child, procedure);
+			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode);
+
+				for(AstNode resultCol: child) {
+					if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
+						createColumn(resultCol,result);
+					}
+				}
+			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode);
+				createColumn(child,result);
+			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				procOptionNodes.add(child);
+			}
+		}
+		
+        try {
+            NewModelObjectHelperManager.helpCreate(procedure, new Properties());
+        } catch (ModelerCoreException err) {
+            DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
+        }
+        
+		String queryExpression = (String)procedureNode.getProperty(TeiidDdlLexicon.CreateProcedure.STATEMENT);
+		if( ! StringUtilities.isEmpty(queryExpression) ) {
+			procedure.setTransformationSQL(queryExpression);
+		}
+
+		// process the Procedure Options
+		processOptions(procOptionNodes,procedure);
+
+		return procedure;
+	}
 
 	@Override
 	protected RelationalParameter createProcedureParameter(AstNode node, RelationalProcedure procedure) throws Exception {
@@ -390,6 +459,8 @@ public class TeiidDdlImporter extends StandardImporter {
 	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
 
 		setImporterManager(importManager);
+		getImporterManager().optToGenerateDefaultSQL(false);
+		getImporterManager().optToHelpCreateTransform(false);
 
 		// Create a RelationalModel for the imported DDL
 		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
@@ -496,9 +567,16 @@ public class TeiidDdlImporter extends StandardImporter {
 				viewTable.setTransformationSQL(queryExpression);
 			}
 
-		}else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
+		} else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
 				|| is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
-			createProcedure(node, model);
+			String modelType = (String)node.getProperty(TeiidDdlLexicon.SchemaElement.TYPE);
+			if( modelType != null ) {
+				if( modelType.equalsIgnoreCase("VIRTUAL")) {
+					createVirtualProcedure(node, model);
+				} else {
+					createProcedure(node, model);
+				}
+			}
 
 			// Handle Alter Table
 		} else if (is(node, TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)) {

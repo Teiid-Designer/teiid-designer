@@ -198,7 +198,9 @@ public class DynamicVdb extends BasicVdb {
                             vdb.setPasswordPattern(value);
                         } else if (Xml.AUTHENTICATION_TYPE.equals(name)) {
                             vdb.setAuthenticationType(value);
-                        } else {
+                        } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
+                            vdb.setAutoGenerateRESTWar(Boolean.parseBoolean(value));
+                        }  else {
                             vdb.setProperty(name, value);
                         }
                     }
@@ -249,6 +251,7 @@ public class DynamicVdb extends BasicVdb {
                         role.setAllowCreateTempTables(element.allowCreateTempTables());
                         role.setAnyAuthenticated(element.isAnyAuthenticated());
                         role.setGrantAll(element.doGrantAll());
+                        role.setDescription(element.getDescription());
 
                         { // Handle Permissions
                             for (PermissionElement pe : element.getPermissions()) {

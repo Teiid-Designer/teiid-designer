@@ -359,23 +359,26 @@ public class DdlImporter {
         if(importManager.getModelType() == ModelType.VIRTUAL_LITERAL ) {
             Properties props = new Properties();
             boolean doGenerateDefaultSQL = importManager.optToGenerateDefaultSQL();
-            if (doGenerateDefaultSQL) {
-                props.put("generateDefaultSQL", doGenerateDefaultSQL); //$NON-NLS-1$
-                props.put("validate", doGenerateDefaultSQL); //$NON-NLS-1$
+            boolean doHelpCreateTransform = importManager.optToHelpCreateTransform();
+            if( doHelpCreateTransform ) {
+	            if (doGenerateDefaultSQL) {
+	                props.put("generateDefaultSQL", doGenerateDefaultSQL); //$NON-NLS-1$
+	                props.put("validate", doGenerateDefaultSQL); //$NON-NLS-1$
+	            }
+	        	
+	        	Collection<EObject> targets = new ArrayList<EObject>();
+	        	
+	        	for( Object nextObj : model.getEObjects() ) {
+	        		if( nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
+			            try {
+			                NewModelObjectHelperManager.helpCreate(nextObj, props);
+			                targets.add((EObject)nextObj);
+			            } catch (ModelerCoreException err) {
+			                DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
+			            }
+	        		}
+	        	}
             }
-        	
-        	Collection<EObject> targets = new ArrayList<EObject>();
-        	
-        	for( Object nextObj : model.getEObjects() ) {
-        		if( nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
-		            try {
-		                NewModelObjectHelperManager.helpCreate(nextObj, props);
-		                targets.add((EObject)nextObj);
-		            } catch (ModelerCoreException err) {
-		                DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
-		            }
-        		}
-        	}
         }
 
 

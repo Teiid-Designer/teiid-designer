@@ -12,12 +12,14 @@ import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.uml.UmlProperty;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.RelationalMetamodelConstants;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 
 /**
@@ -25,7 +27,7 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  *
  * @since 8.0
  */
-public class ColumnAspect extends RelationalEntityAspect implements UmlProperty {
+public class ColumnAspect extends RelationalEntityAspect implements UmlProperty, StringConstants {
     /**
      * Construct an instance of ColumnAspect.
      * @param entity
@@ -74,10 +76,12 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                                 ModelerCore.getDatatypeManager(col,true).getName(col.getType()) : 
                                 null;
         final String dtName  = (tmpName == null ? CoreStringUtil.Constants.EMPTY_STRING : tmpName); 
-        
+
+        final boolean isLengthType = ModelerCore.getTeiidDataTypeManagerService().isLengthDataType(dtName);
         final boolean isStringType = col.getType() != null ?
                                        ModelerCore.getDatatypeManager(col, true).isCharacter(col.getType()) :
                                        false;
+        final boolean addLength = isStringType || isLengthType;
 
         //case 16 is for properties, which should return an empty string, so 
         //it has been added in to the remaining cases where applicable.
@@ -108,8 +112,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -121,8 +125,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -136,8 +140,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -152,8 +156,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -188,8 +192,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
             break;
@@ -201,8 +205,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -216,8 +220,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;
@@ -232,8 +236,8 @@ public class ColumnAspect extends RelationalEntityAspect implements UmlProperty 
                 if(col.getType() != null){
                     result.append(dtName);
                     final int length = col.getLength();
-                    if ( length != 0 && isStringType ) {
-                        result.append("(" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                    if ( length != 0 && addLength ) {
+                        result.append(OPEN_BRACKET + length + CLOSE_BRACKET);
                     }
                 }
                 break;

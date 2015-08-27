@@ -656,6 +656,10 @@ public interface Vdb extends VdbConstants {
         /**
          */
         String AUTHENTICATION_TYPE_USERPASSWORD = "USERPASSWORD"; //$NON-NLS-1$
+        
+        /**
+         */
+        String USE_CONNECTOR_METADATA = "UseConnectorMetadata"; //$NON-NLS-1$
     }
 
     /**

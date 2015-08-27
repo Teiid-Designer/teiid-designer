@@ -35,6 +35,8 @@ public class DdlImporterManager {
     private boolean optToSetModelEntityDescription;
 
     private boolean optToGenerateDefaultSQL;
+    
+    private boolean optToHelpCreateTransform;
 
     private DdlNodeImporter nodeImporter;
 
@@ -161,6 +163,20 @@ public class DdlImporterManager {
      */
     public void optToGenerateDefaultSQL(boolean value) {
         this.optToGenerateDefaultSQL = value;
+    }
+    
+    /**
+     * @return optToGenerateDefaultSQL
+     */
+    public boolean optToHelpCreateTransform() {
+        return optToHelpCreateTransform;
+    }
+
+    /**
+     * @param value
+     */
+    public void optToHelpCreateTransform(boolean value) {
+        this.optToHelpCreateTransform = value;
     }
 
     /**

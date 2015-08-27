@@ -8,6 +8,7 @@
 package org.teiid.designer.metamodels.relational.util;
 
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -486,5 +487,13 @@ public class RelationalUtil {
 			}
 		}
 		return result;
+    }
+    
+    public static RelationalModelExtensionAssistant getRelationalExtensionAssistant() {
+    	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        final RelationalModelExtensionAssistant assistant = (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
+        
+        return assistant;
     }
 }

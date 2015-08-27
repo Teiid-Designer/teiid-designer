@@ -10,6 +10,9 @@ package org.teiid.designer.vdb;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -17,9 +20,11 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -701,12 +706,43 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
      * @param vdb
      */
     protected void populateVdb(BasicVdb vdb) {
+    	// Note that at this time, the input VDB would have validation version and validation date defined as properties.
+    	// So need to either copy them instead of generating them.
+    	// {validationVersion=8.7.1, validationDateTime=Thu Aug 06 14:29:43 CDT 2015}
+    	Properties existingProps = vdb.getProperties();
         vdb.setName(getName());
         vdb.setDescription(getDescription());
-        vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
+        String validationVersion = existingProps.getProperty("validationVersion");
+        if( validationVersion != null ) {
+        	vdb.setValidationVersion(validationVersion);
+        	existingProps.remove("validationVersion");
+        } else {
+        	vdb.setValidationVersion(ModelerCore.getTeiidServerVersion().toString());
+        }
+        
+        
+        String validationDateTime = existingProps.getProperty("validationDateTime");
+        if( validationDateTime != null ) {
+        	existingProps.remove("validationDateTime");
+        	try {
+        		SimpleDateFormat inFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        		// Mon Aug 10 15:21:50 CDT 2015
+        		Date dtIn = inFormat.parse(validationDateTime);
 
-        for (Map.Entry<Object, Object> entry : getProperties().entrySet()) {
-            vdb.setProperty(entry.getKey().toString(), entry.getValue().toString());
+				vdb.setValidationDateTime(dtIn);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				vdb.setValidationDateTime(new Date());
+			}
+        } else {
+        	vdb.setValidationDateTime(new Date());
+        }
+
+        for (Map.Entry<Object, Object> entry : existingProps.entrySet()) {
+        	if( ! entry.getKey().toString().equals("validationVersion") && 
+        		! entry.getKey().toString().equals("validationDateTime") ) {
+        		vdb.setProperty(entry.getKey().toString(), entry.getValue().toString());
+        	}
         }
 
         if (vdb.getSourceFile() == null)
@@ -728,6 +764,11 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
         vdb.setAuthenticationType(getAuthenticationType());
         vdb.setValidationDateTime(getValidationDateTime());
         vdb.setAutoGenerateRESTWar(isAutoGenerateRESTWar());
+        
+        // Look for other specific VDB properties
+        if(getProperties().keySet().contains(Vdb.Xml.USE_CONNECTOR_METADATA) ) {
+        	vdb.setProperty(Vdb.Xml.USE_CONNECTOR_METADATA, getProperties().getProperty(Vdb.Xml.USE_CONNECTOR_METADATA));
+        }
 
         for (VdbImportVdbEntry entry : getImports()) {
             VdbImportVdbEntry clone = entry.clone();

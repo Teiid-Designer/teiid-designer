@@ -31,8 +31,8 @@ public interface TeiidDDLConstants {
 		public static final String CREATE_FOREIGN_FUNCTION = "CREATE FOREIGN FUNCTION";
 		public static final String CREATE_FOREIGN_PROCEDURE = "CREATE FOREIGN PROCEDURE";
 		public static final String CREATE_VIEW = "CREATE VIEW";
-		public static final String CREATE_VIRTUAL_PROCEDURE = "CREATE FOREIGN TABLE";
-		public static final String CREATE_VIRTUAL_FUNCTION = "CREATE FOREIGN FUNCTION";
+		public static final String CREATE_VIRTUAL_PROCEDURE = "CREATE VIRTUAL PROCEDURE";
+		public static final String CREATE_VIRTUAL_FUNCTION = "CREATE VIRTUAL FUNCTION";
 		
 		public static final String JAVA_METHOD = "JAVA_METHOD";//$NON-NLS-1$
 		public static final String JAVA_CLASS = "JAVA_CLASS";//$NON-NLS-1$
@@ -56,6 +56,9 @@ public interface TeiidDDLConstants {
 		public static final String NOT_NULL = "NOT NULL";//$NON-NLS-1$
 		public static final String FOREIGN_KEY = "FOREIGN KEY";//$NON-NLS-1$
 		public static final String PRIMARY_KEY = "PRIMARY KEY";//$NON-NLS-1$
+		public static final String CONSTRAINT = "CONSTRAINT";//$NON-NLS-1$
+		public static final String UNIQUE = "UNIQUE";//$NON-NLS-1$
+		public static final String REFERENCES = "REFERENCES";//$NON-NLS-1$
 		public static final String ACCESSPATTERN = "ACCESSPATTERN";//$NON-NLS-1$
 		public static final String NAMEINSOURCE = "NAMEINSOURCE";//$NON-NLS-1$
 		public static final String ANNOTATION = "ANNOTATION";//$NON-NLS-1$

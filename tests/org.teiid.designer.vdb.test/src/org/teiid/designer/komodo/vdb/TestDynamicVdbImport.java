@@ -75,6 +75,7 @@ public class TestDynamicVdbImport implements VdbConstants {
         assertEquals(dynVdb.getDescription(), xmiVdb.getDescription());
 
         for (Map.Entry<Object, Object> entry : dynVdb.getProperties().entrySet()) {
+        	System.out.println("VDB Property:  " + entry.getValue() + " == " + xmiVdb.getProperties().getProperty(entry.getKey().toString()));
             assertEquals(entry.getValue(), xmiVdb.getProperties().getProperty(entry.getKey().toString()));
         }
 
