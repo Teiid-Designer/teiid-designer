@@ -341,6 +341,9 @@ public class DataRole extends VdbUnit {
         clone.setAnyAuthenticated(isAnyAuthenticated());
         clone.setAllowCreateTempTables(isAllowCreateTempTables());
         clone.setGrantAll(isGrantAll());
+        if( getDescription() != null ) {
+        	clone.setDescription(getDescription());
+        }
 
         for (String roleName : getRoleNames()) {
             clone.addRoleName(roleName);
