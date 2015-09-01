@@ -71,6 +71,11 @@ public class TeiidDdlImporter extends StandardImporter {
 	private static final String NS_DESIGNER_ACCUMULO = "accumulo"; //$NON-NLS-1$
     private static final String NS_DESIGNER_EXCEL = "excel"; //$NON-NLS-1$
     private static final String NS_DESIGNER_JPA = "jpa2"; //$NON-NLS-1$
+    
+    // Added to address TEIID-3629
+    private static final String SF_PROPNAME_CALCULATED_BAD = "calculated"; //$NON-NLS-1$
+    private static final String SF_PROPNAME_CALCULATED_GOOD = "Calculated"; //$NON-NLS-1$
+    
 	
 	interface TYPES_UPPER {
 		String ARRAY = "ARRAY"; //$NON-NLS-1$
@@ -960,32 +965,34 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @return the equivalent designer-namespaced PropName.
 	 */
 	private String translateNamespacedOptionName(String namespacedPropName) {
-		// ===============================================================================================================
-		// Handling for propNames which are namespaced with URI, eg http://www.teiid.org/translator/excel/2014}CELL_NUMBER
-		// ===============================================================================================================
+		// ===================================================================================================================
+		// Determine NS for propNames which are namespaced with URI, eg http://www.teiid.org/translator/excel/2014}CELL_NUMBER
+		// ===================================================================================================================
+		String designerNs = null;
 		if(isUriNamespaced(namespacedPropName)) {
 			// Get the Namespace URI
 			String propNsUri = getExtensionPropertyNsUri(namespacedPropName);
 			
 			// Translate the uri to corresponding designer med prefix
-			String designerNs = translateTeiidNsUriToDesignerNSPrefix(propNsUri);
-			
-			// Get name portion of incoming name
-			String propName = getExtensionPropertyName(namespacedPropName);
-			
-			// return reassembled namespaced name
-			return designerNs+':'+propName;
-		// =====================================================================================
-		// Handling for propNames which are namespaced with a prefix, eg teiid_excel:CELL_NUMBER
-		// =====================================================================================
+			designerNs = translateTeiidNsUriToDesignerNSPrefix(propNsUri);
+		// =========================================================================================
+		// Determine NS for propNames which are namespaced with a prefix, eg teiid_excel:CELL_NUMBER
+		// =========================================================================================
 		} else if(isPrefixNamespaced(namespacedPropName)) {
 			// Get the Namespace prefix
 			String propNsPrefix = getExtensionPropertyNsPrefix(namespacedPropName);
 			
-			String designerNs = translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix);
-			
+			designerNs = translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix);
+		}
+		
+		if(designerNs!=null) {
 			// Get name portion of incoming name
 			String propName = getExtensionPropertyName(namespacedPropName);
+
+			// Addresses teiid defect - TEIID-3629.  This will have no adverse affect after the teiid defect is fixed
+			if(designerNs.equals(NS_DESIGNER_SALESFORCE) && propName.equals(SF_PROPNAME_CALCULATED_BAD)) {
+				propName = SF_PROPNAME_CALCULATED_GOOD;
+			}
 			
 			// return reassembled namespaced name
 			return designerNs+':'+propName;
