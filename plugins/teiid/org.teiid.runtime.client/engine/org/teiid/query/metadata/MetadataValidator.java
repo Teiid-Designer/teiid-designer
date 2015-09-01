@@ -387,6 +387,11 @@ public class MetadataValidator {
 					t.setProperty(AbstractMetadataRecord.RELATIONAL_URI + "MATVIEW_TTL", String.valueOf(ttl)); //$NON-NLS-1$
 				}
     		}
+			if(resolverReport != null && resolverReport.hasItems()) {
+				for (ValidatorFailure v:resolverReport.getItems()) {
+					log(report, model, v.getStatus() == IValidatorFailure.VFStatus.ERROR?Severity.ERROR:Severity.WARNING, v.getMessage());
+				}
+    		}
     		processReport(model, record, report, resolverReport);
 		} catch (Exception e) {
 			log(report, model, Messages.gs(Messages.TEIID.TEIID31080, record.getFullName(), e.getMessage()));

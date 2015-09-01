@@ -20,9 +20,15 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
+<<<<<<< HEAD
     <releaseinfo>9.2.0
     </releaseinfo>
     <productnumber>9.2.0
+=======
+    <releaseinfo>9.0.3
+    </releaseinfo>
+    <productnumber>9.0.3
+>>>>>>> 9.0.x
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
@@ -34,7 +40,7 @@
       </imageobject>
     </mediaobject>
     <copyright>
-      <year>2014
+      <year>2015
       </year>
       <holder>Red Hat, Inc.
       </holder>

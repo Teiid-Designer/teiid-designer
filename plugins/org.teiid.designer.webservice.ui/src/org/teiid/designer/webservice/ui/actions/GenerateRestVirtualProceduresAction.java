@@ -10,6 +10,7 @@ package org.teiid.designer.webservice.ui.actions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -287,7 +288,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			
     			RelationalViewProcedure viewProcedure = new RelationalViewProcedure(procName);
 
-    			Map<String, String> paramToColumnMap = new HashMap<String, String>();
+    			Map<String, String> paramToColumnMap = new LinkedHashMap<String, String>();
     			
     			if( ! pkColumns.isEmpty() ) {
     				// create IN parameter for each column with "pk_<columnName>_in

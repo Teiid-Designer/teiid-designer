@@ -18,5 +18,6 @@ Export-Package: org.teiid.core.designer,
  org.teiid.core.designer.xml
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.10.0,4.0.0)",
  org.jboss.tools.locus.sf.saxon;bundle-version="[9.5.1,10.0.0)"
+ org.jboss.tools.usage;resolution:=optional;x-installation:=greedy
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
