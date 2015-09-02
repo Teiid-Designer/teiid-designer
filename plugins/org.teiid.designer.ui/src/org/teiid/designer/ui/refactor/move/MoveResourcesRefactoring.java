@@ -218,6 +218,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                     IFile file = (IFile) resource;
                     Set<PathPair> importPathPairs = RefactorResourcesUtils.calculateImportChanges(file, destinationPath, getResourcesAndChildren(status));
                     TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(file, importPathPairs);
+                    for( PathPair pair : importPathPairs ) {
+                        RefactorResourcesUtils.calculateModelImportsElementLChanges(file, pair, textFileChange);
+                    }
                     if (addTextChange(file, textFileChange)) {
                         // Calculate the effect on any vdbs containing this modified related file
                         RefactorResourcesUtils.calculateRelatedVdbResources(file, status, new VdbResourceCallback());
