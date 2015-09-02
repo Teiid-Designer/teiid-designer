@@ -44,7 +44,6 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.ProcedureResult;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
-import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.SF_Column;
 import org.teiid.designer.modelgenerator.salesforce.SalesforceConstants.SF_Table;
@@ -119,12 +118,6 @@ public class RelationalModelgenerator {
         annotation.setPrimaryMetamodelUri(RelationalPackage.eINSTANCE.getNsURI());
         resource.getContents().add(annotation);
         
-        // Create a schema object in the relational model.
-        Schema schema = RelationalFactory.eINSTANCE.createSchema();
-        schema.setName(NAMESPACE_PROVIDER.getNamespacePrefix());
-        schema.setNameInSource(NAMESPACE_PROVIDER.getNamespacePrefix());
-        resource.getContents().add(schema);
-        
         // add Salesforce MED
         this.assistant.saveModelExtensionDefinition(modelResource);
 
@@ -134,7 +127,7 @@ public class RelationalModelgenerator {
             SalesforceObject sfo = (SalesforceObject)objects[i];
             if (sfo.isSelected() && !monitor.isCanceled()) {
                 monitor.subTask("Creating " + sfo.getName() + " table"); //$NON-NLS-1$ //$NON-NLS-2$
-                addTableToModel(sfo, schema);
+                addTableToModel(sfo, resource);
                 monitor.worked(1);
             }
         }
@@ -147,11 +140,11 @@ public class RelationalModelgenerator {
         }
 
         if (wizardManager.isGenerateUpdated() && !monitor.isCanceled()) {
-            generateGetUpdated(schema);
+            generateGetUpdated(resource);
         }
 
         if (wizardManager.isGenerateDeleted() && !monitor.isCanceled()) {
-            generateGetDeleted(schema);
+            generateGetDeleted(resource);
         }
     }
 
@@ -159,18 +152,18 @@ public class RelationalModelgenerator {
      * Create a relational table from salesforce metadata
      * 
      * @param sfo metadata about a salesforce object to be modeled as a table
-     * @param schema the relational schema that contains the tables
+     * @param resource the resource that contains the tables
      * @throws ModelBuildingException
      * @throws ModelerCoreException 
      */
     private void addTableToModel( SalesforceObject sfo,
-                                  Schema schema ) throws ModelBuildingException {
+    		                      Resource resource ) throws ModelBuildingException {
         BaseTable newTable = RelationalFactory.eINSTANCE.createBaseTable();
 
         this.relationships.addAll(sfo.getSelectedRelationships());
         this.tablesByName.put(sfo.getName(), newTable);
-        newTable.setSchema(schema);
-
+        resource.getContents().add(newTable);
+        
         if (wizardManager.isSetNameAsLabel() && null != sfo.getLabel()) {
             newTable.setName(NameUtil.normalizeName(sfo.getLabel()));
         } else {
@@ -500,11 +493,11 @@ public class RelationalModelgenerator {
         }
     }
 
-    private void generateGetUpdated( Schema schema ) throws ModelBuildingException {
+    private void generateGetUpdated( Resource resource ) throws ModelBuildingException {
         try {
             DatatypeManager dtMgr = ModelerCore.getBuiltInTypesManager();
             Procedure getUpdatedProc = RelationalFactory.eINSTANCE.createProcedure();
-            getUpdatedProc.setSchema(schema);
+            resource.getContents().add(getUpdatedProc);
             getUpdatedProc.setName("GetUpdated"); //$NON-NLS-1$
             getUpdatedProc.setNameInSource("GetUpdated"); //$NON-NLS-1$
 
@@ -520,26 +513,26 @@ public class RelationalModelgenerator {
         }
     }
 
-    private void generateGetDeleted( Schema schema ) throws ModelBuildingException {
+    private void generateGetDeleted( Resource resource ) throws ModelBuildingException {
         try {
             DatatypeManager dtMgr = ModelerCore.getBuiltInTypesManager();
-            Procedure getUpdatedProc = RelationalFactory.eINSTANCE.createProcedure();
-            getUpdatedProc.setSchema(schema);
-            getUpdatedProc.setName("GetDeleted"); //$NON-NLS-1$
-            getUpdatedProc.setNameInSource("GetDeleted"); //$NON-NLS-1$
+            Procedure getDeletedProc = RelationalFactory.eINSTANCE.createProcedure();
+            resource.getContents().add(getDeletedProc);
+            getDeletedProc.setName("GetDeleted"); //$NON-NLS-1$
+            getDeletedProc.setNameInSource("GetDeleted"); //$NON-NLS-1$
 
-            addCommonProcParams(getUpdatedProc, dtMgr);
+            addCommonProcParams(getDeletedProc, dtMgr);
 
             ProcedureParameter earliestDateAvailable = RelationalFactory.eINSTANCE.createProcedureParameter();
-            getUpdatedProc.getParameters().add(earliestDateAvailable);
+            getDeletedProc.getParameters().add(earliestDateAvailable);
             earliestDateAvailable.setName("EarliestDateAvailable"); //$NON-NLS-1$
             earliestDateAvailable.setNameInSource("EarliestDateAvailable"); //$NON-NLS-1$
             earliestDateAvailable.setDirection(DirectionKind.OUT_LITERAL);
             earliestDateAvailable.setType(dtMgr.getBuiltInDatatype(DatatypeConstants.BuiltInNames.DATE_TIME));
 
-            addLatestDateCoveredParam(getUpdatedProc, dtMgr);
+            addLatestDateCoveredParam(getDeletedProc, dtMgr);
 
-            ProcedureResult result = addCommonResult(getUpdatedProc, dtMgr);
+            ProcedureResult result = addCommonResult(getDeletedProc, dtMgr);
 
             Column deletedDate = RelationalFactory.eINSTANCE.createColumn();
             deletedDate.setName("DeletedDate"); //$NON-NLS-1$
