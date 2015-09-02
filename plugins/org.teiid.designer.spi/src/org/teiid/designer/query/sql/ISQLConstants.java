@@ -58,6 +58,14 @@ public interface ISQLConstants {
     String EXEC = "EXEC"; //$NON-NLS-1$
     String CONVERT = "CONVERT"; //$NON-NLS-1$
     String NULL = "NULL"; //$NON-NLS-1$
+    String PARAM_ASSIGNMENT = "=>"; //$NON-NLS-1$
+   
+    //PARAMETERS FOR invoke()
+    String BINDING_PARAM = "binding"; //$NON-NLS-1$
+    String ACTION_PARAM = "action"; //$NON-NLS-1$
+    String REQUEST_PARAM = "request"; //$NON-NLS-1$
+    String ENDPOINT_PARAM = "endpoint"; //$NON-NLS-1$
+    String STREAM_PARAM = "stream"; //$NON-NLS-1$
     
     String ENVELOPE_NS = "http://schemas.xmlsoap.org/soap/envelope/"; //$NON-NLS-1$
     String ENVELOPE_NS_ALIAS = "soap"; //$NON-NLS-1$
