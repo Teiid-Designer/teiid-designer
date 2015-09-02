@@ -52,9 +52,6 @@ class ModelerCacheEventManager
     /** The cache being managed. */
     private final EObjectModelerCache cache;
 
-    /** Used to find the ModelResource of EObjects. */
-    private final ModelEditor modelEditor = ModelerCore.getModelEditor();
-
     private boolean removeDeltaProcessed = false;
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,6 +69,10 @@ class ModelerCacheEventManager
     // /////////////////////////////////////////////////////////////////////////////////////////////
     // METHODS
     // /////////////////////////////////////////////////////////////////////////////////////////////
+
+    private ModelEditor getModelEditor() {
+        return ModelerCore.getModelEditor();
+    }
 
     /**
      * Adds the specified listener to the collection of listeners receiving {@link ModelerCacheEvent}s. Listeners already
@@ -162,7 +163,7 @@ class ModelerCacheEventManager
             EObject eObj = null;
             while (iter.hasNext()) {
                 eObj = (EObject)iter.next();
-                mr = modelEditor.findModelResource(eObj);
+                mr = getModelEditor().findModelResource(eObj);
                 if (modelResource != null && modelResource.equals(mr)) result.add(eObj);
             }
         }
@@ -186,7 +187,7 @@ class ModelerCacheEventManager
             EObject eObj = null;
             while (iter.hasNext()) {
                 eObj = (EObject)iter.next();
-                modelResource = modelEditor.findModelResource(eObj);
+                modelResource = getModelEditor().findModelResource(eObj);
                 if (modelResource == null) result.add(eObj);
             }
         }
@@ -208,7 +209,7 @@ class ModelerCacheEventManager
         boolean result = false;
 
         if (!this.cache.isEmpty()) {
-            ModelResource modelResource = modelEditor.findModelResource(theEObject);
+            ModelResource modelResource = getModelEditor().findModelResource(theEObject);
 
             if (modelResource == null) {
                 result = true;

@@ -682,49 +682,6 @@ public class FacetHelper {
         return rv;
     }
 
-    // /** This method will create a new facet and add it to the specified type.
-    // * @param type The type to work with
-    // * @param facetName name of the facet to create
-    // */
-    // private static XSDConstrainingFacet createAndAddFacet(XSDSimpleTypeDefinition type, String facetName) {
-    // return createAndAddFacet(type, facetName, false);
-    // }
-
-    // /** This method will create a new facet and add it to the specified type.
-    // * @param type The type to work with
-    // * @param facetName name of the facet to create
-    // */
-    // private static XSDConstrainingFacet createAndAddFacet(XSDSimpleTypeDefinition type, String facetName, boolean inclusive) {
-    // // adding a new (unrestricted) facet:
-    // XSDConstrainingFacet facet = createFacet(facetName, inclusive);
-    // // add the copy:
-    // type.getFacetContents().add(facet);
-    //        
-    // return facet;
-    // }
-
-    // /** This method will copy the specified facet and add it to the specified type.
-    // * The existing facet will be removed.
-    // * @param type The type to work with
-    // * @param facet the facet to copy
-    // */
-    // private static XSDConstrainingFacet copyAndAddFacet(XSDSimpleTypeDefinition type, XSDConstrainingFacet facet) {
-    // // modifying an existing facet:
-    // try {
-    // ModelEditor me = ModelerCore.getModelEditor();
-    // XSDConstrainingFacet newFacet = (XSDConstrainingFacet) me.copy(facet);
-    //
-    // // remove original if present in this type:
-    // type.getFacetContents().remove(facet);
-    // // add the copy:
-    // type.getFacetContents().add(newFacet);
-    // } catch (ModelerCoreException ex) {
-    // ModelerXsdUiPlugin.Util.log(ex);
-    // } // endtry
-    //        
-    // return facet;
-    // }
-
     public static XSDConstrainingFacet createFacet( String name ) {
         return createFacet(name, false);
     }

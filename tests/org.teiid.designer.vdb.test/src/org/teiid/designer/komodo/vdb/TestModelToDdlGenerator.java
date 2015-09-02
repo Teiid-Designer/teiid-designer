@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.StringConstants;
@@ -260,7 +259,6 @@ public class TestModelToDdlGenerator implements StringConstants {
     }
 
     @Test
-    @Ignore("Passing on its own but fails when executed with the other tests")
     public void testColumnProperties() throws Exception {
         String ddl = "CREATE VIEW StockPrices (" + NEW_LINE +
                             "symbol string(10) NOT NULL AUTO_INCREMENT, " + NEW_LINE +
