@@ -58,7 +58,7 @@ public class VdbFileEntryTest {
     }
     
     @After
-    public void afterEach() {
+    public void afterEach() throws Exception {
         vdbTest.after();
     }
 

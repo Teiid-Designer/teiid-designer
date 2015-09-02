@@ -115,7 +115,7 @@ public class VdbModelEntryTest {
     }
     
     @After
-    public void afterEach() {
+    public void afterEach() throws Exception {
     	modelWorkspaceMock.dispose();
         vdbTest.after();
     }

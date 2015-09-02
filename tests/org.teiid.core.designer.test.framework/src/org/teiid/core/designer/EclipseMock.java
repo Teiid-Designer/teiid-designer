@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
+import org.mockito.Mockito;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
@@ -51,7 +52,13 @@ public final class EclipseMock {
         ModelWorkspaceManager.getModelWorkspaceManager();
     }
     
-    public void dispose() {
+    public void dispose() throws Exception {
+        ModelWorkspaceManager.shutdown();
+
+        Mockito.reset(workspace);
+        Mockito.reset(workspaceRoot);
+        Mockito.reset(workspaceRootLocation);
+
         ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.WORKSPACE_KEY);
     }
 

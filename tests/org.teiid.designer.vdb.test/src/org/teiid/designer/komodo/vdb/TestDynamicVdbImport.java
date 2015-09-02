@@ -52,9 +52,11 @@ public class TestDynamicVdbImport implements VdbConstants {
     }
 
     @After
-    public void after() {
+    public void after() throws Exception {
+        // Disposes the eclipse mock as well
         modelWorkspaceMock.dispose();
-        eclipseMock.dispose();
+        modelWorkspaceMock = null;
+        eclipseMock = null;
     }
 
     @Test

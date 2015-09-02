@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.teiid.core.designer.EclipseMock;
@@ -46,9 +47,9 @@ import org.teiid.designer.core.types.DatatypeManagerLifecycle;
 public final class ModelWorkspaceMock {
 
     private final EclipseMock eclipseMock;
-    private ModelEditor modelEditor;
     private Container container;
     private EditingDomain editingDomain;
+    private ModelEditorMock editorMock;
 
     /**
      * Mocks core modeling classes used when running Designer.
@@ -148,8 +149,7 @@ public final class ModelWorkspaceMock {
         //
         // ModelEditor
         //
-        ModelEditorMock editorMock = new ModelEditorMock(this);
-        modelEditor = editorMock.getModelEditor();
+        editorMock = new ModelEditorMock(this);
     }
 
     /**
@@ -158,9 +158,17 @@ public final class ModelWorkspaceMock {
      * This is necessary to remove the mocked objects from the
      * {@link ModelerCore} registry that have been registered by this instance.
      */
-    public void dispose() {
+    public void dispose() throws Exception {
         ((RegistrySPI)ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
         ((RegistrySPI)ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
+
+        Mockito.reset(container);
+        container = null;
+
+        editingDomain = null;
+
+        editorMock.dispose();
+
         eclipseMock.dispose();
     }
 
@@ -175,7 +183,7 @@ public final class ModelWorkspaceMock {
      * @return the editor
      */
     public ModelEditor getModelEditor() {
-        return this.modelEditor;
+        return editorMock.getModelEditor();
     }
 
     /**

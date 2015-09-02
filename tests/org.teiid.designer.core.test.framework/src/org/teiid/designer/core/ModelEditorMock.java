@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.teiid.core.designer.ModelerCoreException;
@@ -210,6 +211,12 @@ public class ModelEditorMock {
                 return null;
             }
         }).when(modelEditor).addValue(any(), any(), isA(EList.class));
+    }
+
+    public void dispose() {
+        Mockito.reset(modelEditor);
+        modelEditor = null;
+        modelWkspMock = null;
     }
 
     /**

@@ -113,10 +113,10 @@ public class VdbTest implements VdbConstants {
     }
     
     @After
-    public void after() {
+    public void after() throws Exception {
+        // Disposes the eclipse mock as well
         modelWorkspaceMock.dispose();
         modelWorkspaceMock = null;
-        eclipseMock.dispose();
         eclipseMock = null;
     }
 

@@ -44,6 +44,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 <artifactId>tycho-surefire-plugin</artifactId>
                 <version>${tychoVersion}</version>
                 <configuration>
+                    <!-- Sets the memory configuration and disables jbosstools usage reporting -->
+                    <argLine>-Xmx1024m -XX:MaxPermSize=512m -Dusage_reporting_enabled=false</argLine>
                     <systemProperties>
                         <property>
                             <name>usage_reporting_enabled</name>

@@ -15,9 +15,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.File;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -52,8 +50,9 @@ public class DdlImporterTest {
     }
     
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         eclipseMock.dispose();
+        eclipseMock = null;
     }
     @Test
     public void shouldAcceptNewModel() {
