@@ -554,8 +554,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 	void handleViewModelBrowse() {
 		final Object[] selections = WidgetUtil
 				.showWorkspaceObjectSelectionDialog(
-						getString("viewSourceModelTitle"), //$NON-NLS-1$
-						getString("viewSourceModelMessage"), //$NON-NLS-1$
+						getString("selectViewModelTitle"), //$NON-NLS-1$
+						getString("selectViewModelMessage"), //$NON-NLS-1$
 						false, null, viewModelFilter,
 						new ModelResourceSelectionValidator(false),
 						new ModelExplorerLabelProvider(),
