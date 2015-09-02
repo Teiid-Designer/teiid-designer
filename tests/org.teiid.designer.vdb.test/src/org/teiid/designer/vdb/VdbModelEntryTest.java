@@ -31,6 +31,7 @@ import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.spi.RegistrySPI;
 import org.teiid.designer.core.workspace.ModelObjectAnnotations;
@@ -42,13 +43,14 @@ import org.teiid.designer.metamodels.core.ModelType;
 /**
  * 
  */
+@SuppressWarnings( "javadoc" )
 public class VdbModelEntryTest {
 
     private VdbModelEntry entry;
     private String modelResourceFileName;
     private VdbTest vdbTest;
     private ModelWorkspaceMock modelWorkspaceMock;
-    
+
     @Before
     public void before() throws Exception {
         vdbTest = new VdbTest();
@@ -65,6 +67,7 @@ public class VdbModelEntryTest {
         FileInputStream fileInputStream = new FileInputStream(tempFile);
 
         modelResourceFileName = FileUtils.getFilenameWithoutExtension(tempFile.getName());
+
         final IPath nonExtModelPathName = mock(IPath.class);
         when(nonExtModelPathName.toString()).thenReturn(modelResourceFileName);
         when(nonExtModelPathName.lastSegment()).thenReturn(modelResourceFileName);
@@ -73,6 +76,8 @@ public class VdbModelEntryTest {
         when(modelPath.toFile()).thenReturn(tempFile);
         when(modelPath.getFileExtension()).thenReturn("xmi");
         when(modelPath.toString()).thenReturn(tempFile.getCanonicalPath());
+        when(modelPath.toOSString()).thenReturn(tempFile.getCanonicalPath());
+        when(modelPath.lastSegment()).thenReturn(modelResourceFileName);
         when(modelPath.removeFileExtension()).thenReturn(nonExtModelPathName);
 
         IFile file = mock(IFile.class);
@@ -89,7 +94,10 @@ public class VdbModelEntryTest {
         when(annotation.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
         
         final EmfResource model = mock(EmfResource.class);
-        when(modelWorkspaceMock.getFinder().findByURI(isA(URI.class), eq(false))).thenReturn(model);
+        ResourceFinder finder = mock(ResourceFinder.class);
+        when(finder.findByURI(isA(URI.class), eq(false))).thenReturn(model);
+        modelWorkspaceMock.setFinder(finder);
+
         when(model.getModelType()).thenReturn(ModelType.PHYSICAL_LITERAL);
         when(model.getModelAnnotation()).thenReturn(annotation);
         
@@ -103,7 +111,7 @@ public class VdbModelEntryTest {
         
         final ModelObjectAnnotations annotations = mock(ModelObjectAnnotations.class);
         when(modelResource.getAnnotations()).thenReturn(annotations);
-        entry = vdb.addEntry(modelPath, null);
+        entry = vdb.addEntry(modelPath);
     }
     
     @After

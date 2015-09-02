@@ -270,10 +270,17 @@ public interface ModelWorkspaceItem extends IAdaptable {
     ModelWorkspaceItem getParent();
 
     /**
+     * @return item info
+     * @throws ModelWorkspaceException
+     */
+    ModelWorkspaceItemInfo getItemInfo() throws ModelWorkspaceException;
+
+    /**
      * Return the objects that this workspace item contains.  The type of
      * objects returned depends upon the subtype of workspace item on which this
      * method is being called.
      * @return the immediate children of this item; never null
+     * @throws ModelWorkspaceException
      */
     ModelWorkspaceItem[] getChildren() throws ModelWorkspaceException;
     
@@ -283,6 +290,7 @@ public interface ModelWorkspaceItem extends IAdaptable {
      * <p>
      * This method returns an object in {@link #getChildren()}.
      * </p>
+     * @param childName
      * @return the {@link ModelWorkspaceItem} instance contained by this project item that represents
      * the suppplied resource; may be null if the supplied resource doesn't represent a model or a folder
      * @throws ModelWorkspaceException
@@ -295,6 +303,7 @@ public interface ModelWorkspaceItem extends IAdaptable {
      * <p>
      * This method returns an object in {@link #getChildren()}.
      * </p>
+     * @param resource
      * @return the {@link ModelWorkspaceItem} instance contained by this project item that represents
      * the suppplied resource; may be null if the supplied resource doesn't represent a model or a folder
      * @throws ModelWorkspaceException

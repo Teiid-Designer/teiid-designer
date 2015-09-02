@@ -92,6 +92,6 @@ public interface BaseTable extends Table{
      * @model type="org.teiid.designer.metamodels.relational.UniqueConstraint" opposite="table" containment="true"
      * @generated
      */
-    EList getUniqueConstraints();
+    EList<UniqueConstraint> getUniqueConstraints();
 
 } // BaseTable

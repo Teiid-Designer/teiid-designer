@@ -25,13 +25,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.osgi.framework.BundleContext;
-
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.PluginUtilImpl;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.PluginUtilImpl;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.types.DatatypeConstants;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.xsd.XsdResourceFactory;
 
 
@@ -151,8 +150,8 @@ public class ModelerSdtPlugin extends Plugin {
     protected static ResourceSet createResourceSet() {
         ResourceSet result = new ResourceSetImpl();
         Map map = result.getResourceFactoryRegistry().getExtensionToFactoryMap();
-        if (!map.containsKey(ModelUtil.EXTENSION_XSD)) {
-            map.put(ModelUtil.EXTENSION_XSD, new XsdResourceFactory());
+        if (!map.containsKey(StringConstants.XSD)) {
+            map.put(StringConstants.XSD, new XsdResourceFactory());
         }
         return result;
     }

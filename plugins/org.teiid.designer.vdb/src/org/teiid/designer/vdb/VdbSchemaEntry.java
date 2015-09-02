@@ -9,7 +9,6 @@ package org.teiid.designer.vdb;
 
 import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.teiid.designer.vdb.manifest.EntryElement;
 
 
@@ -26,11 +25,10 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
      *
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param path the schema path (may not be <code>null</code>)
-     * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
-    public VdbSchemaEntry( final Vdb vdb, final IPath path, final IProgressMonitor monitor ) throws Exception {
-        super(vdb, path, monitor);
+    public VdbSchemaEntry( final XmiVdb vdb, final IPath path) throws Exception {
+        super(vdb, path);
     }
 
     /**
@@ -38,32 +36,42 @@ public final class VdbSchemaEntry extends VdbIndexedEntry {
      *
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
      * @param element the EntryElement
-     * @param monitor the progress monitor or <code>null</code>
      * @throws Exception
      */
-    VdbSchemaEntry( final Vdb vdb, final EntryElement element, final IProgressMonitor monitor ) throws Exception {
-        super(vdb, element, monitor);
+    public VdbSchemaEntry( final XmiVdb vdb, final EntryElement element ) throws Exception {
+        super(vdb, element);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see org.teiid.designer.vdb.VdbEntry#synchronize(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#synchronize()
      */
     @Override
-    public void synchronize(final IProgressMonitor monitor) throws Exception {
+    public void synchronize() throws Exception {
         if (getSynchronization() != Synchronization.NotSynchronized)
             return;
 
-        synchronizeSchemaEntry(monitor);
-        super.synchronize(monitor);
+        synchronizeSchemaEntry();
+        super.synchronize();
     }
 
     /**
-     * @param monitor
      * @throws Exception
      */
-    public void synchronizeSchemaEntry(IProgressMonitor monitor) throws Exception {
-        synchronizeIndex(monitor);
+    public void synchronizeSchemaEntry() throws Exception {
+        synchronizeIndex();
+    }
+
+    @Override
+    public VdbSchemaEntry clone() {
+        try {
+            VdbSchemaEntry clone = new VdbSchemaEntry(getVdb(), getPath());
+            cloneVdbObject(clone);
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
     }
 }

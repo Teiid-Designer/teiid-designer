@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -84,8 +83,8 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 import org.teiid.designer.ui.viewsupport.SingleProjectFilter;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
-import org.teiid.designer.vdb.ui.VdbUiPlugin;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 
@@ -220,14 +219,14 @@ public final class NewVdbWizard extends AbstractWizard
                 try {
                     final IFile vdbFile = NewVdbWizard.this.folder.getFile(new Path(NewVdbWizard.this.name));
                     vdbFile.create(new ByteArrayInputStream(new byte[0]), false, monitor);
-                    Vdb newVdb = new Vdb(vdbFile, false, monitor);
+                    Vdb newVdb = new XmiVdb(vdbFile, false);
             		String desc = descriptionTextEditor.getText();
             		if( desc != null && desc.length() > 0 ) {
             			newVdb.setDescription(desc);
             		}
-            		
+	
             		// Now parse the name to see if it contains a version
-                    String fullVdbName = newVdb.getName().removeFileExtension().lastSegment();
+                    String fullVdbName = newVdb.getName();
     				int firstIndex = fullVdbName.indexOf('.');
                     String versionStr = fullVdbName.substring(firstIndex + 1);
 					int version = 1;
@@ -238,7 +237,7 @@ public final class NewVdbWizard extends AbstractWizard
 					}
 					newVdb.setVersion(version);;
             		
-                    newVdb.save(monitor);
+                    newVdb.save();
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
 
@@ -706,7 +705,7 @@ public final class NewVdbWizard extends AbstractWizard
 				int firstIndex = proposedName.indexOf('.');
 				int lastIndex = proposedName.lastIndexOf('.');
 				if (lastIndex != -1 && firstIndex != lastIndex) {
-					String error = VdbUiPlugin.Util.getString(I18N_PREFIX + "vdbNameContainsTooManyDotsErrorMessage", proposedName); //$NON-NLS-1$)
+					String error = VdbUiConstants.Util.getString(I18N_PREFIX + "vdbNameContainsTooManyDotsErrorMessage", proposedName); //$NON-NLS-1$)
 					this.mainPage.setErrorMessage(error);
 					this.mainPage.setPageComplete(false);
 				} else {
@@ -728,7 +727,7 @@ public final class NewVdbWizard extends AbstractWizard
 						this.mainPage.setPageComplete(true);
 					}
 				}
-			} else {
+            } else {
                 this.mainPage.setErrorMessage(null);
                 this.mainPage.setPageComplete(true);
             }
@@ -777,7 +776,7 @@ public final class NewVdbWizard extends AbstractWizard
 			final IEditorPart editor = editors[i].getEditor(false);
 			if (editor instanceof VdbEditor) {
 				final VdbEditor vdbEditor = (VdbEditor) editor;
-				final IPath editorVdbPath = vdbEditor.getVdb().getName();
+				final IPath editorVdbPath = vdbEditor.getVdb().getSourceFile().getFullPath();
 				if (vdbFile.getFullPath().equals(editorVdbPath)) 
 					return vdbEditor;
 

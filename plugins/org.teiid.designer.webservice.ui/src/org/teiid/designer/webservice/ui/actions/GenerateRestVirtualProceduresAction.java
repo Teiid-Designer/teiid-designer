@@ -9,11 +9,9 @@ package org.teiid.designer.webservice.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,7 +36,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -58,7 +55,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
@@ -205,7 +202,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         		String columnXmlTag = dialog.getColumnXmlTag();
         		String restMethod = dialog.getRestMethodValue();
         		IContainer folder = dialog.getViewModelFolder();
-        		
+
         		boolean cancelled = false;
         		Collection<RestProcedureInfo> procedureInfos = new ArrayList<RestProcedureInfo>(selectedViewsAndTables.length);
         		if( dialog.getSetIndividualTags() ) {
@@ -232,9 +229,9 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         		if( !cancelled ) {
 	        		try {
 						String modelName = modelResource.getUnderlyingResource().getFullPath().removeFileExtension().lastSegment();
-						String modelNameWithExtension = dialog.getViewModelName();;
-						if( !modelNameWithExtension.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
-							modelNameWithExtension = modelNameWithExtension + ModelUtil.DOT_EXTENSION_XMI;
+						String modelNameWithExtension = dialog.getViewModelName();
+						if( !modelNameWithExtension.toUpperCase().endsWith(StringConstants.DOT_XMI.toUpperCase())) {
+							modelNameWithExtension = modelNameWithExtension + StringConstants.DOT_XMI;
 						}
 						
 						if( selectedViewsAndTables.length > 0 ) {
@@ -909,7 +906,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			if (selections[0] instanceof IFile) {
     				IFile modelFile = (IFile) selections[0];
     				viewModelFolder = modelFile.getParent();
-    				String modelName = modelFile.getFullPath().removeFileExtension().lastSegment();
+    				String modelName = FileUtils.getNameWithoutExtension(modelFile);
     				viewModelName = modelName;
     				viewModelFileText.setText(modelName);
     				viewModelContainerText.setText(viewModelFolder.toString());
@@ -942,7 +939,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				getButton(IDialogConstants.OK_ID).setEnabled(false);
 				return;
 			} else {
-				if(viewModelName.contains(StringUtilities.SPACE)){
+				if(viewModelName.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("viewModelNameCannotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -988,7 +985,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(viewXmlTagValue.contains(StringUtilities.SPACE)){
+				if(viewXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.viewXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -1006,7 +1003,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(columnXmlTagValue.contains(StringUtilities.SPACE)){
+				if(columnXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.columnXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;

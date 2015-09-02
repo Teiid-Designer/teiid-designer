@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -85,6 +84,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalView;
+import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.model.RelationalViewTable;
 import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 
@@ -298,9 +298,14 @@ public class EmfModelGenerator {
         	modelResource.getEmfResource().getContents().add(newEObject);
         } break;
         case TYPES.PROCEDURE: {
-        	newEObject = createProcedure(relationalRef, modelResource);
-        	modelResource.getEmfResource().getContents().add(newEObject);
+                if (relationalRef instanceof RelationalViewProcedure) {
+                    newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+                } else {
+                    newEObject = createProcedure(relationalRef, modelResource);
+                    modelResource.getEmfResource().getContents().add(newEObject);
+                }
         } break;
+
         case TYPES.INDEX: {
         	newEObject = createIndex(relationalRef, modelResource);
         	modelResource.getEmfResource().getContents().add(newEObject);

@@ -83,6 +83,8 @@ public interface PluginConstants {
         String WARNING_BUTTON_ICON = "icons/full/cview20/warning-20x20.png"; //$NON-NLS-1$
         String ARROW_LEFT_ICON = "icons/full/cview20/arrow-only-left-20x20.png"; //$NON-NLS-1$
         String ARROW_RIGHT_ICON = "icons/full/cview20/arrow-only-20x20.png"; //$NON-NLS-1$
+        
+        String EXPORT_DDL_ICON = "icons/full/ctool16/exportddl_wiz.gif"; //$NON-NLS-1$
     }
 
     /**

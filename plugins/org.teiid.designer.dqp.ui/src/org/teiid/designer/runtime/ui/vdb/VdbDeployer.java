@@ -9,17 +9,15 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.util.Collection;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -33,6 +31,7 @@ import org.teiid.designer.runtime.spi.ITeiidDataSource;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 
 /**
@@ -152,6 +151,7 @@ public class VdbDeployer {
      * Deploy the selected VDB to the default Teiid Instance.
      * 
      * @param monitor the progress monitor (can be <code>null</code>)
+     * @return if fails then returns the model name otherwise null
      */
     public String deploy( IProgressMonitor monitor ) {
         if (monitor == null) {
@@ -169,17 +169,17 @@ public class VdbDeployer {
                 boolean foundFirstOne = false; // determines if create DS dialog is shown
                 boolean createOnServer = false; // user's choice on if they want DSs auto-created on server
 
-                for (VdbModelEntry modelEntry : this.vdb.getModelEntries()) {
+                for (VdbEntry modelEntry : this.vdb.getModelEntries()) {
                     // see if user canceled monitor
                     if (monitor.isCanceled()) {
                         this.status = DeployStatus.MONITOR_CANCELLED;
                         return null; // don't do anything else
                     }
 
-                    String modelName = modelEntry.getName().toFile().getName();
+                    String modelName = modelEntry.getPath().toFile().getName();
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelTypeTask", modelName)); //$NON-NLS-1$
                     boolean autoCreate = false; // based on DS name and preference value
-                    String modelType = modelEntry.getType();
+                    String modelType = ((VdbModelEntry)modelEntry).getType();
                     boolean sourceModel = (modelType.equalsIgnoreCase(ModelType.PHYSICAL_LITERAL.getName()));
 
                     // only source models have a data source and translator
@@ -190,23 +190,23 @@ public class VdbDeployer {
                     // check translator
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelTranslatorTask", modelName)); //$NON-NLS-1$
 
-                    if (!hasValidTranslator(modelEntry)) {
+                    if (!hasValidTranslator((VdbModelEntry)modelEntry)) {
                         this.status = DeployStatus.TRANSLATOR_PROBLEM;
                         break; // translator problems are fatal (deployment will fail)
                     }
                     
-                    IFile model = modelEntry.findFileInWorkspace();
+                    IFile modelFile = modelEntry.findFileInWorkspace();
 
                     // Check that Source Model has Connection Info
-                    if (this.vdb.isPreview() && !hasConnectionInfo(model)) {  
+                    if (this.vdb.isPreview() && !hasConnectionInfo(modelFile)) {  
                     	this.status = DeployStatus.SOURCE_CONNECTION_INFO_PROBLEM;
                     	break;
                     }
                     
                     // check DS
                     monitor.subTask(UTIL.getString(PREFIX + "checkModelDataSourceTask", modelName)); //$NON-NLS-1$
-                    String sourceName = modelEntry.getSourceInfo().getSource(0).getName();
-                    String jndiName = modelEntry.getSourceInfo().getSource(0).getJndiName();
+                    String sourceName = ((VdbModelEntry)modelEntry).getSourceInfo().getSource(0).getName();
+                    String jndiName = ((VdbModelEntry)modelEntry).getSourceInfo().getSource(0).getJndiName();
 
                     // DS with matching jndi not found on server
                     if (!StringUtilities.isEmpty(jndiName) && !dataSourceWithJndiExists(jndiName)) {
@@ -257,19 +257,19 @@ public class VdbDeployer {
 
                         // TODO must also be able to create DS even if model not found in workspace
                         // if model found in workspace create data source on server
-                        if ((autoCreate || createOnServer) && (model != null)) {
+                        if ((autoCreate || createOnServer) && (modelFile != null)) {
                             monitor.subTask(UTIL.getString(PREFIX + "createModelDataSourceTask", modelName)); //$NON-NLS-1$
 
                             TeiidDataSourceFactory factory = new TeiidDataSourceFactory();
                             
-                            ITeiidDataSource ds = factory.createDataSource(teiidServer, model, jndiNameWithoutContext, false);
+                            ITeiidDataSource ds = factory.createDataSource(teiidServer, modelFile, jndiNameWithoutContext, false);
                             
                             if( ds == null ) {
                             	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
                                 break; // don't try again to create a DS
                             } else if( ds instanceof FailedTeiidDataSource ) {
                             	this.status = DeployStatus.CREATE_DATA_SOURCE_FAILED;
-                            	failedModelName = model.getFullPath().removeFileExtension().lastSegment();
+                            	failedModelName = FileUtils.getNameWithoutExtension(modelFile);
                                 break; // don't try again to create a DS
                             }
                         } else if (!hasJndiProblems) {
@@ -310,16 +310,16 @@ public class VdbDeployer {
              //
              // EXAMPLE: Customers.2.vdb
              //
-             int version = vdb.getVersion(); // Manifest version
-             int versionInName = getVdbVersion(getVdbName()); // version in name
-             if( versionInName > 0 ) { // If version in name, then use it (i.e. ignore manifest version)
-             version = versionInName;
-             }
-             teiidServer.deployVdb(vdb.getFile(), version);
-             //teiidServer.deployVdb(vdb.getFile());
-             // VDB name may have a version in it, so need to strip off any extension
-             String actualName = new Path(getVdbName()).removeFileExtension().toString();
-             this.status = (teiidServer.hasVdb(actualName) ? DeployStatus.DEPLOYED_VDB : DeployStatus.DEPLOY_VDB_FAILED);            }
+                int version = vdb.getVersion(); // Manifest version
+                int versionInName = getVdbVersion(getVdbName()); // version in name
+                if (versionInName > 0) { // If version in name, then use it (i.e. ignore manifest version)
+                    version = versionInName;
+                }
+
+                teiidServer.deployVdb(vdb.getSourceFile(), version);
+                // VDB name may have a version in it, so need to strip off any extension
+                this.status = (teiidServer.hasVdb(getVdbName()) ? DeployStatus.DEPLOYED_VDB : DeployStatus.DEPLOY_VDB_FAILED);
+            }
         } catch (Exception e) {
             this.status = DeployStatus.EXCEPTION;
             this.error = e;
@@ -413,7 +413,7 @@ public class VdbDeployer {
      * @return the name of the VDB being deployed (never <code>null</code>)
      */
     public String getVdbName() {
-        return this.vdb.getName().removeFileExtension().lastSegment();
+        return this.vdb.getName();
     }
 
     /**

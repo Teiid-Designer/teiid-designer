@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -444,6 +443,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
         this.state = new RunnableState();
     }
 
+    @Override
     public ObjectManager getObjectManager() {
         return this.objectManager;
     }
@@ -590,6 +590,7 @@ public class ContainerImpl implements Container, IEditingDomainProvider {
      * 
      * @return ResourceSet
      */
+    @Override
     public final ResourceSet getResourceSet() {
         if (!isStarted()) {
             throw new ModelerCoreRuntimeException(

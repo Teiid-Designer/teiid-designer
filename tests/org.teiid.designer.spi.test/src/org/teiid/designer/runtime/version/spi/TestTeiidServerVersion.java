@@ -102,10 +102,10 @@ public class TestTeiidServerVersion extends TestCase {
         assertTrue(version("8.x.0").isGreaterThan(version("7.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("7.0.0").isGreaterThan(version("8.x.0"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-        assertTrue(version("8.0.x").isGreaterThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        assertFalse(version("8.0.x").isGreaterThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("8.0.0").isGreaterThan(version("8.0.x"))); //$NON-NLS-1$ //$NON-NLS-2$
 
-        assertTrue(version("8.x.0").isGreaterThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+        assertFalse(version("8.x.0").isGreaterThan(version("8.0.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("8.0.0").isGreaterThan(version("8.x.0"))); //$NON-NLS-1$ //$NON-NLS-2$
 
         // silly micro version should be ignored since minor versions should be enough for the comparison
@@ -125,6 +125,8 @@ public class TestTeiidServerVersion extends TestCase {
         assertTrue(version("8.10.0").isGreaterThan(version("8.8.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertTrue(version("8.10.1").isGreaterThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(version("8.10.1").isGreaterThan(version("8.11.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+
+        assertFalse(version("8.7.1").isGreaterThan(version("8.7.x")));  //$NON-NLS-1$//$NON-NLS-2$
     }
 
     /**
@@ -187,5 +189,7 @@ public class TestTeiidServerVersion extends TestCase {
         
 	    assertTrue(version("8.7.0").isLessThan(version("8.7.1"))); //$NON-NLS-1$ //$NON-NLS-2$
 	    assertTrue(version("8.8.0").isLessThan(version("8.10.0"))); //$NON-NLS-1$ //$NON-NLS-2$
+
+	    assertFalse(version("8.7.1").isLessThan(version("8.7.x")));  //$NON-NLS-1$//$NON-NLS-2$
     }
 }

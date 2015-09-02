@@ -48,6 +48,11 @@ public class FakeOpenableModelWorkspaceItem extends FakeOpenable implements Mode
         return null;
     }
 
+    @Override
+    public ModelWorkspaceItemInfo getItemInfo() {
+        return null;
+    }
+
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getCorrespondingResource()
      */

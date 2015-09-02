@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -76,7 +77,7 @@ public class DeleteDataSourceAction extends SortableSelectionAction implements D
 
         if (properties != null && !properties.isEmpty()) {
             ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
-            String name = modelFile.getFullPath().removeFileExtension().lastSegment();
+            String name = FileUtils.getNameWithoutExtension(modelFile);
             String jndiName = new ConnectionInfoHelper().generateUniqueConnectionJndiName(name,
                                                                                           modelFile.getFullPath(),
                                                                                           ModelerCore.workspaceUuid().toString());

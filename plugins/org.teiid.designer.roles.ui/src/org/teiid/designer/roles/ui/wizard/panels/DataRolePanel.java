@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.roles.ui.wizard.DataRoleWizard;
 import org.teiid.designer.roles.ui.wizard.DataRolesModelTreeProvider;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -71,7 +71,7 @@ public abstract class DataRolePanel {
 	protected String getSpaces(int numSpaces) {
 		StringBuilder sb = new StringBuilder();
 		for( int i=0; i<numSpaces; i++ ) {
-			sb.append(StringUtilities.SPACE);
+			sb.append(StringConstants.SPACE);
 		}
 		
 		return sb.toString();

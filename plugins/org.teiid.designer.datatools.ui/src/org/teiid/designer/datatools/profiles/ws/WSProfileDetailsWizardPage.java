@@ -280,7 +280,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 	StringBuilder updateUrlPreview() {
 		StringBuilder previewUrl = new StringBuilder();
 		String urlText = this.urlText.getText();
-		if (urlText == null || urlText.trim().equals(StringUtilities.EMPTY_STRING)){
+		if (urlText == null || urlText.trim().equals(StringConstants.EMPTY_STRING)){
 			urlText = "{base URL}"; //$NON-NLS-1$
 		}
 		String parameters = null;

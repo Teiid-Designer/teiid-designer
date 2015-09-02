@@ -102,6 +102,11 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
         }
 
         if (value instanceof ITeiidVdb) {
+        	if( ((ITeiidVdb)value).isDynamicVdb() ) {
+        		return ((ITeiidVdb) value).getName() + " <dynamic>";
+        	} else if( ((ITeiidVdb)value).isDdlFileVdb() ) {
+        		return ((ITeiidVdb) value).getName() + " <ddl>";
+        	}
             return ((ITeiidVdb) value).getName();
         }
 
@@ -172,9 +177,15 @@ public class TeiidDataNode<V> implements ITeiidContentNode<AbstractTeiidFolder> 
         }
 
         if (value instanceof ITeiidVdb) {
-            if (((ITeiidVdb) value).isActive()) {
-            	if (((ITeiidVdb) value).getValidityErrors().isEmpty()) {
-            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DEPLOY_VDB);
+        	ITeiidVdb vdb = (ITeiidVdb) value;
+            if (vdb.isActive()) {
+            	if (vdb.getValidityErrors().isEmpty()) {
+            		if(vdb.isDynamicVdb() ) {
+            			return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DYNAMIC_VDB);
+            		} else if( vdb.isDdlFileVdb() ) {
+            			return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.DDL_VDB);
+            		}
+            		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.STANDARD_VDB);
             	} else {
             		return DqpUiPlugin.getDefault().getAnImage(DqpUiConstants.Images.ACTIVE_VDB_WITH_ERRORS);
             	}

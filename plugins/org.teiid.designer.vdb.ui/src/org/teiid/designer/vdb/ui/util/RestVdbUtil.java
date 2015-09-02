@@ -8,40 +8,25 @@
 package org.teiid.designer.vdb.ui.util;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
-import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
-import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -65,10 +50,10 @@ public class RestVdbUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(vdbFile);
             Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+            for (VdbEntry vdbModelEntry : modelEntrySet) {
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
 

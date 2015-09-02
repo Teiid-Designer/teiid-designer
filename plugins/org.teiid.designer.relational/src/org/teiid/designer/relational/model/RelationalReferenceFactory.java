@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -458,11 +458,13 @@ public class RelationalReferenceFactory implements RelationalConstants {
     	setDescription(proc,procEObj);
     	
     	ProcedureResult procResult = procEObj.getResult();
-    	RelationalProcedureResultSet relProcResult = createProcedureResultSet(procResult);
-    	if(relProcResult!=null) {
-     		proc.setResultSet(relProcResult);
+    	if (procResult != null) {
+    	    RelationalProcedureResultSet relProcResult = createProcedureResultSet(procResult);
+    	    if(relProcResult!=null) {
+    	        proc.setResultSet(relProcResult);
+    	    }
     	}
-    	
+
     	List<ProcedureParameter> params = procEObj.getParameters();
     	for(ProcedureParameter param : params) {
     		RelationalParameter relProcParam = createProcedureParameter(param);
@@ -732,6 +734,14 @@ public class RelationalReferenceFactory implements RelationalConstants {
      */
     public RelationalViewTable createViewTable( ) {
     	return new RelationalViewTable();
+    }
+    
+    /**
+     * Create a RelationalTable
+     * @return the new object
+     */
+    public RelationalViewProcedure createViewProcedure( ) {
+    	return new RelationalViewProcedure();
     }
         
 }

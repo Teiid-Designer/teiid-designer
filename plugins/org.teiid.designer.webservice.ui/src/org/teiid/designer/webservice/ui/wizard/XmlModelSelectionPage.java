@@ -10,7 +10,6 @@ package org.teiid.designer.webservice.ui.wizard;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -32,8 +31,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.UiUtil;
@@ -243,7 +242,7 @@ public class XmlModelSelectionPage extends AbstractWizardPage
 
     private String getModelPath( final String modelLocation,
                                  final String modelName ) {
-        return new StringBuffer().append(modelLocation).append(File.separator).append(modelName).append(FILE_EXTENSION_SEPARATOR_CHAR).append(ModelUtil.EXTENSION_XMI).toString();
+        return new StringBuffer().append(modelLocation).append(File.separator).append(modelName).append(FILE_EXTENSION_SEPARATOR_CHAR).append(StringConstants.XMI).toString();
     }
 
     /**

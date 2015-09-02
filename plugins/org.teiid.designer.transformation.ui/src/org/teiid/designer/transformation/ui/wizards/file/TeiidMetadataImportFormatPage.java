@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -50,7 +50,7 @@ public class TeiidMetadataImportFormatPage extends AbstractWizardPage implements
 	private static final String TITLE = getString("title"); //$NON-NLS-1$
 	private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
 
-	private final String EMPTY = StringUtilities.EMPTY_STRING;
+	private final String EMPTY = StringConstants.EMPTY_STRING;
 	private final int GROUP_HEIGHT_190 = 190;
 
 	private static String getString(final String id) {

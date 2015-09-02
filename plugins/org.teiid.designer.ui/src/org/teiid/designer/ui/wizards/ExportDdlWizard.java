@@ -76,7 +76,7 @@ import org.eclipse.ui.PartInitException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.MetamodelDescriptor;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -148,15 +148,8 @@ public final class ExportDdlWizard extends AbstractWizard
     private static final String METADATA_GROUP = getString("metadataGroup"); //$NON-NLS-1$
     private static final String OPTIONS_GROUP = getString("optionsGroup"); //$NON-NLS-1$
     private static final String COMMENT_OPTIONS_GROUP = getString("commentOptionsGroup"); //$NON-NLS-1$
-    private static final String TYPE_LABEL = getString("typeLabel"); //$NON-NLS-1$
-    private static final String SCHEMA_CHECKBOX = getString("schemaCheckBox"); //$NON-NLS-1$
-    private static final String INFO_COMMENTS_CHECKBOX = getString("infoCommentsCheckBox"); //$NON-NLS-1$
-    private static final String TABLE_COMMENTS_CHECKBOX = getString("tableCommentsCheckBox"); //$NON-NLS-1$
-    private static final String COLUMN_COMMENTS_CHECKBOX = getString("columnCommentsCheckBox"); //$NON-NLS-1$
-    private static final String DROP_STATEMENTS_CHECKBOX = getString("dropStatementsCheckBox"); //$NON-NLS-1$
     private static final String USE_NAMES_IN_SOURCE_CHECKBOX = getString("useNamesInSourceCheckBox"); //$NON-NLS-1$
     private static final String USE_NATIVE_TYPE_CHECKBOX = getString("useNativeTypeCheckBox"); //$NON-NLS-1$
-    private static final String ENFORCE_UNIQUE_NAMES_CHECKBOX = getString("enforceUnqiueNamesCheckBox"); //$NON-NLS-1$
     private static final String FILE_GROUP = getString("fileGroup"); //$NON-NLS-1$
     private static final String FILE_LABEL = getString("fileLabel"); //$NON-NLS-1$
     private static final String FILE_BUTTON = BROWSE_BUTTON;
@@ -164,7 +157,6 @@ public final class ExportDdlWizard extends AbstractWizard
     private static final String INITIAL_MESSAGE = getString("initialMessage"); //$NON-NLS-1$
     private static final String INVALID_SELECTION_INITIAL_MESSAGE = getString("initialMessageInvalidSelection"); //$NON-NLS-1$
     private static final String NO_SELECTIONS_MESSAGE = getString("noSelectionsMessage"); //$NON-NLS-1$
-    private static final String NO_TYPE_MESSAGE = getString("noTypeMessage"); //$NON-NLS-1$
     private static final String NO_EXPORT_TO_CHOICE_MESSAGE = getString("noExportChoiceMessage");  //$NON-NLS-1$
     private static final String NO_FILE_MESSAGE = getString("noFileMessage"); //$NON-NLS-1$
     private static final String INVALID_FILE_MESSAGE = getString("invalidFileMessage"); //$NON-NLS-1$
@@ -252,7 +244,7 @@ public final class ExportDdlWizard extends AbstractWizard
     }
 
     private void exportToSQLWorkbook() throws Exception {
-        String scrap = StringUtilities.EMPTY_STRING;
+        String scrap = StringConstants.EMPTY_STRING;
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         writeToStream(stream);
@@ -310,15 +302,8 @@ public final class ExportDdlWizard extends AbstractWizard
 
             // Save settings for next time wizard is run
             final IDialogSettings settings = getDialogSettings();
-            settings.put(TYPE_LABEL, typeCombo.getText());
-            settings.put(SCHEMA_CHECKBOX, this.schemaCheckBox.getSelection());
-            settings.put(INFO_COMMENTS_CHECKBOX, this.infoCommentsCheckBox.getSelection());
-            settings.put(TABLE_COMMENTS_CHECKBOX, this.tableCommentsCheckBox.getSelection());
-            settings.put(COLUMN_COMMENTS_CHECKBOX, this.columnCommentsCheckBox.getSelection());
-            settings.put(DROP_STATEMENTS_CHECKBOX, this.dropStatementsCheckBox.getSelection());
             settings.put(USE_NAMES_IN_SOURCE_CHECKBOX, this.useNamesInSourceCheckBox.getSelection());
             settings.put(USE_NATIVE_TYPE_CHECKBOX, this.useNativeTypeCheckBox.getSelection());
-            settings.put(ENFORCE_UNIQUE_NAMES_CHECKBOX, this.enforceUniqueNamesCheckBox.getSelection());
             WidgetUtil.saveSettings(settings, FILE_LABEL, this.fileCombo);
             return true;
         } catch (Throwable err) {
@@ -603,55 +588,14 @@ public final class ExportDdlWizard extends AbstractWizard
         // Initialize widgets w/ last selections made by user
         final DdlOptions options = this.writer.getOptions();
         final IDialogSettings settings = getDialogSettings();
-        final String type = settings.get(TYPE_LABEL);
-        if (type != null) {
-            options.setStyle(registry.getStyle(settings.get(TYPE_LABEL)));
-            options.setGenerateSchema(settings.getBoolean(SCHEMA_CHECKBOX));
-            options.setGenerateInfoComments(settings.getBoolean(INFO_COMMENTS_CHECKBOX));
-            options.setGenerateTableComments(settings.getBoolean(TABLE_COMMENTS_CHECKBOX));
-            options.setGenerateColumnComments(settings.getBoolean(COLUMN_COMMENTS_CHECKBOX));
-            options.setGenerateDropStatements(settings.getBoolean(DROP_STATEMENTS_CHECKBOX));
-            options.setNameInSourceUsed(settings.getBoolean(USE_NAMES_IN_SOURCE_CHECKBOX));
-            options.setNativeTypeUsed(settings.getBoolean(USE_NATIVE_TYPE_CHECKBOX));
-            options.setUniqueNamesEnforced(settings.getBoolean(ENFORCE_UNIQUE_NAMES_CHECKBOX));
-        }
+
+        options.setNameInSourceUsed(settings.getBoolean(USE_NAMES_IN_SOURCE_CHECKBOX));
+        options.setNativeTypeUsed(settings.getBoolean(USE_NATIVE_TYPE_CHECKBOX));
+
         group = WidgetFactory.createGroup(pg, OPTIONS_GROUP, GridData.FILL_HORIZONTAL, 1, 2);
         {
-            WidgetFactory.createLabel(group, TYPE_LABEL);
-            final Style style = options.getStyle();
-            this.typeCombo = WidgetFactory.createCombo(group,
-                                                       SWT.READ_ONLY,
-                                                       GridData.FILL_HORIZONTAL,
-                                                       new ArrayList(styles),
-                                                       style,
-                                                       comboLabelProvider);
-            this.typeCombo.addModifyListener(new ModifyListener() {
-                @Override
-				public void modifyText( final ModifyEvent event ) {
-                    typeModified();
-                }
-            });
-            if (style != null) {
-                this.typeCombo.setToolTipText(style.getDescription());
-            }
-            this.schemaCheckBox = WidgetFactory.createCheckBox(group, SCHEMA_CHECKBOX, 0, 2, options.isGenerateSchema());
-            this.schemaCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    schemasCheckBoxSelected();
-                }
-            });
-            this.dropStatementsCheckBox = WidgetFactory.createCheckBox(group,
-                                                                       DROP_STATEMENTS_CHECKBOX,
-                                                                       0,
-                                                                       2,
-                                                                       options.isGenerateDropStatements());
-            this.dropStatementsCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    dropStatementsCheckBoxSelected();
-                }
-            });
+
+ 
             this.useNamesInSourceCheckBox = WidgetFactory.createCheckBox(group,
                                                                          USE_NAMES_IN_SOURCE_CHECKBOX,
                                                                          0,
@@ -674,41 +618,7 @@ public final class ExportDdlWizard extends AbstractWizard
                     useNativeTypeCheckBoxSelected();
                 }
             });
-            this.enforceUniqueNamesCheckBox = WidgetFactory.createCheckBox(group,
-                                                                           ENFORCE_UNIQUE_NAMES_CHECKBOX,
-                                                                           0,
-                                                                           2,
-                                                                           options.isUniqueNamesEnforced());
-            this.enforceUniqueNamesCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    enforceUniqueNamesCheckBoxSelected();
-                }
-            });
-            Group commentsGroup = WidgetFactory.createGroup(group, COMMENT_OPTIONS_GROUP, GridData.FILL_BOTH, 2, 2);
-            
-            this.infoCommentsCheckBox = WidgetFactory.createCheckBox(commentsGroup, INFO_COMMENTS_CHECKBOX, 0, 2, options.isGenerateInfoComments());
-            this.infoCommentsCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    infoCommentsCheckBoxSelected();
-                }
-            });
-            this.tableCommentsCheckBox = WidgetFactory.createCheckBox(commentsGroup, TABLE_COMMENTS_CHECKBOX, 0, 2, options.isGenerateTableComments());
-            this.tableCommentsCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                	tableCommentsCheckBoxSelected();
-                }
-            });
-            this.columnCommentsCheckBox = WidgetFactory.createCheckBox(commentsGroup, COLUMN_COMMENTS_CHECKBOX, 0, 2, options.isGenerateColumnComments());
-            this.columnCommentsCheckBox.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected( final SelectionEvent event ) {
-                    columnCommentsCheckBoxSelected();
-                }
-            });
-            
+
 
         }
 
@@ -1005,8 +915,6 @@ public final class ExportDdlWizard extends AbstractWizard
     private void validatePage() {
         if (!this.selections.hasSelectionModes()) {
             WizardUtil.setPageComplete(this.pg, NO_SELECTIONS_MESSAGE, IMessageProvider.ERROR);
-        } else if (this.writer.getOptions().getStyle() == null) {
-            WizardUtil.setPageComplete(this.pg, NO_TYPE_MESSAGE, IMessageProvider.ERROR);
         } else if (exportChoice == null) {
             WizardUtil.setPageComplete(this.pg, NO_EXPORT_TO_CHOICE_MESSAGE, IMessageProvider.ERROR);
         } else if (ExportChoice.FILE.equals(exportChoice)) {

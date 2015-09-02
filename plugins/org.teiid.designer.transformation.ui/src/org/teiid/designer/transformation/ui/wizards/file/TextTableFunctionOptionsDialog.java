@@ -24,10 +24,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
+import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -268,8 +268,8 @@ public class TextTableFunctionOptionsDialog  extends TitleAreaDialog {
     	this.includeEscapeCB.setSelection(this.dataFileInfo.doIncludeEscape());
     	this.includeNoTrimCB.setSelection(this.dataFileInfo.doIncludeNoTrim());
     	
-    	this.quoteText.setText(StringUtilities.EMPTY_STRING + this.dataFileInfo.getQuote());
-    	this.escapeText.setText(StringUtilities.EMPTY_STRING + this.dataFileInfo.getEscape());
+    	this.quoteText.setText(StringConstants.EMPTY_STRING + this.dataFileInfo.getQuote());
+    	this.escapeText.setText(StringConstants.EMPTY_STRING + this.dataFileInfo.getEscape());
     	
 
     }

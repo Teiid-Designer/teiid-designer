@@ -11,4 +11,4 @@ Export-Package: org.teiid.designer.metamodels.relational.aspects.validation.rule
  org.teiid.designer.metamodels.relational.provider,
  org.teiid.designer.metamodels.relational.util
 Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.designer.core.test.framework;bundle-version="[9.0.0,10.0.0)"
+ org.teiid.designer.core.test.framework;bundle-version="[9.0.2,10.0.0)"

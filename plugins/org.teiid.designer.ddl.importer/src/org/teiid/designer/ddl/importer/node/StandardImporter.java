@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
@@ -56,15 +55,8 @@ public class StandardImporter extends AbstractImporter {
 		}
 
 		protected void init(AstNode node, RelationalModel model) throws Exception {
-			String name = node.getName();
-			int ndx = name.lastIndexOf('.');
-			if (ndx >= 0) {
-				schema = null;
-				this.name = name;
-			} else {
-				schema = null;
-				this.name = name;
-			}
+			schema = null;
+			this.name = node.getName();
 		}
 
 		protected String removeLeadingTrailingTicks(String name) {
@@ -186,7 +178,6 @@ public class StandardImporter extends AbstractImporter {
 	 */
 	protected void initialize(RelationalReference entity, AstNode node, String name) {
 		entity.setName(name);
-		entity.setNameInSource(name);
 
 		// descriptions must wait to be set until container and model type has been set
 		if (getImporterManager().optToSetModelEntityDescription()) {
@@ -359,7 +350,7 @@ public class StandardImporter extends AbstractImporter {
 			column.setPrecision(Integer.parseInt(prop.toString()));
 		} else {
 			// IF type == FLOAT, BIG_DECIMAL, DECIMAL, then set precision to at least 1
-			if( teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.BIG_DECIMAL.name()) ||
+			if( teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.BIGDECIMAL.name()) ||
 					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DECIMAL.name()) ||
 					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.FLOAT.name()) ||
 					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DOUBLE.name())) {

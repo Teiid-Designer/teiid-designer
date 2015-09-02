@@ -166,37 +166,29 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     @Override
     public void deployVdb( IFile vdbFile ) throws Exception {
+        deployVdb(vdbFile, 1);
+    }
+
+    @Override
+    public void deployVdb( IFile vdbFile, int version) throws Exception {
         ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
         String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
         String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
-    
+        
         // For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
     	if(isLessThanTeiidEightSeven()) {
     		undeployVdb(vdbName);
     	}
+    	
+    	int vdbVersion = 1;
+    	if( version > 1 ) {
+    		vdbVersion = version;
+    	}
         
-        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), 1, vdbFile.getContents());
+        doDeployVdb(vdbDeploymentName, getVdbName(vdbName), vdbVersion, vdbFile.getContents());
     }
-    
-	@Override
-	public void deployVdb(IFile vdbFile, int version) throws Exception {
-		ArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
-		String vdbDeploymentName = vdbFile.getFullPath().lastSegment();
-		String vdbName = vdbFile.getFullPath().removeFileExtension()
-				.lastSegment();
-		// For Teiid Version less than 8.7, do explicit undeploy (TEIID-2873)
-		if (isLessThanTeiidEightSeven()) {
-			undeployVdb(vdbName);
-		}
-		int vdbVersion = 1;
-		if (version > 1) {
-			vdbVersion = version;
-		}
-		doDeployVdb(vdbDeploymentName, getVdbName(vdbName), vdbVersion,
-				vdbFile.getContents());
-	}
-    
+ 
     @Override
     public void deployDynamicVdb( String deploymentName, InputStream inStream ) throws Exception {
         ArgCheck.isNotNull(deploymentName, "deploymentName"); //$NON-NLS-1$

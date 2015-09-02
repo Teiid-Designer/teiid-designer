@@ -54,7 +54,7 @@ public class TranslatorElement implements Serializable {
         this.description = translatorOverride.getDescription();
 
         // process properties
-        for (TranslatorOverrideProperty prop : translatorOverride.getProperties()) {
+        for (TranslatorOverrideProperty prop : translatorOverride.getOverrideProperties()) {
             if (!StringUtilities.isEmpty(prop.getOverriddenValue())) {
                 this.properties.add(new PropertyElement(prop.getDefinition().getId(), prop.getOverriddenValue()));
             }

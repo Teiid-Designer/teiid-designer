@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -328,9 +327,11 @@ public class RelationalModelFactory implements RelationalConstants {
             createPrimaryKey(pk, baseTable, modelResource);
         }
         
-        RelationalUniqueConstraint uc = tableRef.getUniqueContraint();
-        if( uc != null){
-            createUniqueConstraint(uc, baseTable, modelResource);
+        Collection<RelationalUniqueConstraint> uniqueConstraints = tableRef.getUniqueConstraints();
+        if( uniqueConstraints != null) {
+            for (RelationalUniqueConstraint uc : uniqueConstraints) {
+                createUniqueConstraint(uc, baseTable, modelResource);
+            }
         }
         
         for( RelationalAccessPattern ap : tableRef.getAccessPatterns()) {
@@ -641,7 +642,7 @@ public class RelationalModelFactory implements RelationalConstants {
         
         RelationalUniqueConstraint ucRef = (RelationalUniqueConstraint)ref;
         
-        // Create the primary key
+        // Create the unique constraint
         final UniqueConstraint uniqueConstraint = FACTORY.createUniqueConstraint();
         // Set the reference to the table ..
         uniqueConstraint.setTable(baseTable);

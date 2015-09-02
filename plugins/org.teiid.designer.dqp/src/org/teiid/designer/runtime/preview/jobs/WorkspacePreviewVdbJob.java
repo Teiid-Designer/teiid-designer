@@ -24,6 +24,7 @@ import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.preview.Messages;
 import org.teiid.designer.runtime.preview.PreviewContext;
+import org.teiid.designer.vdb.VdbPlugin;
 
 /**
  * The <code>WorkspacePreviewVdbJob</code> are jobs that work with Preview VDBs in the Eclipse workspace.
@@ -174,6 +175,13 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
     @Override
     public boolean shouldRun() {
         boolean result = DqpPlugin.getInstance().getPreferences().getBoolean(PREVIEW_ENABLED, PREVIEW_ENABLED_DEFAULT);
+
+        //
+        // Want to avoid generating previews during vdb conversion
+        // since models can be in partial states
+        //
+        if (result)
+            result = ! VdbPlugin.singleton().conversionInProgress();
 
         // trace message
         if (DqpPlugin.getInstance().isDebugOptionEnabled(DebugConstants.PREVIEW_JOB_SHOULD_RUN)) {

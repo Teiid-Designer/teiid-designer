@@ -10,9 +10,7 @@ package org.teiid.designer.vdb.ui.editor.panels;
 import java.io.File;
 import java.util.Collection;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -43,7 +41,6 @@ import org.teiid.designer.ui.common.table.TableAndToolBar;
 import org.teiid.designer.ui.common.table.TextColumnProvider;
 import org.teiid.designer.ui.common.widget.ButtonProvider;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
-import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiConstants.Images;
@@ -66,9 +63,9 @@ public class DataRolesPanel {
     }
 
     VdbEditor vdbEditor;
-    TableAndToolBar<VdbDataRole> dataRolesGroup;
+    TableAndToolBar<DataRole> dataRolesGroup;
     Action cloneDataRoleAction;
-    VdbDataRole selectedDataRole;
+    DataRole selectedDataRole;
     
     /**
      * @param parent
@@ -133,8 +130,8 @@ public class DataRolesPanel {
              */
             @Override
             public void selected( IStructuredSelection selection ) {
-                VdbDataRole vdbDataRole = (VdbDataRole)selection.getFirstElement();
-                if (vdbDataRole == null) {
+                DataRole dataRole = (DataRole)selection.getFirstElement();
+                if (dataRole == null) {
                     return;
                 }
                 ContainerImpl tempContainer = null;
@@ -170,14 +167,9 @@ public class DataRolesPanel {
                     ModelEditorImpl.setContainer(null);
                 }
 
-                DataRole dataPolicy = new DataRole(vdbDataRole.getName(), vdbDataRole.getDescription(),
-                                                   vdbDataRole.isAnyAuthenticated(), vdbDataRole.allowCreateTempTables(),
-                                                   vdbDataRole.doGrantAll(),
-                                                   vdbDataRole.getMappedRoleNames(), vdbDataRole.getPermissions());
-
                 final IWorkbenchWindow iww = VdbUiPlugin.singleton.getCurrentWorkbenchWindow();
-                Set<String> roleNames = VdbUtil.getDataRoleNames(vdbEditor.getVdb(), vdbDataRole.getName());
-                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataPolicy, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
+                Set<String> roleNames = VdbUtil.getDataRoleNames(vdbEditor.getVdb(), dataRole.getName());
+                final DataRoleWizard wizard = new DataRoleWizard(tempContainer, dataRole, vdbEditor.getVdb().getAllowedLanguages(), roleNames);
 
                 wizard.init(iww.getWorkbench(), new StructuredSelection(vdbEditor.getVdb().getModelEntries()));
                 final WizardDialog dialog = new WizardDialog(wizard.getShell(), wizard);
@@ -186,22 +178,22 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                        vdbEditor.getVdb().removeDataPolicy(vdbDataRole);
-                        vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
+                        vdbEditor.getVdb().removeDataRole(dataRole.getName());
+                        vdbEditor.getVdb().addDataRole(dp);
                     }
 
                 }
             }
         };
         
-        dataRolesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<VdbDataRole>() {
+        dataRolesGroup = new TableAndToolBar(parent, 1, new DefaultTableProvider<DataRole>() {
             /**
              * {@inheritDoc}
              * 
              * @see org.teiid.designer.ui.common.table.DefaultTableProvider#doubleClicked(java.lang.Object)
              */
             @Override
-            public void doubleClicked( VdbDataRole element ) {
+            public void doubleClicked( DataRole element ) {
                 editProvider.selected(new StructuredSelection(element));
             }
 
@@ -211,9 +203,9 @@ public class DataRolesPanel {
              * @see org.teiid.designer.ui.common.table.TableProvider#getElements()
              */
             @Override
-            public VdbDataRole[] getElements() {
-                final Set<VdbDataRole> entries = vdbEditor.getVdb().getDataPolicyEntries();
-                return entries.toArray(new VdbDataRole[entries.size()]);
+            public DataRole[] getElements() {
+                final Collection<DataRole> entries = vdbEditor.getVdb().getDataRoles();
+                return entries.toArray(new DataRole[entries.size()]);
             }
 
             /**
@@ -225,14 +217,14 @@ public class DataRolesPanel {
             public boolean isDoubleClickSupported() {
                 return true;
             }
-        }, new TextColumnProvider<VdbDataRole>() {
+        }, new TextColumnProvider<DataRole>() {
             /**
              * {@inheritDoc}
              * 
              * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#getImage(java.lang.Object)
              */
             @Override
-            public Image getImage( final VdbDataRole element ) {
+            public Image getImage( final DataRole element ) {
                 return null;
             }
 
@@ -262,10 +254,10 @@ public class DataRolesPanel {
              * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
              */
             @Override
-            public String getValue( final VdbDataRole element ) {
+            public String getValue( final DataRole element ) {
                 return element.getName();
             }
-        }, new TextColumnProvider<VdbDataRole>() {
+        }, new TextColumnProvider<DataRole>() {
             /**
              * {@inheritDoc}
              * 
@@ -292,7 +284,7 @@ public class DataRolesPanel {
              * @see org.teiid.designer.ui.common.table.ColumnProvider#getValue(java.lang.Object)
              */
             @Override
-            public String getValue( final VdbDataRole element ) {
+            public String getValue( final DataRole element ) {
                 return element.getDescription();
             }
 
@@ -302,7 +294,7 @@ public class DataRolesPanel {
              * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#isEditable(java.lang.Object)
              */
             @Override
-            public boolean isEditable( final VdbDataRole element ) {
+            public boolean isEditable( final DataRole element ) {
                 return true;
             }
 
@@ -312,7 +304,7 @@ public class DataRolesPanel {
              * @see org.teiid.designer.ui.common.table.DefaultColumnProvider#setValue(java.lang.Object, java.lang.Object)
              */
             @Override
-            public void setValue( final VdbDataRole element,
+            public void setValue( final DataRole element,
                                   final String value ) {
                 element.setDescription(value);
             }
@@ -410,7 +402,7 @@ public class DataRolesPanel {
                     // Get the Data Policy
                     DataRole dp = wizard.getFinalDataRole();
                     if (dp != null) {
-                    	vdbEditor.getVdb().addDataPolicy(dp, new NullProgressMonitor());
+                    	vdbEditor.getVdb().addDataRole(dp);
                     }
 
                 }
@@ -470,8 +462,8 @@ public class DataRolesPanel {
             public void selected( IStructuredSelection selection ) {
                 if (ConfirmationDialog.confirm(CONFIRM_REMOVE_MESSAGE)) {
                     for (final Object element : selection.toList()) {
-                        if (element instanceof VdbDataRole) {
-                        	vdbEditor.getVdb().removeDataPolicy((VdbDataRole)element);
+                        if (element instanceof DataRole) {
+                        	vdbEditor.getVdb().removeDataRole(((DataRole)element).getName());
                         }
 
                     }
@@ -495,9 +487,9 @@ public class DataRolesPanel {
                     DataRole newDR = new DataRole(
                                                   selectedDataRole.getName() + i18n("cloneDataRoleAction.copySuffix"), //$NON-NLS-1$
                                                   selectedDataRole.getDescription(), selectedDataRole.isAnyAuthenticated(),
-                                                  selectedDataRole.allowCreateTempTables(), selectedDataRole.doGrantAll(),
-                                                  selectedDataRole.getMappedRoleNames(), selectedDataRole.getPermissions());
-                    vdbEditor.getVdb().addDataPolicy(newDR, new NullProgressMonitor());
+                                                  selectedDataRole.isAllowCreateTempTables(), selectedDataRole.isGrantAll(),
+                                                  selectedDataRole.getRoleNames(), selectedDataRole.getPermissions());
+                    vdbEditor.getVdb().addDataRole(newDR);
                     dataRolesGroup.getTable().getViewer().refresh();
                 }
 
@@ -524,7 +516,7 @@ public class DataRolesPanel {
                 dataRolesMenuManager.removeAll();
                 IStructuredSelection sel = (IStructuredSelection)dataRolesViewer.getSelection();
                 if (sel.size() == 1) {
-                    selectedDataRole = (VdbDataRole)sel.getFirstElement();
+                    selectedDataRole = (DataRole)sel.getFirstElement();
                     dataRolesMenuManager.add(cloneDataRoleAction);
                 }
 

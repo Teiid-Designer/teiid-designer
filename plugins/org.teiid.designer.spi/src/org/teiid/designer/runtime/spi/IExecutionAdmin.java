@@ -86,16 +86,6 @@ public interface IExecutionAdmin {
       * @throws Exception if deployment fails
       */
       void deployVdb(IFile vdbFile, int version) throws Exception;
-
-
-     /**
-     * Deploys the VDB (IFile) to the related Teiid Instance
-     *
-     * @param vdbFile the vdb file
-     *
-     * @throws Exception if deployment fails
-     */
-     void deployVdb(IFile vdbFile, int version) throws Exception;
      
     /**
      * Returns a teiid data source object if it exists in this server

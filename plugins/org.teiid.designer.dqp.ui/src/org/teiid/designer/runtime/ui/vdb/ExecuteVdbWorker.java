@@ -8,10 +8,8 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.util.Properties;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ProfileManager;
@@ -21,6 +19,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.designer.datatools.ui.dialogs.NewTeiidFilteredCPWizard;
@@ -87,7 +86,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 
 	}
 
-	void internalRun(final IFile selectedVdb) {
+	void internalRun(final IFile selectedVdbFile) {
 		ITeiidServer teiidServer = DqpPlugin.getInstance().getServerManager().getDefaultServer();
 		boolean deployed = false;
 		
@@ -95,24 +94,21 @@ public class ExecuteVdbWorker implements VdbConstants {
 			if (teiidServer != null) {
 				IStatus connectStatus = teiidServer.ping();
 				if (connectStatus.isOK() )  {
-					if(  !VdbAgeChecker.doDeploy(selectedVdb, teiidServer.getServerVersion())) return;
+					if(  !VdbAgeChecker.doDeploy(selectedVdbFile, teiidServer.getServerVersion())) return;
 					// Deploy the VDB
-                    deployed = DeployVdbAction.deployVdb(teiidServer, selectedVdb);
+                    deployed = DeployVdbAction.deployVdb(teiidServer, selectedVdbFile);
                     
-				    String vdbName = selectedVdb.getFullPath().removeFileExtension().lastSegment();
-					if( vdbName.indexOf('.') > -1 ) {
-						vdbName = new Path(vdbName).removeFileExtension().toString();
-						}
+				    String vdbName = FileUtils.getNameWithoutExtension(selectedVdbFile);
                     if (teiidServer.isVdbActive(vdbName)) {
                     	if( deployed ) {
                     		executeVdb(DqpPlugin.getInstance().getServerManager().getDefaultServer(), vdbName);
                     	}
                     } else if (teiidServer.isVdbLoading(vdbName)) {
-                        StringBuilder message = new StringBuilder(getString("vdbLoadingMessage", selectedVdb.getName())); //$NON-NLS-1$
+                        StringBuilder message = new StringBuilder(getString("vdbLoadingMessage", selectedVdbFile.getName())); //$NON-NLS-1$
                         MessageDialog.openWarning(getShell(), getString("vdbLoadingTitle"), //$NON-NLS-1$
                                                   message.toString());
                     } else if( deployed ) {
-                        StringBuilder message = new StringBuilder(getString("vdbNotActiveMessage", selectedVdb.getName())); //$NON-NLS-1$
+                        StringBuilder message = new StringBuilder(getString("vdbNotActiveMessage", selectedVdbFile.getName())); //$NON-NLS-1$
                         if (teiidServer.hasVdb(vdbName)) {
                             for (String error : teiidServer.retrieveVdbValidityErrors(vdbName)) {
                                 message.append("\nERROR:\t").append(error); //$NON-NLS-1$
@@ -136,7 +132,7 @@ public class ExecuteVdbWorker implements VdbConstants {
 			}
 		} catch (Exception e) {
 			DqpUiConstants.UTIL.log(IStatus.ERROR, e, getString("vdbNotDeployedError", //$NON-NLS-1$
-							selectedVdb.getName()));
+							selectedVdbFile.getName()));
 		}
 	}
 	

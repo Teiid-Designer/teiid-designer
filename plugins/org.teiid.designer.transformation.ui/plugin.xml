@@ -380,5 +380,22 @@
 	             value="true">
 	       </attribute>
 	    </markerResolutionGenerator>
-    </extension>
+   </extension>
+   <extension 
+   	     point="org.eclipse.ui.exportWizards">
+      <wizard
+            name="%exportTeiidDdlWizard.name"
+            icon="icons/full/ctool16/exportddl_wiz.gif"
+            category="org.teiid.designer.ui"
+            class="org.teiid.designer.transformation.ui.teiidddl.ExportTeiidDdlWizard"
+            id="exportTeiidDdlWizard">
+         <description>
+            %exportTeiidDdlWizard.description
+         </description>
+         <selection
+               name="*.xmi"
+               class="org.eclipse.core.resources.IFile">
+         </selection>
+      </wizard>
+   </extension>
 </plugin>

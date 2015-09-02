@@ -24,9 +24,9 @@ import org.teiid.designer.core.resource.xmi.MtkXmiResourceImpl;
  */
 public class ObjectManagerImpl implements ObjectManager {
 
-	private final ContainerImpl container;
+	private final Container container;
 
-	public ObjectManagerImpl( final ContainerImpl container ) {
+	public ObjectManagerImpl( final Container container ) {
 		CoreArgCheck.isNotNull(container);
 		this.container = container;
 	}

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.Checksum;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -343,7 +342,6 @@ public class ModelResourceImpl extends OpenableImpl implements ModelResource {
     @Override
     protected boolean generateInfos( final OpenableModelWorkspaceItemInfo info,
                                      final IProgressMonitor pm,
-                                     final Map newElements,
                                      final IResource underlyingResource ) throws ModelWorkspaceException {
         boolean validInfo = false;
         try {

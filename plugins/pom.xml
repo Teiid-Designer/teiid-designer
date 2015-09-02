@@ -68,7 +68,6 @@
 		<module>org.teiid.designer.query.ui</module>
 		<module>org.teiid.designer.relational</module>
 		<module>org.teiid.designer.relational.ui</module>
-		<module>org.teiid.designer.roles</module>
 		<module>org.teiid.designer.roles.ui</module>
 		<module>org.teiid.designer.schema.tools</module>
 		<module>org.teiid.designer.sdt</module>

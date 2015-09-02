@@ -22,7 +22,6 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.action.Action;
@@ -35,9 +34,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlAspectHelper;
 import org.teiid.designer.core.workspace.ModelObjectAnnotationHelper;
@@ -58,6 +56,7 @@ import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -107,7 +106,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
     /**
      * @param selection
-     * @return
+     * @return whether selection is applicable
      */
     @Override
     public boolean isApplicable( ISelection selection ) {
@@ -218,7 +217,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
     /**
      * @param selection
-     * @return
+     * @return if selection was set
      */
     public boolean setSelection(ISelection selection) {
         if (SelectionUtilities.isMultiSelection(selection))
@@ -237,16 +236,16 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(this.selectedVDB, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(this.selectedVDB);
             Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
             for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
 
                 List<RestProcedure> restfulProcedureArray = findRestProcedures(modelResource);
                 if (restfulProcedureArray.size() > 0) {
-                    String modelName = FileUtils.getFilenameWithoutExtension(vdbModelEntry.getName().lastSegment());
+                    String modelName = vdbModelEntry.getName();
                     restfulProcedureMap.put(modelName, restfulProcedureArray);
                     result = true;
                 }
@@ -286,7 +285,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
             UTIL.log(e);
         }
 
-        return headers==null?StringUtilities.EMPTY_STRING:(String)headers;
+        return headers==null?StringConstants.EMPTY_STRING:(String)headers;
     }
     
     private static String getCharset( Procedure procedure ) {
@@ -367,7 +366,6 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
                         uriParameterCount++;
                     }
                 }
-                
                 
                 //Check for query parameters
                 if (uriString.indexOf("&")>-1){ //$NON-NLS-1$

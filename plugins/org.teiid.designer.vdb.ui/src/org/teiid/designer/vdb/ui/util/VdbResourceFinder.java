@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +35,7 @@ import org.teiid.designer.core.xmi.XMIHeaderReader;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.XmiVdb;
 
 /**
  * This class provides utilities to find resources given in input VDB file
@@ -67,7 +67,7 @@ public class VdbResourceFinder {
         ModelEditorImpl.setContainer(this.container);
         
         try {
-            this.vdb = new Vdb(vdbFile, false, new NullProgressMonitor());
+            this.vdb = new XmiVdb(vdbFile, false);
         } catch (Exception ex) {
             throw ErrorHandler.toCoreException(ex);
         }

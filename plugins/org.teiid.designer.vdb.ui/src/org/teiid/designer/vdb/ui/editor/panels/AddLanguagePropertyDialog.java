@@ -8,8 +8,6 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
-import java.util.HashSet;
-import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -27,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.vdb.AllowedLanguages;
 
 /**
  *
@@ -36,7 +35,7 @@ public class AddLanguagePropertyDialog extends MessageDialog {
     private static final String PREFIX = I18nUtil.getPropertyPrefix(AddLanguagePropertyDialog.class);
 
     private Button btnOk;
-    private final Set<String> existingNames;
+    private final AllowedLanguages existingNames;
     private String name;
 
     /**
@@ -44,13 +43,13 @@ public class AddLanguagePropertyDialog extends MessageDialog {
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
      */
     public AddLanguagePropertyDialog( Shell parentShell,
-                              Set<String> existingPropertyNames ) {
+                              AllowedLanguages existingPropertyNames ) {
         super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
         if( existingPropertyNames == null ) {
-        	this.existingNames = new HashSet<String>(0);
+        	this.existingNames = new AllowedLanguages();
         } else {
         	this.existingNames = existingPropertyNames;
         }

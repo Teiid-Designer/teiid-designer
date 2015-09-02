@@ -93,6 +93,7 @@ import org.teiid.core.designer.id.UUID;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.DebuggingStopwatch;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.common.xmi.XMIHeaderReader;
 import org.teiid.designer.core.association.AbstractAssociationDescriptor;
@@ -150,7 +151,6 @@ public class ModelEditorImpl implements ModelEditor {
      */
     public static final String XML_SCHEMA_METAMODEL_URI = XSDPackage.eNS_URI;
 
-    private static final String NAME_FEATURE_NAME = "name"; //$NON-NLS-1$
     private static final String ESTRING_MAP_NAME = "EStringToStringMapEntry"; //$NON-NLS-1$
 
     protected static final String NEW = ModelerCore.Util.getString("ModelEditorImpl.New_1"); //$NON-NLS-1$
@@ -1602,15 +1602,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     @Override
 	public EStructuralFeature getNameFeature( final EObject eObject ) {
-        CoreArgCheck.isNotNull(eObject);
-        final EClass eClass = eObject.eClass();
-        for (Iterator iter = eClass.getEAllStructuralFeatures().iterator(); iter.hasNext();) {
-            final EStructuralFeature feature = (EStructuralFeature)iter.next();
-            if (NAME_FEATURE_NAME.equalsIgnoreCase(feature.getName())) {
-                return feature;
-            }
-        }
-        return null;
+        return ModelUtil.getNameFeature(eObject);
     }
 
     /**
@@ -1618,13 +1610,7 @@ public class ModelEditorImpl implements ModelEditor {
      */
     @Override
 	public String getName( final EObject eObject ) {
-        CoreArgCheck.isNotNull(eObject);
-        final EStructuralFeature nameFeature = getNameFeature(eObject);
-        if (nameFeature == null) {
-            return null;
-        }
-        final Object value = eObject.eGet(nameFeature);
-        return value != null ? value.toString() : null;
+        return ModelUtil.getName(eObject);
     }
 
     /**
@@ -1702,6 +1688,9 @@ public class ModelEditorImpl implements ModelEditor {
 
     /**
      * Should only be called by the model container's EMF content adapter.
+     * @param owner command owner
+     * @param cmd command to be post executed
+     * @throws ModelerCoreException
      * 
      * @see org.teiid.designer.core.ModelEditor#executeCommand(org.eclipse.emf.ecore.EObject,
      *      org.eclipse.emf.common.command.Command)
@@ -1712,7 +1701,6 @@ public class ModelEditorImpl implements ModelEditor {
         executeAsTransaction(new TransactionRunnable() {
             @Override
 			public Object run( UnitOfWork uow ) throws ModelerCoreException {
-                ((UnitOfWorkImpl)uow).setAlreadyExecuted(true);
                 executeCommandInTransaction(uow, owner, cmd);
                 return null;
             }
@@ -2666,7 +2654,7 @@ public class ModelEditorImpl implements ModelEditor {
                         cloneFolder(originalProject, origFile, modelToReferenceMap, genRefMap, tester);
                     }
                 } else {
-                    if (name.endsWith(ModelUtil.DOT_EXTENSION_XMI)) {
+                    if (name.endsWith(StringConstants.DOT_XMI)) {
                         cloneFile(originalProject, origFile, modelToReferenceMap, genRefMap, tester);
                     }
                 }
@@ -2691,7 +2679,7 @@ public class ModelEditorImpl implements ModelEditor {
                         cloneFolder2(originalProject, origFile, modelToReferenceMap, genRefMap, clonedFile, tester);
                     }
                 } else {
-                    if (name.endsWith(ModelUtil.DOT_EXTENSION_XMI) || name.endsWith(ModelUtil.DOT_EXTENSION_XSD)) {
+                    if (name.endsWith(StringConstants.DOT_XMI) || name.endsWith(StringConstants.DOT_XSD)) {
                         clonedFolder.mkdirs();
                         cloneFile2(originalProject, origFile, modelToReferenceMap, genRefMap, clonedFile, tester);
                     }
@@ -2992,7 +2980,7 @@ public class ModelEditorImpl implements ModelEditor {
             boolean uuid = false;
             int prevBufLen = 0;
             int outBufNdx = 0;
-            boolean xsd = originalFile.getName().endsWith(ModelUtil.DOT_EXTENSION_XSD);
+            boolean xsd = originalFile.getName().endsWith(StringConstants.DOT_XSD);
             try {
                 for (int bufLen = in.read(buf, 0, BUFFER_LENGTH); bufLen > prevBufLen; bufLen = prevBufLen
                                                                                                 + in.read(buf,

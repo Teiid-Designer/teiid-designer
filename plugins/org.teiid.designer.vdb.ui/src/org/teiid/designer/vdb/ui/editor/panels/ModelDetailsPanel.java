@@ -50,6 +50,7 @@ import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.TranslatorOverride;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
@@ -57,7 +58,6 @@ import org.teiid.designer.vdb.connections.SourceHandlerExtensionManager;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 /**
  *
@@ -79,16 +79,16 @@ public class ModelDetailsPanel {
     TableViewerBuilder problemsViewer;
     VdbModelEntry selectedVdbModelEntry;
     
-    VdbEditor vdbEditor;
+    Vdb vdb;
 
 
     /**
      * @param parent
-     * @param vdbEditor
+     * @param vdb
      */
-    public ModelDetailsPanel(Composite parent, VdbEditor vdbEditor) {
+    public ModelDetailsPanel(Composite parent, Vdb vdb) {
     	super();
-    	this.vdbEditor = vdbEditor;
+    	this.vdb = vdb;
     	
     	createPanel(parent);
     }
@@ -251,13 +251,13 @@ public class ModelDetailsPanel {
 		        
 		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_translatorNameLabel + "            "); //$NON-NLS-1$
-		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer.getTableViewer(), vdbEditor.getVdb().getFile()));
+		        column.setEditingSupport(new TranslatorEditingSupport(bindingsViewer.getTableViewer(), vdb.getSourceFile()));
 		        column.setLabelProvider(new BindingDataLabelProvider(1));
 
 
 		        column = bindingsViewer.createColumn(SWT.LEFT, 30, 30, true);
 		        column.getColumn().setText(Messages.modelDetailsPanel_jndiNameLabel + "          "); //$NON-NLS-1$
-		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer.getTableViewer(), vdbEditor.getVdb().getFile()));
+		        column.setEditingSupport(new JndiEditingSupport(bindingsViewer.getTableViewer(), vdb.getSourceFile()));
 		        column.setLabelProvider(new BindingDataLabelProvider(2));
 
 		        
@@ -414,8 +414,8 @@ public class ModelDetailsPanel {
     		problemsViewer.getTable().removeAll();
     		modelDescriptionEditor.getTextViewer().setEditable(false);
         } else {
-        	modelNameText.setText(selectedVdbModelEntry.getName().lastSegment());
-        	modelLocationText.setText(selectedVdbModelEntry.getName().removeLastSegments(1).toString());
+        	modelNameText.setText(selectedVdbModelEntry.getName());
+        	modelLocationText.setText(selectedVdbModelEntry.getPath().toOSString());
         	modelDescriptionEditor.setText(selectedVdbModelEntry.getDescription());
         	modelDescriptionEditor.getTextViewer().setEditable(true);
         	bindingsViewer.getTable().removeAll();
@@ -582,7 +582,7 @@ public class ModelDetailsPanel {
             }
 
             // add in the translator overrides from the VDB
-            for (TranslatorOverride translator : vdbEditor.getVdb().getTranslators()) {
+            for (TranslatorOverride translator : vdb.getTranslators()) {
                 translators.add(translator.getName());
             }
 

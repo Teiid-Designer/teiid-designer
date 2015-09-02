@@ -23,11 +23,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.query.proc.ITeiidMetadataFileInfo;
 import org.teiid.designer.transformation.ui.UiConstants;
-import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.UiConstants.Images;
+import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -234,7 +234,7 @@ public class DelimiterOptionsDialog  extends TitleAreaDialog {
     	} else {
     		// Assume OTHER
     		this.otherDelimiterRB.setSelection(true);
-    		String charStr = StringUtilities.EMPTY_STRING + delimiter;
+    		String charStr = StringConstants.EMPTY_STRING + delimiter;
     		this.otherDelimiterText.setText(charStr);
     		this.otherDelimiterText.setEnabled(true);
     	}

@@ -9,6 +9,7 @@ package org.teiid.designer.metamodels.relational.provider;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
@@ -17,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -35,7 +37,7 @@ import org.teiid.designer.metamodels.relational.RelationalPlugin;
  *
  * @since 8.0
  */
-public class ProcedureParameterItemProvider extends RelationalEntityItemProvider {
+public class ProcedureParameterItemProvider extends RelationalEntityItemProvider implements StringConstants {
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -466,18 +468,40 @@ public class ProcedureParameterItemProvider extends RelationalEntityItemProvider
         if (label == null || label.length() == 0) {
             label = getString("_UI_ProcedureParameter_type"); //$NON-NLS-1$
         }
+        
+        StringBuilder sb = new StringBuilder(label);
         // Add the datatype ...
-        final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(param, true);
         final EObject dt = param.getType();
-        final String dtName = dtMgr.getName(dt);
-        if (dt != null && dtName != null && dtName.trim().length() != 0) {
-            label = label + " : " + dtName; //$NON-NLS-1$
+        if( dt != null ) {
+	        final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(param, true);
+	        final String dtName = dtMgr.getName(dt);
+	        
+			final boolean isLengthType = ModelerCore.getTeiidDataTypeManagerService().isLengthDataType(dtName);
+			final boolean isPrecisionType = ModelerCore.getTeiidDataTypeManagerService().isPrecisionDataType(dtName);
+			final boolean isScaleType = ModelerCore.getTeiidDataTypeManagerService().isScaleDataType(dtName);
+	        
+	        if (dtName != null && dtName.trim().length() != 0) {
+	            sb.append(SPACE + COLON + SPACE).append(dtName); //$NON-NLS-1$
+
+		        final int length = param.getLength();
+		        final int precision = param.getPrecision();
+		        final int scale = param.getScale();
+		        
+				if( isLengthType ) {
+					if( length > 0 ) {
+						sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
+					}
+				} else if( isPrecisionType && precision > 0 ) {
+					sb.append(OPEN_BRACKET).append(precision);
+					if( isScaleType && scale > 0 ) {
+						sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);
+					} else {
+						sb.append(CLOSE_BRACKET);
+					}
+				}
+	        }
         }
-        final int length = param.getLength();
-        if (dt != null && length != 0 && dtMgr.isCharacter(dt)) {
-            label = label + "(" + length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return label;
+        return sb.toString();
         // End customized code
     }
 

@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.validation.ObjectValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
 import org.teiid.designer.core.validation.ValidationProblem;
@@ -59,10 +59,10 @@ public final class RestPropertiesRule implements ObjectValidationRule {
                 String method = props.getProperty("rest:restMethod"); //$NON-NLS-1$
                 String uri = props.getProperty("rest:uri"); //$NON-NLS-1$
 
-                methodSet = method != null && !method.trim().equals(StringUtilities.EMPTY_STRING) ? true : false;
-                uriSet = uri != null && !uri.trim().equals(StringUtilities.EMPTY_STRING) ? true : false;
+                methodSet = method != null && !method.trim().equals(StringConstants.EMPTY_STRING) ? true : false;
+                uriSet = uri != null && !uri.trim().equals(StringConstants.EMPTY_STRING) ? true : false;
 
-                String message = StringUtilities.EMPTY_STRING;
+                String message = StringConstants.EMPTY_STRING;
                 if (methodSet & !uriSet) {
                     message = Util.getString(I18N_PREFIX + "uriRequired"); //$NON-NLS-1$
                 }
@@ -71,7 +71,7 @@ public final class RestPropertiesRule implements ObjectValidationRule {
                     message = Util.getString(I18N_PREFIX + "methodRequired"); //$NON-NLS-1$
                 }
 
-                if (!message.equals(StringUtilities.EMPTY_STRING)) {
+                if (!message.equals(StringConstants.EMPTY_STRING)) {
                     ValidationResult result = new ValidationResultImpl(theObject, theObject);
                     ValidationProblem problem = new ValidationProblemImpl(IStatus.ERROR, IStatus.ERROR, message);
                     result.addProblem(problem);

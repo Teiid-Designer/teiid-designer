@@ -8,7 +8,9 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -23,6 +25,7 @@ import org.teiid.designer.runtime.ui.DqpUiPlugin;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.XmiVdb;
 
 
 /**
@@ -104,7 +107,7 @@ public class ExecuteVdbAction extends Action {
     }
     
     private boolean isVdbSyncd(IFile file) throws Exception {
-    	Vdb vdb = new Vdb(file, null);
+    	Vdb vdb = new XmiVdb(file);
     	return vdb.isSynchronized();
     }
 
