@@ -316,8 +316,8 @@ public abstract class ProcedureInfo implements IWsdlProcedureInfo, ISQLConstants
 				}
 			}
 			
-			if( ! columnInfo.getDatatype().equalsIgnoreCase(IWsdlColumnInfo.INTEGER_DATATYPE) ) {
-				columnInfo.setDatatype(IWsdlColumnInfo.INTEGER_DATATYPE);
+			if( ! columnInfo.getDatatype().equalsIgnoreCase(IWsdlColumnInfo.BIGINTEGER_DATATYPE) ) {
+				columnInfo.setDatatype(IWsdlColumnInfo.BIGINTEGER_DATATYPE);
 			}
 			columnInfo.setOrdinality(true);
 		}

@@ -9,13 +9,16 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
+import org.teiid.designer.metamodels.core.Datatype;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
@@ -32,6 +35,7 @@ import org.teiid.designer.query.sql.symbol.IElementSymbol;
 public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstants {
 	
 	private static final char SEPARATOR = '/';
+	public static final String INTEGER_DATATYPE = "integer";
 
     /** Constant value indicating no segments */
     private static final String[] NO_SEGMENTS = new String[0];
@@ -115,7 +119,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
         CoreArgCheck.isNotEmpty(datatype, "datatype is null"); //$NON-NLS-1$
         
 		initNameSymbol(name);
-		this.datatype = datatype;
+		setDatatype(datatype);
 		
 		this.attributeInfoList = new ArrayList<AttributeInfo>();
 		validate();
@@ -221,7 +225,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 	 */
 	public void setDatatype(String datatype) {
 		CoreArgCheck.isNotNull(datatype, "datatype is null"); //$NON-NLS-1$
-		this.datatype = datatype;
+		this.datatype = datatype.equals(INTEGER_DATATYPE) ? BIGINTEGER_DATATYPE : datatype; 
 		validate();
 	}
 	

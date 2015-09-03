@@ -10,8 +10,11 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -34,7 +37,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -204,7 +209,11 @@ public class EditColumnDialog extends TitleAreaDialog {
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
 		Arrays.sort(sortedStrings);
 		for( String dType : sortedStrings ) {
-			dTypes.add(dType);
+			if (dType.equals(ColumnInfo.INTEGER_DATATYPE)){
+				//skip
+			}else{
+				dTypes.add(dType);
+			}
 		}
 		
 		String[] datatypes = dTypes.toArray(new String[dTypes.size()]);
@@ -238,7 +247,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 
 		return composite;
 	}
-
+	
 	private void validate() {
 
 		boolean enable = true;
