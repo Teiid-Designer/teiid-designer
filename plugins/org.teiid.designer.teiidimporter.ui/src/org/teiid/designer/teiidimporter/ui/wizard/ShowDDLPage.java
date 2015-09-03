@@ -302,7 +302,10 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
                     ddlContentsBox.setText(Messages.ShowDDLPage_vdbDeploymentErrorMsg);  
                 } else if(!deployStatus.isOK()) {
                 	StringBuffer sb = new StringBuffer(deployStatus.getMessage());
-                	sb.append("\n\n"+ Messages.ShowDDLPage_vdbDeploymentCheckServerLogMsg); //$NON-NLS-1$
+                	// Show 'check server log' message, unless deployment was cancelled.
+                	if(deployStatus.getSeverity()!=IStatus.CANCEL) {
+                		sb.append("\n\n"+ Messages.ShowDDLPage_vdbDeploymentCheckServerLogMsg); //$NON-NLS-1$
+                	}
                     ddlContentsBox.setText(sb.toString());  
                 } else {
                     String ddl = importManager.getDdl();
@@ -334,7 +337,8 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
             } else {
                 errorMsg = Messages.ShowDDLPage_vdbDeploymentErrorMsg;
             }
-            setThisPageComplete(errorMsg, WARNING);
+            // Cannot proceed if VDB is not deployed
+            setThisPageComplete(errorMsg, ERROR);
             return false;
         }
         String ddlStr = getDDL();

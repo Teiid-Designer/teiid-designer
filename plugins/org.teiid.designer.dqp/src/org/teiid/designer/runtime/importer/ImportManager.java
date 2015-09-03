@@ -198,6 +198,9 @@ public final class ImportManager implements IExecutionConfigurationListener {
         boolean finishedLoading = false;
         try {
             finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
+        } catch (InterruptedException ie) {
+            resultStatus = new Status(IStatus.CANCEL, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingInterruptedError, vdbName));
+            return resultStatus;
         } catch (Exception ex) {
             resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, vdbName));
             return resultStatus;
@@ -332,7 +335,8 @@ public final class ImportManager implements IExecutionConfigurationListener {
     	int workIncrement = Math.round((float)workRemaining / increments);
     	
         long waitUntil = System.currentTimeMillis() + timeoutInSecs*1000;
-        if (timeoutInSecs < 0) {
+        // Timeout of zero or less means no timeout...
+        if (timeoutInSecs < 1) {
             waitUntil = Long.MAX_VALUE;
         }
         boolean first = true;
@@ -348,6 +352,12 @@ public final class ImportManager implements IExecutionConfigurationListener {
                 first = false;
             }
             monitor.worked(workIncrement);
+            
+            // Check for cancellation request.  If cancelled, throw InterruptedException
+            if(monitor.isCanceled()) {
+            	monitor.setCanceled(true);
+            	throw new InterruptedException("The operation was cancelled"); //$NON-NLS-1$
+            }
             
             boolean isActive = getImportServer().isVdbActive(vdbName);
             boolean isLoading = getImportServer().isVdbLoading(vdbName);

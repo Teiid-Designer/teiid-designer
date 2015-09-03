@@ -45,8 +45,8 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
 
         this.timeoutSecTextField = new Spinner(pnl, SWT.BORDER);
         this.timeoutSecTextField.setToolTipText(getToolTip());
-        this.timeoutSecTextField.setMaximum(300);
-        this.timeoutSecTextField.setMinimum(10);
+        this.timeoutSecTextField.setMaximum(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MAX);
+        this.timeoutSecTextField.setMinimum(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MIN);
 
         Label label = new Label(pnl, SWT.NONE);
         label.setText(getName());
