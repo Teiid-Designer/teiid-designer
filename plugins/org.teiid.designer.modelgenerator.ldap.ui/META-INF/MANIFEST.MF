@@ -4,7 +4,6 @@ Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.modelgenerator.ldap.ui;singleton:=true
 Bundle-Version: 9.2.0.qualifier
 Bundle-Vendor: %pluginProvider
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Activator: org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui;bundle-version="[3.106.1,4.0.0)",
@@ -36,7 +35,14 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.106.1,4.0.0)",
  org.teiid.designer.transformation.ui;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.relational;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.legacy;bundle-version="[9.0.2,10.0.0)",
- org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)"
+ org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
+ org.apache.directory.api.ldap.model;bundle-version="1.0.0",
+ org.apache.directory.studio.common.core;bundle-version="2.0.0",
+ org.apache.directory.studio.common.ui;bundle-version="2.0.0",
+ org.apache.directory.studio.connection.core;bundle-version="2.0.0",
+ org.apache.directory.studio.connection.ui;bundle-version="2.0.0",
+ org.apache.directory.studio.ldapbrowser.common;bundle-version="2.0.0",
+ org.apache.directory.studio.ldapbrowser.core;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.teiid.designer.schema.tools.processing

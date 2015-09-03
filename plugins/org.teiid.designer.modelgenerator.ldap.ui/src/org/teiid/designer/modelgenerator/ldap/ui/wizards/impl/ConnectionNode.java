@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.ldap.ui.wizards.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
+import org.apache.directory.studio.ldapbrowser.core.model.IEntry;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.designer.datatools.profiles.ldap.ILdapProfileConstants;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
@@ -21,19 +22,17 @@ import org.teiid.designer.modelgenerator.ldap.ui.wizards.LdapImportWizardManager
  */
 public class ConnectionNode implements ILdapEntryNode {
 
-    private static final String SLASH = "/"; //$NON-NLS-1$
+	private final LdapImportWizardManager manager;
 
-    private String rootDN;
-
-    private String context;
+    private final String context;
 
     /**
      * @param manager
      */
     public ConnectionNode(LdapImportWizardManager manager) {
+        this.manager = manager;
         IConnectionProfile connectionProfile = manager.getConnectionProfile();
         Properties properties = connectionProfile.getBaseProperties();
-        this.rootDN = properties.getProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID);
         this.context = properties.getProperty(ILdapProfileConstants.URL_PROP_ID);
     }
 
@@ -43,8 +42,8 @@ public class ConnectionNode implements ILdapEntryNode {
     }
 
     @Override
-    public boolean isRelative() {
-        return false;
+    public IEntry getEntry() {
+        return manager.getBrowserConnection().getRootDSE();
     }
 
     @Override
@@ -53,18 +52,28 @@ public class ConnectionNode implements ILdapEntryNode {
     }
 
     @Override
+    public Object[] getChildren() {
+        return manager.getSelectedEntries().toArray();
+    }
+
+    @Override
+    public boolean hasChildren() {
+        return !manager.getSelectedEntries().isEmpty();
+    }
+
+    @Override
     public String getSourceName() {
-        return rootDN;
+        return context;
     }
 
     @Override
     public String getSourceBaseName() {
-        return rootDN;
+        return context;
     }
 
     @Override
     public String getLabel() {
-        return context + SLASH + rootDN;
+        return context;
     }
 
     @Override
@@ -102,7 +111,6 @@ public class ConnectionNode implements ILdapEntryNode {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.context == null) ? 0 : this.context.hashCode());
-        result = prime * result + ((this.rootDN == null) ? 0 : this.rootDN.hashCode());
         return result;
     }
 
@@ -115,9 +123,6 @@ public class ConnectionNode implements ILdapEntryNode {
         if (this.context == null) {
             if (other.context != null) return false;
         } else if (!this.context.equals(other.context)) return false;
-        if (this.rootDN == null) {
-            if (other.rootDN != null) return false;
-        } else if (!this.rootDN.equals(other.rootDN)) return false;
         return true;
     }
 }

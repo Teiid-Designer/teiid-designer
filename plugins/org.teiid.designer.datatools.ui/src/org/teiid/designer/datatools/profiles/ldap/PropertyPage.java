@@ -1,47 +1,38 @@
 package org.teiid.designer.datatools.profiles.ldap;
 
+import java.util.Map.Entry;
 import java.util.Properties;
-import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.datatools.connectivity.ui.wizards.ProfileDetailsPropertyPage;
 import org.eclipse.datatools.help.ContextProviderDelegate;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.teiid.core.designer.event.IChangeListener;
+import org.teiid.core.designer.event.IChangeNotifier;
+import org.teiid.designer.datatools.profiles.ldap.widget.LdapAuthenticationWidget;
+import org.teiid.designer.datatools.profiles.ldap.widget.LdapSettingsWidget;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
-import org.teiid.designer.ui.common.util.WidgetFactory;
 
-public class PropertyPage extends ProfileDetailsPropertyPage implements IContextProvider, DatatoolsUiConstants {
+/**
+ * Property page displaying all settings when an
+ * ldap connection is to be edited.
+ */
+public class PropertyPage extends ProfileDetailsPropertyPage
+    implements IContextProvider, DatatoolsUiConstants, IChangeListener, ILdapProfileConstants {
 
     private ContextProviderDelegate contextProviderDelegate = new ContextProviderDelegate(
                                                                                           DatatoolsUiPlugin.getDefault().getBundle().getSymbolicName());
-    private Composite scrolled;
-    private Label usernameLabel;
-    private Text usernameText;
-    private Label passwordLabel;
-    private Text passwordText;
-    private Label urlLabel;
-    private Text urlText;
-    private Label rootDNSuffixLabel;
-    private Text rootDNSuffixText;
-    private Text contextFactoryText;
-    private Label contextFactoryLabel;
+    private TabFolder tabFolder;
 
-    public PropertyPage() {
-        super();
-    }
+    private Properties newProperties = new Properties();
 
     @Override
-    public IContext getContext( Object target ) {
+    public IContext getContext(Object target) {
         return contextProviderDelegate.getContext(target);
     }
 
@@ -51,208 +42,74 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
     }
 
     @Override
-    public String getSearchExpression( Object target ) {
+    public String getSearchExpression(Object target) {
         return contextProviderDelegate.getSearchExpression(target);
     }
 
-    
     @Override
-	protected Control createContents(Composite parent) {
-		Control result = super.createContents(parent);
-        this.setPingButtonEnabled(false);
-        this.setPingButtonVisible(false);
+    protected Control createContents(Composite parent) {
+        Control result = super.createContents(parent);
+        this.setPingButtonEnabled(true);
+        this.setPingButtonVisible(true);
         return result;
-	}
-
-	@Override
-    protected void createCustomContents( Composite parent ) {
-        GridData gd;
-
-        Group group = WidgetFactory.createSimpleGroup(parent,
-                                                      UTIL.getString("Common.Properties.Label")); //$NON-NLS-1$;
-
-        scrolled = new Composite(group, SWT.NONE);
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 2;
-        scrolled.setLayout(gridLayout);
-
-        usernameLabel = new Label(scrolled, SWT.NONE);
-        usernameLabel.setText(UTIL.getString("Common.Username.Label")); //$NON-NLS-1$
-        usernameLabel.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.BEGINNING;
-        usernameLabel.setLayoutData(gd);
-
-        usernameText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        usernameText.setToolTipText(UTIL.getString("Common.Username.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        usernameText.setLayoutData(gd);
-
-        passwordLabel = new Label(scrolled, SWT.NONE);
-        passwordLabel.setText(UTIL.getString("Common.Password.Label")); //$NON-NLS-1$
-        passwordLabel.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.BEGINNING;
-        passwordLabel.setLayoutData(gd);
-
-        passwordText = new Text(scrolled, SWT.SINGLE | SWT.BORDER | SWT.PASSWORD);
-        passwordText.setToolTipText(UTIL.getString("Common.Password.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        passwordText.setLayoutData(gd);
-
-        urlLabel = new Label(scrolled, SWT.NONE);
-        urlLabel.setText(UTIL.getString("Common.URL.Label")); //$NON-NLS-1$
-        urlLabel.setToolTipText(UTIL.getString("Common.URL.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.BEGINNING;
-        urlLabel.setLayoutData(gd);
-
-        urlText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        urlText.setToolTipText(UTIL.getString("Common.URL.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        urlText.setLayoutData(gd);
-
-        rootDNSuffixLabel = new Label(scrolled, SWT.NONE);
-        rootDNSuffixLabel.setText(UTIL.getString("LDAP.RootDNSufix.Label")); //$NON-NLS-1$
-        rootDNSuffixLabel.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.BEGINNING;
-        rootDNSuffixLabel.setLayoutData(gd);
-
-        rootDNSuffixText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        rootDNSuffixText.setToolTipText(UTIL.getString("LDAP.RootDNSufix.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        rootDNSuffixText.setLayoutData(gd);
-
-        contextFactoryLabel = new Label(scrolled, SWT.NONE);
-        contextFactoryLabel.setText(UTIL.getString("Common.Context.Factory.Label")); //$NON-NLS-1$
-        contextFactoryLabel.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.verticalAlignment = GridData.BEGINNING;
-        contextFactoryLabel.setLayoutData(gd);
-
-        contextFactoryText = new Text(scrolled, SWT.SINGLE | SWT.BORDER);
-        contextFactoryText.setToolTipText(UTIL.getString("Common.Context.Factory.ToolTip")); //$NON-NLS-1$
-        gd = new GridData();
-        gd.horizontalAlignment = GridData.FILL;
-        gd.verticalAlignment = GridData.BEGINNING;
-        gd.grabExcessHorizontalSpace = true;
-        gd.horizontalSpan = 1;
-        contextFactoryText.setLayoutData(gd);
-
-        initControls();
-        addlisteners();
     }
 
-    /**
-     * 
-     */
-    private void addlisteners() {
-        usernameText.addModifyListener(new ModifyListener() {
+    @Override
+    protected void createCustomContents(Composite parent) {
+        Properties oldProperties = getConnectionProfile().getBaseProperties();
+        for (Entry<Object, Object> entry : oldProperties.entrySet()) {
+            newProperties.put(entry.getKey(), entry.getValue());
+        }
 
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
+        tabFolder = new TabFolder(parent, SWT.TOP);
 
-        passwordText.addModifyListener(new ModifyListener() {
+        TabItem[] tabs = new TabItem[2];
 
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
+        tabs[0] = new TabItem(tabFolder, SWT.NONE);
+        LdapSettingsWidget settingsWidget = new LdapSettingsWidget(tabFolder, SWT.NONE, newProperties);
+        settingsWidget.addChangeListener(this);
+        tabs[0].setText(settingsWidget.getTitle());
+        tabs[0].setControl(settingsWidget);
 
-        urlText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-        rootDNSuffixText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-        contextFactoryText.addModifyListener(new ModifyListener() {
-
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                validate();
-            }
-        });
-
+        tabs[0] = new TabItem(tabFolder, SWT.NONE);
+        LdapAuthenticationWidget authWidget = new LdapAuthenticationWidget(tabFolder, SWT.NONE, newProperties);
+        authWidget.addChangeListener(this);
+        tabs[0].setText(authWidget.getTitle());
+        tabs[0].setControl(authWidget);
     }
 
     protected void validate() {
         String errorMessage = null;
         boolean valid = true;
-        if (null == usernameText.getText() || usernameText.getText().isEmpty()) {
-            errorMessage = UTIL.getString("Common.Username.Error.Message"); //$NON-NLS-1$
-            valid = false;
-        }
-        if (null == passwordText.getText() || passwordText.getText().isEmpty()) {
-            errorMessage = UTIL.getString("Common.Password.Error.Message"); //$NON-NLS-1$
-            valid = false;
-        }
-        if (null == urlText.getText() || urlText.getText().isEmpty()) {
+        if (null == newProperties.get(URL_PROP_ID) || newProperties.getProperty(URL_PROP_ID).isEmpty()) {
             errorMessage = UTIL.getString("Common.URL.Error.Message"); //$NON-NLS-1$
             valid = false;
         }
-        if (null == rootDNSuffixText.getText() || rootDNSuffixText.getText().isEmpty()) {
-            errorMessage = UTIL.getString("LDAP.RootDNSufix.Error.Message"); //$NON-NLS-1$
+        if (null == newProperties.get(CONTEXT_FACTORY) || newProperties.getProperty(CONTEXT_FACTORY).isEmpty()) {
+            setErrorMessage(UTIL.getString("Common.Context.Factory.Error.Message")); //$NON-NLS-1$
             valid = false;
         }
-        if (null == contextFactoryText.getText() || contextFactoryText.getText().isEmpty()) {
-            errorMessage = UTIL.getString("Common.Connection.Factory.Error.Message"); //$NON-NLS-1$
+
+        boolean authSimple = AUTHMETHOD_SIMPLE.equals(newProperties.getProperty(AUTHENTICATION_METHOD));
+
+        boolean hasPassword = (newProperties.get(PASSWORD_PROP_ID) != null && !newProperties.getProperty(PASSWORD_PROP_ID).isEmpty());
+        boolean hasUser = (newProperties.get(USERNAME_PROP_ID) != null && !newProperties.getProperty(USERNAME_PROP_ID).isEmpty());
+
+        if (authSimple && !hasPassword) {
+            setErrorMessage(UTIL.getString("Common.Password.Error.Message")); //$NON-NLS-1$
+            valid = false;
+        } else if (authSimple && !hasUser) {
+            setErrorMessage(UTIL.getString("Common.Username.Error.Message")); //$NON-NLS-1$
             valid = false;
         }
+
         setErrorMessage(errorMessage);
         setValid(valid);
-
     }
 
-    /**
-     * 
-     */
-    private void initControls() {
-        IConnectionProfile profile = getConnectionProfile();
-        Properties props = profile.getBaseProperties();
-        if (null != props.get(ILdapProfileConstants.USERNAME_PROP_ID)) {
-            usernameText.setText((String)props.get(ILdapProfileConstants.USERNAME_PROP_ID));
-        }
-        if (null != props.get(ILdapProfileConstants.PASSWORD_PROP_ID)) {
-            passwordText.setText((String)props.get(ILdapProfileConstants.PASSWORD_PROP_ID));
-        }
-        if (null != props.get(ILdapProfileConstants.URL_PROP_ID)) {
-            urlText.setText((String)props.get(ILdapProfileConstants.URL_PROP_ID));
-        }
-        if (null != props.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID)) {
-            rootDNSuffixText.setText((String)props.get(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID));
-        }
-        if (null != props.get(ILdapProfileConstants.CONTEXT_FACTORY)) {
-            contextFactoryText.setText((String)props.get(ILdapProfileConstants.CONTEXT_FACTORY));
-        }
+    @Override
+    public void stateChanged(IChangeNotifier theSource) {
+        validate();
     }
 
     /**
@@ -262,16 +119,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements IContext
      */
     @Override
     protected Properties collectProperties() {
-        Properties result = super.collectProperties();
-        if (null == result) {
-            result = new Properties();
-        }
-        result.setProperty(ILdapProfileConstants.USERNAME_PROP_ID, usernameText.getText());
-        result.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, passwordText.getText());
-        result.setProperty(ILdapProfileConstants.URL_PROP_ID, urlText.getText());
-        result.setProperty(ILdapProfileConstants.ROOT_DN_SUFFIX_PROP_ID, rootDNSuffixText.getText());
-        result.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactoryText.getText());
-        return result;
+        return newProperties;
     }
 
 }
