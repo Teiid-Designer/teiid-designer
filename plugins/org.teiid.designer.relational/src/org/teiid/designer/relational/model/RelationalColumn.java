@@ -152,7 +152,7 @@ public class RelationalColumn extends RelationalReference {
      * @param datatype Sets datatype to the specified value.
      */
     public void setDatatype( String datatype ) {
-        this.datatype = datatype;
+    	this.datatype = datatype.equalsIgnoreCase("INTEGER") ? "BIGINTEGER" : datatype; //$NON-NLS-1$ //$NON-NLS-2$
         if( this.precision == DEFAULT_PRECISION &&
         	(this.datatype.equalsIgnoreCase("INTEGER") || //$NON-NLS-1$
         	this.datatype.equalsIgnoreCase("DECIMAL") || //$NON-NLS-1$
