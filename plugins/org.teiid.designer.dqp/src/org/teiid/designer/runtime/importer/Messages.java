@@ -21,6 +21,7 @@ public final class Messages extends NLS {
     public static String ImportManagerUndeployVdbError;
     public static String ImportManagerDeployVdbError;
     public static String ImportManagerVdbLoadingError;
+    public static String ImportManagerVdbLoadingInterruptedError;
     public static String ImportManagerVdbGetStateError;
     public static String ImportManagerVdbInactiveStateError;
     public static String ImportManagerVdbLoadingNotCompleteError;

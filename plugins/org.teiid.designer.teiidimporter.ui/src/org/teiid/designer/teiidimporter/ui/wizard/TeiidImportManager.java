@@ -264,7 +264,13 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
-                        monitor.beginTask(NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs()), 100); 
+                    	String message = null;
+                    	if(getTimeoutPrefSecs()<1) {
+                    		message = Messages.TeiidImportManager_deployVdbNoTimeoutMsg;
+                    	} else {
+                    		message = NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs());
+                    	}
+                        monitor.beginTask(message, 100); 
                         vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(),dataSourceName,translatorName,optionalImportPropMap,monitor); 
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
