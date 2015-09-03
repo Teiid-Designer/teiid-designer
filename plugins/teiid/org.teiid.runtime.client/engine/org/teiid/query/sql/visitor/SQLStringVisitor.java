@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
@@ -2327,6 +2326,7 @@ public class SQLStringVisitor extends LanguageVisitor
     @Override
     public void visit(CreateProcedureCommand obj) {
     	addLeadingComment(obj.getLeadingComment());
+    	addCacheHint(obj.getCacheHint());
         if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
             append(CREATE);
             append(SPACE);

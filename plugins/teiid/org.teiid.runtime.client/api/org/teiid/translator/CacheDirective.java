@@ -23,9 +23,9 @@
 package org.teiid.translator;
 
 import java.io.Serializable;
-
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.query.parser.TeiidParser;
 
 public class CacheDirective implements Serializable {
 	
@@ -52,7 +52,9 @@ public class CacheDirective implements Serializable {
 	}
 
 	private static final long serialVersionUID = -4119606289701982511L;
-	
+
+	private final TeiidParser teiidParser;
+
 	private Boolean prefersMemory;
 	private Boolean updatable;
 	private Boolean readAll;
@@ -60,13 +62,22 @@ public class CacheDirective implements Serializable {
 	private Scope scope;
 	private Invalidation invalidation = Invalidation.NONE;
 	
-	public CacheDirective() {
+	public CacheDirective(TeiidParser teiidParser) {
+	    this.teiidParser = teiidParser;
 	}
 	
-	public CacheDirective(Boolean prefersMemory, Long ttl) {
+	public CacheDirective(TeiidParser teiidParser, Boolean prefersMemory, Long ttl) {
+	    this(teiidParser);
 		this.prefersMemory = prefersMemory;
 		this.ttl = ttl;
 	}
+
+	/**
+     * @return the teiidParser
+     */
+    public TeiidParser getTeiidParser() {
+        return this.teiidParser;
+    }
 
 	public Boolean getPrefersMemory() {
 		return prefersMemory;
