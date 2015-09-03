@@ -153,7 +153,7 @@ public class TransformationCopyModelFeaturePopulator
         Collection /*<EObject>*/ sourceFirstLevelChildrenCopies = null;
         final Map originalsToCopies = new HashMap();
         try {
-            sourceFirstLevelChildrenCopies = modelEditor.copyAll(
+            sourceFirstLevelChildrenCopies = ModelerCore.getModelEditor().copyAll(
                     sourceFirstLevelChildren, originalsToCopies);
         } catch (ModelerCoreException ex) {
             throw ex;

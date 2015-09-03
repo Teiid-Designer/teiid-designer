@@ -9,13 +9,10 @@ package org.teiid.designer.ui.wizards;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.tree.DefaultMutableTreeNode;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
@@ -23,7 +20,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -49,7 +45,6 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
     protected IFile sourceFile;
     protected ICheckboxTreeViewerListenerController listenerController;
     protected ModelResource targetModelResource;
-    protected ModelEditor modelEditor = ModelerCore.getModelEditor();
 
 
     /**
@@ -201,7 +196,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
         Collection /*<EObject>*/sourceFirstLevelChildrenCopies = null;
         // We cannot modify the source model, so create a deep copy of it
         try {
-            sourceFirstLevelChildrenCopies = modelEditor.copyAll(filteredChildren);
+            sourceFirstLevelChildrenCopies = ModelerCore.getModelEditor().copyAll(filteredChildren);
 
             // don't allow 2 ModelAnnotations so if there is a ModelAnnotation in the target model remove it exists
             List targetChildren = targetModelResource.getEmfResource().getContents();
@@ -295,7 +290,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
             sourceFirstLevelChildrenCopies.remove(childToRemove);
         }
 
-        modelEditor.delete((EObject)childToRemove);
+        ModelerCore.getModelEditor().delete((EObject)childToRemove);
     }
 
     protected Object getChildAtIndex( Object parent,

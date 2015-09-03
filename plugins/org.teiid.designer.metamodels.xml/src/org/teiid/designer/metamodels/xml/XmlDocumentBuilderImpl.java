@@ -83,7 +83,6 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
     private XmlElement root;
     private IProgressMonitor monitor;
     private final XmlDocumentFactory docFactory = XmlDocumentFactory.eINSTANCE;
-    private final ModelEditor me = ModelerCore.getModelEditor();
     private boolean useFragments;
 
     /**
@@ -101,6 +100,10 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
 
     public XmlDocumentBuilderImpl( final int levels ) {
         setNumberOfLevelsToBuild(levels);
+    }
+
+    private ModelEditor getModelEditor() {
+        return ModelerCore.getModelEditor();
     }
 
     /**
@@ -954,7 +957,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
                     found = true;
                     final int temp = getIndexOfChild(docParent, docChild) + 1;
                     if (temp != docIndex) {
-                        me.move(docParent, documentElement, temp);
+                        getModelEditor().move(docParent, documentElement, temp);
                         moved = true;
                     }
 
@@ -974,7 +977,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
             }
 
             if (foundIndex < Integer.MAX_VALUE && foundIndex != docIndex) {
-                me.move(docParent, documentElement, foundIndex);
+                getModelEditor().move(docParent, documentElement, foundIndex);
                 moved = true;
             }
         }
@@ -999,7 +1002,7 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
                 final Iterator childrenIT = children.iterator();
                 while (childrenIT.hasNext()) {
                     final EObject child = (EObject)childrenIT.next();
-                    me.delete(child);
+                    getModelEditor().delete(child);
                     count++;
                 }
             }
@@ -1018,8 +1021,8 @@ public class XmlDocumentBuilderImpl implements XmlDocumentBuilder {
             final EObject next = (EObject)children.next();
             if (clazz.isAssignableFrom(next.getClass())) try {
                 final String name2 = ((XmlDocumentNode)next).getName();
-                if (name == null && name2 == null) me.delete(next);
-                else if (name != null && name.equals(name2)) me.delete(next);
+                if (name == null && name2 == null) getModelEditor().delete(next);
+                else if (name != null && name.equals(name2)) getModelEditor().delete(next);
             } catch (final ModelerCoreException e) {
                 ModelerCore.Util.log(IStatus.ERROR,
                                      e,

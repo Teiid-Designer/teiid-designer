@@ -24,7 +24,6 @@ import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
@@ -55,8 +54,7 @@ public class MaterializationModelGenerator {
     
     private static IStatus OK_STATUS = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID,
     		TransformationPlugin.Util.getString("MVModelGenerator.allInputsOkStatusMessage"));  //$NON-NLS-1$
-    
-    private final ModelEditor modelEditor;
+
     private final HashMap virtToPhysMappings;
     private final StringNameValidator nameValidator = new StringNameValidator();
 
@@ -70,7 +68,6 @@ public class MaterializationModelGenerator {
     private Set usedNIS;
     
     public MaterializationModelGenerator() {
-        this.modelEditor = ModelerCore.getModelEditor();
         this.virtToPhysMappings = new HashMap();
         this.usedNIS = new HashSet();
         nextIndex = STARTING_INDEX + 1;
@@ -369,7 +366,7 @@ public class MaterializationModelGenerator {
     
     public void addValue(final Object owner, final Object value, EList feature) {
         try {
-                this.modelEditor.addValue(owner, value, feature);
+                ModelerCore.getModelEditor().addValue(owner, value, feature);
         } catch (ModelerCoreException err) {
         	TransformationPlugin.Util.log(err);
         }

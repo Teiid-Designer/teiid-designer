@@ -103,8 +103,7 @@ public class EmfModelGenerator {
     public static RelationalViewModelFactory VIEW_MODEL_FACTORY = new RelationalViewModelFactory();
 
     private DatatypeProcessor datatypeProcessor = new DatatypeProcessor();
-    private ModelEditor modelEditor = ModelerCore.getModelEditor();
-    
+
     private List<DeferredPair> pkList = new ArrayList<DeferredPair>();
     private List<DeferredPair> fkList = new ArrayList<DeferredPair>();
     private List<DeferredPair> apList = new ArrayList<DeferredPair>();
@@ -117,8 +116,15 @@ public class EmfModelGenerator {
 
 	private Set<String> propsWithNoAssistant = new HashSet<String>();
 	private Set<String> metaclassesWithNoAssistant = new HashSet<String>();
-	
+
 	/**
+     * @return the modelEditor
+     */
+    private ModelEditor getModelEditor() {
+        return ModelerCore.getModelEditor();
+    }
+
+    /**
 	 * EMF Model Generator execute
      * @param diffReport the difference report
      * @param targetModelResource the model resource
@@ -333,7 +339,7 @@ public class EmfModelGenerator {
         Collection<EObject> existingChildren = targetResource.getEmfResource().getContents();
         EObject childToDelete = null;
         for( EObject child : existingChildren ) {
-        	String eObjName = this.modelEditor.getName(child);
+        	String eObjName = this.getModelEditor().getName(child);
         	if(refType==RelationalConstants.TYPES.TABLE && child instanceof BaseTable) {
 //        		BaseTable tableEObj = ((BaseTable)child);
 //        		EObject parent = tableEObj.eContainer();
@@ -369,7 +375,7 @@ public class EmfModelGenerator {
         	}
         }
         if( childToDelete != null ) {
-            this.modelEditor.delete(childToDelete);
+            this.getModelEditor().delete(childToDelete);
         }
     }
 
@@ -510,7 +516,7 @@ public class EmfModelGenerator {
         if( datatype != null ) {
             column.setType(datatype);
             
-            String dTypeName = this.modelEditor.getName(datatype);
+            String dTypeName = this.getModelEditor().getName(datatype);
             
             int datatypeLength = columnRef.getLength();
             if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
@@ -577,7 +583,7 @@ public class EmfModelGenerator {
         if( datatype != null ) {
             column.setType(datatype);
             
-            String dTypeName = this.modelEditor.getName(datatype);
+            String dTypeName = this.getModelEditor().getName(datatype);
             
             int datatypeLength = columnRef.getLength();
             if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
@@ -802,7 +808,7 @@ public class EmfModelGenerator {
                 foreignKey.setUniqueKey(fkTable.getPrimaryKey());
             } else if( fkTable.getUniqueConstraints().isEmpty() ) {
                 for( Object key : fkTable.getUniqueConstraints()) {
-                    String keyName = this.modelEditor.getName((UniqueKey)key);
+                    String keyName = this.getModelEditor().getName((UniqueKey)key);
                     if( keyName.equalsIgnoreCase(ukRefName) ) {
                         foreignKey.setUniqueKey((UniqueKey)key);
                     }
@@ -909,7 +915,7 @@ public class EmfModelGenerator {
     private BaseTable getTable(String tableName, ModelResource modelResource) {
         try {
             for (EObject eObj : modelResource.getEmfResource().getContents() ) {
-                String eObjName = this.modelEditor.getName(eObj);
+                String eObjName = this.getModelEditor().getName(eObj);
                 if( eObj instanceof BaseTable && eObjName != null && eObjName.equalsIgnoreCase(tableName)) {
                     return (BaseTable)eObj;
                 }
@@ -988,7 +994,7 @@ public class EmfModelGenerator {
 
         if( datatype != null ) {
             parameter.setType(datatype);
-            String dTypeName = this.modelEditor.getName(datatype);
+            String dTypeName = this.getModelEditor().getName(datatype);
             
             int datatypeLength = parameterRef.getLength();
             if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
