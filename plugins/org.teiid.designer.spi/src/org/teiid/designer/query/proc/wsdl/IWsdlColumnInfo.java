@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 public interface IWsdlColumnInfo {
 
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
+    public static final String BIGINTEGER_DATATYPE = "biginteger"; //$NON-NLS-1$
     public static final String INTEGER_DATATYPE = "integer"; //$NON-NLS-1$
     public static final int DEFAULT_WIDTH = 10;
 

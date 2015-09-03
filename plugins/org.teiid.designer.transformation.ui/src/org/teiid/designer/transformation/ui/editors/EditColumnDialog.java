@@ -158,6 +158,11 @@ public class EditColumnDialog extends TitleAreaDialog {
 		String[] sortedStrings = unsortedDatatypes.toArray(new String[unsortedDatatypes.size()]);
 		Arrays.sort(sortedStrings);
 		for( String dType : sortedStrings ) {
+			if (dType.equalsIgnoreCase("integer")){
+				//skip
+			}else{
+				dTypes.add(dType);
+			}
 			dTypes.add(dType);
 		}
 		
