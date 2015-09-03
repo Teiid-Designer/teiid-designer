@@ -10,7 +10,6 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -20,7 +19,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.designer.ModelerCoreException;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -101,7 +100,7 @@ public class PermissionTreeProvider implements ILabelProvider, ITreeContentProvi
             return ((Resource)element).getURI().lastSegment();
         }
 
-        return StringUtilities.EMPTY_STRING;
+        return StringConstants.EMPTY_STRING;
 	}
 
     /*

@@ -15,14 +15,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
 import org.teiid.designer.ui.common.util.WidgetFactory;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
 
 /**
  *
  */
 public class DescriptionPanel {
-	VdbEditor vdbEditor;
+	Vdb vdb;
 	StyledTextEditor textEditor;
 	
     static String i18n( final String id ) {
@@ -31,11 +31,11 @@ public class DescriptionPanel {
     
 	/**
      * @param parent
-     * @param editor
+     * @param vdb
      */
-    public DescriptionPanel(Composite parent, VdbEditor editor) {
+    public DescriptionPanel(Composite parent, Vdb vdb) {
     	super();
-    	this.vdbEditor = editor;
+    	this.vdb = vdb;
     	
     	createPanel(parent);
     }
@@ -48,7 +48,7 @@ public class DescriptionPanel {
         gridData.horizontalSpan = 1;
 
         this.textEditor.setLayoutData(gridData);
-        this.textEditor.setText(vdbEditor.getVdb().getDescription());
+        this.textEditor.setText(vdb.getDescription());
         this.textEditor.getDocument().addDocumentListener(new IDocumentListener() {
             /**
              * {@inheritDoc}
@@ -67,7 +67,7 @@ public class DescriptionPanel {
              */
             @Override
             public void documentChanged( final DocumentEvent event ) {
-                vdbEditor.getVdb().setDescription(textEditor.getText());
+            	vdb.setDescription(textEditor.getText());
             }
 
         });

@@ -14,9 +14,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.util.ErrorHandler;
-import org.teiid.designer.vdb.VdbConstants;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.editor.VdbEditor;
@@ -88,7 +88,7 @@ public class VdbExtractModelsSyncVdbMarkerResolution implements IMarkerResolutio
 	 */
 	private boolean isVdbFile(IResource resource) {
 		return ((resource.getType() == IResource.FILE)
-				&& VdbConstants.VDB_FILE_EXTENSION.equals(resource
+				&& ITeiidVdb.VDB_EXTENSION.equals(resource
 						.getFileExtension()) && resource.exists());
 	}
 

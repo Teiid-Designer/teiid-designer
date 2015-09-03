@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.ValidationPreferences;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
@@ -26,7 +27,6 @@ import org.teiid.designer.core.validation.ValidationProblem;
 import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 
 
@@ -47,7 +47,7 @@ public class TargetTransformationRule implements ResourceValidationRule {
         CoreArgCheck.isNotNull(context);
         // run this rule only for XMI resources
         final URI uri = resource.getURI();
-        if (uri != null && !uri.lastSegment().endsWith(ModelUtil.EXTENSION_XMI)) {
+        if (uri != null && !uri.lastSegment().endsWith(StringConstants.XMI)) {
             return;
         }
 

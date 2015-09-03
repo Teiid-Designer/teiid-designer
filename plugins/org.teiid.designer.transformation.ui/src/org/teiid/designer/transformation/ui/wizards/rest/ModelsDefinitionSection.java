@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
@@ -452,8 +452,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 					.getSourceModelLocation().makeRelative().toString());
 		} else {
 			this.info.setSourceModelLocation(new Path(
-					StringUtilities.EMPTY_STRING));
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+					StringConstants.EMPTY_STRING));
+			this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.sourceModelFileText.getText() != null
@@ -493,8 +493,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 					.getSourceModelLocation().makeRelative().toString());
 			this.sourceModelFileText.setText(this.info.getSourceModelName());
 		} else {
-			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
+			this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		this.info.setSourceModelExists(sourceModelExists());
@@ -539,8 +539,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 					.getViewModelLocation().makeRelative().toString());
 		} else {
 			this.info.setViewModelLocation(new Path(
-					StringUtilities.EMPTY_STRING));
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+					StringConstants.EMPTY_STRING));
+			this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.viewModelFileText.getText() != null
@@ -554,8 +554,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 	void handleViewModelBrowse() {
 		final Object[] selections = WidgetUtil
 				.showWorkspaceObjectSelectionDialog(
-						getString("viewSourceModelTitle"), //$NON-NLS-1$
-						getString("viewSourceModelMessage"), //$NON-NLS-1$
+						getString("selectViewModelTitle"), //$NON-NLS-1$
+						getString("selectViewModelMessage"), //$NON-NLS-1$
 						false, null, viewModelFilter,
 						new ModelResourceSelectionValidator(false),
 						new ModelExplorerLabelProvider(),
@@ -580,8 +580,8 @@ public final class ModelsDefinitionSection implements UiConstants{
 					.getViewModelLocation().makeRelative().toString());
 			this.viewModelFileText.setText(this.info.getViewModelName());
 		} else {
-			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelFileText.setText(StringConstants.EMPTY_STRING);
+			this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		this.info.setViewModelExists(viewModelExists());
@@ -619,7 +619,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 			newName = this.viewProcedureNameText.getText();
 			this.info.getSourceXmlFileInfo().setViewProcedureName(newName);
 		} else {
-			this.info.getSourceXmlFileInfo().setViewProcedureName(StringUtilities.EMPTY_STRING);
+			this.info.getSourceXmlFileInfo().setViewProcedureName(StringConstants.EMPTY_STRING);
 		}
 
 		int caret = this.viewProcedureNameText.getCaretPosition();
@@ -636,13 +636,13 @@ public final class ModelsDefinitionSection implements UiConstants{
 			this.sourceModelContainerText.setText(this.info
 					.getSourceModelLocation().makeRelative().toString());
 		} else {
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.info.getSourceModelName() != null) {
 			this.sourceModelFileText.setText(this.info.getSourceModelName());
 		} else {
-			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		String sourceFileName = EMPTY_STRING;
@@ -670,13 +670,13 @@ public final class ModelsDefinitionSection implements UiConstants{
 			this.viewModelContainerText.setText(this.info
 					.getViewModelLocation().makeRelative().toString());
 		} else {
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.info.getViewModelName() != null) {
 			this.viewModelFileText.setText(this.info.getViewModelName());
 		} else {
-			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.viewModelFileText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		String viewProcedureName = viewProcedureNameText.getText();
@@ -684,7 +684,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 			if (getXmlFileInfo().getViewProcedureName() != null) {
 				this.viewProcedureNameText.setText(getXmlFileInfo().getViewProcedureName());
 			} else {
-				this.viewProcedureNameText.setText(StringUtilities.EMPTY_STRING);
+				this.viewProcedureNameText.setText(StringConstants.EMPTY_STRING);
 			}
 		} else {
 			this.viewProcedureNameText.setText(viewProcedureName);

@@ -24,14 +24,18 @@ package org.teiid.query.function.metadata;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.metadata.Datatype;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.validator.ValidatorReport;
 import org.teiid.runtime.client.Messages;
 
@@ -55,13 +59,21 @@ public class FunctionMetadataValidator {
 
 	/**
 	 * Validate a collection of {@link FunctionMethod} objects.
+	 * @param teiidVersion teiid version
 	 * @param methods Collection of {@link FunctionMethod} objects
 	 * @param report Report to store validation errors
 	 */
 	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report) {
+	    validateFunctionMethods(teiidVersion, methods, report, null);
+	}
+
+	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
+        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+            runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
+        }
 	    if(methods != null) {
 	    	for (FunctionMethod method : methods) {
-	    		validateFunctionMethod(teiidVersion, method, report);
+	    		validateFunctionMethod(teiidVersion, method, report, runtimeTypeMap);
 	    	}
 	    }
 	}
@@ -79,8 +91,9 @@ public class FunctionMetadataValidator {
      * @param teiidVersion teiid version
      * @param method The method to validate
      * @param report The report to update during validation
+     * @param runtimeTypeMap runtime type map
      */
-    public static final void validateFunctionMethod(ITeiidServerVersion teiidVersion, FunctionMethod method, ValidatorReport report) {
+    public static final void validateFunctionMethod(ITeiidServerVersion teiidVersion, FunctionMethod method, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
         if(method == null) {
             updateReport(report, method, Messages.getString(Messages.ERR.ERR_015_001_0052, "FunctionMethod")); //$NON-NLS-1$ //$NON-NLS-2$
             return;  // can't validate
@@ -97,12 +110,24 @@ public class FunctionMetadataValidator {
 	       List<FunctionParameter> params = method.getInputParameters();
 	        if(params != null && !params.isEmpty()) {
 	            for(int i=0; i<params.size(); i++) {
-	                validateFunctionParameter(teiidVersion, params.get(i));
+	                FunctionParameter param = params.get(i);
+	                validateFunctionParameter(teiidVersion, param);
+	                if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	                    // runtime type map not supported in Teiid 7
+	                    param.setPosition(i+1);
+	                    MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
+	                    param.getUUID();
+	                }
 	            }
 	        }
 
 	        // Validate output parameters
 	        validateFunctionParameter(teiidVersion, method.getOutputParameter());
+	        if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	            // runtime type map not supported in Teiid 7
+	            method.getOutputParameter().setPosition(0);
+	            MetadataFactory.setDataType(method.getOutputParameter().getRuntimeType(), method.getOutputParameter(), runtimeTypeMap, true);
+	        }
         } catch(Exception e) {
         	updateReport(report, method, e.getMessage());
         }

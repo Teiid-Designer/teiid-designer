@@ -20,9 +20,7 @@
 				specified in our parent pom. The teiid-designer.target
 				will remain to serve as a platform easily available to
 				developers loading the TP into an eclipse IDE.
-		-->
 		<plugins>
-			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
@@ -37,17 +35,17 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>teiid-designer.target</file>
-									<type>target</type>
-									<classifier>teiid-designer</classifier>
+									<file>teiid-designer-${td.tpc.version}.target</file>
+									<type>${td.tpc.type}</type>
+									<classifier>teiid-designer-${td.tpc.version}</classifier>
 								</artifact>
 							</artifacts>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			-->
 		</plugins>
+    -->
 	</build>
 
 	<profiles>

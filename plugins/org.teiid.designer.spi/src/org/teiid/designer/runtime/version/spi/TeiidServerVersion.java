@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
 import org.eclipse.osgi.util.NLS;
 import org.teiid.designer.DesignerSPIPlugin;
 import org.teiid.designer.Messages;
@@ -74,11 +73,21 @@ public class TeiidServerVersion implements ITeiidServerVersion {
          * Teiid 8.7
          */
         TEIID_8_7(VersionID.TEIID_8_7),
-        
+
+        /**
+         * Teiid 8.8
+         */
+        TEIID_8_8(VersionID.TEIID_8_8),
+
+        /**
+         * Teiid 8.9
+         */
+        TEIID_8_9(VersionID.TEIID_8_9),
+
         /**
          * Default Teiid for this Designer
          */
-        TEIID_DEFAULT(VersionID.TEIID_8_7);
+        TEIID_DEFAULT(VersionID.TEIID_8_9);
 
         private final ITeiidServerVersion version;
 
@@ -311,21 +320,21 @@ public class TeiidServerVersion implements ITeiidServerVersion {
 
     @Override
     public boolean isGreaterThan(ITeiidServerVersion otherVersion) {
-        ITeiidServerVersion myMaxVersion = getMaximumVersion();
-        ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
+        ITeiidServerVersion myMinVersion = getMinimumVersion();
+        ITeiidServerVersion otherMaxVersion = otherVersion.getMaximumVersion();
 
-        int majCompResult = isOtherNumberGreaterThan(myMaxVersion.getMajor(), otherMinVersion.getMajor());
+        int majCompResult = isOtherNumberGreaterThan(myMinVersion.getMajor(), otherMaxVersion.getMajor());
         if (majCompResult > 0)
             return true;
         
-        int minCompResult = isOtherNumberGreaterThan(myMaxVersion.getMinor(), otherMinVersion.getMinor());
+        int minCompResult = isOtherNumberGreaterThan(myMinVersion.getMinor(), otherMaxVersion.getMinor());
         if (majCompResult == 0 && minCompResult > 0)
             return true;
 
-        int micCompResult = isOtherNumberGreaterThan(myMaxVersion.getMicro(), otherMinVersion.getMicro());
+        int micCompResult = isOtherNumberGreaterThan(myMinVersion.getMicro(), otherMaxVersion.getMicro());
         if (majCompResult == 0 && minCompResult == 0 && micCompResult > 0)
             return true;
-            
+
         return false;
     }
 
@@ -334,15 +343,43 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
 
-        int majCompResult = isOtherNumberLessThan(myMaxVersion.getMajor(), otherMinVersion.getMajor());
+        int majCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMajor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMajor());
+            majCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
+
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            majCompResult = myMaxVersion.getMajor().compareTo(otherMinVersion.getMajor());
+        }
+
         if (majCompResult < 0)
             return true;
 
-        int minCompResult = isOtherNumberLessThan(myMaxVersion.getMinor(), otherMinVersion.getMinor());
+        int minCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMinor());
+            int otherMin = Integer.parseInt(otherMinVersion.getMinor());
+            minCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            minCompResult = myMaxVersion.getMinor().compareTo(otherMinVersion.getMinor());
+        }
+
         if (majCompResult == 0 && minCompResult < 0)
             return true;
 
-        int micCompResult = isOtherNumberLessThan(myMaxVersion.getMicro(), otherMinVersion.getMicro());
+        int micCompResult;
+        try {
+            int myMax = Integer.parseInt(myMaxVersion.getMicro());
+            int otherMin = Integer.parseInt(otherMinVersion.getMicro());
+            micCompResult = Integer.valueOf(myMax).compareTo(Integer.valueOf(otherMin));
+        } catch (NumberFormatException ex) {
+            // One or other is a string so compare lexographically
+            micCompResult = myMaxVersion.getMicro().compareTo(otherMinVersion.getMicro());
+        }
+
         if (majCompResult == 0 && minCompResult == 0 && micCompResult < 0)
             return true;
             
@@ -358,51 +395,50 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     public boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion) {
         return this.compareTo(otherVersion) || this.isLessThan(otherVersion);
     }
-    
-    private int isOtherNumberLessThan(String myNumber, String otherNumber ) {
-    	int myValue = -1;
-    	int otherValue = -1;
-    	
-    	try {
-    		myValue = Integer.parseInt(myNumber);
-		} catch (NumberFormatException e) {
-			myValue = -1;
-		}
-    	
-    	try {
-    		otherValue = Integer.parseInt(otherNumber);
-		} catch (NumberFormatException e) {
-			otherValue = -1;
-		}
-    	
-    	if( myValue < 0 || otherValue < 0 ) {
-    		return myNumber.compareTo(otherNumber);
-    	} else {
-    		return myValue - otherValue;
-    	}
+
+    private int isOtherNumberLessThan(String myNumber, String otherNumber) {
+        int myValue = -1;
+        int otherValue = -1;
+
+        try {
+            myValue = Integer.parseInt(myNumber);
+        } catch (NumberFormatException e) {
+            myValue = -1;
+        }
+
+        try {
+            otherValue = Integer.parseInt(otherNumber);
+        } catch (NumberFormatException e) {
+            otherValue = -1;
+        }
+
+        if (myValue < 0 || otherValue < 0) {
+            return myNumber.compareTo(otherNumber);
+        } else {
+            return myValue - otherValue;
+        }
     }
-    
-    
-    private int isOtherNumberGreaterThan(String myNumber, String otherNumber ) {
-    	int myValue = -1;
-    	int otherValue = -1;
-    	
-    	try {
-    		myValue = Integer.parseInt(myNumber);
-		} catch (NumberFormatException e) {
-			myValue = -1;
-		}
-    	
-    	try {
-    		otherValue = Integer.parseInt(otherNumber);
-		} catch (NumberFormatException e) {
-			otherValue = -1;
-		}
-    	
-    	if( myValue < 0 || otherValue < 0 ) {
-    		return myNumber.compareTo(otherNumber);
-    	} else {
-    		return myValue - otherValue;
-    	}
+
+    private int isOtherNumberGreaterThan(String myNumber, String otherNumber) {
+        int myValue = -1;
+        int otherValue = -1;
+
+        try {
+            myValue = Integer.parseInt(myNumber);
+        } catch (NumberFormatException e) {
+            myValue = -1;
+        }
+
+        try {
+            otherValue = Integer.parseInt(otherNumber);
+        } catch (NumberFormatException e) {
+            otherValue = -1;
+        }
+
+        if (myValue < 0 || otherValue < 0) {
+            return myNumber.compareTo(otherNumber);
+        } else {
+            return myValue - otherValue;
+        }
     }
 }

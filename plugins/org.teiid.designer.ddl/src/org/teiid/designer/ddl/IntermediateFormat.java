@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.ddl;
 
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -310,7 +311,7 @@ public class IntermediateFormat {
     // private final IProgressMonitor monitor;
     private String exporterTool;
     private String exporterVersion;
-    private final ModelEditor editor;
+    private WeakReference<ModelEditor> editorRef;
 
     /**
      * Construct an instance of IntermediateFormat.
@@ -325,7 +326,6 @@ public class IntermediateFormat {
         this.modelWrappers.add(modelWrapper);
         this.options = options;
         // this.monitor = monitor != null ? monitor : new NullProgressMonitor();
-        this.editor = ModelerCore.getModelEditor();
         this.relationalEntities = new HashMap();
     }
 
@@ -341,12 +341,11 @@ public class IntermediateFormat {
         this.modelWrappers = new ArrayList(modelWrappers);
         this.options = options;
         // this.monitor = monitor != null ? monitor : new NullProgressMonitor();
-        this.editor = ModelerCore.getModelEditor();
         this.relationalEntities = new HashMap();
     }
 
     protected ModelEditor getModelEditor() {
-        return this.editor;
+        return ModelerCore.getModelEditor();
     }
 
     /**
@@ -592,8 +591,8 @@ public class IntermediateFormat {
             parent.addContent(schemaElement);
 
             setAttribute(schemaElement, Xml.Schema.Attributes.NAME, getObjectNameInDdl(schema));
-            setAttribute(schemaElement, Xml.Schema.Attributes.UUID, editor.getObjectID(schema));
-            setAttribute(schemaElement, Xml.Schema.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(schema));
+            setAttribute(schemaElement, Xml.Schema.Attributes.UUID, getModelEditor().getObjectID(schema));
+            setAttribute(schemaElement, Xml.Schema.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(schema));
 
             parentOfNewElements = schemaElement;
         }
@@ -627,8 +626,8 @@ public class IntermediateFormat {
         parent.addContent(tableElement);
 
         setAttribute(tableElement, Xml.Table.Attributes.NAME, getObjectNameInDdl(table));
-        setAttribute(tableElement, Xml.Table.Attributes.UUID, editor.getObjectID(table));
-        setAttribute(tableElement, Xml.Table.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(table));
+        setAttribute(tableElement, Xml.Table.Attributes.UUID, getModelEditor().getObjectID(table));
+        setAttribute(tableElement, Xml.Table.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(table));
         final Annotation annotation = wrapper.getContents().getAnnotation(table);
         if (annotation != null) {
             setAttribute(tableElement, Xml.Table.Attributes.DESCRIPTION, annotation.getDescription());
@@ -679,7 +678,7 @@ public class IntermediateFormat {
         final Element columnElement = new Element(Xml.Column.TAG);
         parent.addContent(columnElement);
         setAttribute(columnElement, Xml.Column.Attributes.NAME, getObjectNameInDdl(column));
-        setAttribute(columnElement, Xml.Column.Attributes.UUID, editor.getObjectID(column));
+        setAttribute(columnElement, Xml.Column.Attributes.UUID, getModelEditor().getObjectID(column));
         final Annotation annotation = wrapper.getContents().getAnnotation(column);
         if (annotation != null) {
             setAttribute(columnElement, Xml.Column.Attributes.DESCRIPTION, annotation.getDescription());
@@ -792,8 +791,8 @@ public class IntermediateFormat {
         parent.addContent(pkElement);
 
         setAttribute(pkElement, Xml.PrimaryKey.Attributes.NAME, getUniqueObjectName(pkey));
-        setAttribute(pkElement, Xml.PrimaryKey.Attributes.UUID, editor.getObjectID(pkey));
-        setAttribute(pkElement, Xml.PrimaryKey.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(pkey));
+        setAttribute(pkElement, Xml.PrimaryKey.Attributes.UUID, getModelEditor().getObjectID(pkey));
+        setAttribute(pkElement, Xml.PrimaryKey.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(pkey));
 
         // Process the table that contains the primary key ...
         final Table pkTable = pkey.getTable();
@@ -808,7 +807,7 @@ public class IntermediateFormat {
             final Column column = (Column)iter.next();
             final Element pkColumnElement = new Element(Xml.PrimaryKeyColumn.TAG);
             setAttribute(pkColumnElement, Xml.PrimaryKeyColumn.Attributes.NAME, getObjectNameInDdl(column));
-            setAttribute(pkColumnElement, Xml.PrimaryKeyColumn.Attributes.UUID, editor.getObjectID(column));
+            setAttribute(pkColumnElement, Xml.PrimaryKeyColumn.Attributes.UUID, getModelEditor().getObjectID(column));
             pkElement.addContent(pkColumnElement);
         }
 
@@ -828,8 +827,8 @@ public class IntermediateFormat {
         final Element pkElement = new Element(Xml.UniqueKey.TAG);
         parent.addContent(pkElement);
         setAttribute(pkElement, Xml.UniqueKey.Attributes.NAME, getUniqueObjectName(ukey));
-        setAttribute(pkElement, Xml.UniqueKey.Attributes.UUID, editor.getObjectID(ukey));
-        setAttribute(pkElement, Xml.UniqueKey.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(ukey));
+        setAttribute(pkElement, Xml.UniqueKey.Attributes.UUID, getModelEditor().getObjectID(ukey));
+        setAttribute(pkElement, Xml.UniqueKey.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(ukey));
 
         // Process the table that contains the primary key ...
         final Table ukTable = ukey.getTable();
@@ -844,7 +843,7 @@ public class IntermediateFormat {
             final Column column = (Column)iter.next();
             final Element pkColumnElement = new Element(Xml.UniqueKeyColumn.TAG);
             setAttribute(pkColumnElement, Xml.UniqueKeyColumn.Attributes.NAME, getObjectNameInDdl(column));
-            setAttribute(pkColumnElement, Xml.UniqueKeyColumn.Attributes.UUID, editor.getObjectID(column));
+            setAttribute(pkColumnElement, Xml.UniqueKeyColumn.Attributes.UUID, getModelEditor().getObjectID(column));
             pkElement.addContent(pkColumnElement);
         }
 
@@ -864,8 +863,8 @@ public class IntermediateFormat {
         final Element fkElement = new Element(Xml.ForeignKey.TAG);
         parent.addContent(fkElement);
         setAttribute(fkElement, Xml.ForeignKey.Attributes.NAME, getUniqueObjectName(fkey));
-        setAttribute(fkElement, Xml.ForeignKey.Attributes.UUID, editor.getObjectID(fkey));
-        setAttribute(fkElement, Xml.ForeignKey.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(fkey));
+        setAttribute(fkElement, Xml.ForeignKey.Attributes.UUID, getModelEditor().getObjectID(fkey));
+        setAttribute(fkElement, Xml.ForeignKey.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(fkey));
 
         // Process the table that contains the foreign key ...
         final Table fkTable = fkey.getTable();
@@ -892,7 +891,7 @@ public class IntermediateFormat {
             final Column column = (Column)iter.next();
             final Element fkColumnElement = new Element(Xml.ForignKeyColumn.TAG);
             setAttribute(fkColumnElement, Xml.ForignKeyColumn.Attributes.NAME, getObjectNameInDdl(column));
-            setAttribute(fkColumnElement, Xml.ForignKeyColumn.Attributes.UUID, editor.getObjectID(column));
+            setAttribute(fkColumnElement, Xml.ForignKeyColumn.Attributes.UUID, getModelEditor().getObjectID(column));
             // Find the corresponding column in the primary key; do this by order, but be tolerant
             // of when the # of pk columns is different than the number of fk columns
             if (pkColumns != null && pkColumns.size() > index) {
@@ -924,8 +923,8 @@ public class IntermediateFormat {
         final Element indexElement = new Element(Xml.Index.TAG);
         parent.addContent(indexElement);
         setAttribute(indexElement, Xml.Index.Attributes.NAME, getUniqueObjectName(index));
-        setAttribute(indexElement, Xml.Index.Attributes.UUID, editor.getObjectID(index));
-        setAttribute(indexElement, Xml.Index.Attributes.PATH_IN_MODEL, editor.getModelRelativePath(index));
+        setAttribute(indexElement, Xml.Index.Attributes.UUID, getModelEditor().getObjectID(index));
+        setAttribute(indexElement, Xml.Index.Attributes.PATH_IN_MODEL, getModelEditor().getModelRelativePath(index));
 
         // Process the columns that the primary key references ...
         final List columns = index.getColumns();
@@ -937,7 +936,7 @@ public class IntermediateFormat {
             final Column column = (Column)iter.next();
             final Element indexedColumnElement = new Element(Xml.IndexColumn.TAG);
             setAttribute(indexedColumnElement, Xml.IndexColumn.Attributes.NAME, getObjectNameInDdl(column));
-            setAttribute(indexedColumnElement, Xml.IndexColumn.Attributes.UUID, editor.getObjectID(column));
+            setAttribute(indexedColumnElement, Xml.IndexColumn.Attributes.UUID, getModelEditor().getObjectID(column));
             indexColumnElement.addContent(indexedColumnElement);
             indexedTable = (Table)column.getOwner();
         }

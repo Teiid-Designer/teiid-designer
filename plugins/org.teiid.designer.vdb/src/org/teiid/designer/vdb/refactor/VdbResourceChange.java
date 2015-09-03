@@ -28,9 +28,11 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.PathPair;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
 
 /**
  *
@@ -178,7 +180,7 @@ public class VdbResourceChange extends ResourceChange {
              * Cannot find the vdb file so cannot do any refreshing
              */
             String msg = VdbPlugin.UTIL.getString(getClass().getSimpleName() + ".syncVdbFailure", projectName, parentFolder, vdbName); //$NON-NLS-1$
-            IStatus status = new Status(IStatus.WARNING, VdbPlugin.ID, msg);
+            IStatus status = new Status(IStatus.WARNING, VdbConstants.PLUGIN_ID, msg);
             return status;
         }
 
@@ -189,17 +191,17 @@ public class VdbResourceChange extends ResourceChange {
             VdbUtil.synchronizeVdb(vdbFile, false, true);
 
             // This should clean up and remove old resources
-            Vdb actualVdb = new Vdb(vdbFile, monitor);
-            for (VdbModelEntry entry : actualVdb.getModelEntries()) {
+            Vdb actualVdb = new XmiVdb(vdbFile);
+            for (VdbEntry entry : actualVdb.getModelEntries()) {
                 for (PathPair pathPair : replacements) {
-                    if (entry.getName().equals(pathPair.getSourcePath())) {
+                    if (entry.getPath().equals(pathPair.getSourcePath())) {
                         actualVdb.removeEntry(entry);
-                        actualVdb.save(monitor);
+                        actualVdb.save();
                     }
                 }
             }
         } catch (Exception ex) {
-            return new Status(IStatus.ERROR, VdbPlugin.ID, ex.getMessage());
+            return new Status(IStatus.ERROR, VdbConstants.PLUGIN_ID, ex.getMessage());
         }
 
         return Status.OK_STATUS;

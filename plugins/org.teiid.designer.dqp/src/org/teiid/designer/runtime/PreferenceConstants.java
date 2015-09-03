@@ -46,7 +46,17 @@ public interface PreferenceConstants {
     /**
      * The default value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference. Default value is {@value} .
      */
-    String TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT = "120"; //$NON-NLS-1$
+    int TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT = 120;
+    
+    /**
+     * The Min value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference.
+     */
+    int TEIID_IMPORTER_TIMEOUT_SEC_MIN = 0;
+
+    /**
+     * The Max value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference.
+     */
+    int TEIID_IMPORTER_TIMEOUT_SEC_MAX = 999;
 
     /**
      * The name of the preference indicating if Preview VDBs and their associated data sources will be deleted from Teiid
@@ -58,4 +68,14 @@ public interface PreferenceConstants {
      * The default value for the {@link #PREVIEW_TEIID_CLEANUP_ENABLED} preference. Default value is {@value} .
      */
     boolean PREVIEW_TEIID_CLEANUP_ENABLED_DEFAULT = true;
+
+    /**
+     * The name of the preference for the timeout value for jboss server requests
+     */
+    String JBOSS_REQUEST_EXECUTION_TIMEOUT = ".preferences.JbossRequestExecutionTimeout"; //$NON-NLS-1$
+
+    /**
+     * The default value for the {@link #JBOSS_REQUEST_EXECUTION_TIMEOUT} preference. Default value is {@value} .
+     */
+    int JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT = 10;
 }

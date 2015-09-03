@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="DynamicProducts" version="1">
+ 
+    <description>Product Dynamic VDB</description>    <!--
+      Setting to use connector supplied metadata. Can be "true" or "cached".
+      "true" will obtain metadata once for every launch of Teiid.
+      "cached" will save a file containing the metadata into
+      the deploy/<vdb name>/<vdb version/META-INF directory
+    -->
+    <property name="UseConnectorMetadata" value="true" />
+    
+    <model name="ProductsMySQL_Dynamic">
+        <!--
+            Each source represents a translator and data source. There are
+            pre-defined translators, or you can create one.
+        -->
+        <source name="jdbc" translator-name="mysql" connection-jndi-name="java:/ProductsMySQL"/>
+    </model>
+
+
+    <model name="ProductViews" type="VIRTUAL">
+        <metadata type="DDL"><![CDATA[
+            CREATE VIEW PRODUCT_INFO (
+            ID string,
+            name string,
+            type string
+            ) AS SELECT  INSTR_ID AS ID, NAME, TYPE
+                 FROM ProductsMySQL_Dynamic.PRODUCTS.PRODUCTDATA;
+        ]]> </metadata>
+    </model>
+    
+    <model name="ProductSummary" type="VIRTUAL">
+        <metadata type="DDL"><![CDATA[
+            CREATE VIEW PRODUCT_INFO (
+            ID string,
+            name string,
+            type string
+            ) AS SELECT  INSTR_ID AS ID, NAME, TYPE
+                 FROM ProductsMySQL_Dynamic.PRODUCTS.PRODUCTDATA;
+        ]]> </metadata>
+    </model>
+
+</vdb>

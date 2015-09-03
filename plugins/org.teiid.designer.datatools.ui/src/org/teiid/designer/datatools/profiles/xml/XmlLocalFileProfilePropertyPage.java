@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -163,7 +163,7 @@ public class XmlLocalFileProfilePropertyPage extends ProfileDetailsPropertyPage
             	localFilePathText.setText(selectedFilePath);
             }
         } else {
-        	localFilePathText.setText(StringUtilities.EMPTY_STRING);
+            localFilePathText.setText(StringConstants.EMPTY_STRING);
         }
     }
 

@@ -21,8 +21,11 @@
  */
 package org.teiid.query.metadata;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +39,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
@@ -67,10 +71,13 @@ import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.navigator.PostOrderNavigator;
 import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
+import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.Symbol;
+import org.teiid.query.sql.visitor.ElementCollectorVisitor;
 import org.teiid.query.sql.visitor.EvaluatableVisitor;
+import org.teiid.query.sql.visitor.GroupCollectorVisitor;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.query.validator.Validator;
 import org.teiid.query.validator.ValidatorFailure;
@@ -100,6 +107,10 @@ public class MetadataValidator {
         this(teiidVersion, SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap());
     }
 
+	private boolean isTeiidOrGreater(Version version) {
+	    return teiidVersion.isGreaterThanOrEqualTo(version.get());
+	}
+
 	private <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
 	    return queryParser.getTeiidParser().createASTNode(nodeType);
 	}
@@ -116,7 +127,7 @@ public class MetadataValidator {
 	}
 	
 	// At minimum the model must have table/view, procedure or function 
-	private class MinimalMetadata implements MetadataRule {
+	class MinimalMetadata implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			for (Schema schema:store.getSchemaList()) {
@@ -134,7 +145,10 @@ public class MetadataValidator {
 				for (Table t:schema.getTables().values()) {
 					if (t.getColumns() == null || t.getColumns().size() == 0) {
 						metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31071, t.getFullName()));
-					}					
+					}
+                    Set<String> names = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+                    validateConstraintNames(metadataValidator, report, model, t.getAllKeys(), names);
+                    validateConstraintNames(metadataValidator, report, model, t.getFunctionBasedIndexes(), names);
 				}
 				
 				// procedure validation is handled in parsing routines.
@@ -148,7 +162,18 @@ public class MetadataValidator {
 				}
 			}
 		}
-	}
+
+        private void validateConstraintNames(MetadataValidator metadataValidator, ValidatorReport report, ModelMetaData model, Collection<KeyRecord> keys, Set<String> names) {
+            for (KeyRecord record : keys) {
+                if (record.getName() == null) {
+                    continue;
+                }
+                if (!names.add(record.getName())) {
+                    metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31152, record.getFullName()));
+                }
+            }
+        }
+    }
 	
 	// do not allow foreign tables, source functions in view model and vice versa 
 	static class SourceModelArtifacts implements MetadataRule {
@@ -203,7 +228,7 @@ public class MetadataValidator {
 	}	
 	
 	// Resolves metadata query plans to make sure they are accurate
-	private class ResolveQueryPlans implements MetadataRule {
+	class ResolveQueryPlans implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			IQueryMetadataInterface metadata = vdb.getAttachment(IQueryMetadataInterface.class);
@@ -282,14 +307,16 @@ public class MetadataValidator {
     			resolver.resolveCommand(command, gs, ICommand.TYPE_STORED_PROCEDURE, metadata, false);
     			Validator validator = new Validator();
     			resolverReport =  validator.validate(command, metadata);
+    			determineDependencies(p, command);
     		} else if (record instanceof Table) {
     			Table t = (Table)record;
     			
     			GroupSymbol symbol = createASTNode(ASTNodes.GROUP_SYMBOL); 
     			symbol.setName(t.getFullName());
     			ResolverUtil.resolveGroup(symbol, metadata);
+    			String selectTransformation = t.getSelectTransformation();
     			if (t.isVirtual() && (t.getColumns() == null || t.getColumns().isEmpty())) {
-    				QueryCommand command = (QueryCommand) queryParser.parseCommand(t.getSelectTransformation());
+    				QueryCommand command = (QueryCommand) queryParser.parseCommand(selectTransformation);
     				QueryResolver resolver = new QueryResolver(queryParser);
     				resolver.resolveCommand(command, metadata);
     				Validator validator = new Validator();
@@ -304,6 +331,16 @@ public class MetadataValidator {
 							}
     					}
     				}
+    				determineDependencies(t, command);
+                    if (t.getInsertPlan() != null && t.isInsertPlanEnabled()) {
+                        validateUpdatePlan(model, report, metadata, t, t.getInsertPlan());
+                    }
+                    if (t.getUpdatePlan() != null && t.isUpdatePlanEnabled()) {
+                        validateUpdatePlan(model, report, metadata, t, t.getUpdatePlan());
+                    }
+                    if (t.getDeletePlan() != null && t.isDeletePlanEnabled()) {
+                        validateUpdatePlan(model, report, metadata, t, t.getDeletePlan());
+                    }
     			}
     			
     			boolean addCacheHint = false;
@@ -354,10 +391,58 @@ public class MetadataValidator {
 				for (ValidatorFailure v:resolverReport.getItems()) {
 					log(report, model, v.getStatus() == IValidatorFailure.VFStatus.ERROR?Severity.ERROR:Severity.WARNING, v.getMessage());
 				}
-			}
+    		}
+    		processReport(model, record, report, resolverReport);
 		} catch (Exception e) {
 			log(report, model, Messages.gs(Messages.TEIID.TEIID31080, record.getFullName(), e.getMessage()));
 		}
+    }
+
+    public static void determineDependencies(AbstractMetadataRecord p, Command command) {
+        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroupsIgnoreInlineViews(command, true);
+        LinkedHashSet<AbstractMetadataRecord> values = new LinkedHashSet<AbstractMetadataRecord>();
+        for (GroupSymbol group : groups) {
+            Object mid = group.getMetadataID();
+            if (mid instanceof TempMetadataAdapter) {
+                mid = ((TempMetadataID)mid).getOriginalMetadataID();
+            }
+            if (mid instanceof AbstractMetadataRecord) {
+                values.add((AbstractMetadataRecord)mid);
+            }
+        }
+        Collection<ElementSymbol> elems = ElementCollectorVisitor.getElements(command, true, true);
+        for (ElementSymbol elem : elems) {
+            Object mid = elem.getMetadataID();
+            if (mid instanceof TempMetadataAdapter) {
+                mid = ((TempMetadataID)mid).getOriginalMetadataID();
+            }
+            if (mid instanceof AbstractMetadataRecord) {
+                values.add((AbstractMetadataRecord)mid);
+            }
+        }
+        p.setIncomingObjects(new ArrayList<AbstractMetadataRecord>(values));
+    }
+
+    private void validateUpdatePlan(ModelMetaData model,
+            ValidatorReport report,
+            IQueryMetadataInterface metadata, 
+            Table t, String plan) throws Exception {
+        QueryCommand command = (QueryCommand) queryParser.parseCommand(plan);
+        QueryResolver queryResolver = new QueryResolver(queryParser);
+        queryResolver.resolveCommand(command, metadata);
+        //determineDependencies(t, command); -- these should be tracked against triggers
+        ValidatorReport resolverReport = new Validator().validate(command, metadata);
+        processReport(model, t, report, resolverReport);
+    }
+
+    private void processReport(ModelMetaData model,
+            AbstractMetadataRecord record, ValidatorReport report,
+            ValidatorReport resolverReport) {
+        if(resolverReport != null && resolverReport.hasItems()) {
+            for (ValidatorFailure v:resolverReport.getItems()) {
+                log(report, model, v.getStatus() == IValidatorFailure.VFStatus.ERROR?Severity.ERROR:Severity.WARNING, v.getMessage());
+            }
+        }
     }
 
 	private Column addColumn(String name, Class<?> type, Table table, MetadataFactory mf) throws Exception {
@@ -371,6 +456,7 @@ public class MetadataValidator {
 	
 	// this class resolves the artifacts that are dependent upon objects from other schemas
 	// materialization sources, fk and data types (coming soon..)
+	// ensures that even if cached metadata is used that we resolve to a single instance
 	static class CrossSchemaResolver implements MetadataRule {
 		
 		private boolean keyMatches(List<String> names, KeyRecord record) {
@@ -400,8 +486,8 @@ public class MetadataValidator {
 
 				for (Table t:schema.getTables().values()) {
 					if (t.isVirtual()) {
-						if (t.isMaterialized() && t.getMaterializedTable() != null && t.getMaterializedTable().getParent() == null) {
-							String matTableName = t.getMaterializedTable().getName();
+					    if (t.isMaterialized() && t.getMaterializedTable() != null) {
+                            String matTableName = t.getMaterializedTable().getFullName();
 							int index = matTableName.indexOf(Table.NAME_DELIM_CHAR);
 							if (index == -1) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31088, matTableName, t.getFullName()));
@@ -437,22 +523,29 @@ public class MetadataValidator {
 					}
 					
 					for (ForeignKey fk:fks) {
-						if (fk.getReferenceKey() != null) {
+					    // Only applicable to older teiid releases than 8.9
+						if (fk.getReferenceKey() != null && !metadataValidator.isTeiidOrGreater(Version.TEIID_8_9)) {
 							//ensure derived fields are set
 							fk.setReferenceKey(fk.getReferenceKey());
 							continue;
 						}
 						
 						String referenceTableName = fk.getReferenceTableName();
-						if (referenceTableName == null){
-							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31091, t.getFullName()));
-							continue;
-						}
-						
-						String referenceSchemaName = schema.getName();
-						//TODO there is an ambiguity here because we don't properly track the name parts
-						//so we have to first check for a table name that may contain .
-						Table referenceTable = schema.getTable(referenceTableName);
+						Table referenceTable = null;
+                        if (fk.getReferenceKey() == null) {
+                            if (referenceTableName == null){
+                                metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31091, t.getFullName()));
+                                continue;
+                            }
+
+                            //TODO there is an ambiguity here because we don't properly track the name parts
+                            //so we have to first check for a table name that may contain .
+                            referenceTable = schema.getTable(referenceTableName);
+                        } else {
+                            referenceTableName = fk.getReferenceKey().getParent().getFullName();
+                        }
+                        
+                        String referenceSchemaName = schema.getName();
 						int index = referenceTableName.indexOf(Table.NAME_DELIM_CHAR);
 						if (referenceTable == null) {
 							if (index != -1) {
@@ -471,7 +564,16 @@ public class MetadataValidator {
 						}
 
 						KeyRecord uniqueKey = null;
-						if (fk.getReferenceColumns() == null || fk.getReferenceColumns().isEmpty()) {
+						List<String> referenceColumns = fk.getReferenceColumns();
+                        if (fk.getReferenceKey() != null) {
+                            //index metadata logic sets the key prior to having the column names
+                            List<Column> cols = fk.getReferenceKey().getColumns();
+                            referenceColumns = new ArrayList<String>();
+                            for (Column col : cols) {
+                                referenceColumns.add(col.getName());
+                            }
+                        }
+						if (referenceColumns == null || referenceColumns.isEmpty()) {
 							if (referenceTable.getPrimaryKey() == null) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31094, t.getFullName(), referenceTableName.substring(index+1), referenceSchemaName));
 							}

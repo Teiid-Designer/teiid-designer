@@ -746,6 +746,11 @@ public class ModelExtensionUtils {
 
         try {
             Annotation definitionAnnotation = getDefinitionAnnotation(modelResource, true, namespacePrefix);
+            if (definitionAnnotation == null) {
+                succeeded = false;
+                return;
+            }
+
             EMap<String, String> definitionTags = definitionAnnotation.getTags();
 
             // metamodel URI

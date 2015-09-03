@@ -10,8 +10,6 @@ package org.teiid.designer.core.workspace;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -28,7 +26,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 import org.teiid.designer.extension.ExtensionConstants;
 
 
@@ -195,7 +192,6 @@ public class ModelProjectImpl extends OpenableImpl implements IProjectNature, Mo
     @Override
     protected boolean generateInfos( final OpenableModelWorkspaceItemInfo info,
                                      final IProgressMonitor pm,
-                                     final Map newElements,
                                      final IResource underlyingResource ) throws ModelWorkspaceException {
         boolean validInfo = false;
         try {

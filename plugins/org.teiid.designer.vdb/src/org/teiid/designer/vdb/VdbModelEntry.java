@@ -24,9 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -61,7 +59,7 @@ import org.teiid.designer.vdb.manifest.SourceElement;
  * @since 8.0
  */
 @ThreadSafe
-public final class VdbModelEntry extends VdbIndexedEntry {
+public class VdbModelEntry extends VdbIndexedEntry {
 
     /**
      * @param path the model path (may not be <code>null</code>)
@@ -82,20 +80,19 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     private final String type;
     final VdbSourceInfo sourceInfo;
     private transient ModelElement element;
+    private final String schemaText;
+    private final String metadataType;
 
     /**
      * Constructs a model entry and adds it to the specified VDB. <strong>Callers of this method should call
-     * {@link #synchronizeModelEntry(IProgressMonitor)} immediately after constructing the model entry.</strong>
+     * {@link #synchronizeModelEntry()} immediately after constructing the model entry.</strong>
      * 
      * @param vdb the VDB where the resource is be added to (may not be <code>null</code>)
-     * @param name the resource path (may not be <code>null</code>)
-     * @param monitor the progress monitor or <code>null</code>
+     * @param path the resource path (may not be <code>null</code>)
      * @throws Exception
      */
-    VdbModelEntry( final Vdb vdb,
-                   final IPath name,
-                   final IProgressMonitor monitor ) throws Exception {
-        super(vdb, name, monitor);
+    public VdbModelEntry( final XmiVdb vdb, final IPath path) throws Exception {
+        super(vdb, path);
         final Resource model = findModel();
         builtIn = getFinder().isBuiltInResource(model);
         modelClass = findModelClass(model);
@@ -116,7 +113,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
             // if (emfModel.getModelAnnotation().getDescription() != null)
             // description.set(emfModel.getModelAnnotation().getDescription());
             if (ModelUtil.isPhysical(model)) {
-                final String defaultName = createDefaultSourceName(name);
+                final String defaultName = createDefaultSourceName(path);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
                 String translator = helper.getTranslatorName(mr);
                 if( translator == null ) translator = EMPTY_STRING;
@@ -141,15 +138,9 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         } else {
         	type = VdbUtil.OTHER;
         }
-        // TODO: Fix This ???
-        /*
-        if (this.translator.get() == null) {
-            this.translator.set(EMPTY_STR);
-        }
-        */
-        if (this.description.get() == null) {
-            this.description.set(EMPTY_STRING);
-        }
+
+        schemaText = null;
+        metadataType = null;
     }
 
     private void updateUdfJars(Resource model) throws Exception {
@@ -180,7 +171,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
                     if(jarResource instanceof IFile) {
                         IPath path = ((IFile)jarResource).getProjectRelativePath();
                         if(path.toString().equals(udfJarPath)) {
-                            udfJars.add(new VdbFileEntry(getVdb(), jarResource.getFullPath(), VdbFileEntry.FileEntryType.UDFJar, new NullProgressMonitor()));
+                            udfJars.add(new VdbFileEntry(getVdb(), jarResource.getFullPath(), VdbFileEntry.FileEntryType.UDFJar));
                         }
                     }
                 }
@@ -225,20 +216,32 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         return udfJarPath;
     }
     
-    VdbModelEntry( final Vdb vdb,
-                   final ModelElement element,
-                   final IProgressMonitor monitor ) throws Exception {
-        super(vdb, element, monitor);
+    /**
+     * @param vdb
+     * @param element
+     * @throws Exception
+     */
+    public VdbModelEntry( final XmiVdb vdb,
+                   final ModelElement element ) throws Exception {
+        super(vdb, element);
         this.element = element;
         type =  element.getType();
         visible.set(element.isVisible());
         sourceInfo = new VdbSourceInfo(vdb);
+        if( element.getMetadata() != null && !element.getMetadata().isEmpty()) {
+        	schemaText = element.getMetadata().get(0).getSchemaText();
+        	metadataType = element.getMetadata().get(0).getType();
+        } else {
+        	schemaText = null;
+            metadataType = null;
+        }
         if (element.getSources() != null && !element.getSources().isEmpty()) {
             for (final SourceElement source : element.getSources()) {
             	sourceInfo.add(source.getName(), source.getJndiName(), 
             			source.getTranslatorName() == null ? EMPTY_STRING : source.getTranslatorName());
             }
         }
+
         if(VdbUtil.FUNCTION.equals(type) || VdbUtil.VIRTUAL.equals(type) || VdbUtil.PHYSICAL.equals(type)) {
             updateUdfJars(findModel());
         }
@@ -264,7 +267,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         this.builtIn = builtIn;
         this.modelClass = modelClass;
         
-        getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+        getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
         
         getVdb().synchronizeUdfJars(udfJars);
     }
@@ -292,7 +295,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
      * @see org.teiid.designer.vdb.VdbEntry#dispose()
      */
     @Override
-    final void dispose() {
+    public final void dispose() {
         super.dispose();
 
         // remove the imported by models
@@ -339,6 +342,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
                         }
                     }
                 } catch (ModelWorkspaceException ex) {
+                    // Nothing to do
                 }
             }
         }
@@ -385,18 +389,25 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     /**
      * @return type
      */
-    public final String getType() {
+    public String getType() {
         return type;
     }
 
-    void initializeImports() {
-        for (final PropertyElement property : element.getProperties())
-            if (ModelElement.IMPORTS.equals(property.getName())) for (final VdbModelEntry entry : getVdb().modelEntries)
-                if (property.getValue().equals(entry.getName().toString())) {
-                    entry.importedBy.add(this);
-                    imports.add(entry);
-                    break;
-                }
+    /**
+     * 
+     */
+    public void initializeImports() {
+        for (final PropertyElement property : element.getProperties()) {
+            if (ModelElement.IMPORTS.equals(property.getName())) {
+            	for (final VdbEntry entry : getVdb().getModelEntries()) {
+	                if (property.getValue().equals(entry.getPath().toOSString())) {
+	                    ((VdbModelEntry)entry).importedBy.add(this);
+	                    imports.add(entry);
+	                    break;
+	                }
+            	}
+            }
+        }
         element = null;
     }
     
@@ -431,12 +442,11 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream, org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#save(java.util.zip.ZipOutputStream)
      */
     @Override
-    final void save( final ZipOutputStream out,
-                     final IProgressMonitor monitor ) throws Exception {
-        super.save(out, monitor);
+    public final void save( final ZipOutputStream out) throws Exception {
+        super.save(out);
     }
 
     /**
@@ -478,12 +488,26 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     }
     
     /**
+     * @return schema text
+     */
+    public String getSchemaText() {
+    	return schemaText;
+    }
+    
+    /**
+     * @return metadata type
+     */
+    public final String getMetadataType() {
+    	return metadataType;
+    }
+    
+    /**
      * Returns the current <code>TranslatorOverride</code> for this model
      * @return translator override. May be null.
      */
     public final TranslatorOverride getTranslatorOverride() {
     	if( !this.sourceInfo.isEmpty() ) {
-        	Set<TranslatorOverride> overrides = getVdb().getTranslators();
+        	Collection<TranslatorOverride> overrides = getVdb().getTranslators();
         	for( TranslatorOverride to : overrides) {
         		for( VdbSource source : this.sourceInfo.getSources() ) {
         			String translatorName = source.getTranslatorName();
@@ -514,7 +538,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     	
         // If only ONE property and it's "name", then ignore
 
-        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.Translator.NAME_KEY) ) {
+        if( props.size() == 1 && ((String)props.keySet().toArray()[0]).equalsIgnoreCase(VdbConstants.TRANSLATOR_NAME_KEY) ) {
             return;
         }
     	TranslatorOverride to = getTranslatorOverride();
@@ -528,10 +552,10 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     		to = new TranslatorOverride(getVdb(), toName, oldTranslator, null);
     		newTranslator = toName;
     		this.sourceInfo.getSource(0).setTranslatorName(toName);
-    		getVdb().addTranslator(to, new NullProgressMonitor());
+    		getVdb().addTranslator(to);
     	}
     	
-    	TranslatorOverrideProperty[] toProps = to.getProperties();
+    	TranslatorOverrideProperty[] toProps = to.getOverrideProperties();
     	
         Set<Object> keys = props.keySet();
         for (Object nextKey : keys) {
@@ -567,17 +591,20 @@ public final class VdbModelEntry extends VdbIndexedEntry {
     /**
      * {@inheritDoc}
      * 
-     * @see org.teiid.designer.vdb.VdbEntry#synchronize(org.eclipse.core.runtime.IProgressMonitor)
+     * @see org.teiid.designer.vdb.VdbEntry#synchronize()
      */
     @Override
-    public void synchronize(final IProgressMonitor monitor) throws Exception {
+    public void synchronize() throws Exception {
         if (getSynchronization() != Synchronization.NotSynchronized)
             return;
-        synchronizeModelEntry(monitor);
-        super.synchronize(monitor);
+        synchronizeModelEntry();
+        super.synchronize();
     }
 
-    void synchronizeModelEntry(final IProgressMonitor monitor) throws Exception {
+    /**
+     * @throws Exception
+     */
+    public void synchronizeModelEntry() throws Exception {
         final IFile workspaceFile = findFileInWorkspace();
         if (workspaceFile == null)
             return;
@@ -587,7 +614,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
         final Resource model = findModel();
         if (ModelUtil.isPhysical(model)) {
             if (!this.getSourceInfo().isMultiSource()) {
-                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(workspaceFile);
+                final ModelResource mr = ModelerCore.getModelEditor().findModelResource(model);
                 final ConnectionInfoHelper helper = new ConnectionInfoHelper();
 
                 final String translatorName = this.sourceInfo.getSource(0).getTranslatorName();
@@ -614,7 +641,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
             updateUdfJars(model);
         }
 
-        synchronizeIndex(monitor);
+        synchronizeIndex();
 
         // Also add imported models if not a preview
         if (!getVdb().isPreview()) {
@@ -634,15 +661,15 @@ public final class VdbModelEntry extends VdbIndexedEntry {
                     } else {
                         VdbEntry importedEntry = null;
 
-                        for (final VdbModelEntry entry : getVdb().getModelEntries()) {
-                            if (name.equals(entry.getName())) {
+                        for (final VdbEntry entry : getVdb().getModelEntries()) {
+                            if (name.equals(entry.getPath())) {
                                 importedEntry = entry;
                                 break;
                             }
                         }
 
                         if (importedEntry == null)
-                            importedEntry = getVdb().addEntry(name, monitor);
+                            importedEntry = getVdb().addEntry(name);
                         imports.add(importedEntry);
 
                         if (importedEntry instanceof VdbModelEntry)
@@ -653,7 +680,7 @@ public final class VdbModelEntry extends VdbIndexedEntry {
 
             // Process for any import VDBs
             // if list is empty, then there may be import VDB's that need to get removed from the VDB
-            getVdb().registerImportVdbs(importVdbNames, this.getName().toString(), monitor);
+            getVdb().registerImportVdbs(importVdbNames, this.getPath().toString());
 
             getVdb().synchronizeUdfJars(udfJars);
         }
@@ -698,5 +725,17 @@ public final class VdbModelEntry extends VdbIndexedEntry {
             if (iter.hasNext()) builder.append(", "); //$NON-NLS-1$
         }
         builder.append(']');
+    }
+
+    @Override
+    public VdbModelEntry clone() {
+        try {
+            VdbModelEntry clone = new VdbModelEntry(getVdb(), getPath());
+            cloneVdbObject(clone);
+            return clone;
+        } catch (Exception ex) {
+            VdbPlugin.UTIL.log(ex);
+            return null;
+        }
     }
 }

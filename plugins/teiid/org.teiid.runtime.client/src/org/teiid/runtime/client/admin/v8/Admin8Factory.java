@@ -25,6 +25,7 @@ package org.teiid.runtime.client.admin.v8;
 import static org.jboss.as.controller.client.helpers.ClientConstants.DEPLOYMENT_REMOVE_OPERATION;
 import static org.jboss.as.controller.client.helpers.ClientConstants.DEPLOYMENT_UNDEPLOY_OPERATION;
 import static org.jboss.as.controller.client.helpers.ClientConstants.RESULT;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
@@ -52,6 +54,7 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.RealmCallback;
 import javax.security.sasl.RealmChoiceCallback;
+
 import org.jboss.as.cli.Util;
 import org.jboss.as.cli.operation.OperationFormatException;
 import org.jboss.as.cli.operation.impl.DefaultOperationRequestAddress;
@@ -207,6 +210,17 @@ public class Admin8Factory {
 		private ModelControllerClient connection;
     	private boolean domainMode = false;
     	private String profileName = "ha";
+    	
+    	private Collection<String> dataSourceNames;
+    	private Set<String> installedResourceAdapterNames;
+    	private Set<String> deployedResourceAdaptorNames;
+    	private HashSet<String> installedJdbcDrivers;
+    	private HashMap<String, String> connectionFactoryNames;
+    	private Collection<String> dsNames;
+    	private Collection<String> xaDsNames;
+    	private HashMap<String, String> rarToModuleNames;
+    	private HashMap<String, String> rarToRAModuleNames;
+    	private HashMap<String, Collection<PropertyDefinition>> translatorTempPropDefs;
 
         /**
          * @param teiidVersion
@@ -227,8 +241,25 @@ public class Admin8Factory {
         public ITeiidServerVersion getTeiidVersion() {
             return this.teiidVersion;
         }
+        
+        @Override
+		public void refresh() {
+        	// The expectation is that various getters will look for null then go back to the server
+        	// to retrieve the information and re-cache it, until refresh() is called again.
+        	// This allows making only necessary CLI calls during loading of Teiid server Data Source and Translator info
+        	
+        	dataSourceNames = null;
+        	installedResourceAdapterNames = null;
+        	deployedResourceAdaptorNames = null;
+        	installedJdbcDrivers = null;
+        	connectionFactoryNames = null;
+        	dsNames = null;
+        	xaDsNames = null;
+        	rarToModuleNames = null;
+			
+		}
 
-        private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
+		private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
             if (getTeiidVersion().isLessThan(requiredVersion))
                 throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
         }
@@ -283,7 +314,7 @@ public class Admin8Factory {
 			//AS-4776 HACK - END
 			
 			BuildPropertyDefinitions bpd = new BuildPropertyDefinitions();
-			buildResourceAdpaterProperties(rarName, bpd);
+			buildResourceAdapterProperties(rarName, bpd);
 			ArrayList<PropertyDefinition> jcaSpecific = bpd.getPropertyDefinitions();
 
 			///subsystem=resource-adapters/resource-adapter=fileDS/connection-definitions=fileDS:add(jndi-name=java\:\/fooDS)
@@ -380,6 +411,13 @@ public class Admin8Factory {
 		private String getResourceAdapterModuleName(String rarName)
 				throws AdminException {
 			final List<String> props = new ArrayList<String>();
+			
+			if( rarToModuleNames == null ) {
+				this.rarToModuleNames = new HashMap<String, String>();
+			}
+			String value = this.rarToModuleNames.get(rarName);
+			if( value != null ) return value;
+			
 			cliCall("read-resource",
 					new String[] { "subsystem", "resource-adapters", "resource-adapter", rarName},
 					null, new ResultCallback() {
@@ -398,7 +436,12 @@ public class Admin8Factory {
 			        		}
 						}
 					});
-			return props.get(0);
+			value = props.get(0);
+				
+			if( value != null ) {
+				rarToModuleNames.put(rarName, value);
+			}
+			return value;
 		}
 
 		class AbstractMetadatMapper implements MetadataMapper<String>{
@@ -413,40 +456,42 @@ public class Admin8Factory {
 		}
 
 		public Set<String> getInstalledJDBCDrivers() throws AdminException {
-			HashSet<String> driverList = new HashSet<String>();
-			driverList.addAll(getChildNodeNames("datasources", "jdbc-driver"));
-
-			if (!this.domainMode) {
-				//'installed-driver-list' not available in the domain mode.
-				final ModelNode request = buildRequest("datasources", "installed-drivers-list");
-		        try {
-		            ModelNode outcome = this.connection.execute(request);
-		            if (Util.isSuccess(outcome)) {
-			            List<String> drivers = getList(outcome, new AbstractMetadatMapper() {
-							@Override
-							public String unwrap(ModelNode node) {
-								if (node.hasDefined("driver-name")) {
-									return node.get("driver-name").asString();
+			if( this.installedJdbcDrivers == null ) {
+				installedJdbcDrivers = new HashSet<String>();
+				installedJdbcDrivers.addAll(getChildNodeNames("datasources", "jdbc-driver"));
+	
+				if (!this.domainMode) {
+					//'installed-driver-list' not available in the domain mode.
+					final ModelNode request = buildRequest("datasources", "installed-drivers-list");
+			        try {
+			            ModelNode outcome = this.connection.execute(request);
+			            if (Util.isSuccess(outcome)) {
+				            List<String> drivers = getList(outcome, new AbstractMetadatMapper() {
+								@Override
+								public String unwrap(ModelNode node) {
+									if (node.hasDefined("driver-name")) {
+										return node.get("driver-name").asString();
+									}
+									return null;
 								}
-								return null;
-							}
-						});
-			            driverList.addAll(drivers);
+							});
+				            installedJdbcDrivers.addAll(drivers);
+			            }
+			        } catch (IOException e) {
+			        	throw new AdminComponentException(e);
+			        }
+				}
+				else {
+					// TODO: AS7 needs to provide better way to query the deployed JDBC drivers
+					List<String> deployments = getChildNodeNames(null, "deployment");
+		            for (String deployment:deployments) {
+		            	if (!deployment.contains("translator") && deployment.endsWith(".jar")) {
+		            		installedJdbcDrivers.add(deployment);
+		            	}
 		            }
-		        } catch (IOException e) {
-		        	throw new AdminComponentException(e);
-		        }
+				}
 			}
-			else {
-				// TODO: AS7 needs to provide better way to query the deployed JDBC drivers
-				List<String> deployments = getChildNodeNames(null, "deployment");
-	            for (String deployment:deployments) {
-	            	if (!deployment.contains("translator") && deployment.endsWith(".jar")) {
-	            		driverList.add(deployment);
-	            	}
-	            }
-			}
-	        return driverList;
+	        return installedJdbcDrivers;
 		}
 
 		public String getProfileName() throws AdminException {
@@ -528,6 +573,8 @@ public class Admin8Factory {
 	        // issue the "enable" operation
 			cliCall("enable", new String[] { "subsystem", "datasources","data-source", deploymentName },
 					null, new ResultCallback());
+			
+			refresh();
 		}
 
 		// /subsystem=datasources/data-source=DS/connection-properties=foo:add(value=/home/rareddy/testing)
@@ -550,56 +597,6 @@ public class Admin8Factory {
 	        } catch (IOException e) {
 	        	 throw new AdminComponentException(e);
 	        }
-		}
-
-		@Override
-		public Properties getDataSource(String deployedName) throws AdminException {
-			deployedName = removeJavaContext(deployedName);
-
-			Collection<String> dsNames = getDataSourceNames();
-			if (!dsNames.contains(deployedName)) {
-				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
-			}
-
-			Properties dsProperties = new Properties();
-
-			// check regular data-source
-			cliCall("read-resource",
-					new String[] { "subsystem", "datasources", "data-source", deployedName}, null,
-					new DataSourceProperties(dsProperties));
-
-			// check xa connections
-			if (dsProperties.isEmpty()) {
-				cliCall("read-resource",
-						new String[] {"subsystem", "datasources", "xa-data-source", deployedName}, null,
-						new DataSourceProperties(dsProperties));
-			}
-
-			// check connection factories
-			if (dsProperties.isEmpty()) {
-				Map<String, String> raDSMap = getConnectionFactoryNames();
-				// deployed rar name, may be it is == deployedName or if server restarts it will be rar name or rar->[1..n] name
-				String rarName = raDSMap.get(deployedName);
-				if (rarName != null) {
-					cliCall("read-resource",
-							new String[] { "subsystem", "resource-adapters", "resource-adapter", rarName, "connection-definitions", deployedName},
-							null, new ConnectionFactoryProperties(dsProperties, rarName, deployedName, null));
-				}
-
-				// figure out driver-name
-                if (dsProperties.getProperty("driver-name") == null) {
-                    String moduleName = getResourceAdapterModuleName(rarName);
-                    Set<String> installedRars = getResourceAdapterNames();
-                    for (String installedRar:installedRars) {
-                        if (getResourceAdapterModuleName(installedRar).equals(moduleName)) {
-                            dsProperties.setProperty("driver-name", installedRar);
-                            break;
-                        }
-                    }
-                }
-			}
-
-			return dsProperties;
 		}
 
 		private class DataSourceProperties extends ResultCallback {
@@ -724,11 +721,14 @@ public class Admin8Factory {
 					//AS-4776 HACK - END
 				}
 			}
+			
+			refresh();
 
 			dsNames = getDataSourceNames();
 			if (dsNames.contains(deployedName)) {
 				throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
 			}
+
 		}
 
 		private String removeJavaContext(String deployedName) {
@@ -971,7 +971,7 @@ public class Admin8Factory {
 	        return Collections.emptyList();
 
 		}
-
+		
 		/**
 		 * /subsystem=datasources:read-children-names(child-type=data-source)
 		 * /subsystem=resource-adapters/resource-adapter={rar-file}:read-resource
@@ -979,30 +979,119 @@ public class Admin8Factory {
 		 */
 		@Override
 		public Collection<String> getDataSourceNames() throws AdminException {
-			Set<String> datasourceNames = new HashSet<String>();
-			datasourceNames.addAll(getChildNodeNames("datasources", "data-source"));
-			datasourceNames.addAll(getChildNodeNames("datasources", "xa-data-source"));
-			datasourceNames.addAll(getConnectionFactoryNames().keySet());
-
-			Set<String> dsNames = new HashSet<String>();
-			for (String s:datasourceNames) {
-				if (s.startsWith(JAVA_CONTEXT)) {
-					dsNames.add(s.substring(6));
-				}
-				else {
-					dsNames.add(s);
+			if( this.dataSourceNames == null ) {
+				Set<String> datasourceNames = new HashSet<String>();
+				datasourceNames.addAll(getDSNames());
+				datasourceNames.addAll(getXaDSNames());
+				datasourceNames.addAll(getConnectionFactoryNames().keySet());
+	
+				dataSourceNames = new HashSet<String>();
+				for (String s:datasourceNames) {
+					if (s.startsWith(JAVA_CONTEXT)) {
+						this.dataSourceNames.add(s.substring(6));
+					}
+					else {
+						this.dataSourceNames.add(s);
+					}
 				}
 			}
-	        return dsNames;
+			
+	        return this.dataSourceNames;
+		}
+		
+		private Collection<String> getDSNames() throws AdminException {
+			if (this.dsNames == null) {
+				dsNames = new HashSet<String>();
+				dsNames.addAll(getChildNodeNames("datasources", "data-source"));
+			}
+			return dsNames;
 		}
 
-		private Map<String, String> getConnectionFactoryNames() throws AdminException {
-			HashMap<String, String> datasourceNames = new HashMap<String, String>();
-			Set<String> resourceAdapters = getInstalledResourceAdaptorNames();
-			for (String resource:resourceAdapters) {
-				getRAConnections(datasourceNames, resource);
+		private Collection<String> getXaDSNames() throws AdminException {
+			if (this.xaDsNames == null) {
+				xaDsNames = new HashSet<String>();
+				xaDsNames.addAll(getChildNodeNames("datasources",
+						"xa-data-source"));
 			}
-			return datasourceNames;
+			return xaDsNames;
+		}
+		
+		@Override
+		public Properties getDataSource(String deployedName) throws AdminException {
+			deployedName = removeJavaContext(deployedName);
+
+			Collection<String> dsNames = getDataSourceNames();
+			if (!dsNames.contains(deployedName)) {
+				 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70008, deployedName));
+			}
+
+			Properties dsProperties = new Properties();
+
+			// Regular DataSource
+			if(getDSNames().contains(deployedName)) {
+				cliCall("read-resource",
+							new String[] { "subsystem", "datasources", "data-source", deployedName}, null,
+							new DataSourceProperties(dsProperties));
+			// Xa DataSource
+			} else if(getXaDSNames().contains(deployedName)) {
+			 				cliCall("read-resource",
+			 						new String[] {"subsystem", "datasources", "xa-data-source", deployedName}, null,
+			 						new DataSourceProperties(dsProperties));
+			// Connection Factory
+			} else if(getConnectionFactoryNames().keySet().contains(deployedName)) {
+				Map<String, String> raDSMap = getConnectionFactoryNames();
+				// deployed rar name, may be it is == deployedName or if server restarts it will be rar name or rar->[1..n] name
+				String rarName = raDSMap.get(deployedName);
+				if (rarName != null) {
+					cliCall("read-resource",
+							new String[] { "subsystem", "resource-adapters", "resource-adapter", rarName, "connection-definitions", deployedName},
+							null, new ConnectionFactoryProperties(dsProperties, rarName, deployedName, null));
+				}
+
+				// figure out driver-name
+                if (dsProperties.getProperty("driver-name") == null) {
+                	String matchingInstalledRar = getRarToModuleNames().get(rarName);
+                	if( matchingInstalledRar != null ) {
+                		dsProperties.setProperty("driver-name", matchingInstalledRar);
+                	} else {
+	                    String moduleName = getResourceAdapterModuleName(rarName);
+	                    Set<String> installedRars = getResourceAdapterNames();
+	                    for (String installedRar:installedRars) {
+	                    	String resAdaptModuleName = getResourceAdapterModuleName(installedRar);
+	                        if (resAdaptModuleName.equals(moduleName)) {
+//	                        	getRarToModuleNames().put(rarName, installedRar);
+	                            dsProperties.setProperty("driver-name", installedRar);
+	                            break;
+	                        } 
+//	                        else {
+//	                        	getRarToModuleNames().put(installedRar, resAdaptModuleName);
+//	                        }
+	                    }
+                	}
+                }
+			}
+
+			return dsProperties;
+		}
+		
+		private Map<String, String> getRarToModuleNames() throws AdminException {
+			if( this.rarToModuleNames == null ) {
+				this.rarToModuleNames = new HashMap<String, String>();
+			}
+			
+			return this.rarToModuleNames;
+		}
+
+
+		private Map<String, String> getConnectionFactoryNames() throws AdminException {
+			if( this.connectionFactoryNames == null ) {
+				connectionFactoryNames = new HashMap<String, String>();
+				Set<String> resourceAdapters = getInstalledResourceAdaptorNames();
+				for (String resource:resourceAdapters) {
+					getRAConnections(connectionFactoryNames, resource);
+				}
+			}
+			return connectionFactoryNames;
 		}
 
 		private void getRAConnections(final HashMap<String, String> datasourceNames, final String rarName) throws AdminException {
@@ -1033,11 +1122,14 @@ public class Admin8Factory {
 		 * @throws AdminException
 		 */
 		private Set<String> getInstalledResourceAdaptorNames() throws AdminException {
-			Set<String> templates = new HashSet<String>();
-			templates.addAll(getChildNodeNames("resource-adapters", "resource-adapter"));
-	        return templates;
+			if( this.installedResourceAdapterNames == null ) {
+				installedResourceAdapterNames = new HashSet<String>();
+				this.installedResourceAdapterNames.addAll(getChildNodeNames("resource-adapters", "resource-adapter"));
+			}
+	        return installedResourceAdapterNames;
 		}
 
+		
 		// :read-children-names(child-type=deployment)
 		private Set<String> getResourceAdapterNames() throws AdminException {
 			Set<String> templates = getDeployedResourceAdaptorNames();
@@ -1053,14 +1145,16 @@ public class Admin8Factory {
 		}
 
 		private Set<String> getDeployedResourceAdaptorNames() throws AdminException {
-			Set<String> templates = new HashSet<String>();
-			List<String> deployments = getChildNodeNames(null, "deployment");
-            for (String deployment:deployments) {
-            	if (deployment.endsWith(".rar")) {
-            		templates.add(deployment);
-            	}
-            }
-			return templates;
+			if( this.deployedResourceAdaptorNames == null ) {
+				this.deployedResourceAdaptorNames = new HashSet<String>();
+				List<String> deployments = getChildNodeNames(null, "deployment");
+	            for (String deployment:deployments) {
+	            	if (deployment.endsWith(".rar")) {
+	            		this.deployedResourceAdaptorNames.add(deployment);
+	            	}
+	            }
+			}
+			return deployedResourceAdaptorNames;
 		}
 
 		public List<String> getDeployments(){
@@ -1166,7 +1260,7 @@ public class Admin8Factory {
 		/**
 		 * /subsystem=resource-adapters/resource-adapter=teiid-connector-ws.rar/connection-definitions=foo:read-resource-description
 		 */
-		private void buildResourceAdpaterProperties(String rarName, BuildPropertyDefinitions builder) throws AdminException {
+		private void buildResourceAdapterProperties(String rarName, BuildPropertyDefinitions builder) throws AdminException {
 			cliCall("read-resource-description", new String[] { "subsystem","resource-adapters",
 					"resource-adapter", rarName,
 					"connection-definitions", "any" }, null, builder);
@@ -1178,29 +1272,40 @@ public class Admin8Factory {
 		 */
 		@Override
 		public Collection<PropertyDefinition> getTemplatePropertyDefinitions(String templateName) throws AdminException {
+			if( translatorTempPropDefs == null ) {
+				this.translatorTempPropDefs = new HashMap<String, Collection<PropertyDefinition>>();
+			}
+			
+			Collection<PropertyDefinition> props = this.translatorTempPropDefs.get(templateName);
+			
+			if(  props == null ) {
+				BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
+				
+				// RAR properties
+				Set<String> resourceAdapters = getResourceAdapterNames();
+	        	if (resourceAdapters.contains(templateName)) {
+	        		cliCall("read-rar-description", new String[] {"subsystem", "teiid"}, new String[] {"rar-name", templateName}, builder);
+	        		buildResourceAdapterProperties(templateName, builder);
+			        props = builder.getPropertyDefinitions();
+	        	} else {
+		
+		        	// get JDBC properties
+		    		cliCall("read-resource-description", new String[] {"subsystem", "datasources", "data-source", templateName}, null, builder);
+		
+			        // add driver specific properties
+			        PropertyDefinitionMetadata cp = new PropertyDefinitionMetadata();
+			        cp.setName("connection-properties");
+			        cp.setDisplayName("Addtional Driver Properties");
+			        cp.setDescription("The connection-properties element allows you to pass in arbitrary connection properties to the Driver.connect(url, props) method. Supply comma separated name-value pairs"); //$NON-NLS-1$
+			        cp.setRequired(false);
+			        cp.setAdvanced(true);
+			        props = builder.getPropertyDefinitions();
+			        props.add(cp);
+	        	}
+	        					
+	        	this.translatorTempPropDefs.put(templateName, props);
+			}
 
-			BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
-
-			// RAR properties
-			Set<String> resourceAdapters = getResourceAdapterNames();
-        	if (resourceAdapters.contains(templateName)) {
-        		cliCall("read-rar-description", new String[] {"subsystem", "teiid"}, new String[] {"rar-name", templateName}, builder);
-        		buildResourceAdpaterProperties(templateName, builder);
-		        return builder.getPropertyDefinitions();
-        	}
-
-        	// get JDBC properties
-    		cliCall("read-resource-description", new String[] {"subsystem", "datasources", "data-source", templateName}, null, builder);
-
-	        // add driver specific properties
-	        PropertyDefinitionMetadata cp = new PropertyDefinitionMetadata();
-	        cp.setName("connection-properties");
-	        cp.setDisplayName("Addtional Driver Properties");
-	        cp.setDescription("The connection-properties element allows you to pass in arbitrary connection properties to the Driver.connect(url, props) method. Supply comma separated name-value pairs"); //$NON-NLS-1$
-	        cp.setRequired(false);
-	        cp.setAdvanced(true);
-	        ArrayList<PropertyDefinition> props = builder.getPropertyDefinitions();
-	        props.add(cp);
 	        return props;
 		}
 
@@ -1234,10 +1339,11 @@ public class Admin8Factory {
 		@Override
         @Since(Version.TEIID_8_7)
         public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException{
-            requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7.get());
+			requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7.get());
 
 		    BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
-            Collection<? extends Translator> translators = getTranslators();
+
+		    Collection<? extends Translator> translators = getTranslators();
             for (Translator t:translators) {
                 if (t.getName().equalsIgnoreCase(translatorName)) {
                     cliCall("read-translator-properties", new String[] {"subsystem", "teiid"}, new String[] {"translator-name", translatorName, "type", type.name()}, builder);
@@ -1523,7 +1629,8 @@ public class Admin8Factory {
 			return request;
 		}
 
-		private void cliCall(String operationName, String[] address, String[] params, ResultCallback callback) throws AdminException {
+		private void cliCall(String operationName, String[] address, String[] params, ResultCallback callback) throws AdminException {			
+
 			DefaultOperationRequestBuilder builder = new DefaultOperationRequestBuilder();
 	        final ModelNode request;
 	        try {

@@ -10,9 +10,11 @@ package org.teiid.designer.ui.refactor.delete;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -114,13 +116,48 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
             status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError", project.getName()))); //$NON-NLS-1$
         }
     }
+    
+    private boolean isSelectedOrChildResource(final IResource child) {
+        if (getResources().contains(child))
+            return true;
+
+        final boolean status[] = new boolean[1];
+
+        IResourceVisitor childVisitor = new IResourceVisitor() {
+
+            @Override
+            public boolean visit(IResource resource) {
+                if (resource.equals(child)) {
+                    status[0] = true;
+                    return false; // found the child so exit the visitor stat!
+                }
+
+                return true;
+            }
+        };
+
+        for (IResource selected : getResources()) {
+            try {
+                selected.accept(childVisitor);
+                if (status[0]) {
+                    // child is a descendant of one of the selected
+                    return true;
+                }
+            } catch (CoreException ex) {
+                // do nothing
+            }
+        }
+
+        return false;
+    }
+    	
 
     @Override
     protected void checkResource(IResource resource, IProgressMonitor progressMonitor, RefactoringStatus status) {
         int readOnlyStatusLevel;
         String readOnlyStatusMsg;
 
-        if (getResources().contains(resource)) {
+        if (isSelectedOrChildResource(resource)) {
             readOnlyStatusLevel = IStatus.WARNING;
             readOnlyStatusMsg = RefactorResourcesUtils.getString("ResourcesRefactoring.readOnlyResourceError",  //$NON-NLS-1$
                                                                  resource.getName());
@@ -202,6 +239,7 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
     @Override
     public RefactoringStatus checkFinalConditions(IProgressMonitor progressMonitor) throws OperationCanceledException {
         RefactoringStatus status = new RefactoringStatus();
+        clearChanges();
 
         try {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("DeleteRefactoring.finalConditions"), 2); //$NON-NLS-1$

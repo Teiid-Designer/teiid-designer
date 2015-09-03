@@ -2013,6 +2013,24 @@
 					</imageobject>
 				</mediaobject>
 			</figure>
+			<para>You can create new operations in the <emphasis>Operation Editor</emphasis> by right-clicking an interface or operation and selecting
+			the <emphasis>Create Operation</emphasis> action. This will display a dialog for entering the definition for your new operation.</para>
+			<figure>
+				<title>Create Operation Action</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/create-operation-action.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<figure>
+				<title>Create Operation Dialog</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="images/screencaps/create-operation-dialog.png" />
+					</imageobject>
+				</mediaobject>
+			</figure>
 		</section>
 	</section>
 	

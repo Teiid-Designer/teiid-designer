@@ -162,6 +162,10 @@ public class RelationalColumn extends RelationalReference {
         	this.datatype.equalsIgnoreCase("BIGINTEGER")) ) { //$NON-NLS-1$
         	setPrecision(DEFAULT_NUMERIC_PRECISION);
         }
+        
+        if( this.datatype.equalsIgnoreCase("CHAR")) {
+        	setLength(1);
+        }
     }
     /**
      * @return nativeType

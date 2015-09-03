@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.teiid.designer.core.builder.AbstractTeiidProjectBuilder;
-import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
@@ -191,7 +191,7 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
     				if( iStatus.getMessage().indexOf("Teiid validation version of the VDB could not be found") > 0 ) { //$NON-NLS-1$
                         createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.NO_VALIDATION_VERSION);
                     }
-    				if( iStatus.getMessage().indexOf("different than the current default teiid instance") > 0 ) { //$NON-NLS-1$
+    				if( iStatus.getMessage().indexOf("different than the current default") > 0 ) { //$NON-NLS-1$
     					createMarker(vdbFile, IMarker.SEVERITY_WARNING, iStatus.getMessage(), VdbUiConstants.VdbIds.PROBLEM_MARKER, MarkerType.DIFFERENT_VALIDATION_VERSION);
     				}
     				if( iStatus.getMessage().indexOf("no JNDI name defined") > 0 ) { //$NON-NLS-1$
@@ -292,7 +292,14 @@ Read more: http://javarevisited.blogspot.com/2011/08/enum-in-java-example-tutori
          * @return <code>true</code> if resource is a VDB file
          */
         private boolean isVdbFile( IResource resource ) {
-            return ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+        	
+            boolean mightBeXmiVdb = ((resource.getType() == IResource.FILE) && ITeiidVdb.VDB_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+            
+            if(mightBeXmiVdb) {
+            	return !VdbUtil.isDdlVdb((IFile)resource);
+            }
+            
+            return false;
         }
 
         /**

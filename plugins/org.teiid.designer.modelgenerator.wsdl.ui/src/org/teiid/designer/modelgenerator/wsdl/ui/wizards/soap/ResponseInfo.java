@@ -54,7 +54,7 @@ public class ResponseInfo extends ProcedureInfo implements IWsdlResponseInfo {
 		if( getBodyColumnInfoList().length == 0 ) {
 			status.add(new Status(IStatus.ERROR, ProcedureGenerator.PLUGIN_ID,
 				NLS.bind(Messages.Error_NoColumnsDefinedForResponseProcedureForOperation_0, 
-					getOperation().getName())));
+					getOperation().getName(), getOperation().getName())));
 		}
 
 		// Look at all element xpaths

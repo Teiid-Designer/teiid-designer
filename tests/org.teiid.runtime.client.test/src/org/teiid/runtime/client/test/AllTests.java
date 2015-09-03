@@ -3,6 +3,12 @@ package org.teiid.runtime.client.test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.teiid.language.TestReservedWords;
+import org.teiid.query.metadata.v8.Test8MetadataValidator;
+import org.teiid.query.metadata.v85.Test85MetadataValidator;
+import org.teiid.query.metadata.v86.Test86MetadataValidator;
+import org.teiid.query.metadata.v87.Test87MetadataValidator;
+import org.teiid.query.metadata.v88.Test88MetadataValidator;
+import org.teiid.query.metadata.v89.Test89MetadataValidator;
 import org.teiid.query.resolver.v7.Test7AccessPattern;
 import org.teiid.query.resolver.v7.Test7AlterResolving;
 import org.teiid.query.resolver.v7.Test7FunctionResolving;
@@ -33,6 +39,18 @@ import org.teiid.query.resolver.v87.Test87FunctionResolving;
 import org.teiid.query.resolver.v87.Test87ProcedureResolving;
 import org.teiid.query.resolver.v87.Test87Resolver;
 import org.teiid.query.resolver.v87.Test87XMLResolver;
+import org.teiid.query.resolver.v88.Test88AccessPattern;
+import org.teiid.query.resolver.v88.Test88AlterResolving;
+import org.teiid.query.resolver.v88.Test88FunctionResolving;
+import org.teiid.query.resolver.v88.Test88ProcedureResolving;
+import org.teiid.query.resolver.v88.Test88Resolver;
+import org.teiid.query.resolver.v88.Test88XMLResolver;
+import org.teiid.query.resolver.v89.Test89AccessPattern;
+import org.teiid.query.resolver.v89.Test89AlterResolving;
+import org.teiid.query.resolver.v89.Test89FunctionResolving;
+import org.teiid.query.resolver.v89.Test89ProcedureResolving;
+import org.teiid.query.resolver.v89.Test89Resolver;
+import org.teiid.query.resolver.v89.Test89XMLResolver;
 import org.teiid.query.sql.lang.TestCriteriaOperator;
 import org.teiid.query.sql.v7.Test7Cloning;
 import org.teiid.query.sql.v7.Test7Create;
@@ -60,6 +78,16 @@ import org.teiid.query.sql.v87.Test87Create;
 import org.teiid.query.sql.v87.Test87CreateDrop;
 import org.teiid.query.sql.v87.Test87SQLStringVisitor;
 import org.teiid.query.sql.v87.TestQuery87Parser;
+import org.teiid.query.sql.v88.Test88Cloning;
+import org.teiid.query.sql.v88.Test88Create;
+import org.teiid.query.sql.v88.Test88CreateDrop;
+import org.teiid.query.sql.v88.Test88SQLStringVisitor;
+import org.teiid.query.sql.v88.TestQuery88Parser;
+import org.teiid.query.sql.v89.Test89Cloning;
+import org.teiid.query.sql.v89.Test89Create;
+import org.teiid.query.sql.v89.Test89CreateDrop;
+import org.teiid.query.sql.v89.Test89SQLStringVisitor;
+import org.teiid.query.sql.v89.TestQuery89Parser;
 import org.teiid.query.validator.v7.Test7AlterValidation;
 import org.teiid.query.validator.v7.Test7FunctionMetadataValidator;
 import org.teiid.query.validator.v7.Test7UpdateValidator;
@@ -80,6 +108,14 @@ import org.teiid.query.validator.v87.Test87AlterValidation;
 import org.teiid.query.validator.v87.Test87FunctionMetadataValidator;
 import org.teiid.query.validator.v87.Test87UpdateValidator;
 import org.teiid.query.validator.v87.Test87Validator;
+import org.teiid.query.validator.v88.Test88AlterValidation;
+import org.teiid.query.validator.v88.Test88FunctionMetadataValidator;
+import org.teiid.query.validator.v88.Test88UpdateValidator;
+import org.teiid.query.validator.v88.Test88Validator;
+import org.teiid.query.validator.v89.Test89AlterValidation;
+import org.teiid.query.validator.v89.Test89FunctionMetadataValidator;
+import org.teiid.query.validator.v89.Test89UpdateValidator;
+import org.teiid.query.validator.v89.Test89Validator;
 import org.teiid.types.Test7DataTypeManagerService;
 import org.teiid.types.Test8DataTypeManagerService;
 
@@ -92,6 +128,14 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         // query.sql.lang
                                         TestCriteriaOperator.class,
 
+                                        // query.metadata
+                                        Test8MetadataValidator.class,
+                                        Test85MetadataValidator.class,
+                                        Test86MetadataValidator.class,
+                                        Test87MetadataValidator.class,
+                                        Test88MetadataValidator.class,
+                                        Test89MetadataValidator.class,
+                                        
                                         // query.sql
                                         Test7Cloning.class,
                                         Test7Create.class,
@@ -119,6 +163,16 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test87CreateDrop.class,
                                         TestQuery87Parser.class,
                                         Test87SQLStringVisitor.class,
+                                        Test88Cloning.class,
+                                        Test88Create.class,
+                                        Test88CreateDrop.class,
+                                        TestQuery88Parser.class,
+                                        Test88SQLStringVisitor.class,
+                                        Test89Cloning.class,
+                                        Test89Create.class,
+                                        Test89CreateDrop.class,
+                                        TestQuery89Parser.class,
+                                        Test89SQLStringVisitor.class,
 
                                         // query.resolver
                                         Test7Resolver.class,
@@ -151,6 +205,18 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test87FunctionResolving.class,
                                         Test87ProcedureResolving.class,
                                         Test87XMLResolver.class,
+                                        Test88Resolver.class,
+                                        Test88AccessPattern.class,
+                                        Test88AlterResolving.class,
+                                        Test88FunctionResolving.class,
+                                        Test88ProcedureResolving.class,
+                                        Test88XMLResolver.class,
+                                        Test89Resolver.class,
+                                        Test89AccessPattern.class,
+                                        Test89AlterResolving.class,
+                                        Test89FunctionResolving.class,
+                                        Test89ProcedureResolving.class,
+                                        Test89XMLResolver.class,
 
                                         // query.validator
                                         Test7AlterValidation.class,
@@ -173,6 +239,14 @@ import org.teiid.types.Test8DataTypeManagerService;
                                         Test87FunctionMetadataValidator.class,
                                         Test87Validator.class,
                                         Test87UpdateValidator.class,
+                                        Test88AlterValidation.class,
+                                        Test88FunctionMetadataValidator.class,
+                                        Test88Validator.class,
+                                        Test88UpdateValidator.class,
+                                        Test89AlterValidation.class,
+                                        Test89FunctionMetadataValidator.class,
+                                        Test89Validator.class,
+                                        Test89UpdateValidator.class,
 
                                         // types
                                         Test7DataTypeManagerService.class,

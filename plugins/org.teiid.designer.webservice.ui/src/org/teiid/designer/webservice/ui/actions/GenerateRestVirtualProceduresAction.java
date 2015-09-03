@@ -9,11 +9,9 @@ package org.teiid.designer.webservice.ui.actions;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,8 +41,10 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
@@ -81,6 +82,7 @@ import org.teiid.designer.transformation.model.RelationalViewModelFactory;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.ui.actions.SortableSelectionAction;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
+import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.ScrollableTitleAreaDialog;
@@ -106,8 +108,14 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	private static final String COLUMN_XML_TAG_LABEL = getString("columnXmlTagLabel");  //$NON-NLS-1$
 	
 	private static final String getString(String key) {
-		return UTIL.getString("generateRestVirtualProceduresAction." + key);
+		return UTIL.getString("generateRestVirtualProceduresAction." + key); //$NON-NLS-1$
 	}
+	
+	private static final String getString(String key, Object value) {
+		return UTIL.getString("generateRestVirtualProceduresAction." + key, value); //$NON-NLS-1$
+	}
+	
+	private IContainer viewModelFolder;
 
     public GenerateRestVirtualProceduresAction() {
         super();
@@ -194,17 +202,48 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         		String columnXmlTag = dialog.getColumnXmlTag();
         		String restMethod = dialog.getRestMethodValue();
         		IContainer folder = dialog.getViewModelFolder();
-        		String modelName = dialog.getViewModelName();
-        		if( !modelName.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
-        			modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+
+        		boolean cancelled = false;
+        		Collection<RestProcedureInfo> procedureInfos = new ArrayList<RestProcedureInfo>(selectedViewsAndTables.length);
+        		if( dialog.getSetIndividualTags() ) {
+        			for( EObject obj : selectedViewsAndTables ) {
+	        			RestProcedureInfo info = new RestProcedureInfo(obj);
+	        			
+	        			SetTagsDialog tagsDialog = new SetTagsDialog(iww.getShell(), info);
+	        			if( tagsDialog.open() != Dialog.OK ) {
+	        				// Need to cancel the whole thing!
+	        				cancelled = true;
+	        				break;
+	        			}
+	        			procedureInfos.add(info);
+	        		}
+        		} else {
+        			for( EObject obj : selectedViewsAndTables ) {
+	        			RestProcedureInfo info = new RestProcedureInfo(obj);
+	        			info.setViewTag(viewXmlTag);
+	        			info.setColumnTag(columnXmlTag);
+	        			procedureInfos.add(info);
+        			}
         		}
-        		
-        		if( selectedViewsAndTables.length > 0 ) {
-        			generateRestProcedures(modelName, folder, selectedViewsAndTables, viewXmlTag, columnXmlTag, restMethod);
+
+        		if( !cancelled ) {
+	        		try {
+						String modelName = modelResource.getUnderlyingResource().getFullPath().removeFileExtension().lastSegment();
+						String modelNameWithExtension = dialog.getViewModelName();
+						if( !modelNameWithExtension.toUpperCase().endsWith(StringConstants.DOT_XMI.toUpperCase())) {
+							modelNameWithExtension = modelNameWithExtension + StringConstants.DOT_XMI;
+						}
+						
+						if( selectedViewsAndTables.length > 0 ) {
+							generateRestProcedures(modelNameWithExtension, modelName, folder, procedureInfos, restMethod);
+						}
+					} catch (ModelWorkspaceException e) {
+						UTIL.log(e);
+					}
         		}
         	}
         } else {
-        	// TODO: Show ERROR/WARNING?
+        	// Show ERROR/WARNING?
         }
     }
     
@@ -213,7 +252,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         return service.getReservedWords();
     }
     
-    private void generateRestProcedures(String modelName, IContainer folder, EObject[] viewsAndTables, String viewXmlTag, String columnXmlTag, String restMethod) {
+    private void generateRestProcedures(String modelNameWithExtension, String modelName, IContainer folder, Collection<RestProcedureInfo> procedureInfos, String restMethod) {
     	String[] columnNames = null;
     	
     	Set<String> reservedWords = getAllSQLReservedWords();
@@ -221,7 +260,11 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	
     	Collection<RelationalViewProcedure> viewProcedures = new ArrayList<RelationalViewProcedure>();
     	
-    	for( EObject eObj : viewsAndTables ) {
+    	for( RestProcedureInfo info : procedureInfos ) {
+        	String viewXmlTag = info.getViewTag();
+        	String columnXmlTag = info.getColumnTag();
+        	
+    		EObject eObj = info.getTable(); 
     		Collection<Column> pkColumns = new ArrayList<Column>();
     		
     		if( eObj instanceof BaseTable ) {
@@ -229,6 +272,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			pkColumns = getPKColumns((BaseTable)eObj);
     		} 
     		String viewName = getName(eObj);
+    		String viewQualifiedName = modelName + '.' + getName(eObj);
     		String procName = viewName + RESTPROC_SUFFIX;
     		if( columnNames.length > 0 ) {
     			String colStr = getColumnsString(columnNames, reservedWords);
@@ -276,7 +320,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			viewProcedure.setRestEnabled(true);
     			viewProcedure.setRestUri(restURI);
     			
-    			String generatedSql = getRestProcedureDdl(procName, viewXmlTag, columnXmlTag, colStr, viewName, viewName, reservedWords, paramToColumnMap);
+    			String generatedSql = getRestProcedureDdl(procName, viewXmlTag, columnXmlTag, colStr, viewQualifiedName, viewName, reservedWords, paramToColumnMap);
     			
     			viewProcedure.setTransformationSQL(generatedSql);
     			viewProcedure.setRestMethod(restMethod);
@@ -287,12 +331,12 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	}
     	
     	if( !viewProcedures.isEmpty() ) {
-    		createViewProceduresInTxn(modelName, folder, viewProcedures);
+    		createViewProceduresInTxn(modelNameWithExtension, folder, viewProcedures);
     	}
     }
     
     private void createViewProceduresInTxn( String modelName, IContainer folder, Collection<RelationalViewProcedure> viewProcedures ) {
-    	IPath modelPath = folder.getFullPath().append(modelName + ".xmi");
+    	IPath modelPath = folder.getFullPath().append(modelName + ".xmi");  //$NON-NLS-1$
     	
     	ModelResource modelResource = null;
     	
@@ -527,10 +571,10 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
         EObject[] tablesAndViews;
         String viewXmlTagValue;
         String columnXmlTagValue;
-
+        Button setAllTagsTheSame;
+    	private boolean setIndividualTags;
         
     	private Text viewModelContainerText;
-    	private IContainer viewModelFolder;
         String viewModelName;
     	private Text viewModelFileText;
 
@@ -544,8 +588,11 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
             this.modelResource = resource;
             this.allTablesAndViews = getTables(modelResource);
             if( ModelIdentifier.isRelationalViewModel(resource) ) {
-            	this.viewModelFolder = (IContainer)resource.getResource().getParent();
+            	viewModelFolder = (IContainer)resource.getResource().getParent();
             	this.viewModelName = resource.getResource().getFullPath().removeFileExtension().lastSegment();
+            } else {
+            	viewModelFolder = (IContainer)resource.getResource().getProject();
+            	viewModelName = null;
             }
         }
 
@@ -560,6 +607,11 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
             GridLayoutFactory.swtDefaults().margins(5, 5).applyTo(composite);
             composite.setLayoutData(new GridData(GridData.FILL_BOTH));
             
+            Composite labelPanel = WidgetFactory.createPanel(composite, SWT.NONE, GridData.FILL, 1, 2);
+            WidgetFactory.createLabel(labelPanel, getString("model")); //$NON-NLS-1$
+            org.teiid.designer.ui.common.widget.Label label = WidgetFactory.createLabel(labelPanel, modelResource.getItemName());
+            label.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+            
             { // VIEW MODEL DEFINITION
         		Group viewGroup = WidgetFactory.createGroup(composite, getString("viewModelDefinitionGroup"), SWT.NONE, 2, 3); //$NON-NLS-1$
         		GridData gd_vg = new GridData(GridData.FILL_HORIZONTAL);
@@ -571,7 +623,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 
         		viewModelContainerText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
         		if( viewModelFolder != null ) {
-        			viewModelContainerText.setText(this.viewModelFolder.getName());
+        			viewModelContainerText.setText(viewModelFolder.getName());
         		}
         		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         		viewModelContainerText.setLayoutData(gridData);
@@ -620,8 +672,28 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 
             }
             
-            { // TODO:  Add OPTIONS groups
-            	Composite optionsGroup = WidgetFactory.createGroup(composite, "Options");
+            setAllTagsTheSame = new Button(composite, SWT.CHECK);
+            setAllTagsTheSame.setText("Set all tag names to default");
+            setAllTagsTheSame.setSelection(true);
+            setAllTagsTheSame.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean enableSameTags = setAllTagsTheSame.getSelection();
+					viewXmlTag.setEnabled(enableSameTags);
+					columnXmlTag.setEnabled(enableSameTags);
+					setIndividualTags = !setAllTagsTheSame.getSelection();
+					
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+            
+            
+            {
+            	Composite optionsGroup = WidgetFactory.createGroup(composite, getString("options"));
             	GridLayoutFactory.swtDefaults().numColumns(2).applyTo(optionsGroup);
             	optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             	
@@ -630,28 +702,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
             	restMethodLabel.setText(getString("restMethodLabel")); //$NON-NLS-1$
             	
             	Label restMethodValueLabel = new Label(optionsGroup, SWT.NONE);
-            	restMethodValueLabel.setText("GET"); //$NON-NLS-1$ 
-            
-//            	restMethodsCombo = new Combo(optionsGroup, SWT.NONE | SWT.READ_ONLY);
-//				GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-//				gd.verticalAlignment = GridData.CENTER;
-//				restMethodsCombo.setLayoutData(gd);
-//
-//				
-//				List<String> comboItems = new ArrayList<String>();
-//				for( String str : RestModelExtensionConstants.METHODS_ARRAY ) {
-//					comboItems.add(str);
-//				}
-//				restMethodsCombo.select(0);
-				
-//				WidgetUtil.setComboItems(restMethodsCombo, comboItems, null, true);
-//				restMethodsCombo.addSelectionListener(new SelectionAdapter() {
-//		            @Override
-//		            public void widgetSelected( SelectionEvent ev ) {
-//		            	selectMethodComboItem(restMethodsCombo.getSelectionIndex());
-//		            	validate();
-//		            }
-//		        });
+            	restMethodValueLabel.setText("GET"); //$NON-NLS-1$
             	
             	// Add View XML tag & Column XML tag
             	
@@ -824,18 +875,19 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	 * the container field.
     	 */
     	void handleViewModelLocationBrowse() {
+    		ViewerFilter filter = new ModelingResourceFilter();
+    		if( viewModelFolder != null ) {
+    			filter = folderFilter;
+    		}
     		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
     				ModelerCore.getWorkspace().getRoot(),
-    				new ModelingResourceFilter(),
+    				filter,
     				new ModelProjectSelectionStatusValidator());
     		
             if (folder != null) {
-                this.viewModelContainerText.setText(folder.toString());
+                this.viewModelContainerText.setText(folder.getFullPath().toString());
                 viewModelFolder = folder;
-            } else {
-                this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
             }
-            
 
     		validate();
     	}
@@ -854,7 +906,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     			if (selections[0] instanceof IFile) {
     				IFile modelFile = (IFile) selections[0];
     				viewModelFolder = modelFile.getParent();
-    				String modelName = modelFile.getFullPath().removeFileExtension().lastSegment();
+    				String modelName = FileUtils.getNameWithoutExtension(modelFile);
     				viewModelName = modelName;
     				viewModelFileText.setText(modelName);
     				viewModelContainerText.setText(viewModelFolder.toString());
@@ -876,7 +928,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 			
 			// Validate view model location
 			
-			if( this.viewModelFolder == null ) {
+			if( viewModelFolder == null ) {
 				setErrorMessage(getString("viewFileLocationMustBeSpecified")); //$NON-NLS-1$
 				getButton(IDialogConstants.OK_ID).setEnabled(false);
 				return;
@@ -887,8 +939,28 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				getButton(IDialogConstants.OK_ID).setEnabled(false);
 				return;
 			} else {
-				if(viewModelName.contains(StringUtilities.SPACE)){
+				if(viewModelName.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("viewModelNameCannotContainSpaces")); //$NON-NLS-1$
+					getButton(IDialogConstants.OK_ID).setEnabled(false);
+					return;
+				}
+			}
+			
+			// check the selected model is a view model
+			IPath modelPath = viewModelFolder.getFullPath().append(viewModelName + ".xmi");
+			if (ModelUtil.isModelFile(modelPath)) {
+				ModelResource theModel = null;
+				try {
+		    		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(modelPath, IResource.FILE);
+		    		if(item != null && item.exists()){
+						IResource iRes = item.getCorrespondingResource();
+						theModel = ModelUtilities.getModelResource(iRes);
+		    		}
+				} catch (Exception ex) {
+					ModelerCore.Util.log(ex);
+				}
+				if (theModel != null && !ModelIdentifier.isRelationalViewModel(theModel)) {
+					setErrorMessage(getString("msg.selectedModelMustBeViewModel")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
@@ -913,7 +985,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(viewXmlTagValue.contains(StringUtilities.SPACE)){
+				if(viewXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.viewXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -931,7 +1003,7 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
 				}
-				if(columnXmlTagValue.contains(StringUtilities.SPACE)){
+				if(columnXmlTagValue.contains(StringConstants.SPACE)){
 					setErrorMessage(getString("msg.columnXmlTagConnotContainSpaces")); //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 					return;
@@ -1013,6 +1085,11 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
     	public String getViewModelName() {
     		return this.viewModelName;
     	}
+    	
+    	public boolean getSetIndividualTags() {
+    		return this.setIndividualTags;
+    	}
+
 
     }
 	
@@ -1110,15 +1187,17 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 				boolean projectOpen = ((IResource) element).getProject().isOpen();
 				if (projectOpen) {
 					// Show open projects
-					if (element instanceof IProject) {
+					if(element instanceof IContainer) {
+						if( viewModelFolder != null ) {
+							doSelect = ((IContainer)element).getProject() == viewModelFolder.getProject();
+						} else doSelect = true;
+						// Show web service model files, and not .xsd files
+					} else if( element instanceof IProject) {
 						try {
 		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
 		                } catch (CoreException e) {
 		                	ModelerCore.Util.log(e);
 		                }
-					} else if (element instanceof IContainer) {
-						doSelect = true;
-						// Show webservice model files, and not .xsd files
 					} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
 						ModelResource theModel = null;
 						try {
@@ -1138,4 +1217,265 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 			return doSelect;
 		}
 	};
+	
+	final ViewerFilter folderFilter = new ModelWorkspaceViewerFilter(true) {
+
+		@Override
+		public boolean select(final Viewer viewer, final Object parent,
+				final Object element) {
+			boolean doSelect = false;
+			if (element instanceof IResource) {
+				// If the project is closed, dont show
+				boolean projectOpen = ((IResource) element).getProject().isOpen();
+				if (projectOpen) {
+					// Show open projects
+					if(element instanceof IContainer) {
+						if( viewModelFolder != null ) {
+							doSelect = ((IContainer)element).getProject() == viewModelFolder.getProject();
+						} else doSelect = true;
+						// Show web service model files, and not .xsd files
+					} else if( element instanceof IProject) {
+						try {
+		                	doSelect = ((IProject)element).hasNature(ModelerCore.NATURE_ID);
+		                } catch (CoreException e) {
+		                	ModelerCore.Util.log(e);
+		                }
+					}
+				}
+			} else if (element instanceof IContainer) {
+				doSelect = true;
+			}
+
+			return doSelect;
+		}
+	};
+	
+	class RestProcedureInfo {
+		EObject table;
+		String viewTag;
+		String columnTag;
+			
+		public RestProcedureInfo(EObject table) {
+			this(table, null, null);
+		}
+		
+		public RestProcedureInfo(EObject table, String viewTag, String columnTag) {
+			super();
+			this.table = table;
+			this.viewTag = viewTag;
+			this.columnTag = columnTag;
+		}
+
+		public EObject getTable() {
+			return table;
+		}
+
+		public void setTable(EObject table) {
+			this.table = table;
+		}
+
+		public String getViewTag() {
+			return viewTag;
+		}
+
+		public void setViewTag(String viewTag) {
+			this.viewTag = viewTag;
+		}
+
+		public String getColumnTag() {
+			return columnTag;
+		}
+
+		public void setColumnTag(String columnTag) {
+			this.columnTag = columnTag;
+		}
+		
+		
+	}
+	
+    class SetTagsDialog extends MessageDialog implements StringConstants {
+
+        private Button btnOk;
+
+        RestProcedureInfo procedureInfo;
+        
+        private Text viewXmlTag, columnXmlTag;
+
+        /**
+         * @param parentShell the parent shell (may be <code>null</code>)
+         * @param existingPropertyNames the existing property names (can be <code>null</code>)
+         */
+        public SetTagsDialog( Shell parentShell, RestProcedureInfo procedureInfo) {
+            super(parentShell, getString("definedRestProcedureTagsDefine"), null,   //$NON-NLS-1$
+            		getString("defineTags") , MessageDialog.INFORMATION,  //$NON-NLS-1$
+                    new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+            this.procedureInfo = procedureInfo;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.dialogs.MessageDialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
+         */
+        @Override
+        protected Button createButton( Composite parent,
+                                       int id,
+                                       String label,
+                                       boolean defaultButton ) {
+            Button btn = super.createButton(parent, id, label, defaultButton);
+
+            if (id == IDialogConstants.OK_ID) {
+                // disable OK button initially
+                this.btnOk = btn;
+                btn.setEnabled(false);
+            }
+
+            return btn;
+        }
+
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse.swt.widgets.Composite)
+         */
+        @Override
+        protected Control createCustomArea( Composite parent ) {
+            Composite pnl = new Composite(parent, SWT.NONE);
+            pnl.setLayout(new GridLayout(2, false));
+            pnl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            
+            WidgetFactory.createLabel(pnl, getString("table")); //$NON-NLS-1$
+            org.teiid.designer.ui.common.widget.Label label = WidgetFactory.createLabel(pnl, ModelerCore.getModelEditor().getName(procedureInfo.getTable()));
+            label.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+
+            {
+            	Composite optionsGroup = WidgetFactory.createGroup(pnl, getString("options")); //$NON-NLS-1$
+            	GridLayoutFactory.swtDefaults().numColumns(2).applyTo(optionsGroup);
+            	optionsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            	((GridData)optionsGroup.getLayoutData()).horizontalSpan = 2;
+            	
+            	// REST METHOD
+            	Label restMethodLabel = new Label(optionsGroup, SWT.NONE);
+            	restMethodLabel.setText(getString("restMethodLabel")); //$NON-NLS-1$
+            	
+            	Label restMethodValueLabel = new Label(optionsGroup, SWT.NONE);
+            	restMethodValueLabel.setText(getString("get")); //$NON-NLS-1$ 
+            
+            	
+            	// Add View XML tag & Column XML tag
+            	
+            	Label label1 = new Label(optionsGroup, SWT.NONE);
+            	label1.setText(VIEW_XML_TAG_LABEL);
+            	viewXmlTag = new Text(optionsGroup, SWT.BORDER);
+            	viewXmlTag.setText(EMPTY_STRING);
+            	viewXmlTag.setEditable(true);
+            	viewXmlTag.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            	viewXmlTag.addModifyListener(new ModifyListener() {
+					
+					@Override
+					public void modifyText(ModifyEvent arg0) {
+						String tagValue = viewXmlTag.getText();
+						if( tagValue == null ) {
+							tagValue = StringConstants.EMPTY_STRING;
+						}
+						procedureInfo.setViewTag(tagValue);
+						updateState();
+					}
+				});
+            	
+            	Label label2 = new Label(optionsGroup, SWT.NONE);
+            	label2.setText(COLUMN_XML_TAG_LABEL);
+            	columnXmlTag = new Text(optionsGroup, SWT.BORDER);
+
+            	columnXmlTag.setText(EMPTY_STRING);
+            	columnXmlTag.setEditable(true);
+            	columnXmlTag.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+            	columnXmlTag.addModifyListener(new ModifyListener() {
+					
+					@Override
+					public void modifyText(ModifyEvent arg0) {
+						String tagValue = columnXmlTag.getText();
+						if( tagValue == null ) {
+							tagValue = StringConstants.EMPTY_STRING;
+						}
+						procedureInfo.setColumnTag(tagValue);
+						updateState();
+					}
+				});
+            }
+
+            messageLabel.setText(getString("defineTagsForTable_0_", ModelerCore.getModelEditor().getName(procedureInfo.getTable())));
+			return pnl;
+    	}
+        
+
+
+        private void updateState() {
+        	String msg = validateName(procedureInfo.getViewTag());
+        	
+        	if( msg == null ) {
+        		msg = validateName(procedureInfo.getColumnTag());
+        	}
+        	
+        	if( msg == null ) {
+        		if( procedureInfo.getViewTag().equals(procedureInfo.getColumnTag()) ) {
+        			msg = getString("viewAndColumnNamesCannotBeTheSame");  //$NON-NLS-1$
+        		} 
+        	}
+        	
+            // update UI controls
+            if (StringUtilities.isEmpty(msg)) {
+                if (!this.btnOk.isEnabled()) {
+                    this.btnOk.setEnabled(true);
+                }
+
+                if (this.imageLabel.getImage() != null) {
+                    this.imageLabel.setImage(null);
+                }
+
+                this.imageLabel.setImage(getInfoImage());
+            } else {
+                // value is not valid
+                if (this.btnOk.isEnabled()) {
+                    this.btnOk.setEnabled(false);
+                }
+
+                this.imageLabel.setImage(getErrorImage());
+            }
+
+            if (!StringUtilities.isEmpty(msg)) {
+            	this.messageLabel.setText(msg);
+            } else {
+            	this.messageLabel.setText(getString("clickOkToContinue")); //$NON-NLS-1$
+            }
+            
+            this.messageLabel.pack();
+        }
+
+        /**
+         * @param proposedName the proposed property name
+         * @return an error message or <code>null</code> if name is valid
+         */
+        public String validateName( String proposedName ) {
+            // must have a name
+            if (StringUtilities.isEmpty(proposedName)) {
+                return 	getString("tagCannotBeNullOrEmpty");  //$NON-NLS-1$
+            }
+            
+            for( char ch : proposedName.toCharArray()) {
+            	if( !isValidChar(ch)) {
+            		return getString("invalidTagCharacter", ch);  //$NON-NLS-1$
+            	}
+            }
+            // valid name
+            return null;
+        }
+        
+        private boolean isValidChar(char c) {
+        	if((Character.isLetter(c) || Character.isDigit(c))) return true;
+        	
+        	return false;
+        }
+        
+    }
 }

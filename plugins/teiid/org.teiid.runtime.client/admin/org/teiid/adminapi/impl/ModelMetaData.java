@@ -68,7 +68,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 	protected String modelType = Type.PHYSICAL.name();
 	protected String description;	
 	protected String path; 
-    protected Boolean visible = true;
+    protected boolean visible = true;
 
     @Since(Version.TEIID_8_0)
     protected List<Message> messages;
@@ -197,7 +197,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 		return getName() + this.sources;
     }
     
-    public void setVisible(Boolean value) {
+    public void setVisible(boolean value) {
     	this.visible = value;
     }    
 

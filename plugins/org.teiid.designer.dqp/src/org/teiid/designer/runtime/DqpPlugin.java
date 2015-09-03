@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.wst.server.core.IServer;
+import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.osgi.framework.BundleContext;
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.event.IChangeNotifier;
@@ -101,6 +102,22 @@ public class DqpPlugin extends Plugin {
      */
     public IEclipsePreferences getPreferences() {
         return this.getPreferences(PLUGIN_ID);
+    }
+
+    /**
+     * @return the jboss execution request timeout property from the preferences
+     * Note: the preference is saved in seconds while this will convert it into ms since
+     *           that is what the {@link IAS7ManagementDetails#PROPERTY_TIMEOUT} requires
+     */
+    public int getJbossRequestTimeout() {
+        IEclipsePreferences preferences = DqpPlugin.getInstance().getPreferences();
+        int timeout = preferences.getInt(PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT,
+                                         PreferenceConstants.JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT);
+        if (timeout < 100) {
+            // timeout preference is in seconds and the jboss property is in ms
+            timeout = timeout * 1000;
+        }
+        return timeout;
     }
 
     /**

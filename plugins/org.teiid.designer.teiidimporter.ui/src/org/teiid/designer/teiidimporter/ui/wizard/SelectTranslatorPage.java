@@ -352,8 +352,12 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
         if (visible) {
             String dsName = importManager.getDataSourceName();
             String dsType = importManager.getDataSourceDriverName();
-            this.dataSourceNameText.setText(dsName);
-            this.dataSourceDriverText.setText(dsType);
+            if(!StringUtilities.isEmpty(dsName) ) {
+            	this.dataSourceNameText.setText(dsName);
+            }
+            if(!StringUtilities.isEmpty(dsType) ) {
+            	this.dataSourceDriverText.setText(dsType);
+            }
             // Set initial translator selection
             String initialTranslatorSelection = getInitialTranslatorSelection();
             if(initialTranslatorSelection!=null) {

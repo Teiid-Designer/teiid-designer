@@ -377,7 +377,11 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 
     void beginLocalTxnIfNeeded() throws SQLException {
         if (this.transactionXid != null || inLocalTxn || this.autoCommitFlag || isDisableLocalTxn()) {
-        	return;
+            return;
+        }
+        String prop = this.propInfo.getProperty(ExecutionProperties.DISABLE_LOCAL_TRANSACTIONS);
+        if (prop != null && Boolean.valueOf(prop)) {
+            return;
         }
         try {
         	try {
@@ -684,9 +688,13 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         if (this.autoCommitFlag) {
             return ResultsFuture.NULL_FUTURE;
         }
-        
+
         this.autoCommitFlag = true;
-    	
+
+        if (isDisableLocalTxn()) {
+            return ResultsFuture.NULL_FUTURE;
+        }
+
         try {
 	        if (commit) {
 	        	return dqp.commit();
@@ -841,7 +849,7 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 		return this.getServerConnection().isOpen(timeout * 1000);
 	}
 	
-	public void recycleConnection() {
+	public void recycleConnection(boolean selectNewInstance) {
 		this.payload = null;
         try {
         	//close all open statements
@@ -864,7 +872,9 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
         	logger.log(Level.WARNING, Messages.getString(Messages.JDBC.MMXAConnection_rolling_back_error), e); 
         }
         
-		this.serverConn.cleanUp();
+        if (selectNewInstance) {
+            this.serverConn.cleanUp();
+        }
 	}
 	
 	public boolean isSameProcess(ConnectionImpl conn) throws CommunicationException {

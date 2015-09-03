@@ -10,7 +10,6 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.DocumentEvent;
@@ -37,7 +36,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.roles.Crud.Type;
 import org.teiid.designer.roles.DataRole;
@@ -48,6 +50,7 @@ import org.teiid.designer.roles.ui.wizard.panels.AllowedLanguagesPanel;
 import org.teiid.designer.roles.ui.wizard.panels.ColumnMaskingPanel;
 import org.teiid.designer.roles.ui.wizard.panels.CrudPanel;
 import org.teiid.designer.roles.ui.wizard.panels.RowBasedSecurityPanel;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.ui.common.InternalUiConstants.Widgets;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -57,12 +60,13 @@ import org.teiid.designer.ui.common.widget.IListPanelController;
 import org.teiid.designer.ui.common.widget.ListPanel;
 import org.teiid.designer.ui.common.widget.ListPanelAdapter;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.vdb.AllowedLanguages;
 
 /**
  * @since 8.0
  */
 public class DataRoleWizard extends AbstractWizard {
-    private static final String I18N_PREFIX = "NewDataRoleWizard."; //$NON-NLS-1$
+    private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(DataRoleWizard.class);
 
     private static final String TITLE = Messages.dataRoleWizardTitle;
     private static final String EDIT_TITLE = Messages.editDataRoleWizardEditTitle;
@@ -124,13 +128,15 @@ public class DataRoleWizard extends AbstractWizard {
 
     String roleNameTextEntry;
     
-    private Set<String> allowedLanguages;
+    private AllowedLanguages allowedLanguages;
     private Set<String> otherDataRoleNames;
+    
+    private boolean disableGrantAll = false;
 
     /**
      * @since 4.0
      */
-    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, Set<String> allowedLanguages, Set<String> otherDataRoleNames) {
+    public DataRoleWizard(Container tempContainer, DataRole existingDataRole, AllowedLanguages allowedLanguages, Set<String> otherDataRoleNames) {
         super(RolesUiPlugin.getInstance(), TITLE, IMAGE);
         this.tempContainer = tempContainer;
         this.allowedLanguages = allowedLanguages;
@@ -148,15 +154,16 @@ public class DataRoleWizard extends AbstractWizard {
         } else {
             this.dataRoleName = existingDataRole.getName();
             this.description = existingDataRole.getDescription();
-            this.allowCreateTempTables = existingDataRole.allowCreateTempTables();
+            this.allowCreateTempTables = existingDataRole.isAllowCreateTempTables();
             this.anyAuthentication = existingDataRole.isAnyAuthenticated();
-            this.grantAll = existingDataRole.doGrantAll();
-            this.allowSystemTables = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET) != null;
+            this.grantAll = existingDataRole.isGrantAll();
+            this.allowSystemTables = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET) != null;
             this.isEdit = true;
             this.setWindowTitle(EDIT_TITLE);
             this.mappedRoleNames = new HashSet<String>(existingDataRole.getRoleNames());
         }
         
+        disableGrantAll = ModelerCore.getTeiidServerManager().getDefaultServer() == null || ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7.get());
     }
 
     /**
@@ -443,12 +450,18 @@ public class DataRoleWizard extends AbstractWizard {
         });
         
         grantAllCheckBox = WidgetFactory.createCheckBox( miscOptionsGroup, getString("grantAllCheckBox.label"), GridData.FILL_HORIZONTAL, 1, grantAll); //$NON-NLS-1$
-        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(final SelectionEvent event) {
-				grantAll = grantAllCheckBox.getSelection();
-			}
-		});
+   	 	if( disableGrantAll ) {
+   	   	 	grantAllCheckBox.setEnabled(false);
+   	   	 	grantAllCheckBox.setText(getString("grantAllCheckBox.label") + StringConstants.SPACE + getString("grantAllCheckBoxDisabled.tooltip") );	//$NON-NLS-1$ //$NON-NLS-2$
+    	} else {
+	        grantAllCheckBox.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent event) {
+					grantAll = grantAllCheckBox.getSelection();
+				}
+			});
+    	}
+
         
         final Group sysTablesGroup = WidgetFactory.createGroup(miscOptionsGroup,
                 getString("systemTablesAccess.label"), GridData.FILL_HORIZONTAL, 2, 2); //$NON-NLS-1$
@@ -471,7 +484,7 @@ public class DataRoleWizard extends AbstractWizard {
 					}
 				});
 
-		final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup, StringUtilities.EMPTY_STRING,
+		final Group sysTablesPermissions = WidgetFactory.createGroup(sysTablesGroup, StringConstants.EMPTY_STRING,
 				GridData.FILL_HORIZONTAL, 2, 1);
 
 		readSysCB = WidgetFactory.createCheckBox(sysTablesPermissions, Messages.read.toUpperCase(), 0, 1, false);
@@ -517,8 +530,8 @@ public class DataRoleWizard extends AbstractWizard {
     private void loadExistingPermissions() {
         this.dataRoleName = this.existingDataRole.getName();
         this.anyAuthentication = this.existingDataRole.isAnyAuthenticated();
-        this.allowCreateTempTables = this.existingDataRole.allowCreateTempTables();
-        this.grantAll = this.existingDataRole.doGrantAll();
+        this.allowCreateTempTables = this.existingDataRole.isAllowCreateTempTables();
+        this.grantAll = this.existingDataRole.isGrantAll();
         this.dataRoleNameText.setText(this.existingDataRole.getName());
         this.mappedRolesPanel.addItems(this.existingDataRole.getRoleNames().toArray());
         this.descriptionTextEditor.setText(this.existingDataRole.getDescription());
@@ -558,7 +571,9 @@ public class DataRoleWizard extends AbstractWizard {
         this.anyAuthenticatedCheckBox.setSelection(this.anyAuthentication);
         this.allowCreateTempTablesCheckBox.setSelection(this.allowCreateTempTables);
         this.mappedRolesPanel.setEnabled(!anyAuthentication);
-        this.grantAllCheckBox.setEnabled(true);
+        if( !disableGrantAll ) {
+        	this.grantAllCheckBox.setEnabled(true);
+        }
 
         refreshAll();
 
@@ -613,7 +628,7 @@ public class DataRoleWizard extends AbstractWizard {
     	existingDataRole.setDescription(this.description);
     	existingDataRole.setPermissions(this.treeProvider.getPermissions());
     	
-    	Permission systemPerm = existingDataRole.getPermissionsMap().get(SYS_ADMIN_TABLE_TARGET);
+    	Permission systemPerm = existingDataRole.getPermission(SYS_ADMIN_TABLE_TARGET);
         if (allowSystemTables ) {
         	if( systemPerm == null ) {
         		existingDataRole.addPermission(new Permission(SYS_ADMIN_TABLE_TARGET,
@@ -642,7 +657,7 @@ public class DataRoleWizard extends AbstractWizard {
     	return this.tempContainer;
     }
     
-    public Set<String> getAllowedLanguages() {
+    public AllowedLanguages getAllowedLanguages() {
     	return allowedLanguages;
     }
 

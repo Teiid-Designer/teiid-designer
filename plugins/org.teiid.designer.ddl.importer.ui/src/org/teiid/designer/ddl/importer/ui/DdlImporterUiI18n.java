@@ -38,6 +38,7 @@ class DdlImporterUiI18n {
     static final String MODEL_TYPE_LABEL = i18n("modelTypeLabel"); //$NON-NLS-1$
     static final String OPT_TO_CREATE_MODEL_ENTITIES_FOR_UNSUPPORTED_DDL_LABEL = i18n("optToCreateModelEntitiesForUnsupportedDdlLabel"); //$NON-NLS-1$
     static final String OPT_TO_SET_MODEL_ENTITY_DESCRIPTION_LABEL = i18n("optToSetModelEntityDescriptionLabel"); //$NON-NLS-1$
+    static final String FILTER_UCS_FOR_DEFINED_PKS_LABEL = i18n("filterUcsForDefinedPksLabel"); //$NON-NLS-1$
     static final String PAGE_DESCRIPTION = i18n("pageDescription"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_NO_DDL_IMPORTED_MSG = i18n("differencePage.noDdlImportedMsg"); //$NON-NLS-1$
     static final String PAGE_TITLE = i18n("pageTitle"); //$NON-NLS-1$

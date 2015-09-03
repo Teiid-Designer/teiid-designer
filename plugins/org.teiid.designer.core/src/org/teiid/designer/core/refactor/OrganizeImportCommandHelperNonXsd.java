@@ -28,13 +28,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.refactor.ExternalReferenceVisitor.ExternalReferences;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.util.ModelVisitorProcessor;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelImport;
@@ -554,7 +554,7 @@ public class OrganizeImportCommandHelperNonXsd extends OrganizeImportCommandHelp
             final String modelLocation = modelImport.getModelLocation();
             if (modelImport.eResource() == null && !CoreStringUtil.isEmpty(modelLocation)) {
                 URI baseLocationURI = eResource.getURI();
-                final boolean isXSD = baseLocationURI.lastSegment().endsWith(ModelUtil.EXTENSION_XSD);
+                final boolean isXSD = baseLocationURI.lastSegment().endsWith(StringConstants.XSD);
 
                 // If the base resource URI was created as a file URI then it's path is encoded so before we
                 // resolve the referenced resource we need to encode it's relative path

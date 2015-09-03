@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
@@ -179,7 +179,7 @@ public class TeiidXmlImportXmlConfigurationPage extends AbstractWizardPage imple
 			return true;
 		}
 		
-		setThisPageComplete(StringUtilities.EMPTY_STRING, NONE);
+		setThisPageComplete(StringConstants.EMPTY_STRING, NONE);
 		return true;
 	}
 

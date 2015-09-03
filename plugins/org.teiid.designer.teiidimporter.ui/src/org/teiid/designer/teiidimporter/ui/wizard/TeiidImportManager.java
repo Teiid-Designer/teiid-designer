@@ -83,6 +83,7 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private Properties dataSourceProps = null;
     private Map<String,String> optionalImportProps = new HashMap<String,String>();
     private boolean createConnectionProfile = true;
+    private boolean filterRedundantUniqueConstraints = true;
     private TranslatorOverride translatorOverride;
     
     IStatus vdbDeploymentStatus = null;
@@ -263,7 +264,13 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
                 @Override
                 public void run( IProgressMonitor monitor ) throws InvocationTargetException {
                     try {
-                        monitor.beginTask(NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs()), 100); 
+                    	String message = null;
+                    	if(getTimeoutPrefSecs()<1) {
+                    		message = Messages.TeiidImportManager_deployVdbNoTimeoutMsg;
+                    	} else {
+                    		message = NLS.bind(Messages.TeiidImportManager_deployVdbMsg, getTimeoutPrefSecs());
+                    	}
+                        monitor.beginTask(message, 100); 
                         vdbDeploymentStatus = getServerImportManager().deployDynamicVdb(getCurrentImportVdbName(),dataSourceName,translatorName,optionalImportPropMap,monitor); 
                     } catch (Throwable e) {
                         throw new InvocationTargetException(e);
@@ -296,14 +303,8 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
         return getServerImportManager().createDynamicVdbString(getCurrentImportVdbName(), dataSourceName, translatorName, getOptionalImportProps());
     }
 
-    private String getTimeoutPrefSecs() {
-        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        try {
-			Integer.parseInt(timeoutStr);
-		} catch (NumberFormatException ex1) {
-			timeoutStr = PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT;
-		}
-        return timeoutStr;
+    private int getTimeoutPrefSecs() {
+        return DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
     }
     
     /**
@@ -558,6 +559,22 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 	 */
 	public void setCreateConnectionProfile(boolean createConnectionProfile) {
 		this.createConnectionProfile = createConnectionProfile;
+	}
+	
+    /**
+     * Get the CreateConnectionProfile flag
+	 * @return 'true' if a connection profile is to be created, 'false' if not.
+	 */
+	public boolean isFilterRedundantUniqueConstraints() {
+		return this.filterRedundantUniqueConstraints;
+	}
+
+	/**
+	 * Set the filterRedundantUniqueConstraints status flag
+	 * @param doFilter 'true' if a connection profile is to be created
+	 */
+	public void setFilterRedundantUniqueConstraints(boolean doFilter) {
+		this.filterRedundantUniqueConstraints = doFilter;
 	}
 
     /**

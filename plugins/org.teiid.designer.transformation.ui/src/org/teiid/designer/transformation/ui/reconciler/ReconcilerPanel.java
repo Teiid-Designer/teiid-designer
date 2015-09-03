@@ -9,6 +9,7 @@ package org.teiid.designer.transformation.ui.reconciler;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,6 +50,7 @@ import org.teiid.designer.udf.IFunctionForm;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.udf.UdfManager;
 import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
+import org.teiid.designer.ui.common.util.LayoutDebugger;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.viewsupport.ModelObjectUtilities;
 import org.teiid.query.ui.builder.util.ElementViewerFactory;
@@ -229,6 +231,8 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         // Set the layout
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
         controlsPanel.setLayout(gridLayout);
 
         GridData gridData = new GridData();
@@ -259,6 +263,7 @@ public class ReconcilerPanel extends SashForm implements ISelectionChangedListen
         // Set the layout
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 1;
+        gridLayout.marginRight = 0;
         panel.setLayout(gridLayout);
 
         GridData gridData = new GridData();

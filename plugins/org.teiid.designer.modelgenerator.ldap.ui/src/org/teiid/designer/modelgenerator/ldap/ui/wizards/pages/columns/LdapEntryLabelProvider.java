@@ -7,6 +7,10 @@
 */
 package org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.columns;
 
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
+import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
+import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiPlugin;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.AbstractLdapLabelProvider;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.ILdapEntryNode;
@@ -35,5 +39,23 @@ public class LdapEntryLabelProvider extends AbstractLdapLabelProvider {
         }
 
         return null;
+    }
+
+    @Override
+    public Image getImage(Object element) {
+        ImageDescriptor descriptor = null;
+
+        ModelGeneratorLdapUiPlugin plugin = ModelGeneratorLdapUiPlugin.getDefault();
+        if (element instanceof ILdapEntryNode) {
+            ILdapEntryNode entryNode = (ILdapEntryNode)element;
+            if (entryNode.isRoot())
+                descriptor = plugin.getImageDescriptor(ModelGeneratorLdapUiConstants.Images.LDAP_OBJECTS_ICON);
+            else
+                descriptor = plugin.getImageDescriptor(ModelGeneratorLdapUiConstants.Images.LDAP_TABLE_ICON);
+        } else if (element instanceof ILdapAttributeNode) {
+            descriptor = plugin.getImageDescriptor(ModelGeneratorLdapUiConstants.Images.LDAP_COLUMN_ICON);
+        }
+
+        return getImage(descriptor);
     }
 }

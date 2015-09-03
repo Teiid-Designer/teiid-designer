@@ -9,26 +9,24 @@ import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 
-
 /**
  * @since 8.0
  */
 public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
-	public final static String LDAP_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$
-	public final static String LDAP_DATASOURCE_URL = "url"; //$NON-NLS-1$
-    public final static String LDAP_CLASSNAME = "class-name"; //$NON-NLS-1$
-    public final static String LDAP_CONNECTION_FACTORY = "org.teiid.resource.adapter.ldap.LDAPManagedConnectionFactory"; //$NON-NLS-1$
+
     /* LDAP Binding Properties and sample values
      * 
+     * LdapAuthMethod = Simple - Only supported at the moment in Teiid
      * LdapAdminUserDN
      * LdapAdminUserPassword
-     * LdapUrl = ldap://<ldapServer>:<389>
+     * LdapStartTLS (encryption) = true/false
+     * LdapUrl = ldap[s]://<ldapServer>:<389>
      * LdapContextFactory = com.sun.jndi.ldap.LdapCtxFactory
      */
 
     @Override
-    public void setConnectionInfo( ModelResource modelResource,
-                                   IConnectionProfile connectionProfile ) throws ModelWorkspaceException {
+    public void setConnectionInfo(ModelResource modelResource, IConnectionProfile connectionProfile)
+        throws ModelWorkspaceException {
         Properties connectionProps = getCommonProfileProperties(connectionProfile);
 
         Properties props = connectionProfile.getBaseProperties();
@@ -36,6 +34,11 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         String url = props.getProperty(ILdapProfileConstants.URL_PROP_ID);
         if (null != url) {
             connectionProps.setProperty(CONNECTION_NAMESPACE + ILdapProfileConstants.URL_PROP_ID, url);
+        }
+
+        String authMethod = props.getProperty(ILdapProfileConstants.AUTHENTICATION_METHOD);
+        if (null != authMethod) {
+            connectionProps.setProperty(CONNECTION_NAMESPACE + ILdapProfileConstants.AUTHENTICATION_METHOD, authMethod);
         }
 
         String user = props.getProperty(ILdapProfileConstants.USERNAME_PROP_ID);
@@ -57,24 +60,18 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
 
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getPasswordPropertyKey()
-     */
     @Override
     public String getPasswordPropertyKey() {
-        return "LdapAdminUserPassword"; //$NON-NLS-1$
+        return ILdapProfileConstants.PASSWORD_PROP_ID;
     }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.datatools.connection.IConnectionInfoHelper#getDataSourcePasswordPropertyKey()
-     */
+
     @Override
-	public String getDataSourcePasswordPropertyKey() {
-        return "LdapAdminUserPassword"; //$NON-NLS-1$
+    public String getDataSourcePasswordPropertyKey() {
+        //
+        // This is the property key for the data source but it happens to
+        // be the same as the property key used by the connection profile
+        //
+        return ILdapProfileConstants.PASSWORD_PROP_ID;
     }
 
     @Override
@@ -83,16 +80,21 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
     }
 
     @Override
-    public Properties getTeiidRelatedProperties( IConnectionProfile connectionProfile ) {
+    public Properties getTeiidRelatedProperties(IConnectionProfile connectionProfile) {
         Properties connectionProps = new Properties();
-        
+
         Properties props = connectionProfile.getBaseProperties();
-        
+
+        //
+        // Connection profile contains more properties for ease
+        // of processing but only include the ones specifically
+        // to be injected into teiid
+        //
         String password = props.getProperty(ILdapProfileConstants.PASSWORD_PROP_ID);
-        if( password != null ) {
-        	connectionProps.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, password);
+        if (password != null) {
+            connectionProps.setProperty(ILdapProfileConstants.PASSWORD_PROP_ID, password);
         }
-        
+
         String url = props.getProperty(ILdapProfileConstants.URL_PROP_ID);
         if (null != url) {
             connectionProps.setProperty(ILdapProfileConstants.URL_PROP_ID, url);
@@ -107,13 +109,15 @@ public class LDAPConnectionInfoProvider extends ConnectionInfoHelper implements 
         if (null != contextFactory) {
             connectionProps.setProperty(ILdapProfileConstants.CONTEXT_FACTORY, contextFactory);
         }
-        connectionProps.setProperty(LDAP_CLASSNAME, LDAP_CONNECTION_FACTORY);
+        connectionProps.setProperty(ILdapProfileConstants.LDAP_CLASSNAME, ILdapProfileConstants.LDAP_CONNECTION_FACTORY);
 
         return connectionProps;
     }
-    
-	@Override
-	public boolean requiresPassword(IConnectionProfile connectionProfile) {
-		return true;
-	}
+
+    @Override
+    public boolean requiresPassword(IConnectionProfile connectionProfile) {
+        Properties props = connectionProfile.getBaseProperties();
+        String authMethod = props.getProperty(ILdapProfileConstants.AUTHENTICATION_METHOD);
+        return ILdapProfileConstants.AUTHMETHOD_SIMPLE.equals(authMethod);
+    }
 }

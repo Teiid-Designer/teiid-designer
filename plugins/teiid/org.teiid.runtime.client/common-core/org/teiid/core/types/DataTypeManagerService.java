@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.teiid.core.types.basic.AnyToObjectTransform;
 import org.teiid.core.types.basic.AnyToStringTransform;
 import org.teiid.core.types.basic.BooleanToNumberTransform;
@@ -50,6 +51,7 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -95,13 +97,13 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         LONG ("long", DataTypeName.LONG, Long.class, 19, "0123456789-", DataTypeAliases.BIGINT), //$NON-NLS-1$ //$NON-NLS-2$
 
-        BIG_INTEGER ("biginteger", DataTypeName.BIG_INTEGER, BigInteger.class, 30, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
+        BIG_INTEGER ("biginteger", DataTypeName.BIGINTEGER, BigInteger.class, 30, "0123456789-"), //$NON-NLS-1$ //$NON-NLS-2$
 
         FLOAT ("float", DataTypeName.FLOAT, Float.class, 30, "0123456789-+.eE", DataTypeAliases.REAL), //$NON-NLS-1$ //$NON-NLS-2$
 
         DOUBLE ("double", DataTypeName.DOUBLE, Double.class, 30, "0123456789-+.eE"), //$NON-NLS-1$ //$NON-NLS-2$
 
-        BIG_DECIMAL ("bigdecimal", DataTypeName.BIG_DECIMAL, BigDecimal.class, 30, "0123456789-.eE", DataTypeAliases.DECIMAL), //$NON-NLS-1$ //$NON-NLS-2$
+        BIG_DECIMAL ("bigdecimal", DataTypeName.BIGDECIMAL, BigDecimal.class, 30, "0123456789-.eE", DataTypeAliases.DECIMAL), //$NON-NLS-1$ //$NON-NLS-2$
 
         DATE ("date", DataTypeName.DATE, Date.class), //$NON-NLS-1$
 
@@ -945,6 +947,62 @@ public class DataTypeManagerService implements IDataTypeManagerService {
     public boolean isDecimalAsDouble() {
         return PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.decimalAsDouble", false); //$NON-NLS-1$
     }
+    
+    /**
+     * Is the given data type variable length
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports length value
+     */
+    @Override
+	public boolean isLengthDataType(String dataTypeName) {
+
+		if (dataTypeName.equalsIgnoreCase(DataTypeName.CHAR.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.CLOB.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.BLOB.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.OBJECT.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.STRING.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.VARBINARY.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.BIGINTEGER.name()) ) {
+			return true;
+		}
+		
+		return false;
+	}
+
+    /**
+     * Is the given data type support precision
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports precision
+     */
+    @Override
+	public boolean isPrecisionDataType(String dataTypeName) {
+
+		if (dataTypeName.equalsIgnoreCase(DataTypeName.BIGDECIMAL.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.DECIMAL.name()) ) {
+			return true;
+		}
+		
+		return false;
+	}
+    
+    /**
+     * Is the given data type support scale
+     * @param dataTypeName
+     * 
+     * @return true if the data type supports scale
+     */
+    @Override
+	public boolean isScaleDataType(String dataTypeName) {
+
+		if (dataTypeName.equalsIgnoreCase(DataTypeName.BIGDECIMAL.name())
+				|| dataTypeName.equalsIgnoreCase(DataTypeName.DECIMAL.name()) ) {
+			return true;
+		}
+		
+		return false;
+	}
 
     /**
      * Convert the value to the probable runtime type.

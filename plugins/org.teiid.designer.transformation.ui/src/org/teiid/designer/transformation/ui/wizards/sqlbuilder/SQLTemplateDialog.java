@@ -60,7 +60,7 @@ public class SQLTemplateDialog  extends ScrollableTitleAreaDialog {
     TabItem procedureTemplatesTab;
     
     Button selectRB, selectJoinRB, unionRB, flatFileSourceRB;
-    Button xmlFileLocalSourceRB, xmlFileUrlSourceRB;
+    Button xmlFileLocalSourceRB, xmlFileUrlSourceRB, selectObjectTableRB;
     Button simpleDefaultProcRB, insertDefaultProcRB, updateDefaultProcRB, deleteDefaultProcRB, 
     	soapCreateProcRB, soapExtractProcRB, restProcedureRB;
     Button replaceSQL_RB, insertAtBeginning_RB, insertAtCursor_RB, insertAtEnd_RB;
@@ -313,6 +313,20 @@ public class SQLTemplateDialog  extends ScrollableTitleAreaDialog {
                 setSQLTemplateArea();
             }
         });
+        
+        // XML File URL Source Query
+        this.selectObjectTableRB = WidgetFactory.createRadioButton(thePanel,
+                                                                  Messages.sqlTemplateDialogSelectObjectTableLabel,
+                                                                  SWT.NONE,
+                                                                  1,
+                                                                  false);
+        this.selectObjectTableRB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected( final SelectionEvent event ) {
+                setSQLTemplateArea();
+            }
+        });
+
 
         return thePanel;
     }
@@ -436,6 +450,8 @@ public class SQLTemplateDialog  extends ScrollableTitleAreaDialog {
                 sqlTextViewer.getDocument().set(SQLTemplates.SELECT_XMLFILE_LOCAL_SRC);
             } else if (this.xmlFileUrlSourceRB.getSelection()) {
                 sqlTextViewer.getDocument().set(SQLTemplates.SELECT_XMLFILE_URL_SRC);
+            } else if (this.selectObjectTableRB.getSelection()) {
+                sqlTextViewer.getDocument().set(SQLTemplates.SELECT_OBJECT_TABLE);
             }
         }
 

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Dialog;
@@ -218,7 +218,7 @@ public class ConnectionProfileSummaryDialog extends Dialog {
                 return prop.getValue();
             }
 
-            return StringUtilities.EMPTY_STRING;
+            return StringConstants.EMPTY_STRING;
         }
 
         /**

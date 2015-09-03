@@ -51,7 +51,6 @@ public class RelationalTable extends RelationalReference {
     private boolean system = DEFAULT_SYSTEM;
     private List<RelationalColumn> columns;
     private RelationalPrimaryKey primaryKey;
-    private RelationalUniqueConstraint uniqueConstraint;
     private List<RelationalUniqueConstraint> uniqueConstraints;
     private List<RelationalAccessPattern> accessPatterns;
     private List<RelationalForeignKey> foreignKeys;
@@ -229,28 +228,37 @@ public class RelationalTable extends RelationalReference {
 	        handleInfoChanged();
     	}
     }
-    
+
     /**
+     * Retained for backward compatibility with
+     * RelationalTableEditorPanel / ViewTableEditorPanel
+     *
+     * @deprecated
      * @return uniqueContraints
      */
     public RelationalUniqueConstraint getUniqueContraint() {
-        return uniqueConstraint;
+        if (getUniqueConstraints() == null || getUniqueConstraints().isEmpty())
+            return null;
+
+        return getUniqueConstraints().iterator().next();
     }
-    
+
     /**
-     * Set the unique constraint
+     * Set the single and only unique constraint
+     *
+     * @deprecated
+     * Retained for backward compatibility with
+     * RelationalTableEditorPanel / ViewTableEditorPanel
+     *
      * @param uc the uc
      */
     public void setUniqueConstraint(RelationalUniqueConstraint uc) {
-    	if( this.uniqueConstraint != uc ) {
-	    	if( uc != null ) {
-	    		uc.setParent(this);
-	    	}
-	        this.uniqueConstraint = uc;
-	        handleInfoChanged();
-    	}
+        if (uniqueConstraints != null)
+            uniqueConstraints.clear();
+
+        addUniqueConstraint(uc);
     }
-    
+
     /**
      * @return uniqueContraints
      */
@@ -509,12 +517,16 @@ public class RelationalTable extends RelationalReference {
 			setStatus(this.getPrimaryKey().getStatus());
 			return;
 		}
-		
-		if( this.getUniqueContraint() != null && !this.getUniqueContraint().getStatus().isOK()) {
-			setStatus(this.getUniqueContraint().getStatus());
-			return;
+
+		if (getUniqueConstraints() != null) {
+		    for (RelationalUniqueConstraint uniqueConstraint : getUniqueConstraints()) {
+		        if( uniqueConstraint != null && !uniqueConstraint.getStatus().isOK()) {
+		            setStatus(uniqueConstraint.getStatus());
+		            return;
+		        }
+		    }
 		}
-		
+
 		for( RelationalForeignKey fk : this.getForeignKeys() ) {
 			if( !fk.getStatus().isOK()) {
 				setStatus(fk.getStatus());
@@ -593,10 +605,10 @@ public class RelationalTable extends RelationalReference {
         } else if (!materializedTable.equals(other.materializedTable))
             return false;
 
-        if (uniqueConstraint == null) {
-            if (other.uniqueConstraint != null)
+        if (uniqueConstraints == null) {
+            if (other.uniqueConstraints != null)
                 return false;   
-        } else if (!uniqueConstraint.equals(other.uniqueConstraint))
+        } else if (!uniqueConstraints.equals(other.uniqueConstraints))
             return false;
 
         if (primaryKey == null) {
@@ -690,8 +702,8 @@ public class RelationalTable extends RelationalReference {
         if(materializedTable!=null) {
             result = HashCodeUtil.hashCode(result, materializedTable);
         }
-        if(uniqueConstraint!=null) {
-            result = HashCodeUtil.hashCode(result, uniqueConstraint);
+        if(uniqueConstraints!=null) {
+            result = HashCodeUtil.hashCode(result, uniqueConstraints);
         }
         if(primaryKey!=null) {
             result = HashCodeUtil.hashCode(result, primaryKey);
@@ -737,8 +749,8 @@ public class RelationalTable extends RelationalReference {
 		if( primaryKey != null ) {
 			sb.append("\n\t").append("PK = ").append(primaryKey); //$NON-NLS-1$  //$NON-NLS-2$
 		}
-		if( uniqueConstraint != null ) {
-			sb.append("\n\t").append("UC = ").append(uniqueConstraint); //$NON-NLS-1$  //$NON-NLS-2$
+		if( uniqueConstraints != null ) {
+			sb.append("\n\t").append("UC = ").append(uniqueConstraints); //$NON-NLS-1$  //$NON-NLS-2$
 		}
 		if( !getAccessPatterns().isEmpty() ) {
 			sb.append("\n\t").append(getAccessPatterns().size()).append(" access patterns"); //$NON-NLS-1$  //$NON-NLS-2$

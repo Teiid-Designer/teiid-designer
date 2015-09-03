@@ -275,6 +275,9 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         return isTeiidVersionOrGreater(Version.TEIID_8_7);
     }
 
+    protected boolean isTeiid89OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_9);
+    }
     
 
     /**

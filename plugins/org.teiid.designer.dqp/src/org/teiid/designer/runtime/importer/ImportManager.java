@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -43,7 +42,6 @@ public final class ImportManager implements IExecutionConfigurationListener {
     private static final String DYNAMIC_VDB_SUFFIX = "-vdb.xml";  //$NON-NLS-1$
     public static final String IMPORT_SRC_MODEL = "SrcModel";  //$NON-NLS-1$
     private static final String JNDI_PROPERTY_KEY = "jndi-name";  //$NON-NLS-1$
-    private static final int VDB_LOADING_TIMEOUT_SEC = 120;
     
     /**
      * The Teiid Instance being used for importers (may be <code>null</code>).
@@ -195,17 +193,14 @@ public final class ImportManager implements IExecutionConfigurationListener {
         workRemaining -= 10;
 
         // Wait until vdb is done loading, up to timeout sec
-        String timeoutStr = DqpPlugin.getInstance().getPreferences().get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        int timeoutSec = 0;
-        try {
-			timeoutSec = Integer.parseInt(timeoutStr);
-		} catch (NumberFormatException ex1) {
-			timeoutSec = VDB_LOADING_TIMEOUT_SEC;
-		}
-        
+        int timeoutSec = DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+
         boolean finishedLoading = false;
         try {
             finishedLoading = waitForVDBLoad(vdbName,timeoutSec,monitor,workRemaining);
+        } catch (InterruptedException ie) {
+            resultStatus = new Status(IStatus.CANCEL, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingInterruptedError, vdbName));
+            return resultStatus;
         } catch (Exception ex) {
             resultStatus = new Status(IStatus.ERROR, DqpPlugin.PLUGIN_ID, NLS.bind(Messages.ImportManagerVdbLoadingError, vdbName));
             return resultStatus;
@@ -340,7 +335,8 @@ public final class ImportManager implements IExecutionConfigurationListener {
     	int workIncrement = Math.round((float)workRemaining / increments);
     	
         long waitUntil = System.currentTimeMillis() + timeoutInSecs*1000;
-        if (timeoutInSecs < 0) {
+        // Timeout of zero or less means no timeout...
+        if (timeoutInSecs < 1) {
             waitUntil = Long.MAX_VALUE;
         }
         boolean first = true;
@@ -356,6 +352,12 @@ public final class ImportManager implements IExecutionConfigurationListener {
                 first = false;
             }
             monitor.worked(workIncrement);
+            
+            // Check for cancellation request.  If cancelled, throw InterruptedException
+            if(monitor.isCanceled()) {
+            	monitor.setCanceled(true);
+            	throw new InterruptedException("The operation was cancelled"); //$NON-NLS-1$
+            }
             
             boolean isActive = getImportServer().isVdbActive(vdbName);
             boolean isLoading = getImportServer().isVdbLoading(vdbName);

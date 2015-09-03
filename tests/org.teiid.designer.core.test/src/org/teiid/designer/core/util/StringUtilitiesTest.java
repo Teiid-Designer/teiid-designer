@@ -3,23 +3,24 @@ package org.teiid.designer.core.util;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 
 public class StringUtilitiesTest {
 
     @Test
     public void emptyStringAndEmptyStringAreSame() {
-        assertTrue("empty string and empty string should be same", StringUtilities.equalsIgnoreCase(StringUtilities.EMPTY_STRING, StringUtilities.EMPTY_STRING)); //$NON-NLS-1$
+        assertTrue("empty string and empty string should be same", StringUtilities.equalsIgnoreCase(StringConstants.EMPTY_STRING, StringConstants.EMPTY_STRING)); //$NON-NLS-1$
     }
 
     @Test
     public void emptyStringAndNonEmptyStringAreNotSame() {
-        assertFalse("empty string and non-empty string should not be same", StringUtilities.equalsIgnoreCase(StringUtilities.EMPTY_STRING, "non-empty-string")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertFalse("empty string and non-empty string should not be same", StringUtilities.equalsIgnoreCase(StringConstants.EMPTY_STRING, "non-empty-string")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Test
     public void nullStringAndEmptyStringAreNotSame() {
-        assertFalse("Null string and empty string should not be same", StringUtilities.equalsIgnoreCase(null, StringUtilities.EMPTY_STRING)); //$NON-NLS-1$
+        assertFalse("Null string and empty string should not be same", StringUtilities.equalsIgnoreCase(null, StringConstants.EMPTY_STRING)); //$NON-NLS-1$
     }
 
     @Test

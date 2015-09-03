@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -52,7 +51,6 @@ import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.core.extension.XClass;
 import org.teiid.designer.ui.UiConstants;
@@ -75,7 +73,6 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
 
     private static final int COMBO_BOX_CHOICE_LIMIT = 10;
     static final ILabelProvider pathLabelProvider = new ModelObjectPathLabelProvider();
-    private static final ModelEditor me = ModelerCore.getModelEditor();
 
     private static final ArrayList customPropertyFactories = new ArrayList();
 
@@ -170,7 +167,7 @@ public abstract class PropertyEditorFactory implements UiConstants.ExtensionPoin
                 target = (EObject)((ModelObjectPropertyDescriptor)propertyDescriptor).getObject();
             }
 
-            if (me.isDatatypeFeature(target, feature)
+            if (ModelerCore.getModelEditor().isDatatypeFeature(target, feature)
                 || (object instanceof XSDSimpleTypeDefinition && eTypeInstanceClassName.equals(EObject.class.getName()))) {
 
                 result = createDatatypeEditor(composite, itemPropertyDescriptor, propertyDescriptor, object);

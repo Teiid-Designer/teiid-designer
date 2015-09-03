@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.RelationalPlugin;
@@ -52,17 +52,17 @@ public class PushdownFunctionData {
 		Collection<ParameterData> params = new ArrayList<ParameterData>(5);
 		for( int i=0; i<numParams; i++ ) {
     		//param = new ParameterData("param_"+Integer.toString(i+1), defaultType, defaultLength);
-    		param = new ParameterData(StringUtilities.EMPTY_STRING, PushdownFunctionData.DEFAULT_TYPE, PushdownFunctionData.DEFAULT_LENGTH);
+    		param = new ParameterData(StringConstants.EMPTY_STRING, PushdownFunctionData.DEFAULT_TYPE, PushdownFunctionData.DEFAULT_LENGTH);
     		param.include();
     		params.add(param);
 		}
 		for( int i=numParams; i<maxParams; i++ ) {
 			//param = new ParameterData("param_"+Integer.toString(i+1), defaultType, defaultLength);
-			param = new ParameterData(StringUtilities.EMPTY_STRING, PushdownFunctionData.DEFAULT_TYPE, PushdownFunctionData.DEFAULT_LENGTH);
+			param = new ParameterData(StringConstants.EMPTY_STRING, PushdownFunctionData.DEFAULT_TYPE, PushdownFunctionData.DEFAULT_LENGTH);
 			params.add(param);
 		}
 		setInputParameters(params);
-		setReturnParameterName(StringUtilities.EMPTY_STRING);
+		setReturnParameterName(StringConstants.EMPTY_STRING);
 		setReturnParameterLength(PushdownFunctionData.DEFAULT_LENGTH);
 		setReturnParameterType(PushdownFunctionData.DEFAULT_TYPE);
 	}

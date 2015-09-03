@@ -87,6 +87,8 @@ public interface VdbUiConstants {
         String RESTORE_DEFAULT_VALUE = CTOOL16 + "restore-default-value.png"; //$NON-NLS-1$
         
         String VDB_ICON = OBJ16 + "VDB.gif"; //$NON-NLS-1$
+        String DYNAMIC_VDB_ICON = OBJ16 + "dynamic-vdb.png"; //$NON-NLS-1$
+        String DDL_VDB_ICON = OBJ16 + "ddl-vdb.png"; //$NON-NLS-1$
         String ERROR_ICON = OBJ16 + "error_st_obj.gif"; //$NON-NLS-1$
         String WARNING_ICON = OBJ16 + "warning_st_obj.gif"; //$NON-NLS-1$
     }

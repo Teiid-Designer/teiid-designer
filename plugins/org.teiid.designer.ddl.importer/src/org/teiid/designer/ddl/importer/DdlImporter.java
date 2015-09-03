@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -41,6 +40,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
 import org.teiid.designer.ddl.importer.node.EmfModelGenerator;
@@ -73,7 +73,6 @@ public class DdlImporter {
     private ModelResource model;
     private String ddlString;
     private IStatus importStatus;
-    private boolean generateDefaultSQL;
     private boolean noDdlImported;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
@@ -96,9 +95,11 @@ public class DdlImporter {
     /**
      * @param monitor
      * @param totalWork
+     * @param options 
      * @throws Exception
      */
-    public void importDdl(final IProgressMonitor monitor, final int totalWork ) throws Exception {
+    public void importDdl(final IProgressMonitor monitor, final int totalWork, final Properties options) throws Exception {
+
         OperationUtil.perform(new Unreliable() {
 
             private FileReader reader = null;
@@ -115,16 +116,14 @@ public class DdlImporter {
             @Override
             public void tryToDo() throws Exception {
                 reader = new FileReader(ddlFileName());
-                importDdl(reader, monitor, totalWork);
+                importDdl(reader, monitor, totalWork, options);
             }
         });
     }
 
-    void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork ) throws Exception {
+    void importDdl(FileReader reader, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
     	ddlString = null;
     	importManager.getImportMessages().clear();
-    	
-        int workUnit = totalWork / 3;
 
         // ------------------------------------------------------------------------------
         // Parse the DDL from the file
@@ -135,13 +134,28 @@ public class DdlImporter {
         StringBuilder builder = new StringBuilder();
         for (int charTot = reader.read(buf); charTot >= 0; charTot = reader.read(buf))
             builder.append(buf, 0, charTot);
+
+        importDdl(builder.toString(), monitor, totalWork, options);
+    }
+
+    /**
+     * @param ddl
+     * @param monitor
+     * @param totalWork
+     * @param options
+     * @throws Exception
+     */
+    public void importDdl(String ddl, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
+        this.ddlString = ddl;
+
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+        int workUnit = totalWork / 3;
 
         // Use specified parser if it has been set
         AstNode rootNode = null;
         DdlParsers parsers = new DdlParsers();
-        ddlString = builder.toString();
-        
+
         if( CoreStringUtil.isEmpty(ddlString) ) {
         	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
         	this.noDdlImported = true;
@@ -203,7 +217,7 @@ public class DdlImporter {
             throw new Exception(DdlImporterPlugin.i18n("noDDLImporterRegisteredMsg", parserId)); //$NON-NLS-1$
 
         importManager.setNodeImporter(nodeImporter);
-        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager);
+        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager, options);
         
         if (monitor.isCanceled())
             throw new OperationCanceledException();
@@ -235,12 +249,26 @@ public class DdlImporter {
     }
     
     /**
-     * @return the failure message
+     * @return the failure error index
      */
     public int getParseErrorIndex() {
     	return importManager.getImportMessages().getParseErrorIndex();
     }
-    
+
+    /**
+     * @return the failure column number
+     */
+    public int getParseErrorColNumber() {
+        return importManager.getImportMessages().getParseErrorColNumber();
+    }
+
+    /**
+     * @return the failure line number
+     */
+    public int getParseErrorLineNumber() {
+        return importManager.getImportMessages().getParseErrorLineNumber();
+    }
+
     /**
      * Add a progress message
      * @param message the progress message
@@ -284,7 +312,14 @@ public class DdlImporter {
     public DifferenceReport getDifferenceReport() {
     	return diffReport;
     }
-    
+
+    /**
+     * @return created model
+     */
+    public ModelResource model() {
+        return model;
+    }
+
     /**
      * @return modelFile
      */
@@ -324,25 +359,29 @@ public class DdlImporter {
         importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);
 
         // If Virtual Model, then find all created Tables, Procedures and Views and call help create to get the transformations set correctly
-        if(importManager.getModelType() == ModelType.VIRTUAL_LITERAL ) {
-        	Properties props = new Properties();
-        	if( doGenerateDefaultSQL() ) {
-	        	props.put("generateDefaultSQL", generateDefaultSQL); //$NON-NLS-1$
-	        	props.put("validate", generateDefaultSQL); //$NON-NLS-1$
-        	}
-        	
-        	Collection<EObject> targets = new ArrayList<EObject>();
-        	
-        	for( Object nextObj : model.getEObjects() ) {
-        		if( nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
-		            try {
-		                NewModelObjectHelperManager.helpCreate(nextObj, props);
-		                targets.add((EObject)nextObj);
-		            } catch (ModelerCoreException err) {
-		                DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
-		            }
-        		}
-        	}
+        if (importManager.getModelType() == ModelType.VIRTUAL_LITERAL) {
+            Properties props = new Properties();
+            boolean doGenerateDefaultSQL = importManager.optToGenerateDefaultSQL();
+            boolean doHelpCreateTransform = importManager.optToHelpCreateTransform();
+            if (doHelpCreateTransform) {
+                if (doGenerateDefaultSQL) {
+                    props.put("generateDefaultSQL", doGenerateDefaultSQL); //$NON-NLS-1$
+                    props.put("validate", doGenerateDefaultSQL); //$NON-NLS-1$
+                }
+
+                Collection<EObject> targets = new ArrayList<EObject>();
+
+                for (Object nextObj : model.getEObjects()) {
+                    if (nextObj instanceof Procedure || nextObj instanceof BaseTable || nextObj instanceof View) {
+                        try {
+                            NewModelObjectHelperManager.helpCreate(nextObj, props);
+                            targets.add((EObject)nextObj);
+                        } catch (ModelerCoreException err) {
+                            DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -442,8 +481,12 @@ public class DdlImporter {
                     if (!ModelUtil.isModelFile(resource)) throw new IllegalArgumentException(
                                                                                              DdlImporterI18n.MODEL_NAME_IS_NON_MODEL_FILE_MSG);
                     // Verify name is not a non-relational model
-                    if (!RelationalPackage.eNS_URI.equals(ModelUtil.getXmiHeader(resource).getPrimaryMetamodelURI())) throw new IllegalArgumentException(
+                    if (resource.exists()) {
+                        XMIHeader xmiHeader = ModelUtil.getXmiHeader(resource);
+                        if (xmiHeader == null || !RelationalPackage.eNS_URI.equals(xmiHeader.getPrimaryMetamodelURI())) throw new IllegalArgumentException(
                                                                                                                                                          DdlImporterI18n.MODEL_NAME_IS_NON_RELATIONAL_MODEL_MSG);
+                    }
+
                     modelFile = (IFile)resource;
                 }
             } else modelFile = root.getFile(modelPath);
@@ -476,14 +519,7 @@ public class DdlImporter {
      * @param value
      */
     public void setGenerateDefaultSQL(boolean value) {
-    	this.generateDefaultSQL = value;
-    }
-    
-    /**
-     * @return generateDefaultSQL
-     */
-    public boolean doGenerateDefaultSQL() {
-    	return this.generateDefaultSQL;
+        importManager.optToGenerateDefaultSQL(value);
     }
 
     /**

@@ -22,8 +22,10 @@
 package org.teiid.query.function;
 
 import java.util.Collection;
+import java.util.Map;
 import org.teiid.core.CoreConstants;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.metadata.Datatype;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.query.function.metadata.FunctionMetadataValidator;
 import org.teiid.query.function.source.SystemSource;
@@ -37,6 +39,7 @@ public class SystemFunctionManager {
 	private boolean allowEnvFunction = true;
 	private final ClassLoader classLoader;
     private final ITeiidServerVersion teiidVersion;
+    private Map<String, Datatype> types;
 
 	/**
 	 * @param teiidVersion
@@ -45,6 +48,16 @@ public class SystemFunctionManager {
     public SystemFunctionManager(ITeiidServerVersion teiidVersion, ClassLoader classLoader) {
         this.teiidVersion = teiidVersion;
         this.classLoader = classLoader;
+    }
+
+    /**
+     * @param teiidVersion
+     * @param classLoader 
+     * @param typeMap
+     */
+    public SystemFunctionManager(ITeiidServerVersion teiidVersion, ClassLoader classLoader, Map<String, Datatype> typeMap) {
+        this(teiidVersion, classLoader);
+        this.types = typeMap;
     }
 
     /**
@@ -61,7 +74,7 @@ public class SystemFunctionManager {
 			// Validate the system source - should never fail
 	    	ValidatorReport report = new ValidatorReport("Function Validation"); //$NON-NLS-1$
 	        Collection<FunctionMethod> functionMethods = systemSource.getFunctionMethods();
-	    	FunctionMetadataValidator.validateFunctionMethods(teiidVersion, functionMethods,report);
+	    	FunctionMetadataValidator.validateFunctionMethods(teiidVersion, functionMethods, report, types);
 			if(report.hasItems()) {
 			    // Should never happen as SystemSourcTe doesn't change
 			    System.err.println(Messages.getString(Messages.ERR.ERR_015_001_0005, report));

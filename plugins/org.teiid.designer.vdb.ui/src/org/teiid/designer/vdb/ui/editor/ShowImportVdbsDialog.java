@@ -119,7 +119,7 @@ public class ShowImportVdbsDialog extends Dialog {
         this.importVdbViewer.getControl().setLayoutData(data);
         
         if( this.vdb != null ) {
-	        for( VdbImportVdbEntry row : this.vdb.getImportVdbEntries() ) {
+	        for( VdbImportVdbEntry row : this.vdb.getImports() ) {
 	        	if( row != null ) {
 //	        		this.importVdbViewer.add(row.getName());
 	        		this.importVdbViewer.add(row);

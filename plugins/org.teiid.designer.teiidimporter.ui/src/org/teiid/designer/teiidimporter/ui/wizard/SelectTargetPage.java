@@ -11,36 +11,38 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
+import org.teiid.designer.runtime.DqpPlugin;
+import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.teiidimporter.ui.Messages;
 import org.teiid.designer.teiidimporter.ui.UiConstants;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
@@ -49,7 +51,6 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.widget.DefaultScrolledComposite;
-import org.teiid.designer.ui.common.widget.Dialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelNameUtil;
@@ -65,16 +66,17 @@ import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
  */
 public class SelectTargetPage extends AbstractWizardPage implements UiConstants {
 
-    private static final String EMPTY_STR = ""; //$NON-NLS-1$
-    private static final String SERVER_PREFIX = "Default Server: "; //$NON-NLS-1$
-
+    private static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
+        
     private TeiidImportManager importManager;
 
     private Text targetModelContainerText;
     private Text targetModelFileText;
     private Text targetModelInfoText;
+    private Text timeoutText;
+    private Button filterRedundantUCsCB;
     private Button createConnProfileCB;
-    private Button showVdbXMLButton;
+    private StyledTextEditor vdbTextEditor;
 
     /**
      * SelectedTranslatorAndTargetPage Constructor
@@ -87,12 +89,12 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
 
     @Override
     public void createControl( Composite theParent ) {
-        final Composite hostPanel = new Composite(theParent, SWT.NONE);
-        hostPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        hostPanel.setLayout(new GridLayout(1, false));
+        final Composite basePanel = new Composite(theParent, SWT.NONE);
+        basePanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        basePanel.setLayout(new GridLayout(1, false));
         
         // Create page            
-        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(hostPanel, SWT.H_SCROLL | SWT.V_SCROLL);
+        DefaultScrolledComposite scrolledComposite = new DefaultScrolledComposite(basePanel, SWT.H_SCROLL | SWT.V_SCROLL);
     	scrolledComposite.setExpandHorizontal(true);
     	scrolledComposite.setExpandVertical(true);
         GridLayoutFactory.fillDefaults().equalWidth(false).applyTo(scrolledComposite);
@@ -109,45 +111,52 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         try {
             serverString = importManager.getDisplayName();
         } catch (Exception ex) {
-            serverString = "Unknown"; //$NON-NLS-1$
+            serverString = UNKNOWN;
         }
-        serverNameLabel.setText(SERVER_PREFIX + serverString);
+        serverNameLabel.setText(Messages.SelectTargetPage_defaultServerPrefix + StringConstants.SPACE + serverString);
         serverNameLabel.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
         Font bannerFont = JFaceResources.getBannerFont();
         serverNameLabel.setFont(bannerFont);
-                
-        // Group for Selection of target Source Model
-        createTargetModelGroup(pnl);
-        
-        showVdbXMLButton = new Button(pnl, SWT.PUSH);
-        showVdbXMLButton.setText(Messages.ShowVdbXmlAction_text);
-        showVdbXMLButton.setToolTipText(Messages.ShowVdbXmlAction_tooltip);
-        showVdbXMLButton.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// Launch a dialog to show vdb.xml text contents
-				ShowVdbXmlDialog dialog = new ShowVdbXmlDialog(getShell(), importManager.getDynamicVdbString());
-				dialog.open();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
+
+        // TabFolder - one tab contains Target Model info, other tab contains VDB deployment info
+		createTabPanel(pnl);
+		
         scrolledComposite.sizeScrolledPanel();
         
-        setControl(hostPanel);
+        setControl(basePanel);
         
         // Validate the page
         validatePage();
     }
 
+    /**
+     * Create the tab panel containing the Target Model Definition tab and VDB Details tab
+     * @param parent the parent composite
+     */
+    private void createTabPanel(Composite parent) {
+        final TabFolder tabFolder = new TabFolder(parent, SWT.TOP | SWT.BORDER | SWT.NO_SCROLL);
+        GridDataFactory.fillDefaults().grab(true,  true).applyTo(tabFolder);
+        
+        // The Target Model Definition tab
+		Composite modelDefnPanel = createTargetModelDefnPanel(tabFolder);
+        TabItem modelDefinitionTab = new TabItem(tabFolder, SWT.NONE);
+        modelDefinitionTab.setControl(modelDefnPanel);
+        modelDefinitionTab.setText(Messages.SelectTargetPage_TgtModelDefnTab);
+		
+		// The VDB details tab
+        Composite vdbDetailsPanel = createVdbDetailsPanel(tabFolder);
+        TabItem vdbTab = new TabItem(tabFolder, SWT.NONE);
+        vdbTab.setControl(vdbDetailsPanel);
+        vdbTab.setText(Messages.SelectTargetPage_AdvancedTab);
+    }
+    
+    private int getTimeoutPrefSecs() {
+        return DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+    }
 
-
+    private void setTimeoutPrefSecs(int timeoutSecs) {
+        DqpPlugin.getInstance().getPreferences().putInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, timeoutSecs);
+    }
     
     @Override
     public void setVisible( boolean visible ) {
@@ -158,6 +167,9 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             	this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
             }
             
+            vdbTextEditor.setText(importManager.getDynamicVdbString());
+            timeoutText.setText(Integer.toString(getTimeoutPrefSecs()));
+            
             validatePage();
             getControl().setVisible(visible);
         } else {
@@ -166,28 +178,29 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     }
     
     /*
-     * Create Group for Definition of the target relational model
+     * Create Group for definition of the target relational model
      * @parent the parent Composite
+     * @return the target model definition composite
      */
-    private void createTargetModelGroup(Composite parent) {
+    private Composite createTargetModelDefnPanel(Composite parent) {
         new Label(parent,SWT.NULL);  // For spacing
         
         // -------------------------------------
         // Create the Model Definition Group
         // -------------------------------------
-        Group sourceGroup = WidgetFactory.createGroup(parent, Messages.SelectTargetPage_TgtModelDefnGroup, SWT.NONE, 1, 3);
-        sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        ((GridData)sourceGroup.getLayoutData()).widthHint = 400;
+        Group modelDefnPanel = WidgetFactory.createGroup(parent, StringConstants.EMPTY_STRING, SWT.NONE, 1, 3);
+        modelDefnPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        ((GridData)modelDefnPanel.getLayoutData()).widthHint = 400;
 
         // -----------------------
         // Location controls
         // -----------------------
         // Location Label
-        Label locationLabel = new Label(sourceGroup, SWT.NULL);
+        Label locationLabel = new Label(modelDefnPanel, SWT.NULL);
         locationLabel.setText(Messages.SelectTargetPage_Location);
 
         // Location Text box
-        targetModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
+        targetModelContainerText = new Text(modelDefnPanel, SWT.BORDER | SWT.SINGLE);
         String targetContainerText = null;
         if( this.importManager.getTargetModelLocation() != null ) {
         	targetContainerText = this.importManager.getTargetModelLocation().toOSString();
@@ -200,7 +213,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         targetModelContainerText.setEditable(false);
 
         // Browse button for Location Definition
-        Button browseButton = new Button(sourceGroup, SWT.PUSH);
+        Button browseButton = new Button(modelDefnPanel, SWT.PUSH);
         gridData = new GridData();
         browseButton.setLayoutData(gridData);
         browseButton.setText(Messages.SelectTargetPage_Browse);
@@ -215,13 +228,11 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         // Model Name controls
         // -----------------------
         // Name label
-        Label fileLabel = new Label(sourceGroup, SWT.NULL);
+        Label fileLabel = new Label(modelDefnPanel, SWT.NULL);
         fileLabel.setText(Messages.SelectTargetPage_Name); 
 
         // Name Text box
-        targetModelFileText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
-//        String targetModelName = this.importManager.getTargetModelName();
-//        if(targetModelName!=null) targetModelFileText.setText(targetModelName);
+        targetModelFileText = new Text(modelDefnPanel, SWT.BORDER | SWT.SINGLE);
         
         gridData = new GridData(GridData.FILL_HORIZONTAL);
         targetModelFileText.setLayoutData(gridData);
@@ -232,11 +243,11 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             }
         });
         
-        new Label(sourceGroup, SWT.NONE);  // For spacing
-        new Label(sourceGroup, SWT.NONE);  // For spacing
+        new Label(modelDefnPanel, SWT.NONE);  // For spacing
+        new Label(modelDefnPanel, SWT.NONE);  // For spacing
         
         // Info area - shows model selection status
-        Group infoGroup = WidgetFactory.createGroup(sourceGroup, Messages.SelectTargetPage_ModelStatus, SWT.NONE | SWT.BORDER_DASH,2);
+        Group infoGroup = WidgetFactory.createGroup(modelDefnPanel, Messages.SelectTargetPage_ModelStatus, SWT.NONE | SWT.BORDER_DASH,2);
         infoGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
         // Text box for info message
@@ -250,10 +261,72 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         targetModelInfoText.setLayoutData(gd);
         
         // CheckBox for Connection Profile - defaults to checked
-        createConnProfileCB = WidgetFactory.createCheckBox(sourceGroup, Messages.SelectTargetPage_CreateConnectionProfileCB_Label, SWT.NONE, 3);
-        createConnProfileCB.setToolTipText(Messages.SelectTargetPage_CreateConnectionProfileCB_Label);
+        filterRedundantUCsCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_FilterRedundantUCsCB_Label, SWT.NONE, 3);
+        filterRedundantUCsCB.setToolTipText(Messages.SelectTargetPage_FilterRedundantUCsCB_ToolTip);
+        filterRedundantUCsCB.setSelection(true);
+        
+        // CheckBox for Connection Profile - defaults to checked
+        createConnProfileCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_CreateConnectionProfileCB_Label, SWT.NONE, 3);
+        createConnProfileCB.setToolTipText(Messages.SelectTargetPage_CreateConnectionProfileCB_ToolTip);
         createConnProfileCB.setSelection(true);
 
+        return modelDefnPanel;
+    }
+    
+    /*
+     * Create panel containing the import VDB details (content and deployment timeout)
+     * @parent the parent Composite
+     * @return the vdb details composite
+     */
+    private Composite createVdbDetailsPanel(Composite parent) {
+    	// Overall panel containing VDB Details
+        final Composite vdbPanel = new Composite(parent, SWT.NONE);
+        vdbPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        vdbPanel.setLayout(new GridLayout(2, false));
+        
+        // VDB Deployment timeout preference
+        Label timeoutLabel = new Label(vdbPanel,SWT.NULL);
+        timeoutLabel.setText(Messages.SelectTargetPage_TimeoutLabelText);
+        
+        timeoutText = new Text(vdbPanel,SWT.BORDER | SWT.SINGLE);
+        GridDataFactory.fillDefaults().minSize(40,SWT.DEFAULT).applyTo(timeoutText);
+        timeoutText.addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText( ModifyEvent e ) {
+                validatePage();
+            }
+        });
+        timeoutLabel.setToolTipText(Messages.SelectTargetPage_TimeoutTooltip);
+        timeoutText.setToolTipText(Messages.SelectTargetPage_TimeoutTooltip);
+                
+        // Dynamic VDB content
+        Group vdbContentGroup = WidgetFactory.createGroup(vdbPanel, Messages.SelectTargetPage_dynamic_vdb_text, SWT.NONE);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.horizontalSpan = 2;
+        vdbContentGroup.setLayoutData(gd);
+        vdbContentGroup.setToolTipText(Messages.SelectTargetPage_dynamic_vdb_tooltip);
+        
+        Composite innerPanel = new Composite(vdbContentGroup, SWT.NONE);
+        innerPanel.setLayout(new GridLayout());
+        GridData pgd = new GridData(GridData.FILL_BOTH);
+        pgd.minimumWidth = 400;
+        pgd.minimumHeight = 400;
+        pgd.grabExcessVerticalSpace = true;
+        pgd.grabExcessHorizontalSpace = true;
+        innerPanel.setLayoutData(pgd);
+        
+        vdbTextEditor = new StyledTextEditor(innerPanel, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+        GridData gdt = new GridData(GridData.FILL_BOTH);
+        gdt.widthHint = 400;
+        gdt.heightHint = 400;
+        vdbTextEditor.setLayoutData(gdt);
+        vdbTextEditor.setEditable(false);
+        vdbTextEditor.setAllowFind(false);
+        vdbTextEditor.getTextWidget().setWordWrap(false);
+        vdbTextEditor.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+        vdbTextEditor.getTextWidget().setToolTipText(Messages.SelectTargetPage_dynamic_vdb_tooltip);
+        
+        return vdbPanel;
     }
     
     /**
@@ -267,7 +340,7 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         	return; // do nothing
         }
 
-        if (folder != null && targetModelContainerText != null) {
+        if (targetModelContainerText != null) {
             this.importManager.setTargetModelLocation(folder.getFullPath().makeRelative());
             this.targetModelContainerText.setText(this.importManager.getTargetModelLocation().makeRelative().toString());
         } else {
@@ -328,12 +401,18 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     private boolean validatePage() {
         
         //---------------------------------------------------
+        // Timeout preference value - validation
+        //---------------------------------------------------
+        boolean timeoutTextValid = validateTimeoutText();
+        if(!timeoutTextValid) return false;
+
+        //---------------------------------------------------
         // Target Model Section - validation
         //---------------------------------------------------
         boolean modelSelectionValid = validateTargetModelSelection();
         if(!modelSelectionValid) return false;
 
-        setThisPageComplete(EMPTY_STR, NONE);
+        setThisPageComplete(StringConstants.EMPTY_STRING, NONE);
         return true;
     }
 
@@ -370,6 +449,11 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         
         // Validate the target model name
         String fileText = targetModelFileText.getText().trim();
+        if(StringUtilities.isEmpty(fileText)) {
+            setThisPageComplete(Messages.SelectTargetPage_EnterModelNameMsg, ERROR);
+            return false;
+        }
+        
         IStatus status = ModelNameUtil.validate(fileText, ModelerCore.MODEL_FILE_EXTENSION, null,
                 ModelNameUtil.IGNORE_CASE );
         if( status.getSeverity() == IStatus.ERROR ) {
@@ -379,10 +463,48 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         
         // Valid target model - now compare it's connection profile vs the selected profile
         if( importManager.targetModelExists() ) {
-            setThisPageComplete(Messages.bind(Messages.SelectTargetPage_ModelExistsWithThisNameMsg, fileText), ERROR);
+            setThisPageComplete(NLS.bind(Messages.SelectTargetPage_ModelExistsWithThisNameMsg, fileText), ERROR);
             return false;
         }
 
+        return true;
+    }
+    
+    /*
+     * This method validates the timeout textbox.  If valid, the preference is updated.
+     * @return 'true' if the timeout textbox is valid, 'false' if not.
+     */
+    private boolean validateTimeoutText() {
+    	// Make sure the timeout text entered is parsable
+    	String timeoutValue = timeoutText.getText();
+    	try {
+    		// Check for empty value
+    		if(StringUtilities.isEmpty(timeoutValue)) {
+	            setThisPageComplete(Messages.SelectTargetPage_TimeoutEmptyMsg, ERROR);
+	    		return false;
+    		}
+    		
+			int timeoutInt = Integer.parseInt(timeoutValue.trim());
+			
+	    	// Make sure the timeout is not less than min value
+	    	if(timeoutInt < PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MIN) {
+	            setThisPageComplete(NLS.bind(Messages.SelectTargetPage_TimeoutLessThanMinAllowedMsg, timeoutValue, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MIN), ERROR);
+	    		return false;
+	    	}
+	    	
+	    	// Make sure the timeout is not greater than max value
+	    	if(timeoutInt > PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MAX) {
+	            setThisPageComplete(NLS.bind(Messages.SelectTargetPage_TimeoutGreaterThanMaxAllowedMsg, timeoutValue, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MAX), ERROR);
+	    		return false;
+	    	}
+	    	
+	    	// If valid, update the preference
+	        setTimeoutPrefSecs(timeoutInt);
+	    	
+		} catch (NumberFormatException ex) {
+            setThisPageComplete(NLS.bind(Messages.SelectTargetPage_TimeoutTextNotParsableMsg, timeoutValue), ERROR);
+            return false;
+		}
         return true;
     }
         
@@ -459,6 +581,18 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     	return isChecked;
     }
     
+    /**
+     * Gets the filter redundant UC's status
+     * @return 'true' if the filter checkbox is checked, 'false' if not.
+     */
+    public boolean isFilterRedundantUniqueConstraints() {
+    	boolean isChecked = false;
+    	if(this.filterRedundantUCsCB != null) {
+    		isChecked = this.filterRedundantUCsCB.getSelection();
+    	}
+    	return isChecked;
+    }
+    
     /*
      * Filter for Model Selection
      */
@@ -502,78 +636,5 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
             return doSelect;
         }
     };
-    
-    class ShowVdbXmlDialog extends Dialog {
-        
-        //============================================================================================================================
-        // Variables
-        
-        private StyledTextEditor textEditor;
-        
-        private String theXmlText;
-
-
-        //============================================================================================================================
-        // Constructors
-            
-        /**<p>
-         * </p>
-         * @param shell the shell
-         * @param theXmlText the xml text
-         * @since 4.0
-         */
-        public ShowVdbXmlDialog(final Shell shell, final String theXmlText) {
-            super(shell, Messages.ShowVdbXmlDialog_title);
-            this.theXmlText = theXmlText;
-        }
-        
-        //============================================================================================================================
-        // Overridden Methods
-
-        /**<p>
-         * </p>
-         * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-         * @since 4.0
-         */
-        @Override
-        protected Control createDialogArea(final Composite parent) {
-            final Composite dlgPanel = (Composite)super.createDialogArea(parent);
-            
-            Group descGroup = WidgetFactory.createGroup(dlgPanel, Messages.ShowVdbXmlDialog_dynamic_vdb_text, SWT.NONE);
-            descGroup.setLayoutData(new GridData(GridData.FILL_BOTH));
-            
-            Composite innerPanel = new Composite(descGroup, SWT.NONE);
-            innerPanel.setLayout(new GridLayout());
-            GridData pgd = new GridData(GridData.FILL_BOTH);
-            pgd.minimumWidth = 400;
-            pgd.minimumHeight = 400;
-            pgd.grabExcessVerticalSpace = true;
-            pgd.grabExcessHorizontalSpace = true;
-            innerPanel.setLayoutData(pgd);
-            
-            this.textEditor = new StyledTextEditor(innerPanel, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-            GridData gdt = new GridData(GridData.FILL_BOTH);
-            gdt.widthHint = 400;
-            gdt.heightHint = 400;
-            this.textEditor.setLayoutData(gdt);
-            this.textEditor.setEditable(false);
-            this.textEditor.setAllowFind(false);
-            this.textEditor.getTextWidget().setWordWrap(false);
-            
-            this.textEditor.setText(theXmlText);
-            
-            return dlgPanel;
-        }
-
-    	@Override
-    	protected Control createContents(Composite parent) {
-    		// TODO Auto-generated method stub
-    		Control superControl =  super.createContents(parent);
-    		
-    		getButton(IDialogConstants.OK_ID).setEnabled(true);
-    		
-    		return superControl;
-    	}
-    }
-    
+       
 }

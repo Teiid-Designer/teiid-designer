@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.actions.TextActionHandler;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.query.proc.ITeiidXmlColumnInfo;
 import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.PluginConstants;
@@ -118,7 +118,6 @@ public class EditColumnsPanel {
 				}
 			}
 		});
-
 	}
 
 	public void refresh() {
@@ -219,7 +218,7 @@ public class EditColumnsPanel {
 				}
 				}
 			}
-			return StringUtilities.EMPTY_STRING;
+			return StringConstants.EMPTY_STRING;
 		}
 
 		/**

@@ -9,7 +9,6 @@ package org.teiid.designer.ui.wizards;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -24,7 +23,6 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.teiid.core.designer.PluginUtil;
-import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelEditorImpl;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -47,7 +45,6 @@ public class ConvertToEnterpriseTypesWizard extends AbstractWizard implements Ui
     public static boolean HEADLESS = false; //Flag to set Wizard to run in headless mode for testing
 
     private final PluginUtil Util = UiConstants.Util;
-    private final ModelEditor me = ModelerCore.getModelEditor();
     private final DatatypeManager dtMgr = ModelerCore.getWorkspaceDatatypeManager();
     private final StringBuffer messages = new StringBuffer();
     
@@ -143,7 +140,7 @@ public class ConvertToEnterpriseTypesWizard extends AbstractWizard implements Ui
             }
             final EnterpriseDatatypeInfo edi =  getEDIForType(next);
 
-            me.setEnterpriseDatatypePropertyValue(next, edi);
+            ModelerCore.getModelEditor().setEnterpriseDatatypePropertyValue(next, edi);
         }
         
         if(schema != null) {

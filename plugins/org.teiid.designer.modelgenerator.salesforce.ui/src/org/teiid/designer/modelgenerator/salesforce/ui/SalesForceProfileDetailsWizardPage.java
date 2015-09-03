@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.modelgenerator.salesforce.datatools.ISalesForceProfileConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -223,7 +223,7 @@ public class SalesForceProfileDetailsWizardPage extends ConnectionProfileDetails
             boolean enable = urlCheckBox.getSelection();
             urlText.setEnabled(enable);
             urlText.setEditable(enable);
-            urlText.setText(StringUtilities.EMPTY_STRING);
+            urlText.setText(StringConstants.EMPTY_STRING);
             setValidatedConnection(false);
             if (!enable) {
             	urlText.setText(DEFAULT_URL);

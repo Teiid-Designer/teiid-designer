@@ -7,7 +7,7 @@
 */
 package org.teiid.designer.ui.common;
 
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 
 /**
  *
@@ -65,6 +65,6 @@ public class UILabelUtil implements UiLabelConstants {
 			
 		}
 		
-		return StringUtilities.EMPTY_STRING;
+		return StringConstants.EMPTY_STRING;
 	}
 }

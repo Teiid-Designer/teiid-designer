@@ -11,16 +11,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.SearchResult;
+import org.apache.directory.studio.connection.core.Connection;
+import org.apache.directory.studio.ldapbrowser.core.model.IAttribute;
+import org.apache.directory.studio.ldapbrowser.core.model.IBrowserConnection;
+import org.apache.directory.studio.ldapbrowser.core.model.IEntry;
+import org.apache.directory.studio.ldapbrowser.core.model.impl.BrowserConnection;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.core.util.KeyInValueHashMap;
 import org.teiid.designer.core.util.KeyInValueHashMap.KeyFromValueAdapter;
+import org.teiid.designer.datatools.profiles.ldap.LDAPConnectionFactory;
 import org.teiid.designer.modelgenerator.ldap.RelationalModelBuilder;
 import org.teiid.designer.modelgenerator.ldap.ui.ModelGeneratorLdapUiConstants;
+import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.ConnectionNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.LdapAttributeNode;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.impl.LdapEntryNode;
 
@@ -46,6 +51,8 @@ public class LdapImportWizardManager implements IChangeNotifier {
 
     private IConnectionProfile connectionProfile;
 
+    private BrowserConnection browserConnection;
+
     private Properties designerProperties;
 
     private Collection<IChangeListener> listeners;
@@ -69,6 +76,8 @@ public class LdapImportWizardManager implements IChangeNotifier {
         }
     }
 
+    private ConnectionNode connectionNode;
+
     private KeyInValueHashMap<Integer, ILdapEntryNode> ldapEntryNodes = new KeyInValueHashMap<Integer, ILdapEntryNode>(new LdapEntryKeyAdapter());
 
     // /////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,8 +94,18 @@ public class LdapImportWizardManager implements IChangeNotifier {
     // METHODS
     // /////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static String getString(String key, Object... properties) {
-        return ModelGeneratorLdapUiConstants.UTIL.getString(LdapImportWizardManager.class.getSimpleName() + "_" + key, properties); //$NON-NLS-1$
+    /**
+     * Dispose of this manager
+     */
+    public void dispose() {
+        if (browserConnection != null) {
+            browserConnection.clearCaches();
+            resetBrowserConnection();
+        }
+
+        if (connectionProfile != null) {
+            connectionProfile.disconnect();
+        }
     }
 
     /**
@@ -104,7 +123,42 @@ public class LdapImportWizardManager implements IChangeNotifier {
 	        return;
 
 		this.connectionProfile = connectionProfile;
+		resetBrowserConnection();
 		notifyChanged();
+	}
+
+	/**
+	 * @return browser connection implementation of connection profile
+	 */
+	public IBrowserConnection getBrowserConnection() {
+		if (browserConnection == null) {
+			if (connectionProfile == null)
+				return null;
+
+			LDAPConnectionFactory factory = new LDAPConnectionFactory();
+			Connection connection = factory.convert(connectionProfile);
+
+			browserConnection = new BrowserConnection(connection);
+		}
+
+		return browserConnection;
+	}
+
+	/**
+	 * Reset the browser connection
+	 */
+	public void resetBrowserConnection() {
+		if (browserConnection == null)
+			return;
+
+		browserConnection.clearCaches();
+		if(browserConnection.getConnection() != null) {
+			Connection connection = browserConnection.getConnection();
+			if (connection.getConnectionWrapper() != null)
+				connection.getConnectionWrapper().disconnect();
+		}
+
+		browserConnection = null;
 	}
 
 	/**
@@ -165,15 +219,25 @@ public class LdapImportWizardManager implements IChangeNotifier {
 	}
 
 	/**
+	 * @return the connection node
+	 */
+	public ConnectionNode getConnectionNode() {
+		if (connectionNode == null)
+			connectionNode = new ConnectionNode(this);
+
+		return connectionNode;
+	}
+
+	/**
 	 * Create a new {@link ILdapEntryNode} if one is not already present
 	 *
-	 * @param searchResult
 	 * @param contextNode
+	 * @param entry
 	 *
 	 * @return existing or new entry node
 	 */
-	public ILdapEntryNode newEntry(SearchResult searchResult, ILdapEntryNode contextNode) {
-	    ILdapEntryNode newNode = new LdapEntryNode(searchResult, contextNode);
+	public ILdapEntryNode newEntry(ILdapEntryNode contextNode, IEntry entry) {
+	    ILdapEntryNode newNode = new LdapEntryNode(contextNode, entry);
 	    ILdapEntryNode currNode = ldapEntryNodes.get(newNode.hashCode());
 
 	    if (currNode != null)
@@ -186,24 +250,32 @@ public class LdapImportWizardManager implements IChangeNotifier {
 	 * Add an entry to the collection of selected entries
 	 *
 	 * @param entryNode
+	 * @return true if entry was added
 	 */
-	public void addEntry(ILdapEntryNode entryNode) {
+	public boolean addEntry(ILdapEntryNode entryNode) {
 	    if (ldapEntryNodes.containsKey(entryNode.hashCode())) {
-	        return;
+	        return false;
 	    }
 
 	    ldapEntryNodes.add(entryNode);
 	    notifyChanged();
+
+	    return true;
 	}
 
 	/**
      * Removes an entry from the set of selected entries
      *
      * @param entryNode
+	 * @return true if entry was removed
      */
-    public void removeEntry(ILdapEntryNode entryNode) {
-        if (ldapEntryNodes.remove(entryNode) != null)
+    public boolean removeEntry(ILdapEntryNode entryNode) {
+        if (ldapEntryNodes.remove(entryNode) != null) {
             notifyChanged();
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -239,7 +311,7 @@ public class LdapImportWizardManager implements IChangeNotifier {
      *
      * @return existing or new entry node
      */
-    public ILdapAttributeNode newAttribute(ILdapEntryNode contextNode, Attribute attribute) {
+    public ILdapAttributeNode newAttribute(ILdapEntryNode contextNode, IAttribute attribute) {
         ILdapAttributeNode newAttributeNode = new LdapAttributeNode(contextNode, attribute);
 
         ILdapEntryNode entryNode = ldapEntryNodes.get(contextNode.hashCode());

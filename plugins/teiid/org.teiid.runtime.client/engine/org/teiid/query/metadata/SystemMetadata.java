@@ -39,6 +39,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.core.util.StringUtil;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -53,6 +54,8 @@ import org.teiid.query.validator.ValidatorReport;
 import org.teiid.runtime.client.Messages;
 
 public class SystemMetadata {
+	
+	private static String JAVA_PATH_SEPARATOR = "/"; //$NON-NLS-1$
 	
 	private static Map<ITeiidServerVersion, SystemMetadata> instances = new HashMap<ITeiidServerVersion, SystemMetadata>();
 	
@@ -87,8 +90,8 @@ public class SystemMetadata {
 		this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 
 		String resourceLocation = this.getClass().getPackage().getName();
-        resourceLocation = resourceLocation.replaceAll("\\.", File.separator); //$NON-NLS-1$
-        resourceLocation = resourceLocation + File.separator;
+        resourceLocation = StringUtil.replaceAll(resourceLocation, StringUtil.Constants.DOT, JAVA_PATH_SEPARATOR); //$NON-NLS-1$
+        resourceLocation = resourceLocation + JAVA_PATH_SEPARATOR;
 
         InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + "types.dat"); //$NON-NLS-1$
 		try {
@@ -146,7 +149,7 @@ public class SystemMetadata {
 		systemStore = loadSchema(vdb, p, resourceLocation, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
 		systemStore.addDataTypes(dataTypes);
 		loadSchema(vdb, p, resourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
-		SystemFunctionManager systemFunctionManager = new SystemFunctionManager(teiidVersion, getClass().getClassLoader());
+		SystemFunctionManager systemFunctionManager = new SystemFunctionManager(teiidVersion, getClass().getClassLoader(), typeMap);
         TransformationMetadata tm = new TransformationMetadata(parser.getTeiidParser(), vdb, new CompositeMetadataStore(systemStore), null, systemFunctionManager.getSystemFunctions(), null);
         vdb.addAttchment(IQueryMetadataInterface.class, tm);
 		MetadataValidator validator = new MetadataValidator(this.teiidVersion, this.typeMap);

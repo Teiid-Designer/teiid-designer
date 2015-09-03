@@ -92,8 +92,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     private Text resultSetNameText;
 	
 	// parameter widgets
-    private Button addParameterButton, deleteParameterButton, upParameterButton, downParameterButton;
-    private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
+    private Button addParameterButton, deleteParameterButton, editParameterButton, upParameterButton, downParameterButton;
+    private Button addColumnButton, deleteColumnButton, editColumnButton, upColumnButton, downColumnButton;
     private Combo updateCountCombo;
     private TableViewerBuilder parametersViewer;
     private TableViewerBuilder columnsViewer;
@@ -315,8 +315,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		}
         });
 
-	  	Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-	  	GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+	  	Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+	  	GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
 	  	GridDataFactory.fillDefaults().span(2, 1).applyTo(buttonPanel);
 
     	addColumnButton = new Button(buttonPanel, SWT.PUSH);
@@ -353,6 +353,32 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				if( column != null ) {
 					getRelationalReference().getResultSet().removeColumn(column);
 					deleteColumnButton.setEnabled(false);
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+    	
+    	editColumnButton = new Button(buttonPanel, SWT.PUSH);
+    	editColumnButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editColumnButton);
+    	editColumnButton.setEnabled(false);
+    	editColumnButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalColumn column = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)columnsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalColumn ) {
+						column =  (RelationalColumn) obj;
+						break;
+					}
+				}
+				if( column != null ) {
+					EditColumnDialog dialog = new EditColumnDialog(getShell(), column);
+					dialog.open();
 					handleInfoChanged();
 				}
 			}
@@ -455,6 +481,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				
 				if( sel.isEmpty()) {
 					deleteColumnButton.setEnabled(false);
+					editColumnButton.setEnabled(false);
 					upColumnButton.setEnabled(false);
 					downColumnButton.setEnabled(false);
 				} else {
@@ -473,6 +500,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 						enable = false;
 					}
 					deleteColumnButton.setEnabled(enable);
+					editColumnButton.setEnabled(enable);
 					if( enable ) {
 						upColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnUp(columnInfo));
 						downColumnButton.setEnabled(getRelationalReference().getResultSet().canMoveColumnDown(columnInfo));
@@ -898,8 +926,8 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 	  	GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
 	  	GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
-	  	Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 4);
-	  	GridLayoutFactory.fillDefaults().numColumns(4).applyTo(buttonPanel);
+	  	Composite buttonPanel = WidgetFactory.createPanel(thePanel, SWT.NONE, 1, 5);
+	  	GridLayoutFactory.fillDefaults().numColumns(5).applyTo(buttonPanel);
 	  	GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
     	addParameterButton = new Button(buttonPanel, SWT.PUSH);
@@ -935,6 +963,32 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				if( parameter != null ) {
 					getRelationalReference().removeParameter(parameter);
 					deleteParameterButton.setEnabled(false);
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+    	
+    	editParameterButton = new Button(buttonPanel, SWT.PUSH);
+    	editParameterButton.setText(Messages.Edit);
+    	GridDataFactory.fillDefaults().applyTo(editParameterButton);
+    	editParameterButton.setEnabled(false);
+    	editParameterButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalParameter parameter = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)parametersViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalParameter ) {
+						parameter =  (RelationalParameter) obj;
+						break;
+					}
+				}
+				if( parameter != null ) {
+					EditParameterDialog dialog = new EditParameterDialog(getShell(), parameter);
+					dialog.open();
 					handleInfoChanged();
 				}
 			}
@@ -1018,7 +1072,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 
         
         column = parametersViewer.createColumn(SWT.LEFT, 20, 30, true);
-        column.getColumn().setText(Messages.lengthLabel);
+        column.getColumn().setText(Messages.lengthLabel + "        ");
         column.setLabelProvider(new ParameterDataLabelProvider(2));
         column.setEditingSupport(new ParameterWidthEditingSupport(this.parametersViewer.getTableViewer()));
 
@@ -1038,7 +1092,6 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         
         // set the existing Direction combo boxes
         
-        
         this.parametersViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			
 			@Override
@@ -1047,6 +1100,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 				
 				if( sel.isEmpty()) {
 					deleteParameterButton.setEnabled(false);
+					editParameterButton.setEnabled(false);
 					upParameterButton.setEnabled(false);
 					downParameterButton.setEnabled(false);
 				} else {
@@ -1064,6 +1118,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 					if( objs.length == 0 ) {
 						enable = false;
 					}
+					editParameterButton.setEnabled(enable);
 					deleteParameterButton.setEnabled(enable);
 					if( enable ) {
 						upParameterButton.setEnabled(getRelationalReference().canMoveParameterUp(columnInfo));
@@ -1192,10 +1247,10 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 //				if( getRelationalReference().getRestUri() != null ) {
 //					restUriText.setText(getRelationalReference().getRestUri());
 //				} else {
-//					restUriText.setText(StringUtilities.EMPTY_STRING);
+//					restUriText.setText(StringConstants.EMPTY_STRING);
 //				}
 //			} else {
-//				restUriText.setText(StringUtilities.EMPTY_STRING);
+//				restUriText.setText(StringConstants.EMPTY_STRING);
 //			}
 			restMethodsCombo.setEnabled(restEnabled);
 			restUriText.setEnabled(restEnabled);
@@ -1332,7 +1387,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 			super(viewer);
 			this.editor = new TextCellEditor((Composite) viewer.getControl());
 		}
-
+		
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -1340,7 +1395,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		 */
 		@Override
 		protected boolean canEdit(Object element) {
-			return true;
+			return false;
 		}
 
 		/*
@@ -1408,7 +1463,7 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
 		 */
 		@Override
 		protected boolean canEdit(Object element) {
-			return true;
+			return false;
 		}
 
 		/*
@@ -1486,9 +1541,13 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
     		datatypes = dTypes.toArray(new String[dTypes.size()]);
     		
         }
-
-
+        
         @Override
+		protected boolean canEdit(Object element) {
+			return false;
+		}
+
+		@Override
         protected String getElementValue( Object element ) {
         	if( element instanceof RelationalParameter ) {
         		return ((RelationalParameter)element).getDatatype();
@@ -1528,6 +1587,11 @@ public class ViewProcedureEditorPanel extends RelationalEditorPanel implements R
         protected String getElementValue( Object element ) {
         	return ((RelationalParameter)element).getDirection();
         }
+        
+        @Override
+      	protected boolean canEdit(Object element) {
+      		return false;
+      	}
 
         @Override
         protected String[] refreshItems( Object element ) {

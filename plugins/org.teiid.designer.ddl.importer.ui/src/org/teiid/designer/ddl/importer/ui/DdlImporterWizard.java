@@ -3,6 +3,8 @@ package org.teiid.designer.ddl.importer.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -18,6 +20,7 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.ddl.importer.DdlImporter;
+import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
@@ -33,6 +36,8 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
     DdlImporter importer;
     private DdlImporterPage srcPg;
     private DdlImportDifferencesPage diffPage;
+    
+    private Properties options;
 
     /**
      * DdlImporterWizard constructor
@@ -45,6 +50,9 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         IDialogSettings section = pluginSettings.getSection(sectionName);
         if (section == null) section = pluginSettings.addNewSection(sectionName);
         setDialogSettings(section);
+        
+        this.options = new Properties();
+        this.options.put(TeiidDDLConstants.FILTER_CONSTAINTS, Boolean.toString(true));
     }
 
     /**
@@ -80,10 +88,10 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         importer = new DdlImporter(projectArray);
         
         // First Page defines source DDL and target model
-        srcPg = new DdlImporterPage(importer, projectArray, finalSelection);
+        srcPg = new DdlImporterPage(importer, projectArray, finalSelection, options);
         
         // Second Page for presentation of differences - allows user selection
-        diffPage = new DdlImportDifferencesPage(importer);
+        diffPage = new DdlImportDifferencesPage(importer, options);
         
     }
     

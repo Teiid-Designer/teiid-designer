@@ -375,7 +375,7 @@ public class RuntimeIndexSelector extends AbstractIndexSelector {
         // // get the entry that is an index file or XSD file
         // final IPath zipEntryPath = new Path(entry.getName());
         // final String extension = zipEntryPath.getFileExtension();
-        // if (extension.equalsIgnoreCase(IndexConstants.INDEX_EXT) || extension.equalsIgnoreCase(ModelUtil.EXTENSION_XSD)) {
+        // if (extension.equalsIgnoreCase(IndexConstants.INDEX_EXT) || extension.equalsIgnoreCase(StringConstants.XSD)) {
         // return true;
         // }
         // }

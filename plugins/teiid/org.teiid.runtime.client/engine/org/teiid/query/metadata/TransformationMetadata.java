@@ -673,7 +673,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
     }
     
     private IllegalArgumentException createInvalidRecordTypeException(Object elementID) {
-        return new IllegalArgumentException(Messages.getString(Messages.TransformationMetadata.invalidType, elementID.getClass().getName()));         
+        return new IllegalArgumentException(Messages.getString(Messages.TransformationMetadata.invalidType, elementID!=null?elementID.getClass().getName():null));
     }
 
     public int getMaxSetSize(final Object modelID) throws Exception {

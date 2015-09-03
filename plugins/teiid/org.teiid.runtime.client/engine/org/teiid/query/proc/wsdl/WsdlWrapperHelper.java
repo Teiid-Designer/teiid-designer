@@ -148,7 +148,7 @@ public class WsdlWrapperHelper extends AbstractWsdlHelper implements IWsdlConsta
         sb.append(TAB).append(AS).append(SPACE)
             .append(REQUEST_LOWER).append(COMMA).append(RETURN);
 
-        // TABLE(EXEC <source-model-name>.invoke('SOAP11', null, REQUEST.xml_out, null))
+        // TABLE(EXEC <source-model-name>.invoke(binding in STRING, action in STRING, request in XML, endpoint in STRING, stream in BOOLEAN))
         sb.append(TAB).append(TAB).append(TABLE_EXEC)
             .append(getModelNameWithoutExtension(wrapperInfo.getSourceModelName()))
             .append(DOT).append(INVOKE_SEGMENT_1).append(wrapperInfo.getBindingType())
@@ -255,6 +255,9 @@ public class WsdlWrapperHelper extends AbstractWsdlHelper implements IWsdlConsta
         sb.append(R_PAREN).append(RETURN).append(TAB4)
             .append(AS).append(SPACE).append(REQUEST_LOWER)
             .append(COMMA).append(RETURN);
+        
+        //invoke(binding in STRING, action in STRING,
+        //request in XML, endpoint in STRING, stream in BOOLEAN)
 
         // Response TABLE
         sb.append(TAB2).append(TABLE).append(L_PAREN)
@@ -265,15 +268,12 @@ public class WsdlWrapperHelper extends AbstractWsdlHelper implements IWsdlConsta
         String actionStr = S_QUOTE + wrapperInfo.getSoapAction() + S_QUOTE;
         sb.append(FUNCTION_INVOKE);
 
-        sb.append(L_PAREN).append(S_QUOTE).append(wrapperInfo.getBindingType())
-            .append(S_QUOTE).append(COMMA).append(SPACE).append(actionStr)
-            .append(COMMA).append(SPACE);
-
-        sb.append(REQUEST).append(DOT).append(XML_OUT)
-            .append(COMMA).append(SPACE).append(NULL_LOWER)
-            .append(COMMA).append(SPACE).append(TRUE);
-
-        sb.append(R_PAREN);
+        sb.append(L_PAREN).append(BINDING_PARAM).append(PARAM_ASSIGNMENT).append(S_QUOTE).append(wrapperInfo.getBindingType())
+            .append(S_QUOTE).append(COMMA).append(SPACE).append(ACTION_PARAM).append(PARAM_ASSIGNMENT).append(SPACE).append(actionStr)
+            .append(COMMA).append(SPACE).append(REQUEST_PARAM).append(PARAM_ASSIGNMENT).append(REQUEST).append(DOT).append(XML_OUT)
+            .append(COMMA).append(SPACE).append(ENDPOINT_PARAM).append(PARAM_ASSIGNMENT).append(NULL_LOWER)
+            .append(COMMA).append(SPACE).append(STREAM_PARAM).append(PARAM_ASSIGNMENT).append(TRUE)
+            .append(R_PAREN);
         
         sb.append(R_PAREN).append(RETURN).append(TAB4).append(AS)
             .append(SPACE).append(RESPONSE_LOWER)

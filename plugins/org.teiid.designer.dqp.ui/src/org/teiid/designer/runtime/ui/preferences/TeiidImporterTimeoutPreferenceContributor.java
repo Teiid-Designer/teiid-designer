@@ -14,17 +14,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.IWorkbench;
 import org.osgi.service.prefs.BackingStoreException;
-import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
-import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor;
-
 
 /**
  * Allows setting the timeout preference for Teiid Importer timeout
@@ -34,22 +31,24 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
 
     private static final String PREFIX = I18nUtil.getPropertyPrefix(TeiidImporterTimeoutPreferenceContributor.class);
 
-    private Text timeoutSecTextField;
+    private Spinner timeoutSecTextField;
 
     /**
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#createPreferenceEditor(org.eclipse.swt.widgets.Composite)
      * @since 5.0
      */
     @Override
-	public void createPreferenceEditor( Composite theParent ) {
+    public void createPreferenceEditor(Composite theParent) {
         Composite pnl = new Composite(theParent, SWT.NONE);
-        pnl.setLayout(new GridLayout(2,false));
+        pnl.setLayout(new GridLayout(2, false));
         pnl.setLayoutData(new GridData());
 
-        this.timeoutSecTextField = WidgetFactory.createTextField(pnl, GridData.FILL_HORIZONTAL, 1);
+        this.timeoutSecTextField = new Spinner(pnl, SWT.BORDER);
         this.timeoutSecTextField.setToolTipText(getToolTip());
-        
-        Label label = new Label(pnl,SWT.NONE);
+        this.timeoutSecTextField.setMaximum(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MAX);
+        this.timeoutSecTextField.setMinimum(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_MIN);
+
+        Label label = new Label(pnl, SWT.NONE);
         label.setText(getName());
         label.setToolTipText(getToolTip());
 
@@ -62,13 +61,13 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public String getName() {
+    public String getName() {
         return UTIL.getStringOrKey(PREFIX + "name"); //$NON-NLS-1$
     }
 
     /**
      * Obtains the <code>IEclipsePreferences</code> where this preference is being persisted.
-     * 
+     *
      * @return the preferences
      */
     private IEclipsePreferences getPreferences() {
@@ -80,7 +79,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public String getToolTip() {
+    public String getToolTip() {
         return UTIL.getStringOrKey(PREFIX + "toolTip"); //$NON-NLS-1$
     }
 
@@ -89,7 +88,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public boolean performCancel() {
+    public boolean performCancel() {
         return true;
     }
 
@@ -98,8 +97,8 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public boolean performDefaults() {
-    	this.timeoutSecTextField.setText(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+    public boolean performDefaults() {
+        this.timeoutSecTextField.setSelection(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
 
         // save
         try {
@@ -115,20 +114,10 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public boolean performOk() {
+    public boolean performOk() {
         IEclipsePreferences prefs = getPreferences();
-        String timeoutStr = this.timeoutSecTextField.getText();
-        // If value entered is valid, set it.  Otherwise, set to the default
-        if(!CoreStringUtil.isEmpty(timeoutStr)) {
-        	try {
-				Integer.parseInt(timeoutStr);
-	            prefs.put(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, timeoutStr);
-			} catch (NumberFormatException ex) {
-	            prefs.put(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-			}
-        } else {
-            prefs.put(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        }
+        int timeout = this.timeoutSecTextField.getSelection();
+        prefs.putInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, timeout);
 
         // save
         try {
@@ -144,18 +133,19 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public void refresh() {
+    public void refresh() {
         IEclipsePreferences prefs = getPreferences();
-        String timeoutSec = prefs.get(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC, PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
-        this.timeoutSecTextField.setText(timeoutSec);
+        int timeoutSec = prefs.getInt(PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC,
+                                      PreferenceConstants.TEIID_IMPORTER_TIMEOUT_SEC_DEFAULT);
+        this.timeoutSecTextField.setSelection(timeoutSec);
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see org.teiid.designer.ui.preferences.IGeneralPreferencePageContributor#setPreferencePage(org.eclipse.jface.preference.PreferencePage)
      */
-    public void setPreferencePage( PreferencePage preferencePage ) {
+    public void setPreferencePage(PreferencePage preferencePage) {
     }
 
     /**
@@ -163,7 +153,7 @@ public class TeiidImporterTimeoutPreferenceContributor implements IGeneralPrefer
      * @since 5.0
      */
     @Override
-	public void setWorkbench( IWorkbench theWorkbench ) {
+    public void setWorkbench(IWorkbench theWorkbench) {
     }
 
 }

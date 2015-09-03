@@ -23,7 +23,7 @@
 package org.teiid.query.function;
 
 import java.util.Collection;
-
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod;
 
 
@@ -41,9 +41,10 @@ public interface FunctionMetadataSource {
      * on initial registration with the FunctionLibraryManager, on a 
      * general reload, etc.  This may be called multiple times and should
      * always return the newest information available.
+     * @param teiidVersion teiid version
      * @return Collection of FunctionMethod objects
      */
-    Collection<FunctionMethod> getFunctionMethods();
+    Collection<FunctionMethod> getFunctionMethods(ITeiidServerVersion teiidVersion);
     
     /**
      * This method determines where the invocation classes specified in the 

@@ -127,7 +127,9 @@ public interface DqpUiConstants {
         public static final String EDIT_VDB = PC.CTOOL16 + "edit-vdb.gif"; //$NON-NLS-1$
         public static final String INACTIVE_DEPLOYED_VDB = PC.CTOOL16 + "inactiveDeployedVdb.png"; //$NON-NLS-1$
         public static final String CREATE_VDB_DATA_SOURCE_ICON = PC.CTOOL16 + "create-vdb-data-source.png"; //$NON-NLS-1$
-
+        public static final String DYNAMIC_VDB = PC.OBJ16 + "dynamic-vdb.png"; //$NON-NLS-1$
+        public static final String DDL_VDB = PC.OBJ16 + "ddl-vdb.png"; //$NON-NLS-1$
+        public static final String STANDARD_VDB = PC.OBJ16 + "standard-vdb.png"; //$NON-NLS-1$
     }
 
     /**

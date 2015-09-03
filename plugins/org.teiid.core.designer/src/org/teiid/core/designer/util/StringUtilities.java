@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.teiid.core.designer.TeiidDesignerRuntimeException;
 
 /**
@@ -306,6 +305,35 @@ public class StringUtilities implements StringConstants {
 
         return sb.toString();
     }
+
+    /**
+     * Converts camel case string into 'normal' words-and-spaces, eg. BasicVdb -> Basic Vdb
+     * <p>
+     * <li>lowercase -> lowercase
+     * <li>Class -> Class
+     * <li>MyClass -> My Class
+     * <li>HTML -> HTML
+     * <li>PDFLoader -> PDF Loader
+     * <li>AString -> A String
+     * <li>SimpleXMLParser -> Simple XML Parser
+     * <li>GL11Version -> GL 11 Version
+     * <li>99Bottles -> 99 Bottles
+     * <li>May5 -> May 5
+     * <li>BFG9000 -> BFG 9000
+     *</p>
+     *
+     * @param value
+     * @return spaced version of camel case word
+     */
+    public static String fromCamelCase(final String value) {
+        if (value == null)
+            return EMPTY_STRING;
+
+        String regexp = String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",  //$NON-NLS-1$//$NON-NLS-2$
+                                                                                   "(?<=[^A-Z])(?=[A-Z])", //$NON-NLS-1$
+                                                                                   "(?<=[A-Za-z])(?=[^A-Za-z])"); //$NON-NLS-1$
+        return value.replaceAll(regexp, SPACE);
+    }
     
     public static String getUniqueName(String baseName, Set<String> otherNames, boolean appendInteger, boolean appendWithSpace, int countLimit) {
 		int count = 1;
@@ -340,6 +368,88 @@ public class StringUtilities implements StringConstants {
 		}
 		
 		return baseName;
+    }
+
+    /**
+     * @param c the character being checked
+     * @return <code>true</code> if the character is a letter
+     */
+    public static boolean isLetter( char c ) {
+        return isBasicLatinLetter(c) || Character.isLetter(c);
+    }
+
+    /**
+     * @param c the character being checked
+     * @return <code>true</code> if the character is a letter or digit
+     */
+    public static boolean isLetterOrDigit( char c ) {
+        return isBasicLatinLetter(c) || isBasicLatinDigit(c) || Character.isLetterOrDigit(c);
+    }
+
+    /**
+     * @param text
+     * @return text is either null or empty
+     */
+    public static boolean isBlank(final String text) {
+        return ((text == null) || (text.trim().length() == 0));
+    }
+
+    /**
+     * @param text the text being checked (can be empty)
+     * @return <code>true</code> if the text can be converted to a number
+     */
+    public static boolean isNumber( final String text ) {
+        return ( !isBlank( text ) && text.matches( "-?\\d+(\\.\\d+)?" ) ); //$NON-NLS-1$
+    }
+
+    private static boolean isBasicLatinLetter( char c ) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+    }
+
+    private static boolean isBasicLatinDigit( char c ) {
+        return c >= '0' && c <= '9';
+    }
+
+    /**
+     * Replace all occurrences of the search string with the replace string
+     * in the source string. If any of the strings is null or the search string
+     * is zero length, the source string is returned.
+     * @param source the source string whose contents will be altered
+     * @param search the string to search for in source
+     * @param replace the string to substitute for search if present
+     * @return source string with *all* occurrences of the search string
+     * replaced with the replace string
+     */
+    public static String replaceAll( String source,
+                                     String search,
+                                     String replace ) {
+        if (source != null && search != null && search.length() > 0 && replace != null) {
+            int start = source.indexOf(search);
+            if (start > -1) {
+                StringBuffer newString = new StringBuffer(source);
+                replaceAll(newString, search, replace);
+                return newString.toString();
+            }
+        }
+        return source;
+    }
+
+    /**
+     * @param source the source string whose contents will be altered
+     * @param search the string to search for in source
+     * @param replace the string to substitute for search if present
+     */
+    public static void replaceAll( StringBuffer source,
+                                   String search,
+                                   String replace ) {
+        if (source != null && search != null && search.length() > 0 && replace != null) {
+            int start = source.toString().indexOf(search);
+            while (start > -1) {
+                int end = start + search.length();
+                source.replace(start, end, replace);
+                start = source.toString().indexOf(search, start + replace.length());
+            }
+        }
     }
     
 	public static void main(String[] args) {

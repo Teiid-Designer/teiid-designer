@@ -33,6 +33,7 @@ import java.util.TreeSet;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.Transform;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -268,6 +269,15 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         return Collections.emptyList();
     }
 
+    @Since(Version.TEIID_8_9)
+    public static class ConversionResult {
+        public ConversionResult(FunctionMethod method) {
+            this.method = method;
+        }
+        public FunctionMethod method;
+        public boolean needsConverion;
+    }
+
 	/**
 	 * Get the conversions that are needed to call the named function with arguments
 	 * of the given type.  In the case of an exact match, the list will contain all nulls.
@@ -278,21 +288,14 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
 	 * @param returnType
 	 * @param args 
 	 * @param types Existing types passed to the function
+     * @param hasUnknownType
      * @return Null if no conversion could be found, otherwise an array of conversions
      * to apply to each argument.  The list should match 1-to-1 with the parameters.
      * Parameters that do not need a conversion are null; parameters that do are
      * FunctionDescriptors.
 	 * @throws Exception
 	 */
-	public FunctionDescriptor[] determineNecessaryConversions(String name, Class<?> returnType, Expression[] args, Class<?>[] types, boolean hasUnknownType) throws Exception {
-		// Check for no args - no conversion necessary
-		if(types.length == 0) {
-		    if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
-		        return new FunctionDescriptor[0];
-
-			return null;
-		}
-
+	public ConversionResult determineNecessaryConversions(String name, Class<?> returnType, Expression[] args, Class<?>[] types, boolean hasUnknownType) throws Exception {
         //First find existing functions with same name and same number of parameters
         final Collection<FunctionMethod> functionMethods = new LinkedList<FunctionMethod>();
         functionMethods.addAll( this.systemFunctions.findFunctionMethods(name, types.length) );
@@ -442,16 +445,22 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                 }
                 if (useCurrent) {
                     ambiguous = false; //prefer narrower
+                } else {
+                    String sysName = result.getProperty(FunctionMethod.SYSTEM_NAME, false);
+                    String sysNameOther = nextMethod.getProperty(FunctionMethod.SYSTEM_NAME, false);
+                    if (sysName != null && sysName.equalsIgnoreCase(sysNameOther)) {
+                        ambiguous = false;
+                    }
                 }
             }
-            
+
             if (currentScore < bestScore || useNext) {
                 ambiguous = false;
                 if (currentScore == 0 && isSystemNext) {
                     //this must be an exact match
-                    return null;
+                    return new ConversionResult(nextMethod);
                 }
-                
+
                 bestScore = currentScore;
                 result = nextMethod;
                 isSystem = isSystemNext;
@@ -459,11 +468,15 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
             }            
         }
         
-        if (ambiguous || result == null) {
+        if (ambiguous) {
              throw new Exception();
         }
-        
-		return getConverts(result, types);
+
+        ConversionResult cr = new ConversionResult(result);
+        if (result != null) {
+            cr.needsConverion = (bestScore != 0);
+        }
+        return cr;
 	}
 
 	private int partCount(String name) {
@@ -480,7 +493,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
         return result;
     }
 
-	private FunctionDescriptor[] getConverts(FunctionMethod method, Class<?>[] types) {
+	public FunctionDescriptor[] getConverts(FunctionMethod method, Class<?>[] types) {
         final List<FunctionParameter> methodTypes = method.getInputParameters();
         FunctionDescriptor[] result = new FunctionDescriptor[types.length];
         for(int i = 0; i < types.length; i++) {
@@ -658,7 +671,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                 aa.setAllowsDistinct(false);
                 break;
             }
-            FunctionMethod fm = FunctionMethod.createFunctionMethod(type.name(), type.name(), FunctionCategoryConstants.AGGREGATE, returnType, argTypes);
+            FunctionMethod fm = FunctionMethod.createFunctionMethod(teiidVersion, type.name(), type.name(), FunctionCategoryConstants.AGGREGATE, returnType, argTypes);
             fm.setAggregateAttributes(aa);
             result.add(fm);
         }

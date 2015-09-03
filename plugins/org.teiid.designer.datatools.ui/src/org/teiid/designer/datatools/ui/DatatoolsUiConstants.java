@@ -53,5 +53,7 @@ public interface DatatoolsUiConstants {
 		public static final String VIEW_CONNECTION_ICON = PC.OBJ16 + "view-connection.png"; //$NON-NLS-1$
 		public static final String ADD_PROPERTY_ICON = PC.OBJ16 + "add_property.png"; //$NON-NLS-1$
 		public static final String REMOVE_PROPERTY_ICON = PC.OBJ16 + "remove_property.png"; //$NON-NLS-1$
+		public static final String UP_PROPERTY_ICON = PC.OBJ16 + "up.gif"; //$NON-NLS-1$
+		public static final String DOWN_PROPERTY_ICON = PC.OBJ16 + "down.gif"; //$NON-NLS-1$
 	}
 }

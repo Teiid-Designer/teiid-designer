@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -53,8 +53,11 @@ public class RelationalReferenceFactory implements RelationalConstants {
 	public static RelationalReferenceFactory INSTANCE = new RelationalReferenceFactory();
     
 	private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
-	private ModelEditor modelEditor = ModelerCore.getModelEditor();
-        
+
+    private ModelEditor getModelEditor() {
+        return ModelerCore.getModelEditor();
+    }
+
     /**
      * Create the RelationalModel object representation of an EMF Model
      * @param modelResource the ModelResource
@@ -62,7 +65,7 @@ public class RelationalReferenceFactory implements RelationalConstants {
      * @throws Exception the exception
      */
     public RelationalModel createRelationalModel(ModelResource modelResource) throws Exception {
-    	String modelName = modelEditor.getModelName(modelResource);
+    	String modelName = getModelEditor().getModelName(modelResource);
     	RelationalModel relationalModel = new RelationalModel(modelName);
     	
     	// Some objects deferred since they reference other objects which must be created first
@@ -220,7 +223,7 @@ public class RelationalReferenceFactory implements RelationalConstants {
     private void setDescription(RelationalReference relationalRef, EObject eObject) {
         try {
 			// Set Description
-			String desc = modelEditor.getDescription(eObject);
+			String desc = getModelEditor().getDescription(eObject);
 			relationalRef.setDescription(desc);
 		} catch (ModelerCoreException ex) {
         	RelationalPlugin.Util.log(IStatus.ERROR, 
@@ -338,7 +341,7 @@ public class RelationalReferenceFactory implements RelationalConstants {
     	SearchabilityType searchabilityType  = columnEObj.getSearchability();
     	relCol.setSearchability(searchabilityType.getLiteral());
 
-        String dTypeName = modelEditor.getName(columnEObj.getType());
+        String dTypeName = getModelEditor().getName(columnEObj.getType());
     	relCol.setDatatype(dTypeName);
     	    	
     	setExtensionProperties(relCol,columnEObj);
@@ -458,11 +461,13 @@ public class RelationalReferenceFactory implements RelationalConstants {
     	setDescription(proc,procEObj);
     	
     	ProcedureResult procResult = procEObj.getResult();
-    	RelationalProcedureResultSet relProcResult = createProcedureResultSet(procResult);
-    	if(relProcResult!=null) {
-     		proc.setResultSet(relProcResult);
+    	if (procResult != null) {
+    	    RelationalProcedureResultSet relProcResult = createProcedureResultSet(procResult);
+    	    if(relProcResult!=null) {
+    	        proc.setResultSet(relProcResult);
+    	    }
     	}
-    	
+
     	List<ProcedureParameter> params = procEObj.getParameters();
     	for(ProcedureParameter param : params) {
     		RelationalParameter relProcParam = createProcedureParameter(param);
@@ -600,7 +605,7 @@ public class RelationalReferenceFactory implements RelationalConstants {
 	 * @throws CoreException
 	 */
 	protected <T extends RelationalReference> T find(Class<T> type, EObject eObj, RelationalReference parent, Collection<RelationalReference> allModelRefs) {
-		return find(type, this.modelEditor.getName(eObj), eObj, parent, allModelRefs);
+		return find(type, this.getModelEditor().getName(eObj), eObj, parent, allModelRefs);
 	}
 	
     /**
@@ -732,6 +737,14 @@ public class RelationalReferenceFactory implements RelationalConstants {
      */
     public RelationalViewTable createViewTable( ) {
     	return new RelationalViewTable();
+    }
+    
+    /**
+     * Create a RelationalTable
+     * @return the new object
+     */
+    public RelationalViewProcedure createViewProcedure( ) {
+    	return new RelationalViewProcedure();
     }
         
 }

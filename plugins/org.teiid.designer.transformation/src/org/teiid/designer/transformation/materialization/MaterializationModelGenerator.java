@@ -23,8 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.ModelEditor;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
@@ -38,6 +37,7 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.transformation.TransformationPlugin;
 
@@ -54,8 +54,7 @@ public class MaterializationModelGenerator {
     
     private static IStatus OK_STATUS = new Status(IStatus.OK, TransformationPlugin.PLUGIN_ID,
     		TransformationPlugin.Util.getString("MVModelGenerator.allInputsOkStatusMessage"));  //$NON-NLS-1$
-    
-    private final ModelEditor modelEditor;
+
     private final HashMap virtToPhysMappings;
     private final StringNameValidator nameValidator = new StringNameValidator();
 
@@ -69,7 +68,6 @@ public class MaterializationModelGenerator {
     private Set usedNIS;
     
     public MaterializationModelGenerator() {
-        this.modelEditor = ModelerCore.getModelEditor();
         this.virtToPhysMappings = new HashMap();
         this.usedNIS = new HashSet();
         nextIndex = STARTING_INDEX + 1;
@@ -211,7 +209,7 @@ public class MaterializationModelGenerator {
             if(nextKey instanceof PrimaryKey) {
                 ((BaseTable)mv).setPrimaryKey( (PrimaryKey)newKey);
             }else {
-                ((BaseTable)mv).getUniqueConstraints().add( newKey);
+                ((BaseTable)mv).getUniqueConstraints().add((UniqueConstraint) newKey);
             }
             
             copyUniqueKeyValues(nextKey, newKey);
@@ -335,7 +333,7 @@ public class MaterializationModelGenerator {
     private String getUniqueNIS(final Table orig) {
     	if (orig.getNameInSource() != null
 				&& !orig.getNameInSource().trim().equals(
-						StringUtilities.EMPTY_STRING)) {
+						StringConstants.EMPTY_STRING)) {
 			final StringBuffer buffer = new StringBuffer(orig.getNameInSource());
 			
 			//Check to see if we have used this NIS. If so, append an index.
@@ -368,7 +366,7 @@ public class MaterializationModelGenerator {
     
     public void addValue(final Object owner, final Object value, EList feature) {
         try {
-                this.modelEditor.addValue(owner, value, feature);
+                ModelerCore.getModelEditor().addValue(owner, value, feature);
         } catch (ModelerCoreException err) {
         	TransformationPlugin.Util.log(err);
         }

@@ -71,7 +71,7 @@ public class XmlFileContentsGroup {
     	gd.heightHint = 400;
     	fileContentsGroup.setLayoutData(gd);
     	
-    	this.xmlTreeViewer = new TreeViewer(fileContentsGroup, SWT.BORDER | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+    	this.xmlTreeViewer = new TreeViewer(fileContentsGroup, SWT.BORDER | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.horizontalSpan=4;
         this.xmlTreeViewer.getControl().setLayoutData(data);
@@ -120,7 +120,7 @@ public class XmlFileContentsGroup {
             public void selectionChanged( final SelectionChangedEvent event ) {
             	columnMenuManager.removeAll();
                 IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
-                if (sel.size() == 1) {
+                if (sel.size() > 0) {
 					columnMenuManager.add(createColumnAction);
 					columnMenuManager.add(setRootPathAction);
 					columnsInfoPanel.notifySelection(true);
@@ -136,7 +136,7 @@ public class XmlFileContentsGroup {
 			@Override
 			public void doubleClick(DoubleClickEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-				if (selection != null && !selection.isEmpty() ) {
+				if (selection != null && !selection.isEmpty() && selection.size() == 1 ) {
 					createColumn();
 				}
 			}
@@ -169,11 +169,14 @@ public class XmlFileContentsGroup {
     
     public void createColumn() {
     	IStructuredSelection sel = (IStructuredSelection)xmlTreeViewer.getSelection();
-    	Object obj = sel.getFirstElement();
-    	if( obj instanceof XmlElement || obj instanceof XmlAttribute ) {
-    		getFileInfo().addNewColumn(obj);
-    		this.configPage.handleInfoChanged(false);
+    	boolean changed = false;
+    	for( Object obj : sel.toList() ) {
+	    	if( obj instanceof XmlElement || obj instanceof XmlAttribute ) {
+	    		getFileInfo().addNewColumn(obj);
+	    		changed = true;
+	    	}
     	}
+    	if( changed ) this.configPage.handleInfoChanged(false);
     }
 	
     Object[] getNodeChildren( Object element ) {

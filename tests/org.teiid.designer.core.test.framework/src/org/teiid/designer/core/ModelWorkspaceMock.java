@@ -7,55 +7,149 @@
  */
 package org.teiid.designer.core;
 
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import org.eclipse.emf.common.util.BasicEList;
+import java.util.Iterator;
+import java.util.List;
+import org.eclipse.emf.common.command.BasicCommandStack;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.teiid.core.designer.EclipseMock;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.container.Container;
+import org.teiid.designer.core.container.ContainerEditingDomain;
+import org.teiid.designer.core.container.DefaultEObjectFinder;
+import org.teiid.designer.core.container.DefaultResourceFinder;
+import org.teiid.designer.core.container.ObjectManagerImpl;
+import org.teiid.designer.core.container.ResourceDescriptor;
+import org.teiid.designer.core.container.ResourceDescriptorImpl;
 import org.teiid.designer.core.container.ResourceFinder;
+import org.teiid.designer.core.metamodel.MetamodelRegistry;
+import org.teiid.designer.core.resource.EmfResourceSetImpl;
 import org.teiid.designer.core.spi.RegistrySPI;
+import org.teiid.designer.core.transaction.UnitOfWorkProviderImpl;
+import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.core.types.DatatypeManagerLifecycle;
 
 /**
  * 
  */
+@SuppressWarnings( "javadoc" )
 public final class ModelWorkspaceMock {
 
     private final EclipseMock eclipseMock;
-    private ResourceFinder finder;
+    private Container container;
+    private EditingDomain editingDomain;
+    private ModelEditorMock editorMock;
 
     /**
      * Mocks core modeling classes used when running Designer.
      */
-    public ModelWorkspaceMock() {
+    public ModelWorkspaceMock() throws Exception {
         this(new EclipseMock());
     }
 
     /**
      * Mocks core modelling classes used when running Designer.
      */
-    public ModelWorkspaceMock( final EclipseMock mock ) {
+    public ModelWorkspaceMock(final EclipseMock mock) throws Exception {
         CoreArgCheck.isNotNull(mock, "mock"); //$NON-NLS-1$
         eclipseMock = mock;
 
-        // ModelerCore
-        Container container = mock(Container.class);
-        ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.DEFAULT_CONTAINER_KEY, container);
-        
-        ChangeNotifier changeNotifier = mock(ChangeNotifier.class);
+        //
+        // Mock the container
+        //
+        container = mock(Container.class);
+        ((RegistrySPI)ModelerCore.getRegistry()).register(ModelerCore.DEFAULT_CONTAINER_KEY, container);
+
+        //
+        // Initialise the internal resource set
+        //
+        final EmfResourceSetImpl resourceSet = new EmfResourceSetImpl(container);
+        when(container.getResources()).thenReturn(resourceSet.getResources());
+        when(container.getResource(isA(URI.class), anyBoolean())).thenAnswer(new Answer<Resource>() {
+            @Override
+            public Resource answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                return resourceSet.getResource((URI)args[0], (Boolean)args[1]);
+            }
+        });
+        when(container.createResource(isA(URI.class))).thenAnswer(new Answer<Resource>() {
+            @Override
+            public Resource answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                return resourceSet.createResource((URI)args[0]);
+            }
+        });
+
+        //
+        // Resource Finder
+        //
+        DefaultResourceFinder resourceFinder = new DefaultResourceFinder(container);
+        when(container.getResourceFinder()).thenReturn(resourceFinder);
+
+        //
+        // EObject Finder
+        //
+        DefaultEObjectFinder eObjectFinder = new DefaultEObjectFinder(container);
+        when(container.getEObjectFinder()).thenReturn(eObjectFinder);
+
+        ObjectManagerImpl objectManager = new ObjectManagerImpl(container);
+        when(container.getObjectManager()).thenReturn(objectManager);
+
+        //
+        // Add external resource sets
+        //
+        List<ResourceSet> extResourceSets = ModelerCore.getExternalResourceSets();
+        for (ResourceSet rsrcSet : extResourceSets) {
+            resourceSet.addExternalResourceSet(rsrcSet);
+        }
+
+        //
+        // Initialise the transaction provider
+        //
+        UnitOfWorkProviderImpl emfTransactionProvider = new UnitOfWorkProviderImpl(resourceSet);
+        when(container.getEmfTransactionProvider()).thenReturn(emfTransactionProvider);
+
+        //
+        // Set the metamodel registry
+        //
+        MetamodelRegistry registry = ModelerCore.getMetamodelRegistry();
+        when(container.getMetamodelRegistry()).thenReturn(registry);
+
+        //
+        // Mock the change notifier
+        //
+        ChangeNotifier changeNotifier = new ChangeNotifier();
         when(container.getChangeNotifier()).thenReturn(changeNotifier);
-        
-        BasicEList<Resource> resourceList = new BasicEList<Resource>();
-        when(container.getResources()).thenReturn(resourceList);
-        
-        finder = mock(ResourceFinder.class);
-        when(container.getResourceFinder()).thenReturn(finder);
-        
-        final ModelEditor editor = mock(ModelEditor.class);
-        ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.MODEL_EDITOR_KEY, editor);
+
+        //
+        // Initialise the data type manager
+        //
+        DatatypeManager datatypeManager = ModelerCore.getDatatypeManager();
+        when(container.getDatatypeManager()).thenReturn(datatypeManager);
+        ((DatatypeManagerLifecycle)datatypeManager).initialize(container);
+
+        // Register the known resource descriptors
+        final Iterator iter = ModelerCore.getConfiguration().getResourceDescriptors().iterator();
+        while (iter.hasNext()) {
+            final ResourceDescriptor resourceDescriptor = (ResourceDescriptor)iter.next();
+            ResourceDescriptorImpl.register(resourceDescriptor, resourceSet);
+        }
+
+        //
+        // ModelEditor
+        //
+        editorMock = new ModelEditorMock(this);
     }
 
     /**
@@ -64,9 +158,17 @@ public final class ModelWorkspaceMock {
      * This is necessary to remove the mocked objects from the
      * {@link ModelerCore} registry that have been registered by this instance.
      */
-    public void dispose() {
-        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
-        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
+    public void dispose() throws Exception {
+        ((RegistrySPI)ModelerCore.getRegistry()).unregister(ModelerCore.DEFAULT_CONTAINER_KEY);
+        ((RegistrySPI)ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
+
+        Mockito.reset(container);
+        container = null;
+
+        editingDomain = null;
+
+        editorMock.dispose();
+
         eclipseMock.dispose();
     }
 
@@ -78,9 +180,46 @@ public final class ModelWorkspaceMock {
     }
 
     /**
+     * @return the editor
+     */
+    public ModelEditor getModelEditor() {
+        return editorMock.getModelEditor();
+    }
+
+    /**
+     * @return the container
+     */
+    public Container getContainer() {
+        return this.container;
+    }
+
+    /**
      * @return finder
      */
     public ResourceFinder getFinder() {
-        return finder;
+        return container.getResourceFinder();
+    }
+
+    public void setFinder(ResourceFinder finder) {
+        when(container.getResourceFinder()).thenReturn(finder);
+    }
+
+    /**
+     * @return editing domain
+     */
+    public EditingDomain getEditingDomain() {
+        if (editingDomain == null) {
+            // Retrieve the adapter factory that yields item providers.
+            final ComposedAdapterFactory adapterFactory = (ComposedAdapterFactory)ModelerCore.getMetamodelRegistry().getAdapterFactory();
+            CoreArgCheck.isNotNull(container.getEmfTransactionProvider());
+
+            // Create the command stack
+            final BasicCommandStack commandStack = new BasicCommandStack();
+
+            // Create the editing domain
+            editingDomain = new ContainerEditingDomain(adapterFactory, commandStack, container);
+        }
+
+        return editingDomain;
     }
 }

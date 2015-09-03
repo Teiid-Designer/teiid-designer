@@ -48,6 +48,7 @@ public class ServerVersionGuard implements IExecutionConfigurationListener, Stri
         if (instance == null)
             return;
 
+
         ITeiidServerVersion version = instance.getServerVersion();
 
         ITeiidServerVersion defaultVersion = TeiidServerVersion.Version.TEIID_DEFAULT.get();

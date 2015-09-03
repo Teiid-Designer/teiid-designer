@@ -21,6 +21,7 @@ public class Messages extends NLS {
     public static String TeiidImportManager_ImportVDBName;
     public static String TeiidImportManager_deployVdbInterruptedMsg;
     public static String TeiidImportManager_deployVdbMsg;
+    public static String TeiidImportManager_deployVdbNoTimeoutMsg;
     public static String TeiidImportManager_ConfirmDialgTitle;
     public static String TeiidImportManager_ContinueImportMsg;
     public static String TeiidImportManager_ImportingMsg;
@@ -95,18 +96,32 @@ public class Messages extends NLS {
     public static String selectDataSourcePage_ConsiderJDBCImporterForSourceTypeMsg;
     
     public static String SelectTargetPage_title;
-    public static String SelectTargetPage_TgtModelDefnGroup;
+    public static String SelectTargetPage_TgtModelDefnTab;
+    public static String SelectTargetPage_AdvancedTab;
+    public static String SelectTargetPage_FilterRedundantUCsCB_Label;
+    public static String SelectTargetPage_FilterRedundantUCsCB_ToolTip;
     public static String SelectTargetPage_CreateConnectionProfileCB_Label;
     public static String SelectTargetPage_CreateConnectionProfileCB_ToolTip;
     public static String SelectTargetPage_Location;
     public static String SelectTargetPage_Browse;
     public static String SelectTargetPage_Name;
     public static String SelectTargetPage_ModelStatus;
+    public static String SelectTargetPage_EnterModelNameMsg;
     public static String SelectTargetPage_SrcModelUndefined;
     public static String SelectTargetPage_SrcModelSelected;
     public static String SelectTargetPage_NoOpenProjMsg;
     public static String SelectTargetPage_SrcLocationNotSpecified;
     public static String SelectTargetPage_ModelExistsWithThisNameMsg;
+    public static String SelectTargetPage_dynamic_vdb_text;
+    public static String SelectTargetPage_dynamic_vdb_tooltip;
+    public static String SelectTargetPage_defaultServerPrefix;
+    public static String SelectTargetPage_TimeoutLabelText;
+    public static String SelectTargetPage_TimeoutTooltip;
+    public static String SelectTargetPage_TimeoutEmptyMsg;
+    public static String SelectTargetPage_TimeoutTextNotParsableMsg;
+    public static String SelectTargetPage_TimeoutLessThanMinAllowedMsg;
+    public static String SelectTargetPage_TimeoutGreaterThanMaxAllowedMsg;
+    
     public static String SelectTranslatorPage_ConfirmDeleteTitle;
     public static String SelectTranslatorPage_ConfirmDeleteMsg;
     
@@ -159,11 +174,6 @@ public class Messages extends NLS {
     public static String AddGeneralPropertyDialog_emptyPropertyName;
     public static String AddGeneralPropertyDialog_invalidPropertyName;
     public static String AddGeneralPropertyDialog_emptyPropertyValue;
-    
-    public static String ShowVdbXmlDialog_dynamic_vdb_text;
-    public static String ShowVdbXmlDialog_title;
-    public static String ShowVdbXmlAction_text;
-    public static String ShowVdbXmlAction_tooltip;
     
     public static String ExportDDLToWorkspaceDialog_title;
     public static String ExportDDLToWorkspaceDialog_errorSelectLocation;

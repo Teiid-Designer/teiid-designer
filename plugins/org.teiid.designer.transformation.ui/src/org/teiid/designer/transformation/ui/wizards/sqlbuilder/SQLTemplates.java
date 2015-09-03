@@ -40,6 +40,9 @@ public class SQLTemplates {
                                                   + "XMLTABLE('/CATALOG/PLANT' PASSING XMLPARSE(DOCUMENT f.result) " //$NON-NLS-1$
                                                   + "COLUMNS COMMON string PATH '/COMMON', BOTANICAL string PATH '/BOTANICAL', ZONE string PATH '/ZONE', " //$NON-NLS-1$
                                                   + "PRICE string PATH '/PRICE') AS A"; //$NON-NLS-1$
+    
+    public static String SELECT_OBJECT_TABLE = "SELECT A.[col_1], A.[col_2] \nFROM [ObjectTableName] as T, \n" //$NON-NLS-1$
+            									  + "OBJECTTABLE('x' PASSING T.[ObjectColumnName] Object as x COLUMNS col_1 string, col_2 string) AS A"; //$NON-NLS-1$
 
     // ----------------------------------------
     // Templates valid for Procedure Targets

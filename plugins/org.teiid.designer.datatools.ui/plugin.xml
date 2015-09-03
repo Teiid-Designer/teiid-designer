@@ -32,7 +32,7 @@
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
    <newWizard
-         class="org.teiid.designer.datatools.profiles.ldap.ConnectionProfileWizard"
+         class="org.teiid.designer.datatools.profiles.ldap.LdapConnectionProfileWizard"
          description="Create an LDAP connection profile."
          icon="icons/full/obj16/connectionFolder.gif"
          id="org.teiid.designer.datatools.profiles.ldap.ConnectionProfileWizard"

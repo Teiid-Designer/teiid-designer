@@ -9,6 +9,7 @@ package org.teiid.designer.ddl.importer.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -67,13 +68,17 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
     private StyledTextEditor ddlContentsArea;
     private org.eclipse.swt.widgets.List messagesList;
     
+    Properties options;
+    
     /**
      * DdlImportDifferencesPage Constructor
      * @param importer the DdlImporter
+     * @param options 
      */
-    public DdlImportDifferencesPage( final DdlImporter importer ) {
+    public DdlImportDifferencesPage( final DdlImporter importer, Properties options) {
         super(DdlImportDifferencesPage.class.getSimpleName(), DdlImporterUiI18n.DIFFERENCE_PAGE_TITLE, null);
         this.importer = importer;
+        this.options = options;
     }
 
     /**
@@ -224,7 +229,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
                 public void run(final IProgressMonitor monitor) {
                     monitor.beginTask(DdlImporterUiI18n.IMPORTING_DDL_MSG, 100);
                     try {
-                        importer.importDdl(monitor, 100);
+                        importer.importDdl(monitor, 100, options);
                     } catch (Exception ex) {
                         importException[0] = ex;
                     }
@@ -351,6 +356,20 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
             setDescription(DdlImporterUiI18n.DIFFERENCE_PAGE_DESCRIPTION);
         }
     }
+    
+	/**
+	 * @return the options
+	 */
+	public Properties getOptions() {
+		return options;
+	}
+
+	/**
+	 * @param options
+	 */
+	public void setOptions(Properties options) {
+		this.options = options;
+	}
     
     class CheckboxTreeLabelProvider extends LabelProvider {
         private final Image TABLE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.TABLE_ICON);

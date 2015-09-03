@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
@@ -38,6 +38,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 /**
  * Node importer for standard DDL
@@ -54,15 +55,8 @@ public class StandardImporter extends AbstractImporter {
 		}
 
 		protected void init(AstNode node, RelationalModel model) throws Exception {
-			String name = node.getName();
-			int ndx = name.lastIndexOf('.');
-			if (ndx >= 0) {
-				schema = null;
-				this.name = removeLeadingTrailingTicks(name.substring(ndx+1));
-			} else {
-				schema = null;
-				this.name = removeLeadingTrailingTicks(name);
-			}
+			schema = null;
+			this.name = node.getName();
 		}
 
 		protected String removeLeadingTrailingTicks(String name) {
@@ -89,6 +83,14 @@ public class StandardImporter extends AbstractImporter {
 	}
 
 	private static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
+	
+	private static final String CHAR_TYPENAME = "char"; //$NON-NLS-1$
+	
+	/**
+	 * see <code>org.teiid.core.types.JDBCSQLTypeInfo.java</code> for details
+	 * FLOAT, DOUBLE, BIG_DECIMAL all show 20 as the default precision
+	 */
+	private static final int DEFAULT_PRECISION = 20; 
 
 	/**
 	 * Create new info object
@@ -176,7 +178,6 @@ public class StandardImporter extends AbstractImporter {
 	 */
 	protected void initialize(RelationalReference entity, AstNode node, String name) {
 		entity.setName(name);
-		entity.setNameInSource(name);
 
 		// descriptions must wait to be set until container and model type has been set
 		if (getImporterManager().optToSetModelEntityDescription()) {
@@ -258,7 +259,7 @@ public class StandardImporter extends AbstractImporter {
 	/**
 	 * Handle a statement OPTION key for Column for DDL
 	 *
-	 * @param column the Column
+	 * @param column the ColumngetTeiidDataTypeName
 	 * @param columnOptionNode a statementOption node for a column
 	 */
 	protected void handleColumnOption(RelationalColumn column, AstNode columnOptionNode) {
@@ -309,41 +310,65 @@ public class StandardImporter extends AbstractImporter {
 		table.getColumns().add(col);
 		initialize(col, node);
 
+		setDataType(node, col);
+
+		return col;
+	}
+	
+	/**
+	 * Create Column from the provided AstNode within ColumnSet
+	 * @param node the provided AstNode
+	 * @param column 
+	 *
+	 * @throws Exception 
+	 */
+	protected void setDataType(AstNode node, RelationalColumn column) throws Exception {
 		String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
-		col.setNativeType(datatype);
+		column.setNativeType(datatype);
 
 		String teiidType = getTeiidDataTypeName(datatype);
-		col.setDatatype(teiidType);
+		column.setDatatype(teiidType);
 
 		// Datatype length
 		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
 		if (prop != null) {
-			col.setLength(Integer.parseInt(prop.toString()));
+			column.setLength(Integer.parseInt(prop.toString()));
 		} else {
 			// Length is not provided for type 'string', use the default length specified in preferences...
 			//String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
-			if(teiidType != null && teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
-				col.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+			if(teiidType != null) {
+				if( teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
+					column.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+				} else if( teiidType.equalsIgnoreCase(CHAR_TYPENAME) ) {
+					column.setLength(1);
+				}
 			}
 		}
 
 		prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
-		if (prop != null)
-			col.setPrecision(Integer.parseInt(prop.toString()));
+		if (prop != null) {
+			column.setPrecision(Integer.parseInt(prop.toString()));
+		} else {
+			// IF type == FLOAT, BIG_DECIMAL, DECIMAL, then set precision to at least 1
+			if( teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.BIGDECIMAL.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DECIMAL.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.FLOAT.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DOUBLE.name())) {
+				column.setPrecision(DEFAULT_PRECISION);
+			}
+		}
 
 		prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
 		if (prop != null)
-			col.setScale(Integer.parseInt(prop.toString()));
+			column.setScale(Integer.parseInt(prop.toString()));
 
 		prop = node.getProperty(StandardDdlLexicon.NULLABLE);
 		if (prop != null)
-			col.setNullable(getRelRefNullable(prop.toString())); 
+			column.setNullable(getRelRefNullable(prop.toString())); 
 
 		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
 		if (prop != null)
-			col.setDefaultValue(prop.toString());
-
-		return col;
+			column.setDefaultValue(prop.toString());
 	}
 
 	/**
@@ -541,11 +566,12 @@ public class StandardImporter extends AbstractImporter {
 	 * Perform the import
 	 * @param rootNode the rootNode of the DDL
 	 * @param importManager the import manager which maintains import options
+	 * 	 * @param props the custom properties for import
 	 * @return the RelationalModel created
 	 * @throws Exception
 	 */
 	@Override
-	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager) throws Exception {
+	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager, Properties props) throws Exception {
 
 		setImporterManager(importManager);
 

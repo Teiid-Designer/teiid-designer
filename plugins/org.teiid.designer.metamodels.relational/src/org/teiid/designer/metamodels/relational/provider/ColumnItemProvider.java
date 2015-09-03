@@ -10,6 +10,7 @@ package org.teiid.designer.metamodels.relational.provider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -18,6 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metamodels.relational.BaseTable;
@@ -37,7 +39,7 @@ import org.teiid.designer.metamodels.relational.util.RelationalUtil;
  *
  * @since 8.0
  */
-public class ColumnItemProvider extends RelationalEntityItemProvider {
+public class ColumnItemProvider extends RelationalEntityItemProvider implements StringConstants {
     /**
      * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -1125,18 +1127,40 @@ public class ColumnItemProvider extends RelationalEntityItemProvider {
         if (label == null || label.length() == 0) {
             label = getString("_UI_Column_type"); //$NON-NLS-1$
         }
+        
+        StringBuilder sb = new StringBuilder(label);
         // Add the datatype ...
         final EObject dt = column.getType();
-        final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(column, true);
-        final String dtName = dtMgr.getName(dt);
-        if (dt != null && dtName != null && dtName.trim().length() != 0) {
-            label = label + " : " + dtName; //$NON-NLS-1$
+        if( dt != null ) {
+	        final DatatypeManager dtMgr = ModelerCore.getDatatypeManager(column, true);
+	        final String dtName = dtMgr.getName(dt);
+	        
+			final boolean isLengthType = ModelerCore.getTeiidDataTypeManagerService().isLengthDataType(dtName);
+			final boolean isPrecisionType = ModelerCore.getTeiidDataTypeManagerService().isPrecisionDataType(dtName);
+			final boolean isScaleType = ModelerCore.getTeiidDataTypeManagerService().isScaleDataType(dtName);
+	        
+	        if (dtName != null && dtName.trim().length() != 0) {
+	            sb.append(SPACE + COLON + SPACE).append(dtName); //$NON-NLS-1$
+
+		        final int length = column.getLength();
+		        final int precision = column.getPrecision();
+		        final int scale = column.getScale();
+		        
+				if( isLengthType ) {
+					if( length > 0 ) {
+						sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
+					}
+				} else if( isPrecisionType && precision > 0 ) {
+					sb.append(OPEN_BRACKET).append(precision);
+					if( isScaleType && scale > 0 ) {
+						sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);
+					} else {
+						sb.append(CLOSE_BRACKET);
+					}
+				}
+	        }
         }
-        final int length = column.getLength();
-        if (dt != null && length != 0 && dtMgr.isCharacter(dt)) {
-            label = label + "(" + length + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return label;
+        return sb.toString();
         // End customized code
     }
 

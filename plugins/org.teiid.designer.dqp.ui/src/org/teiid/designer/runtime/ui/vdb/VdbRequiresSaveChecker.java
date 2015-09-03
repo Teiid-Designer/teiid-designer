@@ -1,7 +1,6 @@
 package org.teiid.designer.runtime.ui.vdb;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -15,6 +14,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
@@ -29,7 +29,7 @@ public class VdbRequiresSaveChecker {
     public static boolean insureOpenVdbSaved(IFile vdbFile) {
     	CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
     	
-    	String vdbName = vdbFile.getFullPath().removeFileExtension().lastSegment();
+    	String vdbName = FileUtils.getNameWithoutExtension(vdbFile);
     	
     	
         final IWorkbenchWindow window = UiPlugin.getDefault().getCurrentWorkbenchWindow();

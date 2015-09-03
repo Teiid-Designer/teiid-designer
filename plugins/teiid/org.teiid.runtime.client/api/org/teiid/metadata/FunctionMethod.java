@@ -26,9 +26,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.function.metadata.FunctionMetadataValidator;
-
 
 /**
  * <p>This class represents information about a particular function signature.  
@@ -55,6 +57,10 @@ import org.teiid.query.function.metadata.FunctionMetadataValidator;
  * @see FunctionParameter
  */
 public class FunctionMethod extends AbstractMetadataRecord {
+
+    @Since(Version.TEIID_8_9)
+    public static final String SYSTEM_NAME = AbstractMetadataRecord.RELATIONAL_URI + "system-name"; //$NON-NLS-1$
+
 	private static final long serialVersionUID = -8039086494296455152L;
 
 	private static final String NOT_ALLOWED = "NOT_ALLOWED"; //$NON-NLS-1$
@@ -274,7 +280,7 @@ public class FunctionMethod extends AbstractMetadataRecord {
     }
     
     /**
-     * Get ouput parameter.
+     * Get ouput/return parameter.
      * @return Output parameter or return argument
      */
     public FunctionParameter getOutputParameter() { 
@@ -282,7 +288,7 @@ public class FunctionMethod extends AbstractMetadataRecord {
     }
     
     /**
-     * Set ouput parameter.
+     * Set ouput/return parameter.
      * @param param Output Parameter
      */
     public void setOutputParameter(FunctionParameter param) {
@@ -510,13 +516,13 @@ public class FunctionMethod extends AbstractMetadataRecord {
         }
     }
 
-	public static FunctionMethod createFunctionMethod(String name, String description, String category,
+	public static FunctionMethod createFunctionMethod(ITeiidServerVersion version, String name, String description, String category,
 			String returnType, String... paramTypes) {
 		FunctionParameter[] params = new FunctionParameter[paramTypes.length];
 		for (int i = 0; i < paramTypes.length; i++) {
-			params[i] = new FunctionParameter("param" + (i+1), paramTypes[i]); //$NON-NLS-1$
+			params[i] = new FunctionParameter(version, "param" + (i+1), paramTypes[i]); //$NON-NLS-1$
 		}
-		FunctionMethod method = new FunctionMethod(name, description, category, params, new FunctionParameter("result", returnType)); //$NON-NLS-1$
+		FunctionMethod method = new FunctionMethod(name, description, category, params, new FunctionParameter(version, "result", returnType)); //$NON-NLS-1$
 		method.setNameInSource(name);
 		return method;
 	}

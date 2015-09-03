@@ -25,6 +25,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
  */
 public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper implements IConnectionInfoProvider {
 
+	// The 'DataSource URL' is uppercase - teiid requires uppercase URL key in the ResourceAdapter properties.
     public final static String SALESFORCE_DATASOURCE_URL = "URL"; //$NON-NLS-1$
     public final static String SALESFORCE_DATASOURCE_USERNAME = "username"; //$NON-NLS-1$
     public final static String SALESFORCE_DATASOURCE_PASSWORD = "password"; //$NON-NLS-1$
@@ -77,8 +78,13 @@ public class SalesForceConnectionInfoProvider extends ConnectionInfoHelper imple
 
         Properties props = connectionProfile.getBaseProperties();
 
-        // Don't put the password in the model
+        // The URL may be either uppercase (if the 'connection profile' is created from ModelResource connection properties),
+        // or it may be lowercase (Designer connection profiles are defined with lowercase url keys).  Check for both possibilities...
+        // The resulting teiid url property set must be uppercase - teiid ResourceAdapter requires uppercase.
         String url = props.getProperty(ISalesForceProfileConstants.URL_PROP_ID);
+        if(url==null) {
+        	url = props.getProperty(SALESFORCE_DATASOURCE_URL);
+        }
         if (null != url) {
             connectionProps.setProperty(SALESFORCE_DATASOURCE_URL, url);
         }

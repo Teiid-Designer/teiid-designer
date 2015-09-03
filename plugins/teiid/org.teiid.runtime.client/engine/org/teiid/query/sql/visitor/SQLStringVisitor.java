@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
@@ -1998,9 +1997,34 @@ public class SQLStringVisitor extends LanguageVisitor
 					Object value2 = av.getValues()[i];
 					outputLiteral(value2!=null?value2.getClass():av.getValues().getClass().getComponentType(), multiValued, value2);
 				}
+
+                // Added to support Teiid 8.9
+				if (av.getValues().length == 1 && isTeiid89OrGreater()) {
+				    append(Tokens.COMMA);
+				}
+
 				append(Tokens.RPAREN);
-				return;
-			}
+                return;
+
+            } else if (type.isArray() && isTeiid89OrGreater()) { // Added to support Teiid 8.9
+                append(Tokens.LPAREN);
+                int length = java.lang.reflect.Array.getLength(value);
+                for (int i = 0; i < length; i++) {
+                    if (i > 0) {
+                        append(Tokens.COMMA);
+                        append(SPACE);
+                    }
+                    Object value2 = java.lang.reflect.Array.get(value, i);
+                    outputLiteral(type.getComponentType(), multiValued, value2);
+                }
+                if (length == 1) {
+                    append(Tokens.COMMA);
+                }
+
+                append(Tokens.RPAREN);
+                return;
+            }
+
             if (Number.class.isAssignableFrom(type)) {
                 constantParts = new String[] {value.toString()};
             } else if (type.equals(DataTypeManagerService.DefaultDataTypes.BOOLEAN.getTypeClass())) {
@@ -2327,6 +2351,7 @@ public class SQLStringVisitor extends LanguageVisitor
     @Override
     public void visit(CreateProcedureCommand obj) {
     	addLeadingComment(obj.getLeadingComment());
+    	addCacheHint(obj.getCacheHint());
         if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
             append(CREATE);
             append(SPACE);

@@ -30,9 +30,9 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.provider.ChangeNotifier;
-import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
+import org.teiid.core.designer.TeiidDesignerRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.designer.core.ModelerCore;
@@ -59,7 +59,6 @@ public class UnitOfWorkImpl implements UnitOfWork {
     private String description;
     private Object source;
     private boolean overrideRollback;
-    private boolean alreadyExecuted;
     private final Set processedNotificationResults;
 
     // ==================================================================================
@@ -386,16 +385,14 @@ public class UnitOfWorkImpl implements UnitOfWork {
             this.txnCommand.append(command);
         }
 
-        if (!this.alreadyExecuted) {
-            try {
-                command.execute();
-            } catch (RuntimeException exception) {
-                final Object[] params = new Object[] {command, exception.getMessage()};
-                final String msg = ModelerCore.Util.getString("UnitOfWorkImpl.error_executing_command", params); //$NON-NLS-1$
+        try {
+            command.execute();
+        } catch (RuntimeException exception) {
+            final Object[] params = new Object[] {command, exception.getMessage()};
+            final String msg = ModelerCore.Util.getString("UnitOfWorkImpl.error_executing_command", params); //$NON-NLS-1$
 
-                command.dispose();
-                throw new ModelerCoreException(exception, msg);
-            }
+            command.dispose();
+            throw new ModelerCoreException(exception, msg);
         }
 
         updateRemovedEObjects(command);
@@ -513,15 +510,6 @@ public class UnitOfWorkImpl implements UnitOfWork {
      */
     public void setOverrideRollback( boolean b ) {
         this.overrideRollback = b;
-    }
-
-    /**
-     * @param alreadyExecuted True if this unit of work has already been executed and all that is left to be done is to handle the
-     *        undo stack.
-     * @since 5.0.3
-     */
-    public void setAlreadyExecuted( boolean alreadyExecuted ) {
-        this.alreadyExecuted = alreadyExecuted;
     }
 
     @Override

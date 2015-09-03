@@ -509,7 +509,7 @@
             </para>
             <itemizedlist>
                 <listitem>Consume a SOAP Web Service</listitem>
-                <listitem>Create a REST WAR</listitem>
+                <listitem>Create a REST Web Service</listitem>
                 <listitem>Model Flat File Source (a text file)</listitem>
                 <listitem>Model JDBC Data Source</listitem>
                 <listitem>Model Local XML File Source</listitem>

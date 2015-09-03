@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelResourceMockFactory;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -41,7 +41,7 @@ public class ConnectionInfoHelperTest {
     private static String CP_PROVIDER_ID_KEY = ConnectionInfoHelper.CONNECTION_PROFILE_NAMESPACE
                                                + ConnectionInfoHelper.PROFILE_PROVIDER_ID_KEY;
     
-    private static final String EMPTY_STRING = StringUtilities.EMPTY_STRING;
+    private static final String EMPTY_STRING = StringConstants.EMPTY_STRING;
 
     private Properties connectionProps;
 

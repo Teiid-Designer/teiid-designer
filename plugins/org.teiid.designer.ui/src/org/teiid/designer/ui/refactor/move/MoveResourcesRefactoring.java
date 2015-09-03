@@ -84,6 +84,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                 return;
             }
 
+            if (pathPairs == null || pathPairs.isEmpty())
+                return;
+
             IPath relatedFilePath = ModelUtil.getLocation(relatedFile).makeAbsolute();
             IPath relatedParentPath = relatedFilePath.removeLastSegments(1);
 
@@ -94,6 +97,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
             }
 
             TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(relatedFile, relativePathPairs);
+            for( PathPair pair : relativePathPairs ) {
+                RefactorResourcesUtils.calculateModelImportsElementLChanges(relatedFile, pair, textFileChange);
+            }
             if (addTextChange(relatedFile, textFileChange)) {
                 // Calculate the effect on any vdbs containing this modified related file
                 RefactorResourcesUtils.calculateRelatedVdbResources(relatedFile, status, this);
@@ -201,11 +207,6 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
             progressMonitor.beginTask(RefactorResourcesUtils.getString("MoveRefactoring.finalConditions"), 2); //$NON-NLS-1$
 
             Set<PathPair> pathPairs = RefactorResourcesUtils.calculateResourceMoves(getResources(), destinationPath, RefactorResourcesUtils.Option.EXCLUDE_FOLDERS);
-            if (pathPairs == null || pathPairs.isEmpty()) {
-                status.merge(RefactoringStatus.createFatalErrorStatus(RefactorResourcesUtils.getString("MoveRefactoring.emptyResourcePairsError"))); //$NON-NLS-1$
-                return status;
-            }
-
             RelatedResourceCallback relatedResourceCallback = new RelatedResourceCallback(pathPairs);
 
             for (IResource resource : getResources()) {
@@ -217,6 +218,9 @@ public class MoveResourcesRefactoring extends AbstractResourcesRefactoring {
                     IFile file = (IFile) resource;
                     Set<PathPair> importPathPairs = RefactorResourcesUtils.calculateImportChanges(file, destinationPath, getResourcesAndChildren(status));
                     TextFileChange textFileChange = RefactorResourcesUtils.calculateTextChanges(file, importPathPairs);
+                    for( PathPair pair : importPathPairs ) {
+                        RefactorResourcesUtils.calculateModelImportsElementLChanges(file, pair, textFileChange);
+                    }
                     if (addTextChange(file, textFileChange)) {
                         // Calculate the effect on any vdbs containing this modified related file
                         RefactorResourcesUtils.calculateRelatedVdbResources(file, status, new VdbResourceCallback());

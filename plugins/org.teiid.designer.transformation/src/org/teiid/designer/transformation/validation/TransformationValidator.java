@@ -396,7 +396,7 @@ public class TransformationValidator implements QueryValidator {
                 // QueryParser is not thread-safe, get new parser each time
                 IQueryParser parser = ModelerCore.getTeiidQueryService().getQueryParser();
                 command = parser.parseDesignerCommand(sqlString);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 status = new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, 0, e.getMessage(), e);
             }
         }

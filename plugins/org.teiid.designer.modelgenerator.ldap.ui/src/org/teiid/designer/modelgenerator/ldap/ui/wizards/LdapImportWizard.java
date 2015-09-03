@@ -138,6 +138,12 @@ public class LdapImportWizard extends AbstractWizard
         addPage(this.ldapColumnsPage);
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        importManager.dispose();
+    }
+
     /**
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      * @since 4.0

@@ -8,7 +8,6 @@
 package org.teiid.designer.core.container;
 
 import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -83,7 +82,12 @@ public interface Container extends ResourceSet, PropertyChangePublisher {
      * @since 3.1
      */
     String getName();
-    
+
+    /**
+     * @return object manager
+     */
+    ObjectManager getObjectManager();
+
     /**
      * Returns a resource for the URI that either already exists, is new but represents an existing file,
      * or is new and represents a brand-new file.
@@ -128,7 +132,14 @@ public interface Container extends ResourceSet, PropertyChangePublisher {
      * @since 3.1
      */
     MetamodelRegistry getMetamodelRegistry();
-    
+
+    /**
+     * Returns the resourceSet.
+     *
+     * @return ResourceSet
+     */
+    ResourceSet getResourceSet();
+
     /**
      * Sets the MetamodelRegistry.
      * @param registry The MetamodelRegistry to set

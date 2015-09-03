@@ -1,18 +1,18 @@
 package org.teiid.designer.runtime.connection;
 
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.util.Properties;
 import org.eclipse.datatools.connectivity.internal.ConnectionProfile;
 import org.junit.Before;
 import org.junit.Test;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.datatools.connection.ConnectionProfileFactory;
 
 
 public class ConnectionProfileFactoryTest {
 	private ConnectionProfileFactory connectionProfileFactory;
-	private static final String EMPTY_STRING = StringUtilities.EMPTY_STRING;
+	private static final String EMPTY_STRING = StringConstants.EMPTY_STRING;
 	
 	private static String NAME_VALUE = "connectionProfileName"; //$NON-NLS-1$
 	private static String DESC_VALUE = "connectionProfileDesc"; //$NON-NLS-1$

@@ -16,10 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -38,6 +36,7 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.util.XSDResourceImpl;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.AspectManager;
 import org.teiid.designer.core.query.QueryValidator;
@@ -49,7 +48,6 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
-import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
 import org.teiid.designer.metamodels.webservice.Input;
@@ -105,7 +103,7 @@ public class WebServiceUiUtil implements FileUtils.Constants, IInternalUiConstan
 
     static {
         // create XSD file dialog extension array
-        FILE_DIALOG_XSD_EXTENSIONS = new String[] {createFileDialogExtension(ModelUtil.EXTENSION_XSD)};
+        FILE_DIALOG_XSD_EXTENSIONS = new String[] {createFileDialogExtension(StringConstants.XSD)};
     }
 
     // ===========================================================================================================================

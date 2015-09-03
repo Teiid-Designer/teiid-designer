@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>hana VDB</title>
-  <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
-  <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+  <title>${title}</title>
+  <link href="images/teiid_icon_16x.png" rel="shortcut icon">
   <link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
   <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
   <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
@@ -26,13 +25,7 @@
       if (!window.location.origin) {
       	window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '');
       }
-      var url = window.location.search.match(/url=([^&]+)/);
-      if (url && url.length > 1) {
-        url = decodeURIComponent(url[1]);
-        alert('In decode' + url);
-      } else {
-        url = window.location.origin + "/hana/api-docs/VirtualHana";
-      }
+      url = window.location.origin + "/${context}/api-docs/${modelName}";
       window.swaggerUi = new SwaggerUi({
         url: url,
         dom_id: "swagger-ui-container",

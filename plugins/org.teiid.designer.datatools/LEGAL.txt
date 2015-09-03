@@ -4,3 +4,6 @@ This program and the accompanying materials are made available under the terms o
 available at http://www.eclipse.org/legal/epl-v10.html.
 
 Some portions may be licensed to Red Hat, Inc. under one or more contributor license agreements.
+
+ Additional code taken from Apache Directory Studio (http://directory.apache.org/studio)
+ licensed under the http://www.apache.org/licenses/LICENSE-2.0

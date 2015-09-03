@@ -726,7 +726,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		
 		if (jsonText.trim().startsWith("[")) {
 			isArray = true;
 		}
@@ -738,7 +737,7 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 			JSONObject jsonObject = new JSONObject(jsonText);
 			xml = XML.toString(jsonObject, "response"); //$NON-NLS-1$
 		}
-		
+
 		FileUtils.write(xml.getBytes(), jsonFile);
 		return jsonFile;
 
@@ -928,7 +927,6 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		if (dotLocation > -1) {
 			filePath = filePath.substring(0, dotLocation);
 		}
-		if (filePath.equals(EMPTY_STRING)) filePath="response";  //$NON-NLS-1$
 		return filePath;
 	}
 

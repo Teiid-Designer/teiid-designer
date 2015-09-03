@@ -21,7 +21,7 @@ import org.eclipse.datatools.sqltools.sqlscrapbook.actions.OpenScrapbookAction;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.ui.common.util.UiUtil;
 
 
@@ -39,7 +39,7 @@ public class OpenScrapbookEditorAction extends OpenScrapbookAction {
     	ISQLEditorConnectionInfo editorConnectionInfo = new SQLEditorConnectionInfo(null, profile.getName(), vdbName);
     		
 		
-		String scrap = StringUtilities.EMPTY_STRING;
+		String scrap = StringConstants.EMPTY_STRING;
 		SQLEditorStorageEditorInput editorStorageEditorInput = new SQLEditorStorageEditorInput(scrap, scrap);
 		
 		editorStorageEditorInput.setStorage(new SQLEditorStorage("SQL " + vdbName,  //$NON-NLS-1$

@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Properties;
 import java.util.Set;
+
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
@@ -387,7 +388,7 @@ public interface Admin {
      * @throws AdminException
      */
     void deleteDataSource(String deployedName) throws AdminException;
-
+    
     /**
      * Returns the all names of all the data sources available in the configuration.
      */
@@ -433,4 +434,5 @@ public interface Admin {
      */
     void restart();
 
+    void refresh();
 }

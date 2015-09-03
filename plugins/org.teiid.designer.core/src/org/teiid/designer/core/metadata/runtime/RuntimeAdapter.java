@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -1721,8 +1720,9 @@ public class RuntimeAdapter extends RecordFactory {
         if (obj instanceof EClass) {
             return null;
         } else if (obj instanceof EObject) {
-            ModelEditorImpl modelEditor = (ModelEditorImpl)ModelerCore.getModelEditor();
-            return modelEditor.getSearchIndexObjectID((EObject)obj);
+            ModelEditor modelEditor = ModelerCore.getModelEditor();
+            if (modelEditor instanceof ModelEditorImpl)
+                return ((ModelEditorImpl)modelEditor).getSearchIndexObjectID((EObject)obj);
         } else if (obj instanceof ObjectID) {
             return obj.toString();
         } else if (obj instanceof String) {

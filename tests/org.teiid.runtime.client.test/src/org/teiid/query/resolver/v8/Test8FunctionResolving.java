@@ -27,6 +27,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.AbstractTestFunctionResolving;
@@ -35,6 +36,7 @@ import org.teiid.query.sql.AbstractTestFactory;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Function;
 import org.teiid.query.sql.v8.Test8Factory;
+import org.teiid.query.unittest.RealMetadataFactory.DDLHolder;
 
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test8FunctionResolving extends AbstractTestFunctionResolving {
@@ -97,6 +99,35 @@ public class Test8FunctionResolving extends AbstractTestFunctionResolving {
     public void testStringAggWrongArgs() throws Exception {
         String sql = "string_agg(pm1.g1.e1)"; //$NON-NLS-1$
         getExpression(sql);
+    }
+
+    @Test
+    public void testImportedPushdown() throws Exception {
+        getMetadataFactory().example1Cached();
+        IQueryMetadataInterface tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func(x object) returns object;"), new DDLHolder("z", "create foreign function func(x object) returns object;"));
+
+        String sql = "func('a')";
+
+        Function func = (Function) getQueryParser().parseExpression(sql);
+        try {
+            ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+            visitor.resolveLanguageObject(func, tm);
+            fail("should be ambiguous");
+        } catch (QueryResolverException e) {
+
+        }
+
+        tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func(x object) returns object options (\"teiid_rel:system-name\" 'f');"), new DDLHolder("z", "create foreign function func(x object) returns object options (\"teiid_rel:system-name\" 'f');"));
+
+        func = (Function) getQueryParser().parseExpression(sql);
+        ResolverVisitor visitor = new ResolverVisitor(getTeiidVersion());
+        visitor.resolveLanguageObject(func, tm);
+
+        tm = getMetadataFactory().fromDDL("x", new DDLHolder("y", "create foreign function func() returns object options (\"teiid_rel:system-name\" 'f');"), new DDLHolder("z", "create foreign function func() returns object options (\"teiid_rel:system-name\" 'f');"));
+
+        func = (Function) getQueryParser().parseExpression("func()");
+        visitor = new ResolverVisitor(getTeiidVersion());
+        visitor.resolveLanguageObject(func, tm);
     }
 
     /**

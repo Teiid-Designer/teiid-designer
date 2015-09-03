@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb;
 
 import java.util.concurrent.atomic.AtomicReference;
-
 import org.teiid.designer.vdb.Vdb.Event;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
 
@@ -17,11 +16,7 @@ import org.teiid.designer.vdb.manifest.ImportVdbElement;
 *
 * @since 8.0
 */
-public class VdbImportVdbEntry {
-	
-	private final Vdb vdb;
-	
-	private String name;
+public class VdbImportVdbEntry extends VdbUnit {
 	
 	final AtomicReference<Integer> version = new AtomicReference<Integer>();
 	
@@ -32,8 +27,8 @@ public class VdbImportVdbEntry {
 	 * @param importVdbName
 	 */
 	public VdbImportVdbEntry(Vdb vdb, String importVdbName) {
-		this.vdb = vdb;
-        this.name = importVdbName;
+		setVdb(vdb);
+        setName(importVdbName);
         this.version.set(1);
         this.importDataPolicies.set(false);
 	}
@@ -42,17 +37,10 @@ public class VdbImportVdbEntry {
 	 * @param vdb
 	 *	@param element
 	 */
-	VdbImportVdbEntry(Vdb vdb, ImportVdbElement element) {
+	public VdbImportVdbEntry(Vdb vdb, ImportVdbElement element) {
 		this(vdb, element.getName());
         this.version.set(element.getVersion());    
         this.importDataPolicies.set(element.isImportDataPolicies());
-	}
-	
-	/**
-	 * @return return the name
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**
@@ -71,7 +59,7 @@ public class VdbImportVdbEntry {
 		final int oldVersion = this.version.get();
         if (version == oldVersion) return;
         this.version.set(version);
-		vdb.setModified(this, Event.IMPORT_VDB_ENTRY_VERSION, oldVersion, version);
+		setModified(this, Event.IMPORT_VDB_ENTRY_VERSION, oldVersion, version);
 	}
 
 	/**
@@ -90,41 +78,46 @@ public class VdbImportVdbEntry {
 		final boolean oldImportDataPolicies = this.importDataPolicies.get();
         if (importDataPolicies == oldImportDataPolicies) return;
         this.importDataPolicies.set(importDataPolicies);
-		vdb.setModified(this, Event.IMPORT_VDB_ENTRY_DATA_POLICY, oldImportDataPolicies, importDataPolicies);
+		setModified(this, Event.IMPORT_VDB_ENTRY_DATA_POLICY, oldImportDataPolicies, importDataPolicies);
 	}
 
-	@SuppressWarnings("javadoc")
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((this.name == null) ? 0 : this.name.hashCode());
-		result = prime * result
-				+ ((this.vdb == null) ? 0 : this.vdb.hashCode());
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((this.importDataPolicies == null) ? 0 : this.importDataPolicies.hashCode());
+        result = prime * result + ((this.version == null) ? 0 : this.version.hashCode());
+        return result;
+    }
 
-	@SuppressWarnings("javadoc")
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		VdbImportVdbEntry other = (VdbImportVdbEntry) obj;
-		if (this.name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!this.name.equals(other.name))
-			return false;
-		if (this.vdb == null) {
-			if (other.vdb != null)
-				return false;
-		} else if (!this.vdb.equals(other.vdb))
-			return false;
-		return true;
-	}
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VdbImportVdbEntry other = (VdbImportVdbEntry)obj;
+        if (this.importDataPolicies == null) {
+            if (other.importDataPolicies != null)
+                return false;
+        } else if (!this.importDataPolicies.equals(other.importDataPolicies))
+            return false;
+        if (this.version == null) {
+            if (other.version != null)
+                return false;
+        } else if (!this.version.equals(other.version))
+            return false;
+        return true;
+    }
+
+    @Override
+    public VdbImportVdbEntry clone() {
+        VdbImportVdbEntry clone = new VdbImportVdbEntry(getVdb(), getName());
+        cloneVdbObject(clone);
+        clone.setImportDataPolicies(isImportDataPolicies());
+        clone.setVersion(getVersion());
+        return clone;
+    }
 }

@@ -163,6 +163,7 @@ public class EditColumnDialog extends TitleAreaDialog {
 			}else{
 				dTypes.add(dType);
 			}
+			dTypes.add(dType);
 		}
 		
 		String[] datatypes = dTypes.toArray(new String[dTypes.size()]);

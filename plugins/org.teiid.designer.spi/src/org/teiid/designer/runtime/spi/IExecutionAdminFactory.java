@@ -10,6 +10,7 @@ package org.teiid.designer.runtime.spi;
 import java.sql.Driver;
 import org.teiid.designer.query.IQueryService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.type.IDataTypeManagerService;
 
 /**

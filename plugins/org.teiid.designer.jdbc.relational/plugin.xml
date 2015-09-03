@@ -97,6 +97,18 @@
             name="org.teiid.designer.jdbc.relational.impl.custom.ModeShapeModelProcessor">
       </processorClass>
    </extension>
+<!-- Define the model processor for the Teiid driver -->
+   <extension
+         id="teiidModelProcessor"
+         name="Teiid"
+         point="org.teiid.designer.jdbc.relational.modelProcessor">
+      <processorType
+            name="teiid">
+      </processorType>
+      <processorClass
+            name="org.teiid.designer.jdbc.relational.impl.custom.TeiidModelProcessor">
+      </processorClass>
+   </extension>
 <!-- EObject Matcher extensions -->
    <extension
          id="jdbcMatcherFactory"

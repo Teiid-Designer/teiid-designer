@@ -12,6 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.refactor.AbstractRefactorModelHandler;
+import org.teiid.designer.core.workspace.ModelDiagrams;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -41,13 +42,18 @@ public class DiagramRefactorModelHandler extends AbstractRefactorModelHandler {
 			    return true;
 			    
 			ModelResource modelResource = ModelUtil.getModel(refactoredResource);
-			    
-			for( Object diagram : modelResource.getModelDiagrams().getDiagrams() ) {
-			    DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
-					
-			    DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+			if (modelResource == null)
+			    return true; // If no resource then no diagrams to clean up!
+
+			ModelDiagrams modelDiagrams = modelResource.getModelDiagrams();
+			if (modelDiagrams != null) {
+			    for( Object diagram : modelDiagrams.getDiagrams() ) {
+			        DiagramEntityManager.cleanDiagramEntities((Diagram)diagram);
+
+			        DiagramEntityManager.cleanUpDiagram((Diagram)diagram);
+			    }
 			}
-			
+
 		} catch (ModelWorkspaceException e) {
 			DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
 			return false;

@@ -34,20 +34,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.UserDefinedAggregate;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.ReflectionHelper;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
+import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.runtime.client.TeiidRuntimePlugin;
 
 
 /**
@@ -69,8 +74,17 @@ public class FunctionTree {
     private Map<String, Set<FunctionMethod>> categories = new TreeMap<String, Set<FunctionMethod>>();
 
     private Map<String, List<FunctionMethod>> functionsByName = new TreeMap<String, List<FunctionMethod>>(String.CASE_INSENSITIVE_ORDER);
-    
+
+    @Since(Version.TEIID_8_9)
+    private Map<String, FunctionMethod> functionsByUuid = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
+
+    @Since(Version.TEIID_8_9)
+    private String schemaName;
+
     private Set<FunctionMethod> allFunctions = new HashSet<FunctionMethod>();
+
+    @Since(Version.TEIID_8_9)
+    private int idCount;
 
 	/**
 	 * Function lookup and invocation use: Function name (uppercase) to Map (recursive tree)
@@ -83,6 +97,7 @@ public class FunctionTree {
     /**
      * Construct a new tree with the given source of function metadata.
      * @param teiidVersion
+     * @param name name
      * @param source The metadata source
      */
     public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source) {
@@ -91,22 +106,24 @@ public class FunctionTree {
     
     /**
      * Construct a new tree with the given source of function metadata.
-     * @param teiidVersion
+     * @param teiidVersion teiid version
+     * @param name name
      * @param source The metadata source
+     * @param validateClass validating class 
      */
     public FunctionTree(ITeiidServerVersion teiidVersion, String name, FunctionMetadataSource source, boolean validateClass) {
         this.teiidVersion = teiidVersion;
+        this.schemaName = name;
         // Load data structures
     	this.validateClass = validateClass;
     	boolean system = CoreConstants.SYSTEM_MODEL.equalsIgnoreCase(name) || CoreConstants.SYSTEM_ADMIN_MODEL.equalsIgnoreCase(name);
-        Collection<FunctionMethod> functions = source.getFunctionMethods();
+        Collection<FunctionMethod> functions = source.getFunctionMethods(teiidVersion);
     	for (FunctionMethod method : functions) {
 			if (!containsIndistinguishableFunction(method)){
                 // Add to tree
                 addFunction(name, source, method, system);
 			} else if (!CoreConstants.SYSTEM_MODEL.equalsIgnoreCase(name)) {
-			    // TODO
-//                LogManager.logWarning(LogConstants.CTX_FUNCTION_TREE, Messages.gs(Messages.TEIID.TEIID30011, new Object[]{method}));
+			    TeiidRuntimePlugin.log(IStatus.WARNING, null, Messages.gs(Messages.TEIID.TEIID30011, method));
 			}
         }
     }
@@ -117,6 +134,17 @@ public class FunctionTree {
 
         return dataTypeManager;
     }
+
+    @Since(Version.TEIID_8_9)
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    @Since(Version.TEIID_8_9)
+    public Map<String, FunctionMethod> getFunctionsByUuid() {
+        return functionsByUuid;
+    }
+
 	// ---------------------- FUNCTION SELECTION USE METHODS ----------------------
 
 	/*
@@ -185,6 +213,8 @@ public class FunctionTree {
     		categoryKey = FunctionCategoryConstants.MISCELLANEOUS;
     	}
 
+        setUuid(method);
+
     	// Look up function map (create if necessary)
     	Set<FunctionMethod> functions = categories.get(categoryKey);
         if (functions == null) {
@@ -204,16 +234,20 @@ public class FunctionTree {
                 String typeName = inputParams.get(i).getType();
                 Class<?> clazz = getDataTypeManager().getDataTypeClass(typeName);
                 types[i] = clazz;
+                setUuid(inputParams.get(i));
             }
         } else {
         	types = new Class<?>[0];
         }
+
+        setUuid(method.getOutputParameter());
 
         FunctionDescriptor descriptor = createFunctionDescriptor(source, method, types, system);
         descriptor.setSchema(schema);
         // Store this path in the function tree
         // Look up function in function map
         functions.add(method);
+        functionsByUuid.put(method.getUUID(), method);
 
         while(true) {
 	        // Add method to list by function name
@@ -261,6 +295,24 @@ public class FunctionTree {
         
         allFunctions.add(method);
         return descriptor;
+    }
+
+    /**
+     * Adapted from {@link MetadataFactory#setUUID}
+     * @param method
+     */
+    private void setUuid(AbstractMetadataRecord method) {
+        if (!method.isUUIDSet()) {
+            int lsb = 0;
+            if (method.getParent() != null) {
+                lsb  = method.getParent().getUUID().hashCode();
+            } else {
+                lsb = CoreConstants.SYSTEM_MODEL.hashCode();
+            }
+            lsb = 31*lsb + method.getName().hashCode();
+            String uuid = "tsid:" + MetadataFactory.hex(lsb, 16) + "-" + MetadataFactory.hex(idCount++, 8); //$NON-NLS-1$ //$NON-NLS-2$
+            method.setUUID(uuid);
+        }
     }
 
     private FunctionDescriptor createFunctionDescriptor(FunctionMetadataSource source, FunctionMethod method, Class<?>[] types, boolean system) {

@@ -239,11 +239,19 @@ public class TestDesignerTestGatherer extends TestCase {
      * @return
      */
     private static boolean hasJUnit4AnnotateTestMethods(Class<?> klazz) {
+        if (klazz == null)
+            return false;
+
         for (Method method : klazz.getDeclaredMethods()) {
             if (method.getAnnotation(org.junit.Test.class) != null) {
                 return true;
             }
         }
+
+        // Class may not contain annotated methods but its parent classes might
+        Class<?> parent = klazz.getSuperclass();
+        if (hasJUnit4AnnotateTestMethods(parent))
+            return true;
 
         return false;
     }

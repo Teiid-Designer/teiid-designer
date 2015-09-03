@@ -242,7 +242,11 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
     public void setPropertyValue(final Object modelObject,
                                  final String propId,
                                  final String newValue) throws Exception {
-        super.setPropertyValue(modelObject, propId, newValue);
+    	boolean isVirtual = ModelUtil.isVirtual(modelObject);
+    	
+    	if( isVirtual && !PropertyName.same(PropertyName.NON_PREPARED, propId)) {
+    		super.setPropertyValue(modelObject, propId, newValue);
+    	}
 
         // if setting aggregate to false remove these properties
         if (PropertyName.same(PropertyName.AGGREGATE, propId) && !Boolean.parseBoolean(newValue)) {

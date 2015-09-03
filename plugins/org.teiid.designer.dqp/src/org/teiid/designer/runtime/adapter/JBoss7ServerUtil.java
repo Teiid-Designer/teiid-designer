@@ -12,13 +12,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.jboss.dmr.ModelNode;
 import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.core.server.v7.management.AS7ManagementDetails;
+import org.jboss.ide.eclipse.as.management.core.IAS7ManagementDetails;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManagerUtil;
 import org.jboss.ide.eclipse.as.management.core.ModelDescriptionConstants;
 import org.teiid.designer.runtime.DebugConstants;
@@ -62,8 +65,16 @@ public abstract class JBoss7ServerUtil extends JBossServerUtil {
      */
     private static ModelNode executeRequest(IServer parentServer, JBoss7Server jboss7Server, ModelNode request) throws Exception {
         String requestString = request.toJSONString(true);
-        
-        String resultString = JBoss7ManagerUtil.getService(parentServer).execute(new AS7ManagementDetails(parentServer), requestString);
+
+        int timeout = DqpPlugin.getInstance().getJbossRequestTimeout();
+
+        //
+        // Add the timeout to a properties map
+        //
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put(IAS7ManagementDetails.PROPERTY_TIMEOUT, timeout);
+
+        String resultString = JBoss7ManagerUtil.getService(parentServer).execute(new AS7ManagementDetails(parentServer, props), requestString);
         return ModelNode.fromJSONString(resultString);
     }
 

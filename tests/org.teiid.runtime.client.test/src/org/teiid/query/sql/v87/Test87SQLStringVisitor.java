@@ -9,13 +9,13 @@ package org.teiid.query.sql.v87;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.sql.v85.Test85SQLStringVisitor;
+import org.teiid.query.sql.v86.Test86SQLStringVisitor;
 
 /**
  *
  */
 @SuppressWarnings( {"javadoc"} )
-public class Test87SQLStringVisitor extends Test85SQLStringVisitor {
+public class Test87SQLStringVisitor extends Test86SQLStringVisitor {
 
     protected Test87SQLStringVisitor(ITeiidServerVersion teiidVersion) {
         super(teiidVersion);
