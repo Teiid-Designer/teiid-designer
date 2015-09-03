@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
@@ -393,7 +392,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 	public CacheHint getQueryCacheOption(String query) {
     	Matcher match = CACHE_HINT.matcher(query);
     	if (match.matches()) {
-    		CacheHint hint = new CacheHint();
+    	    CacheHint hint = new CacheHint(this);
     		if (match.group(2) !=null) {
     			hint.setPrefersMemory(true);
     		}

@@ -23,6 +23,8 @@
 package org.teiid.query.sql.lang;
 
 import org.teiid.metadata.FunctionMethod.Determinism;
+import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.sql.visitor.SQLStringVisitor;
 import org.teiid.translator.CacheDirective;
 
 public class CacheHint extends CacheDirective {
@@ -35,11 +37,12 @@ public class CacheHint extends CacheDirective {
 	public static final String CACHE = "cache"; //$NON-NLS-1$
 	public static final String SCOPE = "scope:"; //$NON-NLS-1$
 	
-	public CacheHint() {
+	public CacheHint(TeiidParser parser) {
+	    super(parser);
 	}
 	
-	public CacheHint(Boolean prefersMemory, Long ttl) {
-		super(prefersMemory, ttl);
+	public CacheHint(TeiidParser teiidParser, Boolean prefersMemory, Long ttl) {
+		super(teiidParser, prefersMemory, ttl);
 	}
 	
 	public boolean isPrefersMemory() {
@@ -51,10 +54,9 @@ public class CacheHint extends CacheDirective {
 
 	@Override
 	public String toString() {
-		// TODO: fix this?
-//		SQLStringVisitor ssv = new SQLStringVisitor();
-//		ssv.addCacheHint(this);
-		return null;
+	    SQLStringVisitor ssv = new SQLStringVisitor(getTeiidParser().getVersion());
+	    ssv.addCacheHint(this);
+		return ssv.getSQLString();
 	}
 	
 	public Determinism getDeterminism() {
@@ -86,7 +88,7 @@ public class CacheHint extends CacheDirective {
 	}
 	
 	public CacheHint clone() {
-		CacheHint copy = new CacheHint();
+		CacheHint copy = new CacheHint(getTeiidParser());
 		copy.setInvalidation(this.getInvalidation());
 		copy.setPrefersMemory(this.getPrefersMemory());
 		copy.setReadAll(this.getReadAll());
