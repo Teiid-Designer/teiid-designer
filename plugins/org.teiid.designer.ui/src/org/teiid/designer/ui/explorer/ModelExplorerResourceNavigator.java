@@ -1082,6 +1082,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         // updateStatusLine(sel);
         updateActionBars(sel);
         linkToEditor(sel);
+        super.handleSelectionChanged(event);
     }
 
     /**

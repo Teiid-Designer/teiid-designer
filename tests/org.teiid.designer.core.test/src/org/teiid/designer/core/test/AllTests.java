@@ -56,6 +56,7 @@ import org.teiid.designer.core.workspace.TestModelWorkspaceItemCache;
 import org.teiid.designer.core.workspace.TestModelWorkspaceItemInfo;
 import org.teiid.designer.core.workspace.TestModelWorkspaceSelections;
 import org.teiid.designer.core.workspace.TestOpenableModelWorkspaceItemInfo;
+import org.teiid.designer.core.workspace.WorkspaceResourceFinderUtilTest;
 
 
 @RunWith( Suite.class )
@@ -74,7 +75,7 @@ import org.teiid.designer.core.workspace.TestOpenableModelWorkspaceItemInfo;
     TestPrimaryMetamodelStatisticsVisitor.class, TestModelStatisticsVisitor.class, TestModelStatistics.class,
     TestIoUtilities.class, TestColumnRecordComparator.class, StringUtilitiesTest.class, TestDatatypeConstants.class,
     TestMultiplicity.class, TestMappingProducer.class, TestFakeMappableObject.class, TestModelerCore.class,
-    TestTransactionStateConstants.class, TestAbstractMetamodelAspect.class,} )
+    TestTransactionStateConstants.class, TestAbstractMetamodelAspect.class, WorkspaceResourceFinderUtilTest.class} )
 public class AllTests {
     // nothing to do
 }

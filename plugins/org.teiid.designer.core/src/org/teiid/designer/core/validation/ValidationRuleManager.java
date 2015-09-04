@@ -20,6 +20,7 @@ import org.teiid.designer.core.metamodel.aspect.ValidationAspect;
 import org.teiid.designer.core.metamodel.aspect.core.aspects.validation.rules.DeletedXmlRelationalExtensionRule;
 import org.teiid.designer.core.metamodel.aspect.core.aspects.validation.rules.DeletedXmlRelationalImportRule;
 import org.teiid.designer.core.resource.EmfResource;
+import org.teiid.designer.core.validation.rules.CircularDependenciesRule;
 import org.teiid.designer.core.validation.rules.EObjectUuidRule;
 import org.teiid.designer.core.validation.rules.EmfResourceValidationRule;
 import org.teiid.designer.core.validation.rules.ModelFileExtensionRule;
@@ -43,6 +44,7 @@ public class ValidationRuleManager {
     private static final ValidationRule RESOURCE_IN_SCOPE_RULE = new ResourceInScopeValidationRule();
     private static final ValidationRule DELETED_XML_RELATIONAL_IMPORT_RULE = new DeletedXmlRelationalImportRule();
     private static final ValidationRule DELETED_XML_RELATIONAL_EXTENSION_RULE = new DeletedXmlRelationalExtensionRule();
+    private static final ValidationRule CIRCULAR_DEPENDENCIES_RULE = new CircularDependenciesRule();
     private LRUCache cache;
 
     // ==================================================================================
@@ -167,6 +169,7 @@ public class ValidationRuleManager {
             ruleSet.addRule(EMF_RESOURCE_RULE);
             ruleSet.addRule(DELETED_XML_RELATIONAL_IMPORT_RULE);
             ruleSet.addRule(DELETED_XML_RELATIONAL_EXTENSION_RULE);
+            ruleSet.addRule(CIRCULAR_DEPENDENCIES_RULE);
         } else if (eResource instanceof XSDResourceImpl) {
             //ruleSet.addRule(FILE_EXTENSION_RULE);
         }
