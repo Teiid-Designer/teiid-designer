@@ -33,8 +33,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -78,7 +76,7 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  * @since 8.0
  */
 public class MappingDiagramController
-    implements DiagramController, ISelectionChangedListener, ControlListener, IRevealHideListener, UiConstants {
+    implements DiagramController, ISelectionChangedListener, IRevealHideListener, UiConstants {
 
     DocumentTreeController documentController;
     DiagramEditor diagramEditor;
@@ -967,26 +965,6 @@ public class MappingDiagramController
 
         // jh Defect 21263 - call resetExtents on tree
         documentController.resetExtentsFromDocument();
-    }
-
-    /**
-     * @see org.eclipse.swt.events.ControlListener#controlMoved(org.eclipse.swt.events.ControlEvent)
-     */
-    @Override
-	public void controlMoved( ControlEvent e ) {
-        // Don't care about anything here.
-
-    }
-
-    /**
-     * @see org.eclipse.swt.events.ControlListener#controlResized(org.eclipse.swt.events.ControlEvent)
-     */
-    @Override
-	public void controlResized( ControlEvent e ) {
-        // We need to tell the diagram to update from it's current scroll position
-        if (diagramEditor.getControl() != null && !diagramEditor.getControl().isDisposed()) {
-            documentController.resetExtentsFromDocument();
-        }
     }
 
     /**

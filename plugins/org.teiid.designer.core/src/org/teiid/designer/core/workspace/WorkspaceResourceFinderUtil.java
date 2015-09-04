@@ -742,13 +742,52 @@ public class WorkspaceResourceFinderUtil {
                 if (isGlobalResource(modelPath))
                     continue;
 
-                resultDependents.add(fileResource);
-                if (IResource.DEPTH_INFINITE == depth)
+                // only add and recurse if haven't already
+                if (resultDependents.add(fileResource) && (IResource.DEPTH_INFINITE == depth)) {
                     getResourcesThatUse(fileResource, filter, depth, resultDependents);
-
+                }
+                
                 break;
             }
         }
+    }
+
+    private static boolean dependsOn(final IResource resourceBeingChecked,
+                                     final IResource model) {
+        final Collection<IFile> dependents = getDependentResources(resourceBeingChecked);
+
+        for (final IResource dependent : dependents) {
+            if (model.equals(dependent)) {
+                return true;
+            }
+
+            // recurse
+            if (dependsOn(dependent, model)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param model the model being checked (cannot be <code>null</code>)
+     * @return the model that is causing the circular dependencies (can be <code>null</code> if no circular dependencies)
+     */
+    public static IFile getFirstResourceHavingCircularDependency(final IResource model) {
+        final Collection<IFile> dependents = getDependentResources(model);
+
+        if ((dependents == null) || dependents.isEmpty()) {
+            return null;
+        }
+
+        for (final IFile dependent : dependents) {
+            if (dependsOn(dependent, model)) {
+                return dependent;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -1063,11 +1102,12 @@ public class WorkspaceResourceFinderUtil {
             final String uriName = URI.createURI(uri).lastSegment();
             final Resource[] systemModels = ModelerCore.getModelContainer().getResourceFinder().findByName(uriName, false, false);
 
-            for (int i = 0; i != systemModels.length; ++i) {
-                final URI resUri = systemModels[i].getURI();
-                if (resUri.lastSegment().equalsIgnoreCase(uriName)) found = true;
+            if ((systemModels != null) && (systemModels.length != 0)) {
+                for (int i = 0; i != systemModels.length; ++i) {
+                    final URI resUri = systemModels[i].getURI();
+                    if (resUri.lastSegment().equalsIgnoreCase(uriName)) found = true;
+                }
             }
-
         } catch (final Exception e) {
             ModelerCore.Util.log(e);
         }
