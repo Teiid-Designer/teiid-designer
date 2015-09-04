@@ -25,12 +25,10 @@ package org.teiid.query.parser;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.HashSet;
-
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.IQueryParser;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.MetadataFactory;
@@ -203,22 +201,24 @@ public class QueryParser implements IQueryParser {
         
     	Command result = null;
         try{
+            TeiidParser teiidParser = getTeiidParser(sql);
             if (designerCommands) {
-                result = getTeiidParser(sql).designerCommand(parseInfo);
+                result = teiidParser.designerCommand(parseInfo);
             } else {
-                result = getTeiidParser(sql).command(parseInfo);
+                result = teiidParser.command(parseInfo);
             }
             String noCommentSql = sql;
-            LeadingComment leadingComment = getTeiidParser(sql).getLeadingComment(sql);
-            TrailingComment trailingComment = getTeiidParser(sql).getTrailingComment(noCommentSql);
-            
+            LeadingComment leadingComment = teiidParser.getLeadingComment(sql);
+            TrailingComment trailingComment = teiidParser.getTrailingComment(noCommentSql);
+
             if( leadingComment != null ) {
-            	noCommentSql = getTeiidParser(sql).removeComments(sql, leadingComment, trailingComment);
+            	noCommentSql = teiidParser.removeComments(sql, leadingComment, trailingComment);
             }
+
             result.setLeadingComment(leadingComment);
             result.setTrailingComment(trailingComment);
-            
-            result.setCacheHint(getTeiidParser(sql).getQueryCacheOption(noCommentSql));
+
+            result.setCacheHint(teiidParser.getQueryCacheOption(noCommentSql));
 
         } catch(Exception e) {
            throw convertParserException(e);
