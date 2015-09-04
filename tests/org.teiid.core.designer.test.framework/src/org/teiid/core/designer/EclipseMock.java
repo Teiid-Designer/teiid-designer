@@ -9,7 +9,8 @@ package org.teiid.core.designer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -26,6 +27,7 @@ public final class EclipseMock {
     private final IWorkspace workspace;
     private final IWorkspaceRoot workspaceRoot;
     private final IPath workspaceRootLocation;
+    private final List<IProject> projects = new ArrayList<IProject>();
 
     public EclipseMock() {
         workspace = mock(IWorkspace.class);
@@ -38,9 +40,15 @@ public final class EclipseMock {
         workspaceRootLocation = mock(IPath.class);
         when(workspaceRoot.getLocation()).thenReturn(workspaceRootLocation);
     }
+
+    public void addProject(final IProject project) {
+        this.projects.add(project);
+        when(workspaceRoot.getProjects()).thenReturn(this.projects.toArray(new IProject[this.projects.size()]));
+    }
     
     public void dispose() {
         ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.WORKSPACE_KEY);
+        this.projects.clear();
     }
 
     /**
