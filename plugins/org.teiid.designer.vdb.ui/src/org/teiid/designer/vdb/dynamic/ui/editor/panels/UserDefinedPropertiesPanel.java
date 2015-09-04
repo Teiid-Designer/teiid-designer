@@ -1,4 +1,4 @@
-package org.teiid.designer.komodo.vdb.ui.editor.panels;
+package org.teiid.designer.vdb.dynamic.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
@@ -32,10 +32,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableItem;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.translators.SimpleProperty;
-import org.teiid.designer.komodo.vdb.ui.editor.dialogs.AddGeneralPropertyDialog;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.dynamic.ui.editor.dialogs.AddGeneralPropertyDialog;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 

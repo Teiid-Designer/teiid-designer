@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.StringConstants;
-import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.Messages;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
@@ -39,6 +38,7 @@ import org.teiid.designer.ui.common.wizard.AbstractWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
 import org.teiid.designer.ui.viewsupport.SingleProjectOrFolderFilter;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
 
 /**
  * Page 2 of Generate Archive Wizard

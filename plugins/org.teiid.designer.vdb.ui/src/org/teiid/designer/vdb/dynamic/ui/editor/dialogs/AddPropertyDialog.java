@@ -1,15 +1,15 @@
 /*
  * JBoss, Home of Professional Open Source.
-*
-* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
-*
-* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
-*/
-package org.teiid.designer.komodo.vdb.ui.editor.dialogs;
+ *
+ * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+ *
+ * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+ */
+package org.teiid.designer.vdb.dynamic.ui.editor.dialogs;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -27,33 +27,45 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.core.translators.TranslatorOverrideProperty;
+import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
+
 
 /**
  *
  */
-public class AddGeneralPropertyDialog  extends MessageDialog {
+public class AddPropertyDialog extends MessageDialog {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddGeneralPropertyDialog.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddPropertyDialog.class);
 
     private Button btnOk;
-    private final Set<String> existingNames;
+    private final List<String> existingNames;
     private String name;
     private String value;
+    private TranslatorOverrideProperty transOverrideProperty;
+    private String editingName = null;
 
     /**
+     * Dialog to Add or Edit a property override
      * @param parentShell the parent shell (may be <code>null</code>)
+     * @param title the dialog title
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
+     * @param transOverrideProperty if supplied, will be edited.
      */
-    public AddGeneralPropertyDialog( Shell parentShell,
-                              Set<String> existingPropertyNames ) {
-        super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
+    public AddPropertyDialog( Shell parentShell,
+    		                  String title,
+                              List<String> existingPropertyNames,
+                              TranslatorOverrideProperty transOverrideProperty) {
+        super(parentShell, title, null, 
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
-        if( existingPropertyNames == null ) {
-        	this.existingNames = new HashSet<String>(0);
-        } else {
-        	this.existingNames = existingPropertyNames;
+        this.existingNames = (existingPropertyNames == null) ? new ArrayList<String>(0) : existingPropertyNames;
+        this.transOverrideProperty = transOverrideProperty;
+        if(this.transOverrideProperty!=null) {
+        	this.editingName = this.transOverrideProperty.getDefinition().getId();
+        	this.name = this.editingName;
+        	this.value = this.transOverrideProperty.getDefinition().getDefaultValue();
         }
     }
 
@@ -96,6 +108,9 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
         Text txtName = new Text(pnl, SWT.BORDER);
         txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtName.setToolTipText(Util.getString(PREFIX + "txtName.toolTip")); //$NON-NLS-1$
+        if(this.transOverrideProperty!=null) {
+        	txtName.setText(this.transOverrideProperty.getDefinition().getId());
+        }
         txtName.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -115,6 +130,9 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
         Text txtValue = new Text(pnl, SWT.BORDER);
         txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         txtValue.setToolTipText(Util.getString(PREFIX + "txtValue.toolTip")); //$NON-NLS-1$
+        if(this.transOverrideProperty!=null) {
+        	txtValue.setText(this.transOverrideProperty.getDefinition().getDefaultValue());
+        }
         txtValue.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -131,21 +149,12 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     }
 
     /**
-     * @return the new property name (never <code>null</code>)
+     * @return the new property (never <code>null</code>)
      * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
      */
-    public String getName() {
+    public TranslatorOverrideProperty getProperty() {
         CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-        return name;
-    }
-    
-    /**
-     * @return the new property value (never <code>null</code>)
-     * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
-     */
-    public String getValue() {
-        CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-        return value;
+        return new TranslatorOverrideProperty(new TranslatorPropertyDefinition(this.name, this.value), null);
     }
 
     /**
@@ -204,14 +213,16 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     }
 
     private String validateName() {
-        String errorMsg = validateName(this.name);
+        String errorMsg = TranslatorPropertyDefinition.validateName(this.name);
 
         if (errorMsg == null) {
             // make sure property ID doesn't already exist
             for (String existingName : this.existingNames) {
                 if (existingName.equals(this.name)) {
-                    errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
-                    break;
+                	if(this.editingName==null || !this.editingName.equals(this.name)) {
+                		errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
+                		break;
+                	}
                 }
             }
         }
@@ -220,48 +231,6 @@ public class AddGeneralPropertyDialog  extends MessageDialog {
     }
 
     private String validateValue() {
-        return validateValue(this.value);
+        return TranslatorPropertyDefinition.validateValue(this.value);
     }
-    
-    /**
-     * @param proposedName the proposed property name
-     * @return an error message or <code>null</code> if name is valid
-     */
-    public static String validateName( String proposedName ) {
-        // must have a name
-        if (StringUtilities.isEmpty(proposedName)) {
-            return Util.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
-        }
-
-        // make sure only letters
-        for (char c : proposedName.toCharArray()) {
-            if ( ! isValidChar(c)) {
-                return Util.getString(PREFIX + "invalidPropertyName"); //$NON-NLS-1$
-            }
-        }
-
-        // valid name
-        return null;
-    }
-    
-    private static boolean isValidChar(char c) {
-    	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-') return true;
-    	
-    	return false;
-    }
-    
-    /**
-     * @param proposedValue the proposed value
-     * @return an error message or <code>null</code> if value is valid
-     */
-    public static String validateValue( String proposedValue ) {
-        // must have a value
-        if (StringUtilities.isEmpty(proposedValue)) {
-            return Util.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
-        }
-
-        // valid
-        return null;
-    }
-
 }

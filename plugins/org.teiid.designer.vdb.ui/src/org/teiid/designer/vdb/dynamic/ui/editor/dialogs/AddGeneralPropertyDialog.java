@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.komodo.vdb.ui.editor.dialogs;
+package org.teiid.designer.vdb.dynamic.ui.editor.dialogs;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
 import java.util.HashSet;
@@ -31,19 +31,20 @@ import org.teiid.core.designer.util.StringUtilities;
 /**
  *
  */
-public class AddLanguagePropertyDialog extends MessageDialog {
+public class AddGeneralPropertyDialog  extends MessageDialog {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddLanguagePropertyDialog.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddGeneralPropertyDialog.class);
 
     private Button btnOk;
     private final Set<String> existingNames;
     private String name;
+    private String value;
 
     /**
      * @param parentShell the parent shell (may be <code>null</code>)
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
      */
-    public AddLanguagePropertyDialog( Shell parentShell,
+    public AddGeneralPropertyDialog( Shell parentShell,
                               Set<String> existingPropertyNames ) {
         super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
@@ -90,11 +91,11 @@ public class AddLanguagePropertyDialog extends MessageDialog {
 
         Label lblName = new Label(pnl, SWT.NONE);
         lblName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lblName.setText(Util.getString(PREFIX + "language")); //$NON-NLS-1$
+        lblName.setText(Util.getString(PREFIX + "lblName.text")); //$NON-NLS-1$
 
         Text txtName = new Text(pnl, SWT.BORDER);
         txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        txtName.setToolTipText(Util.getString(PREFIX + "languageText.tooltip")); //$NON-NLS-1$
+        txtName.setToolTipText(Util.getString(PREFIX + "txtName.toolTip")); //$NON-NLS-1$
         txtName.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -107,18 +108,45 @@ public class AddLanguagePropertyDialog extends MessageDialog {
             }
         });
 
+        Label lblValue = new Label(pnl, SWT.NONE);
+        lblValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+        lblValue.setText(Util.getString(PREFIX + "lblValue.text")); //$NON-NLS-1$
+
+        Text txtValue = new Text(pnl, SWT.BORDER);
+        txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        txtValue.setToolTipText(Util.getString(PREFIX + "txtValue.toolTip")); //$NON-NLS-1$
+        txtValue.addModifyListener(new ModifyListener() {
+            /**
+             * {@inheritDoc}
+             * 
+             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
+             */
+            @Override
+            public void modifyText( ModifyEvent e ) {
+                handleValueChanged(((Text)e.widget).getText());
+            }
+        });
+
         return pnl;
     }
 
     /**
-     * @return the new language (never <code>null</code>)
+     * @return the new property name (never <code>null</code>)
      * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
      */
-    public String getLanguage() {
+    public String getName() {
         CoreArgCheck.isEqual(getReturnCode(), Window.OK);
         return name;
     }
     
+    /**
+     * @return the new property value (never <code>null</code>)
+     * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
+     */
+    public String getValue() {
+        CoreArgCheck.isEqual(getReturnCode(), Window.OK);
+        return value;
+    }
 
     /**
      * {@inheritDoc}
@@ -135,9 +163,20 @@ public class AddLanguagePropertyDialog extends MessageDialog {
         updateState();
     }
 
+    void handleValueChanged( String newValue ) {
+        this.value = newValue.trim();
+        updateState();
+    }
+
     private void updateState() {
         // check to see if new name is valid
         String msg = validateName();
+
+        // empty message means field is valid
+        if (StringUtilities.isEmpty(msg)) {
+            // if name is valid check value
+            msg = validateValue();
+        }
 
         // update UI controls
         if (StringUtilities.isEmpty(msg)) {
@@ -171,7 +210,7 @@ public class AddLanguagePropertyDialog extends MessageDialog {
             // make sure property ID doesn't already exist
             for (String existingName : this.existingNames) {
                 if (existingName.equals(this.name)) {
-                    errorMsg = Util.getString(PREFIX + "languageAlreadyExists", this.name); //$NON-NLS-1$
+                    errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
                     break;
                 }
             }
@@ -179,24 +218,49 @@ public class AddLanguagePropertyDialog extends MessageDialog {
 
         return errorMsg;
     }
+
+    private String validateValue() {
+        return validateValue(this.value);
+    }
+    
     /**
      * @param proposedName the proposed property name
      * @return an error message or <code>null</code> if name is valid
      */
-    public String validateName( String proposedName ) {
+    public static String validateName( String proposedName ) {
         // must have a name
         if (StringUtilities.isEmpty(proposedName)) {
-            return Util.getString(PREFIX + "emptyLanguageName"); //$NON-NLS-1$
+            return Util.getString(PREFIX + "emptyPropertyName"); //$NON-NLS-1$
         }
 
         // make sure only letters
         for (char c : proposedName.toCharArray()) {
-            if (!Character.isLetter(c)) {
-                return Util.getString(PREFIX + "invalidLanguageName", proposedName); //$NON-NLS-1$
+            if ( ! isValidChar(c)) {
+                return Util.getString(PREFIX + "invalidPropertyName"); //$NON-NLS-1$
             }
         }
 
         // valid name
+        return null;
+    }
+    
+    private static boolean isValidChar(char c) {
+    	if((Character.isLetter(c) || Character.isDigit(c)) || c == '-') return true;
+    	
+    	return false;
+    }
+    
+    /**
+     * @param proposedValue the proposed value
+     * @return an error message or <code>null</code> if value is valid
+     */
+    public static String validateValue( String proposedValue ) {
+        // must have a value
+        if (StringUtilities.isEmpty(proposedValue)) {
+            return Util.getString(PREFIX + "emptyPropertyValue"); //$NON-NLS-1$
+        }
+
+        // valid
         return null;
     }
 

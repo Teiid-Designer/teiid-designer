@@ -18,7 +18,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import org.teiid.designer.komodo.vdb.DynamicModel;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
@@ -27,6 +26,7 @@ import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 /**

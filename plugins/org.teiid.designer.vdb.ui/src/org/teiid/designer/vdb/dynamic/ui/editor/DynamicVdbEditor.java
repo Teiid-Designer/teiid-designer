@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.komodo.vdb.ui.editor;
+package org.teiid.designer.vdb.dynamic.ui.editor;
 
 import static org.teiid.designer.vdb.Vdb.Event.CLOSED;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
@@ -62,19 +62,19 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
-import org.teiid.designer.komodo.vdb.DynamicModel;
-import org.teiid.designer.komodo.vdb.ui.editor.panels.DescriptionPanel;
-import org.teiid.designer.komodo.vdb.ui.editor.panels.ModelDetailsPanel;
-import org.teiid.designer.komodo.vdb.ui.editor.panels.PropertiesPanel;
-import org.teiid.designer.komodo.vdb.ui.editor.panels.TranslatorOverridesPanel;
-import org.teiid.designer.komodo.vdb.ui.editor.panels.UserDefinedPropertiesPanel;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.widget.Label;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
+import org.teiid.designer.vdb.dynamic.ui.editor.panels.DescriptionPanel;
+import org.teiid.designer.vdb.dynamic.ui.editor.panels.ModelDetailsPanel;
+import org.teiid.designer.vdb.dynamic.ui.editor.panels.PropertiesPanel;
+import org.teiid.designer.vdb.dynamic.ui.editor.panels.TranslatorOverridesPanel;
+import org.teiid.designer.vdb.dynamic.ui.editor.panels.UserDefinedPropertiesPanel;
 import org.teiid.designer.vdb.ui.Messages;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;

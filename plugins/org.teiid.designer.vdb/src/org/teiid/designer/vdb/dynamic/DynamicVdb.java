@@ -47,10 +47,6 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.ddl.importer.DdlImporter;
-import org.teiid.designer.komodo.vdb.DynamicModel;
-import org.teiid.designer.komodo.vdb.DynamicModel.Type;
-import org.teiid.designer.komodo.vdb.DynamicModelComparator;
-import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
@@ -69,6 +65,7 @@ import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicModel.Type;
 import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
@@ -365,7 +362,7 @@ public class DynamicVdb extends BasicVdb {
     }
 
 	/** (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#addDynamicModel(org.teiid.designer.komodo.vdb.DynamicModel)
+     * @see org.teiid.designer.vdb.Vdb#addDynamicModel(org.teiid.designer.vdb.dynamic.DynamicModel)
      */
     @Override
     public void addDynamicModel(DynamicModel model) {

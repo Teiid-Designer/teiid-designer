@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.komodo.vdb;
+package org.teiid.designer.vdb.dynamic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

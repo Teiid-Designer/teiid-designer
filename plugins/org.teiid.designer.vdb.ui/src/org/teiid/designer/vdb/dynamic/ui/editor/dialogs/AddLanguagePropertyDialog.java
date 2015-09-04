@@ -1,15 +1,15 @@
 /*
  * JBoss, Home of Professional Open Source.
- *
- * See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
- *
- * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
- */
-package org.teiid.designer.komodo.vdb.ui.editor.dialogs;
+*
+* See the LEGAL.txt file distributed with this work for information regarding copyright ownership and licensing.
+*
+* See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
+*/
+package org.teiid.designer.vdb.dynamic.ui.editor.dialogs;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Util;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
@@ -27,45 +27,32 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringUtilities;
-import org.teiid.designer.core.translators.TranslatorOverrideProperty;
-import org.teiid.designer.core.translators.TranslatorPropertyDefinition;
-
 
 /**
  *
  */
-public class AddPropertyDialog extends MessageDialog {
+public class AddLanguagePropertyDialog extends MessageDialog {
 
-    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddPropertyDialog.class);
+    private static final String PREFIX = I18nUtil.getPropertyPrefix(AddLanguagePropertyDialog.class);
 
     private Button btnOk;
-    private final List<String> existingNames;
+    private final Set<String> existingNames;
     private String name;
-    private String value;
-    private TranslatorOverrideProperty transOverrideProperty;
-    private String editingName = null;
 
     /**
-     * Dialog to Add or Edit a property override
      * @param parentShell the parent shell (may be <code>null</code>)
-     * @param title the dialog title
      * @param existingPropertyNames the existing property names (can be <code>null</code>)
-     * @param transOverrideProperty if supplied, will be edited.
      */
-    public AddPropertyDialog( Shell parentShell,
-    		                  String title,
-                              List<String> existingPropertyNames,
-                              TranslatorOverrideProperty transOverrideProperty) {
-        super(parentShell, title, null, 
+    public AddLanguagePropertyDialog( Shell parentShell,
+                              Set<String> existingPropertyNames ) {
+        super(parentShell, Util.getString(PREFIX + "title"), null, //$NON-NLS-1$
                 Util.getString(PREFIX + "message"), MessageDialog.INFORMATION, //$NON-NLS-1$
                 new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
 
-        this.existingNames = (existingPropertyNames == null) ? new ArrayList<String>(0) : existingPropertyNames;
-        this.transOverrideProperty = transOverrideProperty;
-        if(this.transOverrideProperty!=null) {
-        	this.editingName = this.transOverrideProperty.getDefinition().getId();
-        	this.name = this.editingName;
-        	this.value = this.transOverrideProperty.getDefinition().getDefaultValue();
+        if( existingPropertyNames == null ) {
+        	this.existingNames = new HashSet<String>(0);
+        } else {
+        	this.existingNames = existingPropertyNames;
         }
     }
 
@@ -103,14 +90,11 @@ public class AddPropertyDialog extends MessageDialog {
 
         Label lblName = new Label(pnl, SWT.NONE);
         lblName.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lblName.setText(Util.getString(PREFIX + "lblName.text")); //$NON-NLS-1$
+        lblName.setText(Util.getString(PREFIX + "language")); //$NON-NLS-1$
 
         Text txtName = new Text(pnl, SWT.BORDER);
         txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        txtName.setToolTipText(Util.getString(PREFIX + "txtName.toolTip")); //$NON-NLS-1$
-        if(this.transOverrideProperty!=null) {
-        	txtName.setText(this.transOverrideProperty.getDefinition().getId());
-        }
+        txtName.setToolTipText(Util.getString(PREFIX + "languageText.tooltip")); //$NON-NLS-1$
         txtName.addModifyListener(new ModifyListener() {
             /**
              * {@inheritDoc}
@@ -123,39 +107,18 @@ public class AddPropertyDialog extends MessageDialog {
             }
         });
 
-        Label lblValue = new Label(pnl, SWT.NONE);
-        lblValue.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-        lblValue.setText(Util.getString(PREFIX + "lblValue.text")); //$NON-NLS-1$
-
-        Text txtValue = new Text(pnl, SWT.BORDER);
-        txtValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-        txtValue.setToolTipText(Util.getString(PREFIX + "txtValue.toolTip")); //$NON-NLS-1$
-        if(this.transOverrideProperty!=null) {
-        	txtValue.setText(this.transOverrideProperty.getDefinition().getDefaultValue());
-        }
-        txtValue.addModifyListener(new ModifyListener() {
-            /**
-             * {@inheritDoc}
-             * 
-             * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
-             */
-            @Override
-            public void modifyText( ModifyEvent e ) {
-                handleValueChanged(((Text)e.widget).getText());
-            }
-        });
-
         return pnl;
     }
 
     /**
-     * @return the new property (never <code>null</code>)
+     * @return the new language (never <code>null</code>)
      * @throws IllegalArgumentException if called when dialog return code is not {@link Window#OK}.
      */
-    public TranslatorOverrideProperty getProperty() {
+    public String getLanguage() {
         CoreArgCheck.isEqual(getReturnCode(), Window.OK);
-        return new TranslatorOverrideProperty(new TranslatorPropertyDefinition(this.name, this.value), null);
+        return name;
     }
+    
 
     /**
      * {@inheritDoc}
@@ -172,20 +135,9 @@ public class AddPropertyDialog extends MessageDialog {
         updateState();
     }
 
-    void handleValueChanged( String newValue ) {
-        this.value = newValue.trim();
-        updateState();
-    }
-
     private void updateState() {
         // check to see if new name is valid
         String msg = validateName();
-
-        // empty message means field is valid
-        if (StringUtilities.isEmpty(msg)) {
-            // if name is valid check value
-            msg = validateValue();
-        }
 
         // update UI controls
         if (StringUtilities.isEmpty(msg)) {
@@ -213,24 +165,39 @@ public class AddPropertyDialog extends MessageDialog {
     }
 
     private String validateName() {
-        String errorMsg = TranslatorPropertyDefinition.validateName(this.name);
+        String errorMsg = validateName(this.name);
 
         if (errorMsg == null) {
             // make sure property ID doesn't already exist
             for (String existingName : this.existingNames) {
                 if (existingName.equals(this.name)) {
-                	if(this.editingName==null || !this.editingName.equals(this.name)) {
-                		errorMsg = Util.getString(PREFIX + "customPropertyAlreadyExists", this.name); //$NON-NLS-1$
-                		break;
-                	}
+                    errorMsg = Util.getString(PREFIX + "languageAlreadyExists", this.name); //$NON-NLS-1$
+                    break;
                 }
             }
         }
 
         return errorMsg;
     }
+    /**
+     * @param proposedName the proposed property name
+     * @return an error message or <code>null</code> if name is valid
+     */
+    public String validateName( String proposedName ) {
+        // must have a name
+        if (StringUtilities.isEmpty(proposedName)) {
+            return Util.getString(PREFIX + "emptyLanguageName"); //$NON-NLS-1$
+        }
 
-    private String validateValue() {
-        return TranslatorPropertyDefinition.validateValue(this.value);
+        // make sure only letters
+        for (char c : proposedName.toCharArray()) {
+            if (!Character.isLetter(c)) {
+                return Util.getString(PREFIX + "invalidLanguageName", proposedName); //$NON-NLS-1$
+            }
+        }
+
+        // valid name
+        return null;
     }
+
 }

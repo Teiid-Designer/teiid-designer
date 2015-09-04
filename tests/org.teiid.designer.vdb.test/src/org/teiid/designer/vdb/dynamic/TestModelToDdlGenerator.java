@@ -1,4 +1,4 @@
-package org.teiid.designer.komodo.vdb;
+package org.teiid.designer.vdb.dynamic;
 /*
  * JBoss, Home of Professional Open Source.
 *
