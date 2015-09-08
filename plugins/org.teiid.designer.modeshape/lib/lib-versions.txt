@@ -1,5 +1,5 @@
-modeshape-common-3.8.3.GA-redhat-5
-modeshape-sequencer-ddl-3.8.3.GA-redhat-5
+modeshape-common-4.4.0.Final
+modeshape-sequencer-ddl-4.4.0.Final
 
-built from branch 3.8.x-prod-ip6.2
+built from branch master
 
