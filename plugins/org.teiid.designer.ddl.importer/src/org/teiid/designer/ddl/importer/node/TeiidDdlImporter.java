@@ -392,6 +392,11 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		setImporterManager(importManager);
 
+		// Get table updatable override property value from props.
+		// (1) null = dont change anything.  (2) true = set all updatable to true  (3) false = set all updatable to false
+		String updatableOverride = (String)props.get(TeiidDDLConstants.DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE);
+		getImporterManager().setTableUpdatableOverride(updatableOverride);
+		
 		// Create a RelationalModel for the imported DDL
 		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
 
@@ -423,7 +428,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		// Now process all the 'deferred' nodes.  These are nodes which reference other nodes (which are required to exist first)
 		createDeferredObjects(deferredCreateMap,model);
 		
-		String doFilterStr = (String)props.get(TeiidDDLConstants.FILTER_CONSTAINTS);
+		String doFilterStr = (String)props.get(TeiidDDLConstants.DDL_IMPORT_FILTER_CONSTRAINTS);
 		if( doFilterStr != null ) {
 			boolean doIt = Boolean.parseBoolean(doFilterStr);
 			
@@ -669,6 +674,24 @@ public class TeiidDdlImporter extends StandardImporter {
 				}
 			}
 		}
+		// Updatable Override sets supportsUpdate to specified value, regardless of whether OPTION is present
+		if(hasTableUpdatableOverride()) {
+			table.setSupportsUpdate(getTableUpdatableOverride());
+		}
+	}
+	
+	/*
+	 * Determine if override of the table updatable property has been requested
+	 */
+	private boolean hasTableUpdatableOverride() {
+		return (getImporterManager().getTableUpdatableOverride()!=null);
+	}
+	
+	/*
+	 * Get the table updatable value (true or false) - if it has been specified.
+	 */
+	private boolean getTableUpdatableOverride() {
+		return Boolean.parseBoolean(getImporterManager().getTableUpdatableOverride());
 	}
 
 	/**

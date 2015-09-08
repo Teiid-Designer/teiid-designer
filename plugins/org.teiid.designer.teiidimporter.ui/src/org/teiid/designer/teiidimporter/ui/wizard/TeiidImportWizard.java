@@ -64,8 +64,6 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
     private ShowDDLPage showDDLPage;
     private DdlImportDifferencesPage differencesPage;
     
-    private Properties options;
-    
     IContainer targetContainer = null;
     
     private Properties designerProperties;
@@ -83,9 +81,6 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         IDialogSettings section = pluginSettings.getSection(sectionName);
         if (section == null) section = pluginSettings.addNewSection(sectionName);
         setDialogSettings(section);
-        
-        this.options = new Properties();
-        this.options.put(FILTER_CONSTAINTS, Boolean.toString(getImportManager().isFilterRedundantUniqueConstraints()));
     }
 
 	@Override
@@ -176,7 +171,7 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         addPage(showDDLPage);
         
         // Differences Page
-        this.differencesPage = new DdlImportDifferencesPage(importManager.getDdlImporter(), this.options);
+        this.differencesPage = new DdlImportDifferencesPage(importManager.getDdlImporter(), importManager.getDdlImportOptions());
         // DDL differences page
         addPage(differencesPage);  
 	}
@@ -185,6 +180,17 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 	public void createPageControls(Composite pageContainer) {
 		super.createPageControls(pageContainer);
 		updateForProperties();
+	}
+	
+    @Override
+    public IWizardPage getNextPage( IWizardPage page ) {
+    	// Update the import options before showing the differences page
+        if (page == showDDLPage) {
+        	this.differencesPage.setOptions(importManager.getDdlImportOptions());
+            return differencesPage;
+        } else {
+        	return super.getNextPage(page);
+        }
 	}
 	
 	@Override
@@ -197,7 +203,6 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
     public boolean finish() {
     	// Get createConnectionProfile flag and provide to manager.  determines if CP is created or not.
     	importManager.setCreateConnectionProfile(this.selectTargetPage.isCreateConnectionProfile());
-    	importManager.setFilterRedundantUniqueConstraints(this.selectTargetPage.isFilterRedundantUniqueConstraints());
     	
     	// Saves the model
         importManager.saveUsingDdlDiffReport(getShell());

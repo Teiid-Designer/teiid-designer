@@ -260,10 +260,18 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
         gd.horizontalSpan=3;
         targetModelInfoText.setLayoutData(gd);
         
-        // CheckBox for Connection Profile - defaults to checked
+        // CheckBox for FilterRedundantUniqueConstraints DDL Import property
         filterRedundantUCsCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_FilterRedundantUCsCB_Label, SWT.NONE, 3);
         filterRedundantUCsCB.setToolTipText(Messages.SelectTargetPage_FilterRedundantUCsCB_ToolTip);
         filterRedundantUCsCB.setSelection(true);
+        this.importManager.setDdlImportOptionFilterConstraints(true);
+        // Toggling the checkbox toggles the import property
+        filterRedundantUCsCB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                importManager.setDdlImportOptionFilterConstraints(filterRedundantUCsCB.getSelection());
+            }
+        });
         
         // CheckBox for Connection Profile - defaults to checked
         createConnProfileCB = WidgetFactory.createCheckBox(modelDefnPanel, Messages.SelectTargetPage_CreateConnectionProfileCB_Label, SWT.NONE, 3);
@@ -577,18 +585,6 @@ public class SelectTargetPage extends AbstractWizardPage implements UiConstants 
     	boolean isChecked = false;
     	if(this.createConnProfileCB != null) {
     		isChecked = this.createConnProfileCB.getSelection();
-    	}
-    	return isChecked;
-    }
-    
-    /**
-     * Gets the filter redundant UC's status
-     * @return 'true' if the filter checkbox is checked, 'false' if not.
-     */
-    public boolean isFilterRedundantUniqueConstraints() {
-    	boolean isChecked = false;
-    	if(this.filterRedundantUCsCB != null) {
-    		isChecked = this.filterRedundantUCsCB.getSelection();
     	}
     	return isChecked;
     }
