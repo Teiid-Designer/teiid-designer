@@ -57,9 +57,7 @@
 		<echo message="Project source generation is up-to-date" />
 	</target>
 
-	<!-- Disabled since the jars have been included in the codebase -->
-	<!--target name="generate" depends="check-work, nothing-todo" if="should-generate"-->
-	<target name="generate" depends="init-ant-contrib, nothing-todo" if="should-generate">
+    <target name="generate" depends="init-ant-contrib, check-work, nothing-todo" if="should-generate">
 		<echo message="Generating from maven ..." />
 
 		<!-- Build the target platform and install it -->
