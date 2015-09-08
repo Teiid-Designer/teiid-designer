@@ -66,6 +66,7 @@ public interface TeiidDDLConstants {
 		public static final String DETERMINISM_OPT_VDB_DETERMINISTIC = "VDB_DETERMINISTIC"; //$NON-NLS-1$
 		public static final String DETERMINISM_OPT_DETERMINISTIC = "DETERMINISTIC"; //$NON-NLS-1$
 
-	    public String FILTER_CONSTAINTS = "filterConstraints"; //$NON-NLS-1$
+	    public String DDL_IMPORT_FILTER_CONSTRAINTS = "ddlImport_filterConstraints"; //$NON-NLS-1$
+	    public String DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE = "ddlImport_table_updatable_override"; //$NON-NLS-1$
 
 }

@@ -48,6 +48,7 @@ import org.teiid.designer.datatools.connection.ConnectionInfoProviderFactory;
 import org.teiid.designer.datatools.connection.IConnectionInfoProvider;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.ddl.importer.DdlImporter;
+import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.runtime.DqpPlugin;
 import org.teiid.designer.runtime.PreferenceConstants;
@@ -92,6 +93,8 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     private File ddlFile;
     private String uniqueImportVdbName;
     private boolean redeploy = false;
+    private Properties ddlImportOptions = new Properties();
+
     
     /**
      * Set the data source name
@@ -561,20 +564,28 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
 		this.createConnectionProfile = createConnectionProfile;
 	}
 	
-    /**
-     * Get the CreateConnectionProfile flag
-	 * @return 'true' if a connection profile is to be created, 'false' if not.
-	 */
-	public boolean isFilterRedundantUniqueConstraints() {
-		return this.filterRedundantUniqueConstraints;
-	}
-
 	/**
-	 * Set the filterRedundantUniqueConstraints status flag
-	 * @param doFilter 'true' if a connection profile is to be created
+	 * Set the Ddl import 'filterConstraints' option 
+	 * @param doFilter 'true' to filter constraints
 	 */
-	public void setFilterRedundantUniqueConstraints(boolean doFilter) {
-		this.filterRedundantUniqueConstraints = doFilter;
+	public void setDdlImportOptionFilterConstraints(boolean doFilter) {
+        this.ddlImportOptions.put(TeiidDDLConstants.DDL_IMPORT_FILTER_CONSTRAINTS, Boolean.toString(doFilter));
+	}
+	
+	/**
+	 * Set the Ddl import table 'updatable' override option.  Supplying this option, will override the table UPDATABLE settings in the DDL.
+	 * If 'true' all generated tables will be 'updatable true'.  If 'false' all generated tables will be 'updatable false'
+	 * @param updatable 'true' if all generated tables are to be updatable, 'false' if all readonly.
+	 */
+	public void setDdlImportOptionTableUpdatableOverride(boolean updatable) {
+        this.ddlImportOptions.put(TeiidDDLConstants.DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE, Boolean.toString(updatable));
+	}
+	
+	/**
+	 * Remove the Ddl import table 'updatable' override option from the import options
+	 */
+	public void removeDdlImportOptionTableUpdatableOverride( ) {
+		this.ddlImportOptions.remove(TeiidDDLConstants.DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE);
 	}
 
     /**
@@ -938,5 +949,19 @@ public class TeiidImportManager implements ITeiidImportServer, UiConstants {
     public void setRedeploy(boolean changed) {
     	redeploy = changed;
     }
+
+	/**
+	 * @return the ddlImportOptions
+	 */
+	public Properties getDdlImportOptions() {
+		return this.ddlImportOptions;
+	}
+
+	/**
+	 * @param ddlImportOptions the ddlImportOptions to set
+	 */
+	public void setDdlImportOptions(Properties ddlImportOptions) {
+		this.ddlImportOptions = ddlImportOptions;
+	}
     
 }

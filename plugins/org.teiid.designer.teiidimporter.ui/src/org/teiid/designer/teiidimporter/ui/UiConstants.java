@@ -34,6 +34,4 @@ public interface UiConstants {
         String REMOVE_PROPERTY = FOLDER + "remove_property.png";  //$NON-NLS-1$
     }
     
-    String FILTER_CONSTAINTS = "filterConstraints"; //$NON-NLS-1$
-    
 }

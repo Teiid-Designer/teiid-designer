@@ -616,7 +616,7 @@ class DdlImporterPage extends WizardPage implements IPersistentWizardPage {
         filterRedundantUCsCB.addSelectionListener(new SelectionAdapter() {
 	        @Override
 	        public void widgetSelected( final SelectionEvent event ) {
-	            options.put(TeiidDDLConstants.FILTER_CONSTAINTS, Boolean.toString(filterRedundantUCsCB.getSelection()));
+	            options.put(TeiidDDLConstants.DDL_IMPORT_FILTER_CONSTRAINTS, Boolean.toString(filterRedundantUCsCB.getSelection()));
 	        }
 	    });
         

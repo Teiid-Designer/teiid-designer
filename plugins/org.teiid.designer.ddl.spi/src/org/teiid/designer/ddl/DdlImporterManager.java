@@ -37,6 +37,8 @@ public class DdlImporterManager {
     private boolean optToGenerateDefaultSQL;
 
     private boolean optToHelpCreateTransform;
+    
+    private String updatableOverride;
 
     private DdlNodeImporter nodeImporter;
 
@@ -192,4 +194,20 @@ public class DdlImporterManager {
     public DdlNodeImporter getNodeImporter() {
         return this.nodeImporter;
     }
+
+	/**
+	 * Get the table updatable override value (null, true, or false)
+	 * @return the updatableOverride
+	 */
+	public String getTableUpdatableOverride() {
+		return this.updatableOverride;
+	}
+
+	/**
+	 * Set the table updatable override value (null, true or false)
+	 * @param updatableOverride the updatableOverride to set
+	 */
+	public void setTableUpdatableOverride(String updatableOverride) {
+		this.updatableOverride = updatableOverride;
+	}
 }
