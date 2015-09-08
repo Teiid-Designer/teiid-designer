@@ -59,6 +59,7 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
     private Text ddlContentsBox;
     private Button exportDDLToFileSystemButton;
     private Button exportDDLToWorkspaceButton;
+    private Button setAllTablesReadonlyCB;
 		
 	private TeiidImportManager importManager;
 
@@ -89,6 +90,9 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 	    
 	    // Create DDL dispplay group
 		createDDLDisplayGroup(mainPanel);
+		
+		// Create Updatable override checkbox
+		createSetUpdatableCheckbox(mainPanel);
         
 		setPageComplete(false);
 	}
@@ -160,6 +164,28 @@ public class ShowDDLPage extends AbstractWizardPage implements UiConstants {
 
         });
         
+    }
+    
+    /*
+     * Create the Updatable override checkbox 
+     */
+    private void createSetUpdatableCheckbox(Composite parent) {
+        // CheckBox for Table updatable override
+        setAllTablesReadonlyCB = WidgetFactory.createCheckBox(parent, Messages.ShowDDLPage_updatableCheckBox_Label, SWT.NONE, 1);
+        setAllTablesReadonlyCB.setToolTipText(Messages.ShowDDLPage_updatableCheckBox_Tooltip);
+        setAllTablesReadonlyCB.setSelection(false);
+        // Toggling the checkbox toggles the updatable override value
+        setAllTablesReadonlyCB.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+            	boolean setReadonly = setAllTablesReadonlyCB.getSelection();
+            	if(setReadonly) {
+            		importManager.setDdlImportOptionTableUpdatableOverride(!setReadonly);  // if checkbox true, the override value is false (updatable=false)
+            	} else {
+            		importManager.removeDdlImportOptionTableUpdatableOverride();
+            	}
+            }
+        });
     }
 
     /**

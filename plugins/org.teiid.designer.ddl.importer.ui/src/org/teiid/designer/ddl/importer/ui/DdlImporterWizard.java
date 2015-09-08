@@ -52,7 +52,7 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         setDialogSettings(section);
         
         this.options = new Properties();
-        this.options.put(TeiidDDLConstants.FILTER_CONSTAINTS, Boolean.toString(true));
+        this.options.put(TeiidDDLConstants.DDL_IMPORT_FILTER_CONSTRAINTS, Boolean.toString(true));
     }
 
     /**
