@@ -30,6 +30,8 @@ public class Messages extends NLS {
     public static String moveUpLabel;
     public static String nameLabel;
     public static String propertiesLabel;
+    public static String noOpenProjectsWizardTitle;
+    public static String noOpenProjectsWizardMessage;
     
     static {
         NLS.initializeMessages("org.teiid.designer.ui.common.messages", Messages.class); //$NON-NLS-1$

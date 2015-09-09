@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -56,6 +57,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.viewsupport.JobUtils;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.product.IModelerProductContexts.Metamodel;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 import org.teiid.designer.webservice.IWebServiceModelBuilder;
@@ -164,6 +166,9 @@ public class WsdlFileSystemImportWizard extends AbstractWizard implements IImpor
         	
         	if( newProject != null ) {
         		this.selection = new StructuredSelection(newProject);
+        	} else {
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
 

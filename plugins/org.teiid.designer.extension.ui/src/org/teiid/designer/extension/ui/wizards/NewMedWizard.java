@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Map.Entry;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -44,6 +45,7 @@ import org.teiid.designer.ui.PluginConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
@@ -189,29 +191,24 @@ public final class NewMedWizard extends AbstractWizard
             folderLocation = ModelUtil.getContainer(selection.getFirstElement());
             // If no container was selected, set to the first open project found. user can re-select if desired.
         } else {
+            if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
+                IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
+
+                if (newProject != null) {
+                    folderLocation = newProject;
+                }
+            }
             Collection<IProject> openModelProjects = DotProjectUtils.getOpenModelProjects();
-            folderLocation = openModelProjects.iterator().next();
-        }
-
-        if (!ModelerUiViewUtils.workspaceHasOpenModelProjects()) {
-            IProject newProject = ModelerUiViewUtils.queryUserToCreateModelProject();
-
-            if (newProject != null) {
-                folderLocation = newProject;
+            if( !openModelProjects.isEmpty() ) {
+            	folderLocation = openModelProjects.iterator().next();
             }
         }
 
-        if (folderLocation != null && !folderInModelProject(folderLocation)) {
+
+
+        if (folderLocation == null || !folderInModelProject(folderLocation)) {
             // Create empty page
-            WizardPage page = new WizardPage(NewMedWizard.class.getSimpleName(), null, null) {
-                @Override
-                public void createControl(final Composite parent) {
-                    setControl(createEmptyPageControl(parent));
-                }
-            };
-            page.setMessage(Messages.newMedWizardNotModelProjMsg, IMessageProvider.ERROR);
-            page.setPageComplete(false);
-            addPage(page);
+            addPage(NoOpenProjectsWizardPage.getStandardPage());
         } else {
             newMedMainPage = new NewMedMainPage(folderLocation);
             newMedDetailsPage = new NewMedDetailsPage(this.medBeingCopied);

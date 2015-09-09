@@ -10,6 +10,7 @@ package org.teiid.designer.modelgenerator.ldap.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,6 +35,7 @@ import org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.columns.LdapColum
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.definition.LdapDefinitionPage;
 import org.teiid.designer.modelgenerator.ldap.ui.wizards.pages.table.LdapTablesPage;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -110,6 +112,8 @@ public class LdapImportWizard extends AbstractWizard
                 openProjectExists = true;
             } else {
                 openProjectExists = false;
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
             }
         }
 
