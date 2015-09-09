@@ -10,8 +10,10 @@ package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -66,6 +68,8 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     private WizardPage operationsDetailsPage;
     
     private WizardPage modelDefinitionPage;
+    
+    private WizardPage operationsOptionsPage;
 
     private IStructuredSelection selection;
     
@@ -94,7 +98,8 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
     @Override
 	public void init( IWorkbench workbench,
                       IStructuredSelection currentSelection ) {
-        
+		IProject targetProject = null;
+		
         this.selection = currentSelection;
 
         List selectedResources = IDE.computeSelectedResources(currentSelection);
@@ -108,12 +113,22 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         	
         	if( newProject != null ) {
         		selection = new StructuredSelection(newProject);
+        		targetProject = newProject;
         		openProjectExists = true;
         	} else {
         		openProjectExists = false;
         	}
         }
-
+        Object selectedObj = selection.getFirstElement();
+        
+        if( targetProject == null ) {
+        	if( selectedObj instanceof IResource ) {
+        		targetProject = ((IResource)selectedObj).getProject();
+        	}
+        }
+        
+        this.importManager.setTargetProject(targetProject);
+        
         createWizardPages(this.selection);
         setNeedsProgressMonitor(true);
     }
@@ -133,10 +148,17 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
 	        addPage(this.selectWsdlPage);
         }
         
-        SELECT_OPERATIONS_PAGE : {
+        SELECT_MODEL_DEFINITION_PAGE : {
         	this.modelDefinitionPage = new ModelDefinitionPage(this.importManager, this);
         	this.modelDefinitionPage.setPageComplete(false);
         	addPage(this.modelDefinitionPage);
+        }
+        
+        
+        SELECT_OPERATIONS_PAGE : {
+        	this.operationsOptionsPage = new OperationsOptionsPage(this.importManager, this);
+        	this.operationsOptionsPage.setPageComplete(false);
+        	addPage(this.operationsOptionsPage);
         }
         
         OPERATIONS_DETAILS_PAGE : {

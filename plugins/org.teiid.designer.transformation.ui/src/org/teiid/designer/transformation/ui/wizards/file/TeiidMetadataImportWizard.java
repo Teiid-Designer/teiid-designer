@@ -8,9 +8,11 @@
 package org.teiid.designer.transformation.ui.wizards.file;
 
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -85,7 +87,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
-        
+		IProject targetProject = null;
+		
         IStructuredSelection finalSelection = inputSelection;
         // Request User to Create a Model Project - if none open in the workspace.
     	openProjectExists = ModelerUiViewUtils.workspaceHasOpenModelProjects();
@@ -94,19 +97,28 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         	
         	if( newProject != null ) {
         		finalSelection = new StructuredSelection(newProject);
+        		targetProject = newProject;
         		openProjectExists = true;
         	} else {
         		openProjectExists = false;
         	}
         }
 		
-        Object seletedObj = finalSelection.getFirstElement();
+        Object selectedObj = finalSelection.getFirstElement();
+        
+        if( targetProject == null ) {
+        	if( selectedObj instanceof IResource ) {
+        		targetProject = ((IResource)selectedObj).getProject();
+        	}
+        }
+        
+        
         folder = null;
         boolean isViewRelationalModel = false;
         
         try {
-            if (seletedObj instanceof IFile) {
-                ModelResource modelResource = ModelUtil.getModelResource((IFile)seletedObj, false);
+            if (selectedObj instanceof IFile) {
+                ModelResource modelResource = ModelUtil.getModelResource((IFile)selectedObj, false);
                 isViewRelationalModel = ModelIdentifier.isRelationalViewModel(modelResource);
             }
         } catch (Exception e) {
@@ -129,13 +141,14 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         // Construct the business object
         this.filesInfo = new TeiidMetadataImportInfo();
         this.filesInfo.setFileMode(TeiidMetadataImportInfo.FILE_MODE_FLAT_FILE_LOCAL);
+        this.filesInfo.setTargetProject(targetProject);
         
         // Set initial view model and view model location values if present from selection
         if( isViewRelationalModel ) {
-        	this.filesInfo.setViewModelName( ((IFile)seletedObj).getName());
-        	this.filesInfo.setViewModelLocation(((IFile)seletedObj).getFullPath().removeLastSegments(1));
+        	this.filesInfo.setViewModelName( ((IFile)selectedObj).getName());
+        	this.filesInfo.setViewModelLocation(((IFile)selectedObj).getFullPath().removeLastSegments(1));
         	this.filesInfo.setViewModelExists(true);
-        	this.filesInfo.setSourceModelLocation(((IFile)seletedObj).getFullPath().removeLastSegments(1));
+        	this.filesInfo.setSourceModelLocation(((IFile)selectedObj).getFullPath().removeLastSegments(1));
         }
         if( folder != null ) {
         	this.filesInfo.setSourceModelLocation(folder.getFullPath());

@@ -79,7 +79,11 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
      */
     public ModelResource createRelationalViewModel( IContainer container, String modelName) throws ModelWorkspaceException {
         IProject project = container.getProject();
-        IPath relativeModelPath = container.getFullPath().removeFirstSegments(1).append(modelName);
+        String actualModelName = modelName;
+        if( !modelName.toLowerCase().endsWith(XMI_EXT)) {
+        	actualModelName = modelName + XMI_EXT;
+        }
+        IPath relativeModelPath = container.getFullPath().removeFirstSegments(1).append(actualModelName);
         final IFile modelFile = project.getFile( relativeModelPath );
         final ModelResource resrc = ModelerCore.create( modelFile );
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );

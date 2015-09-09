@@ -75,6 +75,8 @@ public class Messages  extends NLS {
     
     public static String Operation;
     public static String Operations;
+    public static String OperationsTypeSelection;
+    public static String OperationsTypeSelectionMessage;
     public static String Options;
     public static String OptionDefineCustomProcures;
     public static String OptionDefineDefaultProcedures;
@@ -90,6 +92,7 @@ public class Messages  extends NLS {
     public static String RootPath;
     
     public static String SchemaContents;
+    public static String SelectOpenModelProject;
     public static String SelectedOperation;
     public static String SelectPort;
     public static String SelectSourceModel_title;
@@ -102,6 +105,8 @@ public class Messages  extends NLS {
     public static String SourceModelDefinition;
     public static String SourceNameTooltip;
     public static String Status;
+    
+    public static String TargetProject;
     
     public static String Up;
     

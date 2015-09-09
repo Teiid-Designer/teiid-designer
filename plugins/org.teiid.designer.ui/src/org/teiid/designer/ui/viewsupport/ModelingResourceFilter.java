@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.ui.viewsupport;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
@@ -27,6 +28,7 @@ import org.teiid.designer.ui.common.viewsupport.CompositeViewerFilter;
 public class ModelingResourceFilter extends CompositeViewerFilter implements UiConstants.Extensions.Explorer {
 
     private ViewerFilter hiddenProjectFilter;
+    private SingleProjectFilter singleProjectFilter;
 
     /**
      * Constructs a <code>ModelingResourceFilter</code> that uses the existing resource filter settings.
@@ -66,6 +68,29 @@ public class ModelingResourceFilter extends CompositeViewerFilter implements UiC
             addFilter(this.hiddenProjectFilter);
         }
     }
+    
+    /**
+     * After calling this method, remember to refresh the viewer.
+     * 
+     * @param showHiddenProjects <code>true</code> if hidden projects should be shown
+     * @since 5.5.3
+     */
+    public void setSingleProjectProject( IProject project ) {
+        if( project == null ) {
+        	if( singleProjectFilter != null ) {
+        		removeFilter(this.singleProjectFilter);
+        	}
+        	this.singleProjectFilter = null;
+        } else {
+        	if( this.singleProjectFilter == null ) {
+        		this.singleProjectFilter = new SingleProjectFilter(project);
+        		addFilter(this.singleProjectFilter);
+        	} else {
+        		this.singleProjectFilter.setProject(project);
+        	}
+        } 
+    }
+
 
     class HiddenProjectFilter extends ViewerFilter {
 
@@ -94,6 +119,43 @@ public class ModelingResourceFilter extends CompositeViewerFilter implements UiC
             }
 
             return true;
+        }
+    }
+    
+    class SingleProjectFilter extends ViewerFilter {
+    	IProject singleProject;
+
+    	SingleProjectFilter(IProject project) {
+    		super();
+    		this.singleProject = project;
+    	}
+        /**
+         * {@inheritDoc}
+         * 
+         * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+         *      java.lang.Object)
+         */
+        @Override
+        public boolean select( Viewer viewer,
+                               Object parentElement,
+                               Object element ) {
+            if (element instanceof IProject) {
+            	if( singleProject == null) return true;
+            	
+                IProject proj = (IProject)element;
+                if( proj.getName().equals(singleProject.getName()) ) return true;
+            } else if( element instanceof IContainer) {
+            	if( singleProject == null) return true;
+            	
+            	IProject proj = ((IContainer)element).getProject();
+                if( proj.getName().equals(singleProject.getName()) ) return true;
+            }
+
+            return false;
+        }
+        
+        public void setProject(IProject project) {
+        	singleProject = project;
         }
     }
 }

@@ -7,6 +7,8 @@
  */
 package org.teiid.designer.transformation.ui.wizards.rest;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -19,6 +21,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -26,8 +31,10 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -35,8 +42,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -89,9 +98,11 @@ public final class ModelsDefinitionSection implements UiConstants{
 	private Text viewHelpText;
 	private IPath viewModelFilePath;
 	private Text viewProcedureNameText;
+	private Combo projectCombo;
 	
 	RelationalStringNameValidator validator = new RelationalStringNameValidator(true);
 	IConnectionInfoHelper connectionInfoHelper = new ConnectionInfoHelper();
+	ModelingResourceFilter locationFilter = new ModelingResourceFilter();
 	
 	boolean synchronizing = false;
 	boolean controlComplete = false;
@@ -105,17 +116,70 @@ public final class ModelsDefinitionSection implements UiConstants{
 	}
 	
 	private void buildUi(Composite parent) {
+		// ============ Target Project Selection Panel =====================
+		
+		Group projectGroup = WidgetFactory.createGroup(parent, getString("targetProjectTitle"), SWT.NONE, 1, 2); //$NON-NLS-1$
+		projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		((GridData)projectGroup.getLayoutData()).widthHint = 400;
+		
+		Label label = new Label(projectGroup, SWT.NONE);
+		label.setText(getString("selectOpenModelProjectLabel"));
+		final ILabelProvider srcLabelProvider = new LabelProvider() {
+
+			@Override
+			public String getText(final Object project) {
+				return ((IProject) project).getName();
+			}
+		};
+		this.projectCombo = WidgetFactory.createCombo(projectGroup, SWT.READ_ONLY,
+				GridData.FILL_HORIZONTAL, (ArrayList<IProject>) DotProjectUtils.getOpenModelProjects(),
+				null, // this.src,
+				srcLabelProvider, true);
+		GridDataFactory.fillDefaults().grab(true,  false).applyTo(projectCombo);
+		
+		if( this.info.getTargetProject() != null ) {
+			String projName = this.info.getTargetProject().getName();
+			int count = 0;
+			int index = -1;
+			for( String item : this.projectCombo.getItems()) {
+				if( item.equals(projName) ) {
+					index = count;
+				} else {
+					count++;
+				}
+			}
+			if( index > -1 ) {
+				this.projectCombo.select(index);
+			}
+		}
+		
+		this.projectCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IProject proj = getProject(new Path(projectCombo.getText()));
+				boolean changed = info.setTargetProject(proj);
+				if( changed ) {
+					sourceModelContainerText.setText(info.getSourceModelLocation().toString());
+					viewModelContainerText.setText(info.getSourceModelLocation().toString());
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
+		
 		// SOURCE
-		Group sourceGroup = WidgetFactory.createGroup(parent,
-				getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
+		Group sourceGroup = WidgetFactory.createGroup(parent, getString("sourceModelDefinitionGroup"), SWT.NONE, 1, 3); //$NON-NLS-1$
 		sourceGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		((GridData)sourceGroup.getLayoutData()).widthHint = 400;
 
 		Label locationLabel = new Label(sourceGroup, SWT.NULL);
 		locationLabel.setText(getString("location")); //$NON-NLS-1$
 
-		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER
-				| SWT.SINGLE);
+		sourceModelContainerText = new Text(sourceGroup, SWT.BORDER | SWT.SINGLE);
 
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		sourceModelContainerText.setLayoutData(gridData);
@@ -164,8 +228,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 
 		{
 			sourceHelpText = new Text(helpGroup, SWT.WRAP | SWT.READ_ONLY);
-			sourceHelpText.setBackground(WidgetUtil
-					.getReadOnlyBackgroundColor());
+			sourceHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
 			sourceHelpText.setForeground(WidgetUtil.getDarkBlueColor());
 			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.heightHint = 40;
@@ -185,8 +248,7 @@ public final class ModelsDefinitionSection implements UiConstants{
 
 		GridData viewGridData = new GridData(GridData.FILL_HORIZONTAL);
 		viewModelContainerText.setLayoutData(viewGridData);
-		viewModelContainerText.setBackground(Display.getCurrent()
-				.getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
+		viewModelContainerText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		viewModelContainerText.setEditable(false);
 
 		Button viewBrowseButton = new Button(viewGroup, SWT.PUSH);
@@ -439,9 +501,12 @@ public final class ModelsDefinitionSection implements UiConstants{
 	 * the container field.
 	 */
 	void handleSourceModelLocationBrowse() {
+		IProject proj = info.getTargetProject();
+		locationFilter.setSingleProjectProject(proj);
+		
 		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
 				ModelerCore.getWorkspace().getRoot(),
-				new ModelingResourceFilter(),
+				locationFilter,
 				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
@@ -450,19 +515,15 @@ public final class ModelsDefinitionSection implements UiConstants{
 			this.sourceModelFilePath = this.info.getSourceModelLocation();
 			this.sourceModelContainerText.setText(this.info
 					.getSourceModelLocation().makeRelative().toString());
-		} else {
-			this.info.setSourceModelLocation(new Path(
-					StringUtilities.EMPTY_STRING));
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
-		}
+		} 
 
-		if (this.sourceModelFileText.getText() != null
-				&& this.sourceModelFileText.getText().length() > -1) {
+		if (this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1) {
 			this.info.setSourceModelExists(sourceModelExists());
 		}
 
 		validatePage();
 	}
+
 
 	void handleSourceModelBrowse() {
 		final Object[] selections = WidgetUtil
@@ -485,19 +546,20 @@ public final class ModelsDefinitionSection implements UiConstants{
 				info.setSourceModelLocation(folderPath);
 				info.setSourceModelName(modelName);
 			}
+			
+			if (this.info.getSourceModelName() != null) {
+				this.sourceModelFilePath = this.info.getSourceModelLocation();
+				this.sourceModelContainerText.setText(this.info
+						.getSourceModelLocation().makeRelative().toString());
+				this.sourceModelFileText.setText(this.info.getSourceModelName());
+			} else {
+				this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
+				this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
+			}
+
+			this.info.setSourceModelExists(sourceModelExists());
 		}
 
-		if (this.info.getSourceModelName() != null) {
-			this.sourceModelFilePath = this.info.getSourceModelLocation();
-			this.sourceModelContainerText.setText(this.info
-					.getSourceModelLocation().makeRelative().toString());
-			this.sourceModelFileText.setText(this.info.getSourceModelName());
-		} else {
-			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
-		}
-
-		this.info.setSourceModelExists(sourceModelExists());
 
 		validatePage();
 	}
@@ -527,9 +589,12 @@ public final class ModelsDefinitionSection implements UiConstants{
 	 * the container field.
 	 */
 	void handleViewModelLocationBrowse() {
+		IProject proj = info.getTargetProject();
+		locationFilter.setSingleProjectProject(proj);
+		
 		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
 				ModelerCore.getWorkspace().getRoot(),
-				new ModelingResourceFilter(),
+				locationFilter,
 				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && viewModelContainerText != null) {
@@ -537,14 +602,9 @@ public final class ModelsDefinitionSection implements UiConstants{
 			this.viewModelFilePath = this.info.getViewModelLocation();
 			this.viewModelContainerText.setText(this.info
 					.getViewModelLocation().makeRelative().toString());
-		} else {
-			this.info.setViewModelLocation(new Path(
-					StringUtilities.EMPTY_STRING));
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
 		}
 
-		if (this.viewModelFileText.getText() != null
-				&& this.viewModelFileText.getText().length() > -1) {
+		if (this.viewModelFileText.getText() != null && this.viewModelFileText.getText().length() > -1) {
 			this.info.setViewModelExists(sourceModelExists());
 		}
 
@@ -572,19 +632,19 @@ public final class ModelsDefinitionSection implements UiConstants{
 				info.setViewModelLocation(folderPath);
 				info.setViewModelName(modelName);
 			}
-		}
 
-		if (this.info.getViewModelName() != null) {
-			this.viewModelFilePath = this.info.getViewModelLocation();
-			this.viewModelContainerText.setText(this.info
-					.getViewModelLocation().makeRelative().toString());
-			this.viewModelFileText.setText(this.info.getViewModelName());
-		} else {
-			this.viewModelFileText.setText(StringUtilities.EMPTY_STRING);
-			this.viewModelContainerText.setText(StringUtilities.EMPTY_STRING);
-		}
+			if (this.info.getViewModelName() != null) {
+				this.viewModelFilePath = this.info.getViewModelLocation();
+				this.viewModelContainerText.setText(this.info
+						.getViewModelLocation().makeRelative().toString());
+				this.viewModelFileText.setText(this.info.getViewModelName());
+			} else {
+				this.viewModelFileText.setText(StringConstants.EMPTY_STRING);
+				this.viewModelContainerText.setText(StringConstants.EMPTY_STRING);
+			}
 
-		this.info.setViewModelExists(viewModelExists());
+			this.info.setViewModelExists(viewModelExists());
+		}
 
 		validatePage();
 	}
@@ -713,7 +773,23 @@ public final class ModelsDefinitionSection implements UiConstants{
 		synchronizing = false;
 	}
 	
-
+	private IProject getProject(IPath path ) {
+		if( path == null ) return null;
+		
+		IPath actualPath = new Path('/' + path.toString());
+		
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(actualPath,	IResource.FOLDER);
+		if( item == null ) {
+			item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(actualPath,	IResource.PROJECT);
+		}
+		
+		if( item != null) {
+			return item.getResource().getProject();
+		}
+		
+		return null;
+	}
+	
 	private boolean sourceModelExists() {
 		if (this.sourceModelFilePath == null) {
 			return false;
@@ -945,94 +1021,97 @@ public final class ModelsDefinitionSection implements UiConstants{
 	final ViewerFilter sourceModelFilter = new ModelWorkspaceViewerFilter(true) {
 
 		@Override
-		public boolean select(final Viewer viewer, final Object parent,
-				final Object element) {
-			boolean doSelect = false;
+		public boolean select(final Viewer viewer, final Object parent, final Object element) {
 			if (element instanceof IResource) {
-				// If the project is closed, dont show
-				boolean projectOpen = ((IResource) element).getProject()
-						.isOpen();
-
-				if (projectOpen) {
-					// Show open projects
-					if (element instanceof IProject) {
-						try {
-							doSelect = ((IProject) element)
-									.hasNature(ModelerCore.NATURE_ID);
-						} catch (CoreException e) {
-							UiConstants.Util.log(e);
-						}
-					} else if (element instanceof IContainer) {
-						doSelect = true;
-						// Show webservice model files, and not .xsd files
-					} else if (element instanceof IFile
-							&& ModelUtil.isModelFile((IFile) element)) {
-						ModelResource theModel = null;
-						try {
-							theModel = ModelUtil.getModelResource(
-									(IFile) element, true);
-						} catch (Exception ex) {
-							ModelerCore.Util.log(ex);
-						}
-						if (theModel != null
-								&& ModelIdentifier
-										.isRelationalSourceModel(theModel)) {
-							doSelect = true;
+				IProject proj = ((IResource)element).getProject();
+				if( proj == null ) {
+					return false;
+				} else {
+					IProject targetProj = info.getTargetProject();
+					if( targetProj != null  && targetProj != proj ) return false;
+					
+					// If the project is closed, dont show
+					boolean projectOpen = ((IResource) element).getProject().isOpen();
+	
+					if (projectOpen) {
+						// Show open projects
+						if (element instanceof IProject) {
+							try {
+								return ((IProject) element).hasNature(ModelerCore.NATURE_ID);
+							} catch (CoreException e) {
+								UiConstants.Util.log(e);
+								return false;
+							}
+						} else if (element instanceof IContainer) {
+							return true;
+							// Show webservice model files, and not .xsd files
+						} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+							ModelResource theModel = null;
+							try {
+								theModel = ModelUtil.getModelResource(
+										(IFile) element, true);
+							} catch (Exception ex) {
+								ModelerCore.Util.log(ex);
+								return false;
+							}
+							if (theModel != null&& ModelIdentifier.isRelationalSourceModel(theModel)) {
+								return true;
+							}
 						}
 					}
 				}
-			} else if (element instanceof IContainer) {
-				doSelect = true;
 			}
 
-			return doSelect;
+			return false;
 		}
 	};
 
 	final ViewerFilter viewModelFilter = new ModelWorkspaceViewerFilter(true) {
 
 		@Override
-		public boolean select(final Viewer viewer, final Object parent,
-				final Object element) {
-			boolean doSelect = false;
-			if (element instanceof IResource) {
-				// If the project is closed, dont show
-				boolean projectOpen = ((IResource) element).getProject()
-						.isOpen();
+		public boolean select(final Viewer viewer, final Object parent, final Object element) {
 
-				if (projectOpen) {
-					// Show open projects
-					if (element instanceof IProject) {
-						try {
-							doSelect = ((IProject) element)
-									.hasNature(ModelerCore.NATURE_ID);
-						} catch (CoreException e) {
-							UiConstants.Util.log(e);
-						}
-					} else if (element instanceof IContainer) {
-						doSelect = true;
-						// Show webservice model files, and not .xsd files
-					} else if (element instanceof IFile
-							&& ModelUtil.isModelFile((IFile) element)) {
-						ModelResource theModel = null;
-						try {
-							theModel = ModelUtil.getModelResource(
-									(IFile) element, true);
-						} catch (Exception ex) {
-							ModelerCore.Util.log(ex);
-						}
-						if (theModel != null
-								&& ModelIdentifier
-										.isRelationalViewModel(theModel)) {
-							doSelect = true;
+			if (element instanceof IResource) {
+				IProject proj = ((IResource)element).getProject();
+				if( proj == null ) {
+					return false;
+				} else {
+					IProject targetProj = info.getTargetProject();
+					if( targetProj != null  && targetProj != proj ) return false;
+					
+					// If the project is closed, dont show
+					boolean projectOpen = ((IResource) element).getProject().isOpen();
+	
+					if (projectOpen) {
+						// Show open projects
+						if (element instanceof IProject) {
+							try {
+								return ((IProject) element).hasNature(ModelerCore.NATURE_ID);
+							} catch (CoreException e) {
+								UiConstants.Util.log(e);
+								return false;
+							}
+						} else if (element instanceof IContainer) {
+							return true;
+							// Show webservice model files, and not .xsd files
+						} else if (element instanceof IFile
+								&& ModelUtil.isModelFile((IFile) element)) {
+							ModelResource theModel = null;
+							try {
+								theModel = ModelUtil.getModelResource((IFile) element, true);
+							} catch (Exception ex) {
+								ModelerCore.Util.log(ex);
+								return false;
+							}
+							if (theModel != null && ModelIdentifier.isRelationalViewModel(theModel)) {
+								return true;
+							}
 						}
 					}
 				}
-			} else if (element instanceof IContainer) {
-				doSelect = true;
 			}
 
-			return doSelect;
+			return false;
 		}
 	};
 
