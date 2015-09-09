@@ -8,9 +8,6 @@
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/commons-logging.jar"/>
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/httpclient.jar"/>
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/httpcore.jar"/>
-	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/jackson-core-asl.jar"/>
-	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/jackson-jaxrs.jar"/>
-	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/jackson-mapper-asl.jar"/>
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/javassist.jar"/>
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/jaxrs-api.jar"/>
 	<classpathentry kind="lib" path="rest_war_resources/webapps/WEB-INF/lib/jcip-annotations.jar"/>
