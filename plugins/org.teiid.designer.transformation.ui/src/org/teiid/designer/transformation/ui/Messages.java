@@ -163,6 +163,7 @@ public class Messages extends NLS {
     public static String sqlTemplateDialogXmlFileLocalSrcLabel;
     public static String sqlTemplateDialogXmlFileUrlSrcLabel;
     public static String sqlTemplateDialogSimpleDefaultProcLabel;
+    public static String sqlTemplateDialogSelectObjectTableLabel;
     public static String sqlTemplateDialogInsDefaultProcLabel;
     public static String sqlTemplateDialogUpdDefaultProcLabel;
     public static String sqlTemplateDialogDelDefaultProcLabel;
