@@ -73,6 +73,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.util.WizardUtil;
 import org.teiid.designer.ui.common.viewsupport.ListContentProvider;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -287,7 +288,8 @@ public final class NewVdbWizard extends AbstractWizard
         		selection = new StructuredSelection(newProject);
         		openProjectExists = true;
         	} else {
-        		openProjectExists = false;
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
         

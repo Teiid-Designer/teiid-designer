@@ -35,6 +35,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
@@ -60,6 +61,7 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.DeleteAction;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -129,6 +131,8 @@ public class NewModelWizard extends AbstractWizard
      */
     @Override
     public void addPages() {
+    	if( !openProjectExists) return;
+    	
         if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()
             && (ProductCustomizerMgr.getInstance().getProductCharacteristics().getHiddenProject(false) == null)) {
             this.createHiddenProjPage = ProductCustomizerMgr.getInstance().getProductCharacteristics().getCreateHiddenProjectWizardPage();
@@ -489,6 +493,10 @@ public class NewModelWizard extends AbstractWizard
         		openProjectExists = true;
         	} else {
         		openProjectExists = false;
+        		WizardPage page = NoOpenProjectsWizardPage.getStandardPage();
+        		addPage(page);
+        		wizardPageArray = new IWizardPage[] { page };
+        		return;
         	}
         }
     }

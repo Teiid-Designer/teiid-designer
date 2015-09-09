@@ -30,6 +30,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
@@ -100,7 +101,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
         		targetProject = newProject;
         		openProjectExists = true;
         	} else {
-        		openProjectExists = false;
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
 		
@@ -159,6 +161,8 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
 
 	@Override
 	public void addPages() {
+		if( !openProjectExists ) return;
+		
         TeiidFlatFileImportOptionsPage flatFileImportOptionsPage = new TeiidFlatFileImportOptionsPage(getFileInfo());
         addPage(flatFileImportOptionsPage);
 
@@ -255,5 +259,9 @@ public class TeiidMetadataImportWizard extends AbstractWizard implements
     	if( !this.openProjectExists) {
 			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
 		}
+	}
+
+	public boolean isOpenProjectExists() {
+		return openProjectExists;
 	}
 }

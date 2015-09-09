@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.IDE;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -109,7 +110,8 @@ public class XsdFileSystemImportWizard extends AbstractWizard implements IImport
         		this.selection = new StructuredSelection(this.newProject);
         		openProjectExists = true;
         	} else {
-        		openProjectExists = false;
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
 

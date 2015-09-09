@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -25,6 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
@@ -45,6 +47,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager
 import org.teiid.designer.schema.tools.processing.SchemaProcessingException;
 import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
@@ -117,6 +120,7 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
         		openProjectExists = true;
         	} else {
         		openProjectExists = false;
+        		
         	}
         }
         Object selectedObj = selection.getFirstElement();
@@ -140,6 +144,11 @@ public class ImportWsdlSoapWizard extends AbstractWizard implements IImportWizar
      */
     @SuppressWarnings("unused")
 	public void createWizardPages( ISelection theSelection ) {
+    	
+    	if( !this.openProjectExists ) {
+            addPage(NoOpenProjectsWizardPage.getStandardPage());
+    		return;
+    	}
 
         // construct pages
         SELECT_WSDL_PAGE : {

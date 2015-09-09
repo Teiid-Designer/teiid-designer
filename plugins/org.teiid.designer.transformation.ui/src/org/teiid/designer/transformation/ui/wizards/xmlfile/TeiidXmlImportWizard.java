@@ -51,11 +51,15 @@ public class TeiidXmlImportWizard extends TeiidMetadataImportWizard {
 	public void init(IWorkbench workbench, IStructuredSelection inputSelection) {
         super.init(workbench, inputSelection);
         
-        getFileInfo().setFileMode(TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE);
+        if( isOpenProjectExists() ) {
+        	getFileInfo().setFileMode(TeiidMetadataImportInfo.FILE_MODE_TEIID_XML_FILE);
+        }
 	}
 	
 	@Override
 	public void addPages() {
+		
+		if( ! isOpenProjectExists() ) return;
 		
 		this.optionsPage = new TeiidXmlImportOptionsPage(getFileInfo());
 		addPage(optionsPage);

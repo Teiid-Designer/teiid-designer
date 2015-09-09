@@ -27,6 +27,7 @@ import org.teiid.designer.tools.textimport.ui.TextImportContributionManager;
 import org.teiid.designer.tools.textimport.ui.TextImportPlugin;
 import org.teiid.designer.tools.textimport.ui.UiConstants;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
@@ -124,6 +125,9 @@ public class ImportTextWizard extends AbstractWizard
         	
         	if( newProject != null ) {
         		finalSelection = new StructuredSelection(newProject);
+        	} else {
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
     	

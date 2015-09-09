@@ -82,6 +82,7 @@ import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.common.product.ProductCustomizerMgr;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -648,7 +649,8 @@ public class JdbcImportWizard extends AbstractWizard
             		selection = new StructuredSelection(newProject);
             		openProjectExists = true;
             	} else {
-            		openProjectExists = false;
+            		addPage(NoOpenProjectsWizardPage.getStandardPage());
+            		return;
             	}
             }
         }

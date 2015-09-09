@@ -33,6 +33,7 @@ import org.teiid.designer.modelgenerator.salesforce.ui.Activator;
 import org.teiid.designer.modelgenerator.salesforce.ui.ModelGeneratorSalesforceUiConstants;
 import org.teiid.designer.modelgenerator.salesforce.util.ModelBuildingException;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
@@ -97,6 +98,9 @@ public class SalesforceToRelationalImportWizard extends AbstractWizard
         	
         	if( newProject != null ) {
         		this.selection = new StructuredSelection(newProject);
+        	} else {
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
 

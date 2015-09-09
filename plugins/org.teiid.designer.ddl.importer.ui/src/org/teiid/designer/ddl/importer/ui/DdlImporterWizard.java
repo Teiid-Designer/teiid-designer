@@ -25,6 +25,7 @@ import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
@@ -38,6 +39,8 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
     private DdlImportDifferencesPage diffPage;
     
     private Properties options;
+    
+    boolean noOpenProjects = false;
 
     /**
      * DdlImporterWizard constructor
@@ -62,6 +65,11 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
      */
     @Override
     public void addPages() {
+        
+        if( noOpenProjects ) {
+        	addPage(NoOpenProjectsWizardPage.getStandardPage());
+            return;
+        } 
         addPage(srcPg);
         addPage(diffPage);
     }
@@ -80,11 +88,13 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         	
         	if( newProject != null ) {
         		finalSelection = new StructuredSelection(newProject);
+        	} else {
+        		noOpenProjects = true;
         	}
         }
         final Collection<IProject> projects = DotProjectUtils.getOpenModelProjects();
         IProject[] projectArray = projects.toArray(new IProject[0]);
-        
+
         importer = new DdlImporter(projectArray);
         
         // First Page defines source DDL and target model

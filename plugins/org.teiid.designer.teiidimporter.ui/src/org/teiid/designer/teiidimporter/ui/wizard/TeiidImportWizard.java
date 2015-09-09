@@ -38,6 +38,7 @@ import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.common.wizard.IPersistentWizardPage;
+import org.teiid.designer.ui.common.wizard.NoOpenProjectsWizardPage;
 import org.teiid.designer.ui.editors.ModelEditorManager;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
 import org.teiid.designer.ui.viewsupport.IPropertiesContext;
@@ -95,7 +96,8 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         		finalSelection = new StructuredSelection(newProject);
         		openProjectExists = true;
         	} else {
-        		openProjectExists = false;
+        		addPage(NoOpenProjectsWizardPage.getStandardPage());
+        		return;
         	}
         }
         
@@ -154,6 +156,8 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 
 	@Override
 	public void addPages() {
+		if( ! openProjectExists ) return;
+		
 	    // DataSource Selection Page
 		this.selectDataSourcePage = new SelectDataSourcePage(importManager);
         addPage(selectDataSourcePage);
@@ -195,7 +199,9 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
 	
 	@Override
 	public boolean performCancel() {
-        importManager.undeployDynamicVdb();
+		if( importManager != null ) {
+			importManager.undeployDynamicVdb();
+		}
 	    return true;
 	}
 	
