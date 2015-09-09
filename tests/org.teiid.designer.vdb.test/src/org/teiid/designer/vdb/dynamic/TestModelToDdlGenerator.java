@@ -96,8 +96,8 @@ public class TestModelToDdlGenerator implements StringConstants {
     }
     
     private interface EXPECTED_BQT2_TYPE_DDL {
-    	String 	TYPE_INT = "type_int integer OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
-    	String 	TYPE_INTEGER = "type_integer integer OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_INT = "type_int biginteger OPTIONS(NAMEINSOURCE '\"type_int\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
+    	String 	TYPE_INTEGER = "type_integer biginteger OPTIONS(NAMEINSOURCE '\"type_integer\"', NATIVE_TYPE 'int', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_SMALLINT = "type_smallint short OPTIONS(NAMEINSOURCE '\"type_smallint\"', NATIVE_TYPE 'smallint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_TINYINT = "type_tinyint byte OPTIONS(NAMEINSOURCE '\"type_tinyint\"', NATIVE_TYPE 'tinyint', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
     	String 	TYPE_DECIMAL = "type_decimal bigdecimal(20) OPTIONS(NAMEINSOURCE '\"type_decimal\"', NATIVE_TYPE 'decimal', CASE_SENSITIVE 'FALSE', FIXED_LENGTH 'TRUE', SEARCHABLE 'ALL_EXCEPT_LIKE')";
