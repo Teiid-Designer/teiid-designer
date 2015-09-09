@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
 import org.teiid.designer.vdb.TranslatorOverride;
 
@@ -28,6 +29,8 @@ import org.teiid.designer.vdb.TranslatorOverride;
 public class TranslatorElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private CommentSets comments;
 
     @XmlAttribute(name = "name", required = true)
     private String name;
@@ -59,6 +62,14 @@ public class TranslatorElement implements Serializable {
                 this.properties.add(new PropertyElement(prop.getDefinition().getId(), prop.getOverriddenValue()));
             }
         }
+
+        // Append any comments to the property elements
+        for (PropertyElement propElement : getProperties()) {
+            CommentSets propertyComments = translatorOverride.getPropertyComments(propElement.getName());
+            propElement.getComments().add(propertyComments);
+        }
+
+        getComments().add(translatorOverride.getComments());
     }
 
     /**
@@ -89,4 +100,20 @@ public class TranslatorElement implements Serializable {
         return this.type;
     }
 
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
+    }
 }

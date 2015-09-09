@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.teiid.core.designer.util.StringConstants;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry;
 
@@ -35,6 +36,8 @@ public class EntryElement implements Serializable {
     public static final String INDEX_NAME = "indexName"; //$NON-NLS-1$
     
     private static final long serialVersionUID = 1L;
+
+    private CommentSets comments;
 
     /**
      * Path of entry
@@ -87,5 +90,22 @@ public class EntryElement implements Serializable {
     public List<PropertyElement> getProperties() {
         if (properties == null) properties = new ArrayList<PropertyElement>();
         return properties;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
     }
 }

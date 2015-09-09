@@ -47,10 +47,6 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.datatools.profiles.jbossds.IJBossDsProfileConstants;
 import org.teiid.designer.ddl.importer.DdlImporter;
-import org.teiid.designer.komodo.vdb.DynamicModel;
-import org.teiid.designer.komodo.vdb.DynamicModel.Type;
-import org.teiid.designer.komodo.vdb.DynamicModelComparator;
-import org.teiid.designer.komodo.vdb.Metadata;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
@@ -69,10 +65,12 @@ import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbUtil;
 import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicModel.Type;
 import org.teiid.designer.vdb.manifest.ConditionElement;
 import org.teiid.designer.vdb.manifest.DataRoleElement;
 import org.teiid.designer.vdb.manifest.ImportVdbElement;
 import org.teiid.designer.vdb.manifest.MaskElement;
+import org.teiid.designer.vdb.manifest.MetadataElement;
 import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PermissionElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
@@ -158,20 +156,28 @@ public class DynamicVdb extends BasicVdb {
             public void tryToDo() throws Exception {
                 try {
                     fileStream = new FileInputStream(dynVdbFile);
-
                     DynamicVdb vdb = DynamicVdb.this;
 
                     // Initialize using manifest
                     final Unmarshaller unmarshaller = vdb.getJaxbContext().createUnmarshaller();
                     unmarshaller.setSchema(vdb.getManifestSchema());
                     final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(fileStream);
+
+                    CommentReader reader = new CommentReader(manifest);
+                    reader.read(dynVdbFile);
+
                     vdb.setDescription(manifest.getDescription());
                     vdb.setVersion(manifest.getVersion());
                     vdb.setName(manifest.getName());
+
+                    vdb.addComments(manifest.getComments());
+
                     // VDB properties
                     for (final PropertyElement property : manifest.getProperties()) {
                         final String name = property.getName();
                         final String value = property.getValue();
+
+                        vdb.addPropertyComments(name, property.getComments());
 
                         if (Xml.PREVIEW.equals(name)) {
                             vdb.setPreview(Boolean.parseBoolean(value));
@@ -208,22 +214,36 @@ public class DynamicVdb extends BasicVdb {
                         DynamicModel model = new DynamicModel();
                         model.setName(element.getName());
                         model.setVisible(element.isVisible());
+
+                        model.addComments(element.getComments());
+
+                        for (final PropertyElement property : element.getProperties()) {
+                            final String name = property.getName();
+                            final String value = property.getValue();
+
+                            model.setProperty(name, value);
+                            model.addPropertyComments(name, property.getComments());
+                        }
+
                         if (element.getMetadata() != null && element.getMetadata().size() > 0) {
-                            String schemaText = element.getMetadata().get(0).getSchemaText();
+                            MetadataElement metadataElement = element.getMetadata().get(0);
+                            String schemaText = metadataElement.getSchemaText();
                             String metadataType = element.getMetadata().get(0).getType();
                             Metadata metadata = new Metadata();
                             metadata.setSchemaText(schemaText);
                             metadata.setType(metadataType);
+                            metadata.addComments(metadataElement.getComments());
                             model.setMetadata(metadata);
                         }
                         model.setModelType(element.getType());
                         if (element.getSources() != null && !element.getSources().isEmpty()) {
-                            for (final SourceElement source : element.getSources()) {
+                            for (final SourceElement sourceElement : element.getSources()) {
                                 VdbSource modelSource = new VdbSource(
                                                                       vdb,
-                                                                      source.getName(),
-                                                                      source.getJndiName() == null ? EMPTY_STRING : source.getJndiName(),
-                                                                      source.getTranslatorName() == null ? EMPTY_STRING : source.getTranslatorName());
+                                                                      sourceElement.getName(),
+                                                                      sourceElement.getJndiName() == null ? EMPTY_STRING : sourceElement.getJndiName(),
+                                                                      sourceElement.getTranslatorName() == null ? EMPTY_STRING : sourceElement.getTranslatorName());
+                                modelSource.addComments(sourceElement.getComments());
                                 model.addSource(modelSource);
                             }
                         }
@@ -235,12 +255,23 @@ public class DynamicVdb extends BasicVdb {
                         VdbImportVdbEntry vdbImport = new VdbImportVdbEntry(vdb, element.getName());
                         vdbImport.setImportDataPolicies(false);
                         vdbImport.setVersion(vdb.getVersion());
+                        vdbImport.addComments(element.getComments());
                         vdb.addImport(vdbImport);
                     }
 
                     // load translator overrides
                     for (final TranslatorElement translatorElement : manifest.getTranslators()) {
                         TranslatorOverride translator = new TranslatorOverride(vdb, translatorElement);
+                        translator.addComments(translatorElement.getComments());
+
+                        for (final PropertyElement property : translatorElement.getProperties()) {
+                            final String name = property.getName();
+                            final String value = property.getValue();
+
+                            translator.setProperty(name, value);
+                            translator.addPropertyComments(name, property.getComments());
+                        }
+
                         vdb.addTranslator(translator);
                     }
 
@@ -251,6 +282,7 @@ public class DynamicVdb extends BasicVdb {
                         role.setAnyAuthenticated(element.isAnyAuthenticated());
                         role.setGrantAll(element.doGrantAll());
                         role.setDescription(element.getDescription());
+                        role.addComments(element.getComments());
 
                         { // Handle Permissions
                             for (PermissionElement pe : element.getPermissions()) {
@@ -262,11 +294,14 @@ public class DynamicVdb extends BasicVdb {
 
                                 Permission permission = new Permission(pe.getResourceName(), pe.isCreate(), pe.isRead(),
                                                                        pe.isUpdate(), pe.isDelete(), pe.isExecute(), pe.isAlter());
+                                permission.addComments(pe.getComments());
 
                                 ConditionElement condition = pe.getCondition();
                                 if (condition != null) {
                                     permission.setCondition(condition.getSql());
-                                    permission.setConstraint(condition.getConstraint());
+                                    Boolean constraint = condition.getConstraint();
+                                    permission.setConstraint(constraint == null ? false : constraint);
+                                    permission.setConditionComments(condition.getComments());
                                 }
 
                                 MaskElement mask = pe.getMask();
@@ -275,6 +310,7 @@ public class DynamicVdb extends BasicVdb {
                                         permission.setOrder(Integer.valueOf(mask.getOrder()));
                                     }
                                     permission.setMask(mask.getSql());
+                                    permission.setMaskComments(mask.getComments());
                                 }
 
                                 if (allow) {
@@ -300,7 +336,7 @@ public class DynamicVdb extends BasicVdb {
         });
 	}
 
-	/**
+    /**
      * @param xml
 	 * @return true if vdb file is valid
 	 * @throws Exception 
@@ -316,6 +352,11 @@ public class DynamicVdb extends BasicVdb {
         return true;
     }
 
+    private void marshallComments(VdbElement vdbElement, Document document) {
+        CommentWriter writer = new CommentWriter(document);
+        writer.visit(vdbElement);
+    }
+
     /**
      * Export vdb to destination writer. If null then use source file}
      * @param destination
@@ -328,7 +369,7 @@ public class DynamicVdb extends BasicVdb {
 	    }
 
 	    VdbElement vdbElement = new VdbElement(this);
-			
+
 	    try {
 	        final Marshaller marshaller = getJaxbContext().createMarshaller();
 	        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
@@ -343,6 +384,7 @@ public class DynamicVdb extends BasicVdb {
 
 	        // Marshall the feed object into the empty document.
 	        marshaller.marshal(vdbElement, document);
+	        marshallComments(vdbElement, document);
 
 	        // Transform the DOM to the output stream
 	        TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -365,7 +407,7 @@ public class DynamicVdb extends BasicVdb {
     }
 
 	/** (non-Javadoc)
-     * @see org.teiid.designer.vdb.Vdb#addDynamicModel(org.teiid.designer.komodo.vdb.DynamicModel)
+     * @see org.teiid.designer.vdb.Vdb#addDynamicModel(org.teiid.designer.vdb.dynamic.DynamicModel)
      */
     @Override
     public void addDynamicModel(DynamicModel model) {

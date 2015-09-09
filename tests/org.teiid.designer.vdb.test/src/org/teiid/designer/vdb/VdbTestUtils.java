@@ -17,11 +17,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,9 +48,11 @@ import org.teiid.core.util.SmartTestDesignerSuite;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.komodo.vdb.DynamicModel;
-import org.teiid.designer.komodo.vdb.Metadata;
+import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.roles.Permission;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
+import org.teiid.designer.vdb.dynamic.Metadata;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -208,13 +213,7 @@ public class VdbTestUtils implements StringConstants {
         return customerVdb;
     }
 
-    public static DynamicVdb mockPortfolioDynamicVdb(ModelWorkspaceMock modelWksp) throws Exception {
-        //
-        // Required to avoid DDL Importer throwing NPE when validating name of model
-        //
-        EclipseMock eclipseMock = modelWksp.getEclipseMock();
-        when(eclipseMock.workspace().validateName(isA(String.class), anyInt())).thenReturn(Status.OK_STATUS);
-
+    public static MockFileBuilder mockPortfolioVdbXmlFile() throws IOException, Exception, FileNotFoundException {
         File portfolioCopy = File.createTempFile("Portfolio", DOT_XML);
         portfolioCopy.deleteOnExit();
 
@@ -226,6 +225,17 @@ public class VdbTestUtils implements StringConstants {
 
         final MockFileBuilder portfolio = new MockFileBuilder(portfolioCopy);
         portfolio.enableExtensionRegistry();
+        return portfolio;
+    }
+
+    public static DynamicVdb mockPortfolioDynamicVdb(ModelWorkspaceMock modelWksp) throws Exception {
+        //
+        // Required to avoid DDL Importer throwing NPE when validating name of model
+        //
+        EclipseMock eclipseMock = modelWksp.getEclipseMock();
+        when(eclipseMock.workspace().validateName(isA(String.class), anyInt())).thenReturn(Status.OK_STATUS);
+
+        final MockFileBuilder portfolio = mockPortfolioVdbXmlFile();
 
         //
         // Override workspaceRoot.findMember since essential when creating index files
@@ -339,12 +349,35 @@ public class VdbTestUtils implements StringConstants {
         stocksMatModel.setMetadata(new Metadata(metadataText, Metadata.Type.DDL));
         vdb.addDynamicModel(stocksMatModel);
 
+        List<Permission> permissions = new ArrayList<Permission>();
+        Permission permission1 = new Permission("Accounts", false, true, true, false, false, false);
+        permissions.add(permission1);
+
+        Permission permission2 = new Permission("Accounts.Customer");
+        permission2.setCondition("state <> 'New York'");
+        permissions.add(permission2);
+
+        Permission permission3 = new Permission("Accounts.Customer.SSN");
+        permission3.setMask("null");
+        permissions.add(permission3);
+
+        String[] roleNames = {"supervisor", "dept-supervisor" };
+        DataRole dataRole = new DataRole("ReadWrite",
+                                         "Allow Reads and Writes to tables and procedures",
+                                         null, null, null,
+                                         Arrays.asList(roleNames), permissions);
+
+        vdb.addDataRole(dataRole);
         return vdb;
     }
 
     public static Document readDocument(Reader reader) throws Exception {
+        return readDocument(reader, true);
+    }
+
+    public static Document readDocument(Reader reader, boolean ignoreComments) throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        dbf.setIgnoringComments(true);
+        dbf.setIgnoringComments(ignoreComments);
         DocumentBuilder db = dbf.newDocumentBuilder();
 
         Document doc = db.parse(new InputSource(reader));
@@ -359,7 +392,11 @@ public class VdbTestUtils implements StringConstants {
     }
 
     public static Document readDocument(String xml) throws Exception {
-        return readDocument(new StringReader(xml));
+        return readDocument(new StringReader(xml), false);
+    }
+
+    public static Document readDocument(String xml, boolean ignoreComments) throws Exception {
+        return readDocument(new StringReader(xml), ignoreComments);
     }
 
     private static boolean compareAttributes(Element expected, Element actual) {
@@ -411,13 +448,12 @@ public class VdbTestUtils implements StringConstants {
         // compare children
         NodeList expectedChildren = expected.getChildNodes();
         NodeList actualChildren = actual.getChildNodes();
-        if (expectedChildren.getLength() != actualChildren.getLength()) {
-            return false;
-        }
 
         // Same number but could be in a different order
         for (int i = 0; i < expectedChildren.getLength(); ++i) {
             org.w3c.dom.Node expectedChild = expectedChildren.item(i);
+            if (expectedChild instanceof Text && expectedChild.getTextContent().trim().length() == 0)
+                continue; // Ignore these text formatting nodes
 
             boolean matchMade = false;
             for (int j = 0; j < actualChildren.getLength(); ++j) {

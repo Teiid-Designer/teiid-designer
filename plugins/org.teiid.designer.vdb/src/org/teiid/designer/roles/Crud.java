@@ -26,7 +26,11 @@ public class Crud {
      */
     @SuppressWarnings("javadoc")
     public Boolean c, r, u, d, e, a;
-    
+
+    public Crud() {
+        super();
+    }
+
     /**
      * @param c
      * @param r

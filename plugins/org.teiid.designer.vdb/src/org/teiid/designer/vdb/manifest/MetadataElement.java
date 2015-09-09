@@ -8,12 +8,12 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
+import org.teiid.designer.comments.CommentSets;
 
 /**
  *
@@ -23,7 +23,9 @@ import javax.xml.bind.annotation.XmlValue;
 public class MetadataElement implements Serializable {
 			
     private static final long serialVersionUID = 1L;
-    
+
+    private CommentSets comments;
+
     @XmlAttribute( name = "type", required = true )
     private String type;
     
@@ -60,4 +62,21 @@ public class MetadataElement implements Serializable {
 	public String getSchemaText() {
 		return this.schemaText;
 	}
+
+	   /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
+    }
 }

@@ -27,7 +27,7 @@
             default="true"
             icon="icons/full/obj16/dynamic-vdb.png"
             extensions="xml"
-            class="org.teiid.designer.komodo.vdb.ui.editor.DynamicVdbEditor"
+            class="org.teiid.designer.vdb.dynamic.ui.editor.DynamicVdbEditor"
             id="dynamicVdbEditor">
       </editor>
    </extension>

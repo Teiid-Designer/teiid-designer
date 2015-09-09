@@ -69,15 +69,15 @@ public class DataRole extends VdbUnit {
      */
 
     // grant-all is an attribute associated with a data role in the vdb.xml definition
-    private boolean grantAll;
+    private Boolean grantAll;
 
     private Set<String> roleNames;
 
     private Map<String, Permission> permissions;
 
-    private boolean anyAuthenticated;
+    private Boolean anyAuthenticated;
 
-    private boolean allowCreateTempTables;
+    private Boolean allowCreateTempTables;
 
     /**
      * @param name
@@ -158,7 +158,7 @@ public class DataRole extends VdbUnit {
      * @param roleNames
      * @param permissions
      */
-    public DataRole(String name, String description, boolean anyAuthenticated, boolean allowCreateTempTables, boolean grantAll, Collection<String> roleNames, Collection<Permission> permissions) {
+    public DataRole(String name, String description, Boolean anyAuthenticated, Boolean allowCreateTempTables, Boolean grantAll, Collection<String> roleNames, Collection<Permission> permissions) {
         super();
         setName(name);
         setDescription(description);
@@ -247,14 +247,14 @@ public class DataRole extends VdbUnit {
     /**
      * @return grant all
      */
-    public boolean isGrantAll() {
+    public Boolean isGrantAll() {
         return this.grantAll;
     }
 
     /**
      * @param newGrantAll
      */
-    public void setGrantAll(boolean newGrantAll) {
+    public void setGrantAll(Boolean newGrantAll) {
         if( this.grantAll != newGrantAll) {
             this.grantAll = newGrantAll;
             setChanged(true);
@@ -264,14 +264,14 @@ public class DataRole extends VdbUnit {
     /**
      * @return is any authenticated
      */
-    public boolean isAnyAuthenticated() {
+    public Boolean isAnyAuthenticated() {
         return this.anyAuthenticated;
     }
 
     /**
      * @param newAnyAuthenticated
      */
-    public void setAnyAuthenticated(boolean newAnyAuthenticated) {
+    public void setAnyAuthenticated(Boolean newAnyAuthenticated) {
         if( this.anyAuthenticated != newAnyAuthenticated) {
             this.anyAuthenticated = newAnyAuthenticated;
             setChanged(true);
@@ -316,14 +316,14 @@ public class DataRole extends VdbUnit {
     /**
      * @return allow create temp tables
      */
-    public boolean isAllowCreateTempTables() {
+    public Boolean isAllowCreateTempTables() {
         return this.allowCreateTempTables;
     }
 
     /**
      * @param newAllowCreateTempTables
      */
-    public void setAllowCreateTempTables(boolean newAllowCreateTempTables) {
+    public void setAllowCreateTempTables(Boolean newAllowCreateTempTables) {
         if( this.allowCreateTempTables != newAllowCreateTempTables) {
             this.allowCreateTempTables = newAllowCreateTempTables;
             setChanged(true);

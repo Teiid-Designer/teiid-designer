@@ -297,16 +297,6 @@ public interface StringConstants {
     String PIPE = "|"; //$NON-NLS-1$
 
     /**
-     * komodo
-     */
-    String KOMODO = "komodo"; //$NON-NLS-1$
-
-    /**
-     * .komodo
-     */
-    String DOT_KOMODO = ".komodo"; //$NON-NLS-1$
-
-    /**
      * log
      */
     String LOG = "log"; //$NON-NLS-1$

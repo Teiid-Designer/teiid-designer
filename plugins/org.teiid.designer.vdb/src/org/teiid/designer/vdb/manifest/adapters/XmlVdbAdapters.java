@@ -9,9 +9,9 @@ package org.teiid.designer.vdb.manifest.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.teiid.designer.komodo.vdb.DynamicModel.Type;
 import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.VdbPlugin;
+import org.teiid.designer.vdb.dynamic.DynamicModel.Type;
 
 /**
  *

@@ -16,12 +16,14 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.teiid.designer.komodo.vdb.DynamicModel;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
+import org.teiid.designer.vdb.dynamic.Metadata;
 import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 
 /**
@@ -161,29 +163,38 @@ public class ModelElement extends EntryElement {
             description = model.getDescription();
         }
 
+        getComments().add(model.getComments());
+
         for( VdbSource source : model.getSources() ) {
             getSources().add(new SourceElement(source));
         }
 
-        final List<PropertyElement> props = getProperties();
-
         if (model.isMultiSource())
-            props.add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
+            getProperties().add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
 
         if (model.doAddColumn())
-            props.add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(model.doAddColumn())));
+            getProperties().add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(model.doAddColumn())));
 
         String alias = model.getColumnAlias();
         if( alias != null && alias.length() > 0 )
-            props.add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
+            getProperties().add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
 
         for (Map.Entry<Object, Object> entry : model.getProperties().entrySet()) {
-            props.add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
+            getProperties().add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
         }
 
-        if( model.getMetadata() != null && model.getMetadata().getSchemaText() != null ) {
-            getMetadata().add(new MetadataElement(
-                    model.getMetadata().getSchemaText(), model.getMetadata().getType().name()));
+        // Append any comments to the property elements
+        for (PropertyElement propElement : getProperties()) {
+            CommentSets propertyComments = model.getPropertyComments(propElement.getName());
+            propElement.getComments().add(propertyComments);
+        }
+
+        Metadata metadata = model.getMetadata();
+        if( metadata != null && metadata.getSchemaText() != null ) {
+            MetadataElement metadataElement = new MetadataElement(
+                    metadata.getSchemaText(), metadata.getType().name());
+            metadataElement.getComments().add(metadata.getComments());
+            getMetadata().add(metadataElement);
         }
     }
 
@@ -248,4 +259,11 @@ public class ModelElement extends EntryElement {
 
         return text.toString();
 	}
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

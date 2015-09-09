@@ -20,8 +20,9 @@ import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
-import org.teiid.designer.komodo.vdb.DynamicModel;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.roles.DataRole;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
 import org.teiid.designer.vdb.dynamic.DynamicVdb;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -788,5 +789,17 @@ public interface Vdb extends VdbConstants {
      * @throws Exception 
      *
      */
-    public <V extends Vdb> V convert(Class<V> vdbType, IFile destination, Properties options) throws Exception;
+    <V extends Vdb> V convert(Class<V> vdbType, IFile destination, Properties options) throws Exception;
+
+    /**
+     * @return the comments associated with this vdb
+     */
+    CommentSets getComments();
+
+    /**
+     * @param propertyName
+     *
+     * @return the comments associated with the property with the given name
+     */
+    CommentSets getPropertyComments(String propertyName);
 }

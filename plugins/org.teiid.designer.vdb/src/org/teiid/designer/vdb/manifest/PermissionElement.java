@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.roles.Permission;
 
 /**
@@ -23,6 +24,8 @@ import org.teiid.designer.roles.Permission;
 public class PermissionElement implements Serializable {
 	
     private static final long serialVersionUID = 1L;
+
+    private CommentSets comments;
 
     @XmlElement( name = "resource-name", required = true)
     private String resource_name;
@@ -68,7 +71,9 @@ public class PermissionElement implements Serializable {
     public PermissionElement(Permission permission) {
         super();
         this.resource_name = permission.getTargetName();
-        
+
+        getComments().add(permission.getComments());
+
         if( !permission.isAllowLanguage() ) {
 	        this.create = permission.isCreateAllowed();
 	        this.read = permission.isReadAllowed();
@@ -79,11 +84,14 @@ public class PermissionElement implements Serializable {
 	        
 	        if( permission.getCondition() != null && permission.getCondition().length() > 0 ) {
 	        	condition = new ConditionElement(permission.getCondition(), permission.isConstraint());
+	        	condition.getComments().add(permission.getConditionComments());
 	        }
 	        
 	        if( permission.getMask() != null && permission.getMask().length() > 0 ) {
 	        	mask = new MaskElement(permission.getMask(), permission.getOrder());
+	        	mask.getComments().add(permission.getMaskComments());
 	        }
+
 	        this.allowLanguage = null;
         } else {
 			this.allowLanguage = Boolean.TRUE;
@@ -171,7 +179,23 @@ public class PermissionElement implements Serializable {
 	public Boolean isAllowLanguage() {
 		return allowLanguage;
 	}
-    
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
+    }
 }
 
 /*

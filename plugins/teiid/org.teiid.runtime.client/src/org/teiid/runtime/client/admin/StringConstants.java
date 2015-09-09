@@ -248,21 +248,11 @@ public interface StringConstants {
      * The String "\n"
      */
     String CLOSE_ELEMENT = "/>"; //$NON-NLS-1$
-    
-	/**
-   * komodo
-   */
-  String KOMODO = "komodo"; //$NON-NLS-1$
 
-  /**
-   * .komodo
-   */
-  String DOT_KOMODO = ".komodo"; //$NON-NLS-1$
-
-  /**
-   * log
-   */
-  String LOG = "log"; //$NON-NLS-1$
+    /**
+     * log
+     */
+    String LOG = "log"; //$NON-NLS-1$
 
 	/**
 	 * Current Folder Symbol
@@ -338,10 +328,5 @@ public interface StringConstants {
    * private
    */
   String PRIVATE = "private"; //$NON-NLS-1$
-
-  /**
-   * The default local repository workspace name (cannot be empty and must match the workspace name in the config file).
-   */
-  String DEFAULT_LOCAL_WORKSPACE_NAME = "komodoLocalWorkspace"; //$NON-NLS-1$
 }
 
