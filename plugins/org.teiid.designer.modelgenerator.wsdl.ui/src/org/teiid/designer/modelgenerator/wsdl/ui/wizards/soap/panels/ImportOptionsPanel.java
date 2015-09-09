@@ -7,20 +7,33 @@
  */
 package org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels;
 
+import java.util.ArrayList;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -28,21 +41,29 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.event.IChangeListener;
 import org.teiid.core.designer.event.IChangeNotifier;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.workspace.DotProjectUtils;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.core.workspace.ModelWorkspaceItem;
 import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 import org.teiid.designer.datatools.connection.ConnectionInfoHelper;
 import org.teiid.designer.datatools.connection.IConnectionInfoHelper;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.WSDLImportWizardManager;
+import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.wizards.file.FlatFileRelationalModelFactory;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
+import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
 import org.teiid.designer.ui.viewsupport.DesignerPropertiesUtil;
-import org.teiid.designer.ui.viewsupport.MetamodelSelectionUtilities;
+import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelProjectSelectionStatusValidator;
+import org.teiid.designer.ui.viewsupport.ModelResourceSelectionValidator;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
+import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 /**
@@ -59,11 +80,15 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	private Text viewModelContainerText;
 	private Text viewModelHelpText;
 	
+	private Combo projectCombo;
+	
 	private IConnectionInfoHelper connectionInfoHelper;
 	
 	private final WSDLImportWizardManager importManager;
 
 	private ModelWorkspaceManager modelWorkspaceManager = ModelWorkspaceManager.getModelWorkspaceManager();
+	
+	ModelingResourceFilter locationFilter = new ModelingResourceFilter();
 
 	private boolean refreshing = false;
 
@@ -78,6 +103,63 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	private void init(Composite parent) {
 		
 		this.connectionInfoHelper = new ConnectionInfoHelper();
+		
+		PROJECT_INFO: {
+			// ============ Target Project Selection Panel =====================
+			Group projectGroup = WidgetFactory.createGroup(parent,
+					Messages.TargetProject, SWT.NONE, 1, 2); //$NON-NLS-1$
+			projectGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+			((GridData)projectGroup.getLayoutData()).widthHint = 400;
+			
+			Label label = new Label(projectGroup, SWT.NONE);
+			label.setText(Messages.SelectOpenModelProject);
+			final ILabelProvider srcLabelProvider = new LabelProvider() {
+
+				@Override
+				public String getText(final Object project) {
+					return ((IProject) project).getName();
+				}
+			};
+			this.projectCombo = WidgetFactory.createCombo(projectGroup, SWT.READ_ONLY,
+					GridData.FILL_HORIZONTAL, (ArrayList<IProject>) DotProjectUtils.getOpenModelProjects(),
+					null, // this.src,
+					srcLabelProvider, true);
+			GridDataFactory.fillDefaults().grab(true,  false).applyTo(projectCombo);
+			
+			if( this.importManager.getTargetProject() != null ) {
+				String projName = this.importManager.getTargetProject().getName();
+				int count = 0;
+				int index = -1;
+				for( String item : this.projectCombo.getItems()) {
+					if( item.equals(projName) ) {
+						index = count;
+					} else {
+						count++;
+					}
+				}
+				if( index > -1 ) {
+					this.projectCombo.select(index);
+				}
+			}
+			
+			this.projectCombo.addSelectionListener(new SelectionListener() {
+
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					IProject proj = getProject(new Path(projectCombo.getText()));
+					boolean changed = importManager.setTargetProject(proj);
+					if( changed ) {
+						sourceModelContainerText.setText(importManager.getSourceModelLocation().getFullPath().makeRelative().toString());
+						viewModelContainerText.setText(importManager.getSourceModelLocation().getFullPath().makeRelative().toString());
+					}
+				}
+
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+					// TODO Auto-generated method stub
+				}
+			});
+		}
 		
 		SOURCE_MODEL_INFO : {
     		Group group = WidgetFactory.createGroup(parent, Messages.SourceModelDefinition, GridData.FILL_HORIZONTAL, 1, 3);
@@ -242,8 +324,13 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	 * the container field.
 	 */
 	void handleSourceModelLocationBrowse() {
-		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
-			new ModelingResourceFilter(), new ModelProjectSelectionStatusValidator());
+		IProject proj = this.importManager.getTargetProject();
+		locationFilter.setSingleProjectProject(proj);
+		
+		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
+				ModelerCore.getWorkspace().getRoot(),
+				locationFilter,
+				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
 			// viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
@@ -255,8 +342,13 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	}
 	
 	void handleViewModelLocationBrowse() {
-		final IContainer folder = WidgetUtil.showFolderSelectionDialog(ModelerCore.getWorkspace().getRoot(),
-			new ModelingResourceFilter(), new ModelProjectSelectionStatusValidator());
+		IProject proj = this.importManager.getTargetProject();
+		locationFilter.setSingleProjectProject(proj);
+		
+		final IContainer folder = WidgetUtil.showFolderSelectionDialog(
+				ModelerCore.getWorkspace().getRoot(),
+				locationFilter,
+				new ModelProjectSelectionStatusValidator());
 
 		if (folder != null && sourceModelContainerText != null) {
 			// viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
@@ -268,32 +360,52 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	}
 
 	void handleSourceModelBrowse() {
-		IFile modelFile = MetamodelSelectionUtilities.selectSourceModelInWorkspace();
+		final Object[] selections = WidgetUtil
+				.showWorkspaceObjectSelectionDialog(
+						"Select Source Model", //$NON-NLS-1$
+						"Select Source Model Message", //$NON-NLS-1$
+						false, null, sourceModelFilter,
+						new ModelResourceSelectionValidator(false),
+						new ModelExplorerLabelProvider(),
+						new ModelExplorerContentProvider());
 
-		if( modelFile != null ) {
-			IContainer folder = modelFile.getParent();
-			String modelName = modelFile.getFullPath().lastSegment();
-			this.importManager.setSourceModelExists(true);
-			this.importManager.setSourceModelLocation(folder);
-			this.importManager.setSourceModelName(modelName);
-			this.sourceModelContainerText.setText(folder.getFullPath().makeRelative().toString());
-			this.sourceModelFileText.setText(modelName);
+		if (selections != null && selections.length == 1 && sourceModelFileText != null) {
+			if (selections[0] instanceof IFile) {
+				IFile selectedFile = (IFile)selections[0];
+				IContainer folder = selectedFile.getParent();
+				String modelName = selectedFile.getFullPath().lastSegment();
+				this.importManager.setSourceModelExists(true);
+				this.importManager.setSourceModelLocation(folder);
+				this.importManager.setSourceModelName(modelName);
+				this.sourceModelContainerText.setText(folder.getFullPath().makeRelative().toString());
+				this.sourceModelFileText.setText(modelName);
+			}
 		}
 
 		notifyChanged();
 	}
 
 	void handleViewModelBrowse() {
-		IFile modelFile = MetamodelSelectionUtilities.selectViewModelInWorkspace();
+		final Object[] selections = WidgetUtil
+				.showWorkspaceObjectSelectionDialog(
+						"Select Source Model", //$NON-NLS-1$
+						"Select Source Model Message", //$NON-NLS-1$
+						false, null, sourceModelFilter,
+						new ModelResourceSelectionValidator(false),
+						new ModelExplorerLabelProvider(),
+						new ModelExplorerContentProvider());
 
-		if( modelFile != null ) {
-			IContainer folder = modelFile.getParent();
-			String modelName = modelFile.getFullPath().lastSegment();
-			this.importManager.setViewModelExists(true);
-			this.importManager.setViewModelLocation(folder);
-			this.importManager.setViewModelName(modelName);
-			this.viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
-			this.viewModelFileText.setText(modelName);
+		if (selections != null && selections.length == 1 && sourceModelFileText != null) {
+			if (selections[0] instanceof IFile) {
+				IFile selectedFile = (IFile)selections[0];
+				IContainer folder = selectedFile.getParent();
+				String modelName = selectedFile.getFullPath().lastSegment();
+				this.importManager.setViewModelExists(true);
+				this.importManager.setViewModelLocation(folder);
+				this.importManager.setViewModelName(modelName);
+				this.viewModelContainerText.setText(folder.getFullPath().makeRelative().toString());
+				this.viewModelFileText.setText(modelName);
+			}
 		}
 
 		notifyChanged();
@@ -526,4 +638,120 @@ public class ImportOptionsPanel implements IChangeListener, ModelGeneratorWsdlUi
 	public void notifyChanged() {
 		this.importManager.notifyChanged();
 	}
+	
+	private IProject getProject(IPath path ) {
+		if( path == null ) return null;
+		
+		IPath actualPath = new Path('/' + path.toString());
+		
+		ModelWorkspaceItem item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(actualPath,	IResource.FOLDER);
+		if( item == null ) {
+			item = ModelWorkspaceManager.getModelWorkspaceManager().findModelWorkspaceItem(actualPath,	IResource.PROJECT);
+		}
+
+		if( item != null) {
+			return item.getResource().getProject();
+		}
+
+		
+		return null;
+	}
+	
+	final ViewerFilter sourceModelFilter = new ModelWorkspaceViewerFilter(true) {
+
+		@Override
+		public boolean select(final Viewer viewer, final Object parent,
+				final Object element) {
+			if (element instanceof IResource) {
+				IProject proj = ((IResource)element).getProject();
+				if( proj == null ) {
+					return false;
+				} else {
+					IProject targetProj = importManager.getTargetProject();
+					if( targetProj != null  && targetProj != proj ) return false;
+					
+					// If the project is closed, dont show
+					boolean projectOpen = ((IResource) element).getProject().isOpen();
+	
+					if (projectOpen) {
+						// Show open projects
+						if (element instanceof IProject) {
+							try {
+								return ((IProject) element).hasNature(ModelerCore.NATURE_ID);
+							} catch (CoreException e) {
+								UiConstants.Util.log(e);
+								return false;
+							}
+						} else if (element instanceof IContainer) {
+							return true;
+							// Show webservice model files, and not .xsd files
+						} else if (element instanceof IFile && ModelUtil.isModelFile((IFile) element)) {
+							ModelResource theModel = null;
+							try {
+								theModel = ModelUtil.getModelResource(
+										(IFile) element, true);
+							} catch (Exception ex) {
+								ModelerCore.Util.log(ex);
+								return false;
+							}
+							if (theModel != null&& ModelIdentifier.isRelationalSourceModel(theModel)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+	};
+
+	final ViewerFilter viewModelFilter = new ModelWorkspaceViewerFilter(true) {
+
+		@Override
+		public boolean select(final Viewer viewer, final Object parent, final Object element) {
+
+			if (element instanceof IResource) {
+				IProject proj = ((IResource)element).getProject();
+				if( proj == null ) {
+					return false;
+				} else {
+					IProject targetProj = importManager.getTargetProject();
+					if( targetProj != null  && targetProj != proj ) return false;
+					
+					// If the project is closed, dont show
+					boolean projectOpen = ((IResource) element).getProject().isOpen();
+	
+					if (projectOpen) {
+						// Show open projects
+						if (element instanceof IProject) {
+							try {
+								return ((IProject) element).hasNature(ModelerCore.NATURE_ID);
+							} catch (CoreException e) {
+								UiConstants.Util.log(e);
+								return false;
+							}
+						} else if (element instanceof IContainer) {
+							return true;
+							// Show webservice model files, and not .xsd files
+						} else if (element instanceof IFile
+								&& ModelUtil.isModelFile((IFile) element)) {
+							ModelResource theModel = null;
+							try {
+								theModel = ModelUtil.getModelResource((IFile) element, true);
+							} catch (Exception ex) {
+								ModelerCore.Util.log(ex);
+								return false;
+							}
+							if (theModel != null && ModelIdentifier.isRelationalViewModel(theModel)) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+	};
 }

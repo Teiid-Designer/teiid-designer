@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
@@ -59,6 +60,8 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     // FIELDS
     // /////////////////////////////////////////////////////////////////////////////////////////////
     private WSDLReader wsdlReader;
+    
+    private IProject targetProject;
     
 	private String sourceModelName;
 	private boolean sourceModelExists;
@@ -518,5 +521,25 @@ public class WSDLImportWizardManager implements IChangeNotifier {
     @Override
     public void removeChangeListener(IChangeListener listener) {
     	this.listeners.remove(listener);
+    }
+    
+	
+    public IProject getTargetProject() {
+    	return targetProject;
+    }
+    
+    public boolean setTargetProject(IProject project) {
+    	// If project is the same project, do nothing:
+    	if( this.targetProject != null && this.targetProject == project ) return false;
+    	
+    	this.targetProject = project;
+    	
+    	// If new project, need to set the "location" of the view and source models to the project name
+    	if( this.targetProject != null ) {
+	    	setViewModelLocation(project);
+	    	setSourceModelLocation(project);
+    	}
+    	
+    	return true;
     }
 }

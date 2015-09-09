@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -135,7 +136,11 @@ public class RelationalModelFactory implements RelationalConstants {
      */
     public ModelResource createRelationalModel( IContainer container, String modelName) throws ModelWorkspaceException {
         IProject project = container.getProject();
-        IPath relativeModelPath = container.getFullPath().removeFirstSegments(1).append(modelName);
+        String actualModelName = modelName;
+        if( !modelName.toLowerCase().endsWith(XMI_EXT)) {
+        	actualModelName = modelName + XMI_EXT;
+        }
+        IPath relativeModelPath = container.getFullPath().removeFirstSegments(1).append(actualModelName);
         final IFile modelFile = project.getFile( relativeModelPath );
         final ModelResource resrc = ModelerCore.create( modelFile );
         resrc.getModelAnnotation().setPrimaryMetamodelUri( RELATIONAL_PACKAGE_URI );

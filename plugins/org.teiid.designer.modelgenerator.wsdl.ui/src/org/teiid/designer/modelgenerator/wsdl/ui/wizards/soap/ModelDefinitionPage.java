@@ -63,14 +63,11 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 	ImportWsdlSoapWizard wizard;
 	
 	ImportOptionsPanel importOptionsPanel;
-	
-	Button generateDefaultProceduresButton;
-	Button generateCustomProceduresButton;
 
 	/**
 	 * Constructs the page with the provided import manager
 	 * 
-	 * @param theImportManager
+	 * @param theImportManagerOperationsTypeSelection
 	 *            the import manager object
 	 */
 	public ModelDefinitionPage(WSDLImportWizardManager theImportManager, ImportWsdlSoapWizard wizard) {
@@ -109,74 +106,10 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			importOptionsPanel = new ImportOptionsPanel(pnlMain, this.importManager);
         }
 		
-		GENERATE_PROCEDURE_OPTION : {
-			// Includes a radio button and description for 
-			//  1) Generate Default Procedures and 
-			//  2) Customize Request & Response
-			Group group = WidgetFactory.createGroup(pnlMain, 
-			                                        Messages.ProcedureGenerationOptions, 
-			                                        GridData.HORIZONTAL_ALIGN_FILL, 
-			                                        1);
-			
-			generateCustomProceduresButton = WidgetFactory.createRadioButton(group, Messages.CustomProcedures, true);
-			generateCustomProceduresButton.addSelectionListener(new SelectionListener() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					handleGenerateOptionChanged();
-				}
-				
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-			});
-			
-			Text customProceduresHelpText = new Text(group, SWT.WRAP | SWT.READ_ONLY);
-			customProceduresHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-			customProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-			customProceduresHelpText.setText(Messages.OptionDefineCustomProcures);
-			GridDataFactory.swtDefaults()
-                                        .hint(300, SWT.DEFAULT)
-                                        .align(SWT.FILL,SWT.FILL)
-                                        .grab(true, true)
-                                        .applyTo(customProceduresHelpText);
-			
-			generateDefaultProceduresButton = WidgetFactory.createRadioButton(group, Messages.DefaultProcedures, false);
-			generateDefaultProceduresButton.addSelectionListener(new SelectionListener() {
-				
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					handleGenerateOptionChanged();
-				}
-				
-				@Override
-				public void widgetDefaultSelected(SelectionEvent e) {
-				}
-			});
-				
-			Text defaultProceduresHelpText = new Text(group, SWT.WRAP | SWT.READ_ONLY);
-			defaultProceduresHelpText.setBackground(WidgetUtil.getReadOnlyBackgroundColor());
-			defaultProceduresHelpText.setForeground(WidgetUtil.getDarkBlueColor());
-			defaultProceduresHelpText.setText(Messages.OptionDefineDefaultProcedures);
-			GridDataFactory.swtDefaults()
-			                            .hint(300, SWT.DEFAULT)
-			                            .align(SWT.FILL,SWT.FILL)
-			                            .grab(true, true)
-			                            .applyTo(defaultProceduresHelpText);
-		}
         
         scrolledComposite.sizeScrolledPanel();
         
         setControl(hostPanel);
-	}
-	
-	private void handleGenerateOptionChanged() {
-		// need to set the boolean value on importManager and notify the wizard to update it's pages
-		// to remove Page 3 if generate default is checked
-		this.importManager.setGenerateDefaultProcedures(this.generateDefaultProceduresButton.getSelection());
-		this.wizard.notifyManagerChanged();
-		
-		notifyChanged();
 	}
 	
 
@@ -263,10 +196,8 @@ public class ModelDefinitionPage extends AbstractWizardPage implements
 			this.importManager.validate();
 			
 			this.importOptionsPanel.setVisible();
-			this.generateDefaultProceduresButton.setSelection(this.importManager.doGenerateDefaultProcedures());
-			this.generateCustomProceduresButton.setSelection(! this.importManager.doGenerateDefaultProcedures());
+			
 			setPageStatus();
-			//getControl().pack(true);
 		}
 	}
 

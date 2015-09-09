@@ -61,6 +61,8 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	
 	private TeiidXmlFileInfo sourceXmlFileInfo;
 	
+	private IProject targetProject;
+	
     /**
      * The unique source model name (never <code>null</code> or empty).
      * 
@@ -328,19 +330,22 @@ public class TeiidMetadataImportInfo implements UiConstants {
 	}
 	
     public IProject getTargetProject() {
-        IProject result = null;
-        String containerName = getSourceModelLocation().toString();
-
-        if (!CoreStringUtil.isEmpty(containerName)) {
-            IWorkspaceRoot root = ModelerCore.getWorkspace().getRoot();
-            IResource resource = root.findMember(new Path(containerName));
-
-            if (resource.exists()) {
-                result = resource.getProject();
-            }
-        }
-
-        return result;
+    	return targetProject;
+    }
+    
+    public boolean setTargetProject(IProject project) {
+    	// If project is the same project, do nothing:
+    	if( this.targetProject != null && this.targetProject == project ) return false;
+    	
+    	this.targetProject = project;
+    	
+    	// If new project, need to set the "location" of the view and source models to the project name
+    	if( this.targetProject != null ) {
+	    	setViewModelLocation(new Path(this.targetProject.getName()));
+	    	setSourceModelLocation(new Path(this.targetProject.getName()));
+    	}
+    	
+    	return true;
     }
 	
 	public TeiidMetadataFileInfo getCheckedFileInfo() {
