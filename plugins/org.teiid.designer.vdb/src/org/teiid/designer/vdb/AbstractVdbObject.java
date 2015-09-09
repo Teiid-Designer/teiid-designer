@@ -7,10 +7,12 @@
 */
 package org.teiid.designer.vdb;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.designer.comments.CommentSets;
 
 /**
  *
@@ -36,6 +38,10 @@ public abstract class AbstractVdbObject implements StringConstants {
      * Changed flag of vdb object
      */
     private boolean changed;
+
+    private CommentSets comments;
+
+    private Map<String, CommentSets> propertyComments;
 
     /**
      * 
@@ -153,6 +159,46 @@ public abstract class AbstractVdbObject implements StringConstants {
      */
     protected void setChanged(int value1, int value2) {
     	setChanged(value1 != value2);
+    }
+
+    /**
+     * @return the comments
+     */
+    public CommentSets getComments() {
+        return this.comments;
+    }
+
+    /**
+     * @param comments
+     */
+    public void addComments(CommentSets comments) {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        this.comments.add(comments);
+    }
+
+    /**
+     * @param propertyName
+     *
+     * @return the propertyComments
+     */
+    public CommentSets getPropertyComments(String propertyName) {
+        if (this.propertyComments == null)
+            return null;
+
+        return this.propertyComments.get(propertyName);
+    }
+
+    /**
+     * @param name
+     * @param comments
+     */
+    public void addPropertyComments(String name, CommentSets comments) {
+        if (this.propertyComments == null)
+            this.propertyComments = new HashMap<String, CommentSets>();
+
+        this.propertyComments.put(name, comments);
     }
 
     @Override

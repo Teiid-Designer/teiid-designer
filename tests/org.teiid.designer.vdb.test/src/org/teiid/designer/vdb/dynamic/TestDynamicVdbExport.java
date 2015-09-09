@@ -34,9 +34,6 @@ import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbSourceInfo;
 import org.teiid.designer.vdb.VdbTestUtils;
-import org.teiid.designer.vdb.dynamic.DynamicModel;
-import org.teiid.designer.vdb.dynamic.DynamicVdb;
-import org.teiid.designer.vdb.dynamic.Metadata;
 import org.w3c.dom.Document;
 
 @SuppressWarnings( "javadoc" )
@@ -66,7 +63,7 @@ public class TestDynamicVdbExport implements VdbConstants {
 
         StringWriter destination = new StringWriter();
         vdb.write(destination);
-        
+
         Document vdbDoc = VdbTestUtils.readDocument(destination.toString());
         assertNotNull(vdbDoc);
 

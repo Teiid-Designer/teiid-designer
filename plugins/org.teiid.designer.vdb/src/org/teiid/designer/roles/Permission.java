@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.roles;
 
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.vdb.VdbUnit;
 
 
@@ -102,7 +103,7 @@ public class Permission extends VdbUnit {
 
 	private Crud crud;
 	private boolean primary;
-	private boolean constraint;
+	private boolean constraint = true; // default
 	private String condition;
 	private int order;
 	private String mask;
@@ -112,12 +113,17 @@ public class Permission extends VdbUnit {
 	
 	private String NULL = "null"; //$NON-NLS-1$
 
+    private CommentSets conditionComments;
+
+    private CommentSets maskComments;
+
 	/**
 	 * @param targetName
 	 */
 	public Permission(String targetName) {
 		super();
 		setName(targetName);
+		this.crud = new Crud();
 	}
 
 	/**
@@ -448,6 +454,23 @@ public class Permission extends VdbUnit {
 		this.condition = condition;
 	}
 
+	/**
+     * @return the conditionComments
+     */
+    public CommentSets getConditionComments() {
+        return this.conditionComments;
+    }
+
+    /**
+     * @param comments
+     */
+    public void setConditionComments(CommentSets comments) {
+        if (this.conditionComments == null)
+            this.conditionComments = new CommentSets();
+
+        this.conditionComments.add(comments);
+    }
+
     /**
         * @return the order
         */
@@ -475,7 +498,24 @@ public class Permission extends VdbUnit {
 	public void setMask(String mask) {
 		this.mask = mask;
 	}
-	
+
+	/**
+     * @return the maskComments
+     */
+    public CommentSets getMaskComments() {
+        return this.maskComments;
+    }
+
+    /**
+     * @param comments
+     */
+    public void setMaskComments(CommentSets comments) {
+        if (this.maskComments == null)
+            this.maskComments = new CommentSets();
+
+        this.maskComments.add(comments);
+    }
+
 	/**
 	 * @return allowLanguage
 	 */

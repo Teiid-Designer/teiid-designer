@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
@@ -41,6 +42,8 @@ import org.teiid.designer.vdb.dynamic.DynamicVdb;
 public class VdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private CommentSets commentSets;
 
     @XmlAttribute( name = "name", required = true )
     private String name;
@@ -68,7 +71,6 @@ public class VdbElement implements Serializable {
     
     @XmlElement( name = "entry", type = EntryElement.class )
     private List<EntryElement> entries;
-
 
     /**
      * Used by JAXB
@@ -105,6 +107,8 @@ public class VdbElement implements Serializable {
         name = vdb.getName();
         description = vdb.getDescription();
         version = vdb.getVersion();
+
+        getComments().add(vdb.getComments());
 
         for (final VdbImportVdbEntry importVdbEntry : vdb.getImports())
         	getImportVdbEntries().add(new ImportVdbElement(importVdbEntry));
@@ -164,6 +168,12 @@ public class VdbElement implements Serializable {
         Properties properties = vdb.getProperties();
         for( Entry<Object, Object> entry : properties.entrySet()) {
         	getProperties().add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
+        }
+
+        // Append any comments to the property elements
+        for (PropertyElement propElement : getProperties()) {
+            CommentSets propertyComments = vdb.getPropertyComments(propElement.getName());
+            propElement.getComments().add(propertyComments);
         }
     }
 
@@ -234,5 +244,22 @@ public class VdbElement implements Serializable {
      */
     public int getVersion() {
         return version;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.commentSets == null)
+            this.commentSets = new CommentSets();
+
+        return this.commentSets;
     }
 }

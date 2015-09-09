@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!--
+    The Portfolio Example Vdb
+-->
+<!--
+    Another comment for testing purposes
+-->
 <vdb name="Portfolio" version="1">
  
-    <!-- 
+    <!--
         The defaults for attributes included for test comparison purposes
-     -->
+    -->
  
     <description>The Portfolio Dynamic VDB</description>
  
@@ -20,7 +27,7 @@
       Each model represents a access to one or more sources.
       The name of the model will be used as a top level schema name
       for all of the metadata imported from the connector.
- 
+
       NOTE: Multiple models, with different import settings, can be bound to
       the same connector binding and will be treated as the same source at
       runtime.
@@ -36,7 +43,7 @@
     <model name="Accounts">
         <!--
           JDBC Import settings
- 
+
           importer.useFullSchemaName directs the importer to drop the source
           schema from the Teiid object name, so that the Teiid fully qualified name
           will be in the form of <model name>.<table name>
@@ -44,9 +51,7 @@
         <property name="importer.useFullSchemaName" value="false"/>
  
          <!--
- 
-            This connector is defined to reference the H2 localDS" 
- 
+            This connector is defined to reference the H2 localDS
           -->
  
         <source name="h2-connector" translator-name="h2" connection-jndi-name="java:/accounts-ds"/>
@@ -54,9 +59,12 @@
     </model>
  
     <model name="PersonalValuations">
+        <!-- importer header row number property -->
         <property name="importer.headerRowNumber" value="1"/>
+        <!-- import excel file name property -->
         <property name="importer.ExcelFileName" value="otherholdings.xls"/>
         <source name="excelconnector" translator-name="excel"  connection-jndi-name="java:/excel-file"/>
+        <!-- The DDL for accessing an excel spreadsheet -->
         <metadata type="DDL"><![CDATA[
  
         SET NAMESPACE 'http://www.teiid.org/translator/excel/2014' AS teiid_excel;
@@ -101,19 +109,64 @@
     </model>
  
     <model name="StocksMatModel" type="VIRTUAL">
-    <metadata type="DDL"><![CDATA[
-    CREATE view stockPricesMatView
-        (
-            product_id integer,
-            symbol string,
-            price bigdecimal,
-            company_name   varchar(256)
-        ) OPTIONS (MATERIALIZED 'TRUE', UPDATABLE 'TRUE',
+        <metadata type="DDL"><![CDATA[
+            CREATE view stockPricesMatView
+            (
+                product_id integer,
+                symbol string,
+                price bigdecimal,
+                company_name   varchar(256)
+            ) OPTIONS (MATERIALIZED 'TRUE', UPDATABLE 'TRUE',
                MATERIALIZED_TABLE 'Accounts.h2_stock_mat')
-        AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME
+            AS SELECT  A.ID, S.symbol, S.price, A.COMPANY_NAME
                     FROM Stocks.StockPrices AS S, Accounts.PRODUCT AS A
                     WHERE S.symbol = A.SYMBOL;
-    ]]></metadata>
+            ]]>
+        </metadata>
     </model>  
  
+    <!-- Example data role -->
+    <data-role name="ReadWrite">
+        <!-- Useful to provide comments -->
+        <description>Allow Reads and Writes to tables and procedures</description>
+ 
+        <!-- Permission on Accounts table -->
+        <permission>
+            <!-- Resource name referenced by permission -->
+            <resource-name>Accounts</resource-name>
+            <!-- Deny create -->
+            <allow-create>false</allow-create>
+            <!-- Allow read -->
+            <allow-read>true</allow-read>
+            <!-- Allow update -->
+            <allow-update>true</allow-update>
+            <allow-delete>false</allow-delete>
+            <allow-execute>false</allow-execute>
+            <allow-alter>false</allow-alter>
+        </permission>
+
+        <!-- can see any state Account but New York -->
+        <permission>
+            <resource-name>Accounts.Customer</resource-name>
+            <!-- Permission using a condition -->
+            <condition>state &lt;&gt; 'New York'</condition>
+        </permission>
+
+        <permission>
+            <resource-name>Accounts.Customer.SSN</resource-name>
+            <!-- Permission mask -->
+            <mask order="0">null</mask>
+        </permission>
+
+        <!--
+            This role must defined in the JAAS security domain, the sample UserRolesLoginModules based roles file provided
+            in this sample directory. copy these "teiid-security-roles.properties" and "teiid-security-users.proeprties"
+            into "<jboss-install>/modules/org/jboss/teiid/conf" directory and replace the old ones.
+        -->
+        <mapped-role-name>supervisor</mapped-role-name>
+
+        <!-- Secondary mapped role name -->
+        <mapped-role-name>dept-supervisor</mapped-role-name>
+
+    </data-role>
 </vdb>

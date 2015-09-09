@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 
@@ -19,15 +20,17 @@ import org.teiid.designer.roles.Permission;
 public class DataRoleElement implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	
+
+    private CommentSets comments;
+
     @XmlAttribute( name = "name", required = true )
     private String name;
     
     @XmlAttribute( name = "any-authenticated", required = false )
-    private boolean anyAuthenticated;
+    private Boolean anyAuthenticated;
     
     @XmlAttribute( name = "allow-create-temporary-tables", required = false )
-    private boolean allowCreateTempTables;
+    private Boolean allowCreateTempTables;
     
     @XmlAttribute( name = "grant-all", required = false )
     private Boolean grantAll;
@@ -40,7 +43,7 @@ public class DataRoleElement implements Serializable {
     
     @XmlElement( name = "mapped-role-name" )
     private List<String> mappedRoleNames;
-    
+
     /**
      * Used by JAXB when loading a VDB
      */
@@ -53,13 +56,24 @@ public class DataRoleElement implements Serializable {
     public DataRoleElement(DataRole dataRole) {
     	super();
     	name = dataRole.getName();
-    	anyAuthenticated = dataRole.isAnyAuthenticated();
-    	allowCreateTempTables = dataRole.isAllowCreateTempTables();
-    	grantAll = dataRole.isGrantAll();
+
+    	if (dataRole.isAnyAuthenticated() != null)
+    	    anyAuthenticated = dataRole.isAnyAuthenticated();
+
+    	if (dataRole.isAllowCreateTempTables() != null)
+    	    allowCreateTempTables = dataRole.isAllowCreateTempTables();
+
+    	if (dataRole.isGrantAll() != null)
+    	    grantAll = dataRole.isGrantAll();
+
     	description = dataRole.getDescription();
+
+    	getComments().add(dataRole.getComments());
+
     	for( Permission permission : dataRole.getPermissions() ) {
     		getPermissions().add(new PermissionElement(permission));
     	}
+
     	mappedRoleNames = new ArrayList<String>(dataRole.getRoleNames().size());
     	for( String name : dataRole.getRoleNames() ) {
     		mappedRoleNames.add(name);
@@ -69,7 +83,7 @@ public class DataRoleElement implements Serializable {
     /**
      * @return anyAuthenticated
      */
-    public boolean allowCreateTempTables() {
+    public Boolean allowCreateTempTables() {
         return allowCreateTempTables;
     }
     
@@ -106,18 +120,32 @@ public class DataRoleElement implements Serializable {
     /**
      * @return anyAuthenticated
      */
-    public boolean isAnyAuthenticated() {
+    public Boolean isAnyAuthenticated() {
         return anyAuthenticated;
     }
     
     /**
      * @return grantAll
      */
-    public boolean doGrantAll() {
-    	if( grantAll == null ) {
-    		return false;
-    	}
+    public Boolean doGrantAll() {
     	return grantAll;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
     }
 }
 

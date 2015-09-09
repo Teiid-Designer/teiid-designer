@@ -8,12 +8,11 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-
+import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 
 /**
@@ -24,6 +23,8 @@ import org.teiid.designer.vdb.VdbImportVdbEntry;
 public class ImportVdbElement implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private CommentSets comments;
 
     @XmlAttribute( name = "name", required = true )
     private String name;
@@ -49,6 +50,8 @@ public class ImportVdbElement implements Serializable {
         name = entry.getName();
         version = entry.getVersion();
         importDataPolicies = entry.isImportDataPolicies();
+
+        getComments().add(entry.getComments());
     }
 
     /**
@@ -70,5 +73,22 @@ public class ImportVdbElement implements Serializable {
      */
     public boolean isImportDataPolicies() {
     	return importDataPolicies;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
+    /**
+     * @return comments for this element
+     */
+    public CommentSets getComments() {
+        if (this.comments == null)
+            this.comments = new CommentSets();
+
+        return this.comments;
     }
 }
