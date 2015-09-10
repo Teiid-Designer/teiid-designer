@@ -196,4 +196,16 @@ public class StructuralCopyWizardPage extends WizardPage implements UiConstants,
 		}
 	}
 
+	public void setMetamodelDescriptor(MetamodelDescriptor metamodelDescriptor) {
+		this.metamodelDescriptor = metamodelDescriptor;
+		panel.setMetamodelDescriptor(metamodelDescriptor);
+	}
+
+	public void setTargetIsVirtual(boolean targetIsVirtual) {
+		this.targetIsVirtual = targetIsVirtual;
+		panel.setTargetIsVirtual(targetIsVirtual);
+	}
+	
+	
+
 }//end StructuralCopyWizardPage

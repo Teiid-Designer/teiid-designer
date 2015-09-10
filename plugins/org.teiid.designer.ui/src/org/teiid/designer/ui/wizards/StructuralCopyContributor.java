@@ -130,6 +130,8 @@ public class StructuralCopyContributor implements INewModelWizardContributor, Ui
         IResource targetResource,
         MetamodelDescriptor descriptor,
         boolean isVirtual) {
+    	structuralCopyPage.setMetamodelDescriptor(descriptor);
+    	structuralCopyPage.setTargetIsVirtual(isVirtual);
     }
 
     @Override
