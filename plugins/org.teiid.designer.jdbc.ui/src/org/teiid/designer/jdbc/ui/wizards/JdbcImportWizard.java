@@ -807,7 +807,7 @@ public class JdbcImportWizard extends AbstractWizard
                 sWatch.start(true);
 
                 // Inject the connectionProfile into the ModelResource
-                if (this.connectionProfile != null) {
+                if (this.connectionProfile != null && ! isUpdatedModel()) {
                     IConnectionInfoProvider provider = new JDBCConnectionInfoProvider();
                     provider.setConnectionInfo(ppProcessorPack.getModelResource(), this.connectionProfile);
                 }
