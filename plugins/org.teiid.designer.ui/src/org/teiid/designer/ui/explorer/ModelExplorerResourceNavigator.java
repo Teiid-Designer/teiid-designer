@@ -62,20 +62,15 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -283,8 +278,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Label defaultServerStatusLabel;
     private Label defaultTeiidStatusLabel;
     
-    private Control ctrl;
-
     /* Listen for change in default teiid instance */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
 
@@ -381,8 +374,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     }
 
 
-    private void internalCreatePartControl( ) {
-    	Composite parent = (Composite)this.ctrl;
+    private void internalCreatePartControl( Composite parent) {
         /* Set the parent's layout to grid layout to allow the two components */
         GridDataFactory.fillDefaults().grab(true, true).applyTo(parent);
         GridLayoutFactory.fillDefaults().applyTo(parent);
@@ -403,7 +395,9 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
 
         // Create selection helper
         new ModelExplorerSelectionHelper(getTreeViewer());
-
+    }
+    
+    private void applyCustomActionService() {
         /* 
          * BML TODO: Defect 21210 needs to screen out non-model projects.
          * However we can't do this for non-Model Explorer perspectives/products
@@ -572,7 +566,7 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     @Override   
     public void createPartControl( final Composite parent ) {
     	
-    	this.ctrl = parent;
+    	internalCreatePartControl(parent);
         
         ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
         manager.manageLoading(this);
@@ -1082,7 +1076,6 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         // updateStatusLine(sel);
         updateActionBars(sel);
         linkToEditor(sel);
-        super.handleSelectionChanged(event);
     }
 
     /**
@@ -1817,16 +1810,27 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         treeViewer.setSelection(newSelection, true);
     }
     
+    /**
+     * @see IWorkbenchPart#setFocus()
+     */
+    @SuppressWarnings("deprecation")
+	@Override
+    public void setFocus() {
+    	if( getTreeViewer() != null && getTreeViewer().getTree() != null ) {
+    		getTreeViewer().getTree().setFocus();
+    	}
+    }
+    
     @Override
 	public void manageLoad(Properties args) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-            	internalCreatePartControl();
+            	applyCustomActionService();
             }
         };
 
-        UiUtil.runInSwtThread(runnable, true);
+        UiUtil.runInSwtThread(runnable, false);
 	}
 
 	protected class ShowImportsAction extends Action {
