@@ -214,7 +214,7 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_RELATIONAL_VIEW = "Create new relational view model. Options include empty model, copy from existing or by transforming" + //$NON-NLS-1$
 				" from existing relational model";  //$NON-NLS-1$
 		String NEW_MODEL_WS = "Create new web services view model";  //$NON-NLS-1$
-		String NEW_MODEL_XML_DOC = "Crate new XML document view model";  //$NON-NLS-1$
+		String NEW_MODEL_XML_DOC = "Create new XML document view model";  //$NON-NLS-1$
 		String NEW_MODEL_MED = "Create new Model Extension Definition";  //$NON-NLS-1$
 		
         String NEW_OBJECT_BASE_TABLE = "Create new relational table"; //$NON-NLS-1$

@@ -32,7 +32,8 @@ public class DesignerPropertiesMapperUtil {
     		return DesignerPropertiesUtil.getProjectName(properties);
     	}
     	
-    	if( actionId.equals(COMMAND_IDS.IMPORT_JDBC) ) {
+    	if( actionId.equals(COMMAND_IDS.IMPORT_JDBC) ||
+    		actionId.equals(COMMAND_IDS.IMPORT_TEIID_CONNECTION_DDL)) {
     		return DesignerPropertiesUtil.getSourceModelName(properties);
     	}
     	
