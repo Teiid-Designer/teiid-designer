@@ -220,6 +220,10 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
         importManager.undeployDynamicVdb();
         importManager.deleteDdlTempFile();
         
+        if( this.designerProperties != null ) {
+        	DesignerPropertiesUtil.setSourceModelName(this.designerProperties, importManager.getTargetModelName());
+        }
+        
         // Open the created Model in an Editor
         openModelInEditor();
 
@@ -279,6 +283,10 @@ public class TeiidImportWizard extends AbstractWizard implements IImportWizard, 
             	getImportManager().setTargetModelLocation(project.getFullPath());
             }
         }
+        
+//        if( importManager.getTargetModelName() != null ) {
+//        	DesignerPropertiesUtil.setSourceModelName(this.designerProperties, importManager.getTargetModelName());
+//        }
     	
     	if( !this.openProjectExists) {
 			DesignerPropertiesUtil.setProjectStatus(this.designerProperties, IPropertiesContext.NO_OPEN_PROJECT);
