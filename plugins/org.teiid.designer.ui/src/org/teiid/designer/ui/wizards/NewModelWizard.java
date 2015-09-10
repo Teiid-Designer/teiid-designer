@@ -588,7 +588,7 @@ public class NewModelWizard extends AbstractWizard
 
         if (page == metamodelSelectionPage) {
 
-            updatePageQueue(false);
+            updatePageQueue(true);
             if (wizardPageArray != null) {
                 return wizardPageArray[0];
             }

@@ -289,4 +289,18 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
     public void warnIfUnsupportedModelInfo(ModelResource mr) {
         ModelUtilities.warnIfUnsupportedModelInfoWontBeCopied(mr);
     }
+
+	public void setMetamodelDescriptor(MetamodelDescriptor metamodelDescriptor) {
+		this.metamodelDescriptor = metamodelDescriptor;
+	}
+
+	public void setSourceIsPhysical(boolean sourceIsPhysical) {
+		this.sourceIsPhysical = sourceIsPhysical;
+	}
+
+	public void setTargetIsVirtual(boolean targetIsVirtual) {
+		this.targetIsVirtual = targetIsVirtual;
+	}
+    
+    
 }// end TreeViewerWizardPanel
