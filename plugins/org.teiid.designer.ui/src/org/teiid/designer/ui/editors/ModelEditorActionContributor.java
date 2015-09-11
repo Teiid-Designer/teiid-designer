@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.commands.ActionHandler;
@@ -26,15 +25,14 @@ import org.eclipse.ui.handlers.IHandlerActivation;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
-import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
-import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.ui.UiConstants;
 import org.teiid.designer.ui.UiPlugin;
 import org.teiid.designer.ui.actions.IModelerActionConstants;
 import org.teiid.designer.ui.actions.ModelerGlobalActionsMap;
 import org.teiid.designer.ui.common.actions.ActionService;
 import org.teiid.designer.ui.common.actions.GlobalActionsMap;
+import org.teiid.designer.ui.common.util.UiUtil;
 
 
 /**
@@ -168,7 +166,15 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      */
     @Override
     public void setActiveEditor( IEditorPart thePart ) {
-        setActivePage(thePart);
+        final IEditorPart thisPart = thePart;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+            	setActivePage(thisPart);
+            }
+        };
+
+        UiUtil.runInSwtThread(runnable, true);
     }
 
     /* (non-JavaDoc)
@@ -176,6 +182,8 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
      */
     @Override
     public void setActivePage( IEditorPart thePart ) {
+
+    	
         // redirect to the pages contributor
         AbstractModelEditorPageActionBarContributor contributor = null;
         IEditorPart part = thePart;
@@ -186,6 +194,9 @@ public class ModelEditorActionContributor extends MultiPageEditorActionBarContri
         if (thePart instanceof ModelEditor) {
             part = ((ModelEditor)thePart).getCurrentPage();
         }
+        
+    	
+    	if( part == null || part.getSite() == null) return;
 
         //
         // deactivate other page contributors by setting the active editor. if not their editor they will deactivate.

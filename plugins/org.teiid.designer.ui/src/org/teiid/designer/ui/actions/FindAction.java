@@ -45,8 +45,6 @@ public class FindAction extends AbstractAction
     private ModelObjectEditorPanel moepModelEditorPanel = null;
 
     private FocusEvent feMostRecentFocusGainEvent;
-//    private FocusEvent feMostRecentFocusLostEvent;
-//    private int iCallCount = 0;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CONSTRUCTORS
@@ -55,9 +53,7 @@ public class FindAction extends AbstractAction
     public FindAction() {
         
         super(UiPlugin.getDefault());
-        setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.FIND));
-        setEnableState();                
-//        System.out.println("[FindAction.ctor] Hash: " + this.hashCode() ); //$NON-NLS-1$
+        setImageDescriptor(UiPlugin.getDefault().getImageDescriptor(PluginConstants.Images.FIND));                
     }
         
     
@@ -72,45 +68,36 @@ public class FindAction extends AbstractAction
     @Override
     public void selectionChanged(IWorkbenchPart thePart,
                                  ISelection theSelection) {
-//        System.out.println("[FindAction.selectionChanged] "); //$NON-NLS-1$
         super.selectionChanged(thePart, theSelection);
         setEnableState( thePart );
     }
     
     @Override
     protected void doRun() {
-
-//        System.out.println("[FindAction.doRun] About to execute 'actEclipseFindReplaceAction..run()'"); //$NON-NLS-1$
         FindReplaceAction actFindReplace = getFindReplaceAction();
         actFindReplace.update();
         actFindReplace.run();
     }
 
 
-    private void setEnableState( IWorkbenchPart part ) {
-//        iCallCount++;
-//        System.out.println("[FindAction.setEnableState] pass: " + iCallCount + " Hash: " + this.hashCode() ); //$NON-NLS-1$
-        
-        if ( part != null ) {
-        
-            IFindReplaceTarget target = (IFindReplaceTarget)part.getAdapter( IFindReplaceTarget.class );
-            
-            if ( target != null ) {
-//                if ( hasFocus() ) {
-//                    System.out.println("[FindAction.setEnableState] About to set state true (hasFocus() is true)"); //$NON-NLS-1$
-//                } else {                    
-//                    System.out.println("[FindAction.setEnableState] About to set state false (hasFocus() is false)"); //$NON-NLS-1$
-//                }
-                setEnabled( hasFocus() /*target.canPerformFind()*/ ); // jhTODO: retest and see if canPerformFind EVER works
-            } else {
-//                System.out.println("[FindAction.setEnableState] target is NULL, about to set state false"); //$NON-NLS-1$
-                setEnabled( false );        
-            }
-        } else {
-//            System.out.println("[FindAction.setEnableState] part is NULL, setting state false"); //$NON-NLS-1$
-            setEnabled( false );
-        }
-    }
+	private void setEnableState(IWorkbenchPart part) {
+
+		if (part != null && part instanceof ModelEditor) {
+			ModelObjectEditorPanel panel = ((ModelEditor) part).getEditorContainer();
+			if (panel != null) {
+
+				IFindReplaceTarget target = (IFindReplaceTarget) part.getAdapter(IFindReplaceTarget.class);
+
+				if (target != null) {
+					setEnabled(hasFocus() /* target.canPerformFind() */);
+				} else {
+					setEnabled(false);
+				}
+			}
+		} else {
+			setEnabled(false);
+		}
+	}
 
     private void setEnableState() {
         setEnableState( getCurrentWorkbenchPart() );
@@ -148,21 +135,18 @@ public class FindAction extends AbstractAction
      */
     @Override
 	public void partActivated(IWorkbenchPart part) {
-//        System.out.println("\n\n + + + + + + [FindAction.partActivated] part hash: " + part.hashCode() ); //$NON-NLS-1$  part
-//        System.out.println(" + + + + + + [FindAction.partActivated] part is: " + part.getTitle() ); //$NON-NLS-1$  part
         
         if ( part instanceof ModelEditor ) {
-//            System.out.println("[FindAction.partActivated] About to retrieve MOEP " ); //$NON-NLS-1$  part
             moepModelEditorPanel = ((ModelEditor)part).getEditorContainer();
             
             if ( moepModelEditorPanel != null ) {            
-//                System.out.println("[FindAction.partActivated] About to ADD focusListener  " ); //$NON-NLS-1$  part
                 moepModelEditorPanel.addFocusListener( this );
+                setEnableState();
             } else {
-//                System.out.println("[FindAction.partActivated] NO MOEP FOUND!!! - will NOT ADD focusListening " ); //$NON-NLS-1$  part                
+            	setEnabled(false);         
             }
         }
-        setEnableState();
+        
     }
 
     /* (non-Javadoc)
@@ -186,18 +170,13 @@ public class FindAction extends AbstractAction
      */
     @Override
 	public void partDeactivated(IWorkbenchPart part) {
-//        System.out.println("\n - - - - - -[FindAction.partDeactivated] part hash: " + part.hashCode() ); //$NON-NLS-1$  part
-//        System.out.println(" - - - - - -[FindAction.partDeactivated] part is: " + part.getTitle() ); //$NON-NLS-1$  part
-        
+
         if ( part instanceof ModelEditor && moepModelEditorPanel == null) {
             moepModelEditorPanel = ((ModelEditor)part).getEditorContainer();
             
-            if ( moepModelEditorPanel != null ) {            
-//                System.out.println("[FindAction.partDeactivated] About to REMOVE focusListener " ); //$NON-NLS-1$  part                
+            if ( moepModelEditorPanel != null ) {                          
                 moepModelEditorPanel.removeFocusListener( this );
-            } else {
-//                System.out.println("[FindAction.partDeactivated] NO MOEP FOUND!!! - will NOT REMOVE focusListening " ); //$NON-NLS-1$  part                
-            }
+            } 
         }
         moepModelEditorPanel = null;
         setEnabled( false );
@@ -212,23 +191,17 @@ public class FindAction extends AbstractAction
     }
     
     public boolean hasFocus() {
-//        System.out.println("[FindAction.hasFocus] returning: " + bHasFocus ); //$NON-NLS-1$
         return bHasFocus;        
     }
     
     @Override
 	public void focusLost( FocusEvent fe ) {
-//        System.out.println("[FindAction.focusLost] widget: " + fe.widget ); //$NON-NLS-1$
         
         // if this 'focusLost' is related to our current 'focusGain' widget,
         //  then we are now in a no-focus state:
         if( (feMostRecentFocusGainEvent) != null && (fe.widget == feMostRecentFocusGainEvent.widget) ) {
-//            System.out.println("[FindAction.focusLost] this LOST closes our last GAINED; setting hasFocus to FALSE"); //$NON-NLS-1$
             bHasFocus = false;               
         }
-        
-        // save the new focusLost event
-//        feMostRecentFocusLostEvent = fe;
         
         // reset enable state
         setEnableState();      
@@ -238,7 +211,6 @@ public class FindAction extends AbstractAction
     @Override
 	public void focusGained( FocusEvent fe ) {
         
-//        System.out.println("[FindAction.focusGained] widget: " + fe.widget ); //$NON-NLS-1$
         bHasFocus = true;   
                 
         feMostRecentFocusGainEvent = fe;
