@@ -99,6 +99,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
     private boolean tabFolderSelectionInProgress = false;
     
     private Composite primaryParent;
+    
+    private boolean managingLoading;
 
     /**
      * Creates an empty multi-page editor with no pages.
@@ -490,6 +492,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
      */
     @Override
     public final void createPartControl( Composite parent ) {
+    	managingLoading = true;
     	this.primaryParent = parent;
         
         ComponentLoadingManager manager = ComponentLoadingManager.getInstance();
@@ -498,6 +501,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
     }
     
     private void internalCreatePartControl() {
+    	
         createContainer(primaryParent);
         createPages();
         // set the active page (page 0 by default), unless it has already been done
@@ -515,6 +519,7 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
             @Override
             public void run() {
             	internalCreatePartControl();
+                managingLoading = false;
             }
         };
 
@@ -852,6 +857,10 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
      */
     @Override
     public void setFocus() {
+    	if( managingLoading ) {
+    		return;
+    	}
+    	
         if (getSite().getWorkbenchWindow().getActivePage() == null) {
             getSite().getWorkbenchWindow().addPageListener(new IPageListener() {
 
