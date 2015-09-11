@@ -27,6 +27,7 @@ import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
@@ -75,6 +76,7 @@ public class TeiidDdlImporter extends StandardImporter {
     // Added to address TEIID-3629
     private static final String SF_PROPNAME_CALCULATED_BAD = "calculated"; //$NON-NLS-1$
     private static final String SF_PROPNAME_CALCULATED_GOOD = "Calculated"; //$NON-NLS-1$
+    private static final String XMLLITERAL_TYPE_NAME = DatatypeConstants.MetaMatrixExtendedBuiltInNames.XML_LITERAL;
     
 	
 	interface TYPES_UPPER {
@@ -108,6 +110,9 @@ public class TeiidDdlImporter extends StandardImporter {
 		String TINYINT = "TINYINT"; //$NON-NLS-1$
 		String VARBINARY = "VARBINARY"; //$NON-NLS-1$
 		String VARCHAR = "VARCHAR"; //$NON-NLS-1$
+		String IMAGE = "IMAGE"; //$NON-NLS-1$
+		String TEXT = "TEXT"; //$NON-NLS-1$
+		String XML = DatatypeConstants.RuntimeTypeNames.XML;
 	}
 	
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
@@ -138,19 +143,26 @@ public class TeiidDdlImporter extends StandardImporter {
 	@Override
 	protected String getTeiidDataTypeName(String datatype) throws Exception {
 		String resultTypeName = null;
+		String targetTypeName = datatype;
 
 		/*
 		 * Get the Datatype for Teiid DDL.
 		 * First tries to match the datatype string with a teiid built-in type.
 		 * If a built-in type is not found, then attempt to use the relational mapping to find a match.
+		 * 
+		 * Also an issue with Teiid's XML type.. this will map to XMLLiteral name
 		 */
+		
+		if( datatype.equalsIgnoreCase(TYPES_UPPER.XML) ) {
+			targetTypeName = XMLLITERAL_TYPE_NAME;
+		}
 
 		// Look up matching Built-In type
 		EObject[] builtInTypes = ModelerCore.getWorkspaceDatatypeManager().getAllDatatypes();
 		String dtName = null;
 		for (int i = 0; i < builtInTypes.length; i++) {
 			dtName = ModelerCore.getWorkspaceDatatypeManager().getName(builtInTypes[i]);
-			if (dtName != null && dtName.equalsIgnoreCase(datatype)) {
+			if (dtName != null && dtName.equalsIgnoreCase(targetTypeName)) {
 				resultTypeName = dtName;
 				break;
 			}
