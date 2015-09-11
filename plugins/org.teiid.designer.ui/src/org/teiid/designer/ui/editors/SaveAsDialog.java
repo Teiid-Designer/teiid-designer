@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
+import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.refactor.ModelCopyCommand;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
@@ -62,6 +63,7 @@ public class SaveAsDialog extends ElementTreeSelectionDialog implements UiConsta
     static final String FOLDER_MESSAGE = UiConstants.Util.getString("SaveAsDialog.folderOrProjectOnly"); //$NON-NLS-1$
     static final String MODEL_PROJECT_MESSAGE = UiConstants.Util.getString("SaveAsDialog.notModelProject"); //$NON-NLS-1$
     static final String CLOSED_PROJECT_MESSAGE = UiConstants.Util.getString("SaveAsDialog.closedProject"); //$NON-NLS-1$
+    static final String SAME_NAME_RESOURCE_IN_PROJECT_MESSAGE = UiConstants.Util.getString("SaveAsDialog.sameNameResourceInProject"); //$NON-NLS-1$
     private static final String NAME_MESSAGE = UiConstants.Util.getString("SaveAsDialog.modelName"); //$NON-NLS-1$
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -198,7 +200,13 @@ public class SaveAsDialog extends ElementTreeSelectionDialog implements UiConsta
 
             if (selection.length == 1 && selection[0] != null) {
                 if (selection[0] instanceof IContainer) {
-                    if (selection[0] instanceof IProject && !((IProject)selection[0]).isOpen()) {
+                	IContainer container = (IContainer)selection[0];
+                	// Check if model name is same as initial name check for same model project
+                	String newName = fileNameText.getText();
+                	String currentName = resource.getProjectRelativePath().removeFileExtension().lastSegment();
+                	if( StringUtilities.equals(newName, currentName) && container.getProject() == resource.getProject()) {
+                		result = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, 0, SAME_NAME_RESOURCE_IN_PROJECT_MESSAGE, null);
+                	} else if (selection[0] instanceof IProject && !((IProject)selection[0]).isOpen()) {
                         result = new Status(IStatus.ERROR, UiConstants.PLUGIN_ID, 0, CLOSED_PROJECT_MESSAGE, null);
                     } else if (isModelProject((IContainer)selection[0])) {
                         result = setContainer((IContainer)selection[0]);
