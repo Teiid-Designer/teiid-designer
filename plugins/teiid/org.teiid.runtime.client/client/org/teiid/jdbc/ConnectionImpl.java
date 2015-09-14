@@ -121,8 +121,25 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
     private Collection<Annotation> annotations;
     private Properties connectionProps;
     private Properties payload;
-        
-    public ConnectionImpl(ServerConnection serverConn, Properties info, String url) { 
+
+    /**
+     * @return teiid version if defined by the connection properties or
+     *                the default teiid version for this release.
+     */
+    private static ITeiidServerVersion deriveTeiidVersion(Properties properties) {
+        String teiidVersionString = properties.getProperty(ITeiidServerVersion.TEIID_VERSION_PROPERTY);
+
+        ITeiidServerVersion teiidVersion = null;
+        if (teiidVersionString == null)
+            teiidVersion = Version.TEIID_DEFAULT.get();
+        else
+            teiidVersion = new TeiidServerVersion(teiidVersionString);
+
+        return teiidVersion;
+    }
+
+    public ConnectionImpl(ServerConnection serverConn, Properties info, String url) {
+        super(deriveTeiidVersion(info));
     	this.connectionProps = info;
     	this.serverConn = serverConn;
         this.url = url;
@@ -1072,22 +1089,6 @@ public class ConnectionImpl extends WrapperImpl implements TeiidConnection {
 			}
 		}
 	}
-
-    /**
-     * @return teiid version if defined by the connection properties or
-     *                the default teiid version for this release.
-     */
-    public ITeiidServerVersion getTeiidVersion() {
-        String teiidVersionString = connectionProps.getProperty(ITeiidServerVersion.TEIID_VERSION_PROPERTY);
-
-        ITeiidServerVersion teiidVersion = null;
-        if (teiidVersionString == null)
-            teiidVersion = Version.TEIID_DEFAULT.get();
-        else
-            teiidVersion = new TeiidServerVersion(teiidVersionString);
-
-        return teiidVersion;
-    }
 
     protected boolean isLessThanTeiidEight() {
         return getTeiidVersion().isLessThan(Version.TEIID_8_0.get());

@@ -519,7 +519,8 @@ public class Messages {
         non_xml,
         non_boolean,
         invalid_distinct,
-        multi_source_update_not_allowed;
+        multi_source_update_not_allowed,
+        xmlcast_types;
 
         @Override
         public String toString() {
@@ -953,6 +954,15 @@ public class Messages {
         @Override
         public String toString() {
             return getEnumName(this) + DOT + name();
+        }
+
+        public static SystemSource safeValueOf(String id) {
+            for (SystemSource ss : SystemSource.values()) {
+                if (ss.name().equals(id))
+                    return ss;
+            }
+
+            return null;
         }
     }
 
@@ -1477,6 +1487,8 @@ public class Messages {
         TEIID31152,
         TEIID31155,
         TEIID31156,
+        TEIID31159,
+        TEIID31160,
         TEIID60001,
         TEIID60004,
         TEIID60008,
@@ -1543,13 +1555,17 @@ public class Messages {
      * @return i18n string
      */
     private static String getString(Enum<?> key) {
+        String noMsg = "<No message available>"; //$NON-NLS-1$
+        if (key == null)
+            return noMsg;
+
         try {
             return RESOURCE_BUNDLE.getString(key.toString());
         } catch (final Exception err) {
             String msg;
 
             if (err instanceof NullPointerException) {
-                msg = "<No message available>"; //$NON-NLS-1$
+                msg = noMsg;
             } else if (err instanceof MissingResourceException) {
                 msg = "<Missing message for key \"" + key + "\" in: " + BUNDLE_NAME + '>'; //$NON-NLS-1$ //$NON-NLS-2$
             } else {

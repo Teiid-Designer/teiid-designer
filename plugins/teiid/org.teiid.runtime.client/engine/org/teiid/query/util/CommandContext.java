@@ -22,12 +22,16 @@
 
 package org.teiid.query.util;
 
+import java.io.InputStream;
 import java.io.Serializable;
+import java.sql.Clob;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.TimeZone;
 import javax.security.auth.Subject;
+import org.teiid.core.types.ClobImpl;
+import org.teiid.core.types.InputStreamFactory;
 import org.teiid.core.util.LRUCache;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -125,6 +129,20 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 		}
 		return result;
 	}
+
+	/**
+     * Used by the system table logic
+     * @return a clob
+     */
+    public Clob getSpatialSysRef() {
+        return new ClobImpl(new InputStreamFactory() {
+            
+            @Override
+            public InputStream getInputStream() {
+                return getClass().getClassLoader().getResourceAsStream("org/teiid/metadata/spatial_ref_sys.csv"); //$NON-NLS-1$
+            }
+        }, -1);
+    }
 
     @Override
     public String getUserName() {

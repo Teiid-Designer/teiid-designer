@@ -40,7 +40,9 @@
                                  nux.jar,
                                  xnio-api.jar,
                                  xnio-nio.jar,
-                                 xom.jar"/>
+                                 xom.jar,
+                                 jts.jar,
+                                 jts2geojson.jar"/>
 
 	<!-- Location of the generated SQLParser class -->
 	<property name="parsers" value="v7/Teiid7Parser.java,

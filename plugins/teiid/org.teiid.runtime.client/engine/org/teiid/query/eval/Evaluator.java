@@ -41,9 +41,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.transform.stream.StreamResult;
-import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.query.QueryResult;
-import net.sf.saxon.trans.XPathException;
+import javax.xml.transform.stream.StreamSource;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BaseLob;
 import org.teiid.core.types.BlobType;
@@ -57,9 +55,11 @@ import org.teiid.core.types.XMLType;
 import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.types.basic.StringToSQLXMLTransform;
 import org.teiid.core.util.StringUtil;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.FunctionMethod.PushDown;
@@ -67,8 +67,10 @@ import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.JSONFunctionMethods.JSONBuilder;
 import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.function.source.XMLSystemFunctions.XmlConcat;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
+import org.teiid.query.processor.relational.XMLTableNode;
 import org.teiid.query.sql.lang.AbstractCompareCriteria;
 import org.teiid.query.sql.lang.AbstractSetCriteria;
 import org.teiid.query.sql.lang.CollectionValueIterator;
@@ -104,7 +106,9 @@ import org.teiid.query.sql.symbol.ScalarSubquery;
 import org.teiid.query.sql.symbol.SearchedCaseExpression;
 import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -120,6 +124,13 @@ import org.teiid.query.xquery.saxon.XQueryEvaluator;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.translator.SourceSystemFunctions;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.om.Item;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.query.QueryResult;
+import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.StringValue;
+import net.sf.saxon.value.StringValue;
 
 /**
  *
@@ -130,14 +141,31 @@ public class Evaluator {
 		XmlConcat concat; //just used to get a writer
 		Type type;
 		private javax.xml.transform.Result result;
-		
-		private XMLQueryRowProcessor() throws Exception {
-			concat = new XmlConcat();
-			result = new StreamResult(concat.getWriter());
+
+		@Since(Version.TEIID_8_10)
+		boolean hasItem;
+
+        private XMLQueryRowProcessor() throws Exception {
+            this(false);
+        }
+
+		private XMLQueryRowProcessor(boolean exists) throws Exception {
+		    if (! exists) {
+		        concat = new XmlConcat();
+			    result = new StreamResult(concat.getWriter());
+		    }
 		}
 
 		@Override
 		public void processRow(NodeInfo row) {
+		    if (concat == null) {
+		        //
+		        // concat will never be null for versions less than 10
+		        // since they use default constructor
+		        //
+                hasItem = true;
+                return;
+            }
 			if (type == null) {
 				type = SaxonXQueryExpression.getType(row);
 			} else {
@@ -237,6 +265,13 @@ public class Evaluator {
     }
 
     /**
+     * @return teiid version
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return commandContext.getTeiidVersion();
+    }
+
+    /**
      * @param criteria
      * @return evaluation of criteria
      * @throws Exception
@@ -291,6 +326,8 @@ public class Evaluator {
             return Boolean.valueOf(evaluate((ExistsCriteria)criteria));
         } else if (criteria instanceof ExpressionCriteria) {
         	return (Boolean)evaluate(((ExpressionCriteria)criteria).getExpression());
+        } else if (criteria instanceof XMLExists) {
+            return (Boolean) evaluateXMLQuery(((XMLExists)criteria).getXmlQuery(), true);
 		} else {
              throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30311, criteria));
 		}
@@ -684,7 +721,7 @@ public class Evaluator {
            ExpressionSymbol exprSyb = (ExpressionSymbol) expression;
            Expression expr = exprSyb.getExpression();
            return internalEvaluate(expr);
-       } 
+       }
 	   if(expression instanceof Constant) {
 	       return ((Constant) expression).getValue();
 	   } else if(expression instanceof Function) {
@@ -724,7 +761,7 @@ public class Evaluator {
 	   } else if (expression instanceof XMLSerialize){
 		   return evaluateXMLSerialize((XMLSerialize)expression);
 	   } else if (expression instanceof XMLQuery) {
-		   return evaluateXMLQuery((XMLQuery)expression);
+		   return evaluateXMLQuery((XMLQuery)expression, false);
 	   } else if (expression instanceof QueryString) {
 		   return evaluateQueryString((QueryString)expression);
 	   } else if (expression instanceof XMLParse){
@@ -743,10 +780,60 @@ public class Evaluator {
 		   return new ArrayImpl(expression.getTeiidVersion(), result);
 	   } else if (expression instanceof ExceptionExpression) {
 		   return evaluate((ExceptionExpression)expression);
+	   } else if (expression instanceof XMLCast) {
+           return evaluate((XMLCast)expression);
 	   } else {
 	        throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30329, expression.getClass().getName()));
 	   }
 	}
+
+	@Since(Version.TEIID_8_10)
+	private Object evaluate(XMLCast expression) throws Exception {
+        Object val = internalEvaluate(expression.getExpression());
+        if (val == null) {
+            TeiidNodeFactory factory = new TeiidNodeFactory();
+            Constant constant = factory.create(expression.getTeiidParser(), ASTNodes.CONSTANT);
+            constant.setValue(null);
+            constant.setType(expression.getType());
+            return constant;
+        }
+        Configuration config = new Configuration();
+        XMLType value = (XMLType)val;
+        Type t = value.getType();
+        try {
+            Item i = null;
+            switch (t) {
+                case CONTENT: 
+                    //content could map to an array value, but we aren't handling that case here yet - only in xmltable
+                case COMMENT:
+                case PI:
+                    throw new TeiidClientException();
+                case TEXT:
+                    i = new StringValue(value.getString());
+                    break;
+                case UNKNOWN:
+                case DOCUMENT:
+                case ELEMENT:
+                    StreamSource ss = value.getSource(StreamSource.class);
+                    try {
+                        i = config.buildDocument(ss);
+                    } finally {
+                        if (ss.getInputStream() != null) {
+                            ss.getInputStream().close();
+                        }
+                        if (ss.getReader() != null) {
+                            ss.getReader().close();
+                        }
+                    }
+                    break;
+                default:
+                    throw new AssertionError("Unknown xml value type " + t); //$NON-NLS-1$
+            }
+            return XMLTableNode.getValue(expression.getType(), i, config, commandContext);
+        } catch (Exception e) {
+            throw new TeiidClientException(e);
+        }
+    }
 
 	@SuppressWarnings( "unused" )
     private Object evaluate(ExceptionExpression ee)
@@ -886,17 +973,41 @@ public class Evaluator {
 		return result.toString();
 	}
 
-	private Object evaluateXMLQuery(XMLQuery xmlQuery)
+	/**
+     * 
+     * @param xmlQuery
+     * @param exists - check only for the existence of a non-empty result
+     * @return Boolean if exists is true, otherwise an XMLType value
+     * @throws BlockedException
+     * @throws TeiidComponentException
+     * @throws FunctionExecutionException
+     */
+	private Object evaluateXMLQuery(XMLQuery xmlQuery, boolean exists)
 			throws Exception {
 		boolean emptyOnEmpty = xmlQuery.getEmptyOnEmpty() == null || xmlQuery.getEmptyOnEmpty();
 		Result result = null;
 		try {
 			XMLQueryRowProcessor rp = null;
-			if (xmlQuery.getXQueryExpression().isStreaming()) {
-				rp = new XMLQueryRowProcessor();
+			ITeiidServerVersion teiidVersion = xmlQuery.getTeiidVersion();
+            if (xmlQuery.getXQueryExpression().isStreaming()) {
+			    if (teiidVersion.isLessThan(Version.TEIID_8_10.get()))
+			        rp = new XMLQueryRowProcessor();
+			    else
+			        rp = new XMLQueryRowProcessor(exists);
 			}
 			try {
 				result = evaluateXQuery(xmlQuery.getXQueryExpression(), xmlQuery.getPassing(), rp);
+                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+                    if (result == null) {
+                        return null;
+                    }
+                    if (exists) {
+                        if (result.iter.next() == null) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
 			} catch (RuntimeException e) {
 				if (e.getCause() instanceof XPathException) {
 					throw (XPathException)e.getCause();
@@ -904,6 +1015,9 @@ public class Evaluator {
 				throw e;
 			}
 			if (rp != null) {
+			    if (exists && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+                    return rp.hasItem;
+                }
 				XMLType.Type type = rp.type;
 				if (type == null) {
 					if (!emptyOnEmpty) {
@@ -1139,9 +1253,21 @@ public class Evaluator {
 	
 	private Result evaluateXQuery(SaxonXQueryExpression xquery, List<DerivedColumn> cols, RowProcessor processor) 
 	throws Exception {
-		HashMap<String, Object> parameters = new HashMap<String, Object>();
-		Object contextItem = evaluateParameters(cols, parameters);
-		return XQueryEvaluator.evaluateXQuery(xquery, contextItem, parameters, processor);
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		Object contextItem = null;
+		if(getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+		    contextItem = evaluateParameters(cols, parameters);
+		else {
+		    evaluateParameters(cols, parameters);
+	        if (parameters.containsKey(null)) {
+	            contextItem = parameters.remove(null);
+	            if (contextItem == null) {
+	                return null;
+	            }
+	        }
+		}
+
+		return XQueryEvaluator.evaluateXQuery(xquery, contextItem, parameters, processor);        
 	}
 
 	/**
@@ -1158,7 +1284,10 @@ public class Evaluator {
 		for (DerivedColumn passing : cols) {
 			Object value = evaluateParameter(passing);
 			if (passing.getAlias() == null) {
-				contextItem = value;
+			    if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+				    contextItem = value;
+			    else
+			        parameters.put(null, value);
 			} else {
 				parameters.put(passing.getAlias(), value);
 			}

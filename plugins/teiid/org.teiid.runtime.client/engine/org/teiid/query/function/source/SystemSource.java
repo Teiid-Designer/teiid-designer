@@ -41,6 +41,7 @@ import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.function.FunctionMethods;
+import org.teiid.query.function.GeometryFunctionMethods;
 import org.teiid.query.function.JSONFunctionMethods;
 import org.teiid.query.function.SystemFunctionMethods;
 import org.teiid.query.function.TeiidFunction;
@@ -224,6 +225,13 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addFunctions(JSONFunctionMethods.class);
         addFunctions(SystemFunctionMethods.class);
         addFunctions(FunctionMethods.class);
+
+        // Since 8.10
+        addFunctions(GeometryFunctionMethods.class);
+
+        // Added here in Teiid 8.10 but the class has existed long before this
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+            addFunctions(XMLSystemFunctions.class);
     }
 
     /**
@@ -270,27 +278,34 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 			if (name.isEmpty()) {
 				name = method.getName();
 			}
-
-			FunctionMethod func = MetadataFactory.createFunctionFromMethod(teiidVersion, name, method);
-
-			Messages.SystemSource descKey = Messages.SystemSource.valueOf(name + "_description"); //$NON-NLS-1$
-			Messages.SystemSource resultKey = Messages.SystemSource.valueOf(name + "_result"); //$NON-NLS-1$
-			
-			func.setDescription(Messages.getString(descKey));
-			func.setCategory(f.category());
-			for (int i = 0; i < func.getInputParameterCount(); i++) {
-			    Messages.SystemSource paramKey = Messages.SystemSource.valueOf(name + "_param" + (i +1)); //$NON-NLS-1$
-				func.getInputParameters().get(i).setDescription(Messages.getString(paramKey));
-			}
-			func.getOutputParameter().setDescription(Messages.getString(resultKey));
-			if (f.nullOnNull()) {
-				func.setNullOnNull(true);
-			}
-			func.setDeterminism(f.determinism());
-			functions.add(func);
+			addFunction(method, f, name);
+            if (!f.alias().isEmpty()) {
+                addFunction(method, f, f.alias());
+            }
 		}
 	}
-    
+
+    private FunctionMethod addFunction(Method method, TeiidFunction f, String name) {
+        FunctionMethod func = MetadataFactory.createFunctionFromMethod(teiidVersion, name, method);
+        Messages.SystemSource descKey = Messages.SystemSource.safeValueOf(name + "_description"); //$NON-NLS-1$
+        Messages.SystemSource resultKey = Messages.SystemSource.safeValueOf(name + "_result"); //$NON-NLS-1$
+
+        func.setDescription(Messages.getString(descKey));
+        func.setCategory(f.category());
+        for (int i = 0; i < func.getInputParameterCount(); i++) {
+            Messages.SystemSource paramKey = Messages.SystemSource.safeValueOf(name + "_param" + (i +1)); //$NON-NLS-1$
+            func.getInputParameters().get(i).setDescription(Messages.getString(paramKey));
+        }
+        func.getOutputParameter().setDescription(Messages.getString(resultKey));
+        if (f.nullOnNull()) {
+            func.setNullOnNull(true);
+        }
+        func.setDeterminism(f.determinism());
+        func.setPushdown(f.pushdown());
+        functions.add(func);
+        return func;
+    }
+
     private void addTrimFunction() {
         functions.add(
             new FunctionMethod(SourceSystemFunctions.TRIM, Messages.getString(Messages.SystemSource.trim_description), STRING, FUNCTION_CLASS, SourceSystemFunctions.TRIM,//$NON-NLS-1$ 

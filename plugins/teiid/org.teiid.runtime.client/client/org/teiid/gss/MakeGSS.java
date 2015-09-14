@@ -233,7 +233,7 @@ class GssAction implements PrivilegedAction {
             }  
             return result;
         }  catch (GSSException gsse) {
-        	return new TeiidClientException(gsse, Messages.getString(Messages.GSS.gss_auth_failed)); 
+        	return new TeiidClientException(gsse, Messages.gs(Messages.TEIID.TEIID20005));
         } catch(Exception e) {
         	return e;
         }

@@ -88,7 +88,8 @@ public abstract class AbstractTestMetadataValidator extends AbstractTest {
         String ddl = "create foreign table g1(e1 integer, e2 varchar(12)); create view g2(e1 integer, e2 varchar(12)) AS select * from foo;";
         buildModel("pm1", true, this.vdb, this.store, ddl);
         ValidatorReport report = new ValidatorReport();
-        new MetadataValidator.SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
+        MetadataValidator metadataValidator = new MetadataValidator(getTeiidVersion());
+        metadataValidator.new SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
         assertFalse(printError(report), report.hasItems());
     }
 
@@ -108,7 +109,8 @@ public abstract class AbstractTestMetadataValidator extends AbstractTest {
         String ddl = "create foreign table g1(e1 integer, e2 varchar(12)); create view g2(e1 integer, e2 varchar(12)) AS select * from foo;";
         buildModel("vm1", false, this.vdb, this.store, ddl);
         ValidatorReport report = new ValidatorReport();
-        new MetadataValidator.SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
+        MetadataValidator metadataValidator = new MetadataValidator(getTeiidVersion());
+        metadataValidator.new SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
         assertTrue(printError(report), report.hasItems());
     }
 
@@ -117,7 +119,8 @@ public abstract class AbstractTestMetadataValidator extends AbstractTest {
         buildModel("vm1", false, this.vdb, this.store, "create view g2(e1 integer, e2 varchar(12)) AS select * from foo;");
         buildModel("pm1", true, this.vdb, this.store, "create foreign table g1(e1 integer, e2 varchar(12));");
         ValidatorReport report = new ValidatorReport();
-        new MetadataValidator.SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
+        MetadataValidator metadataValidator = new MetadataValidator(getTeiidVersion());
+        metadataValidator.new SourceModelArtifacts().execute(vdb, store, report, newMetadataValidator());
         assertFalse(printError(report), report.hasItems());
     }
 

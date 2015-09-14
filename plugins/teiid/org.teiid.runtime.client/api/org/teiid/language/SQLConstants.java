@@ -139,6 +139,10 @@ public abstract class SQLConstants {
         String JSONOBJECT = "JSONOBJECT"; //$NON-NLS-1$
         @Since(Version.TEIID_8_7)
         String AUTO_INCREMENT = "AUTO_INCREMENT"; //$NON-NLS-1$
+        @Since(Version.TEIID_8_10)
+        String PRESERVE = "PRESERVE"; //$NON-NLS-1$
+        @Since(Version.TEIID_8_10)
+        String GEOMETRY = "GEOMETRY"; //$NON-NLS-1$
     }
     
     public interface Reserved {

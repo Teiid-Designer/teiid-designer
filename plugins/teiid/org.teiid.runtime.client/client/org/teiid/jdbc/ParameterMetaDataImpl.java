@@ -26,8 +26,8 @@ import java.sql.CallableStatement;
 import java.sql.ParameterMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import org.teiid.core.types.JDBCSQLTypeInfo;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 /**
@@ -38,13 +38,14 @@ public class ParameterMetaDataImpl extends WrapperImpl implements ParameterMetaD
 	
 	private ResultSetMetaDataImpl metadata;
 	
-	public ParameterMetaDataImpl(ResultSetMetaDataImpl metadata) {
+	public ParameterMetaDataImpl(ITeiidServerVersion teiidVersion, ResultSetMetaDataImpl metadata) {
+	    super(teiidVersion);
 		this.metadata = metadata;
 	}
 
 	@Override
 	public String getParameterClassName(int param) throws SQLException {
-		return JDBCSQLTypeInfo.getJavaClassName(getParameterType(param));
+		return JDBCSQLTypeInfo.getJavaClassName(getTeiidVersion(), getParameterType(param));
 	}
 
 	@Override

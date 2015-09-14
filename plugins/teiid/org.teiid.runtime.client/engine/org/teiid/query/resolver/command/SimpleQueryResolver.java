@@ -41,6 +41,7 @@ import org.teiid.designer.query.metadata.IQueryMetadataInterface.SupportConstant
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.designer.query.sql.lang.ISPParameter;
+import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
@@ -64,6 +65,7 @@ import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.QueryCommand;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.Select;
+import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
 import org.teiid.query.sql.lang.SubqueryContainer;
@@ -181,7 +183,29 @@ public class SimpleQueryResolver extends CommandResolver {
             
             getQueryResolver().setChildMetadata(queryExpression, query);
             
-            getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+            
+            QueryCommand recursive = null;
+            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+                try {
+                    getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+                } catch (QueryResolverException e) {
+                    if (!(queryExpression instanceof SetQuery)) {
+                        throw e;
+                    }
+                    SetQuery setQuery = (SetQuery)queryExpression;
+                    //valid form must be a union with nothing above
+                    if (setQuery.getOperation() != Operation.UNION
+                            || setQuery.getLimit() != null 
+                            || setQuery.getOrderBy() != null 
+                            || setQuery.getOption() != null) {
+                        throw e;
+                    }
+                    getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+                    recursive = setQuery.getRightQuery();
+                }
+            } else {
+                getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
+            }
 
             if (!discoveredGroups.add(obj.getGroupSymbol())) {
             	 throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30101, obj.getGroupSymbol()));
@@ -215,6 +239,14 @@ public class SimpleQueryResolver extends CommandResolver {
             		es.setMetadataID(colid);
             		es.setGroupSymbol(obj.getGroupSymbol());
 				}
+            }
+
+            if (recursive != null) {
+                // Only be not null is version > 10
+                getQueryResolver().setChildMetadata(recursive, query);
+                getQueryResolver().resolveCommand(recursive, metadata.getMetadata(), false);
+                new SetQueryResolver(getQueryResolver()).resolveSetQuery(metadata, false, (SetQuery)queryExpression, ((SetQuery)queryExpression).getLeftQuery(), recursive);
+                obj.setRecursive(true);
             }
         }
 	}

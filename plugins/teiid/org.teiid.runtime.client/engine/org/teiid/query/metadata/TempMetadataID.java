@@ -30,9 +30,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.teiid.core.util.LRUCache;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IMetadataID;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.mapping.relational.QueryNode;
+import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.Symbol;
 
@@ -59,6 +62,8 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
 		List<TempMetadataID> primaryKey;
 		QueryNode queryNode;
 		Map<Object, Object> localCache;
+		volatile CacheHint cacheHint;
+        long cacheHintUpdated;
 		List<List<TempMetadataID>> keys;
 		List<TempMetadataID> indexes;
 		volatile long lastDataModification;
@@ -108,7 +113,15 @@ public class TempMetadataID implements Serializable, IMetadataID<TempMetadataID>
 		public Object getModel() {
 			return model;
 		}
-		
+
+		@Since(Version.TEIID_8_10)
+		public synchronized boolean updateCacheHint(long time) {
+            if (time >= cacheHintUpdated) {
+                cacheHintUpdated = time;
+                return true;
+            }
+            return false;
+        }
 	}
 	
 	private static TableData DUMMY_DATA = new TableData();

@@ -129,7 +129,7 @@ public class QueryService implements IQueryService {
 
     @Override
     public String getJDBCSQLTypeName(int jdbcType) {
-        return JDBCSQLTypeInfo.getTypeName(jdbcType);
+        return JDBCSQLTypeInfo.getTypeName(teiidVersion, jdbcType);
     }
 
     @Override

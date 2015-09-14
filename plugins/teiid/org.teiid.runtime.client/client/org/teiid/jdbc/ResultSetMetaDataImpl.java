@@ -24,9 +24,9 @@ package org.teiid.jdbc;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
 import org.teiid.client.metadata.ResultsMetadataConstants;
 import org.teiid.core.types.JDBCSQLTypeInfo;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 
 /**
@@ -36,14 +36,15 @@ public class ResultSetMetaDataImpl extends WrapperImpl implements ResultSetMetaD
     private MetadataProvider provider;
 
     private boolean useJDBC4ColumnNameAndLabelSemantics = true;
-    
-    public ResultSetMetaDataImpl(MetadataProvider provider, String supportBackwardsCompatibility) {
-    	this.provider = provider;
+
+    public ResultSetMetaDataImpl(ITeiidServerVersion teiidVersion, MetadataProvider provider, String supportBackwardsCompatibility) {
+    	super(teiidVersion);
+        this.provider = provider;
     	if (supportBackwardsCompatibility != null) {
     		this.useJDBC4ColumnNameAndLabelSemantics = Boolean.parseBoolean(supportBackwardsCompatibility);
     	}
-    }    
-    
+    }
+
     /**
      * Adjust from 1-based to internal 0-based representation
      * @param index External 1-based representation
@@ -156,7 +157,7 @@ public class ResultSetMetaDataImpl extends WrapperImpl implements ResultSetMetaD
 
     public int getColumnType(int index) throws SQLException {
         String runtimeTypeName = getColumnTypeName(index);
-        return JDBCSQLTypeInfo.getSQLType(runtimeTypeName);
+        return JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), runtimeTypeName);
     }
 
     public String getColumnTypeName(int index) throws SQLException {
@@ -176,7 +177,7 @@ public class ResultSetMetaDataImpl extends WrapperImpl implements ResultSetMetaD
     }
 
     public String getColumnClassName(int index) throws SQLException {
-        return JDBCSQLTypeInfo.getJavaClassName(getColumnType(index));
+        return JDBCSQLTypeInfo.getJavaClassName(getTeiidVersion(), getColumnType(index));
     }
 
 }

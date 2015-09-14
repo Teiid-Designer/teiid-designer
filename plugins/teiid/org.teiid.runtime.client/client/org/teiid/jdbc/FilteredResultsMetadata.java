@@ -24,6 +24,7 @@ package org.teiid.jdbc;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 
 
@@ -34,7 +35,8 @@ public class FilteredResultsMetadata extends WrapperImpl implements ResultSetMet
     private ResultSetMetaData delegate; 
     private int actualColumnCount;
     
-    FilteredResultsMetadata(ResultSetMetaData rsmd, int actualColumnCount) {
+    FilteredResultsMetadata(ITeiidServerVersion teiidVersion, ResultSetMetaData rsmd, int actualColumnCount) {
+        super(teiidVersion);
         this.delegate = rsmd;
         this.actualColumnCount = actualColumnCount;
     }

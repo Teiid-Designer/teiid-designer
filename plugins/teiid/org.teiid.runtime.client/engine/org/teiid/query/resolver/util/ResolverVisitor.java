@@ -79,6 +79,7 @@ import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.query.sql.symbol.QueryString;
 import org.teiid.query.sql.symbol.Reference;
 import org.teiid.query.sql.symbol.SearchedCaseExpression;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLQuery;
 import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.sql.symbol.v7.Aggregate7Symbol;
@@ -455,7 +456,13 @@ public class ResolverVisitor extends LanguageVisitor
 			handleException(e); 
 		}
     }
-    
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLExists obj) {
+        visit(obj.getXmlQuery());
+    }
+
     @Override
     public void visit(QueryString obj) {
     	try {

@@ -25,7 +25,6 @@ package org.teiid.query.sql.navigator;
 import java.util.Collection;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -113,7 +112,9 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -769,6 +770,23 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         preVisitVisitor(obj);
         visitNode(obj.getNamespaces());
         visitNodes(obj.getPassing());
+        postVisitVisitor(obj);
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLExists obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getXmlQuery().getNamespaces());
+        visitNodes(obj.getXmlQuery().getPassing());
+        postVisitVisitor(obj);
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLCast obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
         postVisitVisitor(obj);
     }
 

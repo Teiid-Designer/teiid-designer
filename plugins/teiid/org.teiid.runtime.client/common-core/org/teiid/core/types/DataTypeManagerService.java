@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.teiid.core.types.basic.AnyToObjectTransform;
 import org.teiid.core.types.basic.AnyToStringTransform;
 import org.teiid.core.types.basic.BooleanToNumberTransform;
@@ -51,7 +50,6 @@ import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService;
-import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 import org.teiid.query.function.FunctionLibrary;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -122,7 +120,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
         XML ("xml", DataTypeName.XML, XMLType.class), //$NON-NLS-1$
 
         @Since(Version.TEIID_8_0)
-        VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class); //$NON-NLS-1$
+        VARBINARY ("varbinary", DataTypeName.VARBINARY, BinaryType.class), //$NON-NLS-1$
+
+        @Since(Version.TEIID_8_10)
+        GEOMETRY ("geometry", DataTypeName.GEOMETRY, GeometryType.class); //$NON-NLS-1$
 
         private static Map<ITeiidServerVersion, List<DefaultDataTypes>> valueCache = new HashMap<ITeiidServerVersion, List<DefaultDataTypes>>();
 
@@ -215,17 +216,10 @@ public class DataTypeManagerService implements IDataTypeManagerService {
          * @return true if yes; false otherwise
          */
         public static boolean isLOB(Class<?> type) {
-            return BLOB.equals(type) || CLOB.equals(type) || XML.equals(type);
-        }
-
-        /**
-         * Is the supplied class name a LOB based data type?
-         *
-         * @param type
-         * @return true if yes; false otherwise
-         */
-        public static boolean isLOB(String type) {
-            return BLOB.equals(type) ||CLOB.equals(type) || XML.equals(type);
+            return BLOB.getTypeClass().equals(type)
+                    || CLOB.getTypeClass().equals(type)
+                    || XML.getTypeClass().equals(type)
+                    || GEOMETRY.getTypeClass().equals(type);
         }
 
         /**

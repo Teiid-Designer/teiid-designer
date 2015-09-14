@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -64,18 +65,6 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathExpressionException;
-import net.sf.saxon.expr.JPConverter;
-import net.sf.saxon.om.Item;
-import net.sf.saxon.om.Name11Checker;
-import net.sf.saxon.om.NodeInfo;
-import net.sf.saxon.sxpath.XPathEvaluator;
-import net.sf.saxon.sxpath.XPathExpression;
-import net.sf.saxon.trans.XPathException;
-import net.sf.saxon.value.AtomicValue;
-import net.sf.saxon.value.DateTimeValue;
-import net.sf.saxon.value.DateValue;
-import net.sf.saxon.value.DayTimeDurationValue;
-import net.sf.saxon.value.TimeValue;
 import org.teiid.common.buffer.FileStore;
 import org.teiid.common.buffer.FileStoreInputStreamFactory;
 import org.teiid.common.buffer.impl.MemoryStorageManager;
@@ -102,12 +91,26 @@ import org.teiid.json.simple.ParseException;
 import org.teiid.query.eval.Evaluator;
 import org.teiid.query.eval.Evaluator.NameValuePair;
 import org.teiid.query.function.CharsetUtils;
+import org.teiid.query.function.TeiidFunction;
+import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 import org.teiid.util.StAXSQLXML;
 import org.teiid.util.StAXSQLXML.StAXSourceProvider;
+import net.sf.saxon.expr.JPConverter;
+import net.sf.saxon.om.Item;
+import net.sf.saxon.om.Name11Checker;
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.sxpath.XPathEvaluator;
+import net.sf.saxon.sxpath.XPathExpression;
+import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.AtomicValue;
+import net.sf.saxon.value.DateTimeValue;
+import net.sf.saxon.value.DateValue;
+import net.sf.saxon.value.DayTimeDurationValue;
+import net.sf.saxon.value.TimeValue;
 
 
 /** 
@@ -765,9 +768,14 @@ public class XMLSystemFunctions {
 		}
 	}
 	
-	public static XMLType xmlComment(String comment) {
-		return new XMLType(new SQLXMLImpl("<!--" + comment + "-->")); //$NON-NLS-1$ //$NON-NLS-2$
-	}
+	public static XMLType xmlComment(String comment) throws Exception {
+        if (comment.contains("--") || comment.endsWith("-")) { //$NON-NLS-1$ //$NON-NLS-2$
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31159));
+        }
+        XMLType result = new XMLType(new SQLXMLImpl("<!--" + comment + "-->")); //$NON-NLS-1$ //$NON-NLS-2$
+        result.setType(Type.COMMENT);
+        return result;
+    }
 
     public static Source convertToSource(Object value) throws Exception {
     	if (value == null) {
@@ -1127,5 +1135,16 @@ public class XMLSystemFunctions {
         }
         return f;
     }
-    
+
+	@Since(Version.TEIID_8_10)
+	@TeiidFunction(category=FunctionCategoryConstants.XML)
+    public static XMLType xmlText(String val) throws XMLStreamException, FactoryConfigurationError, IOException, TransformerException {
+        //TODO: see if there is a less involved way to escape
+        StringWriter writer = new StringWriter();
+        XMLEventWriter eventWriter = getOutputFactory().createXMLEventWriter(writer);
+        convertValue(writer, eventWriter, threadLocalEventtFactory.get(), val);
+        XMLType result = new XMLType(new SQLXMLImpl(writer.toString())); 
+        result.setType(Type.TEXT);
+        return result;
+    }
 }

@@ -41,7 +41,6 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.designer.annotation.Since;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
@@ -278,6 +277,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
      * @throws SQLException if the connection is already closed.
      */
     DatabaseMetaDataImpl(ConnectionImpl connection) {
+        super(connection.getTeiidVersion());
         this.driverConnection = connection;
         if (PropertiesUtils.getBooleanProperty(connection.getConnectionProps(), REPORT_AS_VIEWS, false)) {
         	TABLE_TYPE = "CASE WHEN IsSystem = 'true' and UCASE(Type) = 'TABLE' THEN 'SYSTEM TABLE' WHEN IsPhysical <> 'true' AND UCASE(Type) = 'TABLE' THEN 'VIEW' ELSE UCASE(Type) END"; //$NON-NLS-1$       	
@@ -292,10 +292,6 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         .append(" WHERE UCASE(VDBName)").append(LIKE_ESCAPE)//$NON-NLS-1$
         .append(" AND UCASE(SchemaName)").append(LIKE_ESCAPE)//$NON-NLS-1$
         .append(" AND UCASE(Name)") .append(LIKE_ESCAPE).toString(); //$NON-NLS-1$
-    }
-
-    private ITeiidServerVersion getTeiidVersion() {
-        return driverConnection.getTeiidVersion();
     }
 
     private boolean isTeiidVersionOrGreater(Version version) {
@@ -577,15 +573,15 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
                 Integer length = (Integer)currentRow.get(JDBCColumnPositions.COLUMNS.DATA_TYPE-1);
                 Integer precision = (Integer)currentRow.get(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1);
                 if (typeName != null) {
-                	currentRow.set(JDBCColumnPositions.COLUMNS.DATA_TYPE-1, JDBCSQLTypeInfo.getSQLType(typeName));
+                	currentRow.set(JDBCColumnPositions.COLUMNS.DATA_TYPE-1, JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName));
                 	if (!Number.class.isAssignableFrom(getDataTypeManager().getDataTypeClass(typeName))) {
                 		if (length != null && length <= 0) {
-                			currentRow.set(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+                			currentRow.set(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
                 		} else {
                 			currentRow.set(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1, length);
                 		}
                 	} else if (precision != null && precision <= 0) {
-            			currentRow.set(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+            			currentRow.set(JDBCColumnPositions.COLUMNS.COLUMN_SIZE-1, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
                 	}
                 } else {
                 	currentRow.set(JDBCColumnPositions.COLUMNS.DATA_TYPE-1, null);
@@ -1317,13 +1313,13 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
                 Integer length = (Integer)currentRow.get(JDBCColumnPositions.PROCEDURE_COLUMNS.LENGTH-1);
                 Integer precision = (Integer)currentRow.get(JDBCColumnPositions.PROCEDURE_COLUMNS.PRECISION-1);
                 if (precision != null && precision <= 0) {
-        			currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.PRECISION-1, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+        			currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.PRECISION-1, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
             	}
                 if (length != null && length <= 0) {
-        			currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.LENGTH-1, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+        			currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.LENGTH-1, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
         		}
                 if (typeName != null) {
-                	currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.DATA_TYPE-1, JDBCSQLTypeInfo.getSQLType(typeName));
+                	currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.DATA_TYPE-1, JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName));
                 } else {
                 	currentRow.set(JDBCColumnPositions.PROCEDURE_COLUMNS.DATA_TYPE-1, null);                	
                 }
@@ -1756,7 +1752,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
         metadataList[16] = StatementImpl.getColumnMetadata(CoreConstants.SYSTEM_MODEL + "." + DATA_TYPES, JDBCColumnNames.TYPE_INFO.SQL_DATETIME_SUB, DataTypeManagerService.DefaultDataTypes.INTEGER,  ResultsMetadataConstants.NULL_TYPES.NULLABLE, ResultsMetadataConstants.SEARCH_TYPES.SEARCHABLE, Boolean.TRUE, Boolean.TRUE, Boolean.FALSE, driverConnection);//$NON-NLS-1$ 
         metadataList[17] = StatementImpl.getColumnMetadata(CoreConstants.SYSTEM_MODEL + "." + DATA_TYPES, JDBCColumnNames.TYPE_INFO.NUM_PREC_RADIX, DataTypeManagerService.DefaultDataTypes.INTEGER,  ResultsMetadataConstants.NULL_TYPES.NULLABLE, ResultsMetadataConstants.SEARCH_TYPES.SEARCHABLE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, driverConnection);//$NON-NLS-1$ 
 
-        ResultSetMetaData rmetadata = new ResultSetMetaDataImpl(new MetadataProvider(metadataList), null);
+        ResultSetMetaData rmetadata = new ResultSetMetaDataImpl(getTeiidVersion(), new MetadataProvider(metadataList), null);
 
         logger.fine(Messages.getString(Messages.JDBC.MMDatabaseMetadata_getTypes_success)); 
 
@@ -1765,7 +1761,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
     }
 
     private Object[] createTypeInfoRow(String typeName, String prefix, String suffix, Boolean unsigned, Boolean fixedPrecScale, int radix){
-        return new Object[] {typeName, new Integer(JDBCSQLTypeInfo.getSQLType(typeName)), JDBCSQLTypeInfo.getDefaultPrecision(typeName), prefix, suffix, null, new Short((short)DatabaseMetaData.typeNullable), Boolean.FALSE, new Short((short)DatabaseMetaData.typeSearchable), unsigned, fixedPrecScale, Boolean.FALSE, typeName, new Short((short)0), new Short((short)255), null, null, new Integer(radix)};
+        return new Object[] {typeName, new Integer(JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName)), JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName), prefix, suffix, null, new Short((short)DatabaseMetaData.typeNullable), Boolean.FALSE, new Short((short)DatabaseMetaData.typeSearchable), unsigned, fixedPrecScale, Boolean.FALSE, typeName, new Short((short)0), new Short((short)255), null, null, new Integer(radix)};
     }
     
     /**
@@ -2113,8 +2109,8 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 
     @Override
     public boolean supportsConvert(int fromType, int toType) throws SQLException {
-    	String fromName = JDBCSQLTypeInfo.getTypeName(fromType);
-    	String toName = JDBCSQLTypeInfo.getTypeName(toType);
+    	String fromName = JDBCSQLTypeInfo.getTypeName(getTeiidVersion(), fromType);
+    	String toName = JDBCSQLTypeInfo.getTypeName(getTeiidVersion(), toType);
     
     	if (fromName.equals(toName)) {
     		if (fromName.equals(DataTypeManagerService.DefaultDataTypes.OBJECT.getId()) && fromName != toName) {
@@ -2554,13 +2550,13 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
 	                Integer length = (Integer)currentRow.get(8);
 	                Integer precision = (Integer)currentRow.get(7);
 	                if (precision != null && precision <= 0) {
-	                    currentRow.set(7, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+	                    currentRow.set(7, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
 	                }
 	                if (length != null && length <= 0) {
-	                    currentRow.set(8, JDBCSQLTypeInfo.getDefaultPrecision(typeName));
+	                    currentRow.set(8, JDBCSQLTypeInfo.getDefaultPrecision(getTeiidVersion(), typeName));
 	                }
 	                if (typeName != null) {
-	                    currentRow.set(5, JDBCSQLTypeInfo.getSQLType(typeName));
+	                    currentRow.set(5, JDBCSQLTypeInfo.getSQLType(getTeiidVersion(), typeName));
 	                } else {
 	                    currentRow.set(5, null);                    
 	                }

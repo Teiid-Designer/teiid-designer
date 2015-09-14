@@ -117,6 +117,14 @@ public class OrderByItem extends SimpleNode
         return true;
     }
 
+    /**
+     * 
+     * @return true if the expression does not appear in the select clause
+     */
+    public boolean isUnrelated() {
+        return getExpressionPosition() == -1;
+    }
+
     /** Accept the visitor. **/
     @Override
     public void acceptVisitor(LanguageVisitor visitor) {

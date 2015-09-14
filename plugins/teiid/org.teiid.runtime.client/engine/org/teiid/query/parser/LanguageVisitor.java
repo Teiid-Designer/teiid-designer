@@ -94,7 +94,9 @@ import org.teiid.designer.query.sql.symbol.ITextLine;
 import org.teiid.designer.query.sql.symbol.IWindowFunction;
 import org.teiid.designer.query.sql.symbol.IWindowSpecification;
 import org.teiid.designer.query.sql.symbol.IXMLAttributes;
+import org.teiid.designer.query.sql.symbol.IXMLCast;
 import org.teiid.designer.query.sql.symbol.IXMLElement;
+import org.teiid.designer.query.sql.symbol.IXMLExists;
 import org.teiid.designer.query.sql.symbol.IXMLForest;
 import org.teiid.designer.query.sql.symbol.IXMLNamespaces;
 import org.teiid.designer.query.sql.symbol.IXMLParse;
@@ -193,7 +195,9 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -278,7 +282,10 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     protected boolean isTeiid89OrGreater() {
         return isTeiidVersionOrGreater(Version.TEIID_8_9);
     }
-    
+
+    protected boolean isTeiid810OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_10);
+    }
 
     /**
      * @return the parser
@@ -569,6 +576,16 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     }
 
     public void visit(XMLTable node) {
+        isApplicable(node);
+    }
+
+    @Since(Version.TEIID_8_10)
+    public void visit(XMLCast node) {
+        isApplicable(node);
+    }
+
+    @Since(Version.TEIID_8_10)
+    public void visit(XMLExists node) {
         isApplicable(node);
     }
 
@@ -908,9 +925,12 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     }
 
     public void visit(IDependentSetCriteria obj) {
+        // No longer required
     }
 
+    @Override
     public void visit(ICreate obj) {
+        visit((Create) obj);
     }
 
     @Override
@@ -1094,6 +1114,18 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     @Override
     public void visit(IXMLTable obj) {
         visit((XMLTable) obj);
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(IXMLExists obj) {
+        visit((XMLExists) obj);
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(IXMLCast obj) {
+        visit((XMLCast) obj);
     }
 
     @Override

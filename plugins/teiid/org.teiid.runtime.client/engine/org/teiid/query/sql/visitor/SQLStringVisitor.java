@@ -40,6 +40,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.language.SQLConstants.NonReserved;
+import org.teiid.language.SQLConstants.Reserved;
 import org.teiid.language.SQLConstants.Tokens;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn;
@@ -51,6 +52,7 @@ import org.teiid.metadata.MetadataFactory;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.DDLConstants;
 import org.teiid.query.parser.LanguageVisitor;
+import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterProcedure;
 import org.teiid.query.sql.lang.AlterTrigger;
@@ -61,6 +63,7 @@ import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Create;
+import org.teiid.query.sql.lang.Create.CommitAction;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaSelector;
 import org.teiid.query.sql.lang.Delete;
@@ -154,7 +157,9 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -170,12 +175,17 @@ import org.teiid.translator.SourceSystemFunctions;
 public class SQLStringVisitor extends LanguageVisitor
     implements SQLConstants.Reserved, SQLConstants.NonReserved, SQLConstants.Tokens, DDLConstants, ISQLStringVisitor<LanguageObject> {
 
-    @Since(Version.TEIID_8_0)
-    private final static Map<String, String> BUILTIN_PREFIXES = new HashMap<String, String>();
-    static {
-        for (Map.Entry<String, String> entry : MetadataFactory.BUILTIN_NAMESPACES.entrySet()) {
-            BUILTIN_PREFIXES.put(entry.getValue(), entry.getKey());
+    /*
+     * Converted from static field to function to allow version to be checked
+     */
+    @Since(Version.TEIID_8_10)
+    private static Map<String, String> builtinPrefixes(ITeiidServerVersion version) {
+        Map<String, String> builtinPrefixes = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : MetadataFactory.builtinNamespaces(version).entrySet()) {
+            builtinPrefixes.put(entry.getValue(), entry.getKey());
         }
+
+        return builtinPrefixes;
     }
 
     @Since(Version.TEIID_8_0)
@@ -858,7 +868,7 @@ public class SQLStringVisitor extends LanguageVisitor
             if (index > 1) {
                 String uri = key.substring(1, index);
                 key = key.substring(index + 1, key.length());
-                String prefix = BUILTIN_PREFIXES.get(uri);
+                String prefix = builtinPrefixes(getTeiidVersion()).get(uri);
                 if (prefix != null) {
                     key = prefix + ":" + key; //$NON-NLS-1$
                 } else {
@@ -972,7 +982,28 @@ public class SQLStringVisitor extends LanguageVisitor
             }
             append(Tokens.RPAREN);
         }
-        append(")"); //$NON-NLS-1$
+        
+        append(Tokens.RPAREN);
+
+        if (isTeiid810OrGreater()) {
+            CommitAction commitAction = obj.getCommitAction();
+            if (commitAction != null) {
+                append(Tokens.SPACE);
+                append(Reserved.ON);
+                append(Tokens.SPACE);
+                append(Reserved.COMMIT);
+                append(Tokens.SPACE);
+                switch (commitAction) {
+                    case PRESERVE_ROWS:
+                        append(NonReserved.PRESERVE);
+                        append(Tokens.SPACE);
+                        append(Reserved.ROWS);
+                        break;
+                }
+            }
+        }
+        
+        
     }
 
     @Override
@@ -1727,6 +1758,9 @@ public class SQLStringVisitor extends LanguageVisitor
         }
     }
     
+    /**
+     * @param obj
+     */
     public void addCacheHint( CacheHint obj ) {
         if (obj == null) {
             return;
@@ -1777,6 +1811,9 @@ public class SQLStringVisitor extends LanguageVisitor
         beginClause(0);
     }
     
+    /**
+     * @param comment
+     */
     public void addLeadingComment(LeadingComment comment) {
         if (comment == null) {
             return;
@@ -1787,6 +1824,9 @@ public class SQLStringVisitor extends LanguageVisitor
     }
     
     
+    /**
+     * @param comment
+     */
     public void addTrailingComment(TrailingComment comment) {
         if (comment == null) {
             return;
@@ -2119,7 +2159,7 @@ public class SQLStringVisitor extends LanguageVisitor
             // Hide this function, which is implicit
             visitNode(args[0]);
 
-        } else if (name.equalsIgnoreCase(CONVERT) || name.equalsIgnoreCase(CAST)) {
+        } else if (name.equalsIgnoreCase(CONVERT) || name.equalsIgnoreCase(CAST) || name.equalsIgnoreCase(XMLCAST)) {
             append(name);
             append("("); //$NON-NLS-1$
 
@@ -2317,6 +2357,7 @@ public class SQLStringVisitor extends LanguageVisitor
     * @param level  
     */
     protected void addTabs(int level) {
+        // Do nothing
     }
 
     @Override
@@ -2662,13 +2703,30 @@ public class SQLStringVisitor extends LanguageVisitor
         append(operator);
         append(SPACE);
         append(quantifier);
+
+        if (isTeiid810OrGreater()) {
+            addSubqueryHint(obj.getSubqueryHint());
+            append(SPACE);
+        }
+
         append("("); //$NON-NLS-1$
+
         visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
     }
 
     @Override
-    public void visit(ScalarSubquery obj) {
+    public void visit(ScalarSubquery obj) {        
+        if (isTeiid810OrGreater()) {
+            if (obj.getSubqueryHint().isDepJoin() || obj.getSubqueryHint().isMergeJoin() || obj.getSubqueryHint().isNoUnnest()) {
+                if (this.parts.charAt(this.parts.length() - 1) == ' ') {
+                    this.parts.setLength(this.parts.length() - 1);
+                }
+                addSubqueryHint(obj.getSubqueryHint());
+                append(SPACE);
+            }
+        }
+
         // operator and beginning of list
         append("("); //$NON-NLS-1$
         visitNode(obj.getCommand());
@@ -2819,7 +2877,7 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         append(SPACE);
         append(NonReserved.COLUMNS);
-
+        boolean noTrim = obj.isNoTrim();
         for (Iterator<TextColumn> cols = obj.getColumns().iterator(); cols.hasNext();) {
             TextColumn col = cols.next();
             append(SPACE);
@@ -2838,7 +2896,7 @@ public class SQLStringVisitor extends LanguageVisitor
                     append(SPACE);
                     append(col.getWidth());
                 }
-                if (col.isNoTrim()) {
+                if (!noTrim && col.isNoTrim()) {
                     append(SPACE);
                     append(NO);
                     append(SPACE);
@@ -2864,7 +2922,19 @@ public class SQLStringVisitor extends LanguageVisitor
             append(ROW);
             append(SPACE);
             append(NonReserved.DELIMITER);
+        } else if (obj.getRowDelimiter() != null) {
+            append(SPACE);
+            append(ROW);
+            append(SPACE);
+            append(NonReserved.DELIMITER);
+            append(SPACE);
+
+            TeiidNodeFactory factory = new TeiidNodeFactory();
+            Constant constant = factory.create(getTeiidParser(), ASTNodes.CONSTANT);
+            constant.setValue(obj.getRowDelimiter());
+            visitNode(constant);
         }
+
         if (obj.getDelimiter() != null) {
             append(SPACE);
             append(NonReserved.DELIMITER);
@@ -2894,6 +2964,12 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NonReserved.SKIP);
             append(SPACE);
             append(obj.getSkip());
+        }
+        if (noTrim) {
+            append(SPACE);
+            append(NO);
+            append(SPACE);
+            append(NonReserved.TRIM);
         }
         append(")");//$NON-NLS-1$
         append(SPACE);
@@ -3033,6 +3109,43 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(NonReserved.EMPTY);
         }
+        append(")");//$NON-NLS-1$
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLExists exists) {
+        append("XMLEXISTS("); //$NON-NLS-1$
+        XMLQuery obj = exists.getXmlQuery();
+        if (obj.getNamespaces() != null) {
+            visitNode(obj.getNamespaces());
+            append(","); //$NON-NLS-1$
+            append(SPACE);
+        }
+
+        TeiidNodeFactory factory = new TeiidNodeFactory();
+        Constant constant = factory.create(getTeiidParser(), ASTNodes.CONSTANT);
+        constant.setValue(obj.getXquery());
+        visitNode(constant);
+
+        if (!obj.getPassing().isEmpty()) {
+            append(SPACE);
+            append(NonReserved.PASSING);
+            append(SPACE);
+            registerNodes(obj.getPassing(), 0);
+        }
+        append(")");//$NON-NLS-1$
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLCast exists) {
+        append("XMLCAST("); //$NON-NLS-1$
+        append(exists.getExpression());
+        append(Tokens.SPACE);
+        append(AS);
+        append(Tokens.SPACE);
+        append(getDataTypeManager().getDataTypeName(exists.getType()));
         append(")");//$NON-NLS-1$
     }
 

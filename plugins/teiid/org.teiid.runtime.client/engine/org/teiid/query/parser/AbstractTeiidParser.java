@@ -943,7 +943,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 	 	int index = key.indexOf(':');
 	 	if (index > 0 && index < key.length() - 1) {
 	 		String prefix = key.substring(0, index);
-	 		String uri = MetadataFactory.BUILTIN_NAMESPACES.get(prefix);
+	 		String uri = MetadataFactory.builtinNamespaces(getVersion()).get(prefix);
 	 		if (uri == null) {
 	 			uri = factory.getNamespaces().get(prefix);
 	 		}

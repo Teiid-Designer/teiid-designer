@@ -232,6 +232,11 @@ MORE :
   < ~[] >
 }
 
+SPECIAL_TOKEN:
+{
+   <LINE_COMMENT: "--"(~["\r","\n"])*>
+}
+
 TOKEN: /* Data types */
 {
 	<STRING: "string">
@@ -616,6 +621,8 @@ TOKEN : /* NonReserved words */
 |   <CHAIN: "chain">
 |   <JSONARRAY_AGG: "jsonarray_agg">
 |   <JSONOBJECT: "jsonobject">
+|   <PRESERVE: "preserve">
+|   <GEOMETRY: "geometry">
 
 }
 /*
@@ -723,7 +730,7 @@ Token nonReserved() :
      |<TO_BYTES>|<TIMESTAMPADD>|<TIMESTAMPDIFF>|<QUERYSTRING>|<NAMESPACE>|<RESULT>|<INDEX>|<ACCESSPATTERN>|<AUTO_INCREMENT>|<WELLFORMED>|<SQL_TSI_FRAC_SECOND>
      |<SQL_TSI_SECOND>|<SQL_TSI_MINUTE>|<SQL_TSI_HOUR>|<SQL_TSI_DAY>|<SQL_TSI_WEEK>|<SQL_TSI_MONTH>|<SQL_TSI_QUARTER>|<SQL_TSI_YEAR>|<TEXTTABLE>|<ARRAYTABLE>
      |<SELECTOR>|<SKIP_KEYWORD>|<WIDTH>|<PASSING>|<NAME>|<ENCODING>|<COLUMNS>|<DELIMITER>|<QUOTE>|<HEADER>|<NULLS>|<OBJECTTABLE>
-     |<VERSION>|<INCLUDING>|<EXCLUDING>|<XMLDECLARATION>|<VARIADIC>|<RAISE>|<EXCEPTION>|<CHAIN>|<JSONARRAY_AGG>|<JSONOBJECT>)
+     |<VERSION>|<INCLUDING>|<EXCLUDING>|<XMLDECLARATION>|<VARIADIC>|<RAISE>|<EXCEPTION>|<CHAIN>|<JSONARRAY_AGG>|<JSONOBJECT>|<PRESERVE>)
     {
     	return getToken(0);
     }	
@@ -1030,6 +1037,14 @@ Command createTempTable(ParseInfo info) #Create :
       }   
     ]
     <RPAREN>
+    [
+        <ON> <COMMIT> <PRESERVE>
+        {
+            requiresVersionAtLeast(Version.TEIID_8_10);
+            jjtThis.setCommitAction(Create.CommitAction.PRESERVE_ROWS);
+        }
+        <ROWS>
+    ]
     {
         return jjtThis;
     }
@@ -2785,12 +2800,14 @@ TextTable textTable(ParseInfo info) #TextTable :
 	List<TextColumn> columns = new ArrayList<TextColumn>();
 	boolean useRowDelimiter = true;
 	Character delimiter = null;
+	Character rowDelimiter = null;
 	boolean escape = false;
 	Character quote = null;
 	Integer header = null;
 	Integer skip = null;
 	String selector = null;
 	String aliasID = null;
+	boolean noTrim = false;
 }
 {
  	<TEXTTABLE> <LPAREN> file = commonValueExpression(info)
@@ -2810,10 +2827,23 @@ TextTable textTable(ParseInfo info) #TextTable :
 		}
 	)* 
 	[
-	  <NO> <ROW> <DELIMITER>
-	  {
-	    useRowDelimiter = false;
-	  }
+        LOOKAHEAD(2)
+        (
+            (
+	           <NO> <ROW> <DELIMITER>
+	           {
+	               useRowDelimiter = false;
+	           }
+            )
+            |
+            (
+                <ROW> <DELIMITER>
+                rowDelimiter = charVal(info, " ROW DELMITER")
+                {
+                    requiresVersionAtLeast(Version.TEIID_8_10);
+                }
+            )
+        )
 	]
 	[
 	  <DELIMITER>
@@ -2839,6 +2869,14 @@ TextTable textTable(ParseInfo info) #TextTable :
 	  <SKIP_KEYWORD>
 	  skip = intVal()
 	]
+	[
+	   LOOKAHEAD(2)
+        <NO> <TRIM>
+        {
+            requiresVersionAtLeast(Version.TEIID_8_10);
+            noTrim = true;      
+        }
+    ]
  	<RPAREN>
  	[<AS>] aliasID=id(Boolean.FALSE)
  	{
@@ -2852,6 +2890,10 @@ TextTable textTable(ParseInfo info) #TextTable :
  		jjtThis.setQuote(quote);
  		jjtThis.setUsingRowDelimiter(useRowDelimiter);
  		jjtThis.setSelector(selector);
+ 		if (noTrim) {
+            jjtThis.setNoTrim();
+        }
+        jjtThis.setRowDelimiter(rowDelimiter);
  		return jjtThis;
  	}
 }
@@ -2911,6 +2953,56 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 	    }
 	  )
     )
+}
+
+/*
+name=xml exists
+description=XML Exists on xml query
+*/
+Expression xmlExists(ParseInfo info) #XMLExists :
+{
+    String xquery = null;
+    XMLNamespaces xmlNamespaces = null;
+    DerivedColumn passing = null;
+    ArrayList<DerivedColumn> passingValues = new ArrayList<DerivedColumn>();
+    Boolean content = null;
+    Boolean empty = null;
+}
+{
+    <XMLEXISTS> <LPAREN>
+    {
+        requiresVersionAtLeast(Version.TEIID_8_10);
+    }
+    [
+        xmlNamespaces = xmlNamespaces(info) <COMMA>
+    ]
+    xquery = stringVal()
+    [ 
+        <PASSING>
+        passing = derivedColumn(info)
+        {
+            passingValues.add(passing);
+            passing.setPropagateName(false);
+        }
+        (
+            <COMMA>
+            passing = derivedColumn(info)
+            {
+                passingValues.add(passing);
+                passing.setPropagateName(false);
+            }
+        )*
+    ]
+    <RPAREN>
+    {
+        XMLQuery query = createASTNode(ASTNodes.XML_QUERY);
+        query.setXquery(xquery);
+        query.setNamespaces(xmlNamespaces);
+        query.setPassing(passingValues);
+        query.setEmptyOnEmpty(true);
+        jjtThis.setXmlQuery(query);
+        return jjtThis;
+    }
 }
 
 /*
@@ -3381,7 +3473,12 @@ Expression booleanPrimary(ParseInfo info) :
 	     )]
 	    )
 	    |
-		ex=existsCriteria(info)
+	    ex=existsCriteria(info)
+        |
+        ex=xmlExists(info)
+        {
+            requiresVersionAtLeast(Version.TEIID_8_10);
+        }
     )
 	{
 		return ex;
@@ -3489,14 +3586,19 @@ SubqueryCompareCriteria subqueryCompareCriteria(ParseInfo info, Expression expre
     QueryCommand subquery = null;
     Token operator = null;
     Token quantifier = null;
-    
+    SubqueryHint hint = null;
 }
 {
 	operator=operator()
-	( quantifier=<ANY> |
-	  quantifier=<SOME> |
-	  quantifier=<ALL>
+	(
+	   quantifier=<ANY> |
+	   quantifier=<SOME> |
+	   quantifier=<ALL>
 	)
+	{
+	   if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+	       hint = getSubqueryHint(getToken(1));
+	}
 	subquery = subquery(info)
 
 	{
@@ -4207,7 +4309,7 @@ Expression unescapedFunction(ParseInfo info) :
 {
     Expression expression = null;
     Expression condition = null;
-    
+    ParsedDataType type = null;
 }
 {
     // Aggregate function
@@ -4226,6 +4328,24 @@ Expression unescapedFunction(ParseInfo info) :
             }
         }
         return expression;
+    }
+    |
+    (           
+        <XMLCAST>
+        {
+            requiresVersionAtLeast(Version.TEIID_8_10);
+        }
+        <LPAREN>
+        expression = expression(info)
+        <AS>
+        type = parseDataType()
+        <RPAREN>                
+    )
+    {
+        XMLCast xmlCast = xmlCast();
+        xmlCast.setExpression(expression);
+        xmlCast.setType(getDataTypeService().getDataTypeClass(type.getType()));
+        return xmlCast;
     }
 }
 
@@ -4281,6 +4401,7 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
 	Expression expression = null;
 	Token symbol = null;
 	QueryCommand subquery = null;
+	SubqueryHint hint = null;
 }
 {
     (
@@ -4303,8 +4424,22 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
 				}  
 			} | symbol=nonReserved()) {expression = elementSymbol(normalizeId(symbol.image));}
 		)
-		|
-		LOOKAHEAD(subquery(info)) subquery = subquery(info) {expression = scalarSubquery(subquery);}
+		|        
+        LOOKAHEAD(subquery(info))
+        (
+            {
+                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+                    hint = getSubqueryHint(getToken(1));
+            }
+            subquery = subquery(info)
+            {
+                ScalarSubquery ss = scalarSubquery(subquery);
+                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+                    ss.setSubqueryHint(hint);
+
+                expression = ss;
+            }
+        )
 		|
 		expression = nestedExpression(info)
 		|
@@ -4531,13 +4666,22 @@ Expression function(ParseInfo info) #Function :
 	   <LPAREN>
 	   { funcName = funcToken.image; funcToken = null; expression = null;}
 	   [
-	    LOOKAHEAD(2) (((funcToken = <LEADING>|
-	      funcToken = <TRAILING>|
-	      funcToken = <BOTH>)
-	    [expression = expression(info)])
-	    |
-	    expression = expression(info))
-		<FROM>
+            LOOKAHEAD((<LEADING>|<TRAILING>|<BOTH>)|(expression(info)<FROM>))
+            (
+                (
+                    (
+                        funcToken = <LEADING>|
+	                    funcToken = <TRAILING>|
+	                    funcToken = <BOTH>
+	                )
+	                [
+	                    expression = expression(info)
+	                ]
+	            )
+	            |
+	            expression = expression(info)
+            )
+            <FROM>
 	   ]
   	   {
 	      if (funcToken == null) {
@@ -4614,7 +4758,7 @@ Expression function(ParseInfo info) #Function :
 		(funcToken = <LEFT> | funcToken = <RIGHT> | funcToken = <CHAR> | funcToken = <USER> 
 		                    | funcToken = <YEAR> | funcToken = <MONTH> | funcToken = <HOUR>
 		                    | funcToken = <MINUTE> | funcToken = <SECOND> | funcToken = <XMLCONCAT>
-		                    | funcToken = <XMLCOMMENT>)
+		                    | funcToken = <XMLCOMMENT> | funcToken = <XMLTEXT>)
         <LPAREN>
 		[args = expressionList(info)]
 		<RPAREN>
@@ -4979,6 +5123,7 @@ ParsedDataType parseDataTypePrimary() :
 		(typeToken = <BLOB> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} )|
 		(typeToken = <CLOB> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} )|
 		(typeToken = <VARBINARY> ([<LPAREN>length=intVal()<RPAREN>]) {precision = false;} ) |
+		typeToken = <GEOMETRY> { requiresVersionAtLeast(Version.TEIID_8_10); } |
 		typeToken = <XML>
 		
 	)
@@ -5971,6 +6116,15 @@ AlterView alterView() #AlterView :
 }
 
 Array array() #Array :
+{
+}
+{
+    {
+        return jjtThis;
+    }
+}
+
+XMLCast xmlCast() #XMLCast :
 {
 }
 {
