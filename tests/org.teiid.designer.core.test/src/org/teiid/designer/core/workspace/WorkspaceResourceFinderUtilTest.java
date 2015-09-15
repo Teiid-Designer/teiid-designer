@@ -7,11 +7,11 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.stubVoid;
 import static org.mockito.Mockito.when;
+
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -26,6 +26,7 @@ import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.designer.util.FileUtils;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.ModelerCore;
 
@@ -137,7 +138,7 @@ public final class WorkspaceResourceFinderUtilTest {
 
     private static void writeFile(final File file,
                                   final String content) throws Exception {
-        Files.write(Paths.get(file.getPath()), content.getBytes());
+    	FileUtils.write(content.getBytes(), file);
     }
 
     private IFile createFile(final String name) throws Exception {
