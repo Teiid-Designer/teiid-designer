@@ -92,7 +92,6 @@
          label="%deployVdbAction.label">
       </resourceAction>
    </extension>
-<!--
    <extension
         id="DeployDynamicVdbAction"
         name="%deployVdbAction.name"
@@ -102,7 +101,6 @@
          label="%deployDynamicVdbAction.label">
       </resourceAction>
    </extension>
--->
      <extension
         id="ExecuteVdbAction"
         name="%executeVdbAction.name"
@@ -179,6 +177,24 @@
       <resourceAction
          name="org.teiid.designer.runtime.ui.connection.properties.EditTOPropertiesAction"
          label="%editTranslatorOverridesAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="GenerateDynamicVdbAction"
+        name="%generateDynamicVdbAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.actions.GenerateDynamicVdbAction"
+         label="%generateDynamicVdbAction.label">
+      </resourceAction>
+   </extension>
+   <extension
+        id="GenerateArchiveVdbAction"
+        name="%generateArchiveVdbAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.runtime.ui.actions.GenerateArchiveVdbAction"
+         label="%generateArchiveVdbAction.label">
       </resourceAction>
    </extension>
 

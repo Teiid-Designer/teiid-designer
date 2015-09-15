@@ -233,8 +233,8 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 	        		try {
 						String modelName = modelResource.getUnderlyingResource().getFullPath().removeFileExtension().lastSegment();
 						String modelNameWithExtension = dialog.getViewModelName();;
-						if( !modelNameWithExtension.toUpperCase().endsWith(ModelUtil.DOT_EXTENSION_XMI.toUpperCase())) {
-							modelNameWithExtension = modelNameWithExtension + ModelUtil.DOT_EXTENSION_XMI;
+						if( !modelNameWithExtension.toUpperCase().endsWith(StringConstants.DOT_XMI.toUpperCase())) {
+							modelNameWithExtension = modelNameWithExtension + StringConstants.DOT_XMI;
 						}
 						
 						if( selectedViewsAndTables.length > 0 ) {

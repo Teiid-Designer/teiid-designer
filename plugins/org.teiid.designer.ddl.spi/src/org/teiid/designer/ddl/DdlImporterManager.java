@@ -36,6 +36,10 @@ public class DdlImporterManager {
 
     private String updatableOverride;
 
+    private boolean optToGenerateDefaultSQL;
+    
+    private boolean optToHelpCreateTransform;
+
     private DdlNodeImporter nodeImporter;
 
     /**
@@ -147,6 +151,34 @@ public class DdlImporterManager {
      */
     public void setOptToSetModelEntityDescription(boolean optToSetModelEntityDescription) {
         this.optToSetModelEntityDescription = optToSetModelEntityDescription;
+    }
+
+    /**
+     * @return optToGenerateDefaultSQL
+     */
+    public boolean optToGenerateDefaultSQL() {
+        return optToGenerateDefaultSQL;
+    }
+
+    /**
+     * @param value
+     */
+    public void optToGenerateDefaultSQL(boolean value) {
+        this.optToGenerateDefaultSQL = value;
+    }
+    
+    /**
+     * @return optToGenerateDefaultSQL
+     */
+    public boolean optToHelpCreateTransform() {
+        return optToHelpCreateTransform;
+    }
+
+    /**
+     * @param value
+     */
+    public void optToHelpCreateTransform(boolean value) {
+        this.optToHelpCreateTransform = value;
     }
 
     /**

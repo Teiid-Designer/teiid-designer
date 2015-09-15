@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="CustomersVDB" version="1">
+    <description></description>
+    <property name="preview" value="false"/>
+    <property name="allowed-languages" value="cobol, java"/>
+    <property name="validationDateTime" value="Tue Jun 23 11:56:49 CDT 2015"/>
+    <property name="validationVersion" value="8.7.1"/>
+    <model name="CustomerAccounts" type="PHYSICAL" visible="true" path="/Customer_Accounts/CustomerAccounts.xmi">
+        <property name="checksum" value="280979212"/>
+        <property name="indexName" value="2598073235.INDEX"/>
+        <property name="modelUuid" value="mmuuid:fc113112-b5f2-4e43-94d4-d4a553b5bde1"/>
+        <property name="modelClass" value="Relational"/>
+        <property name="builtIn" value="false"/>
+        <source name="CustomerAccounts" connection-jndi-name="CustomerAccounts" translator-name="sqlserver"/>
+    </model>
+    <model name="CustomerViews" type="VIRTUAL" visible="true" path="/Customer_Accounts/CustomerViews.xmi">
+        <property name="checksum" value="2288881813"/>
+        <property name="indexName" value="1866162774.INDEX"/>
+        <property name="modelUuid" value="mmuuid:1d6fa063-39ae-46e9-b1e2-b942a795bea1"/>
+        <property name="modelClass" value="Relational"/>
+        <property name="builtIn" value="false"/>
+    </model>
+    <data-role name="CustomerSupport" any-authenticated="false" allow-create-temporary-tables="true" grant-all="true">
+        <description>Customer support data role</description>
+        <permission>
+            <resource-name>CustomerAccounts.CUSTOMER</resource-name>
+            <allow-execute>false</allow-execute>
+            <condition constraint="false">CUSTID &gt; 10000</condition>
+        </permission>
+        <permission>
+            <resource-name>CustomerViews</resource-name>
+            <allow-create>false</allow-create>
+            <allow-read>true</allow-read>
+            <allow-update>false</allow-update>
+            <allow-delete>false</allow-delete>
+            <allow-execute>false</allow-execute>
+            <allow-alter>false</allow-alter>
+        </permission>
+        <permission>
+            <resource-name>CustomerAccounts</resource-name>
+            <allow-create>false</allow-create>
+            <allow-read>true</allow-read>
+            <allow-update>false</allow-update>
+            <allow-delete>false</allow-delete>
+            <allow-execute>true</allow-execute>
+            <allow-alter>false</allow-alter>
+        </permission>
+        <permission>
+            <resource-name>sysadmin</resource-name>
+            <allow-create>false</allow-create>
+            <allow-read>true</allow-read>
+            <allow-update>false</allow-update>
+            <allow-delete>false</allow-delete>
+            <allow-execute>true</allow-execute>
+            <allow-alter>false</allow-alter>
+        </permission>
+        <permission>
+            <resource-name>CustomerAccounts.ACCOUNT</resource-name>
+            <condition constraint="false">CUSTID &gt; 10000</condition>
+        </permission>
+        <permission>
+            <resource-name>CustomerAccounts.CUSTOMER.CUSTID</resource-name>
+            <condition constraint="false">CUSTID = 12345</condition>
+            <mask order="2">CUSTID = 0</mask>
+        </permission>
+        <mapped-role-name>all-customers</mapped-role-name>
+        <mapped-role-name>internal-customers</mapped-role-name>
+    </data-role>
+
+</vdb>

@@ -18,7 +18,7 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.Schema;
@@ -60,7 +60,7 @@ public class ProcedureBuilder {
 				XmlImporterUiPlugin.getDefault().getPluginUtil().getString("ProcedureBuilder.wrongNumberElementsReturnedFromXsd")); //$NON-NLS-1$
 		XSDElementDeclaration element = elements.get(0);
 		this.traversalCtxFactory = traversalCtxFactory;
-		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(element.getName(), new QName(element.getTargetNamespace(), StringUtilities.EMPTY_STRING), this);
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(element.getName(), new QName(element.getTargetNamespace(), StringConstants.EMPTY_STRING), this);
 		traversalContexts.add(ctx);
 		XSDTypeDefinition type = element.getType();
 		String name = getName(type);
@@ -80,7 +80,7 @@ public class ProcedureBuilder {
 	public void build(SchemaObject sObject, ITraversalCtxFactory traversalCtxFactory)
 	throws ModelerCoreException {
 		this.traversalCtxFactory = traversalCtxFactory;
-		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), StringUtilities.EMPTY_STRING), this);
+		TraversalContext ctx = this.traversalCtxFactory.getTraversalContext(sObject.getName(), new QName(sObject.getNamespace(), StringConstants.EMPTY_STRING), this);
 		traversalContexts.add(ctx);
 		XSDTypeDefinition type = sObject.getType();
 		String name = getName(type);
@@ -177,7 +177,7 @@ public class ProcedureBuilder {
 				ctx.appendToPath(name);
 				if(particle.getMaxOccurs() > 1 || particle.getMaxOccurs() == -1 || ctx.isReachedResultNode()) {
 					
-					ctx = traversalCtxFactory.getTraversalContext(name, new QName(element.getTargetNamespace(), StringUtilities.EMPTY_STRING), ctx, this);
+					ctx = traversalCtxFactory.getTraversalContext(name, new QName(element.getTargetNamespace(), StringConstants.EMPTY_STRING), ctx, this);
 					traversalContexts.add(ctx);
 					if(procedureExists(getName(type))){
 						return;

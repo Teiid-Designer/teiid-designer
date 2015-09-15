@@ -15,11 +15,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.datatools.connectivity.IConnectionProfile;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.core.workspace.ModelResource;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.datatools.profiles.ldap.LDAPConnectionInfoProvider;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -55,10 +55,10 @@ public class RelationalModelBuilder {
     }
 
     private ModelResource createNewModelResource(IContainer modelLocation, String modelName) {
-        if (! modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) {
+        if (! modelName.endsWith(StringConstants.DOT_XMI)) {
             // Will probably not include it if the model is new but will certainly include
             // it if the model already exists.
-            modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+            modelName = modelName + StringConstants.DOT_XMI;
         }
 
         Path modelPath = new Path(modelName);

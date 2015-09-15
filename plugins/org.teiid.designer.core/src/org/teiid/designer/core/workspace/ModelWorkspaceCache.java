@@ -9,7 +9,6 @@ package org.teiid.designer.core.workspace;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.util.OverflowingLRUCache;
 
@@ -31,28 +30,23 @@ public class ModelWorkspaceCache {
     /**
      * Cache of open projects and package fragment roots.
      */
-    protected Map projectAndRootCache;
-//    
-//    /**
-//     * Cache of open package fragments
-//     */
-//    protected Map pkgCache;
-//
+    protected Map<ModelWorkspaceItem, ModelWorkspaceItemInfo> projectAndRootCache;
+
     /**
      * Cache of open compilation unit and class files
      */
-    protected OverflowingLRUCache openableCache;
+    protected OverflowingLRUCache<ModelWorkspaceItem, ModelWorkspaceItemInfo> openableCache;
 
     /**
      * Cache of open children of openable ModelWorkspaceItem instances
      */
-    protected Map childrenCache;
+    protected Map<ModelWorkspaceItem, ModelWorkspaceItemInfo> childrenCache;
     
     public ModelWorkspaceCache() {
         this.projectAndRootCache = new HashMap(50);
 //        this.pkgCache = new HashMap(PKG_CACHE_SIZE);
         this.openableCache = new ModelWorkspaceItemCache(OPENABLE_CACHE_SIZE);
-        this.childrenCache = new HashMap(OPENABLE_CACHE_SIZE*20); // average 20 chilren per openable
+        this.childrenCache = new HashMap<ModelWorkspaceItem, ModelWorkspaceItemInfo>(OPENABLE_CACHE_SIZE*20); // average 20 chilren per openable
     }
     
     public int pkgSize() {
@@ -62,8 +56,10 @@ public class ModelWorkspaceCache {
         
     /**
      *  Returns the info for the element.
+     * @param item
+     * @return item info
      */
-    public Object getInfo(ModelWorkspaceItem item) {
+    public ModelWorkspaceItemInfo getInfo(ModelWorkspaceItem item) {
         CoreArgCheck.isNotNull(item);
         switch (item.getItemType()) {
             case ModelWorkspaceItem.MODEL_WORKSPACE:
@@ -71,8 +67,6 @@ public class ModelWorkspaceCache {
             case ModelWorkspaceItem.MODEL_PROJECT:
             case ModelWorkspaceItem.MODEL_FOLDER:
                 return this.projectAndRootCache.get(item);
-//            case ModelWorkspaceItem.MODEL_PACKAGE_FRAGMENT:
-//                return this.pkgCache.get(item);
             case ModelWorkspaceItem.MODEL_RESOURCE:
                 return this.openableCache.get(item);
             default:
@@ -104,7 +98,7 @@ public class ModelWorkspaceCache {
     /**
      * Remember the info for the element.
      */
-    protected void putInfo(ModelWorkspaceItem item, Object info) {
+    protected void putInfo(ModelWorkspaceItem item, ModelWorkspaceItemInfo info) {
         CoreArgCheck.isNotNull(item);
         CoreArgCheck.isNotNull(info);
         switch (item.getItemType()) {
@@ -115,9 +109,6 @@ public class ModelWorkspaceCache {
             case ModelWorkspaceItem.MODEL_FOLDER:
                 this.projectAndRootCache.put(item, info);
                 break;
-//            case ModelWorkspaceItem.MODEL_PACKAGE_FRAGMENT:
-//                this.pkgCache.put(item, info);
-//                break;
             case ModelWorkspaceItem.MODEL_RESOURCE:
                 this.openableCache.put(item,info);
                 break;

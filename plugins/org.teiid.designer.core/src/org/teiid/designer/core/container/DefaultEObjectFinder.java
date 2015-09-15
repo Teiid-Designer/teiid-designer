@@ -31,7 +31,7 @@ import org.teiid.designer.core.workspace.ModelWorkspaceException;
  */
 public class DefaultEObjectFinder extends AbstractFinder {
 
-    private final ContainerImpl container;
+    private final Container container;
 
     // ==================================================================================
     // C O N S T R U C T O R S
@@ -41,7 +41,7 @@ public class DefaultEObjectFinder extends AbstractFinder {
      * @param container
      * @since 4.3
      */
-    public DefaultEObjectFinder( final ContainerImpl container ) {
+    public DefaultEObjectFinder( final Container container ) {
         super();
         this.container = container;
     }

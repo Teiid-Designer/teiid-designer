@@ -14,10 +14,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMarkerResolution;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.util.ErrorHandler;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbConstants;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.vdb.ui.Messages;
 
 /**
@@ -40,7 +41,7 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
      * @return <code>true</code> if resource is a VDB file
      */
     private boolean isVdbFile(IResource resource) {
-        return ((resource.getType() == IResource.FILE) && VdbConstants.VDB_FILE_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
+        return ((resource.getType() == IResource.FILE) && ITeiidVdb.VDB_EXTENSION.equals(resource.getFileExtension()) && resource.exists());
     }
 
     /**
@@ -75,8 +76,8 @@ public class VdbMigrateXsdFilesMarkerResolution implements IMarkerResolution {
 
     void fixVdb(IFile theVdb) throws Exception {
         NullProgressMonitor monitor = new NullProgressMonitor();
-        Vdb vdb = new Vdb(theVdb, false, monitor);
-        vdb.save(monitor);
+        Vdb vdb = new XmiVdb(theVdb, false);
+        vdb.save();
 
         try {
             theVdb.refreshLocal(IResource.DEPTH_ZERO, monitor);

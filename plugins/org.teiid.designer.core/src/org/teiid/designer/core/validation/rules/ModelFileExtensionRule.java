@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.ResourceNameUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.ResourceValidationRule;
 import org.teiid.designer.core.validation.ValidationContext;
@@ -21,7 +22,7 @@ import org.teiid.designer.core.validation.ValidationProblemImpl;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
 import org.teiid.designer.core.workspace.ModelStatusImpl;
-import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 
 
 /**
@@ -29,7 +30,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
  *
  * @since 8.0
  */
-public class ModelFileExtensionRule implements ResourceValidationRule {
+public class ModelFileExtensionRule implements ResourceValidationRule, StringConstants {
 
     /* (non-Javadoc)
      * @See org.teiid.designer.core.validation.ResourceValidationRule#validate(org.eclipse.emf.ecore.resource.Resource, org.teiid.designer.core.validation.ValidationContext)
@@ -133,17 +134,17 @@ public class ModelFileExtensionRule implements ResourceValidationRule {
 
     private static String getMatchingKnownExtension( final String extension ) {
         // Return the "expected" extension by performing a case-insensitive match against all well-known model file extensions
-        if (ModelUtil.EXTENSION_XML.equalsIgnoreCase(extension)) {
-            return ModelUtil.EXTENSION_XML;
+        if (XML.equalsIgnoreCase(extension)) {
+            return XML;
 
-        } else if (ModelUtil.EXTENSION_XMI.equalsIgnoreCase(extension)) {
-            return ModelUtil.EXTENSION_XMI;
+        } else if (XMI.equalsIgnoreCase(extension)) {
+            return XMI;
 
-        } else if (ModelUtil.EXTENSION_XSD.equalsIgnoreCase(extension)) {
-            return ModelUtil.EXTENSION_XSD;
+        } else if (XSD.equalsIgnoreCase(extension)) {
+            return XSD;
 
-        } else if (ModelUtil.EXTENSION_VDB.equalsIgnoreCase(extension)) {
-            return ModelUtil.EXTENSION_VDB;
+        } else if (ITeiidVdb.VDB_EXTENSION.equalsIgnoreCase(extension)) {
+            return ITeiidVdb.VDB_EXTENSION;
 
         }
         return null;

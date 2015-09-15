@@ -9,7 +9,7 @@
 <feature
       id="org.teiid.designer.feature"
       label="Teiid Designer"
-      version="9.0.3.qualifier"
+      version="9.0.4.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="designer32.png">
@@ -145,7 +145,6 @@
       <import plugin="javax.servlet" version="3.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.modelgenerator.salesforce" version="9.0.0" match="compatible"/>
       <import plugin="org.eclipse.osgi" version="3.10.0" match="compatible"/>
-      <import plugin="org.teiid.designer.roles" version="9.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.roles.ui" version="9.0.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.oda.flatfile" version="3.1.8" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.ui.dse" version="1.1.5" match="compatible"/>
@@ -535,13 +534,6 @@
 
    <plugin
          id="org.teiid.designer.ddl.importer.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.teiid.designer.roles"
          download-size="0"
          install-size="0"
          version="0.0.0"

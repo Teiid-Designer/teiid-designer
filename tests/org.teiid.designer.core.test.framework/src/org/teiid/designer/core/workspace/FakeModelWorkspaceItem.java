@@ -68,6 +68,11 @@ public class FakeModelWorkspaceItem implements ModelWorkspaceItem {
         return null;
     }
 
+    @Override
+    public ModelWorkspaceItemInfo getItemInfo() {
+        return null;
+    }
+
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem#getModelWorkspace()
      */

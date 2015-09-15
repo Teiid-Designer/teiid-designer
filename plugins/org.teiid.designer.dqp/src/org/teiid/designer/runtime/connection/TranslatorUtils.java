@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.properties.PropertyDefinition;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.translators.TranslatorOverride;
 import org.teiid.designer.core.translators.TranslatorOverrideProperty;
@@ -78,7 +78,7 @@ public class TranslatorUtils {
                 prop.setModifiable( propDefn.isModifiable());
                 prop.setRequired( propDefn.isRequired());
 
-                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringConstants.EMPTY_STRING
                                                                         : propDefn.getDefaultValue().toString());
 
                 if (propDefn.isConstrainedToAllowedValues()) {
@@ -124,7 +124,7 @@ public class TranslatorUtils {
                 prop.setModifiable( propDefn.isModifiable());
                 prop.setRequired( propDefn.isRequired());
 
-                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringConstants.EMPTY_STRING
                                                                         : propDefn.getDefaultValue().toString());
 
                 if (propDefn.isConstrainedToAllowedValues()) {
@@ -170,7 +170,7 @@ public class TranslatorUtils {
                 prop.setModifiable( propDefn.isModifiable());
                 prop.setRequired( propDefn.isRequired());
 
-                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringUtilities.EMPTY_STRING
+                prop.setDefaultValue((propDefn.getDefaultValue() == null) ? StringConstants.EMPTY_STRING
                                                                         : propDefn.getDefaultValue().toString());
 
                 if (propDefn.isConstrainedToAllowedValues()) {

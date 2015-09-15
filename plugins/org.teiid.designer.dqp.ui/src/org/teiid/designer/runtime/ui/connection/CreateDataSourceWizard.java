@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -700,7 +701,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
                 return prop.getValue();
             }
 
-            return StringUtilities.EMPTY_STRING;
+            return StringConstants.EMPTY_STRING;
         }
 
         /**

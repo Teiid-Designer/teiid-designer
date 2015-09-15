@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
 import org.teiid.designer.query.IQueryFactory;
@@ -29,7 +29,7 @@ import org.teiid.designer.transformation.ui.wizards.xmlfile.XmlElement;
  * @since 8.0
  */
 public class TeiidColumnInfo implements ITeiidColumnInfo {
-	private static final IPath EMPTY_PATH = new Path(StringUtilities.EMPTY_STRING);
+	private static final IPath EMPTY_PATH = new Path(StringConstants.EMPTY_STRING);
 	
     /**
      * The unique column name (never <code>null</code> or empty).
@@ -55,7 +55,7 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
      */
-	private String defaultValue = StringUtilities.EMPTY_STRING;
+	private String defaultValue = StringConstants.EMPTY_STRING;
 	
 	 /**
      * The full xml path
@@ -129,7 +129,7 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 		this(name, datatype);
         this.forOrdinality = ordinality;
         if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -242,7 +242,7 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 	 */
 	public void setDefaultValue(String defaultValue) {
 		if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -283,7 +283,7 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 				return this.fullXmlPath.toString();
 			}
 		}
-		return StringUtilities.EMPTY_STRING;
+		return StringConstants.EMPTY_STRING;
 	}
 	
 	public void setXmlElement(XmlElement element) {

@@ -66,7 +66,7 @@ public abstract class AbstractTestDataTypeManagerService {
             }
 
             // Top of the list
-            assertSame(DefaultDataTypes.BIG_DECIMAL.getId(), dataTypeManager.getDefaultDataType(DataTypeName.BIG_DECIMAL));
+            assertSame(DefaultDataTypes.BIG_DECIMAL.getId(), dataTypeManager.getDefaultDataType(DataTypeName.BIGDECIMAL));
 
             // Middle of the list
             assertSame(DefaultDataTypes.BLOB.getId(), dataTypeManager.getDefaultDataType(DataTypeName.BLOB));

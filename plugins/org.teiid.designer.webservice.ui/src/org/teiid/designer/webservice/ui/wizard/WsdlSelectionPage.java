@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -74,12 +73,12 @@ import org.eclipse.wst.wsdl.validation.internal.WSDLValidator;
 import org.jdom.JDOMException;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.FileUtils;
+import org.teiid.core.designer.util.I18nUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.FileUrl;
 import org.teiid.designer.core.util.URLHelper;
-import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.wsdl.io.WsdlHelper;
 import org.teiid.designer.ui.common.ICredentialsCommon.SecurityType;
 import org.teiid.designer.ui.common.dialog.FolderSelectionDialog;
@@ -1148,7 +1147,7 @@ public final class WsdlSelectionPage extends AbstractWizardPage
 
     private String getModelPath( final String modelLocation,
                                  final String modelName ) {
-        return new StringBuffer().append(modelLocation).append(File.separator).append(modelName).append(FILE_EXTENSION_SEPARATOR_CHAR).append(ModelUtil.EXTENSION_XMI).toString();
+        return new StringBuffer().append(modelLocation).append(File.separator).append(modelName).append(FILE_EXTENSION_SEPARATOR_CHAR).append(StringConstants.XMI).toString();
     }
 
     /**

@@ -15,12 +15,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
@@ -968,7 +967,7 @@ public class TeiidMetadataFileInfo extends TeiidFileInfo implements UiConstants,
 			for( int i=0; i<maxChar; i++ ) {
 				sb.append(chars[i]);
 				if( chars[i] == theDelim && chars[i+1] == theDelim) {
-					sb.append(StringUtilities.SPACE);
+					sb.append(StringConstants.SPACE);
 				}
 			}
 			

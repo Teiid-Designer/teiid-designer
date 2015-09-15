@@ -10,7 +10,7 @@
   <groupId>org.jboss.tools</groupId>
   <artifactId>teiid.site</artifactId>
   <name>Teiid Designer</name>
-  <version>9.0.3-SNAPSHOT</version>
+  <version>9.0.4-SNAPSHOT</version>
   <packaging>eclipse-repository</packaging>
   <properties>
     <update.site.name>Teiid Designer</update.site.name>

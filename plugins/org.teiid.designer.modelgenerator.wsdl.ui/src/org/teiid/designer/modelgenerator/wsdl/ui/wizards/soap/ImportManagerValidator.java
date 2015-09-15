@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.datatools.profiles.ws.IWSProfileConstants;
@@ -103,7 +103,7 @@ public class ImportManagerValidator {
 			return status.getMessage();
 		}
 		
-		return StringUtilities.EMPTY_STRING;
+		return StringConstants.EMPTY_STRING;
 	}
 	
 	public IStatus getProcedureStatus(ProcedureGenerator generator) {

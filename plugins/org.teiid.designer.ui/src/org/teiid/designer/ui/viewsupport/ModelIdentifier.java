@@ -13,6 +13,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xsd.XSDPackage;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.common.xmi.XMIHeader;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelFileUtil;
@@ -338,7 +339,7 @@ public abstract class ModelIdentifier implements UiConstants {
             isXsdFile = isSchemaModel((ModelResource)someResource);
         } else if (someResource instanceof File) {
             fileOnFileSystem = (File)someResource;
-            isXsdFile = fileOnFileSystem.getName().endsWith(ModelUtil.EXTENSION_XSD);
+            isXsdFile = fileOnFileSystem.getName().endsWith(StringConstants.XSD);
         }
 
         if (fileOnFileSystem != null && fileOnFileSystem.exists()) {

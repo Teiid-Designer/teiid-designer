@@ -8,7 +8,6 @@
 package org.teiid.designer.metamodels.relational.impl;
 
 import java.util.Collection;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -74,7 +73,7 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * @generated
      * @ordered
      */
-    protected EList uniqueConstraints = null;
+    protected EList<UniqueConstraint> uniqueConstraints = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -159,7 +158,7 @@ public class BaseTableImpl extends TableImpl implements BaseTable {
      * @generated
      */
     @Override
-	public EList getUniqueConstraints() {
+	public EList<UniqueConstraint> getUniqueConstraints() {
         if (uniqueConstraints == null) {
             uniqueConstraints = new EObjectContainmentWithInverseEList(UniqueConstraint.class, this, RelationalPackage.BASE_TABLE__UNIQUE_CONSTRAINTS, RelationalPackage.UNIQUE_CONSTRAINT__TABLE);
         }

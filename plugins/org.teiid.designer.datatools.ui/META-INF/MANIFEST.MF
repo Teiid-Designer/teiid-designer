@@ -2,26 +2,26 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.datatools.ui;singleton:=true
-Bundle-Version: 9.0.3.qualifier
+Bundle-Version: 9.0.4.qualifier
 Bundle-Activator: org.teiid.designer.datatools.ui.DatatoolsUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.10.0,4.0.0)",
- org.teiid.core.designer;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.datatools;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.core;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.ui;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.ui.common;bundle-version="[9.0.0,10.0.0)",
+ org.teiid.core.designer;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.datatools;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.core;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.ui;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.ui.common;bundle-version="[9.0.2,10.0.0)",
  org.eclipse.core.resources;bundle-version="[3.9.1,4.0.0)",
  org.eclipse.datatools.connectivity.ui.dse;bundle-version="[1.1.5,2.0.0)",
- org.eclipse.emf.edit.ui;bundle-version="[2.10.1,3.0.0)",
+ org.eclipse.emf.edit.ui;bundle-version="[2.10.2,3.0.0)",
  org.eclipse.datatools.help;bundle-version="[1.5.0,2.0.0)",
  org.eclipse.datatools.enablement.oda.xml;bundle-version="[1.2.5,2.0.0)",
  org.eclipse.datatools.connectivity.oda;bundle-version="[3.4.3,4.0.0)",
- org.teiid.designer.modelgenerator.wsdl;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.spi;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.jdbc;bundle-version="[9.0.0,10.0.0)",
- org.teiid.datatools.connectivity;bundle-version="[9.0.0,10.0.0)"
+ org.teiid.designer.modelgenerator.wsdl;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.jdbc;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.datatools.connectivity;bundle-version="[9.0.2,10.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.teiid.designer.datatools.profiles.ws,

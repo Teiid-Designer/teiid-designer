@@ -9,10 +9,8 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -38,9 +36,9 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
+import org.teiid.designer.vdb.Vdb;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
-import org.teiid.designer.vdb.ui.editor.VdbEditor;
 import org.teiid.designer.vdb.ui.util.RestVdbUtil;
 
 /**
@@ -54,7 +52,7 @@ public class PropertiesPanel {
     static final String NO_REST_PROCEDURES_TITLE = i18n("noValidRestProceduresTitle"); //$NON-NLS-1$
     static final String NO_REST_PROCEDURES_MESSAGE = i18n("noValidRestProceduresMessage"); //$NON-NLS-1$
     
-	VdbEditor vdbEditor;
+	Vdb vdb;
 
     ListViewer allowedLanguagesViewer;
     List<String> languages = new ArrayList<String>();
@@ -79,9 +77,9 @@ public class PropertiesPanel {
      * @param parent
      * @param editor
      */
-    public PropertiesPanel(Composite parent, VdbEditor editor) {
+    public PropertiesPanel(Composite parent, Vdb vdb) {
     	super();
-    	this.vdbEditor = editor;
+    	this.vdb = vdb;
     	
     	createPanel(parent);
     }
@@ -100,7 +98,7 @@ public class PropertiesPanel {
 
 		final Text queryTimeoutText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
 		queryTimeoutText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		queryTimeoutText.setText(Integer.toString(vdbEditor.getVdb().getQueryTimeout()));
+		queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
     	queryTimeoutText.addModifyListener(new ModifyListener() {
 			
 			@Override
@@ -108,13 +106,13 @@ public class PropertiesPanel {
 				try {
                     int valueInSecs = Integer.parseInt(queryTimeoutText.getText());
                     if (valueInSecs > -1) {
-                        vdbEditor.getVdb().setQueryTimeout(valueInSecs);
+                        vdb.setQueryTimeout(valueInSecs);
 					}
 				} catch (NumberFormatException ex) {
 					MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
                             INVALID_INTEGER_INPUT_TITLE,
                             INVALID_INTEGER_INPUT_MESSAGE);
-					queryTimeoutText.setText(Integer.toString(vdbEditor.getVdb().getQueryTimeout()));
+					queryTimeoutText.setText(Integer.toString(vdb.getQueryTimeout()));
 				}
 				
 			}
@@ -127,12 +125,12 @@ public class PropertiesPanel {
 	    	
 	    	securityDomainText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
 	    	securityDomainText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    	WidgetUtil.setText(securityDomainText, vdbEditor.getVdb().getSecurityDomain());
+	    	WidgetUtil.setText(securityDomainText, vdb.getSecurityDomain());
 	    	securityDomainText.addModifyListener(new ModifyListener() {
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					vdbEditor.getVdb().setSecurityDomain(securityDomainText.getText());
+					vdb.setSecurityDomain(securityDomainText.getText());
 					updateSecurityWidgets();
 				}
 			});
@@ -143,12 +141,12 @@ public class PropertiesPanel {
 			
 	    	gssPatternText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
 	    	gssPatternText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    	WidgetUtil.setText(gssPatternText, vdbEditor.getVdb().getGssPattern());
+	    	WidgetUtil.setText(gssPatternText, vdb.getGssPattern());
 	    	gssPatternText.addModifyListener(new ModifyListener() {
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					vdbEditor.getVdb().setGssPattern(gssPatternText.getText());
+					vdb.setGssPattern(gssPatternText.getText());
 					updateSecurityWidgets();
 				}
 			});
@@ -159,12 +157,12 @@ public class PropertiesPanel {
 			
 	    	passwordPatternText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
 	    	passwordPatternText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    	WidgetUtil.setText(passwordPatternText, vdbEditor.getVdb().getPasswordPattern());
+	    	WidgetUtil.setText(passwordPatternText, vdb.getPasswordPattern());
 	    	passwordPatternText.addModifyListener(new ModifyListener() {
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					vdbEditor.getVdb().setPasswordPattern(passwordPatternText.getText());
+					vdb.setPasswordPattern(passwordPatternText.getText());
 					updateSecurityWidgets();
 				}
 			});
@@ -175,12 +173,12 @@ public class PropertiesPanel {
 			
 	    	authenticationTypeText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
 	    	authenticationTypeText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-	    	WidgetUtil.setText(authenticationTypeText, vdbEditor.getVdb().getAuthenticationType());
+	    	WidgetUtil.setText(authenticationTypeText, vdb.getAuthenticationType());
 	    	authenticationTypeText.addModifyListener(new ModifyListener() {
 				
 				@Override
 				public void modifyText(ModifyEvent e) {
-					vdbEditor.getVdb().setAuthenticationType(authenticationTypeText.getText());
+					vdb.setAuthenticationType(authenticationTypeText.getText());
 					updateSecurityWidgets();
 				}
 			});
@@ -192,13 +190,13 @@ public class PropertiesPanel {
     	
     	new Label(propertiesGroup, SWT.NONE);
     	//autGenRESTLabel.setText(i18n("autoGenerateRESTWAR")); //$NON-NLS-1$
-		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup, i18n("autoGenerateRESTWAR"), vdbEditor.getVdb().isAutoGenerateRESTWAR());  //$NON-NLS-1$
+		final Button autoGenRESTCheckbox =  WidgetFactory.createCheckBox(propertiesGroup, i18n("autoGenerateRESTWAR"), vdb.isAutoGenerateRESTWar());  //$NON-NLS-1$
 		autoGenRESTCheckbox.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetDefaultSelected( SelectionEvent e ) {
             	boolean validRestVdb = false;
             	try {
-        			validRestVdb = RestVdbUtil.isRestWarVdb(vdbEditor.getVdb().getFile());
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getSourceFile());
         		} catch (Exception ex) {
         			throw new RuntimeException(ex);
         		}
@@ -208,14 +206,14 @@ public class PropertiesPanel {
                             NO_REST_PROCEDURES_TITLE,
                             NO_REST_PROCEDURES_MESSAGE);
             	}
-            	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            	vdb.setAutoGenerateRESTWar(((Button)e.getSource()).getSelection());
             }
             
             @Override
             public void widgetSelected( SelectionEvent e ) {
             	boolean validRestVdb = false;
             	try {
-        			validRestVdb = RestVdbUtil.isRestWarVdb(vdbEditor.getVdb().getFile());
+        			validRestVdb = RestVdbUtil.isRestWarVdb(vdb.getSourceFile());
         		} catch (Exception ex) {
         			throw new RuntimeException(ex);
         		}
@@ -225,7 +223,7 @@ public class PropertiesPanel {
                             NO_REST_PROCEDURES_TITLE,
                             NO_REST_PROCEDURES_MESSAGE);
             	}
-            	vdbEditor.getVdb().setAutoGenerateRESTWAR(((Button)e.getSource()).getSelection());
+            	vdb.setAutoGenerateRESTWar(((Button)e.getSource()).getSelection());
             }
         });
 		
@@ -261,7 +259,7 @@ public class PropertiesPanel {
               
             this.allowedLanguagesViewer.setInput(languages); 
             
-            for( String value : vdbEditor.getVdb().getAllowedLanguages() ) {
+            for( String value : vdb.getAllowedLanguages() ) {
             		this.languages.add(value);
             }
             
@@ -317,7 +315,7 @@ public class PropertiesPanel {
 	}
 	
 	void updateSecurityWidgets() {
-		boolean enabled = vdbEditor.getVdb().getSecurityDomain() != null;
+		boolean enabled = vdb.getSecurityDomain() != null;
 		
 		gssPatternText.setEnabled(enabled);
     	passwordPatternText.setEnabled(enabled);
@@ -345,14 +343,14 @@ public class PropertiesPanel {
 
         AddLanguagePropertyDialog dialog = 
         		new AddLanguagePropertyDialog(allowedLanguagesViewer.getControl().getShell(), 
-        				vdbEditor.getVdb().getAllowedLanguages());
+        				vdb.getAllowedLanguages());
 
 
         if (dialog.open() == Window.OK) {
             // update model
             String language = dialog.getLanguage();
 
-            vdbEditor.getVdb().addAllowedLanguage(language);
+            vdb.addAllowedLanguage(language);
 
             // update UI from model
             this.languages.add(language);
@@ -382,7 +380,7 @@ public class PropertiesPanel {
         assert (selectedLanguage != null);
 
         // update model
-        this.vdbEditor.getVdb().removeAllowedLanguage(selectedLanguage);
+        this.vdb.removeAllowedLanguage(selectedLanguage);
         
         this.languages.remove(selectedLanguage);
         // update UI

@@ -9,18 +9,15 @@ package org.teiid.designer.runtime.ui.wizards.webservices.util;
 
 import static org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants.NAMESPACE_PROVIDER;
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -41,10 +38,12 @@ import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
-import org.teiid.designer.metamodels.relational.impl.ProcedureImpl;
+import org.teiid.designer.runtime.spi.ITeiidVdb;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.XmiVdb;
 import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
 
 
@@ -55,15 +54,38 @@ import org.teiid.designer.webservice.gen.BasicWsdlGenerator;
  */
 public class WarArchiveUtil {
 
+    /**
+     * Target Namespace Key
+     */
     public static final String TARGETNS = "targetNs"; //$NON-NLS-1$
+
+    /**
+     * Web Service Name Key
+     */
     public static final String WEBSERVICENAME = "webserviceName"; //$NON-NLS-1$
+
+    /**
+     * Url Root Key
+     */
     public static final String URLROOT = "urlRoot"; //$NON-NLS-1$
+
+    /**
+     * Service Url Key
+     */
     public static final String SERVICEURL = "serviceUrl"; //$NON-NLS-1$
+
+    /**
+     * WSDL File Extension
+     */
     public static final String WSDLFILE_EXT = "wsdl"; //$NON-NLS-1$
-    public static final String VDB_EXTENSION = "vdb"; //$NON-NLS-1$
+
     private static final ModelObjectAnnotationHelper ANNOTATION_HELPER = new ModelObjectAnnotationHelper();
 
 
+    /**
+     * @param path
+     * @return schema
+     */
     public XSDSchema importSchema( String path ) {
         XSDParser parser = new XSDParser(null);
         parser.parse(path);
@@ -74,7 +96,7 @@ public class WarArchiveUtil {
 
     /**
      * @param uri
-     * @return
+     * @return path parameters
      */
     public static ArrayList<String> getPathParameters( String uri ) {
         ArrayList pathParams = new ArrayList();
@@ -93,6 +115,8 @@ public class WarArchiveUtil {
 
     /**
      * Generate a WSDL file using passed in WS Model Resources and user supplied values
+     * @param wsModelResourceList
+     * @param userSuppliedValues 
      * 
      * @since 7.1
      */
@@ -162,10 +186,10 @@ public class WarArchiveUtil {
 
         boolean result = false;
         try {
-            Vdb vdb = new Vdb(vdbFile, new NullProgressMonitor());
+            Vdb vdb = new XmiVdb(vdbFile);
             Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
-            for (VdbModelEntry vdbModelEntry : modelEntrySet) {
-                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getName());
+            for (VdbEntry vdbModelEntry : modelEntrySet) {
+                final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
                     continue;
 
@@ -191,7 +215,7 @@ public class WarArchiveUtil {
         if (! (obj instanceof IFile))
             return false;
 
-        return VDB_EXTENSION.equals(((IFile) obj).getFileExtension());
+        return ITeiidVdb.VDB_EXTENSION.equals(((IFile) obj).getFileExtension());
     }
     
     /**
@@ -281,27 +305,5 @@ public class WarArchiveUtil {
 
         return restMethod;
     }
-    
-    /**
-     * @param description of the procedure
-     * @return String rest description
-     */
-    public static String getRestDescription( Procedure procedure ) {
-        String restDescription = null;
-
-        try {
-            // try new way first
-            ModelObjectExtensionAssistant assistant = (ModelObjectExtensionAssistant)ExtensionPlugin.getInstance()
-                                                                                                    .getRegistry()
-                                                                                                    .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
-            restDescription = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.DESCRIPTION);
-
-        } catch (Exception e) {
-            UTIL.log(e);
-        }
-
-        return restDescription;
-    }
-
 
 }

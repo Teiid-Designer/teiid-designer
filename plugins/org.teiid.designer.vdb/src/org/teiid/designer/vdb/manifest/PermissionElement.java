@@ -9,12 +9,10 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.designer.roles.Permission;
 
 /**
@@ -70,7 +68,7 @@ public class PermissionElement implements Serializable {
     public PermissionElement(Permission permission) {
         super();
         this.resource_name = permission.getTargetName();
-        
+
         if( !permission.isAllowLanguage() ) {
 	        this.create = permission.isCreateAllowed();
 	        this.read = permission.isReadAllowed();
@@ -86,6 +84,7 @@ public class PermissionElement implements Serializable {
 	        if( permission.getMask() != null && permission.getMask().length() > 0 ) {
 	        	mask = new MaskElement(permission.getMask(), permission.getOrder());
 	        }
+
 	        this.allowLanguage = null;
         } else {
 			this.allowLanguage = Boolean.TRUE;
@@ -173,7 +172,13 @@ public class PermissionElement implements Serializable {
 	public Boolean isAllowLanguage() {
 		return allowLanguage;
 	}
-    
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }
 
 /*

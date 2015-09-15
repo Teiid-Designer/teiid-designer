@@ -7,9 +7,7 @@
  */
 package org.teiid.designer.core.workspace;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -83,14 +81,8 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
 
         // remove existing (old) infos
         removeInfo();
-        HashMap newElements = new HashMap(11);
-        info.setIsStructureKnown(generateInfos(info, monitor, newElements, getResource()));
-        // ModelWorkspaceManager.getModelWorkspaceManager().getElementsOutOfSynchWithBuffers().remove(this);
-        for (Iterator iter = newElements.keySet().iterator(); iter.hasNext();) {
-            ModelWorkspaceItem key = (ModelWorkspaceItem)iter.next();
-            Object value = newElements.get(key);
-            ModelWorkspaceManager.getModelWorkspaceManager().putInfo(key, value);
-        }
+
+        info.setIsStructureKnown(generateInfos(info, monitor, getResource()));
 
         // add the info for this at the end, to ensure that a getInfo cannot reply null in case the LRU cache needs
         // to be flushed. Might lead to performance issues.
@@ -165,7 +157,6 @@ public abstract class OpenableImpl extends ModelWorkspaceItemImpl implements Ope
      */
     protected abstract boolean generateInfos( OpenableModelWorkspaceItemInfo info,
                                               IProgressMonitor pm,
-                                              Map newElements,
                                               IResource underlyingResource ) throws ModelWorkspaceException;
 
     @Override

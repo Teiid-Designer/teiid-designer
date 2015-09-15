@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.Messages;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -83,7 +83,7 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
 	        Label columnLabel = WidgetFactory.createLabel(innerPanel, Messages.column);
 	        GridDataFactory.swtDefaults().align(GridData.CENTER, GridData.CENTER).applyTo(columnLabel);;
 
-	        this.targetNameText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
+	        this.targetNameText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringConstants.EMPTY_STRING);
 	        if( isEdit ) {
 	        	this.targetNameText.setText(this.targetName);
 	        }
@@ -125,7 +125,7 @@ public class ColumnMaskingDialog  extends AbstractAddOrEditTitleDialog {
 	        
 	        WidgetFactory.createLabel(innerPanel, Messages.order);
 	        
-	        this.orderText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringUtilities.EMPTY_STRING);
+	        this.orderText = WidgetFactory.createTextField(innerPanel, GridData.FILL_HORIZONTAL, 1, StringConstants.EMPTY_STRING);
 	        if( isEdit ) {
 	        	this.orderText.setText(Integer.toString(this.order));
 	        } else {

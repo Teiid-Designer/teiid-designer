@@ -66,7 +66,7 @@ import org.eclipse.ui.INewWizard;
 import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
@@ -943,8 +943,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
             this.sourceModelFilePath = this.info.getSourceModelLocation();
             this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
 		} else {
-        	this.info.setSourceModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        	this.info.setSourceModelLocation(new Path(StringConstants.EMPTY_STRING));
+            this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
     	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
@@ -981,8 +981,8 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
         	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         	this.sourceModelFileText.setText(this.info.getSourceModelName());
         } else {
-        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
-        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        	this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
+        	this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
         this.info.setSourceModelExists(sourceModelExists());
@@ -1012,13 +1012,13 @@ public class TeiidXmlImportSourcePage extends AbstractWizardPage
 			this.sourceModelFilePath = this.info.getSourceModelLocation();
 			this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
 		} else {
-			this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		if (this.info.getSourceModelName() != null) {
 			this.sourceModelFileText.setText(this.info.getSourceModelName());
 		} else {
-			this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+			this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
 		}
 
 		String fileName = EMPTY_STRING;

@@ -9,16 +9,21 @@ package org.teiid.designer.vdb.manifest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbIndexedEntry.Problem;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbSource;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
+import org.teiid.designer.vdb.dynamic.Metadata;
+import org.teiid.designer.vdb.manifest.adapters.XmlVdbAdapters;
 
 /**
  * 
@@ -69,14 +74,19 @@ public class ModelElement extends EntryElement {
     @XmlAttribute( name = "name", required = true )
     private String name;
 
-    @XmlAttribute( name = "type", required = true )
+    @XmlAttribute( name = "type", required = false )
+    @XmlJavaTypeAdapter (XmlVdbAdapters.ModelTypeAttributeAdapter.class)
     private String type = "PHYSICAL"; //$NON-NLS-1$
 
-    @XmlAttribute( name = "visible", required = true )
-    private boolean visible = true;
+    @XmlAttribute( name = "visible", required = false )
+    @XmlJavaTypeAdapter (XmlVdbAdapters.VisibleAttributeAdapter.class)
+    private Boolean visible = true;
 
     @XmlElement( name = "source", type = SourceElement.class )
     private List<SourceElement> sources;
+    
+    @XmlElement( name = "metadata", type = MetadataElement.class )
+    private List<MetadataElement> metadata;
 
     @XmlElement( name = "validation-error", type = ProblemElement.class )
     private List<ProblemElement> problems;
@@ -95,7 +105,7 @@ public class ModelElement extends EntryElement {
      */
     ModelElement( final VdbModelEntry entry ) throws Exception {
         super(entry);
-        final String lastSeg = entry.getName().lastSegment();
+        final String lastSeg = entry.getPath().lastSegment();
         final int ndx = lastSeg.lastIndexOf('.');
         name = (ndx < 0 ? lastSeg : lastSeg.substring(0, ndx));
         type = entry.getType();
@@ -129,6 +139,53 @@ public class ModelElement extends EntryElement {
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
         for (final String importedVdbName : entry.getImportVdbNames())
             props.add(new PropertyElement(IMPORT_VDB_REFERENCE, importedVdbName));
+        
+        if( entry.getSchemaText() != null ) {
+        	getMetadata().add(new MetadataElement(entry.getSchemaText(), entry.getType()));
+        }
+    }
+
+    /**
+     * Used to save a model entry
+     * 
+     * @param model
+     * @throws Exception
+     */
+    ModelElement( final DynamicModel model ) throws Exception {
+        super();
+        name = model.getName();
+        type = model.getModelType().toString();
+        visible = model.isVisible();
+        path = null; // Not used by dynamic vdbs
+
+        if( model.getDescription() != null && !model.getDescription().isEmpty() ) {
+            description = model.getDescription();
+        }
+
+        for( VdbSource source : model.getSources() ) {
+            getSources().add(new SourceElement(source));
+        }
+
+        if (model.isMultiSource())
+            getProperties().add(new PropertyElement(SUPPORTS_MULTI_SOURCE, Boolean.toString(model.isMultiSource())));
+
+        if (model.doAddColumn())
+            getProperties().add(new PropertyElement(MULTI_SOURCE_ADD_COLUMN, Boolean.toString(model.doAddColumn())));
+
+        String alias = model.getColumnAlias();
+        if( alias != null && alias.length() > 0 )
+            getProperties().add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
+
+        for (Map.Entry<Object, Object> entry : model.getProperties().entrySet()) {
+            getProperties().add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
+        }
+
+        Metadata metadata = model.getMetadata();
+        if( metadata != null && metadata.getSchemaText() != null ) {
+            MetadataElement metadataElement = new MetadataElement(
+                    metadata.getSchemaText(), metadata.getType().name());
+            getMetadata().add(metadataElement);
+        }
     }
 
     /**
@@ -152,6 +209,14 @@ public class ModelElement extends EntryElement {
     public List<SourceElement> getSources() {
         if (sources == null) sources = new ArrayList<SourceElement>();
         return sources;
+    }
+    
+    /**
+     * @return connectors
+     */
+    public List<MetadataElement> getMetadata() {
+        if (metadata == null) metadata = new ArrayList<MetadataElement>();
+        return metadata;
     }
 
     /**
@@ -184,4 +249,11 @@ public class ModelElement extends EntryElement {
 
         return text.toString();
 	}
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.metamodels.relational.aspects.validation.RelationalStringNameValidator;
@@ -38,7 +38,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 	
 	private static final StringNameValidator nameValidator = new RelationalStringNameValidator(false);
 	
-	private final SchemaPath EMPTY_PATH = new SchemaPath(StringUtilities.EMPTY_STRING);
+	private final SchemaPath EMPTY_PATH = new SchemaPath(StringConstants.EMPTY_STRING);
 	
 	/**
 	 * The collection of AttributeInfo objects
@@ -73,7 +73,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 	 /**
      * The unique column datatype (never <code>null</code> or empty).
      */
-	private String defaultValue = StringUtilities.EMPTY_STRING;
+	private String defaultValue = StringConstants.EMPTY_STRING;
 	
 	 /**
      * The full xml path
@@ -143,7 +143,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
         this.forOrdinality = ordinality;
         
         if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -257,7 +257,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 	 */
 	public void setDefaultValue(String defaultValue) {
 		if( defaultValue == null ) {
-        	this.defaultValue = StringUtilities.EMPTY_STRING;
+        	this.defaultValue = StringConstants.EMPTY_STRING;
         } else {
         	this.defaultValue = defaultValue;
         }
@@ -297,7 +297,7 @@ public class ColumnInfo implements IWsdlColumnInfo, ModelGeneratorWsdlUiConstant
 				return this.fullXmlPath.toString();
 			}
 		}
-		return StringUtilities.EMPTY_STRING;
+		return StringConstants.EMPTY_STRING;
 	}
 	
 	public void setXmlElement(Object element) {

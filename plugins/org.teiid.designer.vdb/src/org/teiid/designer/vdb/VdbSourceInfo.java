@@ -83,14 +83,22 @@ public class VdbSourceInfo {
 	 * @return true if new VdbSource added
 	 */
 	public boolean add(String name, String jndiName, String translatorName) {
-		if( getSource(name) == null ) {
-			VdbSource vdbSource = new VdbSource(getVdb(), name, jndiName, translatorName);
-			this.sources.add(vdbSource);
-			getVdb().setModified(this, MODEL_SOURCES, null, vdbSource);
-			return true;
+		if( getSource(name) != null )
+		    return false;
+
+		//
+		// Avoid duplicate sources named differently but
+		// with the same jndi and translator properties
+		//
+		for (VdbSource source : getSources()) {
+		    if (source.getJndiName().equals(jndiName) && source.getTranslatorName().equals(translatorName))
+		        return false;
 		}
 		
-		return false;
+		VdbSource vdbSource = new VdbSource(getVdb(), name, jndiName, translatorName);
+		this.sources.add(vdbSource);
+		getVdb().setModified(this, MODEL_SOURCES, null, vdbSource);
+		return true;
 	}
 	
 	/**

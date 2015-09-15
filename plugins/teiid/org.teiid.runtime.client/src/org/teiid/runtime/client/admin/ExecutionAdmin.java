@@ -255,19 +255,21 @@ public class ExecutionAdmin implements IExecutionAdmin {
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createDeployVDBEvent(vdb.getName()));
     }
     
-
-	private String getVdbName(String originalVdbName) throws Exception {
-		String vdbName = originalVdbName;
-		int firstIndex = vdbName.indexOf('.');
-		int lastIndex = vdbName.lastIndexOf('.');
-		if (firstIndex != -1) {
-			if (firstIndex != lastIndex) {
-				throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
-			}
-			vdbName = vdbName.substring(0, firstIndex);
-		}
-		return vdbName;
-	}
+    private String getVdbName(String originalVdbName) throws Exception {
+    	String vdbName = originalVdbName;
+    	
+    	int firstIndex = vdbName.indexOf('.');
+    	int lastIndex = vdbName.lastIndexOf('.');
+    	if (firstIndex != -1) {
+	    	if (firstIndex != lastIndex) {
+	    		throw new Exception(Messages.getString(Messages.ExecutionAdmin.invalidVdbName, originalVdbName));
+	    	}
+    	
+	    	vdbName = vdbName.substring(0, firstIndex);
+    	}
+    	
+    	return vdbName;
+    }
     
     @Override
     public String getSchema(String vdbName, int vdbVersion, String modelName) throws Exception {

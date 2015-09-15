@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.ModelerCoreRuntimeException;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlTableAspect;
@@ -38,6 +38,7 @@ import org.teiid.designer.metamodels.relational.PrimaryKey;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.Schema;
 import org.teiid.designer.metamodels.relational.Table;
+import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.transformation.TransformationPlugin;
 
@@ -211,7 +212,7 @@ public class MaterializationModelGenerator {
             if(nextKey instanceof PrimaryKey) {
                 ((BaseTable)mv).setPrimaryKey( (PrimaryKey)newKey);
             }else {
-                ((BaseTable)mv).getUniqueConstraints().add( newKey);
+                ((BaseTable)mv).getUniqueConstraints().add((UniqueConstraint) newKey);
             }
             
             copyUniqueKeyValues(nextKey, newKey);
@@ -335,7 +336,7 @@ public class MaterializationModelGenerator {
     private String getUniqueNIS(final Table orig) {
     	if (orig.getNameInSource() != null
 				&& !orig.getNameInSource().trim().equals(
-						StringUtilities.EMPTY_STRING)) {
+						StringConstants.EMPTY_STRING)) {
 			final StringBuffer buffer = new StringBuffer(orig.getNameInSource());
 			
 			//Check to see if we have used this NIS. If so, append an index.

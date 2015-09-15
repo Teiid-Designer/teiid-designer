@@ -1,9 +1,8 @@
 package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.Properties;
-
 import org.eclipse.datatools.connectivity.IConnectionProfile;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
@@ -100,7 +99,7 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
         
         if (!connectionProps.getProperty(ICredentialsCommon.SECURITY_TYPE_ID).equals(SecurityType.None.name())){
         	 String user = props.getProperty(ICredentialsCommon.USERNAME_PROP_ID);
-             if (null != user && !user.equals(StringUtilities.EMPTY_STRING)) { 
+             if (null != user && !user.equals(StringConstants.EMPTY_STRING)) { 
                  connectionProps.setProperty(ICredentialsCommon.USERNAME_PROP_ID, user);
              }
         }

@@ -8,12 +8,10 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
-
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 
 /**
@@ -70,5 +68,12 @@ public class ImportVdbElement implements Serializable {
      */
     public boolean isImportDataPolicies() {
     	return importDataPolicies;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

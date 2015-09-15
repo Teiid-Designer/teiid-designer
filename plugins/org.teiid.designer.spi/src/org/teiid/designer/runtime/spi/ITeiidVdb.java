@@ -49,6 +49,16 @@ public interface ITeiidVdb {
      * @return <code>true</code> if this is a preview VDB
      */
     boolean isPreviewVdb();
+    
+    /**
+     * @return <code>true</code> if this is a Dynamic VDB
+     */
+    boolean isDynamicVdb();
+    
+    /**
+     * @return <code>true</code> if this is a DDL-FILE VDB
+     */
+    boolean isDdlFileVdb();
 
     /**
      * @return <code>true</code> if this VDB is active
@@ -82,6 +92,13 @@ public interface ITeiidVdb {
      */
     boolean hasModels();
 
+    /**
+     * Get the names of all the models in this vdb
+     * 
+     * @return {@link Collection} of model names
+     */
+    String getManifest();
+    
     /**
      * Get the names of all the models in this vdb
      * 

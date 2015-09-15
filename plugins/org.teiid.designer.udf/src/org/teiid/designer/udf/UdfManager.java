@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.FileUtils;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelObjectCollector;
 import org.teiid.designer.core.util.ModelVisitor;
@@ -524,7 +524,7 @@ public final class UdfManager implements IResourceChangeListener {
                 	isPushdown = true;
                     category = sourceModel.getItemName();
                     if( category.endsWith(".xmi")) { //$NON-NLS-1$
-                        category = category.replaceAll(".xmi", StringUtilities.EMPTY_STRING); //$NON-NLS-1$
+                        category = category.replaceAll(".xmi", StringConstants.EMPTY_STRING); //$NON-NLS-1$
                     }
                 }
     			

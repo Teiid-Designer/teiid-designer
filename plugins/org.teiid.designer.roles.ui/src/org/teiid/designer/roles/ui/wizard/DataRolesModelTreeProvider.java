@@ -10,7 +10,6 @@ package org.teiid.designer.roles.ui.wizard;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
@@ -24,7 +23,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.ContainerImpl;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -424,7 +423,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
             return ((Resource)element).getURI().lastSegment();
         }
 
-        return StringUtilities.EMPTY_STRING;
+        return StringConstants.EMPTY_STRING;
     }
 
     
@@ -573,7 +572,7 @@ public class DataRolesModelTreeProvider implements ITreeContentProvider, ITableL
 		} else if( target instanceof Procedure ) {
 			return NLS.bind(Messages.setSecurityValuesFor_0_message, Messages.procedure);
 		}
-		return StringUtilities.EMPTY_STRING;
+		return StringConstants.EMPTY_STRING;
 	}
 	
 	public void handlePermissionChanged(Permission permission) {

@@ -8,12 +8,11 @@
 package org.teiid.designer.core.workspace;
 
 import java.util.ArrayList;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.PlatformObject;
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.HashCodeUtil;
+import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
 
 
@@ -53,7 +52,7 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * This item's parent, or <code>null</code> if this item does not have a parent.
      */
-    protected final ModelWorkspaceItemImpl fParent;
+    protected final ModelWorkspaceItem fParent;
 
     /**
      * This item's name, or an empty <code>String</code> if this item does not have a name.
@@ -78,11 +77,11 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
         // CoreArgCheck.isNotNull(name); // Should be done in subclasses, not here
         // CoreArgCheck.isNotZeroLength(name); // Should be done in subclasses, not here
         fType = type;
-        fParent = (ModelWorkspaceItemImpl)parent;
+        fParent = parent;
         fName = name;
         if (fParent != null) {
             try {
-                ModelWorkspaceItemInfo info = (ModelWorkspaceItemInfo)fParent.getItemInfo();
+                ModelWorkspaceItemInfo info = fParent.getItemInfo();
                 info.addChild(this);
             } catch (ModelWorkspaceException e) {
                 ModelerCore.Util.log(IStatus.ERROR,
@@ -265,12 +264,13 @@ public abstract class ModelWorkspaceItemImpl extends PlatformObject implements M
     /**
      * @see org.teiid.designer.core.workspace.ModelWorkspaceItem
      */
-    public Object getItemInfo() throws ModelWorkspaceException {
+    @Override
+    public ModelWorkspaceItemInfo getItemInfo() throws ModelWorkspaceException {
 
         // element info creation is done inside a lock on the ModelWorkspaceManager
         ModelWorkspaceManager manager;
         synchronized (manager = ModelWorkspaceManager.getModelWorkspaceManager()) {
-            Object info = manager.getInfo(this);
+            ModelWorkspaceItemInfo info = manager.getInfo(this);
             if (info == null) {
                 openHierarchy();
                 info = manager.getInfo(this);

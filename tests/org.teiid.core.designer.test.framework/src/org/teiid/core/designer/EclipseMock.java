@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.spi.RegistrySPI;
+import org.teiid.designer.core.workspace.ModelWorkspaceManager;
 
 
 /**
@@ -30,6 +31,13 @@ public final class EclipseMock {
     private final List<IProject> projects = new ArrayList<IProject>();
 
     public EclipseMock() {
+        //
+        // Mocks the workspace but does not have a notification manager so
+        // cannot fire resource change events to the DeltaProcessor. Tests that
+        // rely on receipt of these events will have to execute the resource change
+        // event operation manually in order to ensure resources end up the same
+        // as those in Designer.
+        //
         workspace = mock(IWorkspace.class);
         ((RegistrySPI) ModelerCore.getRegistry()).register(ModelerCore.WORKSPACE_KEY, workspace);
 
@@ -39,6 +47,11 @@ public final class EclipseMock {
 
         workspaceRootLocation = mock(IPath.class);
         when(workspaceRoot.getLocation()).thenReturn(workspaceRootLocation);
+
+        //
+        // Initialise the workspace manager
+        //
+        ModelWorkspaceManager.getModelWorkspaceManager();
     }
 
     public void addProject(final IProject project) {

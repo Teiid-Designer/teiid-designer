@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +31,6 @@ import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.roles.Permission;
 import org.teiid.designer.roles.ui.wizard.DataRoleResolver;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 
@@ -76,7 +74,7 @@ public class VdbDataRoleResolver {
 	public void modelEntriesRemoved( Set<VdbEntry> entries ) {
 		Set<String> modelNames = new HashSet<String>(entries.size());
 		for( VdbEntry entry : entries ) {
-			modelNames.add(entry.getName().removeFileExtension().lastSegment());
+			modelNames.add(entry.getName());
 		}
 		
 		removePermissionsForModels(modelNames);
@@ -87,12 +85,12 @@ public class VdbDataRoleResolver {
 	 * Remove any permissions who's target name begins with one of the provided model names
 	 */
 	private void removePermissionsForModels(Set<String> modelNames) {
-		Set<VdbDataRole> roles = vdb.getDataPolicyEntries();
+		Collection<DataRole> roles = vdb.getDataRoles();
 		
-		for( VdbDataRole role : roles ) {
+		for( DataRole role : roles ) {
 			boolean changedPerms = false;
 			Collection<Permission> keepPermList = new ArrayList<Permission>();
-			List<Permission> permissions = role.getPermissions();
+			Collection<Permission> permissions = role.getPermissions();
 			for( Permission perm : permissions ) {
 				boolean shouldRemovePermission = targetIsInStringList(modelNames, perm.getTargetName());
 				
@@ -105,19 +103,18 @@ public class VdbDataRoleResolver {
 			
 			if( changedPerms && ! keepPermList.isEmpty() ) {
 				// Remove the old data policy
-				vdb.removeDataPolicy(role);
+				vdb.removeDataRole(role.getName());
 				
 				// Create a data role
 				DataRole dr = new DataRole(role.getName());
 				dr.setDescription(role.getDescription());
-				if( !role.getMappedRoleNames().isEmpty() ) {
-					dr.setRoleNames(role.getMappedRoleNames());
+				if( !role.getRoleNames().isEmpty() ) {
+					dr.setRoleNames(role.getRoleNames());
 				}
 				dr.setPermissions(keepPermList);
 				dr.setAnyAuthenticated(role.isAnyAuthenticated());
-				
-				vdb.addDataPolicy(dr, new NullProgressMonitor());
-				
+
+				vdb.addDataRole(dr);				
 			}
 		}
 	}
@@ -139,14 +136,14 @@ public class VdbDataRoleResolver {
 		return dotPath.replace(DELIM, B_SLASH);
 	}
 	
-	private DataRole getDataRole(VdbDataRole vdbDataRole) {
+	private DataRole getDataRole(DataRole DataRole) {
 		// Create a data role
-		DataRole dr = new DataRole(vdbDataRole.getName());
-		dr.setDescription(vdbDataRole.getDescription());
-		if( !vdbDataRole.getMappedRoleNames().isEmpty() ) {
-			dr.setRoleNames(vdbDataRole.getMappedRoleNames());
+		DataRole dr = new DataRole(DataRole.getName());
+		dr.setDescription(DataRole.getDescription());
+		if( !DataRole.getRoleNames().isEmpty() ) {
+			dr.setRoleNames(DataRole.getRoleNames());
 		}
-		List<Permission> perms = new ArrayList<Permission>(vdbDataRole.getPermissions());
+		List<Permission> perms = new ArrayList<Permission>(DataRole.getPermissions());
 		dr.setPermissions(perms);
 		
 		return dr;
@@ -168,8 +165,8 @@ public class VdbDataRoleResolver {
 	        try {
 	            File modelFile = null;
 	            for( File file : vdb.getModelFiles() ) {
-	            	String entryName = entry.getName().lastSegment();
-	            	if( file.getName().equals(entryName)) {
+	            	String entryFileName = entry.getPathName();
+	            	if( file.getName().equals(entryFileName)) {
 	            		modelFile = file;
 	            		break;
 	            	}
@@ -205,14 +202,14 @@ public class VdbDataRoleResolver {
 	        if( tempContainer != null ) {
 	        	DataRoleResolver resolver = new DataRoleResolver(tempContainer);
 	        	
-	        	for( VdbDataRole existingRole : vdb.getDataPolicyEntries() ) {
+	        	for( DataRole existingRole : vdb.getDataRoles() ) {
 	        		DataRole existingDataRole = getDataRole(existingRole);
 	    			DataRole changedDataRole = resolver.resolveDataRole(existingDataRole);
 	    			
 	    			if( changedDataRole != null ) {
 	    				// Remove the old data policy
-	    				vdb.removeDataPolicy(existingRole);
-	    				vdb.addDataPolicy(changedDataRole, new NullProgressMonitor());
+	    				vdb.removeDataRole(existingRole.getName());
+	    				vdb.addDataRole(changedDataRole);
 	    			}
 	        	}
 	        	
@@ -263,14 +260,14 @@ public class VdbDataRoleResolver {
         if( tempContainer != null ) {
         	DataRoleResolver resolver = new DataRoleResolver(tempContainer);
         	
-        	for( VdbDataRole existingRole : vdb.getDataPolicyEntries() ) {
+        	for( DataRole existingRole : vdb.getDataRoles() ) {
         		DataRole existingDataRole = getDataRole(existingRole);
     			DataRole changedDataRole = resolver.resolveDataRole(existingDataRole);
     			
     			if( changedDataRole != null ) {
     				// Remove the old data policy
-    				vdb.removeDataPolicy(existingRole);
-    				vdb.addDataPolicy(changedDataRole, new NullProgressMonitor());
+    				vdb.removeDataRole(existingRole.getName());
+    				vdb.addDataRole(changedDataRole);
     			}
         	}
         	

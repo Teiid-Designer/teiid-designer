@@ -10,19 +10,24 @@ package org.teiid.designer.vdb.manifest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.TranslatorOverride;
 import org.teiid.designer.vdb.Vdb;
-import org.teiid.designer.vdb.VdbDataRole;
 import org.teiid.designer.vdb.VdbEntry;
 import org.teiid.designer.vdb.VdbImportVdbEntry;
 import org.teiid.designer.vdb.VdbModelEntry;
 import org.teiid.designer.vdb.VdbUtil;
+import org.teiid.designer.vdb.XmiVdb;
+import org.teiid.designer.vdb.dynamic.DynamicModel;
+import org.teiid.designer.vdb.dynamic.DynamicVdb;
 
 /**
  * 
@@ -64,7 +69,6 @@ public class VdbElement implements Serializable {
     @XmlElement( name = "entry", type = EntryElement.class )
     private List<EntryElement> entries;
 
-
     /**
      * Used by JAXB
      */
@@ -75,26 +79,44 @@ public class VdbElement implements Serializable {
      * @param vdb
      * @throws Exception
      */
-    public VdbElement( final Vdb vdb ) throws Exception {
-    	String initialVdbName = vdb.getName().removeFileExtension().lastSegment();
-    	int indexOfDot = initialVdbName.indexOf('.');
-    	if( indexOfDot > -1 ) {
-    		initialVdbName = initialVdbName.substring(0, indexOfDot);
-    	}
-        name = initialVdbName;
-        description = vdb.getDescription();
-        version = vdb.getVersion();
+    public VdbElement( final XmiVdb vdb ) throws Exception {
         for (final VdbEntry entry : vdb.getEntries())
             getEntries().add(new EntryElement(entry));
-        for (final VdbModelEntry modelEntry : vdb.getModelEntries())
-            getModels().add(new ModelElement(modelEntry));
-        for (final VdbImportVdbEntry importVdbEntry : vdb.getImportVdbEntries())
+
+        for (final VdbEntry modelEntry : vdb.getModelEntries())
+            getModels().add(new ModelElement((VdbModelEntry)modelEntry));
+
+        populate(vdb);
+    }
+
+    /**
+     * @param vdb
+     * @throws Exception
+     */
+    public VdbElement( final DynamicVdb vdb ) throws Exception {
+        for (final DynamicModel model : vdb.getDynamicModels())
+            getModels().add(new ModelElement(model));
+
+        populate(vdb);
+    }
+
+    private void populate(final Vdb vdb) throws Exception {
+        name = vdb.getName();
+        description = vdb.getDescription();
+        version = vdb.getVersion();
+
+        for (final VdbImportVdbEntry importVdbEntry : vdb.getImports())
         	getImportVdbEntries().add(new ImportVdbElement(importVdbEntry));
+
         for (final TranslatorOverride translator : vdb.getTranslators())
             getTranslators().add(new TranslatorElement(translator));
-        for (final VdbDataRole dataPolicyEntry : vdb.getDataPolicyEntries())
+
+        for (final DataRole dataPolicyEntry : vdb.getDataRoles())
             getDataPolicies().add(new DataRoleElement(dataPolicyEntry));
-        getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+
+        if( vdb instanceof XmiVdb) {
+        	getProperties().add(new PropertyElement(Vdb.Xml.PREVIEW, Boolean.toString(vdb.isPreview())));
+        }
         // The Vdb object stores timeout in seconds, but we will persist to Vdb manifest in millis for teiid.
         if( vdb.getQueryTimeout() > 0 ) {
             int timeoutMillis = vdb.getQueryTimeout() * 1000;
@@ -108,7 +130,7 @@ public class VdbElement implements Serializable {
         	}
         }
         
-        if (vdb.isAutoGenerateRESTWAR()){
+        if (vdb.isAutoGenerateRESTWar()){
         	getProperties().add(new PropertyElement(Vdb.Xml.AUTO_GENERATE_REST_WAR, Boolean.TRUE.toString()));
         }
         
@@ -127,21 +149,20 @@ public class VdbElement implements Serializable {
         if (vdb.getAuthenticationType() != null && vdb.getAuthenticationType().trim().length() > 0){
         	getProperties().add(new PropertyElement(Vdb.Xml.AUTHENTICATION_TYPE , vdb.getAuthenticationType()));
         }
-        
-        
+
         if (vdb.getValidationDateTime() != null) {
         	String dateTimeString = vdb.getValidationDateTime().toString();
         	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_DATETIME, dateTimeString));
         }
-        
+
         if (vdb.getValidationVersion() != null) {
         	String versionString = vdb.getValidationVersion();
         	getProperties().add(new PropertyElement(Vdb.Xml.VALIDATION_VERSION, versionString));
         }
-        
-        for( String key : vdb.getGeneralProperties().keySet()) {
-        	String value = vdb.getGeneralProperties().get(key);
-        	getProperties().add(new PropertyElement(key, value));
+
+        Properties properties = vdb.getProperties();
+        for( Entry<Object, Object> entry : properties.entrySet()) {
+        	getProperties().add(new PropertyElement(entry.getKey().toString(), entry.getValue().toString()));
         }
     }
 
@@ -212,5 +233,12 @@ public class VdbElement implements Serializable {
      */
     public int getVersion() {
         return version;
+    }
+
+    /**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
     }
 }

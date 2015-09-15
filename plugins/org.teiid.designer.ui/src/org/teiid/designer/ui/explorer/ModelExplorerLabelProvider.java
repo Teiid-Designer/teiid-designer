@@ -10,7 +10,6 @@ package org.teiid.designer.ui.explorer;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IMarkerDelta;
@@ -34,6 +33,7 @@ import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionPlugin;
@@ -61,8 +61,6 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
  */
 public class ModelExplorerLabelProvider extends LabelProvider
     implements ILightweightLabelDecorator, UiConstants, PluginConstants.Images {
-
-    private static final String DOT_XMI = '.' + ModelUtil.EXTENSION_XMI;
 
     @SuppressWarnings("javadoc")
 	public static boolean debug = false;
@@ -296,8 +294,8 @@ public class ModelExplorerLabelProvider extends LabelProvider
             		// ------------------------------------------------------------
             		String defaultText = getDefaultProvider().getText(element);
             		if (ProductCustomizerMgr.getInstance().getProductCharacteristics().isHiddenProjectCentric()) {
-            			if (defaultText.endsWith(DOT_XMI)) {
-            				int len = defaultText.lastIndexOf(DOT_XMI);
+            			if (defaultText.endsWith(StringConstants.DOT_XMI)) {
+            				int len = defaultText.lastIndexOf(StringConstants.DOT_XMI);
             				defaultText = defaultText.substring(0, len);
             			}
             		}

@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -65,7 +64,7 @@ import org.eclipse.ui.dialogs.FilteredList.FilterMatcher;
 import org.eclipse.ui.internal.misc.StringMatcher;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.I18nUtil;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.URLHelper;
 import org.teiid.designer.core.workspace.DotProjectUtils;
@@ -971,8 +970,8 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
             this.sourceModelFilePath = this.info.getSourceModelLocation();
             this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         } else {
-        	this.info.setSourceModelLocation(new Path(StringUtilities.EMPTY_STRING));
-            this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        	this.info.setSourceModelLocation(new Path(StringConstants.EMPTY_STRING));
+            this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
     	if( this.sourceModelFileText.getText() != null && this.sourceModelFileText.getText().length() > -1 ) {
@@ -1009,7 +1008,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         	this.sourceModelFileText.setText(this.info.getSourceModelName());
         } else {
-        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
         }
         
         this.info.setSourceModelExists(sourceModelExists());
@@ -1052,14 +1051,14 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         if( this.info.getSourceModelLocation() != null ) {
         	this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         } else {
-        	this.sourceModelContainerText.setText(StringUtilities.EMPTY_STRING);
+        	this.sourceModelContainerText.setText(StringConstants.EMPTY_STRING);
         }
         
         if( this.info.getSourceModelName() != null ) {
         	this.sourceModelFilePath = this.info.getSourceModelLocation();
         	this.sourceModelFileText.setText(this.info.getSourceModelName());
         } else {
-        	this.sourceModelFileText.setText(StringUtilities.EMPTY_STRING);
+        	this.sourceModelFileText.setText(StringConstants.EMPTY_STRING);
         }
                 
         synchronizing = false;

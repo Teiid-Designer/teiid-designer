@@ -241,8 +241,8 @@ public final class BuilderUtils implements UiConstants {
         
         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
 
-        return theType.equals(service.getDefaultDataType(DataTypeName.BIG_DECIMAL))
-               || theType.equals(service.getDefaultDataType(DataTypeName.BIG_INTEGER))
+        return theType.equals(service.getDefaultDataType(DataTypeName.BIGDECIMAL))
+               || theType.equals(service.getDefaultDataType(DataTypeName.BIGINTEGER))
                || theType.equals(service.getDefaultDataType(DataTypeName.BYTE))
                || theType.equals(service.getDefaultDataType(DataTypeName.DOUBLE))
                || theType.equals(service.getDefaultDataType(DataTypeName.FLOAT))

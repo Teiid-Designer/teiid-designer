@@ -8,7 +8,6 @@
 package org.teiid.designer.core.workspace;
 
 import java.util.ArrayList;
-import java.util.Map;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -19,7 +18,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.workspace.ModelFileUtil;
 
 
 /**
@@ -124,7 +122,6 @@ public class ModelFolderImpl extends OpenableImpl implements ModelFolder {
     @Override
     protected boolean generateInfos( final OpenableModelWorkspaceItemInfo info,
                                      final IProgressMonitor pm,
-                                     final Map newElements,
                                      final IResource underlyingResource ) throws ModelWorkspaceException {
         boolean validInfo = false;
         try {

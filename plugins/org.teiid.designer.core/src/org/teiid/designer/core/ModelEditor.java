@@ -46,6 +46,11 @@ import org.teiid.designer.metamodels.core.ModelImport;
  */
 public interface ModelEditor {
 
+    /**
+     * The name feature name
+     */
+    String NAME_FEATURE_NAME = "name"; //$NON-NLS-1$
+
 	/**
      * Return true if the feature on the given EObject requires a XSDSimpleType as it's value
      * @param EObject owner of the given SF

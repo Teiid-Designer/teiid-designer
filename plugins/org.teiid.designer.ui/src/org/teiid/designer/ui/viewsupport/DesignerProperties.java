@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelEditor;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.DotProjectUtils;
@@ -31,7 +32,7 @@ import org.teiid.designer.ui.UiPlugin;
 /**
  * @since 8.0
  */
-public class DesignerProperties extends Properties {
+public class DesignerProperties extends Properties implements StringConstants {
 
 	/**
 	 * 
@@ -262,7 +263,7 @@ public class DesignerProperties extends Properties {
         String modelName = getProperty(IPropertiesContext.KEY_LAST_VIEW_MODEL_NAME);
         if (modelName != null) {
             // Expect ModelName to end with extension
-            if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+            if (!modelName.endsWith(DOT_XMI)) modelName = modelName + DOT_XMI;
 
             final IResource resrc = ModelUtilities.findModelByName(modelName);
             if (resrc != null && ModelUtil.isModelFile(resrc) && ModelIdentifier.isVirtualModelType(resrc)) {
@@ -283,7 +284,7 @@ public class DesignerProperties extends Properties {
         String modelName = getProperty(IPropertiesContext.KEY_LAST_SOURCE_MODEL_NAME);
         if (modelName != null) {
             // Expect ModelName to end with extension
-            if (!modelName.endsWith(ModelUtil.DOT_EXTENSION_XMI)) modelName = modelName + ModelUtil.DOT_EXTENSION_XMI;
+            if (!modelName.endsWith(DOT_XMI)) modelName = modelName + DOT_XMI;
 
             final IResource resrc = ModelUtilities.findModelByName(modelName);
             if (resrc != null && ModelUtil.isModelFile(resrc) && ModelIdentifier.isPhysicalModelType(resrc)) {

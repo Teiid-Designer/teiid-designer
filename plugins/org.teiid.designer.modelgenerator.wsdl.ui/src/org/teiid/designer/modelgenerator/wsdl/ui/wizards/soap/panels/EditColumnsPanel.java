@@ -24,24 +24,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.actions.TextActionHandler;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.Messages;
 import org.teiid.designer.modelgenerator.wsdl.ui.ModelGeneratorWsdlUiConstants;
 import org.teiid.designer.modelgenerator.wsdl.ui.util.ModelGeneratorWsdlUiUtil;
@@ -54,9 +49,6 @@ import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
 import org.teiid.designer.transformation.ui.PluginConstants;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
-import org.teiid.designer.transformation.ui.wizards.xmlfile.TeiidXmlColumnInfo;
-import org.teiid.designer.ui.common.UILabelUtil;
-import org.teiid.designer.ui.common.UiLabelConstants;
 
 /**
  * @since 8.0
@@ -243,7 +235,7 @@ public class EditColumnsPanel {
 				}
 				}
 			}
-			return StringUtilities.EMPTY_STRING;
+			return StringConstants.EMPTY_STRING;
 		}
 
 		/**

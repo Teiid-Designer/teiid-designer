@@ -14,7 +14,6 @@ import org.eclipse.jface.fieldassist.IContentProposal;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.fieldassist.IControlContentAdapter;
 import org.eclipse.jface.fieldassist.IControlContentAdapter2;
-import org.eclipse.jface.util.Util;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -22,7 +21,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Control;
-import org.teiid.core.designer.util.StringUtilities;
+import org.teiid.core.designer.util.StringConstants;
 
 /**
  * Provides matching CCombo items based on keystrokes for a readonly combo.
@@ -33,7 +32,7 @@ abstract class CComboProposalProvider implements IControlContentAdapter, IContro
 
     private final CCombo combo;
     private long duration = DEFAULT_DURATION;
-    private String pattern = StringUtilities.EMPTY_STRING;
+    private String pattern = StringConstants.EMPTY_STRING;
     private long t1 = System.currentTimeMillis();
     private long t2;
 
@@ -141,13 +140,13 @@ abstract class CComboProposalProvider implements IControlContentAdapter, IContro
         this.t2 = System.currentTimeMillis();
 
         if ((this.t2 - this.t1) > this.duration) {
-            this.pattern = StringUtilities.EMPTY_STRING;
+            this.pattern = StringConstants.EMPTY_STRING;
         }
 
         this.t1 = this.t2;
 
         if (!Character.isLetter(e.character)) {
-            this.pattern = StringUtilities.EMPTY_STRING;
+            this.pattern = StringConstants.EMPTY_STRING;
         } else {
             this.pattern += e.character;
         }

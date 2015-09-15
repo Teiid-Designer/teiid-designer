@@ -18,23 +18,26 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.sequencer.ddl.DdlConstants;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlConstants;
 import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
+import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.importer.DdlImporterI18n;
+import org.teiid.designer.ddl.importer.DdlImporterPlugin;
 import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -48,6 +51,7 @@ import org.teiid.designer.relational.model.RelationalReference;
 import org.teiid.designer.relational.model.RelationalSchema;
 import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
+import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.model.RelationalViewTable;
 
 
@@ -312,6 +316,10 @@ public class TeiidDdlImporter extends StandardImporter {
 	protected RelationalColumn createColumn(AstNode node, RelationalTable table) throws Exception {
 		RelationalColumn column = super.createColumn(node, table);
 
+		// StandardImporter sets the native type to datatype. Need to unset this because Teiid defines it in the OPTIONS() clause
+		// or it's null
+		column.setNativeType(RelationalColumn.DEFAULT_NATIVE_TYPE);
+
 		// Handle Teiid-specific properties and options
 		Object prop = node.getProperty(TeiidDdlLexicon.CreateTable.AUTO_INCREMENT);
 		if(prop != null)
@@ -367,6 +375,68 @@ public class TeiidDdlImporter extends StandardImporter {
 		return procedure;
 	}
 
+	protected RelationalProcedure createVirtualProcedure(AstNode procedureNode, RelationalModel model) throws Exception {
+		RelationalViewProcedure procedure = getFactory().createViewProcedure();
+		Info info = createInfo(procedureNode, model);
+		if (info.getSchema() == null)
+			model.addChild(procedure);
+		else {
+			info.getSchema().getProcedures().add(procedure);
+			procedure.setParent(info.getSchema());
+		}
+
+		initialize(procedure, procedureNode, info.getName());
+		// TODO: determine how to handle Procedure StatementOption
+		// TODO: determine how to handle Procedure Statement
+
+		if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
+			RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+			procedure.setResultSet(result);
+			initialize(result, procedureNode);
+		}
+
+		List<AstNode> procOptionNodes = new ArrayList<AstNode>();
+
+		for (AstNode child : procedureNode) {
+			if (is(child, TeiidDdlLexicon.CreateProcedure.PARAMETER)) {
+				createProcedureParameter(child, procedure);
+			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_COLUMNS)) {
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode);
+
+				for(AstNode resultCol: child) {
+					if(resultCol.hasMixin(TeiidDdlLexicon.CreateProcedure.RESULT_COLUMN)) {
+						createColumn(resultCol,result);
+					}
+				}
+			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
+				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+				procedure.setResultSet(result);
+				initialize(result, procedureNode);
+				createColumn(child,result);
+			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
+				procOptionNodes.add(child);
+			}
+		}
+
+        try {
+            NewModelObjectHelperManager.helpCreate(procedure, new Properties());
+        } catch (ModelerCoreException err) {
+            DdlImporterPlugin.UTIL.log(IStatus.ERROR, err, err.getMessage());
+        }
+
+		String queryExpression = (String)procedureNode.getProperty(TeiidDdlLexicon.CreateProcedure.STATEMENT);
+		if( ! StringUtilities.isEmpty(queryExpression) ) {
+			procedure.setTransformationSQL(queryExpression);
+		}
+
+		// process the Procedure Options
+		processOptions(procOptionNodes,procedure);
+
+		return procedure;
+	}
+
 	@Override
 	protected RelationalParameter createProcedureParameter(AstNode node, RelationalProcedure procedure) throws Exception {
 		RelationalParameter prm = super.createProcedureParameter(node, procedure);
@@ -403,6 +473,8 @@ public class TeiidDdlImporter extends StandardImporter {
 	public RelationalModel importNode(AstNode rootNode, DdlImporterManager importManager, Properties props) throws Exception {
 
 		setImporterManager(importManager);
+		getImporterManager().optToGenerateDefaultSQL(false);
+		getImporterManager().optToHelpCreateTransform(false);
 
 		// Get table updatable override property value from props.
 		// (1) null = dont change anything.  (2) true = set all updatable to true  (3) false = set all updatable to false
@@ -522,9 +594,16 @@ public class TeiidDdlImporter extends StandardImporter {
 				viewTable.setTransformationSQL(queryExpression);
 			}
 
-		}else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
+		} else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)
 				|| is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
-			createProcedure(node, model);
+			String modelType = (String)node.getProperty(TeiidDdlLexicon.SchemaElement.TYPE);
+			if( modelType != null ) {
+				if( modelType.equalsIgnoreCase("VIRTUAL")) {
+					createVirtualProcedure(node, model);
+				} else {
+					createProcedure(node, model);
+				}
+			}
 
 			// Handle Alter Table
 		} else if (is(node, TeiidDdlLexicon.AlterOptions.TABLE_STATEMENT)) {
@@ -886,32 +965,27 @@ public class TeiidDdlImporter extends StandardImporter {
 		
 		// Not enough info in DDL to determine if fixed length data type so calling it here
 		column.setLengthFixed(isFixedLength(column.getNativeType()));
-		
-		// From RelationalModelProcessor....
-        if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.ALL_EXCEPT_LIKE) ) {
-            column.setCaseSensitive(false);
-        } else if (column.getSearchability().equalsIgnoreCase(RelationalConstants.SEARCHABILITY.SEARCHABLE) ) {
-            column.setCaseSensitive(true);
-        } else {
-            column.setCaseSensitive(false);
-        }
 	}
 	
     /**
      * Method that can identify if a data type is fixed length or not
      * (See <code>org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl</code> used for JDBC import)
+     *
+     * Note that SQL Server has an IMAGE native type that is treated like a blob, so is NOT fixed length
      * @param typeName 
      * @return True if the specified type should be considered fixed-length.
      * @since 4.2
      */
     protected boolean isFixedLength( final String typeName ) {
-        return !(TYPES_UPPER.LONGVARBINARY.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.LONGVARCHAR.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.VARBINARY.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.VARCHAR.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.ARRAY.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.BLOB.equalsIgnoreCase(typeName) || 
-        		TYPES_UPPER.CLOB.equalsIgnoreCase(typeName));
+        return !(TYPES_UPPER.LONGVARBINARY.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.LONGVARCHAR.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.VARBINARY.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.VARCHAR.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.ARRAY.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.BLOB.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.CLOB.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.IMAGE.equalsIgnoreCase(typeName) ||
+            TYPES_UPPER.TEXT.equalsIgnoreCase(typeName));
     }
 
 	/**

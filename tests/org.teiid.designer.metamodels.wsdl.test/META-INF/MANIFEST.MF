@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.metamodels.wsdl.test;singleton:=true
-Bundle-Version: 9.0.3.qualifier
+Bundle-Version: 9.0.4.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.metamodels.wsdl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Localization: plugin
 Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.core.designer.test.framework;bundle-version="[9.0.0,10.0.0)",
- org.teiid.designer.sdt;bundle-version="[9.0.0,10.0.0)"
+ org.teiid.core.designer.test.framework;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.sdt;bundle-version="[9.0.2,10.0.0)"
 Export-Package: org.teiid.designer.metamodels.wsdl

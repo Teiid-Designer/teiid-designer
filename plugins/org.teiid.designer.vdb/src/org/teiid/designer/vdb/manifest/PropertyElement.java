@@ -34,7 +34,7 @@ public class PropertyElement implements Serializable {
     public PropertyElement() {
     }
 
-    PropertyElement( final String name,
+    public PropertyElement( final String name,
                      final String value ) {
         this.name = name;
         this.value = value;
@@ -66,4 +66,11 @@ public class PropertyElement implements Serializable {
 
         return text.toString();
 	}
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
 }

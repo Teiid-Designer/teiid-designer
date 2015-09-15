@@ -8,7 +8,6 @@
 package org.teiid.designer.vdb.manifest;
 
 import java.io.Serializable;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -60,7 +59,14 @@ public class MaskElement  implements Serializable {
 	public String getSql() {
 		return this.sql;
 	}
-    
+
+	/**
+     * @param visitor
+     */
+    public void accept(Visitor visitor) {
+        visitor.visit(this);
+    }
+
 	/*
 	<data-role name="base-role" any-authenticated="true">
         <description>Conditional access</description>
