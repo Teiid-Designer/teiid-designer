@@ -7,8 +7,8 @@
  */
 package org.teiid.designer.vdb;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class AllowedLanguages extends VdbUnit implements Iterable<String> {
 
-    private Set<String> languages = new HashSet<String>();
+    private Set<String> languages = new LinkedHashSet<String>();
 
 	/**
 	 *
