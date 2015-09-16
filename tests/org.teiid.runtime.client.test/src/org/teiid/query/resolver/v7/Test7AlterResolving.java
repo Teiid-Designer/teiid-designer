@@ -31,7 +31,7 @@ public class Test7AlterResolving extends AbstractTestAlterResolving {
      *
      */
     public Test7AlterResolving() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

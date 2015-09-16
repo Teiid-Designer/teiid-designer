@@ -21,12 +21,12 @@ public class Test8UpdateValidator extends AbstractTestUpdateValidator {
 
     private Test8Factory factory;
 
-    protected Test8UpdateValidator(ITeiidServerVersion teiidVersion) {
+    protected Test8UpdateValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8UpdateValidator() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

@@ -17,12 +17,12 @@ import org.teiid.query.validator.v85.Test85UpdateValidator;
 @SuppressWarnings( "javadoc" )
 public class Test86UpdateValidator extends Test85UpdateValidator {
 
-    protected Test86UpdateValidator(ITeiidServerVersion teiidVersion) {
+    protected Test86UpdateValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test86UpdateValidator() {
-        this(Version.TEIID_8_6.get());
+        this(Version.TEIID_8_6);
     }
 
 }

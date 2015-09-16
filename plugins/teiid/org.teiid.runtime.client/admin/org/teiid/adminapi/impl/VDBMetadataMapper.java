@@ -305,12 +305,14 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 					}
 				}
 			}
+
 			if (node.get(METADATA).isDefined()) {
-				model.setSchemaText(node.get(METADATA).asString());
+			    model.setSchemaText(node.get(METADATA).asString());
 			}
 			if (node.get(METADATA_TYPE).isDefined()) {
-				model.setSchemaSourceType(node.get(METADATA_TYPE).asString());
+			    model.setSchemaSourceType(node.get(METADATA_TYPE).asString());
 			}
+
 			if (node.get(METADATA_STATUS).isDefined()) {
 				model.setMetadataStatus(node.get(METADATA_STATUS).asString());
 			}			

@@ -19,6 +19,7 @@ import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.types.NullType;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.type.IDataTypeManagerService.DataSourceTypes;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 
@@ -33,9 +34,9 @@ public abstract class AbstractTestDataTypeManagerService {
     /**
      * @param teiidVersion
      */
-    public AbstractTestDataTypeManagerService(ITeiidServerVersion... teiidVersions) {
-        for (ITeiidServerVersion teiidVersion : teiidVersions) {
-            dataTypeManagerCache.put(teiidVersion, DataTypeManagerService.getInstance(teiidVersion));
+    public AbstractTestDataTypeManagerService(Version... teiidVersions) {
+        for (Version teiidVersion : teiidVersions) {
+            dataTypeManagerCache.put(teiidVersion.get(), DataTypeManagerService.getInstance(teiidVersion.get()));
         }
     }
 

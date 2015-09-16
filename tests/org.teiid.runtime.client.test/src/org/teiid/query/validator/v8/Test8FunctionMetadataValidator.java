@@ -22,12 +22,12 @@ public class Test8FunctionMetadataValidator extends AbstractTestFunctionMetadata
 
     private Test8Factory factory;
 
-    protected Test8FunctionMetadataValidator(ITeiidServerVersion teiidVersion) {
+    protected Test8FunctionMetadataValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8FunctionMetadataValidator() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

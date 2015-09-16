@@ -470,7 +470,7 @@ public class VdbUtil implements VdbConstants {
         if (callback.hasException() || validationVersion == null)
             return false;
 
-        return validationVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0.get());
+        return validationVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0);
     }
     
     /**

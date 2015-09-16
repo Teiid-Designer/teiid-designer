@@ -230,7 +230,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
         addFunctions(GeometryFunctionMethods.class);
 
         // Added here in Teiid 8.10 but the class has existed long before this
-        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10))
             addFunctions(XMLSystemFunctions.class);
     }
 
@@ -769,7 +769,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Since(Version.TEIID_8_0)
     private void addEndsWithFunction() {
-	    if (teiidVersion.getMinimumVersion().isLessThan(Version.TEIID_8_0.get()))
+	    if (teiidVersion.getMinimumVersion().isLessThan(Version.TEIID_8_0))
             return;
 
         FunctionMethod f =
@@ -810,7 +810,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Removed(Version.TEIID_8_0)
 	private void addToCharsFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
 	        return;
 
 		functions.add(
@@ -823,7 +823,7 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 
 	@Removed(Version.TEIID_8_0)
 	private void addToBytesFunction() {
-	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+	    if (teiidVersion.getMinimumVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
             return;
 
 		functions.add(

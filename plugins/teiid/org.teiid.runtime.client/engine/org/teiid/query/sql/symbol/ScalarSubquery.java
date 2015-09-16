@@ -105,7 +105,7 @@ public class ScalarSubquery extends SimpleNode
             if (other.type != null) return false;
         } else if (!this.type.equals(other.type)) return false;
 
-        if(getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        if(getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
             if (this.subqueryHint == null) {
                 if (other.subqueryHint != null) return false;
             } else if (!this.subqueryHint.equals(other.subqueryHint)) return false;

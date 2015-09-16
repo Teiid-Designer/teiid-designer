@@ -25,7 +25,7 @@ public class Test7FunctionMetadataValidator extends AbstractTestFunctionMetadata
      *
      */
     public Test7FunctionMetadataValidator() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

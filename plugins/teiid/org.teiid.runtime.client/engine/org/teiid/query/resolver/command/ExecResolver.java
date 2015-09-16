@@ -403,7 +403,7 @@ public class ExecResolver extends ProcedureContainerResolver {
             namedParameters = true;
         }
         
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             findCommand7Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);
         else
             findCommand8Metadata(metadata, storedProcedureCommand, storedProcedureInfo, oldParams, namedParameters);

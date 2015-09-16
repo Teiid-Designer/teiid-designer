@@ -16,12 +16,12 @@ import org.teiid.query.resolver.v89.Test89Resolver;
 @SuppressWarnings( {"javadoc"} )
 public class Test810Resolver extends Test89Resolver {
 
-    protected Test810Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test810Resolver(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test810Resolver() {
-        this(Version.TEIID_8_10.get());
+        this(Version.TEIID_8_10);
     }
 
     @Override

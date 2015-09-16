@@ -8,6 +8,7 @@
 package org.teiid.query.sql;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.lang.LanguageObject;
 
@@ -23,9 +24,9 @@ public abstract class AbstractTest<T extends LanguageObject> {
     /**
      * @param teiidVersion
      */
-    public AbstractTest(ITeiidServerVersion teiidVersion) {
-        this.teiidVersion = teiidVersion;
-        this.parser = new QueryParser(teiidVersion);
+    public AbstractTest(Version teiidVersion) {
+        this.teiidVersion = teiidVersion.get();
+        this.parser = new QueryParser(this.teiidVersion);
     }
 
     protected abstract AbstractTestFactory getFactory();

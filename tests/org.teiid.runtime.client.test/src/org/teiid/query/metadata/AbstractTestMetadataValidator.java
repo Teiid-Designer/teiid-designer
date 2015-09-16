@@ -20,7 +20,7 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.MetadataFactory;
@@ -41,9 +41,9 @@ public abstract class AbstractTestMetadataValidator extends AbstractTest {
     private VDBMetaData vdb;
     private MetadataStore store;
 
-    public AbstractTestMetadataValidator(ITeiidServerVersion teiidVersion) {
+    public AbstractTestMetadataValidator(Version teiidVersion) {
         super(teiidVersion);
-        SFM = new SystemFunctionManager(teiidVersion, getClass().getClassLoader());
+        SFM = new SystemFunctionManager(getTeiidVersion(), getClass().getClassLoader());
     }
 
     @Before

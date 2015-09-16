@@ -452,7 +452,7 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
         addTransform(new org.teiid.core.types.basic.SQLXMLToStringTransform(this));
 
-        if (teiidVersion.isLessThan(Version.TEIID_8_5.get())) {
+        if (teiidVersion.isLessThan(Version.TEIID_8_5)) {
             for (Class<?> type : getAllDataTypeClasses()) {
                 if (type != DefaultDataTypes.OBJECT.getTypeClass()) {
                     addTransform(new AnyToObjectTransform(this, type));

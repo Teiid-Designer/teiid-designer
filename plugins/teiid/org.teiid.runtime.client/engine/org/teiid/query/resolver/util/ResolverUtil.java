@@ -398,7 +398,7 @@ public class ResolverUtil {
         	if (query.getFrom() != null) {
         		fromClauseGroups = query.getFrom().getGroups();
         	}
-        	if (!query.getSelect().isDistinct() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        	if (!query.getSelect().isDistinct() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
                 groupBy = query.getGroupBy();
             }
         }
@@ -455,7 +455,7 @@ public class ResolverUtil {
                         continue;
                     }
         		}
-        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
         	 // check for legacy positional
                 ExpressionSymbol es = (ExpressionSymbol)sortKey;
         	    if (es.getExpression() instanceof Constant) {
@@ -498,7 +498,7 @@ public class ResolverUtil {
             int index = expressions.indexOf(SymbolMap.getExpression(sortKey));
             // if unrelated and not a simple query - that is more than just a grouping, throw an exception
             if (index == -1 && !isSimpleQuery) {
-                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get()) && groupBy == null)
+                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10) && groupBy == null)
                     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
                 else
                     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));

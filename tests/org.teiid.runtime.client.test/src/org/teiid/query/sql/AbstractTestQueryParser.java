@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.ISPParameter.ParameterInfo;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants.NonReserved;
 import org.teiid.language.SQLConstants.Reserved;
 import org.teiid.language.SortSpecification;
@@ -107,7 +107,7 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
     /**
      * @param teiidVersion 
      */
-    public AbstractTestQueryParser(ITeiidServerVersion teiidVersion) {
+    public AbstractTestQueryParser(Version teiidVersion) {
         super(teiidVersion);
     }
 

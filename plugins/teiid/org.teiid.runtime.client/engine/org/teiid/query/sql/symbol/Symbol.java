@@ -149,7 +149,7 @@ public class Symbol extends SimpleNode implements ISymbol<LanguageVisitor> {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             result = prime * result + ((this.getShortCanonicalName() == null) ? 0 : this.getShortCanonicalName().hashCode());
         else
             result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());

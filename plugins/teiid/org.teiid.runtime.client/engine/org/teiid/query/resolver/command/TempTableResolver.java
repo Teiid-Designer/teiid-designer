@@ -124,7 +124,7 @@ public class TempTableResolver extends CommandResolver {
 			ArrayList<TempMetadataID> primaryKey = new ArrayList<TempMetadataID>(create.getPrimaryKey().size());
 			for (ElementSymbol symbol : create.getPrimaryKey()) {
 
-			    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+			    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
 			        Object mid = symbol.getMetadataID();
 			        if (mid instanceof TempMetadataID) {
 			            primaryKey.add((TempMetadataID)mid);

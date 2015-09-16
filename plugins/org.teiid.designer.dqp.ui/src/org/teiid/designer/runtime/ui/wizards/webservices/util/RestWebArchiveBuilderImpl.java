@@ -502,7 +502,7 @@ public class RestWebArchiveBuilderImpl implements WebArchiveBuilder, WebServiceL
             resources.add(resourceJavaFile);
 
             ITeiidServerVersion version = ModelerCore.getTeiidServerVersion();
-            boolean greaterThan82 = version.isGreaterThan(TeiidServerVersion.Version.TEIID_8_2.get());
+            boolean greaterThan82 = version.isGreaterThan(TeiidServerVersion.Version.TEIID_8_2);
 
             if (greaterThan82) {
             	teiidProviderJavaFile = "TeiidRSProviderPost"; //$NON-NLS-1$

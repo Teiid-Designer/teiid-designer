@@ -44,12 +44,12 @@ public class Test8Cloning extends AbstractTestCloning {
 
     private Test8Factory factory;
 
-    protected Test8Cloning(ITeiidServerVersion teiidVersion) {
+    protected Test8Cloning(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8Cloning() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

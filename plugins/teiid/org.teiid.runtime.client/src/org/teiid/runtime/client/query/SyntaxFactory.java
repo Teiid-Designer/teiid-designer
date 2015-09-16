@@ -146,7 +146,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
         this.teiidParser = teiidParser;
     }
 
-    private boolean isGreaterThanOrEqualTo(ITeiidServerVersion teiidVersion) {
+    private boolean isGreaterThanOrEqualTo(Version teiidVersion) {
         ITeiidServerVersion minVersion = teiidParser.getVersion().getMinimumVersion();
         return minVersion.equals(teiidVersion) || minVersion.isGreaterThan(teiidVersion);
     }
@@ -175,7 +175,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
         aggregateSymbol.setDistinct(isDistinct);
 
         if (expression != null) {
-            if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+            if (isGreaterThanOrEqualTo(Version.TEIID_8_0))
                 aggregateSymbol.setArgs(new Expression[] { expression });
             else
                 aggregateSymbol.setExpression(expression);
@@ -264,7 +264,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public IRaiseStatement createRaiseStatement(Expression expression) {
-        if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get())) {
+        if (isGreaterThanOrEqualTo(Version.TEIID_8_0)) {
             RaiseStatement raiseStatement = create(ASTNodes.RAISE_STATEMENT);
             raiseStatement.setExpression(expression);
             return raiseStatement;
@@ -414,7 +414,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     @Override
     public ICreateProcedureCommand createCreateProcedureCommand(Block block) {
-        if (isGreaterThanOrEqualTo(Version.TEIID_8_0.get())) {
+        if (isGreaterThanOrEqualTo(Version.TEIID_8_0)) {
             CreateProcedureCommand command = create(ASTNodes.CREATE_PROCEDURE_COMMAND);
             command.setBlock(block);
             return command;

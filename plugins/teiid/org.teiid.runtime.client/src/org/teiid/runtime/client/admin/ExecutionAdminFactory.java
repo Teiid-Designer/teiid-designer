@@ -36,7 +36,7 @@ public class ExecutionAdminFactory implements IExecutionAdminFactory {
         if (version == null)
             return SupportLevel.NO_SUPPORT;
 
-        if (version.isLessThan(TeiidServerVersion.Version.TEIID_7_7.get()))
+        if (version.isLessThan(TeiidServerVersion.Version.TEIID_7_7))
             return SupportLevel.NO_SUPPORT;
 
         // Only compare major-minor versions

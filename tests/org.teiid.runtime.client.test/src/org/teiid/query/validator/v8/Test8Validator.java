@@ -29,12 +29,12 @@ public class Test8Validator extends AbstractTestValidator {
 
     private Test8Factory factory;
 
-    protected Test8Validator(ITeiidServerVersion teiidVersion) {
+    protected Test8Validator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8Validator() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

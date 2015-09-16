@@ -30,7 +30,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 public class Test7DataTypeManagerService extends AbstractTestDataTypeManagerService {
 
     public Test7DataTypeManagerService() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Test

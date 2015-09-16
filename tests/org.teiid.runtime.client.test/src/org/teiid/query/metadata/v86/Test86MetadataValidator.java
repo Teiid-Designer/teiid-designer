@@ -7,7 +7,6 @@
 */
 package org.teiid.query.metadata.v86;
 
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.v85.Test85MetadataValidator;
 
@@ -17,11 +16,11 @@ import org.teiid.query.metadata.v85.Test85MetadataValidator;
 @SuppressWarnings( "javadoc" )
 public class Test86MetadataValidator extends Test85MetadataValidator {
 
-    protected Test86MetadataValidator(ITeiidServerVersion teiidVersion) {
+    protected Test86MetadataValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test86MetadataValidator() {
-        this(Version.TEIID_8_6.get());
+        this(Version.TEIID_8_6);
     }
 }

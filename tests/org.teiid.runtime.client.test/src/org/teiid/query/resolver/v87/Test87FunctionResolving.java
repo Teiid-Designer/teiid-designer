@@ -24,12 +24,12 @@ import org.teiid.query.unittest.RealMetadataFactory.DDLHolder;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test87FunctionResolving extends Test86FunctionResolving {
 
-    protected Test87FunctionResolving(ITeiidServerVersion teiidVersion) {
+    protected Test87FunctionResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test87FunctionResolving() {
-        this(Version.TEIID_8_7.get());
+        this(Version.TEIID_8_7);
     }
 
     /*

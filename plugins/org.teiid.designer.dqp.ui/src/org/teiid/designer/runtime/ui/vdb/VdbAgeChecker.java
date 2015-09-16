@@ -29,7 +29,7 @@ public class VdbAgeChecker {
     	CoreArgCheck.isNotNull(vdbFile, "vdbFile"); //$NON-NLS-1$
 
     	
-        if( serverVersion.isLessThan(Version.TEIID_8_0.get()) && 
+        if( serverVersion.isLessThan(Version.TEIID_8_0) && 
         	VdbUtil.isVdbTeiidVersion8orGreater(vdbFile) ) {
         	
         	String vdbName = FileUtils.getNameWithoutExtension(vdbFile);

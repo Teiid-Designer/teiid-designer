@@ -82,7 +82,7 @@ public class SystemMetadata {
 	 * @param teiidVersion
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
-	    if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
+	    if (teiidVersion.isLessThan(Version.TEIID_8_0))
 	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionFailure, this.getClass().getSimpleName(), teiidVersion));
 
 		this.teiidVersion = teiidVersion;

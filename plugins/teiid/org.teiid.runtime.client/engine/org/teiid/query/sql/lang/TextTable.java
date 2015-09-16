@@ -81,7 +81,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
      */
     @Since(Version.TEIID_8_10)
     public Character getRowDelimiter() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
             return null;
 
         return rowDelimiter;
@@ -92,7 +92,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
      */
     @Since(Version.TEIID_8_10)
     public void setRowDelimiter(Character rowDelimiter) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
             return;
 
         this.rowDelimiter = rowDelimiter;
@@ -187,7 +187,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
      */
     @Since(Version.TEIID_8_10)
     public void setNoTrim() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
             return;
 
         for (TextColumn col : columns) {
@@ -200,7 +200,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
      */
     @Since(Version.TEIID_8_10)
     public boolean isNoTrim() {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
             return false;
 
         for (TextColumn col : columns) {
@@ -307,7 +307,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
         if (this.usingRowDelimiter != other.usingRowDelimiter)
             return false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
             if (this.delimiter == null) {
                 if (other.delimiter != null)
                     return false;

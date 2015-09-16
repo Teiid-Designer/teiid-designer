@@ -22,12 +22,12 @@ public class Test8AlterValidation extends AbstractTestAlterValidation {
 
     private Test8Factory factory;
 
-    protected Test8AlterValidation(ITeiidServerVersion teiidVersion) {
+    protected Test8AlterValidation(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8AlterValidation() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

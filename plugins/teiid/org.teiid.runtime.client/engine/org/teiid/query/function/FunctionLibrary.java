@@ -248,7 +248,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
                     //pushdown function takes presedence 
                     //TODO: there may be multiple translators contributing functions with the same name / types
                     //need "conformed" logic so that the right pushdown can occur
-                    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_7.get())) {
+                    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_7)) {
                         // Teiid 8.7 +
                         if (CoreConstants.SYSTEM_MODEL.equals(descriptor.getSchema()))
                             return Arrays.asList(descriptor);
@@ -541,7 +541,7 @@ public class FunctionLibrary implements IFunctionLibrary<FunctionForm, FunctionD
          * but if someone uses teiid 7, they will encounter this exception so the designer
          * client resolver must mirror the same exception.
          */
-        if(teiidVersion.isLessThan(Version.TEIID_8_0.get()) && result.isExplicit()) {
+        if(teiidVersion.isLessThan(Version.TEIID_8_0) && result.isExplicit()) {
             throw new Exception();
         }
 

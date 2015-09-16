@@ -54,7 +54,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
      *
      */
     public Test7ProcedureResolving() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

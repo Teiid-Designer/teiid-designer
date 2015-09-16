@@ -130,12 +130,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
 
     private boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_0.get());
+        return minVersion.isLessThan(Version.TEIID_8_0);
     }
     
     private boolean isLessThanTeiidEightSeven() {
         ITeiidServerVersion minVersion = teiidServer.getServerVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_7.get());
+        return minVersion.isLessThan(Version.TEIID_8_7);
     }
 
     @Override
@@ -751,12 +751,12 @@ public class ExecutionAdmin implements IExecutionAdmin {
             if (translator.getName() != null) {
             	TeiidTranslator teiidTranslator = null;
             	
-                if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6.get())) {
+                if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_6)) {
                 	Collection<? extends PropertyDefinition> propDefs = this.admin.getTemplatePropertyDefinitions(translator.getName());
                 	teiidTranslator =  new TeiidTranslator(translator, propDefs, teiidServer);
                 	
                 	this.translatorByNameMap.put(translator.getName(), teiidTranslator);
-                } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7.get())) {
+                } else if( teiidServer.getServerVersion().isLessThan(Version.TEIID_8_7)) {
                 	@SuppressWarnings("deprecation")
 					Collection<? extends PropertyDefinition> propDefs = this.admin.getTranslatorPropertyDefinitions(translator.getName());
                 	teiidTranslator =   new TeiidTranslator(translator, propDefs, teiidServer);

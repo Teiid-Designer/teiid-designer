@@ -166,7 +166,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 	}
 
 	private boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(Version.TEIID_8_0.get());
+        return getTeiidVersion().isLessThan(Version.TEIID_8_0);
     }
 
     private void checkSupportedVersion() {

@@ -25,7 +25,7 @@ public class Test7AlterValidation extends AbstractTestAlterValidation {
      *
      */
     public Test7AlterValidation() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

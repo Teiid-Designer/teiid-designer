@@ -28,8 +28,8 @@ import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 public class Test8DataTypeManagerService extends AbstractTestDataTypeManagerService {
 
     public Test8DataTypeManagerService() {
-        super(Version.TEIID_8_0.get(), Version.TEIID_8_1.get(), Version.TEIID_8_2.get(), Version.TEIID_8_3.get(),
-                    Version.TEIID_8_4.get(), Version.TEIID_8_5.get(), Version.TEIID_8_6.get(), Version.TEIID_8_7.get());
+        super(Version.TEIID_8_0, Version.TEIID_8_1, Version.TEIID_8_2, Version.TEIID_8_3,
+                    Version.TEIID_8_4, Version.TEIID_8_5, Version.TEIID_8_6, Version.TEIID_8_7);
     }
 
     @Test

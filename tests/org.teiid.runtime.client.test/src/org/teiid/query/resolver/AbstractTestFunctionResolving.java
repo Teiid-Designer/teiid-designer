@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.resolver.util.ResolverVisitor;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -40,7 +40,7 @@ public abstract class AbstractTestFunctionResolving extends AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTestFunctionResolving(ITeiidServerVersion teiidVersion) {
+    public AbstractTestFunctionResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 

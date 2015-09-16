@@ -44,7 +44,7 @@ public class Test7FunctionResolving extends AbstractTestFunctionResolving {
      *
      */
     public Test7FunctionResolving() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class MakeGSS {
 	private static Logger logger = Logger.getLogger("org.teiid.jdbc"); //$NON-NLS-1$
 
 	private static boolean isTeiid89OrGreater(ITeiidServerVersion teiidVersion) {
-	    return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9.get());
+	    return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9);
 	}
 
 	public static LogonResult authenticate(ILogon logon, Properties props) 

@@ -20,12 +20,12 @@ import org.teiid.query.validator.v89.Test89Validator;
 @SuppressWarnings( {"javadoc"} )
 public class Test810Validator extends Test89Validator {
 
-    protected Test810Validator(ITeiidServerVersion teiidVersion) {
+    protected Test810Validator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test810Validator() {
-        this(Version.TEIID_8_10.get());
+        this(Version.TEIID_8_10);
     }
 
     @Test

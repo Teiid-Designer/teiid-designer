@@ -7,7 +7,6 @@
 */
 package org.teiid.query.resolver.v810;
 
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.v89.Test89AccessPattern;
 
@@ -17,11 +16,11 @@ import org.teiid.query.resolver.v89.Test89AccessPattern;
 @SuppressWarnings( "javadoc" )
 public class Test810AccessPattern extends Test89AccessPattern {
 
-    protected Test810AccessPattern(ITeiidServerVersion teiidVersion) {
+    protected Test810AccessPattern(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test810AccessPattern() {
-        this(Version.TEIID_8_10.get());
+        this(Version.TEIID_8_10);
     }
 }

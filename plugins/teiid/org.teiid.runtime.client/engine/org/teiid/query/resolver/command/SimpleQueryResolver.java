@@ -123,7 +123,7 @@ public class SimpleQueryResolver extends CommandResolver {
             qrv.visit(query);
             ResolverVisitor visitor = (ResolverVisitor)qrv.getVisitor();
 			visitor.throwException(true);
-			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get())) {
+			if (visitor.hasUserDefinedAggregate() && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6)) {
 				ExpressionMappingVisitor emv = new ExpressionMappingVisitor(getTeiidVersion(), null) {
 					@Override
                     public Expression replaceExpression(Expression element) {
@@ -185,7 +185,7 @@ public class SimpleQueryResolver extends CommandResolver {
             
             
             QueryCommand recursive = null;
-            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
                 try {
                     getQueryResolver().resolveCommand(queryExpression, metadata.getMetadata(), false);
                 } catch (QueryResolverException e) {

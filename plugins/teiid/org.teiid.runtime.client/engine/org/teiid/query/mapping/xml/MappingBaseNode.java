@@ -94,7 +94,7 @@ public abstract class MappingBaseNode extends MappingNode implements IMappingBas
 
 			/* The upper case of the class is used in Teiid 7 mappings */
 			ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-			if (minVersion.isLessThan(Version.TEIID_8_0.get()))
+			if (minVersion.isLessThan(Version.TEIID_8_0))
 				mappingClass = mappingClass.toUpperCase();
 
             recursiveRoot.setRootRecursiveNode(true, mappingClass);

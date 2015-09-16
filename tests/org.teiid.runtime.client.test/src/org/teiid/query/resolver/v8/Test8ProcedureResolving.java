@@ -36,12 +36,12 @@ public class Test8ProcedureResolving extends AbstractTestProcedureResolving {
 
     private Test8Factory factory;
 
-    protected Test8ProcedureResolving(ITeiidServerVersion teiidVersion) {
+    protected Test8ProcedureResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8ProcedureResolving() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

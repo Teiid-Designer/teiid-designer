@@ -17,11 +17,11 @@ import org.teiid.query.sql.v8.Test8Create;
 @SuppressWarnings( {"javadoc"} )
 public class Test85Create extends Test8Create {
 
-    protected Test85Create(ITeiidServerVersion teiidVersion) {
+    protected Test85Create(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85Create() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 }

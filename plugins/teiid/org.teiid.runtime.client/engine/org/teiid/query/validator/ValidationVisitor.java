@@ -214,7 +214,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
         this.isXML = false;
         this.inQuery = false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0))
             this.createProc = null;
     }
 
@@ -502,7 +502,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     
     @Override
     public void visit(CommandStatement obj) {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             visit7(obj);
         else
             visit8(obj);
@@ -1479,7 +1479,7 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     	}
 
         Expression aggExp = null;
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
             aggExp = obj.getExpression();
             validateNoNestedAggs(aggExp);
         } else {

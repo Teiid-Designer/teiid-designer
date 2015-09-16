@@ -208,12 +208,12 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
     protected boolean isLessThanTeiidEight() {
         ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.isLessThan(Version.TEIID_8_0.get());
+        return minVersion.isLessThan(Version.TEIID_8_0);
     }
 
     protected boolean isGreaterThanTeiidSeven() {
         ITeiidServerVersion minVersion = getTeiidVersion().getMinimumVersion();
-        return minVersion.isGreaterThan(Version.TEIID_7_7.get());
+        return minVersion.isGreaterThan(Version.TEIID_7_7);
     }
 
     protected void checkSupportedVersion(Version teiidVersion) {
@@ -508,7 +508,7 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
         		return booleanFuture(false);
         	}
 
-        	if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        	if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
                 match = SET_CHARACTERISTIC_STATEMENT.matcher(commands[0]);
                 if (match.matches()) {
                     String value = match.group(1);

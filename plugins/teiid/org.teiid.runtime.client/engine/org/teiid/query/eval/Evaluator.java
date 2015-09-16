@@ -990,14 +990,14 @@ public class Evaluator {
 			XMLQueryRowProcessor rp = null;
 			ITeiidServerVersion teiidVersion = xmlQuery.getTeiidVersion();
             if (xmlQuery.getXQueryExpression().isStreaming()) {
-			    if (teiidVersion.isLessThan(Version.TEIID_8_10.get()))
+			    if (teiidVersion.isLessThan(Version.TEIID_8_10))
 			        rp = new XMLQueryRowProcessor();
 			    else
 			        rp = new XMLQueryRowProcessor(exists);
 			}
 			try {
 				result = evaluateXQuery(xmlQuery.getXQueryExpression(), xmlQuery.getPassing(), rp);
-                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
                     if (result == null) {
                         return null;
                     }
@@ -1015,7 +1015,7 @@ public class Evaluator {
 				throw e;
 			}
 			if (rp != null) {
-			    if (exists && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+			    if (exists && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
                     return rp.hasItem;
                 }
 				XMLType.Type type = rp.type;
@@ -1255,7 +1255,7 @@ public class Evaluator {
 	throws Exception {
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		Object contextItem = null;
-		if(getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+		if(getTeiidVersion().isLessThan(Version.TEIID_8_10))
 		    contextItem = evaluateParameters(cols, parameters);
 		else {
 		    evaluateParameters(cols, parameters);
@@ -1284,7 +1284,7 @@ public class Evaluator {
 		for (DerivedColumn passing : cols) {
 			Object value = evaluateParameter(passing);
 			if (passing.getAlias() == null) {
-			    if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+			    if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
 				    contextItem = value;
 			    else
 			        parameters.put(null, value);

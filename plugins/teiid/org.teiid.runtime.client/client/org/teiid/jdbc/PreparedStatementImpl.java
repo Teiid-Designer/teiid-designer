@@ -331,7 +331,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 					|| StatementImpl.TRANSACTION_STATEMENT.matcher(prepareSql).matches()
 					|| StatementImpl.SHOW_STATEMENT.matcher(prepareSql).matches()
 					||
-					    (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_10.get())
+					    (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_10)
 					        && StatementImpl.SET_CHARACTERISTIC_STATEMENT.matcher(prepareSql).matches())) {
 				metadataResults = new MetadataResult();
 			} else {

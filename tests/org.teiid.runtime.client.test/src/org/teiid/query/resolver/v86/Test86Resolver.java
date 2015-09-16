@@ -17,12 +17,12 @@ import org.teiid.query.sql.lang.Command;
 @SuppressWarnings( {"javadoc"} )
 public class Test86Resolver extends Test85Resolver {
 
-    protected Test86Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test86Resolver(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test86Resolver() {
-        this(Version.TEIID_8_6.get());
+        this(Version.TEIID_8_6);
     }
 
     @Override

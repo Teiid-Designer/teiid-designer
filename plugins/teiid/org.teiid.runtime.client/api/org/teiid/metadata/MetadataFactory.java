@@ -40,7 +40,6 @@ import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.MetadataStore.Grant;
@@ -125,7 +124,7 @@ public class MetadataFactory implements Serializable {
         map.put(TEIID_EXCEL, EXCEL_URI.substring(1, EXCEL_URI.length()-1));
         map.put(TEIID_JPA, JPA_URI.substring(1, JPA_URI.length()-1));
 
-        if (TeiidServerVersion.Version.TEIID_8_10.get().isLessThanOrEqualTo(version)) {
+        if (version.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
             map.put(TEIID_HBASE, HBASE_URI.substring(1, HBASE_URI.length()-1));
             map.put(TEIID_SPATIAL, SPATIAL_URI.substring(1, SPATIAL_URI.length()-1));
         }
@@ -155,7 +154,7 @@ public class MetadataFactory implements Serializable {
     }
 
     private boolean isTeiid89OrGreater() {
-        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9.get());
+        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9);
     }
 
     private long longHash(String s, long h) {

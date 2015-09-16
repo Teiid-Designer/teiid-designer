@@ -236,7 +236,7 @@ public class Create extends Command
         } else if (!this.tableMetadata.equals(other.tableMetadata))
             return false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
             if (this.commitAction == null) {
                 if (other.commitAction != null)
                     return false;

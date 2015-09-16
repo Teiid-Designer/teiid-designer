@@ -7,6 +7,8 @@
 */
 package org.teiid.designer.runtime.version.spi;
 
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+
 /**
  * Parent marker interface for teiid instance version information
  */
@@ -183,6 +185,16 @@ public interface ITeiidServerVersion {
     boolean isGreaterThan(ITeiidServerVersion otherVersion);
 
     /**
+     *
+     * @see #isGreaterThan(ITeiidServerVersion)
+     *
+     * @param otherVersion
+     *
+     * @return true if this version is greater. False otherwise.
+     */
+    boolean isGreaterThan(Version otherVersion);
+
+    /**
      * Is this version less than the given version
      *
      * Wildcards will cause the result to return false since either
@@ -196,6 +208,15 @@ public interface ITeiidServerVersion {
     boolean isLessThan(ITeiidServerVersion otherVersion);
 
     /**
+     * @see #isLessThan(ITeiidServerVersion)
+     *
+     * @param otherVersion
+     *
+     * @return true if this version is less. False otherwise.
+     */
+    boolean isLessThan(Version otherVersion);
+
+    /**
      * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
      * and {@link #isGreaterThan(ITeiidServerVersion)}.
      *
@@ -204,6 +225,16 @@ public interface ITeiidServerVersion {
      * @return this is greater than or equal to otherVersion
      */
     boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion);
+
+   /**
+    *
+    * @see #isGreaterThanOrEqualTo(ITeiidServerVersion)
+    *
+    * @param otherVersion
+    *
+    * @return this is greater than or equal to otherVersion
+    */
+    boolean isGreaterThanOrEqualTo(Version otherVersion);
 
     /**
      * Convenience that delegates to {@link #compareTo(ITeiidServerVersion)}
@@ -214,4 +245,13 @@ public interface ITeiidServerVersion {
      * @return this is less than or equal to otherVersion
      */
     boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion);
+
+    /**
+     * @see #isLessThanOrEqualTo(ITeiidServerVersion)
+     *
+     * @param otherVersion
+     *
+     * @return this is less than or equal to otherVersion
+     */
+    boolean isLessThanOrEqualTo(Version otherVersion);
 }

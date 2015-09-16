@@ -41,7 +41,7 @@ public class Test7CreateDrop extends AbstractTestQueryParser {
      *
      */
     public Test7CreateDrop() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

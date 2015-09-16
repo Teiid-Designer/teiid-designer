@@ -7,21 +7,20 @@
 */
 package org.teiid.query.metadata.v810;
 
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.teiid.query.metadata.v88.Test88MetadataValidator;
+import org.teiid.query.metadata.v89.Test89MetadataValidator;
 
 /**
  *
  */
 @SuppressWarnings( "javadoc" )
-public class Test810MetadataValidator extends Test88MetadataValidator {
+public class Test810MetadataValidator extends Test89MetadataValidator {
 
-    protected Test810MetadataValidator(ITeiidServerVersion teiidVersion) {
+    protected Test810MetadataValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test810MetadataValidator() {
-        this(Version.TEIID_8_10.get());
+        this(Version.TEIID_8_10);
     }
 }

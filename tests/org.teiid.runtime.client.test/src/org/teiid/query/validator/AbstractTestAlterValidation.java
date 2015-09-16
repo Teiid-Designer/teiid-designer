@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.Test;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -43,7 +43,7 @@ public abstract class AbstractTestAlterValidation extends AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTestAlterValidation(ITeiidServerVersion teiidVersion) {
+    public AbstractTestAlterValidation(Version teiidVersion) {
         super(teiidVersion);
     }
 

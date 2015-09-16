@@ -97,7 +97,7 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
      */
     @Override
     public List<? extends Expression> getResultSetColumns() {
-        if (returnsResultSet() || parser.getVersion().isLessThan(Version.TEIID_8_0.get())) {
+        if (returnsResultSet() || parser.getVersion().isLessThan(Version.TEIID_8_0)) {
             return getProjectedSymbols();
         }
         return Collections.emptyList();

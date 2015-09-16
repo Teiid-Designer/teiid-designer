@@ -147,13 +147,13 @@ public abstract class BatchSerializer {
      * @return correct version of batch serializer according to teiid version
      */
     public static BatchSerializer getInstance(ITeiidServerVersion teiidVersion) {
-        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0))
             return new Batch0Serializer(teiidVersion);
-        else if (teiidVersion.isLessThan(Version.TEIID_8_2.get()))
+        else if (teiidVersion.isLessThan(Version.TEIID_8_2))
             return new Batch1Serializer(teiidVersion);
-        else if (teiidVersion.isLessThan(Version.TEIID_8_6.get()))
+        else if (teiidVersion.isLessThan(Version.TEIID_8_6))
             return new Batch2Serializer(teiidVersion);
-        else if (teiidVersion.isLessThan(Version.TEIID_8_10.get()))
+        else if (teiidVersion.isLessThan(Version.TEIID_8_10))
             return new Batch3Serializer(teiidVersion);
         else
             return new Batch4Serializer(teiidVersion);

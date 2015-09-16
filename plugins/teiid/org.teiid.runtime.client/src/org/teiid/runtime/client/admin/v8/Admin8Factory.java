@@ -259,7 +259,7 @@ public class Admin8Factory {
 			
 		}
 
-		private void requires(String item, ITeiidServerVersion requiredVersion) throws AdminException {
+		private void requires(String item, Version requiredVersion) throws AdminException {
             if (getTeiidVersion().isLessThan(requiredVersion))
                 throw new AdminComponentException(Messages.getString(Messages.Misc.TeiidVersionFailure, item, getTeiidVersion()));
         }
@@ -1321,7 +1321,7 @@ public class Admin8Factory {
 				    translatorProperties.add("translator-name");
 				    translatorProperties.add(translatorName);
 				    
-				    if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_7.get())) {
+				    if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_7)) {
 				        translatorProperties.add("type");
 				        translatorProperties.add(TranlatorPropertyType.OVERRIDE.name());
 				    }
@@ -1339,7 +1339,7 @@ public class Admin8Factory {
 		@Override
         @Since(Version.TEIID_8_7)
         public Collection<? extends PropertyDefinition> getTranslatorPropertyDefinitions(String translatorName, TranlatorPropertyType type) throws AdminException{
-			requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7.get());
+			requires("getTranslatorPropertyDefinitions(String, TranslatorPropertyType)", Version.TEIID_8_7);
 
 		    BuildPropertyDefinitions builder = new BuildPropertyDefinitions();
 

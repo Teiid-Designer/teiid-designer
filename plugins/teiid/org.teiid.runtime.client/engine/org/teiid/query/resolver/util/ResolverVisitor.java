@@ -141,7 +141,7 @@ public class ResolverVisitor extends LanguageVisitor
     }
 
     private void setFindShortName(IQueryMetadataInterface metadata) {
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5.get()))
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5))
             this.findShortName = metadata.findShortName();
         else
             this.findShortName = determinePartialName.get();
@@ -760,13 +760,13 @@ public class ResolverVisitor extends LanguageVisitor
 	    try {
 	        cr = library.determineNecessaryConversions(function.getName(), function.getType(), args, types, hasArgWithoutType);
 	    } catch (Exception ex) {
-	        if (getTeiidVersion().isLessThan(TeiidServerVersion.Version.TEIID_8_9.get()))
+	        if (getTeiidVersion().isLessThan(TeiidServerVersion.Version.TEIID_8_9))
 	            return Collections.emptyList();
 	        else
 	            throw ex;
 	    }
 
-        if (cr.method == null && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_9.get())) {
+        if (cr.method == null && getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_9)) {
 			return Collections.emptyList();
 		}
 		Class<?>[] newSignature = types;

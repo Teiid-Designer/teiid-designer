@@ -264,7 +264,7 @@ public class TransformationMetadata extends BasicQueryMetadata implements Serial
 	}
 
     public Table getGroupID(String groupName) throws Exception {
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             groupName = groupName.toUpperCase();
 
         return getMetadataStore().findGroup(groupName);

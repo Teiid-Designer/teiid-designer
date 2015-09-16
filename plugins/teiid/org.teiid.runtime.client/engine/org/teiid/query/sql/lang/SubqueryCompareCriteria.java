@@ -87,7 +87,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
     public String getPredicateQuantifierAsString() {
         String name = this.predicateQuantifier.name();
 
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_10.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
             return name + SQLConstants.Tokens.SPACE;
 
         return name;
@@ -146,7 +146,7 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
         } else if (!this.command.equals(other.command)) return false;
         if (this.predicateQuantifier != other.predicateQuantifier) return false;
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
             if (this.subqueryHint == null) {
                 if (other.subqueryHint != null)
                     return false;
