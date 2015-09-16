@@ -497,7 +497,7 @@ public class InterfaceDefinitionPage extends WizardPage
                 boolean projectOpen = ((IResource)theElement).getProject().isOpen();
                 if (projectOpen) {
                     // Show open projects
-                    if (theElement instanceof IProject) {
+                    if (theElement instanceof IContainer) {
                         result = true;
                         // Show webservice model files, and not .xsd files
                     } else if (theElement instanceof IFile && ModelUtil.isModelFile((IFile)theElement)) {
