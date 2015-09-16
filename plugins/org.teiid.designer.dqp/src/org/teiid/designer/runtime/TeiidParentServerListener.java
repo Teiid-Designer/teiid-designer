@@ -11,6 +11,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
+import org.jboss.ide.eclipse.as.management.core.JBoss7ManangerException;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
@@ -25,6 +26,12 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 public class TeiidParentServerListener implements IServerLifecycleListener, IServerListener {
     
     private static TeiidParentServerListener instance;
+    
+    /*
+     * The following exception is being caught during server start.
+     * Could not execute "read-children-names" for undefined. Failure was "JBAS013493: System boot is in process; execution of remote management operations is not currently available".
+     */
+    private static String JBAS013493_CODE = "JBAS013493";  //$NON-NLS-1$
 
     /**
      * Get the singleton instance of of this class
@@ -199,18 +206,19 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 // Loop will try to connect the teiid server 10 times after receiving a server
                 // start signal from the server framework. Given the thread sleeps for 5 seconds
                 // then the server has 60 seconds to finish starting if not already started.
+                
+                Exception logThisException = null;
+                
                 while ( (!parentConnected || queryServer == null ) && attempts < 10) {
                     try {
                         attempts++;
-                        
-                        parentConnected = teiidServer != null && teiidServer.isParentConnected();
+                        parentConnected = teiidServer != null && teiidServer.isParentConnected() && adaptServerOK(parentServer);
                         if( parentConnected ) {
                         	queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
-                        }
+                        }                  
                         Thread.sleep(6000);
                     } catch (Exception ex) {
-                        DqpPlugin.handleException(ex);
-                        break;
+                    	logThisException = ex;
                     }
                 }
                 
@@ -243,6 +251,9 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                     // being made while the server was not started. Since we now know better, we
                     // can correct the registry.
                     DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);
+                    if( logThisException != null ) {
+                    	DqpPlugin.handleException(logThisException);
+                    }
                     return;
                 }
 
@@ -252,6 +263,21 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
         startTeiidServerThread = new Thread(serverStartRunnable, "Teiid Server Starting Thread"); //$NON-NLS-1$
         startTeiidServerThread.start();
+    }
+    
+    private boolean adaptServerOK(final IServer parentServer) throws Exception {
+    	try {
+			factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
+		} catch (JBoss7ManangerException e) {
+			if( e.getMessage().contains(JBAS013493_CODE)) {
+				return false;
+			}
+			throw new Exception(e);
+		} catch (Exception e) {
+			throw new Exception(e);
+		}
+    	
+    	return true;
     }
 
     /**
