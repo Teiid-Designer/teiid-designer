@@ -9,7 +9,9 @@ package org.teiid.designer.datatools.profiles.ws;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -51,10 +53,11 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.model.Parameter;
+import org.teiid.datatools.connectivity.model.Parameter.Type;
 import org.teiid.designer.core.translators.SimpleProperty;
+import org.teiid.designer.datatools.profiles.ws.ParameterPanel.AddParameterDialog;
 import org.teiid.designer.datatools.ui.DatatoolsUiConstants;
 import org.teiid.designer.datatools.ui.DatatoolsUiPlugin;
-import org.teiid.designer.ui.common.ICredentialsCommon;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
@@ -67,8 +70,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
     TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
-	private Properties profileProperties;
+	private Map<String, Parameter> parameterMap;
 	private int visibleTableRows;
+	
+	private WSProfileDetailsWizardPage wsProfileDetailsWizardPage;
+	private PropertyPage propertyPage;
 	
 	/**
 	 * Constructor
@@ -76,10 +82,26 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
      * @param propertiesManager the TeiidpropertiesManager
      * @param visibleTableRows the number of visible rows to be shown in the table
      */
-    public HeaderPropertiesPanel(Composite parent, Properties profileProperties, int visibleTableRows) {
+    public HeaderPropertiesPanel(WSProfileDetailsWizardPage wsProfileDetailsWizardPage, Composite parent, Map<String, Parameter> parameterMap, int visibleTableRows) {
     	super();
-    	this.profileProperties = profileProperties;
+    	this.parameterMap = parameterMap;
     	this.visibleTableRows = visibleTableRows;
+    	this.wsProfileDetailsWizardPage = wsProfileDetailsWizardPage;
+    	createPanel(parent);
+    }
+    
+
+	/**
+	 * Constructor
+     * @param parent the parent Composite
+     * @param propertiesManager the TeiidpropertiesManager
+     * @param visibleTableRows the number of visible rows to be shown in the table
+     */
+    public HeaderPropertiesPanel(PropertyPage propertyPage, Composite parent, Map<String, Parameter> parameterMap, int visibleTableRows) {
+    	super();
+    	this.parameterMap = parameterMap;
+    	this.visibleTableRows = visibleTableRows;
+    	this.propertyPage = propertyPage;
     	createPanel(parent);
     }
     
@@ -151,31 +173,38 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
              * 
              * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
              */
+//            @Override
+//            public Object[] getElements( Object inputElement ) {
+//            	Properties props = profileProperties;
+//
+//                if (props.isEmpty()) {
+//                    return new Object[0];
+//                }
+//                
+//                List<Parameter> properties= new ArrayList<Parameter>();
+//                for( Object key : props.keySet() ) {
+//                	String keyStr = (String)key;
+//                	boolean yes = keyStr.startsWith(Parameter.HEADER_PREFIX);
+//                	if( keyStr.startsWith(Parameter.HEADER_PREFIX) ){
+//                		properties.add((Parameter)props.get(key));
+//                	}
+//                }
+//                return properties.toArray(new Parameter[0]);
+//            }
+            
             @Override
             public Object[] getElements( Object inputElement ) {
-            	Properties props = profileProperties;
 
-                if (props.isEmpty()) {
+                if (parameterMap == null || parameterMap.isEmpty()) {
                     return new Object[0];
                 }
-                
-                List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
-                for( Object key : props.keySet() ) {
-                	String keyStr = (String)key;
-                	if( ICredentialsCommon.PASSWORD_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		ICredentialsCommon.SECURITY_TYPE_ID.equalsIgnoreCase(keyStr) ||
-                		ICredentialsCommon.USERNAME_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		IWSProfileConstants.END_POINT_URI_PROP_ID.equalsIgnoreCase(keyStr) ||
-                		keyStr.toLowerCase().startsWith(Parameter.PREFIX) ||
-                		IWSProfileConstants.URI.equalsIgnoreCase(keyStr) ||
-                        IWSProfileConstants.QUERY_STRING.equalsIgnoreCase(keyStr) ||
-                        IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY.equalsIgnoreCase(keyStr)) {
-                		// do nothing;
-                	} else {
-                		properties.add(new SimpleProperty(keyStr, (String)props.get(key)));
-                	}
+          
+                Map<String, Parameter> parameterValues = new LinkedHashMap<String, Parameter>();
+                for (Parameter parameter: parameterMap.values()){
+                	if (parameter.getType().equals(Parameter.Type.Header))
+                		parameterValues.put(parameter.getPropertyKey(), parameter);
                 }
-                return properties.toArray(new SimpleProperty[0]);
+                return parameterValues.values().toArray();
             }
 
             /**
@@ -204,8 +233,8 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
             public int compare( Viewer viewer,
                                 Object e1,
                                 Object e2 ) {
-            	SimpleProperty prop1 = (SimpleProperty)e1;
-                SimpleProperty prop2 = (SimpleProperty)e2;
+            	Parameter prop1 = (Parameter)e1;
+            	Parameter prop2 = (Parameter)e2;
 
                 return super.compare(viewer, prop1.getName(), prop2.getName());
             }
@@ -245,63 +274,132 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		this.removePropertyButton.setEnabled(hasSelection);
 	}
 	
-    private SimpleProperty getSelectedProperty() {
+    private Parameter getSelectedProperty() {
         IStructuredSelection selection = (IStructuredSelection)this.propertiesViewer.getSelection();
 
         if (selection.isEmpty()) {
             return null;
         }
 
-        return (SimpleProperty)selection.getFirstElement();
+        return (Parameter)selection.getFirstElement();
     }
+    
+    /**
+	 * 
+	 */
+	private void updateProperties() {
+		if (this.wsProfileDetailsWizardPage!=null){
+			for( Object key : this.parameterMap.keySet() )  {
+				Parameter para = (Parameter)this.parameterMap.get(key);
+				wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+			}
+			wsProfileDetailsWizardPage.setParameterMap(this.parameterMap);
+		}else{
+			for( Object key : this.parameterMap.keySet() )  {
+				Parameter para = (Parameter)this.parameterMap.get(key);
+				propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+			}
+			propertyPage.setParameterMap(this.parameterMap);
+		}
+	}
 	
     void handleAddProperty() {
-        assert (!this.propertiesViewer.getSelection().isEmpty());
-        
-        Set<String> keys = new HashSet<String>();
-        for( Object key : profileProperties.keySet() ) {
-        	keys.add((String)key);
-        }
+//        assert (!this.propertiesViewer.getSelection().isEmpty());
+//        
+//        Set<String> keys = new HashSet<String>();
+//        for( Object key : profileProperties.keySet() ) {
+//        	keys.add((String)key);
+//        }
+//
+//
+//        AddHeaderPropertyDialog dialog = new AddHeaderPropertyDialog(propertiesViewer.getControl().getShell(), keys);
+//
+//        if (dialog.open() == Window.OK) {
+//            // update model
+//            String name = dialog.getName();
+//            String value = dialog.getValue();
+//            Parameter newParameter = new Parameter(name, value, Type.Header);
+//            newParameter.setType(Parameter.Type.Header);
+//            profileProperties.put(Parameter.HEADER_PREFIX+name, newParameter.getDefaultValue());
+//
+//            // update UI from model
+//            this.propertiesViewer.refresh();
+//
+//            // select the new property
+//            
+//            
+//            Parameter prop = null;
+//            
+//            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
+//            	if( item.getData() instanceof Parameter && ((Parameter)item.getData()).getName().equals(name) ) {
+//            		prop = (Parameter)item.getData();
+//            		break;
+//            	}
+//            }
+//
+//            if( prop != null ) {
+//                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+//            }
+//        }
+    	 assert (!this.propertiesViewer.getSelection().isEmpty());
+         if (this.parameterMap == null) this.parameterMap = new LinkedHashMap<String, Parameter>();
+         Set<String> keys = new HashSet<String>();
+         for( Object key : parameterMap.keySet() ) {
+         	keys.add((String)key);
+         }
 
+         AddHeaderPropertyDialog dialog = new AddHeaderPropertyDialog(propertiesViewer.getControl().getShell(), keys);
 
-        AddHeaderPropertyDialog dialog = new AddHeaderPropertyDialog(propertiesViewer.getControl().getShell(), keys);
+         if (dialog.open() == Window.OK) {
+             // update model
+             String name = dialog.getName();
+             String defaultValue = dialog.getValue();
+             Parameter parameter = new Parameter(name, defaultValue, Parameter.Type.Header);
 
-        if (dialog.open() == Window.OK) {
-            // update model
-            String name = dialog.getName();
-            String value = dialog.getValue();
-            profileProperties.put(name, value);
+             this.parameterMap.put(Parameter.HEADER_PREFIX+name, parameter);
+             
+             // update UI from model
+             this.propertiesViewer.refresh();
 
-            // update UI from model
-            this.propertiesViewer.refresh();
+             // select the new property
+             
+             Parameter prop = null;
+             
+             for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
+             	if( item.getData() instanceof Parameter && ((Parameter)item.getData()).getName().equals(name) ) {
+             		prop = (Parameter)item.getData();
+             		break;
+             	}
+             }
 
-            // select the new property
-            
-            
-            SimpleProperty prop = null;
-            
-            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
-            	if( item.getData() instanceof SimpleProperty && ((SimpleProperty)item.getData()).getName().equals(name) ) {
-            		prop = (SimpleProperty)item.getData();
-            		break;
-            	}
-            }
-
-            if( prop != null ) {
-                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
-            }
-        }
+             if( prop != null ) {
+                 this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+             }
+         }
+         
+         updateProperties();
     }
     
     void handleRemoveProperty() {
-        SimpleProperty selectedProperty = getSelectedProperty();
+//        Parameter selectedProperty = getSelectedProperty();
+//        assert (selectedProperty != null);
+//
+//        // update model
+//        profileProperties.remove(Parameter.HEADER_PREFIX+selectedProperty.getName());
+//
+//        // update UI
+//        this.propertiesViewer.refresh();
+    	Parameter selectedProperty = getSelectedProperty();
         assert (selectedProperty != null);
 
         // update model
-        profileProperties.remove(selectedProperty.getName());
+        parameterMap.remove(Parameter.HEADER_PREFIX+selectedProperty.getName());
 
         // update UI
         this.propertiesViewer.refresh();
+        
+        updateProperties();
+        
     }
 	
 	class PropertyLabelProvider extends ColumnLabelProvider {
@@ -317,11 +415,11 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		public String getText(Object element) {
-			if( element instanceof SimpleProperty ) {
+			if( element instanceof Parameter ) {
 				if( columnID == 0 ) {
-					return ((SimpleProperty)element).getName();
+					return ((Parameter)element).getName();
 				} else if( columnID == 1 ) {
-					return ((SimpleProperty)element).getValue();
+					return ((Parameter)element).getDefaultValue();
 				}
 			}
 			return super.getText(element);
@@ -372,14 +470,14 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected Object getValue(Object element) {
-			if( element instanceof SimpleProperty ) {
+			if( element instanceof Parameter ) {
 				if( columnID == 0 ) {
-					return ((SimpleProperty)element).getName();
+					return ((Parameter)element).getName();
 				} else if( columnID == 1 ) {
-					return ((SimpleProperty)element).getValue();
+					return ((Parameter)element).getDefaultValue();
 				}
 			}
-			return 0;
+			return null;
 		}
 
 		/*
@@ -390,27 +488,62 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 		 */
 		@Override
 		protected void setValue(Object element, Object value) {
-			if( element instanceof SimpleProperty ) {
-				if( columnID == 0 ) {
-					String oldKey = ((SimpleProperty)element).getName();
-					String oldValue = ((SimpleProperty)element).getValue();
-					String newKey = (String)value;
-					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						profileProperties.remove(oldKey);
-						profileProperties.put(newKey,oldValue);
-						propertiesViewer.refresh();
+//			if( element instanceof Parameter ) {
+//				if( columnID == 0 ) {
+//					String oldKey = ((Parameter)element).getName();
+//					String oldValue = ((Parameter)element).getDefaultValue();
+//					String newKey = (String)value;
+//					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
+//						profileProperties.remove(Parameter.HEADER_PREFIX+oldKey);
+//						profileProperties.put(Parameter.HEADER_PREFIX+newKey,oldValue);
+//						propertiesViewer.refresh();
+//					}
+//				} else if( columnID == 1 ) {
+//					String key = Parameter.HEADER_PREFIX+((Parameter)element).getName();
+//					String oldValue = ((Parameter)element).getDefaultValue();
+//					String newValue = (String)value;
+//					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
+//						profileProperties.put(key,newValue);
+//						propertiesViewer.refresh();
+//					}
+//				}
+//
+//			}
+//		}
+			if( element instanceof Parameter ) {
+				String key = ((Parameter)element).getPropertyKey();
+				if( columnID == 1 ) {
+					String oldDefaultValue = StringConstants.EMPTY_STRING;
+					if( ((Parameter)element).getDefaultValue() != null ) {
+						oldDefaultValue = ((Parameter)element).getDefaultValue();
 					}
-				} else if( columnID == 1 ) {
-					String key = ((SimpleProperty)element).getName();
-					String oldValue = ((SimpleProperty)element).getValue();
-					String newValue = (String)value;
-					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						profileProperties.put(key,newValue);
-						propertiesViewer.refresh();
+					String newDefaultValue = (String)value;
+					if( newDefaultValue != null && newDefaultValue.length() > 0 && !newDefaultValue.equalsIgnoreCase(oldDefaultValue)) {
+						((Parameter)element).setDefaultValue(newDefaultValue);
+						parameterMap.put(key, (Parameter)element);
+						propertiesViewer.refresh(element);
 					}
 				}
-
+				
 			}
+			
+			if (wsProfileDetailsWizardPage!=null){
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		wsProfileDetailsWizardPage.getProfileProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	wsProfileDetailsWizardPage.setParameterMap(parameterMap);
+            	wsProfileDetailsWizardPage.urlPreviewText.setText(wsProfileDetailsWizardPage.updateUrlPreview().toString());
+            }else{
+            	for( Object key : parameterMap.keySet() )  {
+            		Parameter para = (Parameter)parameterMap.get(key);
+            		propertyPage.getExtraProperties().put(para.getPropertyKey(), para.getPropertyValue());
+            	}
+            	propertyPage.setParameterMap(parameterMap);
+            	propertyPage.urlPreviewText.setText(propertyPage.updateUrlPreview().toString());
+            }
+			
+			
 		}
 
 	}

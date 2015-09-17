@@ -8,12 +8,12 @@
 package org.teiid.runtime.client.proc;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.text.StringContent;
-
+import org.json.simple.JSONObject;
 import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.query.IProcedureService;
 import org.teiid.designer.query.proc.ITeiidColumnInfo;
@@ -304,24 +304,30 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          Map<String, Parameter> parameters = xmlFileInfo.getParameterMap();
 
          boolean isQueryParm = false;
+         boolean hasHeaderParm = false;
+         Map<String, Parameter> headerParameters = new LinkedHashMap<String, Parameter>();
          StringBuffer sb = new StringBuffer();
          
          int c = 1;
-         if (parameters.isEmpty()){sb.append("''");} //$NON-NLS-1$
+         if (parameters.isEmpty() ||
+             parametersContainOnlyHeaders(parameters)){sb.append("''");} //$NON-NLS-1$
          for (Parameter param: parameters.values() ){
         	 if (param.getType().equals(Parameter.Type.Query)) {
         		 isQueryParm=true;
         		 if (c==1) tokens.add(xmlFileInfo.getXmlFileUrl());
         		 // Check for Reserved Word
         		 String paramName = param.getName();
-        		 if( SQLConstants.isReservedWord(teiidVersion, paramName) ) {
-        			 paramName = D_QUOTE + paramName + D_QUOTE;
-        		 }
+        		 paramName = checkForReservedWord(paramName);
         		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(paramName).append(SPACE).append(AS).append(SPACE).append(paramName);
         		 if(c < (parameters.size())) {
                      sb.append(COMMA).append(SPACE);
                  }
-        	 }else{
+        	 }else {
+        		 if (param.getType().equals(Parameter.Type.Header)) {
+        			 hasHeaderParm = true;
+        			 headerParameters.put(param.getPropertyKey(), param);
+        			 continue;
+        		 }
         		 if (c==1){
         			 String url = xmlFileInfo.getXmlFileUrl();
         			 if (url.endsWith("/")){ //$NON-NLS-1$
@@ -331,12 +337,13 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         			 sb.append(url); 
         			 sb.append("'"); //$NON-NLS-1$
         		 }
-        		 
-        		 sb.append(" || \'/' || "); //$NON-NLS-1$
-        		 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName());
         	 }
+        		 
+        	 sb.append(" || \'/' || "); //$NON-NLS-1$
+        	 sb.append(relationalViewModelName).append(DOT).append(virtualProcedureName).append(DOT).append(param.getName());
         	 c++;
          }
+         
          
          tokens.add(sb.toString());
          sb = new StringBuffer();
@@ -356,11 +363,57 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          tokens.add(sb.toString());
          tokens.add(relationalSourceModelName);
          
-         String proc = S_QUOTE + xmlFileInfo.getDataFile().getName() + S_QUOTE;
+         StringBuilder proc = new StringBuilder(S_QUOTE + xmlFileInfo.getDataFile().getName() + S_QUOTE);
          if( xmlFileInfo.isUrl() ) {
-             proc = "action=>" + S_QUOTE + GET + S_QUOTE + COMMA + "endpoint=>VARIABLES.qp" + COMMA + "stream=>" + S_QUOTE + TRUE + S_QUOTE;  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        	 proc = new StringBuilder();
+             proc.append("action=>" + S_QUOTE + GET + S_QUOTE + COMMA + "endpoint=>VARIABLES.qp" + COMMA + "stream=>" + S_QUOTE + TRUE + S_QUOTE);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+             JSONObject jsonObject = new JSONObject();
+             Map<String, String> formattedHeaderParameters = new LinkedHashMap<String, String>();
+             if (hasHeaderParm){
+            	int count = 1;
+            	proc.append(COMMA).append("headers=>'");
+            	
+            	for (Parameter param: headerParameters.values()){
+            		String paramValue = param.getDefaultValue();
+            		String paramName = param.getName();
+            		paramName = checkForReservedWord(paramName);
+            		
+           		    //The format of a comma delimited set of values should be, "'value1,value2','etc".
+           		    //The following will clean up the parameters will ensure this format is adhered to.
+            		if (paramValue.contains(",")){
+            			String[] values = paramValue.split(",");
+            			paramValue=EMPTY_STR;
+            			int valuecount = 1;
+            			int length = values.length;
+            			for (String value:values){
+            				value=value.trim();
+            				value=value.replace("'", EMPTY_STR);
+            				value=value.replace("\"", EMPTY_STR);
+            				paramValue+=value;
+            				if (valuecount<length){
+            					paramValue+=",";
+            					valuecount++;
+            				}
+            			}
+            			formattedHeaderParameters.put(paramName, paramValue);
+
+            		}else{
+
+            			//The format of a single value should be, "'myvalue'".
+               		    //The following will clean up the parameter string to ensure this format is adhered to.
+        				paramValue=paramValue.trim();
+        				paramValue=paramValue.replace("'", EMPTY_STR);
+        				paramValue=paramValue.replace("\"", EMPTY_STR);
+        				formattedHeaderParameters.put(paramName, paramValue);
+
+            		}
+            		count++;
+            	}
+            	jsonObject.putAll(formattedHeaderParameters);
+            	proc.append(jsonObject.toJSONString()).append(S_QUOTE);
+             }
          }
-         tokens.add(proc);
+         tokens.add(proc.toString());
          
          String namespaceStr = xmlFileInfo.getNamespaceString();
          sb = new StringBuffer();
@@ -431,6 +484,27 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
          
          return finalSQLString;
 	}
+
+	private String checkForReservedWord(String paramName) {
+		// Check for Reserved Word
+		if( SQLConstants.isReservedWord(teiidVersion, paramName) ) {
+			paramName = D_QUOTE + paramName + D_QUOTE;
+		}
+		return paramName;
+	}
+	
+	    private boolean parametersContainOnlyHeaders(Map<String, Parameter> parameters) {
+	       boolean onlyHeaders = true;
+	       for (Parameter parameter:parameters.values()){
+	    	   if (parameter.getType().equals(Parameter.Type.Header)){
+	    		   continue;
+	    	   }else{
+	    		   onlyHeaders = false;
+	    		   break;
+	    	   }
+	       }
+	        return onlyHeaders;
+	    }
 	
     @Override
     public String getSQLStatement(IWsdlWrapperInfo wrapperInfo) {

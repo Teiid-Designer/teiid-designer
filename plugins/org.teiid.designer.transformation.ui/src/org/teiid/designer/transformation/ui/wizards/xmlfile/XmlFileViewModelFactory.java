@@ -11,6 +11,7 @@ package org.teiid.designer.transformation.ui.wizards.xmlfile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.core.designer.ModelerCoreException;
+import org.teiid.datatools.connectivity.model.Parameter;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.query.QueryValidator;
 import org.teiid.designer.core.types.DatatypeManager;
@@ -102,6 +103,13 @@ public void createViewProcedure(ModelResource modelResource, TeiidXmlFileInfo in
  	procedure.setName(info.getViewProcedureName());
  	
   	for (String parameterKey : info.getParameterMap().keySet()) {
+  		//Don't add header parameters. These are just needed for building the transformation
+  		//and adding them will cause Data Preview to prompt for values.
+  		Object value = info.getParameterMap().get(parameterKey);
+  		if ((value instanceof Parameter) &&
+  		   ((Parameter)value).getType().equals(Parameter.Type.Header)){
+  				continue;
+  		}
  		ProcedureParameter parameter = factory.createProcedureParameter();
  		parameter.setName(parameterKey);
  		EObject stringType = datatypeManager.findDatatype("string"); //$NON-NLS-1$

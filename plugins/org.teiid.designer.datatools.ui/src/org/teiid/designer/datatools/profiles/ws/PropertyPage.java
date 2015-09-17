@@ -265,7 +265,7 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
   		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL);
   		this.headerPropertiesTab.setControl(headerPropertiesPanel);
   		this.headerPropertiesTab.setText(UTIL.getString("HeaderPropertiesPanel_groupTitle")); //$NON-NLS-1$
-        new HeaderPropertiesPanel(headerPropertiesPanel, this.extraProperties, 6);
+        new HeaderPropertiesPanel(this, headerPropertiesPanel, parameterMap, 6);
         
         addlisteners();
     }
@@ -501,9 +501,10 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
     private void loadParameters(Properties props) {
     	for( Object key : props.keySet() )  {
     		String keyStr = (String)key;
-    		if( keyStr.startsWith(Parameter.PREFIX)) {
-    			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
-    			parameterMap.put(Parameter.PREFIX+newParam.getName(), newParam);
+    		if( keyStr.startsWith(Parameter.PREFIX) ||
+    		    keyStr.startsWith(Parameter.HEADER_PREFIX)) {
+    			Parameter newParam = new Parameter(keyStr, props.getProperty(keyStr));
+    			parameterMap.put(keyStr, newParam);
     		}
     	}
     }

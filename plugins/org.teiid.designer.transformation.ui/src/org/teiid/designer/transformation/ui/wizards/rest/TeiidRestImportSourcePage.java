@@ -568,7 +568,8 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
     	for( Object key : props.keySet() )  {
     		String keyStr = (String)key;
     		
-    		if( keyStr.startsWith(Parameter.PREFIX)) {
+    		if( keyStr.startsWith(Parameter.PREFIX) ||
+    			keyStr.startsWith(Parameter.HEADER_PREFIX)) {
     			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
     			parameterMap.put(newParam.getName(), newParam);
     		}
