@@ -1,7 +1,10 @@
 package org.teiid.designer.datatools.profiles.ws;
 
+import java.util.Enumeration;
 import java.util.Properties;
+
 import org.eclipse.datatools.connectivity.IConnectionProfile;
+import org.teiid.core.designer.properties.Property;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
@@ -20,14 +23,17 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
     public final static String WS_CLASSNAME = "class-name"; //$NON-NLS-1$
     public final static String WS_CONNECTION_FACTORY = "org.teiid.resource.adapter.ws.WSManagedConnectionFactory"; //$NON-NLS-1$
+    public final static String HEADER_PARAMETER = "header_param";
 
     @Override
 	public void setConnectionInfo(ModelResource modelResource,
 			IConnectionProfile connectionProfile)
 			throws ModelWorkspaceException {
-        Properties connectionProps = getCommonProfileProperties(connectionProfile);
+    	Properties connectionProps = getCommonProfileProperties(connectionProfile);
 
         Properties props = connectionProfile.getBaseProperties();
+        
+        removeHeaderParameters(props);
 
         String url = readEndPointProperty(props);
         if (null != url) {
@@ -53,6 +59,18 @@ public class WSConnectionInfoProvider extends ConnectionInfoHelper implements
 
         connectionProps.put(TRANSLATOR_NAMESPACE + TRANSLATOR_NAME_KEY, "ws"); //$NON-NLS-1$
         getHelper().setProperties(modelResource, connectionProps);
+		
+	}
+
+	private void removeHeaderParameters(Properties props) {
+		 Enumeration<Object> keys = props.keys();
+
+	    while (keys.hasMoreElements()) {
+	      String key = (String) keys.nextElement();
+	      if (key.startsWith(HEADER_PARAMETER)){
+	    	  props.remove(key);
+	      }
+	    }
 		
 	}
 

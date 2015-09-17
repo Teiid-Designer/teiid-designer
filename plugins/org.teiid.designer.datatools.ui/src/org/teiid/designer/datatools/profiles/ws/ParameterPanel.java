@@ -209,13 +209,17 @@ public class ParameterPanel implements DatatoolsUiConstants {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-            	Map<String, Parameter> parameters = parameterMap;
 
-                if (parameters == null || parameters.isEmpty()) {
+                if (parameterMap == null || parameterMap.isEmpty()) {
                     return new Object[0];
                 }
           
-                return parameters.values().toArray();
+                Map<String, Parameter> parameterValues = new LinkedHashMap<String, Parameter>();
+                for (Parameter parameter: parameterMap.values()){
+                	if (!parameter.getType().equals(Parameter.Type.Header))
+                		parameterValues.put(parameter.getPropertyKey(), parameter);
+                }
+                return parameterValues.values().toArray();
             }
 
             /**
@@ -543,7 +547,7 @@ public class ParameterPanel implements DatatoolsUiConstants {
 					return ((Parameter)element).getDefaultValue();
 				}
 			}
-			return 0;
+			return null;
 		}
 
 		/*
