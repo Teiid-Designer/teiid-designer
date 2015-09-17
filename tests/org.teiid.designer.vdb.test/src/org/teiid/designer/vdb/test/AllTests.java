@@ -19,8 +19,8 @@ import org.teiid.designer.vdb.dynamic.TestModelToDdlGenerator;
     TestAllowLanguages.class,
     TestDynamicVdbExport.class,
     TestDynamicVdbImport.class,
-    VdbUtilTest.class,
-    TestModelToDdlGenerator.class
+    VdbUtilTest.class
+    //,TestModelToDdlGenerator.class
     } )
 public class AllTests {
     // nothing to do
