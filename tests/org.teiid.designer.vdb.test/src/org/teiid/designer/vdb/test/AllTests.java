@@ -5,9 +5,11 @@ import org.junit.runners.Suite;
 import org.teiid.designer.vdb.VdbFileEntryTest;
 import org.teiid.designer.vdb.VdbModelEntryTest;
 import org.teiid.designer.vdb.VdbTest;
+import org.teiid.designer.vdb.VdbUtilTest;
 import org.teiid.designer.vdb.dynamic.TestAllowLanguages;
 import org.teiid.designer.vdb.dynamic.TestDynamicVdbExport;
 import org.teiid.designer.vdb.dynamic.TestDynamicVdbImport;
+import org.teiid.designer.vdb.dynamic.TestModelToDdlGenerator;
 
 @RunWith( Suite.class )
 @Suite.SuiteClasses( {
@@ -16,7 +18,9 @@ import org.teiid.designer.vdb.dynamic.TestDynamicVdbImport;
     VdbFileEntryTest.class,
     TestAllowLanguages.class,
     TestDynamicVdbExport.class,
-    TestDynamicVdbImport.class
+    TestDynamicVdbImport.class,
+    VdbUtilTest.class,
+    TestModelToDdlGenerator.class
     } )
 public class AllTests {
     // nothing to do

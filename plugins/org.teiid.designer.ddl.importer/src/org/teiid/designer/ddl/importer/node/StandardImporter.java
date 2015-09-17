@@ -82,15 +82,15 @@ public class StandardImporter extends AbstractImporter {
 		}
 	}
 
-	private static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
+	protected static final String STRING_TYPENAME = "string"; //$NON-NLS-1$
 	
-	private static final String CHAR_TYPENAME = "char"; //$NON-NLS-1$
+	protected static final String CHAR_TYPENAME = "char"; //$NON-NLS-1$
 	
 	/**
 	 * see <code>org.teiid.core.types.JDBCSQLTypeInfo.java</code> for details
 	 * FLOAT, DOUBLE, BIG_DECIMAL all show 20 as the default precision
 	 */
-	private static final int DEFAULT_PRECISION = 20; 
+	protected static final int DEFAULT_PRECISION = 20; 
 
 	/**
 	 * Create new info object
