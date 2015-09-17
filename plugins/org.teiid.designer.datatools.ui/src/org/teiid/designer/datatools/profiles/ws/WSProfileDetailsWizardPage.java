@@ -82,6 +82,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 	private TabItem parametersTab;
     private TabItem headerPropertiesTab;
     ParameterPanel parameterPanel;
+    HeaderPropertiesPanel headerPanel;
 
     /**
      * @param wizardPageName
@@ -208,7 +209,7 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 		this.headerPropertiesTab = new TabItem(tabFolder, SWT.FILL);
 		this.headerPropertiesTab.setControl(headerPropertiesPanel);
 		this.headerPropertiesTab.setText(UTIL.getString("HeaderPropertiesPanel_groupTitle")); //$NON-NLS-1$
-        new HeaderPropertiesPanel(headerPropertiesPanel, profileProperties, 6);
+        this.headerPanel = new HeaderPropertiesPanel(this, headerPropertiesPanel, parameterMap, 6);
         
         setPingButtonVisible(true);
         setPingButtonEnabled(false);
@@ -267,7 +268,8 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
     	for( Object key : props.keySet() )  {
     		String keyStr = (String)key;
     		
-    		if( keyStr.startsWith(Parameter.PREFIX)) {
+    		if( keyStr.startsWith(Parameter.PREFIX) ||
+    			keyStr.startsWith(Parameter.HEADER_PREFIX)) {
     			Parameter newParam = new Parameter(keyStr, props.getProperty((String)key));
     			parameterMap.put(newParam.getName(), newParam);
     		}
@@ -306,16 +308,18 @@ public class WSProfileDetailsWizardPage extends ScrolledConnectionProfileDetails
 
 		for (String key : parameterMap.keySet()) {
 			Parameter value = parameterMap.get(key);
-			if (value.getType().equals(Parameter.Type.URI)) {
-				parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
-			}
-			if (value.getType() == Parameter.Type.Query) {
-				if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
-					parameterString.append("?"); //$NON-NLS-1$
-				} else {
-					parameterString.append("&"); //$NON-NLS-1$  
+			if (!value.getType().equals(Parameter.HEADER_PREFIX)) {
+				if (value.getType().equals(Parameter.Type.URI)) {
+					parameterString.append("/").append(value.getDefaultValue()); //$NON-NLS-1$
 				}
-				parameterString.append(encodeString(value.getName())).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
+				if (value.getType() == Parameter.Type.Query) {
+					if (parameterString.length() == 0 || !parameterString.toString().contains("?")) { //$NON-NLS-1$
+						parameterString.append("?"); //$NON-NLS-1$
+					} else {
+						parameterString.append("&"); //$NON-NLS-1$  
+					}
+					parameterString.append(encodeString(value.getName())).append("=").append(encodeString(value.getDefaultValue())); //$NON-NLS-1$
+				}
 			}
 		}
 

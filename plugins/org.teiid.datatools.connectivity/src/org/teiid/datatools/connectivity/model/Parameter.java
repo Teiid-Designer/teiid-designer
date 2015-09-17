@@ -15,12 +15,13 @@ public class Parameter {
 	
 	
 	public static final String PREFIX = "rest_param:"; //$NON-NLS-N$
+	public static final String HEADER_PREFIX = "header_param:"; //$NON-NLS-N$
 	
 	private String name;
 	private String defaultValue;
 	private Type type;
 	
-	public enum Type { Query, URI;
+	public enum Type { Query, URI, Header;
 		
 		Type() {
 		}
@@ -100,7 +101,7 @@ public class Parameter {
 	}
 	
 	public String getPropertyKey() {
-		return PREFIX + getName();
+		return (this.type.equals(Parameter.Type.Header) ? HEADER_PREFIX : PREFIX) + getName();
 	}
 	
 	public String getPropertyValue() {
