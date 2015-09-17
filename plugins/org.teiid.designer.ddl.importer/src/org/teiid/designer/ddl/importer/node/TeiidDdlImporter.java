@@ -53,6 +53,7 @@ import org.teiid.designer.relational.model.RelationalTable;
 import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.model.RelationalViewTable;
+import org.teiid.designer.type.IDataTypeManagerService;
 
 
 /**
@@ -99,6 +100,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		String FLOAT = "FLOAT"; //$NON-NLS-1$
 		String INT = "INT"; //$NON-NLS-1$
 		String INTEGER = "INTEGER"; //$NON-NLS-1$
+		String BIGINTEGER = "BIGINTEGER"; //$NON-NLS-1$
 		String LONGVARBINARY = "LONGVARBINARY"; //$NON-NLS-1$
 		String LONGVARCHAR = "LONGVARCHAR"; //$NON-NLS-1$
 		String NCHAR = "NCHAR"; //$NON-NLS-1$
@@ -338,6 +340,63 @@ public class TeiidDdlImporter extends StandardImporter {
 		processOptions(optionNodes,column);
 
 		return column;
+	}
+	
+	/**
+	 * Create Column from the provided AstNode within ColumnSet
+	 * @param node the provided AstNode
+	 * @param column 
+	 *
+	 * @throws Exception 
+	 */
+	@Override
+	protected void setDataType(AstNode node, RelationalColumn column) throws Exception {
+		String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
+//		column.setNativeType(datatype);
+
+		String teiidType = getTeiidDataTypeName(datatype);
+		column.setDatatype(teiidType);
+
+		// Datatype length
+		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
+		if (prop != null) {
+			column.setLength(Integer.parseInt(prop.toString()));
+		} else {
+			// Length is not provided for type 'string', use the default length specified in preferences...
+			//String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
+			if(teiidType != null) {
+				if( teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
+					column.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+				} else if( teiidType.equalsIgnoreCase(CHAR_TYPENAME) ) {
+					column.setLength(1);
+				}
+			}
+		}
+
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_PRECISION);
+		if (prop != null) {
+			column.setPrecision(Integer.parseInt(prop.toString()));
+		} else {
+			// IF type == FLOAT, BIG_DECIMAL, DECIMAL, then set precision to at least 1
+			if( teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.BIGDECIMAL.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DECIMAL.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.FLOAT.name()) ||
+					teiidType.equalsIgnoreCase(IDataTypeManagerService.DataTypeName.DOUBLE.name())) {
+				column.setPrecision(DEFAULT_PRECISION);
+			}
+		}
+
+		prop = node.getProperty(StandardDdlLexicon.DATATYPE_SCALE);
+		if (prop != null)
+			column.setScale(Integer.parseInt(prop.toString()));
+
+		prop = node.getProperty(StandardDdlLexicon.NULLABLE);
+		if (prop != null)
+			column.setNullable(getRelRefNullable(prop.toString())); 
+
+		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
+		if (prop != null)
+			column.setDefaultValue(prop.toString());
 	}
 
 	@Override
@@ -935,7 +994,8 @@ public class TeiidDdlImporter extends StandardImporter {
 	}
 	
 	private void resolveColumnDatatype(RelationalColumn column, String nativeType) {
-		if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) && nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
+		if( (column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) || column.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGINTEGER))
+				&& nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
 			column.setDatatype(nativeType);
 		} else if( column.getDatatype().equalsIgnoreCase(TYPES_UPPER.STRING) && nativeType.equalsIgnoreCase(TYPES_UPPER.CHAR) ) {
 			// Some DB's have columns of type "char(10)" and need to be converted to String type
