@@ -36,7 +36,52 @@
         <version.jts>1.13</version.jts>
         <version.jts2geojson>0.4.0</version.jts2geojson>
         <version.proj4j>0.1.0</version.proj4j>
+        <dependencies-to-copy>
+            connector-api,                         jgroups,                      json-simple,
+            jta,                                           nux,                            xnio-api,
+            xnio-nio,                                  xom,                           jboss-as-cli,
+            jboss-as-controller-client,      jboss-as-controller,   jboss-as-protocol,
+            jboss-dmr,                              jboss-logging,             jboss-marshalling,
+            jboss-marshalling-river,        jboss-modules,          jboss-remoting,
+            jboss-sasl,                              jboss-threads,            jboss-vfs,
+            netty,                                      jts,                               jts2geojson,
+            proj4j
+        </dependencies-to-copy>
+        <source-not-available>nux</source-not-available>
     </properties>
+    <profiles>
+        <profile>
+            <!-- Profile that must be manually invoked to download and copy in -->
+            <!-- the source jars. Don't want the source in the build hence not -->
+            <!-- enabled by default. -->
+            <id>download-sources</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies-src</id>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>sources</classifier>
+                                    <skip>false</skip>
+                                    <stripVersion>true</stripVersion>
+                                    <excludeTransitive>true</excludeTransitive>
+                                    <includeArtifactIds>${dependencies-to-copy}</includeArtifactIds>
+                                    <excludeArtifactIds>${source-not-available}</excludeArtifactIds>
+                                    <outputDirectory>${project.basedir}/libsrc</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>
@@ -62,134 +107,12 @@
                     <execution>
                         <id>copy-dependencies</id>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax.resource</groupId>
-                                    <artifactId>connector-api</artifactId>
-                                    <version>${version.connector-api}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jgroups</groupId>
-                                    <artifactId>jgroups</artifactId>
-                                    <version>${version.org.jgroups}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.googlecode.json-simple</groupId>
-                                    <artifactId>json-simple</artifactId>
-                                    <version>${version.json-simple}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>javax.transaction</groupId>
-                                    <artifactId>jta</artifactId>
-                                    <version>${version.jta}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>nux</groupId>
-                                    <artifactId>nux</artifactId>
-                                    <version>${version.nux}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.xnio</groupId>
-                                    <artifactId>xnio-api</artifactId>
-                                    <version>${version.org.jboss.xnio-api}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.xnio</groupId>
-                                    <artifactId>xnio-nio</artifactId>
-                                    <version>${version.org.jboss.xnio-nio}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>xom</groupId>
-                                    <artifactId>xom</artifactId>
-                                    <version>${version.nu.xom}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.as</groupId>
-                                    <artifactId>jboss-as-cli</artifactId>
-                                    <version>${jbossas-version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.as</groupId>
-                                    <artifactId>jboss-as-controller-client</artifactId>
-                                    <version>${jbossas-version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.as</groupId>
-                                    <artifactId>jboss-as-controller</artifactId>
-                                    <version>${jbossas-version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.as</groupId>
-                                    <artifactId>jboss-as-protocol</artifactId>
-                                    <version>${jbossas-version}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss</groupId>
-                                    <artifactId>jboss-dmr</artifactId>
-                                    <version>${version.org.jboss.jboss-dmr}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.logging</groupId>
-                                    <artifactId>jboss-logging</artifactId>
-                                    <version>${version.org.jboss.logging.jboss-logging}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.marshalling</groupId>
-                                    <artifactId>jboss-marshalling</artifactId>
-                                    <version>${version.org.jboss.marshalling.jboss-marshalling}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.marshalling</groupId>
-                                    <artifactId>jboss-marshalling-river</artifactId>
-                                    <version>${version.org.jboss.marshalling.jboss-marshalling-river}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.modules</groupId>
-                                    <artifactId>jboss-modules</artifactId>
-                                    <version>${version.org.jboss.modules.jboss-modules}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.remoting3</groupId>
-                                    <artifactId>jboss-remoting</artifactId>
-                                    <version>${version.org.jboss.jboss-remoting}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.sasl</groupId>
-                                    <artifactId>jboss-sasl</artifactId>
-                                    <version>${version.org.jboss.jboss-sasl}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss.threads</groupId>
-                                    <artifactId>jboss-threads</artifactId>
-                                    <version>${version.org.jboss.jboss-threads}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.jboss</groupId>
-                                    <artifactId>jboss-vfs</artifactId>
-                                    <version>${version.org.jboss.jboss-vfs}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>io.netty</groupId>
-                                    <artifactId>netty</artifactId>
-                                    <version>${version.org.jboss.netty}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>com.vividsolutions</groupId>
-                                    <artifactId>jts</artifactId>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wololo</groupId>
-                                    <artifactId>jts2geojson</artifactId>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.osgeo</groupId>
-                                    <artifactId>proj4j</artifactId>
-                                </artifactItem>
-                            </artifactItems>
                             <skip>false</skip>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeArtifactIds>${dependencies-to-copy}</includeArtifactIds>
                             <stripVersion>true</stripVersion>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                         </configuration>
