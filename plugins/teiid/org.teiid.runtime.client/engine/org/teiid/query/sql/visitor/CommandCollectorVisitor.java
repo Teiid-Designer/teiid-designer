@@ -24,11 +24,14 @@ package org.teiid.query.sql.visitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ICommandCollectorVisitor;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.ExistsCriteria;
+import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SubqueryCompareCriteria;
@@ -133,6 +136,19 @@ public class CommandCollectorVisitor extends LanguageVisitor
     	this.commands.add(obj.getCommand());
     }
 
+    @Since(Version.TEIID_8_11)
+    @Override
+    public void visit(Insert obj) {
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_11)) {
+            super.visit(obj);
+            return;
+        }
+
+        if (obj.getQueryExpression() != null) {
+            this.commands.add(obj.getQueryExpression());
+        }
+    }
+    
     @Override
     public List<Command> findCommands(Command command) {
         final boolean visitCommands = command instanceof SetQuery;

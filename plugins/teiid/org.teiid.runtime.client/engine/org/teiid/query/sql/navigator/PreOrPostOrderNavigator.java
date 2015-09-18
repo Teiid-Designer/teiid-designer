@@ -139,6 +139,9 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     private boolean order;
     private boolean deep;
 
+    @Since(Version.TEIID_8_11)
+    private boolean skipEvaluatable;
+
     /**
      * @param visitor
      * @param order
@@ -317,7 +320,12 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(ExistsCriteria obj) {
         preVisitVisitor(obj);
-        if (deep) {
+
+        boolean test = deep;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_11))
+            test = deep && (!obj.shouldEvaluate() || !skipEvaluatable);
+
+        if (test) {
             visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
@@ -531,7 +539,12 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(ScalarSubquery obj) {
         preVisitVisitor(obj);
-        if (deep) {
+
+        boolean test = deep;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_11))
+            test = deep && (!obj.shouldEvaluate() || !skipEvaluatable);
+
+        if (test) {
             visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
@@ -944,4 +957,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         object.acceptVisitor(nav);
     }
 
+    public void setSkipEvaluatable(boolean skipEvaluatable) {
+        this.skipEvaluatable = skipEvaluatable;
+    }
 }

@@ -80,15 +80,11 @@ public class GroupContext implements Cloneable, IGroupContext {
 
         return result;
     }
-    
-    public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException err) {
-             throw new RuntimeException(err);
-        }
+
+    public GroupContext clone() {
+        return new GroupContext(parent, new LinkedList<GroupSymbol>(groups));
     }
-    
+
     /** 
      * @see java.lang.Object#toString()
      */

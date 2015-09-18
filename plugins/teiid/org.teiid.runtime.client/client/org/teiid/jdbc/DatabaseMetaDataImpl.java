@@ -456,7 +456,7 @@ public class DatabaseMetaDataImpl extends WrapperImpl implements DatabaseMetaDat
      */
     @Override
     public String getCatalogSeparator() throws SQLException {
-        return EMPTY_STRING;
+        return "."; //$NON-NLS-1$
     }
 
     @Override

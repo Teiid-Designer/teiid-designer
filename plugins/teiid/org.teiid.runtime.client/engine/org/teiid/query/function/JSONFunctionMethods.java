@@ -37,6 +37,7 @@ import org.teiid.core.types.ClobType;
 import org.teiid.core.types.ClobType.Type;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.types.InputStreamFactory;
+import org.teiid.core.types.InputStreamFactory.StorageMode;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Since;
@@ -115,7 +116,12 @@ public class JSONFunctionMethods {
 		public JSONBuilder(ITeiidServerVersion teiidVersion) {
 		    this.teiidVersion = teiidVersion;
             MemoryStorageManager manager = new MemoryStorageManager();
-			fs = manager.createFileStore("xml"); //$NON-NLS-1$
+
+            String fileStoreName = "json"; //$NON-NLS-1$
+            if (teiidVersion.isLessThan(Version.TEIID_8_11))
+                fileStoreName = "xml"; //$NON-NLS-1$
+
+			fs = manager.createFileStore(fileStoreName);
 			fsisf = new FileStoreInputStreamFactory(fs, Streamable.ENCODING);
 		    writer = fsisf.getWriter();
 		}
@@ -197,14 +203,28 @@ public class JSONFunctionMethods {
 			return writer;
 		}
 		
-		public ClobType close() throws TeiidClientException {
+		public ClobType close(CommandContext cc) throws TeiidClientException {
 			try {
 				writer.close();
 			} catch (IOException e) {
 				remove();
 				throw new TeiidClientException(e);
 			}
-	        ClobType result = new ClobType(new ClobImpl(fsisf, -1));
+
+			if (fsisf.getStorageMode() == StorageMode.MEMORY) {
+                //detach if just in memory
+                byte[] bytes = fsisf.getMemoryBytes();
+                fsisf.free();
+                ClobType result = new ClobType(new ClobImpl(new String(bytes, Streamable.CHARSET)));
+                result.setType(Type.JSON);
+                return result;
+            }
+
+            ClobType result = new ClobType(new ClobImpl(fsisf, -1));
+            if (cc != null) {
+                cc.addCreatedLob(fsisf);
+            }
+
 	        result.setType(Type.JSON);
 	        return result;
 		}
@@ -277,7 +297,7 @@ public class JSONFunctionMethods {
 		if (vals == null) {
 			return null;
 		}
-		return Evaluator.jsonArray(null, vals, null, null);
+		return Evaluator.jsonArray(context, null, vals, null, null);
 	}
 
 }

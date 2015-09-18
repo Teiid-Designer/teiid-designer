@@ -1833,11 +1833,21 @@ public class ValidationVisitor extends AbstractValidationVisitor {
     
     @Override
     public void visit(XMLParse obj) {
-    	if (obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass() && 
-    			obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass() &&
-    			obj.getExpression().getType() != DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass()) {
-    		handleValidationError(Messages.getString(Messages.ValidationVisitor.xmlparse_type), obj);
+    	if (obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.STRING.getTypeClass())
+    	    return;
+
+    	if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.CLOB.getTypeClass())
+    	    return;
+
+    	if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.BLOB.getTypeClass())
+    	    return;
+
+    	if (isTeiid811OrGreater()) {
+    	    if(obj.getExpression().getType() == DataTypeManagerService.DefaultDataTypes.VARBINARY.getTypeClass())
+    	        return;
     	}
+
+    	handleValidationError(Messages.getString(Messages.ValidationVisitor.xmlparse_type), obj);
     }
     
     @Override

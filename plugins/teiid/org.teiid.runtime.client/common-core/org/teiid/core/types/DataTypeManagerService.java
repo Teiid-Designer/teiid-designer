@@ -65,7 +65,9 @@ public class DataTypeManagerService implements IDataTypeManagerService {
 
     private static final boolean COMPARABLE_OBJECT = PropertiesUtils.getBooleanProperty(System.getProperties(), "org.teiid.comparableObject", false); //$NON-NLS-1$
 
-    public static final int MAX_LOB_MEMORY_BYTES = Math.max(nextPowOf2(2*MAX_STRING_LENGTH), 1<<13);
+    public static final int MAX_VARBINARY_BYTES = Math.max(nextPowOf2(2*MAX_STRING_LENGTH), 1<<13);
+
+    public static final int MAX_LOB_MEMORY_BYTES = Math.max(nextPowOf2(8*MAX_STRING_LENGTH), 1<<15);
     
     private static final String ARRAY_SUFFIX = "[]"; //$NON-NLS-1$
 

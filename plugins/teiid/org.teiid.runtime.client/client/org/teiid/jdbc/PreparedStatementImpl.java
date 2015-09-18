@@ -443,7 +443,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
     
     @Override
     public void setObject (int parameterIndex, Object value, int targetJdbcType, int scale) throws SQLException {
-    	setObject(parameterIndex, value, targetJdbcType, scale);
+    	setObject(Integer.valueOf(parameterIndex), value, targetJdbcType, scale);
     }
 
     void setObject (Object parameterIndex, Object value, int targetJdbcType, int scale) throws SQLException {

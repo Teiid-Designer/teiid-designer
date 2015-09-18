@@ -22,6 +22,8 @@
 
 package org.teiid.query.sql.lang;
 
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
@@ -36,7 +38,11 @@ public class CacheHint extends CacheDirective {
 	public static final String UPDATABLE = "updatable"; //$NON-NLS-1$
 	public static final String CACHE = "cache"; //$NON-NLS-1$
 	public static final String SCOPE = "scope:"; //$NON-NLS-1$
-	
+	public static final String MIN = "min:"; //$NON-NLS-1$
+
+	@Since(Version.TEIID_8_11)
+    private Long minRows;
+
 	public CacheHint(TeiidParser parser) {
 	    super(parser);
 	}
@@ -95,7 +101,24 @@ public class CacheHint extends CacheDirective {
 		copy.setScope(this.getScope());
 		copy.setTtl(this.getTtl());
 		copy.setUpdatable(this.getUpdatable());
+		copy.setMinRows(this.getMinRows());
 		return copy;
 	}
+
+	@Since(Version.TEIID_8_11)
+	public void setMinRows(Long minRows) {
+	    if (getTeiidVersion().isLessThan(Version.TEIID_8_11))
+	        return;
+
+        this.minRows = minRows;
+    }
+
+	@Since(Version.TEIID_8_11)
+    public Long getMinRows() {
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_11))
+            return 0L;
+
+        return minRows;
+    }
 
 }

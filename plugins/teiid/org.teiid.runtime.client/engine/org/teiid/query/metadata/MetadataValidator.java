@@ -225,7 +225,9 @@ public class MetadataValidator {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31107, p.getFullName()));
 							}
 							hasReturn = true;
-						}
+						} else if (p.isFunction() && param.getType() != ProcedureParameter.Type.In && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31165, p.getFullName(), param.getFullName()));
+                        }
 						if (!names.add(param.getName())) {
 							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31106, p.getFullName(), param.getFullName()));
 						}
@@ -233,6 +235,15 @@ public class MetadataValidator {
 					if (!p.isVirtual() && !model.isSource()) {
 						metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31077, p.getFullName(), model.getName()));
 					}
+
+					if (p.isFunction() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+                        if (!hasReturn) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31166, p.getFullName()));
+                        }
+                        if (p.isVirtual() && p.getQueryPlan() == null) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31167, p.getFullName()));
+                        }
+                    }
 				}
 				
 				for (FunctionMethod func:schema.getFunctions().values()) {
@@ -290,14 +301,19 @@ public class MetadataValidator {
 						}						
 					} else if (record instanceof Procedure) {
 						Procedure p = (Procedure)record;
-						if (p.isVirtual() && !p.isFunction()) {
+						
+						boolean test = p.isVirtual();
+						if (teiidVersion.isLessThan(Version.TEIID_8_11))
+						    test = test && !p.isFunction();
+
+						if (test) {
 							if (p.getQueryPlan() == null) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31081, p.getFullName(), model.getName()));
 							}
 							else {
 								metadataValidator.validate(vdb, model, p, report, metadata, mf);
 							}
-						}						
+						}
 					}
 				}
 			}
@@ -421,7 +437,7 @@ public class MetadataValidator {
     }
 
     public static void determineDependencies(AbstractMetadataRecord p, Command command) {
-        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroupsIgnoreInlineViews(command, true);
+        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroupsIgnoreInlineViewsAndEvaluatableSubqueries(command, true);
         LinkedHashSet<AbstractMetadataRecord> values = new LinkedHashSet<AbstractMetadataRecord>();
         for (GroupSymbol group : groups) {
             Object mid = group.getMetadataID();

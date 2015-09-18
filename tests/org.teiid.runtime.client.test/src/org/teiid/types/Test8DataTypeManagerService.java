@@ -29,7 +29,8 @@ public class Test8DataTypeManagerService extends AbstractTestDataTypeManagerServ
 
     public Test8DataTypeManagerService() {
         super(Version.TEIID_8_0, Version.TEIID_8_1, Version.TEIID_8_2, Version.TEIID_8_3,
-                    Version.TEIID_8_4, Version.TEIID_8_5, Version.TEIID_8_6, Version.TEIID_8_7);
+                    Version.TEIID_8_4, Version.TEIID_8_5, Version.TEIID_8_6, Version.TEIID_8_7,
+                    Version.TEIID_8_8, Version.TEIID_8_9, Version.TEIID_8_10, Version.TEIID_8_11);
     }
 
     @Test
@@ -99,6 +100,22 @@ public class Test8DataTypeManagerService extends AbstractTestDataTypeManagerServ
             assertEquals(DataSourceTypes.LDAP.id(), dataTypeManager.getDataSourceType(DataSourceTypes.LDAP));
             assertEquals(DataSourceTypes.FILE.id(), dataTypeManager.getDataSourceType(DataSourceTypes.FILE));
             assertEquals(DataSourceTypes.WS.id(), dataTypeManager.getDataSourceType(DataSourceTypes.WS));
+        }
+    }
+
+    @Test
+    public void testGetGeometryType() {
+        for (Entry<ITeiidServerVersion, DataTypeManagerService> entry : dataTypeManagerCache.entrySet()) {
+            ITeiidServerVersion version = entry.getKey();
+            DataTypeManagerService dataTypeManager = entry.getValue();
+
+            DefaultDataTypes geoType = dataTypeManager.getDataType("geometry");
+            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+                assertSame(DefaultDataTypes.GEOMETRY, geoType);
+            } else {
+                // Unrecognised object for another below Teiid 8.10
+                assertSame(DefaultDataTypes.OBJECT, geoType);
+            }
         }
     }
 }

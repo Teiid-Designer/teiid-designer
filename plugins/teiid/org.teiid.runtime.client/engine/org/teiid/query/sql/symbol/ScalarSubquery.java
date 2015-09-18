@@ -25,6 +25,8 @@ public class ScalarSubquery extends SimpleNode
     @Since(Version.TEIID_8_10)
     private SubqueryHint subqueryHint = new SubqueryHint();
 
+    private boolean shouldEvaluate;
+
     /**
      * @param p
      * @param id
@@ -81,6 +83,20 @@ public class ScalarSubquery extends SimpleNode
     @Since(Version.TEIID_8_10)
     public void setSubqueryHint(SubqueryHint subqueryHint) {
         this.subqueryHint = subqueryHint;
+    }
+
+    /**
+     * @return whether to evaluate
+     */
+    public boolean shouldEvaluate() {
+        return shouldEvaluate;
+    }
+    
+    /**
+     * @param shouldEvaluate
+     */
+    public void setShouldEvaluate(boolean shouldEvaluate) {
+        this.shouldEvaluate = shouldEvaluate;
     }
 
     @Override

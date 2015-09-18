@@ -210,13 +210,6 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     }
 
     /**
-     * @param groups
-     */
-    public void addExternalGroupsToContext(Collection<GroupSymbol> groups) {
-        getExternalGroupContexts().getGroups().addAll(groups);
-    }
-
-    /**
      * @param root
      */
     public void setExternalGroupContexts(GroupContext root) {

@@ -27,17 +27,26 @@ import org.teiid.core.types.BlobType;
 import org.teiid.core.types.ClobType;
 import org.teiid.core.types.GeometryType;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.util.CommandContext;
 import org.teiid.translator.SourceSystemFunctions;
 
 @Since(Version.TEIID_8_10)
 public class GeometryFunctionMethods {
 
     @TeiidFunction( name = SourceSystemFunctions.ST_ASTEXT, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, pushdown = PushDown.CAN_PUSHDOWN )
+    @Updated(version=Version.TEIID_8_11)
     public static ClobType asText(GeometryType geometry) throws Exception {
-        return GeometryUtils.geometryToClob(geometry);
+        return GeometryUtils.geometryToClob(geometry, false);
+    }
+
+    @TeiidFunction( name = SourceSystemFunctions.ST_ASEWKT, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, pushdown = PushDown.CAN_PUSHDOWN )
+    @Updated(version=Version.TEIID_8_11)
+    public static ClobType asEwkt(GeometryType geometry) throws Exception {
+        return GeometryUtils.geometryToClob(geometry, true);
     }
 
     @TeiidFunction( name = SourceSystemFunctions.ST_ASBINARY, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, pushdown = PushDown.CAN_PUSHDOWN )
@@ -52,8 +61,13 @@ public class GeometryFunctionMethods {
     }
 
     @TeiidFunction( name = SourceSystemFunctions.ST_ASGML, category = FunctionCategoryConstants.GEOMETRY, pushdown = PushDown.CAN_PUSHDOWN, nullOnNull = true )
-    public static ClobType asGml(GeometryType geometry) throws Exception {
-        return GeometryUtils.geometryToGml(geometry);
+    public static ClobType asGml(CommandContext context, GeometryType geometry) throws Exception {
+        return GeometryUtils.geometryToGml(context, geometry, true);
+    }
+
+    @TeiidFunction( name = SourceSystemFunctions.ST_ASKML, category = FunctionCategoryConstants.GEOMETRY, pushdown = PushDown.CAN_PUSHDOWN, nullOnNull = true )
+    public static ClobType asKml(CommandContext context, GeometryType geometry) throws Exception {
+        return GeometryUtils.geometryToGml(context, geometry, false);
     }
 
     @TeiidFunction( name = SourceSystemFunctions.ST_GEOMFROMTEXT, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true )
@@ -149,4 +163,9 @@ public class GeometryFunctionMethods {
         return GeometryUtils.equals(geom1, geom2);
     }
 
+    @TeiidFunction( name = SourceSystemFunctions.ST_TRANSFORM, category = FunctionCategoryConstants.GEOMETRY, nullOnNull = true, pushdown = PushDown.CAN_PUSHDOWN )
+    @Since(Version.TEIID_8_11)
+    public static GeometryType transform(CommandContext context, GeometryType geom, int srid) throws Exception {
+        return GeometryTransformUtils.transform(context, geom, srid);
+    }
 }

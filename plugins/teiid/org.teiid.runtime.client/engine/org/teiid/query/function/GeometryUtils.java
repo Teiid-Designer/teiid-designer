@@ -34,6 +34,9 @@ import org.teiid.core.types.ClobImpl;
 import org.teiid.core.types.ClobType;
 import org.teiid.core.types.ClobType.Type;
 import org.teiid.core.types.GeometryType;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 import org.wololo.geojson.GeoJSON;
@@ -57,12 +60,21 @@ import com.vividsolutions.jts.io.gml2.GMLWriter;
  * TODO: determine if we should use buffermanager to minimize memory footprint
  * TODO: Split into GeometryFilterUtils and GeometryConvertUtils. - Tom
  */
+@Since(Version.TEIID_8_10)
 public class GeometryUtils {
-	
-    public static ClobType geometryToClob(GeometryType geometry) 
+
+    private static final int SRID_4326 = 4326;
+
+    public static ClobType geometryToClob(GeometryType geometry, boolean withSrid) 
             throws Exception {
         Geometry jtsGeometry = getGeometry(geometry);
-        return new ClobType(new ClobImpl(jtsGeometry.toText()));
+        int srid = jtsGeometry.getSRID();
+        StringBuilder geomText = new StringBuilder(); 
+        if (withSrid && srid != GeometryType.UNKNOWN_SRID) {
+            geomText.append("SRID=").append(jtsGeometry.getSRID()).append(";"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        geomText.append(jtsGeometry.toText());
+        return new ClobType(new ClobImpl(geomText.toString()));
     }
 
     public static GeometryType geometryFromClob(ClobType wkt)
@@ -123,10 +135,26 @@ public class GeometryUtils {
         }
     }    
     
-    public static ClobType geometryToGml(GeometryType geometry) 
+    public static ClobType geometryToGml(CommandContext ctx, GeometryType geometry, boolean withGmlPrefix) 
             throws Exception {        
         Geometry jtsGeometry = getGeometry(geometry);
         GMLWriter writer = new GMLWriter();
+
+        if (ctx.getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+            if (!withGmlPrefix) {
+                if (geometry.getSrid() != SRID_4326) {
+                    if (geometry.getSrid() == GeometryType.UNKNOWN_SRID) {
+                        throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31161));
+                    }
+                    jtsGeometry = GeometryTransformUtils.transform(ctx, jtsGeometry, SRID_4326);
+                }
+                writer.setPrefix(null);
+            } else if (geometry.getSrid() != GeometryType.UNKNOWN_SRID) {
+                //TODO: should include the srsName
+                //writer.setSrsName(String.valueOf(geometry.getSrid()));
+            }
+        }
+
         String gmlText = writer.write(jtsGeometry);
         return new ClobType(new ClobImpl(gmlText));
     }

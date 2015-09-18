@@ -32,13 +32,16 @@ import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.metadata.FunctionMethod.PushDown;
+import org.teiid.metadata.Procedure;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -69,6 +72,8 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
     private transient Method invocationMethod;
 
     private ClassLoader classLoader;
+
+    private Procedure procedure;
 
 	FunctionDescriptor(ITeiidServerVersion teiidVersion, FunctionMethod method, Class<?>[] types,
 			Class<?> outputType, Method invocationMethod,
@@ -134,7 +139,17 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
     public boolean requiresContext() {
         return this.requiresContext;
     }
-    
+
+    @Since(Version.TEIID_8_11)
+    public Procedure getProcedure() {
+        return procedure;
+    }
+
+    @Since(Version.TEIID_8_11)
+    public void setProcedure(Procedure procedure) {
+        this.procedure = procedure;
+    }
+
 	@Override
 	public String toString() {
 		StringBuffer str = new StringBuffer(this.method.getName());

@@ -24,6 +24,9 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
     @Since(Version.TEIID_8_7)
     private boolean ordinal;
 
+    @Since(Version.TEIID_8_11)
+    private String header;
+
     /**
      * @param p
      * @param id
@@ -58,6 +61,22 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
      */
     public void setNoTrim(boolean noTrim) {
         this.noTrim = noTrim;
+    }
+
+    @Since(Version.TEIID_8_11)
+    public String getHeader() {
+        if (isLessThanTeiidVersion(Version.TEIID_8_11))
+            return null;
+
+        return header;
+    }
+
+    @Since(Version.TEIID_8_11)
+    public void setHeader(String header) {
+        if (isLessThanTeiidVersion(Version.TEIID_8_11))
+            return;
+
+        this.header = header;
     }
 
     /**
@@ -117,6 +136,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         result = prime * result + ((this.selector == null) ? 0 : this.selector.hashCode());
         result = prime * result + ((this.width == null) ? 0 : this.width.hashCode());
         result = prime * result + (this.ordinal ? 1231 : 1237);
+        result = prime * result + ((this.header == null) ? 0 : this.header.hashCode());
+
         return result;
     }
 
@@ -138,6 +159,10 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         } else if (!this.width.equals(other.width)) return false;
         if (this.ordinal != other.ordinal)
             return false;
+        if (this.header == null) {
+            if (other.header != null) return false;
+        } else if (!this.header.equals(other.header)) return false;
+
         return true;
     }
 
@@ -163,6 +188,8 @@ public class TextColumn extends ProjectedColumn implements ITextColumn<LanguageV
         if(getType() != null)
             clone.setType(getType());
         clone.setOrdinal(isOrdinal());
+        if(getHeader() != null)
+            clone.setSelector(getHeader());
 
         return clone;
     }

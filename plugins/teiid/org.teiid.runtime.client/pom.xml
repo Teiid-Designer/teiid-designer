@@ -14,7 +14,7 @@
 	  <version>9.2.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
-        <jbossas-version>7.4.0.Final-redhat-4</jbossas-version>
+        <jbossas-version>7.5.0.Final-redhat-15</jbossas-version>
         <version.org.jboss.jboss-dmr>1.2.0.Final</version.org.jboss.jboss-dmr>
         <version.org.jboss.modules.jboss-modules>1.3.0.Final</version.org.jboss.modules.jboss-modules>
         <version.org.jboss.jboss-vfs>3.2.2.Final</version.org.jboss.jboss-vfs>
@@ -35,6 +35,7 @@
         <version.nu.xom>1.2.7.redhat-4</version.nu.xom>
         <version.jts>1.13</version.jts>
         <version.jts2geojson>0.4.0</version.jts2geojson>
+        <version.proj4j>0.1.0</version.proj4j>
     </properties>
     <build>
         <plugins>
@@ -182,7 +183,11 @@
                                 <artifactItem>
                                     <groupId>org.wololo</groupId>
                                     <artifactId>jts2geojson</artifactId>
-                                </artifactItem>  
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.osgeo</groupId>
+                                    <artifactId>proj4j</artifactId>
+                                </artifactItem>
                             </artifactItems>
                             <skip>false</skip>
                             <stripVersion>true</stripVersion>
@@ -453,6 +458,10 @@
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.osgeo</groupId>
+            <artifactId>proj4j</artifactId>
+            </dependency>
     </dependencies>
     <dependencyManagement> 
         <dependencies>
@@ -575,6 +584,11 @@
                 <groupId>org.wololo</groupId>
                 <artifactId>jts2geojson</artifactId>
                 <version>${version.jts2geojson}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.osgeo</groupId>
+                <artifactId>proj4j</artifactId>
+                <version>${version.proj4j}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

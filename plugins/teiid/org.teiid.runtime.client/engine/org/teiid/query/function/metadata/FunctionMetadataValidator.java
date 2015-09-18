@@ -103,7 +103,7 @@ public class FunctionMetadataValidator {
 	        // Validate attributes
 	        validateName(teiidVersion, method.getName());
 	        validateDescription(method.getDescription());
-	        validateCategory(method.getCategory());
+	        validateCategory(teiidVersion, method.getCategory());
 	        validateInvocationMethod(method.getInvocationClass(), method.getInvocationMethod(), method.getPushdown());
 
 	        // Validate input parameters
@@ -220,12 +220,17 @@ public class FunctionMetadataValidator {
      * <LI>Validate that category is not null</LI>
      * <LI>Validate that category has length <= MAX_LENGTH</LI>
      * </UL>
+     * @param teiidVersion
      * @param category Category to validate
      * @throws Exception Thrown if category is not valid in some way
      */
-    public static final void validateCategory(String category) throws Exception {
-        validateIsNotNull(category, "Category"); //$NON-NLS-1$
-        validateLength(category, MAX_LENGTH, "Category"); //$NON-NLS-1$
+    public static final void validateCategory(ITeiidServerVersion teiidVersion, String category) throws Exception {
+        if (teiidVersion.isLessThan(Version.TEIID_8_11))
+            validateIsNotNull(category, "Category"); //$NON-NLS-1$
+
+        if (category != null) {
+            validateLength(category, MAX_LENGTH, "Category"); //$NON-NLS-1$
+        }
     }
 
     /**

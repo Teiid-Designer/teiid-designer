@@ -50,19 +50,30 @@ public final class FileStoreInputStreamFactory extends InputStreamFactory {
 
 	@Override
 	public InputStream getInputStream() {
-		return getInputStream(0);
+		return getInputStream(0, -1);
 	}
 	
-	public InputStream getInputStream(long start) {
+	public InputStream getInputStream(long start, long len) {
 		if (fsos != null && !fsos.bytesWritten()) {
 			if (start > Integer.MAX_VALUE) {
 				throw new AssertionError("Invalid start " + start); //$NON-NLS-1$
 			}
 			int s = (int)start;
-			return new ByteArrayInputStream(fsos.getBuffer(), s, fsos.getCount() - s);
-		}
-		return lobBuffer.createInputStream(start);
-	}
+			int intLen = fsos.getCount() - s;
+            if (len >= 0) {
+                intLen = (int)Math.min(len, len);
+            }
+            return new ByteArrayInputStream(fsos.getBuffer(), s, intLen);
+        }
+        return lobBuffer.createInputStream(start, len);
+    }
+    
+    public byte[] getMemoryBytes() {
+        if (fsos != null && !fsos.bytesWritten() && fsos.getBuffer().length == fsos.getCount()) {
+            return fsos.getBuffer();
+        }
+        throw new IllegalStateException("In persistent mode or not closed for writing"); //$NON-NLS-1$
+    }
 	
 	@Override
 	public Reader getCharacterStream() throws IOException {
@@ -92,14 +103,24 @@ public final class FileStoreInputStreamFactory extends InputStreamFactory {
 	/**
 	 * The returned output stream is shared among all uses.
 	 * Once closed no further writing can occur
-	 * @return
+	 * @return output stream
 	 */
 	public FileStoreOutputStream getOuputStream() {
-		if (fsos == null) {
-			fsos = lobBuffer.createOutputStream(DataTypeManagerService.MAX_LOB_MEMORY_BYTES);
-		}
-		return fsos;
-	}
+	    return getOuputStream(DataTypeManagerService.MAX_LOB_MEMORY_BYTES);
+    }
+    
+    /**
+     * The returned output stream is shared among all uses.
+     * Once closed no further writing can occur
+     * @param maxMemorySize
+     * @return output stream
+     */
+    public FileStoreOutputStream getOuputStream(int maxMemorySize) {
+        if (fsos == null) {
+            fsos = lobBuffer.createOutputStream(maxMemorySize);
+        }
+        return fsos;
+    }
 
 	@Override
 	public void free() {

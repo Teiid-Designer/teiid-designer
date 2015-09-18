@@ -310,7 +310,32 @@ public class SimpleQueryResolver extends CommandResolver {
             visitNode(obj.getCriteria());
             visitNode(obj.getGroupBy());
             visitNode(obj.getHaving());
-            visitNode(obj.getSelect());        
+            visitNode(obj.getSelect());
+            /*
+             * TODO
+             * Session Variables are not currently supported in Designer
+             */
+//            if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+//                GroupBy groupBy = obj.getGroupBy();
+//                if (groupBy != null) {
+//                    Object var = DQPWorkContext.getWorkContext().getSession().getSessionVariables().get("resolve_groupby_positional"); //$NON-NLS-1$
+//                    if (Boolean.TRUE.equals(var)) {
+//                        for (int i = 0; i < groupBy.getCount(); i++) {
+//                            List<Expression> select = obj.getSelect().getProjectedSymbols();
+//                            Expression ex = groupBy.getSymbols().get(i);
+//                            ex = SymbolMap.getExpression(ex);
+//                            if (ex instanceof Constant && ex.getType() == DataTypeManager.DefaultDataClasses.INTEGER) {
+//                                Integer val = (Integer)((Constant)ex).getValue();
+//                                if (val != null && val > 0 && val <= select.size()) {
+//                                    Expression selectExpression = select.get(val - 1);
+//                                    selectExpression = SymbolMap.getExpression(selectExpression);
+//                                    groupBy.getSymbols().set(i, selectExpression.clone());
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             visitNode(obj.getLimit());
         }
         

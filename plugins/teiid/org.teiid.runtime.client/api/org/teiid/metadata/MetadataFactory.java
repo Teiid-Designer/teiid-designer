@@ -149,8 +149,30 @@ public class MetadataFactory implements Serializable {
         msb = longHash(schemaName, msb);
         this.idPrefix = "tid:" + hex(msb, 12); //$NON-NLS-1$
         setUUID(this.schema);
+
+        if (isTeiid811OrGreater()) {
+            if (modelProperties != null) {
+                for (Map.Entry<Object, Object> entry : modelProperties.entrySet()) {
+                    if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                        this.schema.setProperty(resolvePropertyKey(this, (String)entry.getKey()), (String)entry.getValue());
+                    }
+                }
+            }
+        }
+
         this.modelProperties = modelProperties;
         this.rawMetadata = rawMetadata;
+    }
+
+    /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
+    private boolean isTeiid811OrGreater() {
+        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11);
     }
 
     private boolean isTeiid89OrGreater() {
@@ -186,6 +208,11 @@ public class MetadataFactory implements Serializable {
         return this.modelProperties;
     }
 
+    /**
+     * Get the metadata text for the first metadata element
+     * @return
+     */
+    @Deprecated
     public String getRawMetadata() {
         return this.rawMetadata;
     }
@@ -926,4 +953,21 @@ public class MetadataFactory implements Serializable {
 
 		this.schema.addFunction(functionMethod);
 	}
+
+	@Since(Version.TEIID_8_11)
+	public static String resolvePropertyKey(MetadataFactory factory, String key) {
+        int index = key.indexOf(':');
+        if (index > 0 && index < key.length() - 1) {
+            String prefix = key.substring(0, index);
+            String uri = builtinNamespaces(factory.getTeiidVersion()).get(prefix);
+            if (uri == null) {
+                uri = factory.getNamespaces().get(prefix);
+            }
+            if (uri != null) {
+                key = '{' +uri + '}' + key.substring(index + 1, key.length());
+            }
+            //TODO warnings or errors if not resolvable 
+        }
+        return key;
+    }
 }

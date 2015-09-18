@@ -59,6 +59,8 @@ public class SourceSystemFunctions {
 	public static final String LOCATE = "locate"; //$NON-NLS-1$
 	public static final String LTRIM = "ltrim"; //$NON-NLS-1$
 	public static final String REPEAT = "repeat"; //$NON-NLS-1$
+	@Since(Version.TEIID_8_11)
+	public static final String REGEXP_REPLACE = "regexp_replace"; //$NON-NLS-1$
 	public static final String REPLACE = "replace"; //$NON-NLS-1$
 	public static final String RIGHT = "right"; //$NON-NLS-1$
 	public static final String RPAD = "rpad"; //$NON-NLS-1$
@@ -172,12 +174,16 @@ public class SourceSystemFunctions {
 
 	@Since(Version.TEIID_8_10)
 	public static final String ST_ASTEXT = "st_astext"; //$NON-NLS-1$
+	@Since(Version.TEIID_8_11)
+	public static final String ST_ASEWKT = "st_asewkt"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
     public static final String ST_ASBINARY = "st_asbinary"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
     public static final String ST_ASGEOJSON = "st_asgeojson"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
     public static final String ST_ASGML = "st_asgml"; //$NON-NLS-1$
+	@Since(Version.TEIID_8_11)
+	public static final String ST_ASKML = "st_askml"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
     public static final String ST_GEOMFROMTEXT = "st_geomfromtext"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
@@ -206,4 +212,6 @@ public class SourceSystemFunctions {
     public static final String ST_SETSRID = "st_setsrid"; //$NON-NLS-1$
 	@Since(Version.TEIID_8_10)
     public static final String ST_EQUALS = "st_equals"; //$NON-NLS-1$
+	@Since(Version.TEIID_8_11)
+	public static final String ST_TRANSFORM = "st_transform"; //$NON-NLS-1$
 }

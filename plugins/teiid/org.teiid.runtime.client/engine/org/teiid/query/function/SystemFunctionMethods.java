@@ -22,9 +22,6 @@
 
 package org.teiid.query.function;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.FunctionMethod.Determinism;
@@ -38,19 +35,15 @@ public class SystemFunctionMethods {
 	
 	private static final int MAX_VARIABLES = 512;
 
-	/**
-	 * Taken from SessionMetadata
-	 */
-	private static transient Map<String, Object> sessionVariables = Collections.synchronizedMap(new HashMap<String, Object>(2));
-
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, nullOnNull=true, determinism=Determinism.COMMAND_DETERMINISTIC)
 	public static Object teiid_session_get(CommandContext context, String key) {
 		return context.getSessionVariable(key);
 	}
-	
+
 	@TeiidFunction(category=FunctionCategoryConstants.SYSTEM, determinism=Determinism.COMMAND_DETERMINISTIC)
 	public static Object teiid_session_set(CommandContext context, String key, Object value) throws Exception {
-		if (sessionVariables.size() > MAX_VARIABLES && !sessionVariables.containsKey(key)) {
+	    Object oldValue = context.getSessionVariable(key);
+		if (context.getSessionVariableCount() > MAX_VARIABLES && oldValue == null) {
 			throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31136, MAX_VARIABLES));
 		}
 		return context.setSessionVariable(key, value);

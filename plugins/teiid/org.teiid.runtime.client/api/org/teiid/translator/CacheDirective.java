@@ -25,6 +25,7 @@ package org.teiid.translator;
 import java.io.Serializable;
 import org.teiid.core.util.EquivalenceUtil;
 import org.teiid.core.util.HashCodeUtil;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.TeiidParser;
 
 public class CacheDirective implements Serializable {
@@ -77,6 +78,13 @@ public class CacheDirective implements Serializable {
      */
     public TeiidParser getTeiidParser() {
         return this.teiidParser;
+    }
+
+    /**
+     * @return version
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.getTeiidParser().getVersion();
     }
 
 	public Boolean getPrefersMemory() {

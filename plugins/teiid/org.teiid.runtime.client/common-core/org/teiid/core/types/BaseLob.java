@@ -78,6 +78,7 @@ public class BaseLob implements Externalizable, StreamFactoryReference {
 	}
 	
 	public void free() {
+	    //we don't actually free the underlying streamFactory as this could be a caching scenario
 		this.streamFactory = null;
 	}
 	

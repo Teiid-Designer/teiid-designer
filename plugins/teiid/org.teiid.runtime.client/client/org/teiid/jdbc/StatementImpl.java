@@ -172,7 +172,9 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
     //Map<out/inout/return param index --> index in results>
     protected Map<Integer, Integer> outParamIndexMap = new HashMap<Integer, Integer>();
     protected Map<String, Integer> outParamByName = new TreeMap<String, Integer>(String.CASE_INSENSITIVE_ORDER);
-    
+
+    private boolean closeOnCompletion;
+
     static Pattern TRANSACTION_STATEMENT = Pattern.compile("\\s*(commit|rollback|(start\\s+transaction))\\s*;?\\s*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
     static Pattern SET_STATEMENT = Pattern.compile("\\s*set(?:\\s+(payload))?\\s+((?:session authorization)|(?:[a-zA-Z]\\w*))\\s+(?:to\\s+)?((?:[^\\s]*)|(?:'[^']*')+)\\s*;?\\s*", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
@@ -263,8 +265,10 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
         this.annotations = null;
 
         if ( this.resultSet != null ) {
-            this.resultSet.close();
+            ResultSet rs = this.resultSet;
             this.resultSet = null;
+            rs.close();
+            checkStatement();
         }
 
         this.serverWarnings = null;
@@ -322,8 +326,9 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 
         // close the the server's statement object (if necessary)
         if(resultSet != null) {
-            resultSet.close();
+            ResultSet rs = this.resultSet;
             resultSet = null;
+            rs.close();
         }
 
         isClosed = true;
@@ -1296,14 +1301,14 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
 	static Map<Integer, Object> getColumnMetadata(String tableName, String columnName, DefaultDataTypes dataType, Integer nullable, Integer searchable, Boolean writable, Boolean signed, Boolean caseSensitive, ConnectionImpl driverConnection) throws SQLException {
 	    return getColumnMetadata(tableName, columnName, dataType.getId(), nullable, searchable, writable, signed, caseSensitive, driverConnection);
 	}
-	
+
 	/* Do not override to allow compatibility with jdk 1.6 */
     public void closeOnCompletion() throws SQLException {
-		throw new UnsupportedOperationException();
+		this.closeOnCompletion = true;
 	}
 
     /* Do not override to allow compatibility with jdk 1.6 */
     public boolean isCloseOnCompletion() throws SQLException {
-		return false;
+		return closeOnCompletion;
 	}
 }

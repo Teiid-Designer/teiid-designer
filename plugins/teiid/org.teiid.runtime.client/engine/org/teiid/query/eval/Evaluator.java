@@ -44,6 +44,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BaseLob;
+import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.BlobType;
 import org.teiid.core.types.ClobType;
 import org.teiid.core.types.DataTypeManagerService;
@@ -255,20 +256,20 @@ public class Evaluator {
     		new String[] {"([a]|[^a])*", "(", ")", "*", "?", "+", //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$ //$NON-NLS-6$
     				"[", "]", "([a]|[^a])", "{", "|", "}"},  SIMILAR_REGEX_RESERVED, '\\', 0);  //$NON-NLS-1$ //$NON-NLS-2$  //$NON-NLS-3$ //$NON-NLS-4$  //$NON-NLS-5$ //$NON-NLS-6$  
 
-    private final CommandContext commandContext;
+    private final CommandContext context;
 
     /**
      * @param teiidVersion
      */
     public Evaluator(ITeiidServerVersion teiidVersion) {
-        commandContext = new CommandContext(teiidVersion);
+        context = new CommandContext(teiidVersion);
     }
 
     /**
      * @return teiid version
      */
     public ITeiidServerVersion getTeiidVersion() {
-        return commandContext.getTeiidVersion();
+        return context.getTeiidVersion();
     }
 
     /**
@@ -829,7 +830,7 @@ public class Evaluator {
                 default:
                     throw new AssertionError("Unknown xml value type " + t); //$NON-NLS-1$
             }
-            return XMLTableNode.getValue(expression.getType(), i, config, commandContext);
+            return XMLTableNode.getValue(expression.getType(), i, config, context);
         } catch (Exception e) {
             throw new TeiidClientException(e);
         }
@@ -872,6 +873,14 @@ public class Evaluator {
 					Reader r = new StringReader(string);
 					type = validate(xp, r);
 				}
+			} else if (value instanceof BinaryType && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+			    BinaryType string = (BinaryType)value;
+			    result = new SQLXMLImpl(string.getBytesDirect());
+			    result.setCharset(Streamable.CHARSET);
+			    if (!xp.isWellFormed()) {
+			        Reader r = result.getCharacterStream();
+			        type = validate(xp, r);
+			    }
 			} else {
 				InputStreamFactory isf = null;
 				Streamable<?> s = (Streamable<?>)value;
@@ -1025,11 +1034,11 @@ public class Evaluator {
 					}
 					type = Type.CONTENT;
 				}
-				XMLType val = rp.concat.close();
+				XMLType val = rp.concat.close(context);
 				val.setType(rp.type);
 				return val;
 			}
-			return xmlQuery.getXQueryExpression().createXMLType(result.iter, emptyOnEmpty);
+			return xmlQuery.getXQueryExpression().createXMLType(result.iter, emptyOnEmpty, context);
 		} catch (Exception e) {
 			 throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30333, e.getMessage()));
 		} finally {
@@ -1127,7 +1136,7 @@ public class Evaluator {
 		Evaluator.NameValuePair<Object>[] nameValuePairs = getNameValuePairs(args, true, true); 
 			
 		try {
-			return XMLSystemFunctions.xmlForest(namespaces(function.getNamespaces()), nameValuePairs);
+			return XMLSystemFunctions.xmlForest(context, namespaces(function.getNamespaces()), nameValuePairs);
 		} catch (Exception e) {
 			 throw new TeiidClientException(e);
 		}
@@ -1153,7 +1162,7 @@ public class Evaluator {
 			}
 			builder.end(false);
 			if (returnValue) {
-				ClobType result = builder.close();
+				ClobType result = builder.close(context);
 				builder = null;
 				return result;
 			}
@@ -1180,7 +1189,7 @@ public class Evaluator {
 				Function f = (Function)value;
 				if (IFunctionLibrary.FunctionName.JSONARRAY.equalsIgnoreCase(f.getName())) {
 					builder.startValue(name);
-					jsonArray(f, f.getArgs(), builder, this);
+					jsonArray(context, f, f.getArgs(), builder, this);
 					return;
 				}
 			}
@@ -1198,7 +1207,7 @@ public class Evaluator {
 	 * @return json clob
 	 * @throws Exception
 	 */
-	public static ClobType jsonArray(Function f, Object[] vals, JSONBuilder builder, Evaluator eval) throws Exception {
+	public static ClobType jsonArray(CommandContext context, Function f, Object[] vals, JSONBuilder builder, Evaluator eval) throws Exception {
 		boolean returnValue = false;
 		try {
 			if (builder == null) {
@@ -1221,7 +1230,7 @@ public class Evaluator {
 			}
 			builder.end(true);
 			if (returnValue) {
-				ClobType result = builder.close();
+				ClobType result = builder.close(context);
 				builder = null;
 				return result;
 			}
@@ -1245,7 +1254,7 @@ public class Evaluator {
 			if (function.getAttributes() != null) {
 				attributes = getNameValuePairs(function.getAttributes().getArgs(), true, true);
 			}
-			return XMLSystemFunctions.xmlElement(function.getName(), namespaces(function.getNamespaces()), attributes, values);
+			return XMLSystemFunctions.xmlElement(function.getName(), namespaces(function.getNamespaces()), attributes, values, context);
 		} catch (Exception e) {
 			throw new TeiidClientException(e);
 		}
@@ -1308,9 +1317,9 @@ public class Evaluator {
 				}
 				try {
 					if (lob instanceof Blob) {
-						return XMLSystemFunctions.jsonToXml(rootName, (Blob)lob, true);
+						return XMLSystemFunctions.jsonToXml(context, rootName, (Blob)lob, true);
 					}
-					return XMLSystemFunctions.jsonToXml(rootName, (Clob)lob, true);
+					return XMLSystemFunctions.jsonToXml(context, rootName, (Clob)lob, true);
 				} catch (Exception e) {
 					throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30384, f.getFunctionDescriptor().getName()));
 				}
@@ -1398,7 +1407,7 @@ public class Evaluator {
 	    
 	    if (fd.requiresContext()) {
 			values = new Object[args.length+1];
-	        values[0] = commandContext;
+	        values[0] = context;
 	        start = 1;
 	    }
 	    else {
@@ -1416,7 +1425,15 @@ public class Evaluator {
 				throw new TeiidClientException(e);
 			}
 	    }
-	    
+
+	    if (fd.getProcedure() != null && getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+            try {
+                return evaluateProcedure(function, values);
+            } catch (Exception e) {
+                throw new TeiidClientException(e);
+            }
+        }
+
 	    // Check for special lookup function
 	    if(IFunctionLibrary.FunctionName.LOOKUP.equalsIgnoreCase(function.getName())) {
 	
@@ -1436,7 +1453,7 @@ public class Evaluator {
 	    }
 
 		// Execute function
-		return fd.invokeFunction(values, commandContext, null);
+		return fd.invokeFunction(values, context, null);
 	}
 	
 	protected Object evaluatePushdown(Function function,
@@ -1477,4 +1494,8 @@ public class Evaluator {
 	throws Exception {
 		throw new UnsupportedOperationException("Subquery evaluation not possible with a base Evaluator"); //$NON-NLS-1$
 	}
+
+    protected Object evaluateProcedure(Function function, Object[] values) throws Exception {
+        throw new UnsupportedOperationException("Procedure evaluation not possible with a base Evaluator"); //$NON-NLS-1$
+    }
 }

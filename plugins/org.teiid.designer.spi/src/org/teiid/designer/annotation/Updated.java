@@ -32,6 +32,6 @@ public @interface Updated {
     /**
      * @return list of values replaced when item was updated
      */
-    String[] replaces();
+    String[] replaces() default "";
 
 }

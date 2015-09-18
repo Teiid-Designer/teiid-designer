@@ -741,16 +741,16 @@ name=identifier
 description=Partial or full name of a single entity.
 example={code:sql}tbl.col{code}\n{code:sql}"tbl"."col"{code}
 */
-String id(Boolean validate) :
+String id(Boolean nonAlias) :
 {
 }
 {
   	(<ID>|nonReserved())
   	{
   		String id = normalizeId(getToken(0).image);
-  		if (validate != null) {
+  		if (nonAlias != null) {
   		    try {
-  			   return validateName(id, validate);
+  			   return validateName(id, nonAlias);
   			 } catch (Exception ex) {
   			   throw new ParseException(ex.getLocalizedMessage());
   		     }
@@ -2911,6 +2911,7 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 	boolean noTrim = false;
 	String selector = null;
 	Integer position = null;
+	String header = null;
 }
 {
 	name = id(Boolean.TRUE)
@@ -2927,6 +2928,13 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
       )
       |
       (
+        [
+            <HEADER>
+            header = stringVal()
+            {
+                requiresVersionAtLeast(Version.TEIID_8_11);
+            }
+        ]
 	    datatype = parseDataType()
 	    [
 	  	  <WIDTH>
@@ -2949,6 +2957,10 @@ TextColumn textColumn(ParseInfo info) #TextColumn :
 	      jjtThis.setNoTrim(noTrim);
 		  jjtThis.setSelector(selector);
 		  jjtThis.setPosition(position);
+
+		  if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11))
+		      jjtThis.setHeader(header);
+
           return jjtThis;
 	    }
 	  )
@@ -3214,7 +3226,7 @@ XMLColumn xmlColumn(ParseInfo info) #XMLColumn :
 	Expression defaultExpr = null;
 }
 {
-	name = id(null)
+	name = id(getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11) ? Boolean.TRUE : null)
 	{
 	   jjtThis.setName(name);
 	}
@@ -3596,7 +3608,7 @@ SubqueryCompareCriteria subqueryCompareCriteria(ParseInfo info, Expression expre
 	   quantifier=<ALL>
 	)
 	{
-	   if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+	   if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
 	       hint = getSubqueryHint(getToken(1));
 	}
 	subquery = subquery(info)
@@ -4428,13 +4440,13 @@ Expression unsignedValueExpressionPrimary(ParseInfo info) :
         LOOKAHEAD(subquery(info))
         (
             {
-                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
                     hint = getSubqueryHint(getToken(1));
             }
             subquery = subquery(info)
             {
                 ScalarSubquery ss = scalarSubquery(subquery);
-                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10.get()))
+                if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10))
                     ss.setSubqueryHint(hint);
 
                 expression = ss;
@@ -5383,9 +5395,13 @@ CreateProcedureCommand createDDLProcedure(MetadataFactory factory, ParseInfo inf
 		{
 			proc.setVirtual(virtual);
 			proc.setFunction(function);
-			if (stmt != null){
-			    if (function || !virtual) {
-			         throw new ParseException(Messages.getString(Messages.TeiidParser.function_def, procName));
+			if (stmt != null) {
+			    boolean test = !virtual;
+			    if (getVersion().isLessThan(Version.TEIID_8_11))
+			        test = function || test;
+
+			    if (test) {
+			        throw new ParseException(Messages.getString(Messages.TeiidParser.function_def, procName));
 			    }
 				proc.setQueryPlan((comment != null?comment.image+" ":"") + stmt.toString());
 			}
@@ -5806,13 +5822,13 @@ void optionPair(AbstractMetadataRecord record, MetadataFactory factory) :
 	 (value = nonNumericLiteral()
 	 | [strVal = plusMinus()] value = unsignedNumericLiteral(strVal))
 	 { 
-	 	key = resolvePropertyKey(factory, key);
+	 	key = MetadataFactory.resolvePropertyKey(factory, key);
 	 	String val = null;
 	 	if (value.getValue() != null) {
 	 		val = value.getValue().toString();
 	 	}
 	 	record.setProperty(key, val); 
-	 } 
+	 }
 }
 
 /*

@@ -34,6 +34,7 @@ import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.StoredProcedure;
 import org.teiid.query.sql.lang.SubqueryFromClause;
 import org.teiid.query.sql.navigator.DeepPreOrderNavigator;
+import org.teiid.query.sql.navigator.PreOrPostOrderNavigator;
 import org.teiid.query.sql.navigator.PreOrderNavigator;
 import org.teiid.query.sql.symbol.GroupSymbol;
 import org.teiid.runtime.client.Messages;
@@ -195,7 +196,7 @@ public class GroupCollectorVisitor extends LanguageVisitor
      * @param removeDuplicates True to remove duplicates
      * @return Collection of {@link org.teiid.query.sql.symbol.GroupSymbol}
      */
-    public static Collection<GroupSymbol> getGroupsIgnoreInlineViews(LanguageObject obj, boolean removeDuplicates) {
+    public static Collection<GroupSymbol> getGroupsIgnoreInlineViewsAndEvaluatableSubqueries(LanguageObject obj, boolean removeDuplicates) {
         Collection<GroupSymbol> groups = null;
         if(removeDuplicates) { 
             groups = new LinkedHashSet<GroupSymbol>();
@@ -204,8 +205,15 @@ public class GroupCollectorVisitor extends LanguageVisitor
         }    
         GroupCollectorVisitor visitor = new GroupCollectorVisitor(obj.getTeiidVersion(), groups);
         visitor.setIgnoreInlineViewGroups(true);
-        DeepPreOrderNavigator.doVisit(obj, visitor);
-        
+
+        if (visitor.isTeiid811OrGreater()) {
+            PreOrPostOrderNavigator nav = new PreOrPostOrderNavigator(visitor, PreOrPostOrderNavigator.PRE_ORDER, true);
+            nav.setSkipEvaluatable(true);
+            obj.acceptVisitor(nav);
+        } else {
+            DeepPreOrderNavigator.doVisit(obj, visitor);
+        }
+
         if(visitor.getInlineViewGroups() != null) {
             groups.removeAll(visitor.getInlineViewGroups());
         }

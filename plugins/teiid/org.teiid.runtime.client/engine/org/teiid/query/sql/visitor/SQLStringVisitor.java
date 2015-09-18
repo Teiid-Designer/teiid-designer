@@ -1803,6 +1803,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(CacheHint.SCOPE);
             append(obj.getScope());            
         }
+        if (obj.getMinRows() != null && isTeiid811OrGreater()) {
+            if (!addParens) {
+                append(Tokens.LPAREN);
+                addParens = true;
+            } else {
+                append(SPACE);
+            }
+            append(CacheHint.MIN);
+            append(obj.getMinRows());
+        }
         if (addParens) {
             append(Tokens.RPAREN);
         }
@@ -2889,6 +2899,10 @@ public class SQLStringVisitor extends LanguageVisitor
                 append(SPACE);
                 append(NonReserved.ORDINALITY);
             } else {
+                if (col.getHeader() != null && isTeiid811OrGreater()) {
+                    outputLiteral(String.class, false, col.getHeader());
+                    append(SPACE);
+                }
                 append(col.getType());
                 if (col.getWidth() != null) {
                     append(SPACE);

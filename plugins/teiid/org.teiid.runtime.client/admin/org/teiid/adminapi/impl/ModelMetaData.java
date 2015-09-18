@@ -75,11 +75,11 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 
     protected transient List<Message> runtimeMessages;
 
-    @Since(Version.TEIID_8_0)
-    protected String schemaSourceType;
+    @Since(Version.TEIID_8_10)
+    protected List<String> sourceMetadataType = new ArrayList<String>();
 
-    @Since(Version.TEIID_8_0)
-	protected String schemaText;
+    @Since(Version.TEIID_8_10)
+	protected List<String> sourceMetadataText = new ArrayList<String>();
 
     @Since(Version.TEIID_8_0)
 	protected MetadataStatus metadataStatus = MetadataStatus.LOADING;
@@ -116,8 +116,8 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 
         /* Teiid 8+ */
         messages = (List<Message>) serFields.get("messages", null);
-        schemaSourceType = (String) serFields.get("schemaSourceType", null);
-        schemaText = (String) serFields.get("schemaText", null);
+        sourceMetadataType.add((String) serFields.get("schemaSourceType", null));
+        sourceMetadataText.add((String) serFields.get("schemaText", null));
         metadataStatus = (MetadataStatus) serFields.get("metadataStatus", null);
     }
 
@@ -187,7 +187,7 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
         this.metadataStatus = status;
     }
     
-    void setMetadataStatus(String status) {
+    public void setMetadataStatus(String status) {
     	if (status != null) {
     		this.metadataStatus = Model.MetadataStatus.valueOf(status);
     	}
@@ -395,23 +395,67 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 		}		
     }
 
+    @Since(Version.TEIID_8_11)
+    public void addSourceMetadata(String type, String text) {
+        this.sourceMetadataType.add(type);
+        this.sourceMetadataText.add(text);
+    }
+
+    /**
+     * @see #getSourceMetadataType()
+     */
     public String getSchemaSourceType() {
-		return schemaSourceType;
-	}
+        if (!sourceMetadataType.isEmpty()) {
+            return sourceMetadataType.get(0);
+        }
+        return null;
+    }
 
-	public void setSchemaSourceType(String schemaSourceType) {
-		this.schemaSourceType = schemaSourceType;
-	}
+    /**
+     * @see #addSourceMetadata(String, String)
+     */
+    @Deprecated
+    public void setSchemaSourceType(String schemaSourceType) {
+        if (!sourceMetadataType.isEmpty()) {
+            sourceMetadataType.set(0, schemaSourceType);
+        } else {
+            sourceMetadataType.add(schemaSourceType);
+        }
+    }
 
+    /**
+     * @see #getSourceMetadataText()
+     */
+    @Deprecated
 	@Override
 	public String getSchemaText() {
-		return schemaText;
+        if (!sourceMetadataText.isEmpty()) {
+            return sourceMetadataText.get(0);
+        }
+
+        return null;
 	}
 
+    /**
+     * @see #addSourceMetadata(String, String)
+     */
+    @Deprecated
 	public void setSchemaText(String schemaText) {
-		this.schemaText = schemaText;
+        if (!sourceMetadataText.isEmpty()) {
+            sourceMetadataText.set(0, schemaText);
+        } else {
+            sourceMetadataText.add(schemaText);
+        }
 	}
-	
+
+    public List<String> getSourceMetadataType() {
+        return sourceMetadataType;
+    }
+    
+    public List<String> getSourceMetadataText() {
+        return sourceMetadataText;
+    }
+
 	@Override
 	public List<String> getValidityErrors() {
 		List<String> allErrors = new ArrayList<String>();
@@ -424,8 +468,5 @@ public class ModelMetaData extends AdminObjectImpl implements Model, Serializabl
 			}
 		}
 		return allErrors;
-	}
-	
-	
-	
+	}	
 }

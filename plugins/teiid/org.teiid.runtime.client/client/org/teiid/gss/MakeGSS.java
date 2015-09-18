@@ -32,13 +32,16 @@
 
 package org.teiid.gss;
 
+import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.GSSManager;
 import org.ietf.jgss.GSSName;
@@ -138,33 +141,57 @@ public class MakeGSS {
         	errors.append(Messages.getString(Messages.GSS.system_prop_missing, "java.security.auth.login.config")); //$NON-NLS-1$ 
         	errors.append(nl);
         }         
-        
-        if (errors.length() > 0) {
-        	 throw new LogonException(errors.toString());
-        }
-        
-        String user = props.getProperty(TeiidURL.CONNECTION.USER_NAME);
-        String password = props.getProperty(TeiidURL.CONNECTION.PASSWORD);
-        
-        try {
-            LoginContext lc = new LoginContext(jaasApplicationName, new GSSCallbackHandler(user, password));
-            lc.login();
 
-            Subject sub = lc.getSubject();
-            PrivilegedAction action = new GssAction(logon, kerberosPrincipalName, props);
+        try {        
+            String user = props.getProperty(TeiidURL.CONNECTION.USER_NAME);
+            String password = props.getProperty(TeiidURL.CONNECTION.PASSWORD);
+
+            boolean performAuthentication = true;
+            GSSCredential gssCredential = null;
+            Subject sub = Subject.getSubject(AccessController.getContext());
+            if(sub != null) {
+                Set<GSSCredential> gssCreds = sub.getPrivateCredentials(GSSCredential.class);
+                if (gssCreds != null && gssCreds.size() > 0) {
+                    gssCredential = gssCreds.iterator().next();
+                    performAuthentication = false;
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.fine("GSS Authentication using delegated credential"); //$NON-NLS-1$
+                    }                    
+                }
+                else {
+                    if (logger.isLoggable(Level.FINE)) {
+                        logger.fine("No delegation credential found in the subject"); //$NON-NLS-1$
+                    }                    
+                }
+            }
+
+            if (performAuthentication) {
+                if (errors.length() > 0) {
+                    throw new LogonException(errors.toString());
+                }
+
+                LoginContext lc = new LoginContext(jaasApplicationName, new GSSCallbackHandler(user, password));
+                lc.login();
+
+                sub = lc.getSubject();
+            }
+
+            PrivilegedAction action = new GssAction(logon, kerberosPrincipalName, props, user, gssCredential);
             result = Subject.doAs(sub, action);
+            
         } catch (Exception e) {
              throw new LogonException(e, Messages.gs(Messages.TEIID.TEIID20005));
         }
 
-        if (result instanceof LogonException)
+        if (result instanceof LogonException) {
         	throw (LogonException)result;
-        else if (result instanceof TeiidClientException)
+        } else if (result instanceof TeiidClientException) {
         	throw (TeiidClientException)result;
-        else if (result instanceof CommunicationException)
+        } else if (result instanceof CommunicationException) {
         	throw (CommunicationException)result;
-        else if (result instanceof Exception)
+        } else if (result instanceof Exception) {
         	 throw new LogonException((Exception)result, Messages.gs(Messages.TEIID.TEIID20005));
+        }
 
         return (LogonResult)result;
     }
@@ -177,13 +204,18 @@ class GssAction implements PrivilegedAction {
     private final ILogon logon;
     private final String kerberosPrincipalName;
     private Properties props;
+    private GSSCredential gssCredential;
+    private String user;
 
-    public GssAction(ILogon pgStream, String kerberosPrincipalName, Properties props) {
+    public GssAction(ILogon pgStream, String kerberosPrincipalName, Properties props, String user, GSSCredential gssCredential) {
         this.logon = pgStream;
         this.kerberosPrincipalName = kerberosPrincipalName;
         this.props = props;
+        this.user = user;
+        this.gssCredential = gssCredential;
     }
 
+    @Override
     public Object run() {
     	byte outToken[] = null;
         
@@ -200,7 +232,12 @@ class GssAction implements PrivilegedAction {
             //GSSName serverName = manager.createName(this.kerberosPrincipalName, null);
             GSSName serverName = manager.createName(this.kerberosPrincipalName, KERBEROS_V5_PRINCIPAL_NAME);
 
-            GSSContext secContext = manager.createContext(serverName, desiredMechs[0], null, GSSContext.DEFAULT_LIFETIME);
+            GSSCredential clientCreds = null;
+            if (this.gssCredential != null) {
+                clientCreds = this.gssCredential;
+            }
+
+            GSSContext secContext = manager.createContext(serverName, desiredMechs[0], clientCreds, GSSContext.DEFAULT_LIFETIME);
             secContext.requestMutualAuth(true);
             secContext.requestConf(true);  // Will use confidentiality later
             secContext.requestInteg(true); // Will use integrity later            

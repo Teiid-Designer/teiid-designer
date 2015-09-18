@@ -25,7 +25,6 @@ package org.teiid.runtime.client.admin.v8;
 import static org.jboss.as.controller.client.helpers.ClientConstants.DEPLOYMENT_REMOVE_OPERATION;
 import static org.jboss.as.controller.client.helpers.ClientConstants.DEPLOYMENT_UNDEPLOY_OPERATION;
 import static org.jboss.as.controller.client.helpers.ClientConstants.RESULT;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -46,7 +45,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
@@ -54,7 +52,6 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.sasl.RealmCallback;
 import javax.security.sasl.RealmChoiceCallback;
-
 import org.jboss.as.cli.Util;
 import org.jboss.as.cli.operation.OperationFormatException;
 import org.jboss.as.cli.operation.impl.DefaultOperationRequestAddress;
@@ -79,14 +76,14 @@ import org.teiid.adminapi.VDB;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.adminapi.WorkerPoolStatistics;
 import org.teiid.adminapi.impl.AdminObjectImpl;
-import org.teiid.adminapi.impl.MetadataMapper;
 import org.teiid.adminapi.impl.PropertyDefinitionMetadata;
 import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.adminapi.impl.VDBMetadataMapper;
-import org.teiid.adminapi.impl.VDBMetadataMapper.RequestMetadataMapper;
-import org.teiid.adminapi.impl.VDBMetadataMapper.SessionMetadataMapper;
-import org.teiid.adminapi.impl.VDBMetadataMapper.TransactionMetadataMapper;
 import org.teiid.adminapi.impl.VDBTranslatorMetaData;
+import org.teiid.adminapi.jboss.MetadataMapper;
+import org.teiid.adminapi.jboss.VDBMetadataMapper;
+import org.teiid.adminapi.jboss.VDBMetadataMapper.RequestMetadataMapper;
+import org.teiid.adminapi.jboss.VDBMetadataMapper.SessionMetadataMapper;
+import org.teiid.adminapi.jboss.VDBMetadataMapper.TransactionMetadataMapper;
 import org.teiid.core.util.ObjectConverterUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
@@ -446,11 +443,11 @@ public class Admin8Factory {
 
 		class AbstractMetadatMapper implements MetadataMapper<String>{
 			@Override
-			public String unwrap(ModelNode node) {
+			public String unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 				return null;
 			}
 			@Override
-			public ModelNode describe(ModelNode node) {
+			public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 				return null;
 			}
 		}
@@ -468,7 +465,7 @@ public class Admin8Factory {
 			            if (Util.isSuccess(outcome)) {
 				            List<String> drivers = getList(outcome, new AbstractMetadatMapper() {
 								@Override
-								public String unwrap(ModelNode node) {
+								public String unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 									if (node.hasDefined("driver-name")) {
 										return node.get("driver-name").asString();
 									}
@@ -911,7 +908,7 @@ public class Admin8Factory {
 	            	}
 	            	if (outcome.hasDefined("result")) {
 	            		ModelNode result = outcome.get("result");
-	            		return Arrays.asList(VDBMetadataMapper.CacheStatisticsMetadataMapper.INSTANCE.unwrap(result));
+	            		return Arrays.asList(VDBMetadataMapper.CacheStatisticsMetadataMapper.INSTANCE.unwrap(getTeiidVersion(), result));
 	            	}
 	            }
 	        } catch (IOException e) {
@@ -931,7 +928,7 @@ public class Admin8Factory {
 	            	}
 	            	if (outcome.hasDefined("result")) {
 	            		ModelNode result = outcome.get("result");
-	            		return Arrays.asList(VDBMetadataMapper.EngineStatisticsMetadataMapper.INSTANCE.unwrap(result));
+	            		return Arrays.asList(VDBMetadataMapper.EngineStatisticsMetadataMapper.INSTANCE.unwrap(getTeiidVersion(), result));
 	            	}
 	            }
 	        } catch (IOException e) {
@@ -1181,7 +1178,7 @@ public class Admin8Factory {
 		            	}
 		            	if (outcome.hasDefined("result")) {
 		            		ModelNode result = outcome.get("result");
-		            		return Arrays.asList(VDBMetadataMapper.WorkerPoolStatisticsMetadataMapper.INSTANCE.unwrap(result));
+		            		return Arrays.asList(VDBMetadataMapper.WorkerPoolStatisticsMetadataMapper.INSTANCE.unwrap(getTeiidVersion(), result));
 		            	}
 		            }
 		        } catch (IOException e) {
@@ -1583,7 +1580,7 @@ public class Admin8Factory {
 	            		}
 	            		else {
 		            		ModelNode result = outcome.get("result");
-		            		return VDBMetadataMapper.VDBTranslatorMetaDataMapper.INSTANCE.unwrap(result);
+		            		return VDBMetadataMapper.VDBTranslatorMetaDataMapper.INSTANCE.unwrap(getTeiidVersion(), result);
 	            		}
 	            	}
 	            }
@@ -1686,7 +1683,7 @@ public class Admin8Factory {
 		    					if (result.isDefined()) {
 		    				        List<ModelNode> nodeList = result.asList();
 		    				        for(ModelNode node : nodeList) {
-		    				        	T anObj = mapper.unwrap(node);
+		    				        	T anObj = mapper.unwrap(getTeiidVersion(), node);
 		    				        	if (anObj instanceof DomainAware) {
 		    				        		((AdminObjectImpl)anObj).setServerGroup(serverGroupName);
 		    				        		((AdminObjectImpl)anObj).setServerName(serverName);
@@ -1717,7 +1714,7 @@ public class Admin8Factory {
 
 	        List<T> list = new ArrayList<T>(nodeList.size());
 	        for(ModelNode node : nodeList) {
-        		list.add(mapper.unwrap(node));
+        		list.add(mapper.unwrap(getTeiidVersion(), node));
 	        }
 	        return list;
 	    }
@@ -1742,7 +1739,7 @@ public class Admin8Factory {
 	            	else {
 		            	if (outcome.hasDefined("result")) {
 		            		ModelNode result = outcome.get("result");
-		            		return VDBMetadataMapper.INSTANCE.unwrap(result);
+		            		return VDBMetadataMapper.INSTANCE.unwrap(getTeiidVersion(), result);
 		            	}
 	            	}
 	            }

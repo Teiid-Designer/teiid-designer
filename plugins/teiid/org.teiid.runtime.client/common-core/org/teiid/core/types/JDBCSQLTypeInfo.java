@@ -117,7 +117,7 @@ public final class JDBCSQLTypeInfo {
     	addType(DataTypeManagerService.DefaultDataTypes.TIMESTAMP, 29, 29, DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getId(), Types.TIMESTAMP);
     	addType(DataTypeManagerService.DefaultDataTypes.XML, Integer.MAX_VALUE, Integer.MAX_VALUE, SQLXML.class.getName(), Types.SQLXML);
     	addType(DataTypeManagerService.DefaultDataTypes.NULL, 4, 1, null, Types.NULL);
-    	addType(DataTypeManagerService.DefaultDataTypes.VARBINARY, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, byte[].class.getName(), Types.VARBINARY, Types.BINARY);
+    	addType(DataTypeManagerService.DefaultDataTypes.VARBINARY, DataTypeManagerService.MAX_VARBINARY_BYTES, DataTypeManagerService.MAX_VARBINARY_BYTES, byte[].class.getName(), Types.VARBINARY, Types.BINARY);
     	
     	TypeInfo typeInfo = new TypeInfo(Version.TEIID_7_7.get(), Integer.MAX_VALUE, 0, "ARRAY", Array.class.getName(), new int[Types.ARRAY]); //$NON-NLS-1$
 		CLASSNAME_TO_TYPEINFO.put(Array.class.getName(), typeInfo); 

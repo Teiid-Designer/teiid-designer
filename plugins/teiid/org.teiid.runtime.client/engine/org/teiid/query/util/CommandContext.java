@@ -22,13 +22,17 @@
 
 package org.teiid.query.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Clob;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 import javax.security.auth.Subject;
 import org.teiid.core.types.ClobImpl;
 import org.teiid.core.types.InputStreamFactory;
@@ -49,6 +53,7 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 
 	    private LRUCache<String, DecimalFormat> decimalFormatCache;
 		private LRUCache<String, SimpleDateFormat> dateFormatCache;
+		private LRUCache<Entry<String,Integer>, Pattern> patternCache;
 	}
 	
 	private GlobalState globalState = new GlobalState();
@@ -78,6 +83,7 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
         }
     }
 
+    @Override
     public double getNextRand() {
         if (globalState.random == null) {
         	globalState.random = new Random();
@@ -85,6 +91,7 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
         return globalState.random.nextDouble();
     }
     
+    @Override
     public double getNextRand(long seed) {
         if (globalState.random == null) {
         	globalState.random = new Random();
@@ -129,6 +136,33 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 		}
 		return result;
 	}
+
+	/**
+     * Compile a regular expression into a {@link java.util.regex.Pattern} and cache it in
+     * the {@link CommandContext} for future use.
+     *
+     * @param context
+     * @param regex Regular expression.
+     * @param flags Bitmask flags like {@link java.util.regex.Pattern#CASE_INSENSITIVE}.
+     * @return Compiled regex.
+     */
+    public static Pattern getPattern(CommandContext context, String regex, int flags) {
+        Pattern result = null;
+        if (context != null) {
+            if (context.globalState.patternCache == null) {
+                context.globalState.patternCache = new LRUCache<Entry<String,Integer>,Pattern>(32);
+            } else {
+                result = context.globalState.patternCache.get(new SimpleEntry(result, flags));
+            }
+        }
+        if (result == null) {
+            result = Pattern.compile(regex, flags);
+            if (context != null) {
+                context.globalState.patternCache.put(new SimpleEntry(result, flags), result);
+            }
+        }
+        return result;
+    }
 
 	/**
      * Used by the system table logic
@@ -221,6 +255,11 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
     }
 
     @Override
+    public int getSessionVariableCount() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public Object setSessionVariable(String key, Object value) {
         throw new UnsupportedOperationException();
     }
@@ -228,5 +267,27 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
     @Override
     public Object getSessionVariable(String key) {
         throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Used by the system table logic
+     * @return
+     */
+    public Clob getSpatialRefSys() {
+        return new ClobImpl(new InputStreamFactory() {
+            
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return getClass().getClassLoader().getResourceAsStream("org/teiid/metadata/spatial_ref_sys.csv"); //$NON-NLS-1$
+            }
+        }, -1);
+    }
+
+    public void addCreatedLob(InputStreamFactory isf) {
+        // Do Nothing
+    }
+
+    public void disableAutoCleanLobs() {
+        // Do Nothing
     }
 }

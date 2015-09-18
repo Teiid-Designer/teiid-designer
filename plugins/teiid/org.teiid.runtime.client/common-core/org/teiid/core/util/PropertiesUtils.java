@@ -7,6 +7,8 @@
 */
 package org.teiid.core.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Map;
@@ -171,6 +173,15 @@ public class PropertiesUtils {
             sb.append(toHex(b));
         }
         return sb.toString();
+    }
+
+    public static void toHex(StringBuilder sb, InputStream is) throws IOException {
+        int i = 0;
+        while ((i = is.read()) != -1) {
+            byte b = (byte)i;
+            sb.append(toHex(b >>> 4));
+            sb.append(toHex(b));
+        }
     }
 
     public static void setBeanProperties(Object bean, Properties props, String prefix) {
