@@ -741,7 +741,8 @@ public class WsdlDefinitionPage extends WizardPage
 	private boolean teiidRelatedPropertiesAreEqual(
 			Properties firstProps, Properties secondProps) {
         
-		if (firstProps==null || secondProps == null) return true;
+		if ((secondProps!=null &&  firstProps == null) ||
+		   (firstProps!=null &&  secondProps == null)) return false;
 		
         String firstPassword = firstProps.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
         String secondPassword = secondProps.getProperty(ICredentialsCommon.PASSWORD_PROP_ID);
