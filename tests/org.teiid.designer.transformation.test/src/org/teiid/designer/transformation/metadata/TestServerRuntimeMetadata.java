@@ -16,11 +16,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.IndexSelector;
 import org.teiid.designer.core.index.RuntimeIndexSelector;
@@ -29,6 +26,10 @@ import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * TestServerRuntimeMetadata
@@ -76,11 +77,16 @@ public class TestServerRuntimeMetadata extends TestCase {
         };
     }
 
-    public static void main(String args[]) {
-        junit.textui.TestRunner.run(suite());
-        System.exit(0);
+    @Override
+    public void setUp() {
+        TestUtilities.setDefaultTeiidVersion();
     }
 
+    @Override
+    public void tearDown() {
+        TestUtilities.unregisterTeiidServerManager();
+    }
+    
     public ServerRuntimeMetadata helpGetMetadata(String vdb) throws Exception {
         List<RuntimeIndexSelector> selectors = new ArrayList<RuntimeIndexSelector>();
         selectors.add(new RuntimeIndexSelector(SmartTestDesignerSuite.getTestDataPath(getClass())+DELIMITER+"/indexTestFolder/"+vdb));  //$NON-NLS-1$        

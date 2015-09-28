@@ -12,8 +12,10 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import org.eclipse.wst.server.core.IServer;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.spi.EventManager;
@@ -54,6 +56,11 @@ public class ServerTest {
         ModelerCore.setTeiidServerManager(teiidServerManager);
 
         this.teiidServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer);
+    }
+
+    @After
+    public void afterEach() {
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -30,7 +30,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.teiid.core.util.SmartTestDesignerSuite;
-import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
+import org.teiid.core.util.TestUtilities;
+import org.teiid.datatools.connectivity.ConnectivityUtil;
+import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.HostProvider;
@@ -135,6 +137,7 @@ public class ServerManagerTest {
 
         String stateLocationPath = System.getProperty("java.io.tmpdir");
         this.mgr = new TeiidServerManager(stateLocationPath, serversProvider, new DefaultStorageProvider());
+        ModelerCore.setTeiidServerManager(this.mgr);
         // State must be set to started
         this.mgr.restoreState();
     }
@@ -143,6 +146,7 @@ public class ServerManagerTest {
     @After
     public void afterEach() throws Exception {
     	MockObjectFactory.dispose();
+    	TestUtilities.unregisterTeiidServerManager();
     }
 
     @Test
@@ -273,8 +277,15 @@ public class ServerManagerTest {
         // setup
         MockObjectFactory.createModelContainer();
 
+        DefaultStorageProvider mgrStorageProvider = new DefaultStorageProvider();
+        mgrStorageProvider.storeInSecureStorage("org/teiid/datatools/connectivity/TeiidAdminInfo/mms://localhost:31443/TOK##!nprfI5QGuA6XDzOmAF6xE4kZGMbzgRlGI83rRX4BxKJXqwgykxJ2qOfHtJgtjf7vfCkAxQlQ-YZBauTUYuOk9w/",
+                                                                                ConnectivityUtil.ADMIN_PASSWORD, "admin");
+        mgrStorageProvider.storeInSecureStorage("org/teiid/datatools/connectivity/TeiidJdbcInfo/jdbc:teiid:<vdbname>@mms://myserver.com:31000/TOK##!kdGRBt_o38H5yh6mcwJBHNFMeGn1xdPoERHtQRTURr3t3OlrDvxoBtyjW06rKv7EsFkCWBw5lZM4hK4YwvP7Nw/",                                
+                                                                                ConnectivityUtil.JDBC_PASSWORD, "teiid");
+
         this.mgr = new TeiidServerManager(SmartTestDesignerSuite.getTestDataPath(getClass()), 
-                                                                       serversProvider, new DefaultStorageProvider());
+                                                                       serversProvider, mgrStorageProvider);
+        ModelerCore.setTeiidServerManager(this.mgr);
         this.mgr.restoreState();
         assertThat(this.mgr.getServers().size(), is(2));
 
@@ -292,11 +303,10 @@ public class ServerManagerTest {
         EventManager eventMgr = mock(EventManager.class);
         IServer parentServer1 = mock(IServer.class);
         when(parentServer1.getId()).thenReturn("server1");
-        ISecureStorageProvider secureStorageProvider = new DefaultStorageProvider();
 
         // construct a server just to get its URL
-        ITeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
-        ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
+        ITeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, mgrStorageProvider, adminPassword, adminSecure);
+        ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, mgrStorageProvider, jdbcPassword, jdbcSecure);
         TeiidServer testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer1);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
@@ -330,8 +340,8 @@ public class ServerManagerTest {
         jdbcPassword = "teiid";
 
         // construct a server just to get its URL
-        adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
-        jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
+        adminInfo = new TeiidAdminInfo(adminPort, adminUser, mgrStorageProvider, adminPassword, adminSecure);
+        jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, mgrStorageProvider, jdbcPassword, jdbcSecure);
         testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer2);
         adminInfo.setHostProvider(testServer);
         jdbcInfo.setHostProvider(testServer);
