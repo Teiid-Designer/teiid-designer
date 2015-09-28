@@ -144,7 +144,7 @@ public class ModelerCore extends Plugin implements DeclarativeTransactionManager
      */
     public static final String WORKSPACE_UUID_FILE = "workspace.uuid"; //$NON-NLS-1$
 
-    private static final String MINIMUM_JAVA_VERSION = "1.6"; //$NON-NLS-1$
+    private static final String MINIMUM_JAVA_VERSION = "1.7"; //$NON-NLS-1$
 
     /**
      * The plug-in identifier of the Modeler Resources support (value <code>"org.teiid.designer.core"</code>).

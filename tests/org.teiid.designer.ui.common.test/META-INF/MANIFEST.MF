@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.teiid.designer.ui.common.test;singleton:=true
 Bundle-Version: 9.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.ui.common
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.teiid.designer.ui.common.actions,
  org.teiid.designer.ui.common.dialogs,
  org.teiid.designer.ui.common.eventsupport,

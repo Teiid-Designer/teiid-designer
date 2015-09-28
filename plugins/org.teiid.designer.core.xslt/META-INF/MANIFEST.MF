@@ -13,4 +13,4 @@ Require-Bundle: org.teiid.core.designer;bundle-version="[9.0.2,10.0.0)",
 Bundle-ActivationPolicy: lazy
 Export-Package: org.teiid.designer.core.xslt,
  org.teiid.designer.core.xslt.impl
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

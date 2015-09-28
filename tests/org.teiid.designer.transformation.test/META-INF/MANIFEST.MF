@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.teiid.designer.transformation.test;singleton:=true
 Bundle-Version: 9.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.transformation
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.teiid.designer.transformation.aspects.validation.rules,
  org.teiid.designer.transformation.metadata,
  org.teiid.designer.transformation.test

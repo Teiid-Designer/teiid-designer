@@ -82,11 +82,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
                 <version>${tychoVersion}</version>
-                <!-- not strictly needed but this suppresses warnings when compiling 
-                    that the default value (1.5) is being overwritten by the value in the MANIFEST.MF -->
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>

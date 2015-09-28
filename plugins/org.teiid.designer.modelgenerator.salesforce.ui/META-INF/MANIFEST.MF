@@ -34,4 +34,4 @@ Export-Package: org.teiid.designer.modelgenerator.salesforce.ui,
  org.teiid.designer.modelgenerator.salesforce.ui.actions,
  org.teiid.designer.modelgenerator.salesforce.ui.util,
  org.teiid.designer.modelgenerator.salesforce.ui.wizards
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

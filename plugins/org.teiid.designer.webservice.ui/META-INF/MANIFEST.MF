@@ -49,4 +49,4 @@ Require-Bundle: org.eclipse.ui.cheatsheets;bundle-version="[3.4.200,4.0.0)",
  org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.relational;bundle-version="[9.1.0,10.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

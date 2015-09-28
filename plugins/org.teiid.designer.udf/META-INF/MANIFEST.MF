@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.teiid.designer.udf;singleton:=true
 Bundle-Version: 9.2.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.teiid.designer.core;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.metamodels.core;bundle-version="[9.0.2,10.0.0)",
  org.teiid.core.designer;bundle-version="[9.0.2,10.0.0)",
