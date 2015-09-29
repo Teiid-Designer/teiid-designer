@@ -53,7 +53,7 @@ public class RequestInfo extends ProcedureInfo implements IWsdlRequestInfo {
 		if( getBodyColumnInfoList().length == 0 ) {
 			status.add(new Status(IStatus.WARNING, ProcedureGenerator.PLUGIN_ID,
 				NLS.bind(Messages.Error_NoElementsDefinedForRequestProcedureForOperation_0, 
-					getOperation().getName())));
+						getOperation().getName(), getOperation().getName())));
 		}
 
 		// Check Request Info
