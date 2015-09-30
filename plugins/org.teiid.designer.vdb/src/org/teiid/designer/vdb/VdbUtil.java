@@ -27,12 +27,15 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.UnmarshalException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -388,7 +391,9 @@ public class VdbUtil implements VdbConstants {
                 }
             });
         } catch (Exception ex) {
-            VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Error finding VDB manifest for file: " + dynamicVdbFile.getName());
+        	if( ! (ex.getCause() instanceof UnmarshalException) ) {
+        		VdbPlugin.UTIL.log(IStatus.ERROR, ex, "Error finding VDB manifest for file: " + dynamicVdbFile.getName());
+        	}
             return null;
         }
         
