@@ -43,6 +43,7 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
+import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 //import org.teiid.query.ui.sqleditor.component.QueryDisplayFormatter;
 
@@ -150,7 +151,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			if( length > 0 ) {
 				sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
 			}
-		} else if( isPrecisionType && precision > 0 ) {
+		} else if( isPrecisionType ) {
+			if( precision == 0 ) precision = IDataTypeManagerService.DEFAULT_PRECISION;
 			sb.append(OPEN_BRACKET).append(precision);
 			if( isScaleType && scale > 0 ) {
 				sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);
