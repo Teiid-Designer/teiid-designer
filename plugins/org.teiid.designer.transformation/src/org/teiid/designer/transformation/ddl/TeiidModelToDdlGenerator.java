@@ -508,8 +508,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				}
 				// REFERENCES
 				if( fk.getTable() != null ) {
-					theSB.append(SPACE).append(REFERENCES).append(SPACE).append(getName(fk.getTable()));
 					BaseTable fkTableRef = (BaseTable)fk.getUniqueKey().getTable();
+					String fkTableRefName = getName(fkTableRef);
+					theSB.append(SPACE).append(REFERENCES).append(SPACE).append(fkTableRefName);
 					PrimaryKey pkRef = fkTableRef.getPrimaryKey();
 					nColumns = pkRef.getColumns().size();
 					count = 0;
