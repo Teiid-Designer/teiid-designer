@@ -21,7 +21,7 @@
             class="org.teiid.designer.vdb.ui.editor.VdbEditor"
             id="vdbEditor">
       </editor>
-<!-- Dynamic VDB Editor -->
+<!-- Dynamic VDB Editor 
       <editor
             name="%dynamicVdbEditor"
             default="true"
@@ -30,6 +30,7 @@
             class="org.teiid.designer.vdb.dynamic.ui.editor.DynamicVdbEditor"
             id="dynamicVdbEditor">
       </editor>
+-->
    </extension>
 
 
