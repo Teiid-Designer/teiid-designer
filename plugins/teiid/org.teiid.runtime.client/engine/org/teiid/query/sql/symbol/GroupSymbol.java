@@ -233,7 +233,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
         int result = 1;
         if (this.schema != null) {
             result = prime * result + this.schema.hashCode();
-            if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+            if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
                 result = prime * result + ((this.getShortName() == null) ? 0 : this.getShortName().hashCode());
             else
                 result = prime * result + ((this.getShortCanonicalName() == null) ? 0 : this.getShortCanonicalName().hashCode());
@@ -255,7 +255,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
             return false;
         GroupSymbol other = (GroupSymbol)obj;
         if (this.schema == null || other.schema == null) {
-            if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+            if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
                 return this.getCanonicalName().equals(other.getCanonicalName());
             } else {
                 return this.getName().equals(other.getName());
@@ -268,7 +268,7 @@ public class GroupSymbol extends Symbol implements IGroupSymbol<LanguageVisitor>
         } else if (!this.schema.equals(other.schema))
             return false;
 
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             return this.getShortCanonicalName().equals(other.getShortCanonicalName());
 
         return this.getShortName().equals(other.getShortName());

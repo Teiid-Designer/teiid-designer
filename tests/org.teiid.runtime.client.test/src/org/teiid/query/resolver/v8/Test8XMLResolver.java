@@ -34,12 +34,12 @@ public class Test8XMLResolver extends AbstractTestXMLResolver {
     
     private Test8Factory factory;
 
-    protected Test8XMLResolver(ITeiidServerVersion teiidVersion) {
+    protected Test8XMLResolver(Version teiidVersion) {
         super(teiidVersion);
     }
    
     public Test8XMLResolver() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

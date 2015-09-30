@@ -18,7 +18,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.sql.lang.IOrderBy;
 import org.teiid.designer.query.sql.lang.ISPParameter;
 import org.teiid.designer.query.sql.lang.ISetQuery.Operation;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.resolver.QueryResolver;
 import org.teiid.query.sql.lang.BetweenCriteria;
@@ -80,9 +80,9 @@ public abstract class AbstractTestSQLStringVisitor extends AbstractTest<Command>
     /**
      * @param teiidVersion 
      */
-    public AbstractTestSQLStringVisitor(ITeiidServerVersion teiidVersion) {
+    public AbstractTestSQLStringVisitor(Version teiidVersion) {
         super(teiidVersion);
-        metadataFactory = new RealMetadataFactory(teiidVersion);
+        metadataFactory = new RealMetadataFactory(this.teiidVersion);
     }
 
     // ################################## TEST HELPERS ################################ 

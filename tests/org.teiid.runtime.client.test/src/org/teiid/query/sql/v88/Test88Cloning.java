@@ -17,11 +17,11 @@ import org.teiid.query.sql.v87.Test87Cloning;
 @SuppressWarnings( "javadoc" )
 public class Test88Cloning extends Test87Cloning {
 
-    protected Test88Cloning(ITeiidServerVersion teiidVersion) {
+    protected Test88Cloning(Version teiidVersion) {
         super(teiidVersion);
     }
  
     public Test88Cloning() {
-        this(Version.TEIID_8_8.get());
+        this(Version.TEIID_8_8);
     }
 }

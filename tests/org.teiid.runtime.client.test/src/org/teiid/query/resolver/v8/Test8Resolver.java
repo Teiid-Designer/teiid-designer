@@ -37,12 +37,12 @@ public class Test8Resolver extends AbstractTestResolver {
 
     private Test8Factory factory;
 
-    protected Test8Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test8Resolver(Version teiidVersion) {
         super(teiidVersion);
     }
    
     public Test8Resolver() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

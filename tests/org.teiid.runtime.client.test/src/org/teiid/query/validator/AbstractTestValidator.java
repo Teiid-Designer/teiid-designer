@@ -38,7 +38,6 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
@@ -66,7 +65,7 @@ public abstract class AbstractTestValidator extends AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTestValidator(ITeiidServerVersion teiidVersion) {
+    public AbstractTestValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
@@ -133,7 +132,7 @@ public abstract class AbstractTestValidator extends AbstractTest {
         Schema docModel = getMetadataFactory().createVirtualModel("vm1", metadataStore); //$NON-NLS-1$
         Table doc1 = getMetadataFactory().createXmlDocument("doc1", docModel, doc); //$NON-NLS-1$
 
-		if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+		if (getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
 		    getMetadataFactory().createElements(doc1, new String[] { "a0", "a0.a1", "a0.a1.a2", "a0.a1.b2", "a0.a1.c2" }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		                                        new String[] {DataTypeManagerService.DefaultDataTypes.STRING.getId(),
 		                                                               DataTypeManagerService.DefaultDataTypes.STRING.getId(),

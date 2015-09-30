@@ -208,7 +208,7 @@ public final class ArrayImpl implements Comparable<ArrayImpl>, Externalizable, A
 	@Override
 	public int getBaseType() throws SQLException {
 		checkValues();
-		return JDBCSQLTypeInfo.getSQLType(getDataTypeManager().getDataTypeName(values.getClass().getComponentType()));
+		return JDBCSQLTypeInfo.getSQLType(teiidVersion, getDataTypeManager().getDataTypeName(values.getClass().getComponentType()));
 	}
 
 	@Override

@@ -17,12 +17,12 @@ import org.teiid.query.validator.v8.Test8FunctionMetadataValidator;
 @SuppressWarnings( "javadoc" )
 public class Test85FunctionMetadataValidator extends Test8FunctionMetadataValidator {
 
-    protected Test85FunctionMetadataValidator(ITeiidServerVersion teiidVersion) {
+    protected Test85FunctionMetadataValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85FunctionMetadataValidator() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 
 }

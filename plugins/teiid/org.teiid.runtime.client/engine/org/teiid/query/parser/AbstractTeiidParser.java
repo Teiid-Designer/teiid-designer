@@ -33,6 +33,7 @@ import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
@@ -77,8 +78,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     
     protected Pattern SOURCE_HINT_ARG = Pattern.compile("\\s*([^: ]+)(\\s+KEEP ALIASES)?\\s*:((?:'[^']*')+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
     
-	private static Pattern CACHE_HINT = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
-
+	private static Pattern CACHE_HINT_PRE_811 = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+	private static Pattern CACHE_HINT = Pattern.compile("/\\*\\+?\\s*cache(\\(\\s*(pref_mem)?\\s*(ttl:\\d{1,19})?\\s*(updatable)?\\s*(scope:(session|vdb|user))?\\s*(min:\\d{1,19})?[^\\)]*\\))?[^\\*]*\\*\\/.*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL); //$NON-NLS-1$
+	
 	private static String COMMENT_START = "/*"; //$NON-NLS-1$
 	private static String COMMENT_END = "*/"; //$NON-NLS-1$
 	
@@ -320,10 +322,10 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     	return true;
     }    
 
-    protected String validateName(String id, boolean element) throws Exception {
+    protected String validateName(String id, boolean nonAlias) throws Exception {
         if(id.indexOf('.') != -1) { 
             Messages.TeiidParser key = Messages.TeiidParser.Invalid_alias;
-            if (element) {
+            if (nonAlias) {
                 key = Messages.TeiidParser.Invalid_short_name;
             }
             throw new TeiidClientException(Messages.getString(key, id)); 
@@ -390,7 +392,11 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     
     
 	public CacheHint getQueryCacheOption(String query) {
-    	Matcher match = CACHE_HINT.matcher(query);
+	    Pattern cacheHint = CACHE_HINT;
+	    if (getVersion().isLessThan(Version.TEIID_8_11))
+	        cacheHint = CACHE_HINT_PRE_811;
+
+    	Matcher match = cacheHint.matcher(query);
     	if (match.matches()) {
     	    CacheHint hint = new CacheHint(this);
     		if (match.group(2) !=null) {
@@ -407,7 +413,13 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     		if (scope != null) {
     			scope = scope.substring(6);
     			hint.setScope(scope);
-    		}    		
+    		}
+    		if (getVersion().isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+    		    String min = match.group(7);
+    		    if (min != null) {
+    		        hint.setMinRows(Long.valueOf(min.substring(4)));
+    		    }
+    		}
     		return hint;
     	}
     	return null;
@@ -699,8 +711,26 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     }
 
 	@Since(Version.TEIID_8_0)
-	protected void replaceProcedureWithFunction(MetadataFactory factory,
-			Procedure proc) {
+	@Updated(version=Version.TEIID_8_11)
+	protected void replaceProcedureWithFunction(MetadataFactory factory, Procedure proc) {
+	    if (proc.isFunction() && proc.getQueryPlan() != null) {
+            return;
+        }
+
+	    FunctionMethod method = createFunctionMethod(getVersion(), proc);
+
+	    //remove the old proc
+	    factory.getSchema().getResolvingOrder().remove(factory.getSchema().getResolvingOrder().size() - 1);
+	    factory.getSchema().getProcedures().remove(proc.getName());
+	    factory.getSchema().addFunction(method);
+	}
+
+	/**
+	 * @param teiidVersion
+	 * @param proc
+	 * @return a function method from given procedure
+	 */
+	public static FunctionMethod createFunctionMethod(ITeiidServerVersion teiidVersion, Procedure proc) {
 		FunctionMethod method = new FunctionMethod();
 		method.setName(proc.getName());
 		method.setPushdown(proc.isVirtual()?FunctionMethod.PushDown.CAN_PUSHDOWN:FunctionMethod.PushDown.MUST_PUSHDOWN);
@@ -712,9 +742,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 			}
 
 			// New functionality for Teiid 8.9+
-			if (versionAtLeast(Version.TEIID_8_9)) {
+			if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9)) {
 			    //copy the metadata
-	            FunctionParameter fp = new FunctionParameter(getVersion(), pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+	            FunctionParameter fp = new FunctionParameter(teiidVersion, pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
 	            fp.setDatatype(pp.getDatatype(), true, pp.getArrayDimensions());
 	            fp.setLength(pp.getLength());
 	            fp.setNameInSource(pp.getNameInSource());
@@ -733,7 +763,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 	                fp.setPosition(0);
 	            }
 			} else { // Functionality for older parsers 8.8 and below
-			    FunctionParameter fp = new FunctionParameter(getVersion(), pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
+			    FunctionParameter fp = new FunctionParameter(teiidVersion, pp.getName(), pp.getRuntimeType(), pp.getAnnotation());
 			    if (pp.getType() == ProcedureParameter.Type.In) {
 			        fp.setVarArg(pp.isVarArg());
 			        ins.add(fp);
@@ -777,8 +807,8 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		if (method.getInvocationMethod() != null) {
     		method.setPushdown(PushDown.CAN_PUSHDOWN);
     	}
-		factory.getSchema().addFunction(method);
-		factory.getSchema().getProcedures().remove(proc.getName());
+
+		return method;
 	}
 
 	@Since(Version.TEIID_8_0)
@@ -937,23 +967,6 @@ public abstract class AbstractTeiidParser implements TeiidParser {
             column.setPrecision(type.getPrecision());
         }
     }
-
-	@Since(Version.TEIID_8_0)
-	protected String resolvePropertyKey(MetadataFactory factory, String key) {
-	 	int index = key.indexOf(':');
-	 	if (index > 0 && index < key.length() - 1) {
-	 		String prefix = key.substring(0, index);
-	 		String uri = MetadataFactory.BUILTIN_NAMESPACES.get(prefix);
-	 		if (uri == null) {
-	 			uri = factory.getNamespaces().get(prefix);
-	 		}
-	 		if (uri != null) {
-	 			key = '{' +uri + '}' + key.substring(index + 1, key.length());
-	 		}
-	 		//TODO warnings or errors if not resolvable 
-	 	}
-	 	return key;
-	}
 
     @Since(Version.TEIID_8_0)
     protected KeyRecord addFBI(MetadataFactory factory, List<Expression> expressions, Table table, String name) {

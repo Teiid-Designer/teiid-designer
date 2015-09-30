@@ -188,7 +188,7 @@ public class ElementSymbol extends Symbol implements SingleElementSymbol, Expres
             int result = 1;
 
             result = prime * result + this.groupSymbol.hashCode();
-            if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+            if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
                 result = prime * result + (this.getShortCanonicalName() == null ? 0 : this.getShortCanonicalName().hashCode());
             else
                 result = prime * result + (this.getShortName() == null ? 0 : this.getShortName().hashCode());

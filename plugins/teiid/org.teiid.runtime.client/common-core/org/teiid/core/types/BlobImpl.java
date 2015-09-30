@@ -74,8 +74,8 @@ public class BlobImpl extends BaseLob implements Blob, StreamProvider {
             Object[] params = new Object[] {new Long(pos)};
             throw new SQLException(Messages.getString(Messages.MMClob.MMBlob_0, params));
         }
-        else if (pos > length()) {
-            return null;
+        else if (length == 0 || pos > length()) {
+            return new byte[0];
         }
         pos = pos - 1;
         

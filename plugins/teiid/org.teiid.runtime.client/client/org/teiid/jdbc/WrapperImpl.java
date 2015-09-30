@@ -25,10 +25,25 @@ package org.teiid.jdbc;
 import java.sql.SQLException;
 import java.sql.Wrapper;
 import org.teiid.core.util.ArgCheck;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.runtime.client.Messages;
 
 
 public class WrapperImpl implements Wrapper {
+
+    private final ITeiidServerVersion teiidVersion;
+
+    public WrapperImpl(ITeiidServerVersion teiidVersion) {
+        this.teiidVersion = teiidVersion;
+    }
+
+    /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		ArgCheck.isNotNull(iface);
 		

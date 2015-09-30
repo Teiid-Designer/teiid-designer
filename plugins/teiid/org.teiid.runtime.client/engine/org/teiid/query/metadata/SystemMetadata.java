@@ -22,7 +22,6 @@
 package org.teiid.query.metadata;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -83,17 +82,17 @@ public class SystemMetadata {
 	 * @param teiidVersion
 	 */
 	public SystemMetadata(ITeiidServerVersion teiidVersion) {
-	    if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
+	    if (teiidVersion.isLessThan(Version.TEIID_8_0))
 	        throw new UnsupportedOperationException(Messages.getString(Messages.Misc.TeiidVersionFailure, this.getClass().getSimpleName(), teiidVersion));
 
 		this.teiidVersion = teiidVersion;
 		this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
 
-		String resourceLocation = this.getClass().getPackage().getName();
-        resourceLocation = StringUtil.replaceAll(resourceLocation, StringUtil.Constants.DOT, JAVA_PATH_SEPARATOR); //$NON-NLS-1$
-        resourceLocation = resourceLocation + JAVA_PATH_SEPARATOR;
+		String baseResourceLocation = this.getClass().getPackage().getName();
+        baseResourceLocation = StringUtil.replaceAll(baseResourceLocation, StringUtil.Constants.DOT, JAVA_PATH_SEPARATOR);
+        baseResourceLocation = baseResourceLocation + JAVA_PATH_SEPARATOR;
 
-        InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + "types.dat"); //$NON-NLS-1$
+        InputStream is = getResource(baseResourceLocation, "types.dat", teiidVersion); //$NON-NLS-1$
 		try {
 			InputStreamReader isr = new InputStreamReader(is, Charset.forName("UTF-8")); //$NON-NLS-1$
 			BufferedReader br = new BufferedReader(isr);
@@ -112,7 +111,7 @@ public class SystemMetadata {
 				if ("string".equals(dt.getName())) { //$NON-NLS-1$
 					dt.setLength(DataTypeManagerService.MAX_STRING_LENGTH);
 				} else if ("varbinary".equals(dt.getName())) { //$NON-NLS-1$
-					dt.setLength(DataTypeManagerService.MAX_LOB_MEMORY_BYTES);
+					dt.setLength(DataTypeManagerService.MAX_VARBINARY_BYTES);
 				}
 				dataTypes.add(dt);
 				if (dt.isBuiltin()) {
@@ -146,9 +145,9 @@ public class SystemMetadata {
 		vdb.setVersion(1);
 		Properties p = new Properties();
 		QueryParser parser = new QueryParser(teiidVersion);
-		systemStore = loadSchema(vdb, p, resourceLocation, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
+		systemStore = loadSchema(vdb, p, baseResourceLocation, "SYS", parser).asMetadataStore(); //$NON-NLS-1$
 		systemStore.addDataTypes(dataTypes);
-		loadSchema(vdb, p, resourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
+		loadSchema(vdb, p, baseResourceLocation, "SYSADMIN", parser).mergeInto(systemStore); //$NON-NLS-1$
 		SystemFunctionManager systemFunctionManager = new SystemFunctionManager(teiidVersion, getClass().getClassLoader(), typeMap);
         TransformationMetadata tm = new TransformationMetadata(parser.getTeiidParser(), vdb, new CompositeMetadataStore(systemStore), null, systemFunctionManager.getSystemFunctions(), null);
         vdb.addAttchment(IQueryMetadataInterface.class, tm);
@@ -159,11 +158,47 @@ public class SystemMetadata {
 		}
 	}
 
-	private MetadataFactory loadSchema(VDBMetaData vdb, Properties p, String resourceLocation, String name, QueryParser parser) {
+    private InputStream getResource(String location, String name, ITeiidServerVersion teiidVersion) {
+        
+
+        int major = 8;
+        int minor = 0;
+        try {
+            major = Integer.parseInt(teiidVersion.getMajor());
+            minor = Integer.parseInt(teiidVersion.getMinor());
+        } catch (NumberFormatException ex) {
+            // Nothing required
+        }
+
+        InputStream is = null;
+        for (int i = major; i > 7; --i) {
+            if (is != null)
+                break;
+
+            for (int j = minor; j >= 0; --j) {
+                if (is != null)
+                    break;
+
+                String versionPkg = "v" + i + j + JAVA_PATH_SEPARATOR; //$NON-NLS-1$
+                String resource = location + versionPkg + name;
+                is = SystemMetadata.class.getClassLoader().getResourceAsStream(resource);
+            }            
+        }
+        
+        if (is == null) {
+            // default to 8.0.0
+            String resource = location + "v800" + JAVA_PATH_SEPARATOR + name; //$NON-NLS-1$
+            is = SystemMetadata.class.getClassLoader().getResourceAsStream(resource);
+        }
+
+        return is;
+    }
+
+    private MetadataFactory loadSchema(VDBMetaData vdb, Properties p, String resourceLocation, String name, QueryParser parser) {
 		ModelMetaData mmd = new ModelMetaData();
 		mmd.setName(name);
 		vdb.addModel(mmd);
-		InputStream is = SystemMetadata.class.getClassLoader().getResourceAsStream(resourceLocation + name + ".sql"); //$NON-NLS-1$ //$NON-NLS-2$
+		InputStream is = getResource(resourceLocation, name + ".sql", teiidVersion); //$NON-NLS-1$
 		try {
 			MetadataFactory factory = new MetadataFactory(teiidVersion, vdb.getName(), vdb.getVersion(), name, typeMap, p, null);
 			parser.parseDDL(factory, new InputStreamReader(is, Charset.forName("UTF-8"))); //$NON-NLS-1$

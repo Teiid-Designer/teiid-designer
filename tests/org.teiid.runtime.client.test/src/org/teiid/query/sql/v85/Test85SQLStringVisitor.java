@@ -26,12 +26,12 @@ import org.teiid.query.sql.v8.Test8SQLStringVisitor;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test85SQLStringVisitor extends Test8SQLStringVisitor {
 
-    protected Test85SQLStringVisitor(ITeiidServerVersion teiidVersion) {
+    protected Test85SQLStringVisitor(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85SQLStringVisitor() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 
     @Override

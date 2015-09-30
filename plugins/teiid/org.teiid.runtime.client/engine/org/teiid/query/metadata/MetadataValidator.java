@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.ModelMetaData.Message.Severity;
 import org.teiid.adminapi.impl.VDBMetaData;
@@ -43,6 +42,7 @@ import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.validator.IValidator.IValidatorFailure;
 import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.Datatype;
 import org.teiid.metadata.ForeignKey;
@@ -54,6 +54,7 @@ import org.teiid.metadata.MetadataFactory;
 import org.teiid.metadata.MetadataStore;
 import org.teiid.metadata.Procedure;
 import org.teiid.metadata.ProcedureParameter;
+import org.teiid.metadata.ProcedureParameter.Type;
 import org.teiid.metadata.Schema;
 import org.teiid.metadata.Table;
 import org.teiid.query.function.metadata.FunctionMetadataValidator;
@@ -85,6 +86,11 @@ import org.teiid.query.validator.ValidatorReport;
 import org.teiid.runtime.client.Messages;
 
 public class MetadataValidator {
+
+    /**
+     * MATVIEW_TTL property name
+     */
+    public static final String MATVIEW_TTL = AbstractMetadataRecord.RELATIONAL_URI + "MATVIEW_TTL"; //$NON-NLS-1$
 
     private final ITeiidServerVersion teiidVersion;
 
@@ -176,7 +182,7 @@ public class MetadataValidator {
     }
 	
 	// do not allow foreign tables, source functions in view model and vice versa 
-	static class SourceModelArtifacts implements MetadataRule {
+	class SourceModelArtifacts implements MetadataRule {
 		@Override
 		public void execute(VDBMetaData vdb, MetadataStore store, ValidatorReport report, MetadataValidator metadataValidator) {
 			for (Schema schema:store.getSchemaList()) {
@@ -194,16 +200,34 @@ public class MetadataValidator {
 				for (Procedure p:schema.getProcedures().values()) {
 					boolean hasReturn = false;
 					names.clear();
-					for (ProcedureParameter param : p.getParameters()) {
+					for (int i = 0; i < p.getParameters().size(); i++) {
+					    ProcedureParameter param = p.getParameters().get(i);
 						if (param.isVarArg() && param != p.getParameters().get(p.getParameters().size() -1)) {
-							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31112, p.getFullName()));
+						    //check that the rest of the parameters are optional
+                            //this accommodates variadic multi-source procedures
+                            //effective this and the resolving logic ensure that you can used named parameters for everything,
+                            //or call the vararg procedure as normal
+						    if(isTeiidOrGreater(Version.TEIID_8_10)) {
+						        for (int j = i+1; j < p.getParameters().size(); j++) {
+                                    ProcedureParameter param1 = p.getParameters().get(j);
+                                    if ((param1.getType() == Type.In || param1.getType() == Type.InOut) 
+                                            && (param1.isVarArg() || (param1.getNullType() != NullType.Nullable && param1.getDefaultValue() == null))) {
+                                        metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31112, p.getFullName()));
+                                    }
+                                }
+						    }
+						    else {
+						        metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31112, p.getFullName()));
+						    }
 						}
 						if (param.getType() == ProcedureParameter.Type.ReturnValue) {
 							if (hasReturn) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31107, p.getFullName()));
 							}
 							hasReturn = true;
-						}
+						} else if (p.isFunction() && param.getType() != ProcedureParameter.Type.In && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31165, p.getFullName(), param.getFullName()));
+                        }
 						if (!names.add(param.getName())) {
 							metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31106, p.getFullName(), param.getFullName()));
 						}
@@ -211,6 +235,15 @@ public class MetadataValidator {
 					if (!p.isVirtual() && !model.isSource()) {
 						metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31077, p.getFullName(), model.getName()));
 					}
+
+					if (p.isFunction() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+                        if (!hasReturn) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31166, p.getFullName()));
+                        }
+                        if (p.isVirtual() && p.getQueryPlan() == null) {
+                            metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31167, p.getFullName()));
+                        }
+                    }
 				}
 				
 				for (FunctionMethod func:schema.getFunctions().values()) {
@@ -268,14 +301,19 @@ public class MetadataValidator {
 						}						
 					} else if (record instanceof Procedure) {
 						Procedure p = (Procedure)record;
-						if (p.isVirtual() && !p.isFunction()) {
+						
+						boolean test = p.isVirtual();
+						if (teiidVersion.isLessThan(Version.TEIID_8_11))
+						    test = test && !p.isFunction();
+
+						if (test) {
 							if (p.getQueryPlan() == null) {
 								metadataValidator.log(report, model, Messages.gs(Messages.TEIID.TEIID31081, p.getFullName(), model.getName()));
 							}
 							else {
 								metadataValidator.validate(vdb, model, p, report, metadata, mf);
 							}
-						}						
+						}
 					}
 				}
 			}
@@ -382,9 +420,9 @@ public class MetadataValidator {
     			QueryNode node = resolver.resolveView(symbol, new QueryNode(t.getSelectTransformation()), SQLConstants.Reserved.SELECT, metadata);
     			CacheHint cacheHint = node.getCommand().getCacheHint();
 				Long ttl = -1L;
-				if (cacheHint != null && cacheHint.getTtl() != null && addCacheHint) {
+				if (cacheHint != null && cacheHint.getTtl() != null && addCacheHint && t.getProperty(MATVIEW_TTL, false) == null) {
 					ttl = cacheHint.getTtl();
-					t.setProperty(AbstractMetadataRecord.RELATIONAL_URI + "MATVIEW_TTL", String.valueOf(ttl)); //$NON-NLS-1$
+					t.setProperty(MATVIEW_TTL, String.valueOf(ttl));
 				}
     		}
 			if(resolverReport != null && resolverReport.hasItems()) {
@@ -399,7 +437,7 @@ public class MetadataValidator {
     }
 
     public static void determineDependencies(AbstractMetadataRecord p, Command command) {
-        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroupsIgnoreInlineViews(command, true);
+        Collection<GroupSymbol> groups = GroupCollectorVisitor.getGroupsIgnoreInlineViewsAndEvaluatableSubqueries(command, true);
         LinkedHashSet<AbstractMetadataRecord> values = new LinkedHashSet<AbstractMetadataRecord>();
         for (GroupSymbol group : groups) {
             Object mid = group.getMetadataID();

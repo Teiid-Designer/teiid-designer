@@ -48,7 +48,7 @@ public class Test7Cloning extends AbstractTestCloning {
      *
      */
     public Test7Cloning() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

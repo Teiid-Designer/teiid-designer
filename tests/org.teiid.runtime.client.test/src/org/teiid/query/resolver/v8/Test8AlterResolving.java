@@ -29,12 +29,12 @@ public class Test8AlterResolving extends AbstractTestAlterResolving {
 
     private Test8Factory factory;
 
-    protected Test8AlterResolving(ITeiidServerVersion teiidVersion) {
+    protected Test8AlterResolving(Version teiidVersion) {
         super(teiidVersion);
     }
    
     public Test8AlterResolving() {
-        super(Version.TEIID_8_0.get());
+        super(Version.TEIID_8_0);
     }
 
     @Override

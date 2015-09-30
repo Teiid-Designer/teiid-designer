@@ -3,7 +3,9 @@
 package org.teiid.query.sql.lang;
 
 import java.util.List;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IWithQueryCommand;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.symbol.ElementSymbol;
@@ -20,6 +22,9 @@ public class WithQueryCommand extends SimpleNode
     private List<ElementSymbol> columns;
 
     private QueryCommand queryExpression;
+
+    @Since(Version.TEIID_8_10)
+    private boolean recursive;
 
     /**
      * @param p
@@ -81,6 +86,16 @@ public class WithQueryCommand extends SimpleNode
         setQueryExpression(command);
     }
 
+    @Since(Version.TEIID_8_10)
+    public boolean isRecursive() {
+        return recursive;
+    }
+
+    @Since(Version.TEIID_8_10)
+    public void setRecursive(boolean recursive) {
+        this.recursive = recursive;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -125,6 +140,8 @@ public class WithQueryCommand extends SimpleNode
             clone.setGroupSymbol(getGroupSymbol().clone());
         if(getQueryExpression() != null)
             clone.setQueryExpression(getQueryExpression().clone());
+
+        clone.setRecursive(clone.isRecursive());
 
         return clone;
     }

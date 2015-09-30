@@ -62,6 +62,7 @@ import org.teiid.core.types.JDBCSQLTypeInfo;
 import org.teiid.core.types.Streamable;
 import org.teiid.core.util.ReaderInputStream;
 import org.teiid.core.util.TimestampWithTimezone;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 
@@ -317,7 +318,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 					return null;
 				}
                 MetadataProvider provider = new MetadataProvider(getMetadataResults().getColumnMetadata());
-                metadata = new ResultSetMetaDataImpl(provider, this.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS));
+                metadata = new ResultSetMetaDataImpl(getTeiidVersion(), provider, this.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS));
             }
         }
 
@@ -328,7 +329,10 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
 		if (metadataResults == null) {
 			if (StatementImpl.SET_STATEMENT.matcher(prepareSql).matches() 
 					|| StatementImpl.TRANSACTION_STATEMENT.matcher(prepareSql).matches()
-					|| StatementImpl.SHOW_STATEMENT.matcher(prepareSql).matches()) {
+					|| StatementImpl.SHOW_STATEMENT.matcher(prepareSql).matches()
+					||
+					    (getTeiidVersion().isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_10)
+					        && StatementImpl.SET_CHARACTERISTIC_STATEMENT.matcher(prepareSql).matches())) {
 				metadataResults = new MetadataResult();
 			} else {
 				try {
@@ -439,7 +443,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
     
     @Override
     public void setObject (int parameterIndex, Object value, int targetJdbcType, int scale) throws SQLException {
-    	setObject(parameterIndex, value, targetJdbcType, scale);
+    	setObject(Integer.valueOf(parameterIndex), value, targetJdbcType, scale);
     }
 
     void setObject (Object parameterIndex, Object value, int targetJdbcType, int scale) throws SQLException {
@@ -474,7 +478,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
         }
 
         // get the java class name for the given JDBC type
-        String typeName = JDBCSQLTypeInfo.getTypeName(targetJdbcType);
+        String typeName = JDBCSQLTypeInfo.getTypeName(getTeiidVersion(), targetJdbcType);
         DefaultDataTypes dataType = getDataTypeManager().getDataType(typeName);
 
         // transform the value to the target datatype
@@ -645,7 +649,7 @@ public class PreparedStatementImpl extends StatementImpl implements TeiidPrepare
     public ParameterMetaDataImpl getParameterMetaData() throws SQLException {
 		if (parameterMetaData == null) {
 			//TODO: some of the base implementation of ResultSetMetadata could be on the MetadataProvider
-			this.parameterMetaData = new ParameterMetaDataImpl(new ResultSetMetaDataImpl(new MetadataProvider(getMetadataResults().getParameterMetadata()), this.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS)));
+			this.parameterMetaData = new ParameterMetaDataImpl(getTeiidVersion(), new ResultSetMetaDataImpl(getTeiidVersion(), new MetadataProvider(getMetadataResults().getParameterMetadata()), this.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS)));
 		}
 		return parameterMetaData;
 	}

@@ -111,7 +111,9 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -221,19 +223,19 @@ public class TeiidNodeFactory {
     private static final Map<String, String> AST_NODE_ANNOTATIONS = new HashMap<String, String>();
 
     static {
-        AST_NODE_ANNOTATIONS.put("CreateUpdateProcedureCommand", "@Removed(\"8.0.0\")"); //$NON-NLS-1$ //$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("CriteriaSelector", "@Removed(\"8.0.0\")"); //$NON-NLS-1$ //$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("RaiseErrorStatement", "@Removed(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("TranslateCriteria", "@Removed(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("HasCriteria", "@Removed(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("CreateUpdateProcedureCommand", "@Removed(Version.TEIID_8_0)"); //$NON-NLS-1$ //$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("CriteriaSelector", "@Removed(Version.TEIID_8_0)"); //$NON-NLS-1$ //$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("RaiseErrorStatement", "@Removed(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("TranslateCriteria", "@Removed(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("HasCriteria", "@Removed(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
 
-        AST_NODE_ANNOTATIONS.put("CreateProcedureCommand", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("ObjectTable", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("ReturnStatement", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("RaiseStatement", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("Array", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("ExceptionExpression", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
-        AST_NODE_ANNOTATIONS.put("JSONObject", "@Since(\"8.0.0\")");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("CreateProcedureCommand", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("ObjectTable", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("ReturnStatement", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("RaiseStatement", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("Array", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("ExceptionExpression", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
+        AST_NODE_ANNOTATIONS.put("JSONObject", "@Since(Version.TEIID_8_0)");  //$NON-NLS-1$//$NON-NLS-2$
     }
 
     private Map<String, String> indexNodeNames(Class<?> constantClass) throws NoSuchFieldException, IllegalAccessException {
@@ -1044,6 +1046,12 @@ public class TeiidNodeFactory {
        CREATE_PROCEDURE_COMMAND("CreateProcedureCommand"), //$NON-NLS-1$
 
        /**
+        * XMLExists
+        * @generated
+        */
+       XML_EXISTS("XMLExists"), //$NON-NLS-1$
+
+       /**
         * ObjectTable
         * @generated
         */
@@ -1068,7 +1076,13 @@ public class TeiidNodeFactory {
         * @generated
         */
        @Since(Version.TEIID_8_0)
-       ARRAY("Array"); //$NON-NLS-1$
+       ARRAY("Array"), //$NON-NLS-1$
+
+       /**
+        * XMLCast
+        * @generated
+        */
+       XML_CAST("XMLCast"); //$NON-NLS-1$
 
        private String name;
 
@@ -2100,6 +2114,18 @@ public class TeiidNodeFactory {
     * @param nodeType
     * @return
     */
+   private XMLExists createXMLExists(TeiidParser teiidParser, int nodeType) {
+       return new XMLExists(teiidParser, nodeType);
+   }
+
+   /**
+    *
+    * @generated
+    *
+    * @param teiidParser
+    * @param nodeType
+    * @return
+    */
    private ObjectTable createObjectTable(TeiidParser teiidParser, int nodeType) {
        return new ObjectTable(teiidParser, nodeType);
    }
@@ -2138,6 +2164,18 @@ public class TeiidNodeFactory {
     */
    private Array createArray(TeiidParser teiidParser, int nodeType) {
        return new Array(teiidParser, nodeType);
+   }
+
+   /**
+    *
+    * @generated
+    *
+    * @param teiidParser
+    * @param nodeType
+    * @return
+    */
+   private XMLCast createXMLCast(TeiidParser teiidParser, int nodeType) {
+       return new XMLCast(teiidParser, nodeType);
    }
 
    /**
@@ -2405,6 +2443,8 @@ public class TeiidNodeFactory {
                return (T) createTextTable(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTTEXTCOLUMN:
                return (T) createTextColumn(teiidParser, nodeType);
+           case Teiid8ParserTreeConstants.JJTXMLEXISTS:
+               return (T) createXMLExists(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTXMLQUERY:
                return (T) createXMLQuery(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTOBJECTTABLE:
@@ -2505,6 +2545,8 @@ public class TeiidNodeFactory {
                return (T) createAlterView(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTARRAY:
                return (T) createArray(teiidParser, nodeType);
+           case Teiid8ParserTreeConstants.JJTXMLCAST:
+               return (T) createXMLCast(teiidParser, nodeType);
            default:
                throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
        }

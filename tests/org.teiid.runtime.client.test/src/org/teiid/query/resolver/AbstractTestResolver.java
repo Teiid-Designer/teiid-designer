@@ -47,7 +47,7 @@ import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.sql.lang.ISPParameter;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.ColumnSet;
 import org.teiid.metadata.MetadataStore;
@@ -108,7 +108,7 @@ public abstract class AbstractTestResolver extends AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTestResolver(ITeiidServerVersion teiidVersion) {
+    public AbstractTestResolver(Version teiidVersion) {
         super(teiidVersion);
     }
 

@@ -1,7 +1,6 @@
 package org.teiid.designer.type;
 
 import java.util.Set;
-
 import org.teiid.designer.annotation.Since;
 /*
  * JBoss, Home of Professional Open Source.
@@ -50,7 +49,10 @@ public interface IDataTypeManagerService {
         DECIMAL,
         
         @Since(Version.TEIID_8_0)
-        VARBINARY
+        VARBINARY,
+
+        @Since(Version.TEIID_8_10)
+        GEOMETRY
     }
 
     public enum DataTypeAliases {

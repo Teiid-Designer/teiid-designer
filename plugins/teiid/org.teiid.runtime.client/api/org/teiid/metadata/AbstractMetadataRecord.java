@@ -48,6 +48,9 @@ public abstract class AbstractMetadataRecord implements Serializable {
 	}
 	
 	public interface DataModifiable {
+	    @Since(Version.TEIID_8_11)
+	    String DATA_TTL = AbstractMetadataRecord.RELATIONAL_URI + "data-ttl"; //$NON-NLS-1$
+
 		long getLastDataModification();
 	}
 	

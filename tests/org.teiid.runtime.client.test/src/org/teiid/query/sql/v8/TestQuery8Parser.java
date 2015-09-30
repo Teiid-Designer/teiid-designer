@@ -8,11 +8,8 @@
 package org.teiid.query.sql.v8;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
-
 import org.junit.Test;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -52,12 +49,12 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
 
     private Test8Factory factory;
 
-    protected TestQuery8Parser(ITeiidServerVersion teiidVersion) {
+    protected TestQuery8Parser(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public TestQuery8Parser() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override
@@ -355,7 +352,6 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
     @Test
     public void testInvalidLeadingComment() {
     	String sql 		= "/* leading comment  SELECT column_1 FROM model_a.table_1";
-    	String expected = "/* leading comment */ \nSELECT column_1 FROM model_a.table_1";
     	LeadingComment comment = parser.getTeiidParser().getLeadingComment(sql);
         
         assertTrue("Leading comment in SQL is invalid", comment == null);

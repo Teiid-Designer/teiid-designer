@@ -32,7 +32,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
+import org.teiid.designer.annotation.AnnotationUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 /**
  * <p> This is a helper class used to obtain SQL type information for java types.
@@ -48,16 +52,33 @@ public final class JDBCSQLTypeInfo {
 		int defaultPrecision;
 		String javaClassName;
 		int[] jdbcTypes;
+        private final ITeiidServerVersion minTeiidVersion;
 		
-		public TypeInfo(int maxDisplaySize, int precision, String name,
+		public TypeInfo(ITeiidServerVersion minTeiidVersion, int maxDisplaySize, int precision, String name,
 				String javaClassName, int[] jdbcTypes) {
 			super();
+            this.minTeiidVersion = minTeiidVersion;
 			this.maxDisplaySize = maxDisplaySize;
 			this.defaultPrecision = precision;
 			this.name = name;
 			this.javaClassName = javaClassName;
 			this.jdbcTypes = jdbcTypes;
 		}
+
+        /**
+         * @return minimum teiid version for this type info
+         */
+        public ITeiidServerVersion getMinimumTeiidVersion() {
+            return minTeiidVersion;
+        }
+
+        /**
+         * @param teiidVersion
+         * @return false if given version is less than min required version, true otherwise
+         */
+        public boolean isApplicable(ITeiidServerVersion teiidVersion) {
+            return ! minTeiidVersion.isGreaterThan(teiidVersion);
+        }
 		
 	}
 	
@@ -78,6 +99,7 @@ public final class JDBCSQLTypeInfo {
     	//note the order in which these are added matters.  if there are multiple sql type mappings (e.g. biginteger and bigdecimal to numeric), the latter will be the primary
     	addType(DataTypeManagerService.DefaultDataTypes.BIG_INTEGER, 20, 19, DataTypeManagerService.DefaultDataTypes.BIG_INTEGER.getId(), Types.NUMERIC);
     	addType(new String[] {DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getId(), "decimal"}, 22, 20, DataTypeManagerService.DefaultDataTypes.BIG_DECIMAL.getId(), Types.NUMERIC, Types.DECIMAL); //$NON-NLS-1$
+    	addType(DataTypeManagerService.DefaultDataTypes.GEOMETRY, Integer.MAX_VALUE, Integer.MAX_VALUE, GeometryType.class.getName(), Types.BLOB, Types.LONGVARBINARY);
     	addType(DataTypeManagerService.DefaultDataTypes.BLOB, Integer.MAX_VALUE, Integer.MAX_VALUE, Blob.class.getName(), Types.BLOB, Types.LONGVARBINARY);
     	addType(DataTypeManagerService.DefaultDataTypes.BOOLEAN, 5, 1, DataTypeManagerService.DefaultDataTypes.BOOLEAN.getId(), Types.BIT, Types.BOOLEAN);
     	addType(new String[] {DataTypeManagerService.DefaultDataTypes.BYTE.getId(), "tinyint"}, 4, 3, DataTypeManagerService.DefaultDataTypes.BYTE.getId(), Types.TINYINT); //$NON-NLS-1$
@@ -95,20 +117,25 @@ public final class JDBCSQLTypeInfo {
     	addType(DataTypeManagerService.DefaultDataTypes.TIMESTAMP, 29, 29, DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getId(), Types.TIMESTAMP);
     	addType(DataTypeManagerService.DefaultDataTypes.XML, Integer.MAX_VALUE, Integer.MAX_VALUE, SQLXML.class.getName(), Types.SQLXML);
     	addType(DataTypeManagerService.DefaultDataTypes.NULL, 4, 1, null, Types.NULL);
-    	addType(DataTypeManagerService.DefaultDataTypes.VARBINARY, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, byte[].class.getName(), Types.VARBINARY, Types.BINARY);
-    	addType(DataTypeManagerService.DefaultDataTypes.VARBINARY, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, DataTypeManagerService.MAX_LOB_MEMORY_BYTES, byte[].class.getName(), Types.VARBINARY, Types.BINARY);
+    	addType(DataTypeManagerService.DefaultDataTypes.VARBINARY, DataTypeManagerService.MAX_VARBINARY_BYTES, DataTypeManagerService.MAX_VARBINARY_BYTES, byte[].class.getName(), Types.VARBINARY, Types.BINARY);
     	
-    	TypeInfo typeInfo = new TypeInfo(Integer.MAX_VALUE, 0, "ARRAY", Array.class.getName(), new int[Types.ARRAY]); //$NON-NLS-1$
+    	TypeInfo typeInfo = new TypeInfo(Version.TEIID_7_7.get(), Integer.MAX_VALUE, 0, "ARRAY", Array.class.getName(), new int[Types.ARRAY]); //$NON-NLS-1$
 		CLASSNAME_TO_TYPEINFO.put(Array.class.getName(), typeInfo); 
     	TYPE_TO_TYPEINFO.put(Types.ARRAY, typeInfo);
     }
 
     private static TypeInfo addType(DefaultDataTypes type, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
-        return addType(type.getId(), maxDisplaySize, precision, javaClassName, sqlTypes);
+        ITeiidServerVersion minTeiidVersion = TeiidServerVersion.Version.TEIID_7_7.get();
+        if (AnnotationUtils.hasAnnotation(type, Since.class)) {
+            Since since = AnnotationUtils.getAnnotation(type, Since.class);
+            minTeiidVersion = since.value().get();
+        }
+
+        return addType(minTeiidVersion, type.getId(), maxDisplaySize, precision, javaClassName, sqlTypes);
     }
     
-	private static TypeInfo addType(String typeName, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
-		TypeInfo ti = new TypeInfo(maxDisplaySize, precision, typeName, javaClassName, sqlTypes);
+	private static TypeInfo addType(ITeiidServerVersion minTeiidVersion, String typeName, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
+		TypeInfo ti = new TypeInfo(minTeiidVersion, maxDisplaySize, precision, typeName, javaClassName, sqlTypes);
 		NAME_TO_TYPEINFO.put(typeName, ti);
 		if (javaClassName != null) {
 			CLASSNAME_TO_TYPEINFO.put(javaClassName, ti);
@@ -119,11 +146,15 @@ public final class JDBCSQLTypeInfo {
 		return ti;
 	}
 	
-	private static void addType(String[] typeNames, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
-		TypeInfo ti = addType(typeNames[0], maxDisplaySize, precision, javaClassName, sqlTypes);
+	private static void addType(ITeiidServerVersion minTeiidVersion, String[] typeNames, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
+		TypeInfo ti = addType(minTeiidVersion, typeNames[0], maxDisplaySize, precision, javaClassName, sqlTypes);
 		for (int i = 1; i < typeNames.length; i++) {
 			NAME_TO_TYPEINFO.put(typeNames[i], ti);
 		}
+	}
+
+	private static void addType(String[] typeNames, int maxDisplaySize, int precision, String javaClassName, int... sqlTypes) {
+	    addType(Version.TEIID_7_7.get(), typeNames, maxDisplaySize, precision, javaClassName, sqlTypes);
 	}
 
     /**
@@ -132,7 +163,7 @@ public final class JDBCSQLTypeInfo {
      * @param Name of the teiid type.
      * @return A short value representing SQL Type for the given java type.
      */
-    public static final int getSQLType(String typeName) {
+    public static final int getSQLType(ITeiidServerVersion teiidVersion, String typeName) {
 
         if (typeName == null) {
             return Types.NULL;
@@ -146,7 +177,9 @@ public final class JDBCSQLTypeInfo {
         	}
             return Types.JAVA_OBJECT;
         }
-        
+        if (! sqlType.isApplicable(teiidVersion))
+            return Types.NULL;
+
         return sqlType.jdbcTypes[0];
     }    
 
@@ -156,7 +189,7 @@ public final class JDBCSQLTypeInfo {
      * @param typeName
      * @return int
      */
-    public static final int getSQLTypeFromClass(String className) {
+    public static final int getSQLTypeFromClass(ITeiidServerVersion teiidVersion, String className) {
 
         if (className == null) {
             return Types.NULL;
@@ -167,7 +200,9 @@ public final class JDBCSQLTypeInfo {
         if (sqlType == null) {
             return Types.JAVA_OBJECT;
         }
-        
+        if (! sqlType.isApplicable(teiidVersion))
+            return Types.NULL;
+
         return sqlType.jdbcTypes[0];
     }
     
@@ -178,23 +213,27 @@ public final class JDBCSQLTypeInfo {
      * @param int value giving the SQL type code.
      * @return A String representing the java class name for the given SQL Type.
      */
-    public static final String getJavaClassName(int jdbcSQLType) {
+    public static final String getJavaClassName(ITeiidServerVersion teiidVersion, int jdbcSQLType) {
     	TypeInfo typeInfo = TYPE_TO_TYPEINFO.get(jdbcSQLType);
     	
     	if (typeInfo == null) {
     		return DataTypeManagerService.DefaultDataTypes.OBJECT.getId();
     	}
+    	if (! typeInfo.isApplicable(teiidVersion))
+            return null;
     	
     	return typeInfo.javaClassName;
     }
     
-    public static final String getTypeName(int sqlType) {
+    public static final String getTypeName(ITeiidServerVersion teiidVersion, int sqlType) {
     	TypeInfo typeInfo = TYPE_TO_TYPEINFO.get(sqlType);
     	
     	if (typeInfo == null) {
     		return DataTypeManagerService.DefaultDataTypes.OBJECT.getId();
     	}
-    	
+    	if (! typeInfo.isApplicable(teiidVersion))
+            return null;
+
     	return typeInfo.name;
     }
 
@@ -203,26 +242,32 @@ public final class JDBCSQLTypeInfo {
     }
 
 	public static Integer getMaxDisplaySize(ITeiidServerVersion teiidVersion, Class<?> dataTypeClass) {
-	    return getMaxDisplaySize(DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
+	    return getMaxDisplaySize(teiidVersion, DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
 	}
 
-	public static Integer getMaxDisplaySize(String typeName) {
+	public static Integer getMaxDisplaySize(ITeiidServerVersion teiidVersion, String typeName) {
 		TypeInfo ti = NAME_TO_TYPEINFO.get(typeName);
 		if (ti == null) {
 			return null;
 		}
+		if (! ti.isApplicable(teiidVersion))
+            return null;
+
 	    return ti.maxDisplaySize;
 	}
 
 	public static Integer getDefaultPrecision(ITeiidServerVersion teiidVersion, Class<?> dataTypeClass) {
-	    return getDefaultPrecision(DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
+	    return getDefaultPrecision(teiidVersion, DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(dataTypeClass));
 	}
 
-	public static Integer getDefaultPrecision(String typeName) {
+	public static Integer getDefaultPrecision(ITeiidServerVersion teiidVersion, String typeName) {
 		TypeInfo ti = NAME_TO_TYPEINFO.get(typeName);
 		if (ti == null) {
 			return null;
 		}
+		if (! ti.isApplicable(teiidVersion))
+		    return null;
+
 	    return ti.defaultPrecision;
 	}
 

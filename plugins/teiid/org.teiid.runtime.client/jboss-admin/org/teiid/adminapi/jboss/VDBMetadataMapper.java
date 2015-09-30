@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.adminapi.impl;
+package org.teiid.adminapi.jboss;
 
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,23 @@ import org.teiid.adminapi.Request.ProcessingState;
 import org.teiid.adminapi.Request.ThreadState;
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.adminapi.VDB.Status;
+import org.teiid.adminapi.impl.AdminObjectImpl;
+import org.teiid.adminapi.impl.CacheStatisticsMetadata;
+import org.teiid.adminapi.impl.DataPolicyMetadata;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
+import org.teiid.adminapi.impl.EngineStatisticsMetadata;
+import org.teiid.adminapi.impl.EntryMetaData;
+import org.teiid.adminapi.impl.ModelMetaData;
+import org.teiid.adminapi.impl.RequestMetadata;
+import org.teiid.adminapi.impl.SessionMetadata;
+import org.teiid.adminapi.impl.SourceMappingMetadata;
+import org.teiid.adminapi.impl.TransactionMetadata;
+import org.teiid.adminapi.impl.VDBImportMetadata;
+import org.teiid.adminapi.impl.VDBMetaData;
+import org.teiid.adminapi.impl.VDBTranslatorMetaData;
+import org.teiid.adminapi.impl.WorkerPoolStatisticsMetadata;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.Messages.VDBMetadata;
  
@@ -57,7 +73,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 	public static VDBMetadataMapper INSTANCE = new VDBMetadataMapper();
 
 	@Override
-    public VDBMetaData unwrap(ModelNode node) {
+    public VDBMetaData unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 		if (node == null)
 			return null;
 			
@@ -85,7 +101,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(PROPERTIES).isDefined()) {
 			List<ModelNode> propNodes = node.get(PROPERTIES).asList();
 			for (ModelNode propNode:propNodes) {
-				String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(propNode);
+				String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(teiidVersion, propNode);
 				if (prop != null) {
 					vdb.addProperty(prop[0], prop[1]);
 				}
@@ -96,7 +112,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(IMPORT_VDBS).isDefined()) {
 			List<ModelNode> modelNodes = node.get(IMPORT_VDBS).asList();
 			for(ModelNode modelNode:modelNodes) {
-				VDBImportMetadata vdbImport = VDBImportMapper.INSTANCE.unwrap(modelNode);
+				VDBImportMetadata vdbImport = VDBImportMapper.INSTANCE.unwrap(teiidVersion, modelNode);
 				if (vdbImport != null) {
 					vdb.getVDBImports().add(vdbImport);	
 				}
@@ -107,7 +123,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(ENTRIES).isDefined()) {
 			List<ModelNode> modelNodes = node.get(ENTRIES).asList();
 			for(ModelNode modelNode:modelNodes) {
-				EntryMetaData entry = EntryMapper.INSTANCE.unwrap(modelNode);
+				EntryMetaData entry = EntryMapper.INSTANCE.unwrap(teiidVersion, modelNode);
 				if (entry != null) {
 					vdb.getEntries().add(entry);	
 				}
@@ -118,7 +134,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(MODELS).isDefined()) {
 			List<ModelNode> modelNodes = node.get(MODELS).asList();
 			for(ModelNode modelNode:modelNodes) {
-				ModelMetaData model = ModelMetadataMapper.INSTANCE.unwrap(modelNode);
+				ModelMetaData model = ModelMetadataMapper.INSTANCE.unwrap(teiidVersion, modelNode);
 				if (model != null) {
 					vdb.addModel(model);	
 				}
@@ -129,7 +145,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(OVERRIDE_TRANSLATORS).isDefined()) {
 			List<ModelNode> translatorNodes = node.get(OVERRIDE_TRANSLATORS).asList();
 			for (ModelNode translatorNode:translatorNodes) {
-				VDBTranslatorMetaData translator = VDBTranslatorMetaDataMapper.INSTANCE.unwrap(translatorNode);
+				VDBTranslatorMetaData translator = VDBTranslatorMetaDataMapper.INSTANCE.unwrap(teiidVersion, translatorNode);
 				if (translator != null) {
 					vdb.addOverideTranslator(translator);
 				}
@@ -140,7 +156,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		if (node.get(DATA_POLICIES).isDefined()) {
 			List<ModelNode> policiesNodes = node.get(DATA_POLICIES).asList();
 			for (ModelNode policyNode:policiesNodes) {
-				DataPolicyMetadata policy = DataPolicyMetadataMapper.INSTANCE.unwrap(policyNode);
+				DataPolicyMetadata policy = DataPolicyMetadataMapper.INSTANCE.unwrap(teiidVersion, policyNode);
 				if (policy != null) {
 					vdb.addDataPolicy(policy);	
 				}
@@ -152,7 +168,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 	}
 	
 	@Override
-    public ModelNode describe(ModelNode node) {
+    public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 		addAttribute(node, VDBNAME, ModelType.STRING, true); 
 
 		ModelNode connectionsAllowed = new ModelNode();
@@ -177,27 +193,27 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		ModelNode props = node.get(PROPERTIES);
 		props.get(TYPE).set(ModelType.LIST);
 		props.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.properties_describe));
-		PropertyMetaDataMapper.INSTANCE.describe(props.get(VALUE_TYPE));
+		PropertyMetaDataMapper.INSTANCE.describe(teiidVersion, props.get(VALUE_TYPE));
 
 		ModelNode vdbImports = node.get(IMPORT_VDBS);	
 		vdbImports.get(TYPE).set(ModelType.LIST);
-		VDBImportMapper.INSTANCE.describe(vdbImports.get(VALUE_TYPE));
+		VDBImportMapper.INSTANCE.describe(teiidVersion, vdbImports.get(VALUE_TYPE));
 		vdbImports.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.import_vdbs_describe));
 		
 		ModelNode models = node.get( MODELS);	
 		models.get(TYPE).set(ModelType.LIST);
-		ModelMetadataMapper.INSTANCE.describe(models.get(VALUE_TYPE));
+		ModelMetadataMapper.INSTANCE.describe(teiidVersion, models.get(VALUE_TYPE));
 		models.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.models_describe));
 		
 		ModelNode translators = node.get(OVERRIDE_TRANSLATORS);
 		translators.get(TYPE).set(ModelType.LIST);
 		translators.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.override_translators_describe));
-		VDBTranslatorMetaDataMapper.INSTANCE.describe(translators.get(VALUE_TYPE));
+		VDBTranslatorMetaDataMapper.INSTANCE.describe(teiidVersion, translators.get(VALUE_TYPE));
 		
 		ModelNode dataPolicies = node.get(DATA_POLICIES);
 		dataPolicies.get(TYPE).set(ModelType.LIST);
 		dataPolicies.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.data_policies_describe));
-		DataPolicyMetadataMapper.INSTANCE.describe(dataPolicies.get(VALUE_TYPE));
+		DataPolicyMetadataMapper.INSTANCE.describe(teiidVersion, dataPolicies.get(VALUE_TYPE));
 		return node;
 	}
 	
@@ -246,6 +262,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		private static final String PROPERTIES = "properties"; //$NON-NLS-1$
 		private static final String SOURCE_MAPPINGS = "source-mappings"; //$NON-NLS-1$
 		private static final String VALIDITY_ERRORS = "validity-errors"; //$NON-NLS-1$
+		private static final String METADATAS= "metadatas"; //$NON-NLS-1$
 		private static final String METADATA= "metadata"; //$NON-NLS-1$
 		private static final String METADATA_TYPE = "metadata-type"; //$NON-NLS-1$
 		private static final String METADATA_STATUS = "metadata-status"; //$NON-NLS-1$
@@ -254,7 +271,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static ModelMetadataMapper INSTANCE = new ModelMetadataMapper();
 
 		@Override
-        public ModelMetaData unwrap(ModelNode node) {
+        public ModelMetaData unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -279,7 +296,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(PROPERTIES).isDefined()) {
 				List<ModelNode> propNodes = node.get(PROPERTIES).asList();
 				for (ModelNode propNode:propNodes) {
-					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(propNode);
+					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(teiidVersion, propNode);
 					if (prop != null) {
 						model.addProperty(prop[0], prop[1]);
 					}
@@ -289,7 +306,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(SOURCE_MAPPINGS).isDefined()) {
 				List<ModelNode> sourceMappingNodes = node.get(SOURCE_MAPPINGS).asList();
 				for (ModelNode sourceMapping:sourceMappingNodes) {
-					SourceMappingMetadata source = SourceMappingMetadataMapper.INSTANCE.unwrap(sourceMapping);
+					SourceMappingMetadata source = SourceMappingMetadataMapper.INSTANCE.unwrap(teiidVersion, sourceMapping);
 					if (source != null) {
 						model.addSourceMapping(source);
 					}
@@ -299,18 +316,37 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(VALIDITY_ERRORS).isDefined()) {
 				List<ModelNode> errorNodes = node.get(VALIDITY_ERRORS).asList();
 				for(ModelNode errorNode:errorNodes) {
-				    ModelMetaData.Message error = ValidationErrorMapper.INSTANCE.unwrap(errorNode);
+				    ModelMetaData.Message error = ValidationErrorMapper.INSTANCE.unwrap(teiidVersion, errorNode);
 					if (error != null) {
 						model.addMessage(error);
 					}
 				}
 			}
-			if (node.get(METADATA).isDefined()) {
-				model.setSchemaText(node.get(METADATA).asString());
-			}
-			if (node.get(METADATA_TYPE).isDefined()) {
-				model.setSchemaSourceType(node.get(METADATA_TYPE).asString());
-			}
+
+            if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11)) {
+                if (node.get(METADATAS).isDefined()) {
+                    List<ModelNode> metadataNodes = node.get(METADATAS).asList();
+                    for (ModelNode modelNode : metadataNodes) {
+                        String text = null;
+                        String type = null;
+                        if (modelNode.get(METADATA).isDefined()) {
+                            text = modelNode.get(METADATA).asString();
+                        }
+                        if (modelNode.get(METADATA_TYPE).isDefined()) {
+                            type = modelNode.get(METADATA_TYPE).asString();
+                        }
+                        model.addSourceMetadata(type, text);
+                    }
+                }
+            } else {
+                if (node.get(METADATA).isDefined()) {
+                    model.setSchemaText(node.get(METADATA).asString());
+                }
+                if (node.get(METADATA_TYPE).isDefined()) {
+                    model.setSchemaSourceType(node.get(METADATA_TYPE).asString());
+                }
+            }
+
 			if (node.get(METADATA_STATUS).isDefined()) {
 				model.setMetadataStatus(node.get(METADATA_STATUS).asString());
 			}			
@@ -318,7 +354,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			ModelNode modelTypes = new ModelNode();
 			modelTypes.add(Model.Type.PHYSICAL.toString());
 			modelTypes.add(Model.Type.VIRTUAL.toString());
@@ -336,17 +372,17 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			ModelNode props = node.get(PROPERTIES);
 			props.get(TYPE).set(ModelType.LIST);
 			props.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.properties_describe));
-			PropertyMetaDataMapper.INSTANCE.describe(props.get(VALUE_TYPE));
+			PropertyMetaDataMapper.INSTANCE.describe(teiidVersion, props.get(VALUE_TYPE));
 
 			ModelNode source = node.get(SOURCE_MAPPINGS);
 			source.get(TYPE).set(ModelType.LIST);
 			source.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.source_mappings_describe));
-			SourceMappingMetadataMapper.INSTANCE.describe(source.get(VALUE_TYPE));
+			SourceMappingMetadataMapper.INSTANCE.describe(teiidVersion, source.get(VALUE_TYPE));
 
 			ModelNode errors = node.get(VALIDITY_ERRORS);
 			errors.get(TYPE).set(ModelType.LIST);
 			errors.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.validity_errors_describe));
-			ValidationErrorMapper.INSTANCE.describe(errors.get(VALUE_TYPE));
+			ValidationErrorMapper.INSTANCE.describe(teiidVersion, errors.get(VALUE_TYPE));
 			
 			ModelNode status = new ModelNode();
 			status.add(Model.MetadataStatus.LOADING.name());
@@ -389,7 +425,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static VDBImportMapper INSTANCE = new VDBImportMapper();
 
 		@Override
-        public VDBImportMetadata unwrap(ModelNode node) {
+        public VDBImportMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -408,7 +444,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, VDB_NAME, ModelType.STRING, true);
 			addAttribute(node, VDB_VERSION, ModelType.INT, true);
 			addAttribute(node, IMPORT_POLICIES, ModelType.BOOLEAN, false);
@@ -437,7 +473,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static ValidationErrorMapper INSTANCE = new ValidationErrorMapper();
 		
 		@Override
-        public ModelMetaData.Message unwrap(ModelNode node) {
+        public ModelMetaData.Message unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -456,7 +492,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, ERROR_PATH, ModelType.STRING, false); 
 			addAttribute(node, SEVERITY, ModelType.STRING, true);
 			addAttribute(node, MESSAGE, ModelType.STRING, true);
@@ -484,7 +520,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static SourceMappingMetadataMapper INSTANCE = new SourceMappingMetadataMapper();
 		
 		@Override
-        public SourceMappingMetadata unwrap(ModelNode node) {
+        public SourceMappingMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -502,7 +538,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, SOURCE_NAME, ModelType.STRING, true); 
 			addAttribute(node, JNDI_NAME, ModelType.STRING, true);
 			addAttribute(node, TRANSLATOR_NAME, ModelType.STRING, true);
@@ -533,7 +569,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static VDBTranslatorMetaDataMapper INSTANCE = new VDBTranslatorMetaDataMapper();
 
 		@Override
-        public VDBTranslatorMetaData unwrap(ModelNode node) {
+        public VDBTranslatorMetaData unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -554,7 +590,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(PROPERTIES).isDefined()) {
 				List<ModelNode> propNodes = node.get(PROPERTIES).asList();
 				for (ModelNode propNode:propNodes) {
-					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(propNode);
+					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(teiidVersion, propNode);
 					if (prop != null) {
 						translator.addProperty(prop[0], prop[1]);
 					}
@@ -565,7 +601,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, TRANSLATOR_NAME, ModelType.STRING, true); 
 			addAttribute(node, BASETYPE, ModelType.STRING, true);
 			addAttribute(node, TRANSLATOR_DESCRIPTION, ModelType.STRING, false);
@@ -574,7 +610,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			ModelNode props = node.get(PROPERTIES);
 			props.get(TYPE).set(ModelType.LIST);
 			props.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.properties_describe));
-			PropertyMetaDataMapper.INSTANCE.describe(props.get(VALUE_TYPE));
+			PropertyMetaDataMapper.INSTANCE.describe(teiidVersion, props.get(VALUE_TYPE));
 			return node; 
 		}	
 		
@@ -611,7 +647,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return node;
 		}
 		
-		public String[] unwrap(ModelNode node) {
+		public String[] unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if(node == null) {
 				return null;
 			}
@@ -626,7 +662,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return new String[] {key, value};
 		}
 		
-		public ModelNode describe(ModelNode node) {
+		public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, PROPERTY_NAME, ModelType.STRING, true);
 			addAttribute(node, PROPERTY_VALUE, ModelType.STRING, true);
 			return node; 
@@ -650,7 +686,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static EntryMapper INSTANCE = new EntryMapper();
 
 		@Override
-        public EntryMetaData unwrap(ModelNode node) {
+        public EntryMetaData unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -668,7 +704,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(PROPERTIES).isDefined()) {
 				List<ModelNode> propNodes = node.get(PROPERTIES).asList();
 				for (ModelNode propNode:propNodes) {
-					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(propNode);
+					String[] prop = PropertyMetaDataMapper.INSTANCE.unwrap(teiidVersion, propNode);
 					if (prop != null) {
 						entry.addProperty(prop[0], prop[1]);
 					}
@@ -678,13 +714,13 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, PATH, ModelType.STRING, true);
 			
 			ModelNode props = node.get(PROPERTIES);
 			props.get(TYPE).set(ModelType.LIST);
 			props.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.properties_describe));
-			PropertyMetaDataMapper.INSTANCE.describe(props.get(VALUE_TYPE));
+			PropertyMetaDataMapper.INSTANCE.describe(teiidVersion, props.get(VALUE_TYPE));
 			return node; 
 		}
 		
@@ -713,7 +749,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static DataPolicyMetadataMapper INSTANCE = new DataPolicyMetadataMapper();
 
 		@Override
-        public DataPolicyMetadata unwrap(ModelNode node) {
+        public DataPolicyMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if(node == null) {
 				return null;
 			}
@@ -735,7 +771,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			if (node.get(DATA_PERMISSIONS).isDefined()) {
 				List<ModelNode> permissionNodes = node.get(DATA_PERMISSIONS).asList();
 				for (ModelNode permissionNode:permissionNodes) {
-					PermissionMetaData permission = PermissionMetaDataMapper.INSTANCE.unwrap(permissionNode);
+					PermissionMetaData permission = PermissionMetaDataMapper.INSTANCE.unwrap(teiidVersion, permissionNode);
 					if (permission != null) {
 						policy.addPermission(permission);
 					}
@@ -753,7 +789,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, POLICY_NAME, ModelType.STRING, true);
 			addAttribute(node, POLICY_DESCRIPTION, ModelType.STRING, false);
 			addAttribute(node, ALLOW_CREATE_TEMP_TABLES, ModelType.BOOLEAN, false);
@@ -763,7 +799,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			permissions.get(TYPE).set(ModelType.LIST);
 			permissions.get(DESCRIPTION).set(Messages.getString(Messages.VDBMetadata.data_permissions_describe));
 			
-			PermissionMetaDataMapper.INSTANCE.describe(permissions.get(VALUE_TYPE));
+			PermissionMetaDataMapper.INSTANCE.describe(teiidVersion, permissions.get(VALUE_TYPE));
 			
 			ModelNode roleNames = node.get(MAPPED_ROLE_NAMES);
 			roleNames.get(TYPE).set(ModelType.LIST);
@@ -804,7 +840,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static PermissionMetaDataMapper INSTANCE = new PermissionMetaDataMapper();
 
 		@Override
-        public PermissionMetaData unwrap(ModelNode node) {
+        public PermissionMetaData unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null) {
 				return null;
 			}
@@ -850,7 +886,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 			return permission;
 		}
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, RESOURCE_NAME, ModelType.STRING, true);
 			addAttribute(node, ALLOW_CREATE, ModelType.BOOLEAN, false);
 			addAttribute(node, ALLOW_DELETE, ModelType.BOOLEAN, false);
@@ -893,7 +929,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static EngineStatisticsMetadataMapper INSTANCE = new EngineStatisticsMetadataMapper();
 
 		@Override
-        public EngineStatisticsMetadata unwrap(ModelNode node) {
+        public EngineStatisticsMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -915,7 +951,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, SESSION_COUNT, ModelType.INT, true);
 			addAttribute(node, TOTAL_MEMORY_USED_IN_KB, ModelType.LONG, true);
 			addAttribute(node, MEMORY_IN_USE_BY_ACTIVE_PLANS, ModelType.LONG, true);
@@ -955,7 +991,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static CacheStatisticsMetadataMapper INSTANCE = new CacheStatisticsMetadataMapper();
 
 		@Override
-        public CacheStatisticsMetadata unwrap(ModelNode node) {
+        public CacheStatisticsMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -969,7 +1005,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, TOTAL_ENTRIES, ModelType.STRING, true);
 			addAttribute(node, HITRATIO, ModelType.STRING, true);
 			addAttribute(node, REQUEST_COUNT, ModelType.STRING, true);
@@ -999,7 +1035,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static RequestMetadataMapper INSTANCE = new RequestMetadataMapper();
 
 		@Override
-        public RequestMetadata unwrap(ModelNode node) {
+        public RequestMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1023,7 +1059,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, EXECUTION_ID, ModelType.LONG, true);
 			addAttribute(node, SESSION_ID, ModelType.STRING, true);
 			addAttribute(node, START_TIME, ModelType.LONG, true);
@@ -1067,7 +1103,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static SessionMetadataMapper INSTANCE = new SessionMetadataMapper();
 
 		@Override
-        public SessionMetadata unwrap(ModelNode node) {
+        public SessionMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 				
@@ -1101,7 +1137,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, APPLICATION_NAME, ModelType.STRING, false);
 			addAttribute(node, CREATED_TIME, ModelType.LONG, true);
 			addAttribute(node, CLIENT_HOST_NAME, ModelType.LONG, true);
@@ -1140,7 +1176,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static TransactionMetadataMapper INSTANCE = new TransactionMetadataMapper();
 
 		@Override
-        public TransactionMetadata unwrap(ModelNode node) {
+        public TransactionMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1154,7 +1190,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, ASSOCIATED_SESSION, ModelType.STRING, true);
 			addAttribute(node, CREATED_TIME, ModelType.LONG, true);
 			addAttribute(node, SCOPE, ModelType.LONG, true);
@@ -1185,7 +1221,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		public static WorkerPoolStatisticsMetadataMapper INSTANCE = new WorkerPoolStatisticsMetadataMapper();
 
 		@Override
-        public WorkerPoolStatisticsMetadata unwrap(ModelNode node) {
+        public WorkerPoolStatisticsMetadata unwrap(ITeiidServerVersion teiidVersion, ModelNode node) {
 			if (node == null)
 				return null;
 
@@ -1203,7 +1239,7 @@ public class VDBMetadataMapper implements MetadataMapper<VDBMetaData> {
 		}
 		
 		@Override
-        public ModelNode describe(ModelNode node) {
+        public ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node) {
 			addAttribute(node, ACTIVE_THREADS, ModelType.INT, true);
 			addAttribute(node, HIGHEST_ACTIVE_THREADS, ModelType.INT, true);
 			addAttribute(node, TOTAL_COMPLETED, ModelType.LONG, true);

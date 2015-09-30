@@ -37,7 +37,7 @@ public class Test7SQLStringVisitor extends AbstractTestSQLStringVisitor {
     private Test7Factory factory;
 
     public Test7SQLStringVisitor() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

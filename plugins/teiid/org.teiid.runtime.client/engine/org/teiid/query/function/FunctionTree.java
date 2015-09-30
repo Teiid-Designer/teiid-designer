@@ -48,7 +48,10 @@ import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.PushDown;
 import org.teiid.metadata.FunctionParameter;
 import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Procedure;
+import org.teiid.metadata.Schema;
 import org.teiid.query.function.metadata.FunctionCategoryConstants;
+import org.teiid.query.parser.AbstractTeiidParser;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
@@ -409,7 +412,8 @@ public class FunctionTree {
                 }
             }
 
-            FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType, invocationMethod, requiresContext);
+            FunctionDescriptor result = new FunctionDescriptor(teiidVersion, method, types, outputType,
+                                                               invocationMethod, requiresContext, source.getClassLoader());
             if (method.getAggregateAttributes() != null
                 && (method.getPushdown() == PushDown.CAN_PUSHDOWN || method.getPushdown() == PushDown.CANNOT_PUSHDOWN)) {
                 result.newInstance();
@@ -457,4 +461,19 @@ public class FunctionTree {
         return null;
     }
 
+    public static FunctionTree getFunctionProcedures(ITeiidServerVersion teiidVersion, Schema schema) {
+        UDFSource dummySource = new UDFSource(Collections.EMPTY_LIST, FunctionTree.class.getClassLoader());
+        FunctionTree ft = null;
+        for (Procedure p : schema.getProcedures().values()) {
+            if (p.isFunction() && p.getQueryPlan() != null) {
+                if (ft == null) {
+                    ft = new FunctionTree(teiidVersion, schema.getName(), dummySource, false);
+                }
+                FunctionMethod fm = AbstractTeiidParser.createFunctionMethod(teiidVersion, p);
+                FunctionDescriptor fd = ft.addFunction(schema.getName(), dummySource, fm, false);
+                fd.setProcedure(p);
+            }
+        }
+        return ft;
+    }
 }

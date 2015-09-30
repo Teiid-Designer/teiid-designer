@@ -17,12 +17,12 @@ import org.teiid.query.resolver.v87.Test87AccessPattern;
 @SuppressWarnings( "javadoc" )
 public class Test88AccessPattern extends Test87AccessPattern {
 
-    protected Test88AccessPattern(ITeiidServerVersion teiidVersion) {
+    protected Test88AccessPattern(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test88AccessPattern() {
-        this(Version.TEIID_8_8.get());
+        this(Version.TEIID_8_8);
     }
 
 }

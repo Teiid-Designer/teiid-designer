@@ -153,7 +153,15 @@ public class RealMetadataFactory {
         Schema vqt = createVirtualModel("VQT", metadataStore); //$NON-NLS-1$
         Schema bvqt = createVirtualModel("BQT_V", metadataStore); //$NON-NLS-1$
         Schema bvqt2 = createVirtualModel("BQT2_V", metadataStore); //$NON-NLS-1$
-        
+
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+            Schema gis = createPhysicalModel("GIS", metadataStore);
+            Table colaMarkets = createPhysicalGroup("COLA_MARKETS", gis);
+            createElement("MKT_ID", colaMarkets, "integer");
+            createElement("NAME", colaMarkets, "string");
+            createElement("SHAPE", colaMarkets, "geometry");
+        }
+
         // Create physical groups
         Table bqt1SmallA = createPhysicalGroup("SmallA", bqt1); //$NON-NLS-1$
         Table bqt1SmallB = createPhysicalGroup("SmallB", bqt1); //$NON-NLS-1$
@@ -463,7 +471,7 @@ public class RealMetadataFactory {
                                       new String[] { "x" }, //$NON-NLS-1$
                                       new String[] { DataTypeManagerService.DefaultDataTypes.STRING.getId()});
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5)) {
             Table status = createPhysicalGroup("Status", physModel_virtSrc); //$NON-NLS-1$
             createElements(status,
                                       new String[] { "VDBName", "VDBVersion", "SchemaName", "Name", "TargetSchemaName", "TargetName", "Valid", "LoadState", "Cardinality", "OnErrorAction", "Updated" }, //$NON-NLS-1$
@@ -491,7 +499,7 @@ public class RealMetadataFactory {
         virtGroup.setMaterializedStageTable(physGroupStage);
 
         
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5)) {
             QueryNode virtTransManaged = new QueryNode("SELECT x as e1 FROM MatSrc.MatSrc"); //$NON-NLS-1$ //$NON-NLS-2$
             Table virtGroupManaged = createVirtualGroup("ManagedMatView", virtModel, virtTransManaged); //$NON-NLS-1$
             createElements(virtGroupManaged, new String[] {"e1"}, //$NON-NLS-1$
@@ -528,7 +536,7 @@ public class RealMetadataFactory {
                                       new String[] { "x" }, //$NON-NLS-1$
                                       new String[] { DataTypeManagerService.DefaultDataTypes.STRING.getId()});
 
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5.get())) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_5)) {
             QueryNode vTrans2a = new QueryNode("SELECT x FROM matsrc"); //$NON-NLS-1$ //$NON-NLS-2$
             Table vGroup2a = createVirtualGroup("VGroup2a", virtModel, vTrans2a); //$NON-NLS-1$
             KeyRecord fbi = new KeyRecord(KeyRecord.Type.Index);
@@ -554,9 +562,18 @@ public class RealMetadataFactory {
         createKey(KeyRecord.Type.Primary, "pk", vGroup3, vElements3.subList(0, 1));
         createKey(KeyRecord.Type.Index, "idx", vGroup3, vElements3.subList(1, 2));
 
-        QueryNode vTrans4 = new QueryNode("/*+ cache(ttl:100) */ SELECT x FROM matsrc");         //$NON-NLS-1$ //$NON-NLS-2$
+        QueryNode vTrans4 = null;
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+            vTrans4 = new QueryNode("/*+ cache(ttl:10000) */ SELECT x FROM matsrc");         //$NON-NLS-1$ //$NON-NLS-2$
+        } else {
+            vTrans4 = new QueryNode("/*+ cache(ttl:100) */ SELECT x FROM matsrc");         //$NON-NLS-1$ //$NON-NLS-2$
+        }
         Table vGroup4 = createVirtualGroup("VGroup4", virtModel, vTrans4); //$NON-NLS-1$
-        vGroup4.setMaterialized(true);
+
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+            vGroup4.setProperty(MetadataValidator.MATVIEW_TTL, "100"); //$NON-NLS-1$
+        }
+
         createElements(vGroup4,
                                       new String[] { "x" }, //$NON-NLS-1$
                                       new String[] { DataTypeManagerService.DefaultDataTypes.STRING.getId()});
@@ -1833,7 +1850,7 @@ public class RealMetadataFactory {
         column.setLength(100);
         column.setNameInSource(name);
 
-        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0.get()))
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_0))
             column.setDatatype(SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap().get(type));
 
         return column; 

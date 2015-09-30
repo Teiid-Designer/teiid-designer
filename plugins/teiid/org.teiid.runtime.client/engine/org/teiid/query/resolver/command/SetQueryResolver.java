@@ -61,18 +61,24 @@ public class SetQueryResolver extends CommandResolver {
         simpleQueryResolver.resolveWith(metadata, setQuery);
 
         QueryCommand firstCommand = setQuery.getLeftQuery();
-        
+        QueryCommand rightCommand = setQuery.getRightQuery();
+
         getQueryResolver().setChildMetadata(firstCommand, setQuery);
         getQueryResolver().resolveCommand(firstCommand, metadata.getMetadata(), false);
 
+        resolveSetQuery(metadata, resolveNullLiterals, setQuery, firstCommand, rightCommand);
+    }
+
+    public void resolveSetQuery(TempMetadataAdapter metadata,
+                                boolean resolveNullLiterals, SetQuery setQuery,
+                                QueryCommand firstCommand, QueryCommand rightCommand)
+                                throws Exception {    
         List<Expression> firstProject = firstCommand.getProjectedSymbols();
         List<Class<?>> firstProjectTypes = new ArrayList<Class<?>>();
         for (Expression symbol : firstProject) {
             firstProjectTypes.add(symbol.getType());
         }
 
-        QueryCommand rightCommand = setQuery.getRightQuery();
-        
         getQueryResolver().setChildMetadata(rightCommand, setQuery);
         getQueryResolver().resolveCommand(rightCommand, metadata.getMetadata(), false);
 

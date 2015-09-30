@@ -44,7 +44,7 @@ public class Test7Resolver extends AbstractTestResolver {
      *
      */
     public Test7Resolver() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

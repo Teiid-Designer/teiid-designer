@@ -40,7 +40,7 @@ public class Test8Create extends AbstractTestQueryParser {
 	
     private Test8Factory factory;
 
-    protected Test8Create(ITeiidServerVersion teiidVersion) {
+    protected Test8Create(Version teiidVersion) {
         super(teiidVersion);
     }
 
@@ -48,7 +48,7 @@ public class Test8Create extends AbstractTestQueryParser {
      *
      */
     public Test8Create() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

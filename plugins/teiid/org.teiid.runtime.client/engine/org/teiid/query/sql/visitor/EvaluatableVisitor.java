@@ -72,14 +72,22 @@ public class EvaluatableVisitor extends LanguageVisitor {
 	private Determinism determinismLevel = Determinism.DETERMINISTIC;
 	private boolean hasCorrelatedReferences;
 
+    @Override
     public void visit(Function obj) {
         FunctionDescriptor fd = obj.getFunctionDescriptor();
         this.setDeterminismLevel(fd.getDeterministic());
-        if (fd.getPushdown() == PushDown.MUST_PUSHDOWN || fd.getDeterministic() == Determinism.NONDETERMINISTIC) {
-            evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
-        } else if (IFunctionLibrary.FunctionName.LOOKUP.equalsIgnoreCase(obj.getName())
-        		//TODO: if we had the context here we could plan better for non-prepared requests
-        		|| fd.getDeterministic().compareTo(Determinism.COMMAND_DETERMINISTIC) <= 0) {
+        if (fd.getDeterministic() == Determinism.NONDETERMINISTIC || fd.getPushdown() == PushDown.MUST_PUSHDOWN) {
+            if (obj.isEval()) {
+                evaluationNotPossible(EvaluationLevel.PROCESSING);
+            } else {
+                evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
+            }
+        } else if (obj.getName().equalsIgnoreCase(IFunctionLibrary.FunctionName.LOOKUP.text())
+                //TODO: if we had the context here we could plan better for non-prepared requests
+                || fd.getDeterministic().compareTo(Determinism.COMMAND_DETERMINISTIC) <= 0) {
+            evaluationNotPossible(EvaluationLevel.PROCESSING);
+        } else if (fd.getProcedure() != null && isTeiid811OrGreater()) {
+            //a function defined by a procedure
             evaluationNotPossible(EvaluationLevel.PROCESSING);
         }
     }
@@ -105,6 +113,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
     	}
     }
         
+    @Override
     public void visit(ElementSymbol obj) {
         if (obj.getGroupSymbol() == null) {
             evaluationNotPossible(EvaluationLevel.PROCESSING);
@@ -122,14 +131,17 @@ public class EvaluatableVisitor extends LanguageVisitor {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }
     
+    @Override
     public void visit(ExpressionSymbol obj) {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }
     
+    @Override
     public void visit(AliasSymbol obj) {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }
     
+    @Override
     public void visit(AggregateSymbol obj) {
     	if (obj.getFunctionDescriptor() != null) {
     		this.setDeterminismLevel(obj.getFunctionDescriptor().getDeterministic());
@@ -141,6 +153,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
      * We assume the non-push down for correlation variables,
      * then make specific checks when correlated variables are allowed.
      */
+    @Override
     public void visit(Reference obj) {
         hasCorrelatedReferences |= obj.isCorrelated();
         if (obj.isPositional()) {
@@ -149,6 +162,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
     	evaluationNotPossible(EvaluationLevel.PROCESSING);
     }
     
+    @Override
     public void visit(StoredProcedure proc){
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
 		for (SPParameter param : proc.getInputParameters()) {
@@ -158,6 +172,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
 		}
     }
     
+    @Override
     public void visit(ScalarSubquery obj){
         /*
          * Purposely excluded since only the optimizer ever sets
@@ -177,6 +192,7 @@ public class EvaluatableVisitor extends LanguageVisitor {
 //		evaluationNotPossible(EvaluationLevel.PROCESSING);
 //    }
     
+    @Override
     public void visit(ExistsCriteria obj) {
     	if (obj.shouldEvaluate()) {
     		evaluationNotPossible(EvaluationLevel.PROCESSING);
@@ -185,10 +201,12 @@ public class EvaluatableVisitor extends LanguageVisitor {
     	}
     }        
 
+    @Override
     public void visit(SubquerySetCriteria obj) {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }        
 
+    @Override
     public void visit(SubqueryCompareCriteria obj) {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }

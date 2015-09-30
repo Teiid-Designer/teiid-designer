@@ -83,4 +83,9 @@ public class FakeFunctionMetadataSource implements FunctionMetadataSource {
         String string = (String)astring;
         return string.trim();
     }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return null;
+    }
 }

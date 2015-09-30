@@ -27,19 +27,22 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import org.teiid.query.util.CommandContext;
 import org.teiid.core.CoreConstants;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.PropertiesUtils;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionDescriptor;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.FunctionMethod;
 import org.teiid.metadata.FunctionMethod.Determinism;
 import org.teiid.metadata.FunctionMethod.PushDown;
+import org.teiid.metadata.Procedure;
+import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
 
@@ -68,15 +71,20 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
     // the real VM descriptor for execution.
     private transient Method invocationMethod;
 
+    private ClassLoader classLoader;
+
+    private Procedure procedure;
+
 	FunctionDescriptor(ITeiidServerVersion teiidVersion, FunctionMethod method, Class<?>[] types,
 			Class<?> outputType, Method invocationMethod,
-			boolean requiresContext) {
+			boolean requiresContext, ClassLoader classloader) {
 		this.teiidVersion = teiidVersion;
         this.types = types;
 		this.returnType = outputType;
         this.invocationMethod = invocationMethod;
         this.requiresContext = requiresContext;
         this.method = method;
+        this.classLoader = classloader;
 	}
 	
 	public Object newInstance() {
@@ -131,7 +139,17 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
     public boolean requiresContext() {
         return this.requiresContext;
     }
-    
+
+    @Since(Version.TEIID_8_11)
+    public Procedure getProcedure() {
+        return procedure;
+    }
+
+    @Since(Version.TEIID_8_11)
+    public void setProcedure(Procedure procedure) {
+        this.procedure = procedure;
+    }
+
 	@Override
 	public String toString() {
 		StringBuffer str = new StringBuffer(this.method.getName());
@@ -273,11 +291,20 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 	        		values = newValues;
         		}
         	}
-            Object result = invocationMethod.invoke(functionTarget, values);
+            Object result = null;
+            ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+            try {
+                if (this.classLoader != null) {
+                    Thread.currentThread().setContextClassLoader(this.classLoader);
+                }
+                result = invocationMethod.invoke(functionTarget, values);
+            } finally {
+                Thread.currentThread().setContextClassLoader(originalCL);
+            }
             if (context != null && getDeterministic().ordinal() <= Determinism.USER_DETERMINISTIC.ordinal()) {
             	context.setDeterminismLevel(getDeterministic());
             }
-            return importValue(result, getReturnType());
+            return importValue(teiidVersion, result, getReturnType());
         } catch(ArithmeticException e) {
     		 throw new TeiidClientException(e, Messages.gs(Messages.TEIID.TEIID30384, getFullName()));
         } catch(InvocationTargetException e) {
@@ -289,7 +316,7 @@ public class FunctionDescriptor implements Serializable, Cloneable, IFunctionDes
 		}
 	}
 
-	public Object importValue(Object result, Class<?> expectedType)
+	public static Object importValue(ITeiidServerVersion teiidVersion, Object result, Class<?> expectedType)
 			throws Exception {
 		if (!ALLOW_NAN_INFINITY) {
 			if (result instanceof Double) {

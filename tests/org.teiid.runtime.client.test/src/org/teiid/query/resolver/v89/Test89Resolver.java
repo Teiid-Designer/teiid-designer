@@ -14,11 +14,11 @@ import org.teiid.query.resolver.v88.Test88Resolver;
 @SuppressWarnings( {"javadoc"} )
 public class Test89Resolver extends Test88Resolver {
 
-    protected Test89Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test89Resolver(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test89Resolver() {
-        this(Version.TEIID_8_9.get());
+        this(Version.TEIID_8_9);
     }
 }

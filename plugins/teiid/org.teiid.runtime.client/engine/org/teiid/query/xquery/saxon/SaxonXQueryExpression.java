@@ -39,6 +39,19 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
+import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.types.SQLXMLImpl;
+import org.teiid.core.types.XMLTranslator;
+import org.teiid.core.types.XMLType;
+import org.teiid.core.types.XMLType.Type;
+import org.teiid.query.function.source.XMLSystemFunctions;
+import org.teiid.query.sql.lang.NamespaceItem;
+import org.teiid.query.sql.lang.XMLColumn;
+import org.teiid.query.sql.symbol.DerivedColumn;
+import org.teiid.query.sql.symbol.XMLNamespaces;
+import org.teiid.query.util.CommandContext;
+import org.teiid.runtime.client.Messages;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.expr.ContextItemExpression;
 import net.sf.saxon.expr.Expression;
@@ -67,18 +80,6 @@ import net.sf.saxon.type.ItemType;
 import net.sf.saxon.type.TypeHierarchy;
 import net.sf.saxon.value.EmptySequence;
 import net.sf.saxon.value.SequenceType;
-import org.teiid.api.exception.query.QueryResolverException;
-import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.core.types.SQLXMLImpl;
-import org.teiid.core.types.XMLTranslator;
-import org.teiid.core.types.XMLType;
-import org.teiid.core.types.XMLType.Type;
-import org.teiid.query.function.source.XMLSystemFunctions;
-import org.teiid.query.sql.lang.NamespaceItem;
-import org.teiid.query.sql.lang.XMLColumn;
-import org.teiid.query.sql.symbol.DerivedColumn;
-import org.teiid.query.sql.symbol.XMLNamespaces;
-import org.teiid.runtime.client.Messages;
 
 @SuppressWarnings("serial")
 public class SaxonXQueryExpression {
@@ -472,7 +473,7 @@ public class SaxonXQueryExpression {
 		}
 	}
 
-	public XMLType createXMLType(final SequenceIterator iter, boolean emptyOnEmpty) throws Exception {
+	public XMLType createXMLType(final SequenceIterator iter, boolean emptyOnEmpty, CommandContext context) throws Exception {
         Item item = iter.next();
         if (item == null && !emptyOnEmpty) {
             return null;
@@ -493,7 +494,7 @@ public class SaxonXQueryExpression {
                     IOException {
                 QueryResult.serializeSequence(iter.getAnother(), config, writer, DEFAULT_OUTPUT_PROPERTIES);
             }
-        });
+        }, context);
         XMLType value = new XMLType(xml);
         value.setType(type);
         return value;

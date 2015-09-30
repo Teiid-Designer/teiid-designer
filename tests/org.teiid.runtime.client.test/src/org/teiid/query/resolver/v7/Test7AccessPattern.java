@@ -23,7 +23,7 @@ public class Test7AccessPattern extends AbstractTestAccessPattern {
      *
      */
     public Test7AccessPattern() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

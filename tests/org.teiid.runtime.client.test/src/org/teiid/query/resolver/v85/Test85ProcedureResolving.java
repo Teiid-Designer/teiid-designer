@@ -27,12 +27,12 @@ import org.teiid.query.sql.symbol.Symbol;
 @SuppressWarnings( {"javadoc", "nls"} )
 public class Test85ProcedureResolving extends Test8ProcedureResolving {
 
-    protected Test85ProcedureResolving(ITeiidServerVersion teiidVersion) {
+    protected Test85ProcedureResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85ProcedureResolving() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 
     @Test

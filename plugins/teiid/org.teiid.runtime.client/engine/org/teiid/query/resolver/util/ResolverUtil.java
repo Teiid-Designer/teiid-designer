@@ -61,6 +61,7 @@ import org.teiid.query.sql.lang.Command;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.FromClause;
+import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
 import org.teiid.query.sql.lang.LanguageObject;
@@ -385,19 +386,23 @@ public class ResolverUtil {
     public static void resolveOrderBy(OrderBy orderBy, QueryCommand command, TempMetadataAdapter metadata)
         throws Exception {
 
+        ITeiidServerVersion teiidVersion = orderBy.getTeiidVersion();
     	List<Expression> knownElements = command.getProjectedQuery().getSelect().getProjectedSymbols();
     	
     	boolean isSimpleQuery = false;
     	List<GroupSymbol> fromClauseGroups = Collections.emptyList();
-        
+        GroupBy groupBy = null;
         if (command instanceof Query) {
         	Query query = (Query)command;
         	isSimpleQuery = !query.getSelect().isDistinct() && !query.hasAggregates();
         	if (query.getFrom() != null) {
         		fromClauseGroups = query.getFrom().getGroups();
         	}
+        	if (!query.getSelect().isDistinct() && teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+                groupBy = query.getGroupBy();
+            }
         }
-    	
+
         // Cached state, if needed
         String[] knownShortNames = new String[knownElements.size()];
         List<Expression> expressions = new ArrayList<Expression>(knownElements.size());
@@ -450,7 +455,7 @@ public class ResolverUtil {
                         continue;
                     }
         		}
-        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+        	} else if (sortKey instanceof ExpressionSymbol && orderBy.getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
         	 // check for legacy positional
                 ExpressionSymbol es = (ExpressionSymbol)sortKey;
         	    if (es.getExpression() instanceof Constant) {
@@ -491,9 +496,13 @@ public class ResolverUtil {
             visitor.resolveLanguageObject(sortKey, metadata);
             
             int index = expressions.indexOf(SymbolMap.getExpression(sortKey));
+            // if unrelated and not a simple query - that is more than just a grouping, throw an exception
             if (index == -1 && !isSimpleQuery) {
-    	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
-        	}
+                if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10) && groupBy == null)
+                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
+                else
+                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30088, sortKey));
+        	}  
         	orderBy.setExpressionPosition(i, index);
         }
     }

@@ -43,12 +43,12 @@ public class Test8FunctionResolving extends AbstractTestFunctionResolving {
 
     private Test8Factory factory;
 
-    protected Test8FunctionResolving(ITeiidServerVersion teiidVersion) {
+    protected Test8FunctionResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8FunctionResolving() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

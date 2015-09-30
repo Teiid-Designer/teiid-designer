@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.teiid.core.designer.util.CoreArgCheck;
@@ -85,8 +87,8 @@ public class DataRole extends VdbUnit {
     public DataRole(String name) {
         super();
         setName(name);
-        this.roleNames = new HashSet<String>();
-        this.permissions = new HashMap<String, Permission>();
+        this.roleNames = new LinkedHashSet<String>();
+        this.permissions = new LinkedHashMap<String, Permission>();
     }
 
     /**

@@ -40,7 +40,10 @@
                                  nux.jar,
                                  xnio-api.jar,
                                  xnio-nio.jar,
-                                 xom.jar"/>
+                                 xom.jar,
+                                 jts.jar,
+                                 jts2geojson.jar,
+                                 proj4j.jar"/>
 
 	<!-- Location of the generated SQLParser class -->
 	<property name="parsers" value="v7/Teiid7Parser.java,
@@ -142,7 +145,7 @@
 
 		<!-- Call the process sources goal and generate using javacc -->
 		<echo message="=== Generating parser ===" />
-		<mvn dir="." args="process-sources" />
+		<mvn dir="." args="-P download-sources process-sources" />
 
 	</target>
 </project>

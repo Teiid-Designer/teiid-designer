@@ -17,12 +17,12 @@ import org.teiid.query.validator.v87.Test87AlterValidation;
 @SuppressWarnings( "javadoc" )
 public class Test88AlterValidation extends Test87AlterValidation {
 
-    protected Test88AlterValidation(ITeiidServerVersion teiidVersion) {
+    protected Test88AlterValidation(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test88AlterValidation() {
-        this(Version.TEIID_8_8.get());
+        this(Version.TEIID_8_8);
     }
 
 }

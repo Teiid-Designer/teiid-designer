@@ -17,12 +17,12 @@ import org.teiid.query.resolver.v8.Test8XMLResolver;
 @SuppressWarnings( "javadoc" )
 public class Test85XMLResolver extends Test8XMLResolver {
 
-    protected Test85XMLResolver(ITeiidServerVersion teiidVersion) {
+    protected Test85XMLResolver(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85XMLResolver() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 
 }

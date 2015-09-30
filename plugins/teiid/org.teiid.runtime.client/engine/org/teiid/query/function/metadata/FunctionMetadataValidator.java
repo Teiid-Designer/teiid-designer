@@ -68,7 +68,7 @@ public class FunctionMetadataValidator {
 	}
 
 	public static final void validateFunctionMethods(ITeiidServerVersion teiidVersion, Collection<FunctionMethod> methods, ValidatorReport report, Map<String, Datatype> runtimeTypeMap) {
-        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+        if (runtimeTypeMap == null && teiidVersion != null && teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
             runtimeTypeMap = SystemMetadata.getInstance(teiidVersion).getRuntimeTypeMap();
         }
 	    if(methods != null) {
@@ -103,7 +103,7 @@ public class FunctionMetadataValidator {
 	        // Validate attributes
 	        validateName(teiidVersion, method.getName());
 	        validateDescription(method.getDescription());
-	        validateCategory(method.getCategory());
+	        validateCategory(teiidVersion, method.getCategory());
 	        validateInvocationMethod(method.getInvocationClass(), method.getInvocationMethod(), method.getPushdown());
 
 	        // Validate input parameters
@@ -112,7 +112,7 @@ public class FunctionMetadataValidator {
 	            for(int i=0; i<params.size(); i++) {
 	                FunctionParameter param = params.get(i);
 	                validateFunctionParameter(teiidVersion, param);
-	                if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	                if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
 	                    // runtime type map not supported in Teiid 7
 	                    param.setPosition(i+1);
 	                    MetadataFactory.setDataType(param.getRuntimeType(), param, runtimeTypeMap, true);
@@ -123,7 +123,7 @@ public class FunctionMetadataValidator {
 
 	        // Validate output parameters
 	        validateFunctionParameter(teiidVersion, method.getOutputParameter());
-	        if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0.get())) {
+	        if (teiidVersion.isGreaterThanOrEqualTo(TeiidServerVersion.Version.TEIID_8_0)) {
 	            // runtime type map not supported in Teiid 7
 	            method.getOutputParameter().setPosition(0);
 	            MetadataFactory.setDataType(method.getOutputParameter().getRuntimeType(), method.getOutputParameter(), runtimeTypeMap, true);
@@ -179,7 +179,7 @@ public class FunctionMetadataValidator {
     public static final void validateName(ITeiidServerVersion teiidVersion, String name) throws Exception {
         validateIsNotNull(name, "Name"); //$NON-NLS-1$
         validateLength(name, MAX_LENGTH, "Name"); //$NON-NLS-1$
-        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0))
             validateNameCharacters(name, "Name"); //$NON-NLS-1$
     }
 
@@ -220,12 +220,17 @@ public class FunctionMetadataValidator {
      * <LI>Validate that category is not null</LI>
      * <LI>Validate that category has length <= MAX_LENGTH</LI>
      * </UL>
+     * @param teiidVersion
      * @param category Category to validate
      * @throws Exception Thrown if category is not valid in some way
      */
-    public static final void validateCategory(String category) throws Exception {
-        validateIsNotNull(category, "Category"); //$NON-NLS-1$
-        validateLength(category, MAX_LENGTH, "Category"); //$NON-NLS-1$
+    public static final void validateCategory(ITeiidServerVersion teiidVersion, String category) throws Exception {
+        if (teiidVersion.isLessThan(Version.TEIID_8_11))
+            validateIsNotNull(category, "Category"); //$NON-NLS-1$
+
+        if (category != null) {
+            validateLength(category, MAX_LENGTH, "Category"); //$NON-NLS-1$
+        }
     }
 
     /**

@@ -47,6 +47,9 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.teiid.core.types.BlobImpl;
 import org.teiid.core.types.BlobType;
 import org.teiid.core.types.ClobImpl;
@@ -67,6 +70,7 @@ import org.teiid.query.function.metadata.FunctionCategoryConstants;
 import org.teiid.query.util.CommandContext;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.translator.SourceSystemFunctions;
 
 /**
  * Static method hooks for most of the function library.
@@ -78,12 +82,24 @@ public final class FunctionMethods {
 
 	// ================== Function = plus =====================
 
-	public static int plus(int x, int y) {
-		return x + y;
+	public static int plus(int x, int y) throws Exception {
+	    long result = (long)x + y;
+        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, result));
+        }
+        return (int)result;
 	}
 	
-	public static long plus(long x, long y) {
-		return x + y;
+	public static long plus(long x, long y) throws Exception {
+	    if (y > 0) {
+            if (x > Long.MAX_VALUE - y) {
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, BigInteger.valueOf(x).add(BigInteger.valueOf(y))));
+            }
+        } else if (x < Long.MIN_VALUE - y) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, BigInteger.valueOf(x).add(BigInteger.valueOf(y))));
+        }
+
+	    return x + y;
 	}
 	
 	public static float plus(float x, float y) {
@@ -104,11 +120,24 @@ public final class FunctionMethods {
 
 	// ================== Function = minus =====================
 
-	public static int minus(int x, int y) {
-		return x - y;
+	public static int minus(int x, int y) throws Exception {
+	    long result = (long)x - y;
+        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, result));
+        }
+        return (int)result;
 	}
 	
-	public static long minus(long x, long y) {
+	public static long minus(long x, long y) throws Exception {
+        if (y > 0) {
+            if (x < Long.MIN_VALUE + y) {
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169,
+                                                                         BigInteger.valueOf(x).subtract(BigInteger.valueOf(y))));
+            }
+        } else if (x > Long.MAX_VALUE + y) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169,
+                                                                     BigInteger.valueOf(x).subtract(BigInteger.valueOf(y))));
+        }
 		return x - y;
 	}
 	
@@ -130,13 +159,22 @@ public final class FunctionMethods {
 
 	// ================== Function = multiply =====================
 
-	public static int multiply(int x, int y) {
-		return x * y;
-	}
-	
-	public static long multiply(long x, long y) {
-		return x * y;
-	}
+	public static int multiply(int x, int y) throws Exception {
+        long result = (long)x * y;
+        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, result));
+        }
+        return (int)result;
+    }
+    
+    public static long multiply(long x, long y) throws Exception {
+        if ((y > 0 && (x > Long.MAX_VALUE/y || x < Long.MIN_VALUE/y))
+                || ((y < -1) && (x > Long.MIN_VALUE/y || x < Long.MAX_VALUE/y))
+                || (y == -1 && x == Long.MIN_VALUE)) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, BigInteger.valueOf(x).multiply(BigInteger.valueOf(y))));
+        }
+        return x * y;
+    }
 	
 	public static float multiply(float x, float y) {
 		return x * y;
@@ -156,13 +194,19 @@ public final class FunctionMethods {
 
 	// ================== Function = divide =====================
 
-	public static int divide(int x, int y) {
-		return x / y;
-	}
-	
-	public static long divide(long x, long y) {
-		return x / y;
-	}
+	public static int divide(int x, int y) throws Exception {
+        if (x == Integer.MIN_VALUE && y == -1) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, (long)Integer.MAX_VALUE + 1));
+        }
+        return x / y;
+    }
+    
+    public static long divide(long x, long y) throws Exception {
+        if (x == Long.MIN_VALUE && y == -1) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.valueOf(1))));
+        }
+        return x / y;
+    }
 	
 	public static float divide(float x, float y) {
 		return x / y;
@@ -189,13 +233,19 @@ public final class FunctionMethods {
 
 	// ================== Function = abs =====================
 
-	public static int abs(int x) {
-		return Math.abs(x);
-	}
-	
-	public static long abs(long x) {
-		return Math.abs(x);
-	}
+	public static int abs(int x) throws Exception {
+        if (x == Integer.MIN_VALUE) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, (long)Integer.MAX_VALUE + 1));
+        }
+        return Math.abs(x);
+    }
+    
+    public static long abs(long x) throws Exception {
+        if (x == Long.MIN_VALUE) {
+            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31169, BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.valueOf(1))));
+        }
+        return Math.abs(x);
+    }
 	
 	public static float abs(float x) {
 		return Math.abs(x);
@@ -1494,5 +1544,94 @@ public final class FunctionMethods {
 		List<String> tokens = StringUtil.tokenize(str, delimiter);
 		return tokens.toArray(new String[tokens.size()]);
 	}
-	
+
+    /**
+     * Perform find-replace operation on a string using regular expressions.
+     *
+     * See {@link java.util.regex.Pattern} for more information.
+     *
+     * @param context
+     * @param source Value to perform replacement on.
+     * @param regex Regular expression pattern.
+     * @param replacement Replacement string.
+     * @return Modified source if the pattern was matched, otherwise source.
+     * @throws FunctionExecutionException If regex pattern was invalid.
+     */
+    @TeiidFunction(name=SourceSystemFunctions.REGEXP_REPLACE,
+                   category=FunctionCategoryConstants.STRING,
+                   nullOnNull=true)
+    @Since(Version.TEIID_8_11)
+    public static String regexpReplace(CommandContext context,
+                                       String source,
+                                       String regex,
+                                       String replacement) throws Exception {
+        return regexpReplace(context, source, regex, replacement, ""); //$NON-NLS-1$
+    }
+
+    /**
+     * Perform find-replace operation on a string using regular expressions.
+     *
+     * See {@link java.util.regex.Pattern} for more information.
+     *
+     * Flags can be used to modify the matching behavior of the regular expression.
+     * <ul>
+     *   <li>g - Replaces all matches instead of just the first.</li>
+     *   <li>i - Performs case insensitive pattern match.</li>
+     *   <li>m - Changes behavior of "^" and "$" to match the beginning and end
+     *           of the line instead of the entire string.</li>
+     * </ul>
+     *
+     * @param context
+     * @param source Value to perform replacement on.
+     * @param regex Regular expression pattern.
+     * @param replacement Replacement string.
+     * @param flags Flags to modify behavior of the pattern.
+     * @return Modified source if the pattern was matched, otherwise source.
+     * @throws Exception If an invalid flag was supplied or if the
+     *                                    regex pattern was invalid.
+     */
+    @TeiidFunction( name = SourceSystemFunctions.REGEXP_REPLACE,
+                                category = FunctionCategoryConstants.STRING, nullOnNull = true )
+    @Since( Version.TEIID_8_11 )
+    public static String regexpReplace(CommandContext context, String source, String regex, String replacement, String flags) throws Exception {
+
+        // Parse regex flags into a bitmask for Pattern API.
+        // Exception is the 'g' flag which makes us call replaceAll instead of
+        // replaceFirst.
+        boolean global = false;
+        int bitFlags = 0;
+
+        for (int i = 0; i < flags.length(); ++i) {
+            char c = flags.charAt(i);
+            if (c == 'g') {
+                // Global match.
+                global = true;
+            } else if (c == 'i') {
+                // Case insensitive match.
+                bitFlags |= Pattern.CASE_INSENSITIVE;
+            } else if (c == 'm') {
+                // Change ^$ to match line endings instad of entire source.
+                bitFlags |= Pattern.MULTILINE;
+            } else {
+                throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID31168, c));
+            }
+        }
+
+        // Compile regex into pattern and do replacement.
+        Pattern pattern;
+        try {
+            pattern = CommandContext.getPattern(context, regex, bitFlags);
+        } catch (PatternSyntaxException e) {
+            throw new TeiidClientException(e);
+        }
+        Matcher matcher = pattern.matcher(source);
+        String result;
+        if (global) {
+            result = matcher.replaceAll(replacement);
+        } else {
+            result = matcher.replaceFirst(replacement);
+        }
+
+        return result;
+    }
 }

@@ -68,7 +68,6 @@ import org.teiid.core.types.Streamable;
 import org.teiid.core.types.XMLType;
 import org.teiid.core.util.PropertiesUtils;
 import org.teiid.core.util.TimestampWithTimezone;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.jdbc.BatchResults.Batch;
 import org.teiid.jdbc.BatchResults.BatchFetcher;
@@ -135,6 +134,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 
 	ResultSetImpl(ResultsMessage resultsMsg, StatementImpl statement,
 			ResultSetMetaData metadata, int parameters) throws SQLException {
+	    super(statement.getTeiidVersion());
 		this.statement = statement;
 		this.parameters = parameters;
 		// server latency-related timestamp
@@ -145,7 +145,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 			MetadataProvider provider = new DeferredMetadataProvider(resultsMsg.getColumnNames(),
 							resultsMsg.getDataTypes(), statement,
 							statement.getCurrentRequestID());
-			rmetadata = new ResultSetMetaDataImpl(provider, this.statement.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS));
+			rmetadata = new ResultSetMetaDataImpl(getTeiidVersion(), provider, this.statement.getExecutionProperty(ExecutionProperties.JDBC4COLUMNNAMEANDLABELSEMANTICS));
 		} else {
 			rmetadata = metadata;
 		}
@@ -154,7 +154,7 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 		
 		this.resultColumns = columnCount - parameters;
 		if (this.parameters > 0) {
-			rmetadata = new FilteredResultsMetadata(rmetadata, resultColumns);
+			rmetadata = new FilteredResultsMetadata(getTeiidVersion(), rmetadata, resultColumns);
 		}
 		this.fetchSize = statement.getFetchSize();
 		if (logger.isLoggable(Level.FINER)) {
@@ -165,12 +165,8 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 		this.batchResults = new BatchResults(this, getCurrentBatch(resultsMsg), this.cursorType == ResultSet.TYPE_FORWARD_ONLY ? 1 : BatchResults.DEFAULT_SAVED_BATCHES);
 	}
 
-	private ITeiidServerVersion getTeiidVersion() {
-	    return statement.getTeiidVersion();
-	}
-
 	private boolean isLessThanTeiidEight() {
-        return getTeiidVersion().isLessThan(Version.TEIID_8_0.get());
+        return getTeiidVersion().isLessThan(Version.TEIID_8_0);
     }
 
     private void checkSupportedVersion() {
@@ -198,6 +194,11 @@ public class ResultSetImpl extends WrapperImpl implements TeiidResultSet, BatchF
 				}
     		}
             isClosed = true;
+        }
+    	//we can do this because the statement can only have a
+        //single resultset open currently
+        if (this.statement.isCloseOnCompletion()) {
+            this.statement.close();
         }
     }
     

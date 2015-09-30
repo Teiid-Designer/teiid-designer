@@ -147,7 +147,7 @@ public class EditTOPropertiesAction  extends SortableSelectionAction  implements
 
             TranslatorOverride override = createOverride(translatorType, filteredProperties);
             
-            boolean overridesSupported = teiidServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get());
+            boolean overridesSupported = teiidServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6);
             boolean noOverrideProperties = override.getProperties().length == 0;
             
             if( !overridesSupported) {

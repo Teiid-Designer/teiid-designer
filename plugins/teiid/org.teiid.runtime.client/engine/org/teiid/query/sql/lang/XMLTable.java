@@ -92,7 +92,7 @@ public class XMLTable extends TableFunctionReference implements IXMLTable<Langua
      * @param columns
      */
     public void setColumns(List<XMLColumn> columns) {
-        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0.get()) && columns.isEmpty()) {
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_0) && columns.isEmpty()) {
             usingDefaultColumn = true;
             XMLColumn xmlColumn = parser.createASTNode(ASTNodes.XML_COLUMN);
             xmlColumn.setName("OBJECT_VALUE"); //$NON-NLS-1$

@@ -19,12 +19,12 @@ import org.teiid.query.sql.lang.Query;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test87Resolver extends Test86Resolver {
 
-    protected Test87Resolver(ITeiidServerVersion teiidVersion) {
+    protected Test87Resolver(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test87Resolver() {
-        this(Version.TEIID_8_7.get());
+        this(Version.TEIID_8_7);
     }
 
     @Test

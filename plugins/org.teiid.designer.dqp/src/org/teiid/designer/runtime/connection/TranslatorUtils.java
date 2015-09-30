@@ -67,7 +67,7 @@ public class TranslatorUtils {
         // the resource-adapter properties and NOT the translator.
         // So added the check and ignore getting translator properties if version < 8.6
         
-        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get())) {
+        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6)) {
             for (TeiidPropertyDefinition propDefn : translator.getPropertyDefinitions()) {
                 TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
                 prop.setAdvanced(propDefn.isAdvanced());
@@ -113,7 +113,7 @@ public class TranslatorUtils {
         // the resource-adapter properties and NOT the translator.
         // So added the check and ignore getting translator properties if version < 8.6
         
-        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get())) {
+        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6)) {
             for (TeiidPropertyDefinition propDefn : translator.getImportPropertyDefinitions()) {
                 TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
                 prop.setAdvanced(propDefn.isAdvanced());
@@ -159,7 +159,7 @@ public class TranslatorUtils {
         // the resource-adapter properties and NOT the translator.
         // So added the check and ignore getting translator properties if version < 8.6
         
-        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6.get())) {
+        if( defaultServer.getServerVersion().isGreaterThanOrEqualTo(Version.TEIID_8_6)) {
             for (TeiidPropertyDefinition propDefn : translator.getExtensionPropertyDefinitions()) {
                 TranslatorProperty prop = new TranslatorProperty(propDefn.getPropertyTypeClassName());
                 prop.setAdvanced(propDefn.isAdvanced());

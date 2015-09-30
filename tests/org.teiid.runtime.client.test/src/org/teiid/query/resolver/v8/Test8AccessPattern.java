@@ -21,12 +21,12 @@ public class Test8AccessPattern extends AbstractTestAccessPattern {
 
     private Test8Factory factory;
 
-    protected Test8AccessPattern(ITeiidServerVersion teiidVersion) {
+    protected Test8AccessPattern(Version teiidVersion) {
         super(teiidVersion);
     }
    
     public Test8AccessPattern() {
-        super(Version.TEIID_8_0.get());
+        super(Version.TEIID_8_0);
     }
 
     @Override

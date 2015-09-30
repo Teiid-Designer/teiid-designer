@@ -23,7 +23,7 @@ public class Test7UpdateValidator extends AbstractTestUpdateValidator {
      *
      */
     public Test7UpdateValidator() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

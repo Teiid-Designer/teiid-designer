@@ -46,6 +46,7 @@ public class UDFSource implements FunctionMetadataSource {
         return Class.forName(className, true, classLoader==null?Thread.currentThread().getContextClassLoader():classLoader);
     }
     
+    @Override
     public ClassLoader getClassLoader() {
 		return classLoader;
 	}

@@ -19,11 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.adminapi.impl;
+package org.teiid.adminapi.jboss;
 
 import org.jboss.dmr.ModelNode;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 public interface MetadataMapper<T> {
-	T unwrap(ModelNode node);
-	ModelNode describe(ModelNode node);
+	T unwrap(ITeiidServerVersion teiidVersion, ModelNode node);
+	ModelNode describe(ITeiidServerVersion teiidVersion, ModelNode node);
 }

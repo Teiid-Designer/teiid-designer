@@ -46,7 +46,7 @@ public abstract class AdminSpec {
      * @return admin spec for specific teiid version
      */
     public static AdminSpec getInstance(ITeiidServerVersion teiidVersion) {
-        if (teiidVersion.isLessThan(Version.TEIID_8_0.get()))
+        if (teiidVersion.isLessThan(Version.TEIID_8_0))
             return new Admin7Spec(teiidVersion);
         else
             return new Admin8Spec(teiidVersion);

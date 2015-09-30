@@ -68,6 +68,10 @@ public class MetadataFactory implements Serializable {
     private static final String TEIID_EXCEL = "teiid_excel"; //$NON-NLS-1$
     @Since(Version.TEIID_8_7)
     private static final String TEIID_JPA = "teiid_jpa"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_10)
+    private static final String TEIID_HBASE = "teiid_hbase"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_10)
+    private static final String TEIID_SPATIAL = "teiid_spatial"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 8590341087771685630L;
 
@@ -100,21 +104,33 @@ public class MetadataFactory implements Serializable {
     public static final String EXCEL_URI = "{http://www.teiid.org/translator/excel/2014}"; //$NON-NLS-1$
     @Since(Version.TEIID_8_7)
     public static final String JPA_URI = "{http://www.teiid.org/translator/jpa/2014}"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_10)
+    public static final String HBASE_URI = "{http://www.teiid.org/translator/hbase/2014}"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_10)
+    public static final String SPATIAL_URI = "{http://www.teiid.org/translator/spatial/2015}"; //$NON-NLS-1$
 
-	public static final Map<String, String> BUILTIN_NAMESPACES;
-
-	static {
-		Map<String, String> map = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
-		map.put(TEIID_RELATIONAL, AbstractMetadataRecord.RELATIONAL_URI.substring(1, AbstractMetadataRecord.RELATIONAL_URI.length()-1));
-		map.put(TEIID_SF, SF_URI.substring(1, SF_URI.length()-1));
-		map.put(TEIID_WS, WS_URI.substring(1, WS_URI.length()-1));
-		map.put(TEIID_MONGO, MONGO_URI.substring(1, MONGO_URI.length()-1));
-		map.put(TEIID_ODATA, ODATA_URI.substring(1, ODATA_URI.length()-1));
-		map.put(TEIID_ACCUMULO, ACCUMULO_URI.substring(1, ACCUMULO_URI.length()-1));
-		map.put(TEIID_EXCEL, EXCEL_URI.substring(1, EXCEL_URI.length()-1));
+    /*
+     * Converted from static field to function to allow version to be checked
+     */
+    @Since(Version.TEIID_8_10)
+    public static Map<String, String> builtinNamespaces(ITeiidServerVersion version) {
+        Map<String, String> map = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        map.put(TEIID_RELATIONAL, AbstractMetadataRecord.RELATIONAL_URI.substring(1, AbstractMetadataRecord.RELATIONAL_URI.length()-1));
+        map.put(TEIID_SF, SF_URI.substring(1, SF_URI.length()-1));
+        map.put(TEIID_WS, WS_URI.substring(1, WS_URI.length()-1));
+        map.put(TEIID_MONGO, MONGO_URI.substring(1, MONGO_URI.length()-1));
+        map.put(TEIID_ODATA, ODATA_URI.substring(1, ODATA_URI.length()-1));
+        map.put(TEIID_ACCUMULO, ACCUMULO_URI.substring(1, ACCUMULO_URI.length()-1));
+        map.put(TEIID_EXCEL, EXCEL_URI.substring(1, EXCEL_URI.length()-1));
         map.put(TEIID_JPA, JPA_URI.substring(1, JPA_URI.length()-1));
-		BUILTIN_NAMESPACES = Collections.unmodifiableMap(map);
-	}
+
+        if (version.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+            map.put(TEIID_HBASE, HBASE_URI.substring(1, HBASE_URI.length()-1));
+            map.put(TEIID_SPATIAL, SPATIAL_URI.substring(1, SPATIAL_URI.length()-1));
+        }
+
+        return Collections.unmodifiableMap(map);
+    }
 
 	public MetadataFactory(ITeiidServerVersion teiidVersion, String vdbName, int vdbVersion, Map<String, Datatype> runtimeTypes, Model model) {
         this(teiidVersion, vdbName, vdbVersion, model.getName(), runtimeTypes, model.getProperties(), model.getSchemaText());
@@ -133,12 +149,34 @@ public class MetadataFactory implements Serializable {
         msb = longHash(schemaName, msb);
         this.idPrefix = "tid:" + hex(msb, 12); //$NON-NLS-1$
         setUUID(this.schema);
+
+        if (isTeiid811OrGreater()) {
+            if (modelProperties != null) {
+                for (Map.Entry<Object, Object> entry : modelProperties.entrySet()) {
+                    if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                        this.schema.setProperty(resolvePropertyKey(this, (String)entry.getKey()), (String)entry.getValue());
+                    }
+                }
+            }
+        }
+
         this.modelProperties = modelProperties;
         this.rawMetadata = rawMetadata;
     }
 
+    /**
+     * @return the teiidVersion
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.teiidVersion;
+    }
+
+    private boolean isTeiid811OrGreater() {
+        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_11);
+    }
+
     private boolean isTeiid89OrGreater() {
-        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9.get());
+        return teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_9);
     }
 
     private long longHash(String s, long h) {
@@ -170,6 +208,11 @@ public class MetadataFactory implements Serializable {
         return this.modelProperties;
     }
 
+    /**
+     * Get the metadata text for the first metadata element
+     * @return
+     */
+    @Deprecated
     public String getRawMetadata() {
         return this.rawMetadata;
     }
@@ -617,7 +660,7 @@ public class MetadataFactory implements Serializable {
         }
 
         if (StringUtil.startsWithIgnoreCase(prefix, TEIID_RESERVED)) {
-            String validURI = BUILTIN_NAMESPACES.get(prefix);
+            String validURI = builtinNamespaces(teiidVersion).get(prefix);
             if (validURI == null || !uri.equals(validURI)) {
                 throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60017, prefix));
             }
@@ -910,4 +953,21 @@ public class MetadataFactory implements Serializable {
 
 		this.schema.addFunction(functionMethod);
 	}
+
+	@Since(Version.TEIID_8_11)
+	public static String resolvePropertyKey(MetadataFactory factory, String key) {
+        int index = key.indexOf(':');
+        if (index > 0 && index < key.length() - 1) {
+            String prefix = key.substring(0, index);
+            String uri = builtinNamespaces(factory.getTeiidVersion()).get(prefix);
+            if (uri == null) {
+                uri = factory.getNamespaces().get(prefix);
+            }
+            if (uri != null) {
+                key = '{' +uri + '}' + key.substring(index + 1, key.length());
+            }
+            //TODO warnings or errors if not resolvable 
+        }
+        return key;
+    }
 }

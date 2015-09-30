@@ -22,12 +22,12 @@ import org.teiid.query.sql.v86.TestQuery86Parser;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class TestQuery87Parser extends TestQuery86Parser {
 
-    protected TestQuery87Parser(ITeiidServerVersion teiidVersion) {
+    protected TestQuery87Parser(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public TestQuery87Parser() {
-        this(Version.TEIID_8_7.get());
+        this(Version.TEIID_8_7);
     }
 
     @Override

@@ -163,7 +163,7 @@ public class DataRoleWizard extends AbstractWizard {
             this.mappedRoleNames = new HashSet<String>(existingDataRole.getRoleNames());
         }
         
-        disableGrantAll = ModelerCore.getTeiidServerManager().getDefaultServer() == null || ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7.get());
+        disableGrantAll = ModelerCore.getTeiidServerManager().getDefaultServer() == null || ModelerCore.getTeiidServerVersion().isLessThan(Version.TEIID_8_7);
     }
 
     /**

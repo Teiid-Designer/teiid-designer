@@ -2,7 +2,9 @@
 /* JavaCCOptions:MULTI=true,NODE_USES_PARSER=true,VISITOR=true,TRACK_TOKENS=false,NODE_PREFIX=,NODE_EXTENDS=,NODE_FACTORY=,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
 package org.teiid.query.sql.lang;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.ISubqueryCompareCriteria;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
@@ -55,6 +57,9 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
 
     private QueryCommand command;
 
+    @Since(Version.TEIID_8_10)
+    private SubqueryHint subqueryHint = new SubqueryHint();
+
     /**
      * @param p
      * @param id
@@ -80,7 +85,12 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
      * @return String version of predicate quantifier
      */
     public String getPredicateQuantifierAsString() {
-        return this.predicateQuantifier.name() + SQLConstants.Tokens.SPACE;
+        String name = this.predicateQuantifier.name();
+
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_10))
+            return name + SQLConstants.Tokens.SPACE;
+
+        return name;
     }
 
     /**
@@ -135,6 +145,15 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
             if (other.command != null) return false;
         } else if (!this.command.equals(other.command)) return false;
         if (this.predicateQuantifier != other.predicateQuantifier) return false;
+
+        if (getTeiidVersion().isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+            if (this.subqueryHint == null) {
+                if (other.subqueryHint != null)
+                    return false;
+            } else if (! this.subqueryHint.equals(other.subqueryHint))
+                return false;
+        }
+
         return true;
     }
 
@@ -157,8 +176,21 @@ public class SubqueryCompareCriteria extends AbstractCompareCriteria
         if(getLeftExpression() != null)
             clone.setLeftExpression(getLeftExpression().clone());
 
+        if (this.subqueryHint != null) {
+            clone.subqueryHint = this.subqueryHint.clone();
+        }
+
         return clone;
     }
 
+    @Since(Version.TEIID_8_10)
+    public SubqueryHint getSubqueryHint() {
+        return subqueryHint;
+    }
+
+    @Since(Version.TEIID_8_10)
+    public void setSubqueryHint(SubqueryHint subqueryHint) {
+        this.subqueryHint = subqueryHint;
+    }
 }
 /* JavaCC - OriginalChecksum=e9b141cd60d09da32342d127668258f8 (do not edit this line) */

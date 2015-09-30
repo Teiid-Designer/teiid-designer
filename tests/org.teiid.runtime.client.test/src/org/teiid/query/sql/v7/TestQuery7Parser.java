@@ -54,7 +54,7 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
      *
      */
     public TestQuery7Parser() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

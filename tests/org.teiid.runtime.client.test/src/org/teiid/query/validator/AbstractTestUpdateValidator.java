@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Test;
 import org.teiid.core.types.DataTypeManagerService;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.ColumnSet;
@@ -54,7 +54,7 @@ public abstract class AbstractTestUpdateValidator extends AbstractTest {
 	/**
      * @param teiidVersion
      */
-    public AbstractTestUpdateValidator(ITeiidServerVersion teiidVersion) {
+    public AbstractTestUpdateValidator(Version teiidVersion) {
         super(teiidVersion);
     }
 

@@ -151,7 +151,7 @@ public class Insert extends ProcedureContainer
              * so should not come through here.
              */
             Query expr = (Query)query;
-            //a singl row constructor query is the same as values 
+            //a single row constructor query is the same as values 
             if (expr.isRowConstructor()) {
                 this.values.clear();
                 this.queryExpression = null;

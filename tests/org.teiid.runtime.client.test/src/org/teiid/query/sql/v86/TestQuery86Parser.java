@@ -17,12 +17,12 @@ import org.teiid.query.sql.v85.TestQuery85Parser;
 @SuppressWarnings( {"javadoc"} )
 public class TestQuery86Parser extends TestQuery85Parser {
 
-    protected TestQuery86Parser(ITeiidServerVersion teiidVersion) {
+    protected TestQuery86Parser(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public TestQuery86Parser() {
-        this(Version.TEIID_8_6.get());
+        this(Version.TEIID_8_6);
     }
 
 }

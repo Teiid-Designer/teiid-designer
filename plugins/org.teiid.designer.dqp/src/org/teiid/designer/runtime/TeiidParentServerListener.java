@@ -93,7 +93,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                  * of the jboss parent server. Thus, version 7 should not try and change these
                  * while version 8+ should.
                  */
-                if (teiidServer.getServerVersion().isGreaterThan(Version.TEIID_7_7.get())) {
+                if (teiidServer.getServerVersion().isGreaterThan(Version.TEIID_7_7)) {
                     teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
                 }
                 String portNumber = serverManager.getJdbcPort(teiidServer, true);

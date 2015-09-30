@@ -18,12 +18,12 @@ import org.teiid.query.validator.v86.Test86Validator;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test87Validator extends Test86Validator {
 
-    protected Test87Validator(ITeiidServerVersion teiidVersion) {
+    protected Test87Validator(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test87Validator() {
-        this(Version.TEIID_8_7.get());
+        this(Version.TEIID_8_7);
     }
 
     @Test

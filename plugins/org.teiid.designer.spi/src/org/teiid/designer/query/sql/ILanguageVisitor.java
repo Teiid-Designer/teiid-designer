@@ -7,6 +7,7 @@
 */
 package org.teiid.designer.query.sql;
 
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.lang.IAlterProcedure;
 import org.teiid.designer.query.sql.lang.IAlterTrigger;
 import org.teiid.designer.query.sql.lang.IAlterView;
@@ -85,12 +86,15 @@ import org.teiid.designer.query.sql.symbol.ITextLine;
 import org.teiid.designer.query.sql.symbol.IWindowFunction;
 import org.teiid.designer.query.sql.symbol.IWindowSpecification;
 import org.teiid.designer.query.sql.symbol.IXMLAttributes;
+import org.teiid.designer.query.sql.symbol.IXMLCast;
 import org.teiid.designer.query.sql.symbol.IXMLElement;
+import org.teiid.designer.query.sql.symbol.IXMLExists;
 import org.teiid.designer.query.sql.symbol.IXMLForest;
 import org.teiid.designer.query.sql.symbol.IXMLNamespaces;
 import org.teiid.designer.query.sql.symbol.IXMLParse;
 import org.teiid.designer.query.sql.symbol.IXMLQuery;
 import org.teiid.designer.query.sql.symbol.IXMLSerialize;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 
@@ -170,6 +174,13 @@ public interface ILanguageVisitor {
     void visit(ITextTable obj);
     void visit(ITextLine obj);
     void visit(IXMLTable obj);
+    
+    @Since(Version.TEIID_8_10)
+    void visit(IXMLExists obj);
+    
+    @Since(Version.TEIID_8_10)
+    void visit(IXMLCast obj);
+
     void visit(IDerivedColumn obj);
     void visit(IXMLSerialize obj);
     void visit(IXMLQuery obj);

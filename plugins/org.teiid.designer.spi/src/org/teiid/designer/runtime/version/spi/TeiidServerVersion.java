@@ -85,6 +85,16 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         TEIID_8_9(VersionID.TEIID_8_9),
 
         /**
+         * Teiid 8.10
+         */
+        TEIID_8_10(VersionID.TEIID_8_10),
+
+        /**
+         * Teiid 8.11
+         */
+        TEIID_8_11(VersionID.TEIID_8_11),
+
+        /**
          * Default Teiid for this Designer
          */
         TEIID_DEFAULT(VersionID.TEIID_8_9);
@@ -339,6 +349,11 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     }
 
     @Override
+    public boolean isGreaterThan(Version otherVersion) {
+        return isGreaterThan(otherVersion.get());
+    }
+
+    @Override
     public boolean isLessThan(ITeiidServerVersion otherVersion) {
         ITeiidServerVersion myMaxVersion = getMaximumVersion();
         ITeiidServerVersion otherMinVersion = otherVersion.getMinimumVersion();
@@ -387,13 +402,28 @@ public class TeiidServerVersion implements ITeiidServerVersion {
     }
 
     @Override
+    public boolean isLessThan(Version otherVersion) {
+        return isLessThan(otherVersion.get());
+    }
+
+    @Override
     public boolean isGreaterThanOrEqualTo(ITeiidServerVersion otherVersion) {
         return this.compareTo(otherVersion) || this.isGreaterThan(otherVersion);
     }
 
     @Override
+    public boolean isGreaterThanOrEqualTo(Version otherVersion) {
+        return isGreaterThanOrEqualTo(otherVersion.get());
+    }
+
+    @Override
     public boolean isLessThanOrEqualTo(ITeiidServerVersion otherVersion) {
         return this.compareTo(otherVersion) || this.isLessThan(otherVersion);
+    }
+
+    @Override
+    public boolean isLessThanOrEqualTo(Version otherVersion) {
+        return isLessThan(otherVersion.get());
     }
 
     private int isOtherNumberLessThan(String myNumber, String otherNumber) {

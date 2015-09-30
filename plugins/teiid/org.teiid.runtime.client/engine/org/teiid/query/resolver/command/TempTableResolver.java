@@ -27,6 +27,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.teiid.api.exception.query.QueryResolverException;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.BaseColumn.NullType;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.Schema;
@@ -117,10 +119,22 @@ public class TempTableResolver extends CommandResolver {
     }
 
 	public static void addAdditionalMetadata(Create create, TempMetadataID tempTable) {
+	    ITeiidServerVersion teiidVersion = create.getTeiidVersion();
 		if (!create.getPrimaryKey().isEmpty()) {
 			ArrayList<TempMetadataID> primaryKey = new ArrayList<TempMetadataID>(create.getPrimaryKey().size());
 			for (ElementSymbol symbol : create.getPrimaryKey()) {
-				primaryKey.add((TempMetadataID) symbol.getMetadataID());
+
+			    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_10)) {
+			        Object mid = symbol.getMetadataID();
+			        if (mid instanceof TempMetadataID) {
+			            primaryKey.add((TempMetadataID)mid);
+			        } else if (mid instanceof Column) {
+			            //TODO: this breaks our normal metadata usage
+			            primaryKey.add(tempTable.getElements().get(((Column)mid).getPosition() - 1));                   
+			        }
+			    } else {
+			        primaryKey.add((TempMetadataID) symbol.getMetadataID());
+			    }
 			}
 			tempTable.setPrimaryKey(primaryKey);
 		}

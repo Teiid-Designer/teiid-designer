@@ -42,7 +42,7 @@ public class Test7Create extends AbstractTestQueryParser {
      *
      */
     public Test7Create() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

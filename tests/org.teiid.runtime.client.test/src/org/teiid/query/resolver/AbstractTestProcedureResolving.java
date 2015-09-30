@@ -29,7 +29,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.teiid.api.exception.query.QueryResolverException;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.sql.lang.Command;
@@ -44,7 +44,7 @@ public abstract class AbstractTestProcedureResolving extends AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTestProcedureResolving(ITeiidServerVersion teiidVersion) {
+    public AbstractTestProcedureResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 

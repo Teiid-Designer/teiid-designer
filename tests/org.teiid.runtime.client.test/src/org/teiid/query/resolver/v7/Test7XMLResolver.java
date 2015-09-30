@@ -37,7 +37,7 @@ public class Test7XMLResolver extends AbstractTestXMLResolver {
      *
      */
     public Test7XMLResolver() {
-        super(Version.TEIID_7_7.get());
+        super(Version.TEIID_7_7);
     }
 
     @Override

@@ -10,7 +10,7 @@ import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.lang.SimpleNode;
 
 /**
- *
+ * Represents XMLElement
  */
 public class XMLElement extends SimpleNode implements Expression, IXMLElement<LanguageVisitor> {
 

@@ -14,11 +14,11 @@ import org.teiid.query.resolver.v85.Test85ProcedureResolving;
 @SuppressWarnings( {"javadoc"} )
 public class Test86ProcedureResolving extends Test85ProcedureResolving {
 
-    protected Test86ProcedureResolving(ITeiidServerVersion teiidVersion) {
+    protected Test86ProcedureResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test86ProcedureResolving() {
-        this(Version.TEIID_8_6.get());
+        this(Version.TEIID_8_6);
     }
 }

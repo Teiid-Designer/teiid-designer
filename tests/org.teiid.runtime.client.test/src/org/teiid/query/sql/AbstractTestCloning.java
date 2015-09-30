@@ -9,7 +9,7 @@ package org.teiid.query.sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.Query;
@@ -26,7 +26,7 @@ public abstract class AbstractTestCloning extends AbstractTest<LanguageObject> {
     /**
      * @param teiidVersion 
      */
-    public AbstractTestCloning(ITeiidServerVersion teiidVersion) {
+    public AbstractTestCloning(Version teiidVersion) {
         super(teiidVersion);
     }
 

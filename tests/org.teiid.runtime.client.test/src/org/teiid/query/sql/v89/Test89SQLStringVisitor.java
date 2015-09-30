@@ -17,12 +17,12 @@ import org.teiid.query.sql.v88.Test88SQLStringVisitor;
 @SuppressWarnings( {"javadoc"} )
 public class Test89SQLStringVisitor extends Test88SQLStringVisitor {
 
-    protected Test89SQLStringVisitor(ITeiidServerVersion teiidVersion) {
+    protected Test89SQLStringVisitor(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test89SQLStringVisitor() {
-        this(Version.TEIID_8_9.get());
+        this(Version.TEIID_8_9);
     }
 
 }

@@ -17,12 +17,12 @@ import org.teiid.query.sql.v86.Test86CreateDrop;
 @SuppressWarnings( {"javadoc"} )
 public class Test87CreateDrop extends Test86CreateDrop {
 
-    protected Test87CreateDrop(ITeiidServerVersion teiidVersion) {
+    protected Test87CreateDrop(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test87CreateDrop() {
-        this(Version.TEIID_8_7.get());
+        this(Version.TEIID_8_7);
     }
 
 }

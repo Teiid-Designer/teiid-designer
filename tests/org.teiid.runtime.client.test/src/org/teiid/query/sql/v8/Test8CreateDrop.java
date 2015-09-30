@@ -40,12 +40,12 @@ public class Test8CreateDrop extends AbstractTestQueryParser {
 
     private Test8Factory factory;
 
-    protected Test8CreateDrop(ITeiidServerVersion teiidVersion) {
+    protected Test8CreateDrop(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8CreateDrop() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

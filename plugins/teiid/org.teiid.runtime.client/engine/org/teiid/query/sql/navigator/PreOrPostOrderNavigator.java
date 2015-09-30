@@ -25,7 +25,6 @@ package org.teiid.query.sql.navigator;
 import java.util.Collection;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.AlterProcedure;
@@ -113,7 +112,9 @@ import org.teiid.query.sql.symbol.TextLine;
 import org.teiid.query.sql.symbol.WindowFunction;
 import org.teiid.query.sql.symbol.WindowSpecification;
 import org.teiid.query.sql.symbol.XMLAttributes;
+import org.teiid.query.sql.symbol.XMLCast;
 import org.teiid.query.sql.symbol.XMLElement;
+import org.teiid.query.sql.symbol.XMLExists;
 import org.teiid.query.sql.symbol.XMLForest;
 import org.teiid.query.sql.symbol.XMLNamespaces;
 import org.teiid.query.sql.symbol.XMLParse;
@@ -137,6 +138,9 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
 
     private boolean order;
     private boolean deep;
+
+    @Since(Version.TEIID_8_11)
+    private boolean skipEvaluatable;
 
     /**
      * @param visitor
@@ -165,7 +169,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     public void visit(AggregateSymbol obj) {
         preVisitVisitor(obj);
 
-        if (getTeiidVersion().isLessThan(Version.TEIID_8_0.get()))
+        if (getTeiidVersion().isLessThan(Version.TEIID_8_0))
             visitNode(obj.getExpression());
         else {
             Expression[] args = obj.getArgs();
@@ -316,7 +320,12 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(ExistsCriteria obj) {
         preVisitVisitor(obj);
-        if (deep) {
+
+        boolean test = deep;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_11))
+            test = deep && (!obj.shouldEvaluate() || !skipEvaluatable);
+
+        if (test) {
             visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
@@ -530,7 +539,12 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     @Override
     public void visit(ScalarSubquery obj) {
         preVisitVisitor(obj);
-        if (deep) {
+
+        boolean test = deep;
+        if (isTeiidVersionOrGreater(Version.TEIID_8_11))
+            test = deep && (!obj.shouldEvaluate() || !skipEvaluatable);
+
+        if (test) {
             visitNode(obj.getCommand());
         }
         postVisitVisitor(obj);
@@ -772,6 +786,23 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         postVisitVisitor(obj);
     }
 
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLExists obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getXmlQuery().getNamespaces());
+        visitNodes(obj.getXmlQuery().getPassing());
+        postVisitVisitor(obj);
+    }
+
+    @Since(Version.TEIID_8_10)
+    @Override
+    public void visit(XMLCast obj) {
+        preVisitVisitor(obj);
+        visitNode(obj.getExpression());
+        postVisitVisitor(obj);
+    }
+
     @Override
     public void visit(DerivedColumn obj) {
         preVisitVisitor(obj);
@@ -926,4 +957,7 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
         object.acceptVisitor(nav);
     }
 
+    public void setSkipEvaluatable(boolean skipEvaluatable) {
+        this.skipEvaluatable = skipEvaluatable;
+    }
 }

@@ -167,7 +167,7 @@ public abstract class ProcedureContainerResolver extends CommandResolver {
 		if (info == null) {
 			return null;
 		}
-    	if (validate || group.getTeiidVersion().isLessThan(Version.TEIID_8_0.get())) {
+    	if (validate || group.getTeiidVersion().isLessThan(Version.TEIID_8_0)) {
     		String error = validateUpdateInfo(group, type, info);
     		if (error != null) {
     			throw new QueryResolverException(error);

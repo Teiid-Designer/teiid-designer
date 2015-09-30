@@ -20,12 +20,12 @@ import org.teiid.query.sql.symbol.Function;
 @SuppressWarnings( {"nls", "javadoc"} )
 public class Test85FunctionResolving extends Test8FunctionResolving {
 
-    protected Test85FunctionResolving(ITeiidServerVersion teiidVersion) {
+    protected Test85FunctionResolving(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test85FunctionResolving() {
-        this(Version.TEIID_8_5.get());
+        this(Version.TEIID_8_5);
     }
 
     /*

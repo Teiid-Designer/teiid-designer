@@ -8,6 +8,7 @@
 package org.teiid.query.metadata;
 
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.QueryParser;
 
 /**
@@ -22,9 +23,9 @@ public abstract class AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTest(ITeiidServerVersion teiidVersion) {
-        this.teiidVersion = teiidVersion;
-        this.queryParser = new QueryParser(teiidVersion);
+    public AbstractTest(Version teiidVersion) {
+        this.teiidVersion = teiidVersion.get();
+        this.queryParser = new QueryParser(this.teiidVersion);
     }
 
     /**

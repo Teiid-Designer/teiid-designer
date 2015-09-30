@@ -24,12 +24,11 @@ package org.teiid.metadata;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.teiid.metadata.AbstractMetadataRecord.Modifiable;
 
 
 /**
- * ProcedureRecordImpl
+ * Represents Teiid and source procedures.  Can also represent a function with restrictions.
  */
 public class Procedure extends AbstractMetadataRecord implements Modifiable {
     

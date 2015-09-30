@@ -9,6 +9,7 @@ package org.teiid.query.validator;
 
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.AbstractTestFactory;
@@ -30,11 +31,11 @@ public abstract class AbstractTest {
     /**
      * @param teiidVersion
      */
-    public AbstractTest(ITeiidServerVersion teiidVersion) {
-        this.teiidVersion = teiidVersion;
-        this.dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
-        this.queryParser = new QueryParser(teiidVersion);
-        this.metadataFactory = new RealMetadataFactory(teiidVersion);
+    public AbstractTest(Version teiidVersion) {
+        this.teiidVersion = teiidVersion.get();
+        this.dataTypeManager = DataTypeManagerService.getInstance(this.teiidVersion);
+        this.queryParser = new QueryParser(this.teiidVersion);
+        this.metadataFactory = new RealMetadataFactory(this.teiidVersion);
     }
 
     /**

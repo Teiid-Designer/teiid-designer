@@ -41,12 +41,12 @@ public class Test8SQLStringVisitor extends AbstractTestSQLStringVisitor {
 
     private Test8Factory factory;
 
-    protected Test8SQLStringVisitor(ITeiidServerVersion teiidVersion) {
+    protected Test8SQLStringVisitor(Version teiidVersion) {
         super(teiidVersion);
     }
 
     public Test8SQLStringVisitor() {
-        this(Version.TEIID_8_0.get());
+        this(Version.TEIID_8_0);
     }
 
     @Override

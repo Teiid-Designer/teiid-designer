@@ -82,4 +82,6 @@ public interface FunctionCategoryConstants {
     @Since(Version.TEIID_8_7)
     public static final String AGGREGATE = "Aggregatee"; //$NON-NLS-1$
 
+    @Since(Version.TEIID_8_10)
+    public static final String GEOMETRY = "Geometry"; //$NON-NLS-1$
 }
