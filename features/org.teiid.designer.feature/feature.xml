@@ -37,6 +37,11 @@
          os="linux"
          ws="gtk"/>
 
+   <includes
+         id="org.teiid.designer.crypto.dummy.feature"
+         version="0.0.0"
+         optional="true"/>
+
    <requires>
       <import plugin="org.eclipse.ui.cheatsheets" version="3.4.200" match="compatible"/>
       <import plugin="org.eclipse.help" version="3.6.0" match="compatible"/>

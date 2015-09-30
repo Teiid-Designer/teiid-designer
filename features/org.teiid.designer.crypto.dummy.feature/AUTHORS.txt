@@ -1,0 +1,7 @@
+Barry LaFond (blafond@redhat.com) - Project Lead
+John Verhaeg (jverhaeg@redhat.com)
+Dan Florian (dflorian@redhat.com)
+John Doyle (jdoyle@redhat.com)
+Paul Richardson (p.g.richardson@redhat.com)
+Mark Drilling (mdrillin@redhat.com)
+Ted Jones (tejones@redhat.com)
