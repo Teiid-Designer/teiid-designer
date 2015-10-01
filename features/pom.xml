@@ -14,6 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+    <module>org.teiid.designer.crypto.dummy.feature</module>
 		<module>org.teiid.designer.teiid.client.feature</module>
 		<module>org.teiid.designer.feature</module>
 		<module>org.teiid.designer.test.feature</module>
