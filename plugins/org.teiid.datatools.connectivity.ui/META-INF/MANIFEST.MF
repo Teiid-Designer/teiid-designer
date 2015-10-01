@@ -31,7 +31,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.106.1,4.0.0)",
  org.jboss.tools.locus.sf.saxon;bundle-version="[9.5.1,10.0.0)",
  org.eclipse.birt.report.data.oda.hive.ui;bundle-version="[4.4.2,5.0.0)",
  org.eclipse.birt.data.oda.mongodb.ui;bundle-version="[4.4.2,5.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.xerces.parsers;version="2.9.0",
  org.eclipse.datatools.sqltools.core,

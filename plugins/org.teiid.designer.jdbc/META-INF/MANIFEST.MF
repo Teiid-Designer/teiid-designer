@@ -25,4 +25,4 @@ Require-Bundle: org.eclipse.emf.ecore;bundle-version="[2.10.2,3.0.0)",
  org.teiid.core.designer;bundle-version="[9.0.2,10.0.0)",
  org.eclipse.datatools.connectivity;bundle-version="[1.2.11,2.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

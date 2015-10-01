@@ -33,4 +33,4 @@ Require-Bundle: org.teiid.designer.metamodels.webservice;bundle-version="[9.0.2,
  org.teiid.designer.legacy;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

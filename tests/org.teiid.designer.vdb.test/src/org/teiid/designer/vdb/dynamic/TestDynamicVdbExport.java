@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.core.ModelWorkspaceMock;
 import org.teiid.designer.core.workspace.MockFileBuilder;
 import org.teiid.designer.roles.DataRole;
@@ -47,6 +48,7 @@ public class TestDynamicVdbExport implements VdbConstants {
     public void before() throws Exception {
         eclipseMock = new EclipseMock();
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
+        TestUtilities.setDefaultTeiidVersion();
     }
 
     @After
@@ -55,6 +57,7 @@ public class TestDynamicVdbExport implements VdbConstants {
         modelWorkspaceMock.dispose();
         modelWorkspaceMock = null;
         eclipseMock = null;
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     @Test

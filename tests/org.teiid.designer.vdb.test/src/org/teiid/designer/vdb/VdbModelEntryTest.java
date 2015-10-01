@@ -116,6 +116,7 @@ public class VdbModelEntryTest {
     
     @After
     public void afterEach() throws Exception {
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
     	modelWorkspaceMock.dispose();
         vdbTest.after();
     }

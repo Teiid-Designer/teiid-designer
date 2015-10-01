@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.core.designer.EclipseMock;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.comments.Commentable;
 import org.teiid.designer.core.ModelWorkspaceMock;
@@ -132,6 +133,7 @@ public class TestDynamicVdbImport implements VdbConstants, Commentable {
     public void before() throws Exception {
         eclipseMock = new EclipseMock();
         modelWorkspaceMock = new ModelWorkspaceMock(eclipseMock);
+        TestUtilities.setDefaultTeiidVersion();
     }
 
     @After
@@ -140,6 +142,7 @@ public class TestDynamicVdbImport implements VdbConstants, Commentable {
         modelWorkspaceMock.dispose();
         modelWorkspaceMock = null;
         eclipseMock = null;
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     @Test

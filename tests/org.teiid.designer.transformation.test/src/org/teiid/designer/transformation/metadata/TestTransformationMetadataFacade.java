@@ -15,13 +15,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.teiid.core.util.SmartTestDesignerSuite;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.core.index.AbstractIndexSelector;
 import org.teiid.designer.core.index.CompositeIndexSelector;
 import org.teiid.designer.core.index.FileDocument;
@@ -44,6 +41,10 @@ import org.teiid.designer.metadata.runtime.ColumnRecord;
 import org.teiid.designer.metadata.runtime.MetadataRecord;
 import org.teiid.designer.metadata.runtime.TableRecord;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * TestTransformationMetadata
@@ -87,17 +88,14 @@ public class TestTransformationMetadataFacade extends TestCase {
         };
     }
 
-    public static void main( String args[] ) {
-        junit.textui.TestRunner.run(suite());
-        System.exit(0);
-    }
-
     @Override
     protected void setUp() throws Exception {
+        TestUtilities.setDefaultTeiidVersion();
     }
 
     @Override
     protected void tearDown() throws Exception {
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     public static void oneTimeSetUp() {

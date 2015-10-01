@@ -7,14 +7,9 @@
  */
 package org.teiid.designer.transformation.aspects.validation.rules;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.util.Collection;
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.eclipse.core.runtime.IStatus;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.validation.ValidationResult;
 import org.teiid.designer.core.validation.ValidationResultImpl;
@@ -26,9 +21,11 @@ import org.teiid.designer.query.sql.lang.ICommand;
 import org.teiid.designer.query.sql.lang.IQuery;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
-import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /** 
  * @since 4.3
@@ -64,15 +61,9 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
         return new TestSetup(suite);
     }
 
-    private void setDefaultServerVersion(ITeiidServerVersion version) {
-        ITeiidServer teiidServer = mock(ITeiidServer.class);
-        when(teiidServer.getServerVersion()).thenReturn(version);
-
-        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
-        when(teiidServerManager.getDefaultServer()).thenReturn(teiidServer);
-        when(teiidServerManager.getDefaultServerVersion()).thenReturn(version);
-
-        ModelerCore.setTeiidServerManager(teiidServerManager);
+    @Override
+    protected void tearDown() throws Exception {
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     public MappingClass helpGetMappingClass() {
@@ -98,7 +89,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testNonQueryNonSetQuery() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("Delete from x");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             ValidationResult result = new ValidationResultImpl(new Object());
@@ -111,7 +102,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testNoInputSelectNoRecursiveMappingClass() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetMappingClass();
@@ -123,7 +114,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testInputSelectNoRecursiveMappingClass() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetMappingClass();
@@ -136,7 +127,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testNoInputSelectRecursiveMappingClassNoCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetRecursiveMappingClass();
@@ -150,7 +141,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testInputSelectRecursiveMappingClassNoCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e, INPUT.f FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetRecursiveMappingClass();
@@ -164,7 +155,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testNoInputSelectRecursiveMappingClassNoInputCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e FROM g where x = y");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetRecursiveMappingClass();
@@ -178,7 +169,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testInputSelectRecursiveMappingClassInputCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
 
             ICommand command = parseCommand("SELECT e FROM g where x = Input.y");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
@@ -203,7 +194,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testNoInputUNIONSelectRecursiveMappingClassNoInputCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
 
             ICommand command = parseCommand("SELECT e FROM g where x = y UNION SELECT e FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
@@ -219,7 +210,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testInputUNIONSelectRecursiveMappingClassInputCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
 
             ICommand command = parseCommand("SELECT e FROM g where x = Input.y UNION SELECT e FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
@@ -244,7 +235,7 @@ public class TestMappingClassTransformationValidationHelper extends TestCase {
 
     public void testInputUNIONSelectRecursiveMappingClassNoCriteria() throws Exception {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             ICommand command = parseCommand("SELECT e, INPUT.f FROM g  UNION SELECT e FROM g");//$NON-NLS-1$
             MappingClassTransformationValidationHelper rule = new MappingClassTransformationValidationHelper();
             MappingClass mappingClass = helpGetRecursiveMappingClass();

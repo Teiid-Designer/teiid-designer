@@ -9,4 +9,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: com.sforce.soap.partner;x-friends:="org.teiid.designer.modelgenerator.salesforce.test"
 Bundle-ClassPath: .,
  lib/salesforce-api.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

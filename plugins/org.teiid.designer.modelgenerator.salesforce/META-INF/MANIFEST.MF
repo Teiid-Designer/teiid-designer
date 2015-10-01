@@ -39,4 +39,4 @@ Export-Package: org.teiid.designer.modelgenerator.salesforce,
  org.teiid.designer.modelgenerator.salesforce.model.impl,
  org.teiid.designer.modelgenerator.salesforce.util
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

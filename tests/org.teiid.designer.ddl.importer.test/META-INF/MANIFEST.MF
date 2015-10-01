@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.teiid.designer.ddl.importer.test;singleton:=true
 Bundle-Version: 9.2.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Fragment-Host: org.teiid.designer.ddl.importer
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.teiid.core.designer.test.framework;bundle-version="[9.0.2,10.0.0)",
  org.jboss.tools.locus.mockito;bundle-version="[1.9.5,2.0.0)",

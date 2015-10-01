@@ -7,15 +7,11 @@
  */
 package org.teiid.designer.schema.tools;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.util.Collection;
-import junit.framework.TestCase;
-import org.teiid.designer.core.ModelerCore;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
-import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import junit.framework.TestCase;
 
 public class NameUtilTest extends TestCase {
 
@@ -29,7 +25,7 @@ public class NameUtilTest extends TestCase {
     public NameUtilTest() throws Exception {
         serverVersions = TeiidRuntimeRegistry.getInstance().getSupportedVersions();
     }
-    
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -38,19 +34,10 @@ public class NameUtilTest extends TestCase {
         trailingUnderscore = new String("foo_bar_"); //$NON-NLS-1$
         duplicate = new String("foo_bar(foo_bar)"); //$NON-NLS-1$
     }
-    
-    /**
-     * @param version
-     */
-    private void setDefaultServerVersion(ITeiidServerVersion version) {
-        ITeiidServer teiidServer = mock(ITeiidServer.class);
-        when(teiidServer.getServerVersion()).thenReturn(version);
 
-        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
-        when(teiidServerManager.getDefaultServer()).thenReturn(teiidServer);
-        when(teiidServerManager.getDefaultServerVersion()).thenReturn(version);
-
-        ModelerCore.setTeiidServerManager(teiidServerManager);
+    @Override
+    protected void tearDown() throws Exception {
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     /*
@@ -58,28 +45,28 @@ public class NameUtilTest extends TestCase {
      */
     public void testDots() {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             assertEquals("foo_bar", NameUtil.normalizeName(dots)); //$NON-NLS-1$
         }
     }
 
     public void testParens() {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             assertEquals("foo_bar", NameUtil.normalizeName(parens)); //$NON-NLS-1$
         }
     }
 
     public void testUnderscore() {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             assertEquals("foo_bar", NameUtil.normalizeName(trailingUnderscore)); //$NON-NLS-1$
         }
     }
 
     public void testDuplicate() {
         for (ITeiidServerVersion version : serverVersions) {
-            setDefaultServerVersion(version);
+            TestUtilities.setDefaultServerVersion(version);
             assertEquals("foo_bar", NameUtil.normalizeName(duplicate)); //$NON-NLS-1$
         }
     }

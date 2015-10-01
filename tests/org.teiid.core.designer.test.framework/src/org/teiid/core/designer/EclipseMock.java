@@ -67,6 +67,8 @@ public final class EclipseMock {
         Mockito.reset(workspaceRoot);
         Mockito.reset(workspaceRootLocation);
         this.projects.clear();
+
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.WORKSPACE_KEY);
     }
 
     /**

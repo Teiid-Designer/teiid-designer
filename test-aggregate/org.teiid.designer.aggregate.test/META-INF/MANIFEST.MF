@@ -86,5 +86,5 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.106.1,4.0.0)",
  org.teiid.designer.xsd.ui;bundle-version="[9.0.2,10.0.0)"
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %Bundle-Vendor

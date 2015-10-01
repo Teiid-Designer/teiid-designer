@@ -44,5 +44,5 @@ Export-Package: org.teiid.designer.modelgenerator.wsdl.ui,
  org.teiid.designer.modelgenerator.wsdl.ui.wizards,
  org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap,
  org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.panels
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.teiid.designer.schema.tools.processing

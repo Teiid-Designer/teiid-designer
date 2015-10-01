@@ -7,8 +7,6 @@
  */
 package org.teiid.query.ui.sqleditor.component;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,9 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.teiid.core.util.TestUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
@@ -65,10 +61,11 @@ import org.teiid.designer.query.sql.symbol.IFunction;
 import org.teiid.designer.query.sql.symbol.IGroupSymbol;
 import org.teiid.designer.query.sql.symbol.IScalarSubquery;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
-import org.teiid.designer.runtime.spi.ITeiidServer;
-import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class TestDisplayNodeFactory extends TestCase {
 
@@ -303,20 +300,14 @@ public class TestDisplayNodeFactory extends TestCase {
     protected void tearDown() throws Exception {
         factory = null;
         parser = null;
+        TestUtilities.unregisterTeiidServerManager();
     }
 
     /**
      * @param version
      */
     private void setDefaultServerVersion(ITeiidServerVersion version) {
-        ITeiidServer teiidServer = mock(ITeiidServer.class);
-        when(teiidServer.getServerVersion()).thenReturn(version);
-
-        ITeiidServerManager teiidServerManager = mock(ITeiidServerManager.class);
-        when(teiidServerManager.getDefaultServer()).thenReturn(teiidServer);
-        when(teiidServerManager.getDefaultServerVersion()).thenReturn(version);
-
-        ModelerCore.setTeiidServerManager(teiidServerManager);
+        TestUtilities.setDefaultServerVersion(version);
         IQueryService queryService = ModelerCore.getTeiidQueryService();
         factory = queryService.createQueryFactory();
         parser = queryService.getQueryParser();

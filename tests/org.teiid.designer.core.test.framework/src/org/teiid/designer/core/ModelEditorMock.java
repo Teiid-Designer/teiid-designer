@@ -215,6 +215,7 @@ public class ModelEditorMock {
 
     public void dispose() {
         Mockito.reset(modelEditor);
+        ((RegistrySPI) ModelerCore.getRegistry()).unregister(ModelerCore.MODEL_EDITOR_KEY);
         modelEditor = null;
         modelWkspMock = null;
     }

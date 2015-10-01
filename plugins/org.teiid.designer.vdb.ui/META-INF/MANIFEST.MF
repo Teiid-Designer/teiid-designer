@@ -36,4 +36,4 @@ Require-Bundle: org.teiid.designer.ui;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.extension;bundle-version="[9.0.2,10.0.0)"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
