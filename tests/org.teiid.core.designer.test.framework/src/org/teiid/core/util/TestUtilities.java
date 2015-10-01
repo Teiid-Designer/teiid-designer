@@ -36,10 +36,17 @@ public class TestUtilities {
         ModelerCore.setTeiidServerManager(teiidServerManager);
     }
 
+    /**
+     * Convenience function for setting the default teiid server version
+     * to the Designer supported Teiid Default value
+     */
     public static void setDefaultTeiidVersion() {
         setDefaultServerVersion(Version.TEIID_DEFAULT.get());
     }
 
+    /**
+     * Unregister any teiid server manager previously assigned to ModelerCore
+     */
     public static void unregisterTeiidServerManager() {
         ModelerCore.setTeiidServerManager(null);
     }

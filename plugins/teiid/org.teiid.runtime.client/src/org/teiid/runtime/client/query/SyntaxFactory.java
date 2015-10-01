@@ -148,7 +148,7 @@ public class SyntaxFactory implements IQueryFactory <Expression,
 
     private boolean isGreaterThanOrEqualTo(Version teiidVersion) {
         ITeiidServerVersion minVersion = teiidParser.getVersion().getMinimumVersion();
-        return minVersion.equals(teiidVersion) || minVersion.isGreaterThan(teiidVersion);
+        return minVersion.equals(teiidVersion.get()) || minVersion.isGreaterThan(teiidVersion.get());
     }
 
     private <T extends LanguageObject> T create(ASTNodes nodeType) {
