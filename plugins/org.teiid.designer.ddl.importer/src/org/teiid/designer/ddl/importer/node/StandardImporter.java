@@ -163,10 +163,7 @@ public class StandardImporter extends AbstractImporter {
 	 */
 	protected <T extends RelationalReference> T find(Class<T> type, AstNode node, RelationalReference parent, Collection<RelationalReference> allModelRefs) throws EntityNotFoundException, CoreException {
 		String nodeName = node.getName();
-		int indx = nodeName.lastIndexOf('.');
-		if(indx>=0) {
-			nodeName = nodeName.substring(indx+1);
-		}
+
 		return find(type, nodeName, node, parent, allModelRefs);
 	}
 
