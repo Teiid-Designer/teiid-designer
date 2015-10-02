@@ -72,6 +72,16 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
     String getParentName();
 
     /**
+     * @return <code>true</code> if a connection to this server is currently being attempted
+     */
+    boolean isConnecting();
+
+    /**
+     * Moves the server into a connecting state
+     */
+    void startConnecting();
+
+    /**
      * @return <code>true</code> if a connection to this server exists and is working
      */
     boolean isConnected();

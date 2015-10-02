@@ -43,6 +43,10 @@ public final class ExecutionConfigurationEvent {
         return new ExecutionConfigurationEvent(EventType.REFRESH, TargetType.SERVER, teiidServer);
     }
 
+    public static ExecutionConfigurationEvent createServerConnectingEvent( ITeiidServer teiidServer ) {
+        return new ExecutionConfigurationEvent(EventType.CONNECTING, TargetType.SERVER, teiidServer);
+    }
+
     public static ExecutionConfigurationEvent createServerConnectedEvent( ITeiidServer teiidServer ) {
         return new ExecutionConfigurationEvent(EventType.CONNECTED, TargetType.SERVER, teiidServer);
     }
@@ -179,6 +183,7 @@ public final class ExecutionConfigurationEvent {
 
     public enum EventType {
         ADD,
+        CONNECTING,
         CONNECTED,
         REFRESH,
         REMOVE,

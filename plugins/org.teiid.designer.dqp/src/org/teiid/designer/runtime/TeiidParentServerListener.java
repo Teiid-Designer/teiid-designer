@@ -194,6 +194,11 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
              */
             private void tryConnecting(final IServer parentServer) throws Exception {
                 ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+                if (teiidServer != null) {
+                    // Places the teiid server is a connecting state which
+                    // can be detected by the UI
+                    teiidServer.startConnecting();
+                }
 
                 boolean parentConnected = false; 
                 /*
