@@ -8,6 +8,7 @@
 package org.teiid.designer.ui.actions;
 
 import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -19,6 +20,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
@@ -102,7 +104,13 @@ public class PasteInResourceAction extends ModelObjectAction implements UiConsta
     }
 
     Shell getShell() {
-        return getPart().getSite().getShell();
+    	Shell shell = null;
+    	if( getPart() != null && getPart().getSite() != null ) {
+    		shell = getPart().getSite().getShell();
+    	} else {
+    		shell = UiUtil.getWorkbenchShellOnlyIfUiThread();
+    	}
+    	return shell;
     }
 
     /**
