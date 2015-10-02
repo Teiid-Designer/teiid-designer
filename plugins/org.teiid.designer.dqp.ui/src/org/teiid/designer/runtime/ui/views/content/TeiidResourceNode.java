@@ -102,19 +102,28 @@ public class TeiidResourceNode extends TeiidContentNode implements ITeiidResourc
         synchronized(provider) {
             try {
                 teiidServer = (ITeiidServer)getServer().loadAdapter(ITeiidServer.class, null);
-
-                if (teiidServer != null && teiidServer.isConnected()) {
-                    if (children == null)
-                        children = new ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>>();
-
-                    children.add(new TeiidServerContainerNode(this, provider));
-                } else {
+                if (teiidServer == null) {
                     setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
                                                                                                  + ".labelNotConnected"))); //$NON-NLS-1$
                     return;
                 }
+                if (teiidServer.isConnecting() && ! teiidServer.isConnected()) {
+                    setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
+                                                                                                 + ".labelConnecting"))); //$NON-NLS-1$
+                    return;
+                }
 
-                clearError();
+                if (teiidServer.isConnected()) {
+                    if (children == null)
+                        children = new ArrayList<ITeiidContentNode<? extends ITeiidContainerNode<?>>>();
+
+                    children.add(new TeiidServerContainerNode(this, provider));
+
+                    clearError();
+                } else {
+                    setError(new TeiidErrorNode(this, teiidServer, DqpUiConstants.UTIL.getString(getClass().getSimpleName()
+                                                                                                 + ".labelNotConnected"))); //$NON-NLS-1$
+                }
 
             } catch (Exception e) {
                 DqpUiConstants.UTIL.log(e);

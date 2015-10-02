@@ -93,6 +93,11 @@ public class TeiidServer implements ITeiidServer {
      */
     private TeiidServerAdapterFactory serverAdapterFactory;
 
+    /**
+     * Flag showing when server is in process of connecting
+     */
+    private boolean connecting = false;
+
     // ===========================================================================================================================
     // Constructors
     // ===========================================================================================================================
@@ -230,6 +235,7 @@ public class TeiidServer implements ITeiidServer {
                 throw ex;
             } finally {
                 getEventManager().permitListeners(true);
+                this.connecting = false;
             }
 
             getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerConnectedEvent(this));
@@ -349,6 +355,17 @@ public class TeiidServer implements ITeiidServer {
         result = prime * result + ((this.teiidAdminInfo == null) ? 0 : this.teiidAdminInfo.hashCode());
         result = prime * result + ((this.teiidJdbcInfo == null) ? 0 : this.teiidJdbcInfo.hashCode());
         return result;
+    }
+
+    @Override
+    public boolean isConnecting() {
+        return connecting ;
+    }
+
+    @Override
+    public void startConnecting() {
+        this.connecting = true;
+        getEventManager().notifyListeners(ExecutionConfigurationEvent.createServerConnectingEvent(this));
     }
 
     /**
@@ -499,8 +516,8 @@ public class TeiidServer implements ITeiidServer {
     private String getVdbDataSourceConnectionUrl(String vdbName) {
     	String host = this.teiidJdbcInfo.getHostProvider().getHost();
 		String port = this.teiidJdbcInfo.getPort();
-		String protocol = this.teiidJdbcInfo.isSecure() ? "@mms" : "@mm";
-		return "jdbc:teiid:" + vdbName + protocol+"://"+host+":"+port;  //$NON-NLS-1$ //$NON-NLS-2$
+		String protocol = this.teiidJdbcInfo.isSecure() ? "@mms" : "@mm"; //$NON-NLS-1$ //$NON-NLS-2$
+		return "jdbc:teiid:" + vdbName + protocol+"://"+host+":"+port;  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     
     @Override

@@ -223,7 +223,12 @@ public class TeiidServerContentProvider implements ICommonContentProvider {
         
         @Override
         public void configurationChanged( final ExecutionConfigurationEvent event ) {
-           if(EventType.CONNECTED.equals(event.getEventType())) {
+            if (EventType.CONNECTING.equals(event.getEventType())) {
+                refreshThread.schedulePending();
+                return;
+            }
+
+            if(EventType.CONNECTED.equals(event.getEventType())) {
                /*
                 * This event is followed straight-after by a refresh event.
                 * No point in refresh twice for performance reasons.
