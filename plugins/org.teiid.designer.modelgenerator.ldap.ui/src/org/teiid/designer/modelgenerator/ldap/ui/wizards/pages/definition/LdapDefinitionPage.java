@@ -465,6 +465,11 @@ public class LdapDefinitionPage extends WizardPage
                 }
             }
         }
+        
+        if( this.importManager.getSourceModelLocation() == null ) {
+            WizardUtil.setPageComplete(this, getString("statusSourceModelLocationUndefined"), IMessageProvider.ERROR); //$NON-NLS-1$
+            return;
+        }
 
         if (this.importManager.getSourceModelName() == null || this.importManager.getSourceModelName().length() == 0) {
             WizardUtil.setPageComplete(this, getString("statusSourceModelNameCannotBeNullOrEmpty"), IMessageProvider.ERROR); //$NON-NLS-1$
