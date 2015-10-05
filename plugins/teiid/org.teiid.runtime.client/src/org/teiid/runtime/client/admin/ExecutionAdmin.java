@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -85,6 +86,7 @@ public class ExecutionAdmin implements IExecutionAdmin {
     private final ModelConnectionMatcher connectionMatcher;
 
     private boolean loaded = false;
+    private boolean refreshing = false;
 
     /**
      * Constructor used for testing purposes only. 
@@ -608,6 +610,11 @@ public class ExecutionAdmin implements IExecutionAdmin {
     }
     
     @Override
+    public boolean isRefreshing() throws Exception {
+    	return this.refreshing;
+    }
+    
+    @Override
     public boolean hasVdbFailed(String vdbName) throws Exception {
         if (! hasVdb(vdbName))
             return false;
@@ -682,39 +689,48 @@ public class ExecutionAdmin implements IExecutionAdmin {
      * @throws Exception if refreshing admin connection fails
      */
     public void refresh() throws Exception {
+    	refreshing = true;
+   
     	// Clears any cached data source or translator info prior to reloading
     	this.admin.refresh();
     	
         // populate data source type names
     	Exception resultException = null;
+    	
     	try {
-    		refreshDataSourceTypes();
-    	} catch (Exception ex) {
-    		resultException = ex;
-    	}
+	    	try {
+	    		refreshDataSourceTypes();
+	    	} catch (Exception ex) {
+	    		resultException = ex;
+	    	}
+	
+	    	try {
+	    		refreshDataSources();
+	    	} catch (Exception ex) {
+	    		resultException = ex;
+	    	}
+	        
+	        // populate translator map
+	    	try {
+	    		refreshTranslators();
+	    	} catch (Exception ex) {
+	    		resultException = ex;
+	    	}
+	
+	        // populate VDBs and source bindings
+	    	try {
+	    		refreshVDBs();
+	    	} catch (Exception ex) {
+	    		resultException = ex;
+	    	}
 
-    	try {
-    		refreshDataSources();
-    	} catch (Exception ex) {
-    		resultException = ex;
+    	} finally  {
+    		// Wrapped in try-catch so that any exception will still set refreshLoaded = true;
+        	refreshing = false;
     	}
-        
-        // populate translator map
-    	try {
-    		refreshTranslators();
-    	} catch (Exception ex) {
-    		resultException = ex;
-    	}
-
-        // populate VDBs and source bindings
-    	try {
-    		refreshVDBs();
-    	} catch (Exception ex) {
-    		resultException = ex;
-    	}
-
+    	
     	if(resultException!=null) throw resultException;
-
+  
         // notify listeners
         this.eventManager.notifyListeners(ExecutionConfigurationEvent.createServerRefreshEvent(this.teiidServer));
     }

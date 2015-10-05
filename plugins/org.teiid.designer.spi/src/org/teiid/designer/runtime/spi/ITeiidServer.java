@@ -92,6 +92,14 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
      * @return true is started, otherwise false
      */
     boolean isParentConnected();
+    
+    /**
+     *  
+     * @return <code>true</code> if server contents is refreshing
+     * @throws Exception
+     */
+    @Override
+    boolean isRefreshing();
 
     /**
      * Attempts to establish communication with the server.

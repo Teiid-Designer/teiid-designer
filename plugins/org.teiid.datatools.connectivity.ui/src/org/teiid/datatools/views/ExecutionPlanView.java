@@ -296,8 +296,11 @@ public class ExecutionPlanView extends ViewPart implements IEclipsePreferences.I
         } catch (Throwable ex) {
             //
             // Exception occurred while trying to initialise browser object
+        	// Ignore if it's an XULRunner "no more handles" error
             //
-            Activator.log(ex);
+        	if( ex.getMessage() == null || !ex.getMessage().contains("XULRunner") ) {
+        		Activator.log(ex);
+        	}
         }
 
         return visualisation;

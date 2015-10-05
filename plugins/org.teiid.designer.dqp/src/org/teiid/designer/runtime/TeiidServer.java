@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Driver;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -395,6 +397,24 @@ public class TeiidServer implements ITeiidServer {
             DqpPlugin.Util.log(ex);
             return false;
         }
+    }
+    
+    /**
+     * @return <code>true</code> if a server is connected and loaded
+     */
+    @Override
+    public boolean isRefreshing() {
+	    if( isConnected() ) {
+	        try {
+	        	return this.admin.isRefreshing();
+	        } catch (Exception ex) {
+	            DqpPlugin.Util.log(ex);
+	            return false;
+	        }
+	    	
+	    }
+	    
+	    return false;
     }
     
     /**

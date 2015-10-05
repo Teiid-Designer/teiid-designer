@@ -182,6 +182,13 @@ public interface IExecutionAdmin {
      boolean isVdbLoading(String vdbName) throws Exception;
      
      /**
+      *  
+      * @return <code>true</code> if server contents is refreshing
+      * @throws Exception
+      */
+     boolean isRefreshing() throws Exception;
+     
+     /**
       * @param vdbName
       *  
       * @return <code>true</code> if the vdb failed

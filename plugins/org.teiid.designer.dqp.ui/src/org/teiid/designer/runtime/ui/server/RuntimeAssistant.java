@@ -8,6 +8,7 @@
 package org.teiid.designer.runtime.ui.server;
 
 import static org.teiid.designer.runtime.ui.DqpUiConstants.UTIL;
+
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -46,23 +47,54 @@ public final class RuntimeAssistant {
      */
     public static boolean ensurePreviewEnabled( Shell shell ) {
         boolean previewEnabled = isPreviewEnabled();
-        boolean previewServerExists = previewServerExists();
+        boolean parentServerConnecting = getServer().isConnecting();
+        boolean parentServerConnected = getServer().isParentConnected();
+        boolean defaultServerExists = previewServerExists();
+        boolean serverRefreshing = serverRefreshing();
         boolean serverCreatedNotStarted = false;
 
         // dialog message (null if preview preference enabled and server exists)
         String msg = null;
+        
+        // PREVIEW ENABLED == FALSE
+        // NO DEFAULT SERVER DEFINED = FALSE
 
-        if (!previewEnabled && !previewServerExists) {
-            msg = UTIL.getString(PREFIX + "previewDisabledNoTeiidInstanceMsg"); //$NON-NLS-1$
-        } else if (!previewEnabled) {
-            msg = UTIL.getString(PREFIX + "previewDisabledMsg"); //$NON-NLS-1$
-        } else if (!previewServerExists) {
-            msg = UTIL.getString(PREFIX + "noTeiidInstanceMsg"); //$NON-NLS-1$
+        if(! previewEnabled && ! defaultServerExists ) {
+        	msg = UTIL.getString(PREFIX + "previewDisabledNoTeiidInstanceMsg"); //$NON-NLS-1$
+        } else if( ! previewEnabled ) {
+        	msg = UTIL.getString(PREFIX + "previewDisabledMsg"); //$NON-NLS-1$
+        } else if( ! defaultServerExists ) {
+        	msg = UTIL.getString(PREFIX + "noTeiidInstanceMsg"); //$NON-NLS-1$
         }
-
-        // if necessary open question dialog
-        if ((msg != null) && MessageDialog.openQuestion(shell, UTIL.getString(PREFIX + "confirmEnablePreviewTitle"), msg)) { //$NON-NLS-1$
-            // if necessary change preference
+        
+        // If msg != null then we can't assume a server has fully started, so user can only enable preview and/or 
+        // create/select a default server
+        
+        if( msg == null ) {
+        	
+        	if( !parentServerConnected ) {
+        		// Parent server has to be connected before we can even get Teiid Server contents
+	        	if( parentServerConnecting ) {
+		        	MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "connectingToServerTitle"), //$NON-NLS-1$
+		        			UTIL.getString(PREFIX + "connectingToServerMsg", getServer().getParentName())); //$NON-NLS-1$
+		        	return false;
+	        	} else {
+		        	MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "runningServerNotAvailableTitle"), //$NON-NLS-1$
+		        			UTIL.getString(PREFIX + "runningServerNotAvailableMsg", getServer().getParentName())); //$NON-NLS-1$
+		        	return false;
+	        	}
+	        } else {
+	        	// ASSUME parent server is connected... then is it loading/refreshing or not (i.e. completed)
+	        	if(serverRefreshing) { 
+		        	String refreshMsg = UTIL.getString(PREFIX + "serverIsStillLoading", getServer().getParentName()); //$NON-NLS-1
+		        	MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidContentsStillLoading"), //$NON-NLS-1$
+		        			refreshMsg); //$NON-NLS-1$
+		        	return false;
+	        	}
+	        } 
+        } else if (MessageDialog.openConfirm(shell, UTIL.getString(PREFIX + "confirmEnablePreviewTitle"), msg)) { //$NON-NLS-1$
+        	// if necessary open question dialog
+        	// if necessary change preference
             if (!previewEnabled) {
                 IEclipsePreferences prefs = DqpPlugin.getInstance().getPreferences();
                 prefs.putBoolean(PreferenceConstants.PREVIEW_ENABLED, true);
@@ -76,7 +108,7 @@ public final class RuntimeAssistant {
             }
 
             // if necessary create new server
-            if (!previewServerExists) {
+            if (!defaultServerExists) {
                 runNewServerAction(shell);
                 // if new server created it won't be started, so cache creation status
                 serverCreatedNotStarted = previewServerExists();
@@ -86,17 +118,21 @@ public final class RuntimeAssistant {
         // if dialog was shown get values again
         if (msg != null) {
             previewEnabled = isPreviewEnabled();
-            previewServerExists = previewServerExists();
+            defaultServerExists = previewServerExists();
 
             // if preview is not enabled or server does not exist then user canceled the dialog or the new server wizard
-            if (!previewEnabled || !previewServerExists) {
+            if (!previewEnabled || !defaultServerExists) {
                 return false;
             }
         }
 
         // abort preview if server is not connected
         // If server was created and not started (see above) then this call will not try to connect and be a no-op call
-        return serverConnectionExists(shell, serverCreatedNotStarted);
+        if( !parentServerConnected ) {
+        	return false;
+        }
+        
+        return serverConnectionExists(shell, serverCreatedNotStarted, true);
     }
 
     /**
@@ -123,7 +159,7 @@ public final class RuntimeAssistant {
         }
 
         // abort preview if server is not connected
-        return serverConnectionExists(shell, ignoreFailedConnection);
+        return serverConnectionExists(shell, ignoreFailedConnection, false);
     }
 
     /**
@@ -145,6 +181,15 @@ public final class RuntimeAssistant {
      */
     private static boolean isPreviewEnabled() {
         return PreviewManager.getInstance().isPreviewEnabled();
+    }
+    
+    /**
+     * @return <code>true</code> if a default Teiid Instance exists
+     * @throws Exception 
+     */
+    private static boolean serverRefreshing() {
+    	
+    	return (getServerManager().getDefaultServer() != null && getServerManager().getDefaultServer().isRefreshing());
     }
 
     /**
@@ -191,13 +236,18 @@ public final class RuntimeAssistant {
      * @param ignoreFailedConnection ignore the failed connection and do not display warning dialog.
      * @return <code>true</code> if connection exists
      */
-    private static boolean serverConnectionExists( Shell shell, boolean ignoreFailedConnection) {
+    private static boolean serverConnectionExists( Shell shell, boolean ignoreFailedConnection, boolean parentConnected) {
         assert (getServer() != null);
 
         if (!getServer().isConnected()) {
         	if( !ignoreFailedConnection ) {
-	            MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
-	                                    UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getParentName())); //$NON-NLS-1$
+        		if( parentConnected ) {
+        			MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidConnectionIncompleteTitle"), //$NON-NLS-1$
+        					UTIL.getString(PREFIX + "teiidConnectionIncompleteMsg", getServer().getParentName())); //$NON-NLS-1$
+        		} else {
+        			MessageDialog.openWarning(shell, UTIL.getString(PREFIX + "teiidNotConnectedTitle"), //$NON-NLS-1$
+        					UTIL.getString(PREFIX + "teiidNotConnectedMsg", getServer().getParentName())); //$NON-NLS-1$
+        		}
         	}
             return false;
         }
