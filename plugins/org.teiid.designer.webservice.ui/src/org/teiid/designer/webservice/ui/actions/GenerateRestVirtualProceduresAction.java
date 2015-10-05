@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.core.designer.util.ResourceNameUtil;
 import org.teiid.core.designer.util.StringConstants;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
@@ -950,7 +951,11 @@ public class GenerateRestVirtualProceduresAction extends SortableSelectionAction
 			}
 			
 			// check the selected model is a view model
-			IPath modelPath = viewModelFolder.getFullPath().append(viewModelName + ".xmi");
+			String fullModelName = viewModelName;
+			if(!fullModelName.toLowerCase().endsWith(ResourceNameUtil.DOT_XMI_FILE_EXTENSION)){
+				fullModelName = fullModelName + ResourceNameUtil.DOT_XMI_FILE_EXTENSION;
+			}
+			IPath modelPath = viewModelFolder.getFullPath().append(fullModelName);
 			if (ModelUtil.isModelFile(modelPath)) {
 				ModelResource theModel = null;
 				try {
