@@ -245,6 +245,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
 		EObject blobType = datatypeManager.findDatatype("blob"); //$NON-NLS-1$
 		EObject booleanType = datatypeManager.findDatatype("boolean"); //$NON-NLS-1$
 		EObject objectType = datatypeManager.findDatatype("object"); //$NON-NLS-1$
+		EObject clobType = datatypeManager.findDatatype("clob"); //$NON-NLS-1$
 		
     	Procedure proc = factory.createProcedure();
     	proc.setName("invokeHttp"); //$NON-NLS-1$
@@ -288,7 +289,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
     	param.setProcedure(proc);
-    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setDirection(DirectionKind.RETURN_LITERAL);
     	param.setType(blobType);
     	
     	param = factory.createProcedureParameter();
@@ -299,6 +300,15 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	if( stringType != null) {
     		param.setType(stringType);
     		param.setLength(DEFAULT_STRING_LENGTH);
+    	}
+    	param = factory.createProcedureParameter();
+    	param.setProcedure(proc);
+    	param.setName("headers"); //$NON-NLS-1$
+    	param.setProcedure(proc);
+    	param.setDirection(DirectionKind.IN_LITERAL);
+    	param.setNullable(NullableType.NULLABLE_LITERAL);
+    	if( clobType != null) {
+    		param.setType(clobType);
     	}
     	
     	addValue(mr, proc, getModelResourceContents(mr));
@@ -358,7 +368,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     	param.setProcedure(proc);
     	param.setName("result"); //$NON-NLS-1$
     	param.setProcedure(proc);
-    	param.setDirection(DirectionKind.OUT_LITERAL);
+    	param.setDirection(DirectionKind.RETURN_LITERAL);
     	param.setNullable(NullableType.NULLABLE_LITERAL);
     	if( xmlLiteralType != null) {
     		param.setType(xmlLiteralType);
