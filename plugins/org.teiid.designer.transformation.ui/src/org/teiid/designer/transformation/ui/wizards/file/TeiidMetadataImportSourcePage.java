@@ -968,6 +968,7 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         if (folder != null && sourceModelContainerText != null) {
             this.info.setSourceModelLocation(folder.getFullPath().makeRelative());
             this.sourceModelFilePath = this.info.getSourceModelLocation();
+            this.info.setTargetProject(folder.getProject());
             this.sourceModelContainerText.setText(this.info.getSourceModelLocation().makeRelative().toString());
         } else {
         	this.info.setSourceModelLocation(new Path(StringConstants.EMPTY_STRING));
@@ -1199,11 +1200,6 @@ public class TeiidMetadataImportSourcePage extends AbstractWizardPage implements
         	setThisPageComplete(Util.getString(I18N_PREFIX + "sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
             return false;
         }				
-        IProject project = this.info.getTargetProject();
-        if (project == null) {
-        	setThisPageComplete(Util.getString(I18N_PREFIX + "sourceFileLocationMustBeSpecified"), ERROR); //$NON-NLS-1$
-            return false;
-        }
         
         String fileText = sourceModelFileText.getText().trim();
 
