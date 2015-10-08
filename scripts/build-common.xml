@@ -99,7 +99,7 @@
 
             <echo>Executing maven in directory @{dir} with arguments: ${rwsResult}</echo>
 
-            <exec dir="@{dir}" executable="mvn.bat" osfamily="windows" failifexecutionfails="true" failonerror="true">
+            <exec dir="@{dir}" executable="mvn.cmd" osfamily="windows" failifexecutionfails="true" failonerror="true">
                 <arg line="${rwsResult}" />
             </exec>
             <exec dir="@{dir}" executable="mvn" osfamily="mac" failifexecutionfails="true" failonerror="true">
