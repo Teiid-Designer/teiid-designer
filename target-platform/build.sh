@@ -34,6 +34,7 @@ echo "Script directory = $SCRIPT_DIR"
 # Set root directory to be the parent of this.
 #
 ROOT_DIR="$SCRIPT_DIR/../.."
+echo "Root Directory: $ROOT_DIR"
 
 #
 # By default debug is turned off
@@ -63,7 +64,12 @@ SRC_DIR="${SCRIPT_DIR}"
 # Ensure it only contains teiid related artifacts and
 # does not clutter up user's existing $HOME/.m2 repository
 #
-LOCAL_REPO="${ROOT_DIR}/m2-repository"
+if [ -z "${M2_REPO}" ]; then
+  LOCAL_REPO="${ROOT_DIR}/m2-repository"
+else
+  LOCAL_REPO=${M2_REPO}
+fi
+echo "Local Repository: $LOCAL_REPO"
 
 #
 # Maven command
