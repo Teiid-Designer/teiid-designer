@@ -28,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Set;
 import java.util.zip.Checksum;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -55,6 +56,7 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.vdb.VdbEntry.Synchronization;
+import org.teiid.designer.vdb.VdbFileEntry.FileEntryType;
 import org.teiid.designer.vdb.file.ValidationVersionCallback;
 import org.teiid.designer.vdb.file.VdbFileProcessor;
 import org.teiid.designer.vdb.manifest.EntryElement;
@@ -424,6 +426,7 @@ public class VdbTest implements VdbConstants {
 
         Vdb udfVdb = new XmiVdb(udfVdbBuilder.getResourceFile());
         udfVdb.save();
+        udfVdb.close();
 
         boolean udfJarPresent = false;
         boolean empSourceModelPresent = false;
@@ -485,6 +488,22 @@ public class VdbTest implements VdbConstants {
         assertTrue(empSourceModelPresent);
         assertEquals(2, indexFilesPresent);
         assertTrue(empViewModelPresent);
+
+        //
+        // Create a new vdb based on the newly-saved version to check everything is intact
+        //
+         udfVdbBuilder = new MockFileBuilder(udfVdbCopy);
+        udfVdbBuilder.addToModelWorkspace(modelWorkspaceMock);
+        when(udfVdbBuilder.getResourceFile().findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE)).thenReturn(new IMarker[0]);
+        when(udfVdbBuilder.getResourceFile().createMarker(IMarker.PROBLEM)).thenReturn(mock(IMarker.class));
+
+        udfVdb = new XmiVdb(udfVdbBuilder.getResourceFile());
+        Set<VdbFileEntry> udfJarEntries = udfVdb.getUdfJarEntries();
+        assertEquals(1, udfJarEntries.size());
+        VdbFileEntry udfEntry = udfJarEntries.iterator().next();
+        assertEquals("name_builder", udfEntry.getName());
+        assertEquals(File.separator + "lib" + File.separator  + "name_builder.jar", udfEntry.getPath().toOSString());
+        assertEquals(FileEntryType.UDFJar, udfEntry.getFileType());
     }
 
     @Test

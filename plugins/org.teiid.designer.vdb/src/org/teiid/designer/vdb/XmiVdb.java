@@ -27,7 +27,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import net.jcip.annotations.ThreadSafe;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -63,6 +62,7 @@ import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
+import net.jcip.annotations.ThreadSafe;
 
 /**
  * 
@@ -228,115 +228,131 @@ public final class XmiVdb extends BasicVdb {
                 archive = new ZipFile(file.getLocation().toString());
                 for (final Enumeration<? extends ZipEntry> iter = archive.entries(); iter.hasMoreElements();) {
                     final ZipEntry zipEntry = iter.nextElement();
-                    entryStream = archive.getInputStream(zipEntry);
-                    if (zipEntry.getName().equals(MANIFEST)) {
-                        // Initialize using manifest
-                        final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
-                        unmarshaller.setSchema(getManifestSchema());
-                        final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
-                        setDescription(manifest.getDescription());
-                        vdbVersion[0] = manifest.getVersion();
-                        vdb.setName(manifest.getName());
-                        // VDB properties
-                        for (final PropertyElement property : manifest.getProperties()) {
-                            final String name = property.getName();
-                            final String value = property.getValue();
-                            
-                            if (Xml.PREVIEW.equals(name)) {
-                                previewable[0] = Boolean.parseBoolean(value);
-                                // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
-                            } else if (Xml.QUERY_TIMEOUT.equals(name)) { 
-                                int timeoutMillis = Integer.parseInt(value);
-                                if (timeoutMillis > 0) {
-                                    queryTimeout[0] = timeoutMillis / 1000;
+                    try {
+                        entryStream = archive.getInputStream(zipEntry);
+                        if (zipEntry.getName().equals(MANIFEST)) {
+                            // Initialize using manifest
+                            final Unmarshaller unmarshaller = getJaxbContext().createUnmarshaller();
+                            unmarshaller.setSchema(getManifestSchema());
+                            final VdbElement manifest = (VdbElement)unmarshaller.unmarshal(entryStream);
+                            setDescription(manifest.getDescription());
+                            vdbVersion[0] = manifest.getVersion();
+                            vdb.setName(manifest.getName());
+                            // VDB properties
+                            for (final PropertyElement property : manifest.getProperties()) {
+                                final String name = property.getName();
+                                final String value = property.getValue();
+
+                                if (Xml.PREVIEW.equals(name)) {
+                                    previewable[0] = Boolean.parseBoolean(value);
+                                    // The stored timeout is in milliseconds. We
+                                    // are converting to seconds for display in
+                                    // Designer
+                                } else if (Xml.QUERY_TIMEOUT.equals(name)) {
+                                    int timeoutMillis = Integer.parseInt(value);
+                                    if (timeoutMillis > 0) {
+                                        queryTimeout[0] = timeoutMillis / 1000;
+                                    }
+                                } else if (Xml.ALLOWED_LANGUAGES.equals(name)) {
+                                    /*
+                                     * EXAMPLE XML FRAGMENT multiple properties
+                                     * allowed with SAME KEY different values
+                                     * Need to discover and treat these
+                                     * differently <property
+                                     * name="allowed-languages" value=
+                                     * "javascript, perl, php"/>
+                                     */
+                                    String[] langs = StringUtilities.parseCommaDelimitedString(value);
+                                    for (String lang : langs) {
+                                        addAllowedLanguage(lang);
+                                    }
+                                } else if (Xml.VALIDATION_DATETIME.equals(name)) {
+                                    valDateTime[0] = value;
+                                } else if (Xml.VALIDATION_VERSION.equals(name)) {
+                                    valVersion[0] = value;
+                                } else if (Xml.SECURITY_DOMAIN.equals(name)) {
+                                    secDomain[0] = value;
+                                } else if (Xml.GSS_PATTERN.equals(name)) {
+                                    gssPatt[0] = value;
+                                } else if (Xml.PASSWORD_PATTERN.equals(name)) {
+                                    pwdPatt[0] = value;
+                                } else if (Xml.AUTHENTICATION_TYPE.equals(name)) {
+                                    authType[0] = value;
+                                } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
+                                    autoGen[0] = Boolean.parseBoolean(value);
+                                    // The stored timeout is in milliseconds. We
+                                    // are converting to seconds for display in
+                                    // Designer
+                                } else {
+                                    setProperty(name, value);
                                 }
-                            } else if(Xml.ALLOWED_LANGUAGES.equals(name) ) {
+                            }
+
+                            for (final ModelElement element : manifest.getModels()) {
+                                IPath path = null;
+                                if (element.getPath() != null) {
+                                    path = Path.fromPortableString(element.getPath());
+                                }
                                 /*
-                                 *  EXAMPLE XML FRAGMENT
-                                 *  multiple properties allowed with SAME KEY different values
-                                 *  Need to discover and treat these differently
-                                    <property name="allowed-languages" value="javascript, perl, php"/>
+                                 * Allows migration from old vdbs where xsd
+                                 * files were considered models
                                  */
-                                String[] langs = StringUtilities.parseCommaDelimitedString(value);
-                                for( String lang : langs ) {
-                                    addAllowedLanguage(lang);
-                                }
-                            } else if (Xml.VALIDATION_DATETIME.equals(name)) { 
-                                valDateTime[0] = value;
-                            } else if (Xml.VALIDATION_VERSION.equals(name)) { 
-                                valVersion[0] = value;
-                            } else if (Xml.SECURITY_DOMAIN.equals(name)) { 
-                                secDomain[0] = value;
-                            } else if (Xml.GSS_PATTERN.equals(name)) { 
-                                gssPatt[0] = value;
-                            } else if (Xml.PASSWORD_PATTERN.equals(name)) { 
-                                pwdPatt[0] = value;
-                            } else if (Xml.AUTHENTICATION_TYPE.equals(name)) { 
-                                authType[0] = value;
-                            } else if (Xml.AUTO_GENERATE_REST_WAR.equals(name)) {
-                                autoGen[0] = Boolean.parseBoolean(value);
-                                // The stored timeout is in milliseconds. We are converting to seconds for display in Designer
-                            } else {
-                                setProperty(name, value);
-                            }
-                        }
-                        
-                        for (final ModelElement element : manifest.getModels()) {
-                            IPath path = null;
-                            if( element.getPath() != null ) {
-                                path = Path.fromPortableString(element.getPath());
-                            }
-                            /* Allows migration from old vdbs where xsd files were considered models */
-                            if (path != null && ModelUtil.isXsdFile(path)) {
-                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
-                                schemaEntries().add(vdbSchemaEntry);
-                            } else {
-                                modelEntries().add(new VdbModelEntry(XmiVdb.this, element));
-                            }
-                        }
-
-                        // Initialize model entry imports only after all model entries have been created
-                        for (final VdbModelEntry entry : modelEntries()) {
-                            entry.initializeImports();
-                        }
-                                                
-                        for (final EntryElement element : manifest.getEntries()) {
-                            IPath path = Path.fromPortableString(element.getPath());
-                            /*
-                             * Xsd files were be added to the manifest as entries but they should
-                             * become schema entries in this runtime instance.
-                             */
-                            if (ModelUtil.isXsdFile(path)) {
-                                VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
-                                schemaEntries().add(vdbSchemaEntry);
-                            } else {
-                                VdbFileEntry vdbFileEntry = new VdbFileEntry(XmiVdb.this, element);
-                                switch (vdbFileEntry.getFileType()) {
-                                    case UDFJar:
-                                        udfJarEntries().add(vdbFileEntry);
-                                        break;
-                                    case UserFile:
-                                        fileEntries().add(vdbFileEntry);
+                                if (path != null && ModelUtil.isXsdFile(path)) {
+                                    VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
+                                    schemaEntries().add(vdbSchemaEntry);
+                                } else {
+                                    modelEntries().add(new VdbModelEntry(XmiVdb.this, element));
                                 }
                             }
-                        }
-                        
-                        // Vdb Import entries
-                        for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
-                            addImport(new VdbImportVdbEntry(XmiVdb.this, element));
-                        }
-                        
-                        // load translator overrides
-                        for (final TranslatorElement translatorElement : manifest.getTranslators()) {
-                            addTranslator(new TranslatorOverride(XmiVdb.this, translatorElement));
-                        }
 
-                        for (final DataRoleElement element : manifest.getDataPolicies()) {
-                            DataRole dataRole = new DataRole(element);
-                            addDataRole(dataRole);
+                            // Initialize model entry imports only after all
+                            // model entries have been created
+                            for (final VdbModelEntry entry : modelEntries()) {
+                                entry.initializeImports();
+                            }
+
+                            for (final EntryElement element : manifest.getEntries()) {
+                                IPath path = Path.fromPortableString(element.getPath());
+                                /*
+                                 * Xsd files were be added to the manifest as
+                                 * entries but they should become schema entries
+                                 * in this runtime instance.
+                                 */
+                                if (ModelUtil.isXsdFile(path)) {
+                                    VdbSchemaEntry vdbSchemaEntry = new VdbSchemaEntry(XmiVdb.this, element);
+                                    schemaEntries().add(vdbSchemaEntry);
+                                } else {
+                                    VdbFileEntry vdbFileEntry = new VdbFileEntry(XmiVdb.this, element);
+                                    switch (vdbFileEntry.getFileType()) {
+                                        case UDFJar:
+                                            udfJarEntries().add(vdbFileEntry);
+                                            break;
+                                        case UserFile:
+                                            fileEntries().add(vdbFileEntry);
+                                    }
+                                }
+                            }
+
+                            // Vdb Import entries
+                            for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
+                                addImport(new VdbImportVdbEntry(XmiVdb.this, element));
+                            }
+
+                            // load translator overrides
+                            for (final TranslatorElement translatorElement : manifest.getTranslators()) {
+                                addTranslator(new TranslatorOverride(XmiVdb.this, translatorElement));
+                            }
+
+                            for (final DataRoleElement element : manifest.getDataPolicies()) {
+                                DataRole dataRole = new DataRole(element);
+                                addDataRole(dataRole);
+                            }
+                        } else if (!zipEntry.isDirectory()) {
+                            FileUtils.copy(entryStream, new File(getStagingFolder(), zipEntry.getName()));
                         }
-                    } else if (! zipEntry.isDirectory()) {
-                        FileUtils.copy(entryStream, new File(getStagingFolder(), zipEntry.getName()));
+                    } finally {
+                        if (entryStream != null)
+                            entryStream.close();
                     }
                 }
                 setChanged(false);
@@ -776,37 +792,41 @@ public final class XmiVdb extends BasicVdb {
                                                             tmpFolder);
                 tmpArchive.getParentFile().mkdirs();
                 out = new ZipOutputStream(new FileOutputStream(tmpArchive));
-                // Create VDB manifest
-                final ZipEntry zipEntry = new ZipEntry(MANIFEST);
-                zipEntry.setComment(getDescription());
-                out.putNextEntry(zipEntry);
                 try {
-                    final Marshaller marshaller = getJaxbContext().createMarshaller();
-                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-                    marshaller.setSchema(getManifestSchema());
-                    marshaller.marshal(vdbElement, out);
-                } finally {
-                    out.closeEntry();
-                }
-                // Clear all problem markers on VDB file
-                IFile file = getSourceFile();
-                if (file != null && file.exists()) {
-                    IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-                    if (markers != null) {
-                        for (final IMarker marker : markers)
-                            marker.delete();
+                    // Create VDB manifest
+                    final ZipEntry zipEntry = new ZipEntry(MANIFEST);
+                    zipEntry.setComment(getDescription());
+                    out.putNextEntry(zipEntry);
+                    try {
+                        final Marshaller marshaller = getJaxbContext().createMarshaller();
+                        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                        marshaller.setSchema(getManifestSchema());
+                        marshaller.marshal(vdbElement, out);
+                    } finally {
+                        out.closeEntry();
                     }
+                    // Clear all problem markers on VDB file
+                    IFile file = getSourceFile();
+                    if (file != null && file.exists()) {
+                        IMarker[] markers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+                        if (markers != null) {
+                            for (final IMarker marker : markers)
+                                marker.delete();
+                        }
+                    }
+
+                    // Save entries
+                    for (final VdbEntry entry : getEntries())
+                        entry.save(out);
+                    for (final VdbModelEntry entry : modelEntries())
+                        entry.save(out);
+
+                } finally {
+                    // Close zip output stream so its fully writen and any locks are removed.
+                    out.close();
+                    out = null;
                 }
 
-                // Save entries
-                for (final VdbEntry entry : getEntries())
-                    entry.save(out);
-                for (final VdbModelEntry entry : modelEntries())
-                    entry.save(out);
-
-                // Close zip output stream so its fully writen and any locks are removed.
-                out.close();
-                out = null;
                 // Replace archive in workspace with temporary archive
                 File archiveFile = getSourceFile().getLocation().toFile();
                 if (archiveFile.exists()) {

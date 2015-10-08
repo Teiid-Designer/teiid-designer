@@ -243,9 +243,15 @@ public abstract class VdbEntry extends VdbUnit {
      */
     public void save( final ZipOutputStream out) throws Exception {
     	String zipName = getPath().toString();
+        //
+        // Path on Windows will be using backslashes but zip entries only
+        // deal with forward slashes so need to replace with them.
+        //
+        zipName = zipName.replace(DOUBLE_BACK_SLASH, FORWARD_SLASH);
+
     	// Need to strip off the leading delimeter if it exists, else a "jar" extract command will result in models
     	// being located at the file system "root" folder.
-    	if( zipName.startsWith("/") ) { //$NON-NLS-1$
+        if (zipName.startsWith(FORWARD_SLASH)) {
     		zipName = zipName.substring(1, zipName.length());
     	}
         final ZipEntry zipEntry = new ZipEntry(zipName);
