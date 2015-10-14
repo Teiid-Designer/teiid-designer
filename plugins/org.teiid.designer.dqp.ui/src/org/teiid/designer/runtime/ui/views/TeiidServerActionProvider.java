@@ -55,6 +55,7 @@ import org.teiid.designer.runtime.ui.server.SetDefaultServerAction;
 import org.teiid.designer.runtime.ui.views.content.DataSourcesFolder;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
 import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.widget.ListMessageDialog;
 
 /**
  * @since 8.0
@@ -112,6 +113,8 @@ public class TeiidServerActionProvider extends CommonActionProvider {
     private IAction clearPreviewArtifactsAction;
     
     private Action createVdbDataSourceAction;
+    
+    private Action showVdbErrorsAction;
 
     private final TeiidServerPreviewOptionContributor previewOptionContributor;
 
@@ -277,7 +280,7 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.executeVdbAction.setEnabled(true);
 
         // the shell used for dialogs that the actions display
-        Shell shell = this.actionSite.getViewSite().getShell();
+        final Shell shell = this.actionSite.getViewSite().getShell();
         // the reconnect action tries to ping a selected server
         this.refreshAction = new RefreshServerAction();
         viewer.addSelectionChangedListener(this.refreshAction);
@@ -396,6 +399,34 @@ public class TeiidServerActionProvider extends CommonActionProvider {
         this.createVdbDataSourceAction.setToolTipText(getString("createDataSourceAction.tooltip")); //$NON-NLS-1$
         this.createVdbDataSourceAction.setEnabled(true);
         
+        
+        this.showVdbErrorsAction = new Action(getString("showVdbErrorsAction")) { //$NON-NLS-1$
+            @Override
+            public void run() {
+                List<Object> selectedObjs = getSelectedObjects();
+                for (Object obj : selectedObjs) {
+                    ITeiidVdb vdb = RuntimeAssistant.adapt(obj, ITeiidVdb.class);
+                    ITeiidServer teiidServer = RuntimeAssistant.getServerFromSelection(selectionProvider.getSelection());
+                    
+                    if (teiidServer != null && teiidServer.isConnected()) {
+                        try {
+                        	List<String> errors = vdb.getValidityErrors();
+                            ListMessageDialog.openError(shell, getString("deployedVdbHasErrorsTitle"), null, //$NON-NLS-1$
+                            		getString("deployedVdbHasErrorsMessage", vdb.getName()), errors, null, true); //$NON-NLS-1$
+                        } catch (Exception e) {
+                            DqpUiConstants.UTIL.log(IStatus.WARNING,
+                                                    e,
+                                                    getString("problemShowingDeployedVdbErrors", vdb.getName())); //$NON-NLS-1$
+                        }
+                    }
+                }
+
+            }
+        };
+
+        this.showVdbErrorsAction.setImageDescriptor(DqpUiPlugin.getDefault().getImageDescriptor(DqpUiConstants.Images.SHOW_VDB_ERRORS));
+        this.showVdbErrorsAction.setEnabled(true);
+        
         // the edit action is only enabled when one server is selected
         this.setDefaultServerAction = new SetDefaultServerAction();
         viewer.addSelectionChangedListener(this.setDefaultServerAction);
@@ -502,6 +533,9 @@ public class TeiidServerActionProvider extends CommonActionProvider {
                 this.executeVdbAction.setEnabled(teiidVdb.isActive());
                 manager.add(this.executeVdbAction);
                 manager.add(this.createVdbDataSourceAction);
+                if( ! teiidVdb.getValidityErrors().isEmpty() ) {
+                	manager.add(this.showVdbErrorsAction);
+                }
                 manager.add(new Separator());
                 manager.add(this.undeployVdbAction);
                 manager.add(new Separator());

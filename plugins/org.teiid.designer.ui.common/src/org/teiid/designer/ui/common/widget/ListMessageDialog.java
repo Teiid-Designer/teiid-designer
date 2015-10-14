@@ -9,8 +9,10 @@ package org.teiid.designer.ui.common.widget;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.swt.SWT;
@@ -33,6 +35,8 @@ public class ListMessageDialog extends MessageDialog {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     private static final String[] DEFAULT_BUTTONS  = new String[] {IDialogConstants.OK_LABEL};
     private static final String[] QUESTION_BUTTONS = new String[] {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL};
+    
+    private static boolean allowResize;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // CLASS METHODS
@@ -56,7 +60,30 @@ public class ListMessageDialog extends MessageDialog {
                                    int theDialogType,
                                    List theItems,
                                    IBaseLabelProvider theLabelProvider) {
-        return openDialog(theShell, theTitle, theImage, theMessage, theDialogType, theItems, theLabelProvider, DEFAULT_BUTTONS);
+        return openDialog(theShell, theTitle, theImage, theMessage, theDialogType, theItems, theLabelProvider, DEFAULT_BUTTONS, false);
+    }
+    
+    /**
+     * Constructs and opens a dialog.
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theDialogType the dialog type (error, warning, info)
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @param allowResizing allow dialog to be resized
+     * @return the return code
+     */
+    private static int openDialog(Shell theShell,
+                                   String theTitle,
+                                   Image theImage,
+                                   String theMessage,
+                                   int theDialogType,
+                                   List theItems,
+                                   IBaseLabelProvider theLabelProvider,
+                                   boolean allowResizing) {
+    	return openDialog(theShell, theTitle, theImage, theMessage, theDialogType, theItems, theLabelProvider, DEFAULT_BUTTONS, allowResizing);
     }
     
     /**
@@ -78,11 +105,15 @@ public class ListMessageDialog extends MessageDialog {
                                    int theDialogType,
                                    List theItems,
                                    IBaseLabelProvider theLabelProvider,
-                                   String[] dialogButtonLabels) {
+                                   String[] dialogButtonLabels,
+                                   boolean allowResizing) {
+    	allowResize = allowResizing;
         ListMessageDialog dialog = new ListMessageDialog(theShell, theTitle, theImage, theMessage, theDialogType, dialogButtonLabels);
         dialog.setLabelProvider(theLabelProvider);
         dialog.setItems(theItems);
-        return dialog.open();
+        int result = dialog.open();
+        allowResize = false;
+        return result;
     }
 
     /**
@@ -105,6 +136,27 @@ public class ListMessageDialog extends MessageDialog {
     }
     
     /**
+     * Opens an error dialog showing the specified items. 
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @param allowResizing allow dialog to be resized
+     * @since 4.2
+     */
+    public static void openError(Shell theShell,
+                                 String theTitle,
+                                 Image theImage,
+                                 String theMessage,
+                                 List theItems,
+                                 IBaseLabelProvider theLabelProvider,
+                                 boolean allowResizing) {
+        openDialog(theShell, theTitle, theImage, theMessage, ERROR, theItems, theLabelProvider, allowResizing);
+    }
+    
+    /**
      * Opens an information dialog showing the specified items. 
      * @param theShell the parent window
      * @param theTitle the dialog title
@@ -121,6 +173,27 @@ public class ListMessageDialog extends MessageDialog {
                                        List theItems,
                                        IBaseLabelProvider theLabelProvider) {
         openDialog(theShell, theTitle, theImage, theMessage, INFORMATION, theItems, theLabelProvider);
+    }
+    
+    /**
+     * Opens an information dialog showing the specified items. 
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @param allowResizing allow dialog to be resized
+     * @since 4.2
+     */
+    public static void openInformation(Shell theShell,
+                                       String theTitle,
+                                       Image theImage,
+                                       String theMessage,
+                                       List theItems,
+                                       IBaseLabelProvider theLabelProvider,
+                                       boolean allowResizing) {
+        openDialog(theShell, theTitle, theImage, theMessage, INFORMATION, theItems, theLabelProvider, allowResizing);
     }
     
     /**
@@ -141,6 +214,26 @@ public class ListMessageDialog extends MessageDialog {
                                    IBaseLabelProvider theLabelProvider) {
         openDialog(theShell, theTitle, theImage, theMessage, WARNING, theItems, theLabelProvider);
     }
+    
+    /**
+     * Opens a warning dialog showing the specified items. 
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @since 4.2
+     */
+    public static void openWarning(Shell theShell,
+                                   String theTitle,
+                                   Image theImage,
+                                   String theMessage,
+                                   List theItems,
+                                   IBaseLabelProvider theLabelProvider,
+                                   boolean allowResizing) {
+        openDialog(theShell, theTitle, theImage, theMessage, WARNING, theItems, theLabelProvider, allowResizing);
+    }
 
     /**
      * Opens a confirm dialog showing the specified items. 
@@ -158,7 +251,28 @@ public class ListMessageDialog extends MessageDialog {
                                    String theMessage,
                                    List theItems,
                                    IBaseLabelProvider theLabelProvider) {
-        return openDialog(theShell, theTitle, theImage, theMessage, QUESTION, theItems, theLabelProvider, QUESTION_BUTTONS) == OK;
+        return openDialog(theShell, theTitle, theImage, theMessage, QUESTION, theItems, theLabelProvider, QUESTION_BUTTONS, false) == OK;
+    }
+    
+    /**
+     * Opens a confirm dialog showing the specified items. 
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @param allowResizing allow dialog to be resized
+     * @since 4.2
+     */
+    public static boolean openQuestion(Shell theShell,
+                                   String theTitle,
+                                   Image theImage,
+                                   String theMessage,
+                                   List theItems,
+                                   IBaseLabelProvider theLabelProvider,
+                                   boolean allowResizing) {
+        return openDialog(theShell, theTitle, theImage, theMessage, QUESTION, theItems, theLabelProvider, QUESTION_BUTTONS, allowResizing) == OK;
     }
 
     /**
@@ -177,7 +291,27 @@ public class ListMessageDialog extends MessageDialog {
                                    String theMessage,
                                    List theItems,
                                    IBaseLabelProvider theLabelProvider) {
-        return openDialog(theShell, theTitle, theImage, theMessage, WARNING, theItems, theLabelProvider, QUESTION_BUTTONS) == OK;
+        return openWarningQuestion(theShell, theTitle, theImage, theMessage, theItems, theLabelProvider, false);
+    }
+    
+    /**
+     * Opens a confirm dialog showing the specified items, using a WARNING icon. 
+     * @param theShell the parent window
+     * @param theTitle the dialog title
+     * @param theImage the dialog image (may be <code>null</code>)
+     * @param theMessage the dialog message
+     * @param theItems the items being displayed  (may be <code>null</code>)
+     * @param theLabelProvider the list label provider  (may be <code>null</code>)
+     * @since 4.2
+     */
+    public static boolean openWarningQuestion(Shell theShell,
+                                   String theTitle,
+                                   Image theImage,
+                                   String theMessage,
+                                   List theItems,
+                                   IBaseLabelProvider theLabelProvider,
+                                   boolean allowResizing) {
+        return openDialog(theShell, theTitle, theImage, theMessage, WARNING, theItems, theLabelProvider, QUESTION_BUTTONS, allowResizing) == OK;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,7 +338,9 @@ public class ListMessageDialog extends MessageDialog {
                                 int theDialogImageType,
                                 String[] dialogButtonLabels) {
         super(theShell, theTitle, null, theMessage, theDialogImageType, dialogButtonLabels, 0);
-//        setShellStyle(getShellStyle() | SWT.RESIZE);
+        if( allowResize ) {
+        	setShellStyle(getShellStyle() | SWT.RESIZE);
+        }
     }
     
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -218,20 +354,26 @@ public class ListMessageDialog extends MessageDialog {
     protected Control createCustomArea(Composite theParent) {
         this.viewer = new ListViewer(theParent, SWT.READ_ONLY | SWT.HIDE_SELECTION | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
         
+        // set input items
+        if (this.items == null) {
+            this.items = Collections.EMPTY_LIST;
+        }
+        
         // configure List control
         org.eclipse.swt.widgets.List list = this.viewer.getList();
-        list.setLayoutData(new GridData(GridData.FILL_BOTH));
+        if( allowResize ) {
+        	int heightHint = items.size() > 5 ? 300 : 200;
+        	GridDataFactory.fillDefaults().hint(400, heightHint).grab(true,  true).applyTo(list);
+        } else {
+        	list.setLayoutData(new GridData(GridData.FILL_BOTH));
+        }
         list.setBackground(UiUtil.getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         
         // set label provider
         if (this.labelProvider != null) {
             this.viewer.setLabelProvider(this.labelProvider);
         }
-        
-        // set input items
-        if (this.items == null) {
-            this.items = Collections.EMPTY_LIST;
-        }
+
         
         this.viewer.add(this.items.toArray());
         
