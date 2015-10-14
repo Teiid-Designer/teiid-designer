@@ -9,9 +9,7 @@ package org.teiid.designer.transformation.ddl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -362,9 +360,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		//   > ???
 		if( isVirtual && !isFunction ) {
 			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
-			String sqlString = TransformationHelper.getSelectSqlString(tRoot);
+			String sqlString = TransformationHelper.getSelectSqlString(tRoot).replace(CREATE_VIRTUAL_PROCEDURE, StringConstants.EMPTY_STRING);
+			
 			if( sqlString != null ) {
-				sb.append(NEW_LINE + TAB).append(Reserved.AS).append(NEW_LINE + SPACE).append(sqlString);
+				if( sqlString.indexOf('\n') == 0 ) {
+					sqlString = sqlString.replace(StringConstants.NEW_LINE, StringConstants.EMPTY_STRING);
+				}
+				sb.append(NEW_LINE + TAB).append(Reserved.AS).append(NEW_LINE).append(sqlString);
 				if( ! sqlString.endsWith(SEMI_COLON)) sb.append(SEMI_COLON);
 				sb.append(NEW_LINE);
 			}
@@ -696,7 +698,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
      * Utility to check a unique constraint and determine if it is redundant. Basically if the uc columns match a PK with the same columns
      */
     private Collection<UniqueConstraint> getUniqueUniqueContraints(BaseTable table) {
-    	EList ucs = table.getUniqueConstraints();
+    	EList<?> ucs = table.getUniqueConstraints();
     	Collection<UniqueConstraint> uniqueConstraints = new ArrayList<UniqueConstraint>();
     	
     	PrimaryKey pk = table.getPrimaryKey();
@@ -704,8 +706,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	for( Object obj: ucs) {
     		UniqueConstraint uc = (UniqueConstraint)obj;
     		if( pk != null ) {
-	    		EList pkColumns = pk.getColumns();
-	    		EList ucColumns = uc.getColumns();
+	    		EList<?> pkColumns = pk.getColumns();
+	    		EList<?> ucColumns = uc.getColumns();
 	    		
 	    		if( pkColumns.size() == ucColumns.size() ) {
 	    			boolean matchesAll = true;
