@@ -7,11 +7,19 @@
  */
 package org.teiid.designer.jdbc.relational.impl.custom;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.jdbc.JdbcException;
+import org.teiid.designer.jdbc.JdbcImportSettings;
+import org.teiid.designer.jdbc.metadata.JdbcNode;
 import org.teiid.designer.jdbc.metadata.JdbcTable;
 import org.teiid.designer.jdbc.relational.impl.Context;
 import org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl;
@@ -20,6 +28,7 @@ import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
 import org.teiid.designer.metamodels.relational.Index;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
+import org.teiid.designer.metamodels.relational.RelationalEntity;
 import org.teiid.designer.metamodels.relational.RelationalFactory;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.util.RelationalTypeMapping;
@@ -224,4 +233,90 @@ public class SybaseModelProcessor extends RelationalModelProcessorImpl {
         	column.setNativeType("double precision"); //$NON-NLS-1$
         }
     }
+    
+    /* (non-Javadoc)
+     * @see org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl#computeNameInSource(org.teiid.designer.metamodels.relational.RelationalEntity, java.lang.String, org.teiid.designer.jdbc.metadata.JdbcNode, org.teiid.designer.jdbc.relational.impl.Context, boolean, java.util.List)
+     */
+    @Override
+	protected String computeNameInSource(RelationalEntity object, String name,
+			JdbcNode node, Context context, boolean forced, List problems) {
+
+		/*
+		 * sybase with the jconn driver does not return schemas from
+		 * DatabaseMetaData.getSchemas, but it requires the fqn to be in the
+		 * form <database>.<owner>.<table> and it does return the <owner> part as
+		 * the SCHEMA value in DatabaseMetaData.getTables
+		 * 
+		 * In case we are unable to obtain the correct name in source, we do not fail,
+		 * but let the super implementation handle it and just show a warning.
+		 * 
+		 */
+
+		final JdbcImportSettings settings = context.getJdbcImportSettings();
+		boolean includeCatalogs = settings.isCreateCatalogsInModel();
+
+		if (node instanceof JdbcTable && includeCatalogs) {
+			JdbcTable tableEntity = (JdbcTable) node;
+			try {
+				DatabaseMetaData databaseMetaData = context.getJdbcDatabase()
+						.getDatabaseMetaData();
+				JdbcNode parentDatabase = tableEntity.getParentDatabaseObject(
+						true, false);
+				ResultSet tables = databaseMetaData.getTables(
+						parentDatabase.getName(), null, name, null);
+
+				final StringBuffer sb = new StringBuffer();
+				String quoteString = databaseMetaData
+						.getIdentifierQuoteString();
+
+				if (tables.next()) {
+					sb.append(quoteString);
+					sb.append(tables.getString("TABLE_CAT")); //$NON-NLS-1$
+					sb.append(quoteString);
+					sb.append(databaseMetaData.getCatalogSeparator());
+					sb.append(quoteString);
+					sb.append(tables.getString("TABLE_SCHEM")); //$NON-NLS-1$
+					sb.append(quoteString);
+					sb.append(databaseMetaData.getCatalogSeparator());
+					sb.append(quoteString);
+					sb.append(tables.getString("TABLE_NAME")); //$NON-NLS-1$
+					sb.append(quoteString);
+				}
+
+				if (tables.next()) {
+					// multiple tables with same name but different owners
+					addNameInSourceWarning(name, context, problems, null);
+				}
+				
+				return sb.toString();
+				
+			} catch (JdbcException ex) {
+				addNameInSourceWarning(name, context, problems, ex);
+			} catch (SQLException ex) {
+				addNameInSourceWarning(name, context, problems, ex);
+			}
+		}
+		return super.computeNameInSource(object, name, node, context, forced,
+				problems);
+	}
+
+	/**
+	 * @param context
+	 * @param problems
+	 * @param ex
+	 */
+	private void addNameInSourceWarning(String name, Context context,
+			List problems, Exception ex) {
+		final String msg = org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.Util
+				.getString(
+						"RelationalModelProcessorImpl.Error_while_obtaining_name_in_source", //$NON-NLS-1$
+						context.getJdbcDatabase().getName())
+				+ (ex == null ? "" : ex.getLocalizedMessage()); //$NON-NLS-1$
+		final IStatus status = new Status(
+				IStatus.WARNING,
+				org.teiid.designer.jdbc.relational.ModelerJdbcRelationalConstants.PLUGIN_ID,
+				0, msg, ex);
+		problems.add(status);
+	}
+    
 }
