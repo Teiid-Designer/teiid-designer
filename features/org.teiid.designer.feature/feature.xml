@@ -38,7 +38,7 @@
          ws="gtk"/>
 
    <includes
-         id="org.teiid.designer.crypto.dummy.feature"
+         id="org.teiid.designer.library.feature"
          version="0.0.0"
          optional="true"/>
 

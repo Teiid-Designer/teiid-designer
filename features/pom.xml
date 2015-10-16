@@ -14,7 +14,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-    <module>org.teiid.designer.crypto.dummy.feature</module>
+    <module>org.teiid.designer.library.feature</module>
 		<module>org.teiid.designer.teiid.client.feature</module>
 		<module>org.teiid.designer.feature</module>
 		<module>org.teiid.designer.test.feature</module>
@@ -43,6 +43,7 @@
 						<plugin id="org.teiid.designer.modelgenerator.salesforce.lib"/>
 						<plugin id="org.teiid.designer.webservice.lib"/>
 						<plugin id="org.jboss.tools.locus.mockito"/>
+						<plugin id="org.apache.directory.studio.slf4j-eclipselog"/>
 						<feature id="org.jboss.tools.foundation.security.linux.feature"/>
 					</excludes>
 				</configuration>
@@ -67,6 +68,7 @@
 						<plugin id="org.teiid.designer.modelgenerator.salesforce.lib"/>
 						<plugin id="org.teiid.designer.webservice.lib"/>
 						<plugin id="org.jboss.tools.locus.mockito"/>
+						<plugin id="org.apache.directory.studio.slf4j-eclipselog"/>
 						<feature id="org.jboss.tools.foundation.security.linux.feature"/>
 					</excludes>
 				</configuration>
