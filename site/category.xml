@@ -20,6 +20,10 @@ Visit the project home page at:  http://www.teiid.org  for details.
     <category name="DataToolsSources"/>
    </feature>
 
+   <feature id="org.teiid.designer.library.feature">
+   	<category name="DataTools"/>
+   </feature>
+
    <feature id="org.teiid.designer.runtime.feature">
    	<category name="DataTools"/>
    </feature>
