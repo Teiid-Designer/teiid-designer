@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.teiid.designer.crypto.dummy.feature"
-      label="Dummy Crypto Feature"
+      id="org.teiid.designer.library.feature"
+      label="Teiid Designer Library Feature"
       version="9.0.4.qualifier"
       provider-name="%providerName">
 
@@ -26,6 +26,14 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.directory.studio.slf4j-eclipselog"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
