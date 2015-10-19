@@ -221,6 +221,13 @@ public class Messages extends NLS {
     public static String saveModelErrorMsg;
     public static String restMedQuickFixLabel;
     
+    public static String ExportTeiidDdlModelSelectionPage_modelGroupTitle;
+    public static String ExportTeiidDdlModelSelectionPage_fileLabel;
+    public static String ExportTeiidDdlModelSelectionPage_title;
+    public static String ExportTeiidDdlModelSelectionPage_ddlExportOptions;
+    public static String ExportTeiidDdlModelSelectionPage_nameInSourceOption;
+    public static String ExportTeiidDdlModelSelectionPage_nativeTypeOption;
+    
     static {
         NLS.initializeMessages("org.teiid.designer.transformation.ui.messages", Messages.class); //$NON-NLS-1$
     }

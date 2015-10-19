@@ -1,6 +1,5 @@
 package org.teiid.designer.transformation.ui.teiidddl;
 
-import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -15,7 +14,6 @@ import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.ui.common.InternalUiConstants;
 import org.teiid.designer.ui.common.eventsupport.SelectionUtilities;
-import org.teiid.designer.ui.common.util.WidgetUtil;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.ui.viewsupport.ModelIdentifier;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
@@ -63,8 +61,6 @@ public class ExportTeiidDdlWizard extends AbstractWizard implements
 	private ExportTeiidDdlModelSelectionPage modelSelectionPage;
 	
 	private ExportTeiidShowDdlPage ddlSummaryPage;
-	
-	private ExportTeiidDdlOutputPage ddlOutputPage;
 
 	private boolean invalidSelection;
 
@@ -81,26 +77,26 @@ public class ExportTeiidDdlWizard extends AbstractWizard implements
 	 */
 	@Override
 	public boolean finish() {
-
-		try {
-			switch (exporter.getExportType()) {
-				case FILE:
-					exporter.exportToFile();
-					break;
-				case CLIPBOARD:
-					exporter.exportToClipboard();
-					break;
-			}
-
-			return true;
-		} catch (Throwable err) {
-			if (err instanceof InvocationTargetException) {
-				err = ((InvocationTargetException) err).getTargetException();
-			}
-			Util.log(err);
-			WidgetUtil.showError(EXPORT_ERROR_MESSAGE);
-			return false;
-		}
+		return true;
+//		try {
+//			switch (exporter.getExportType()) {
+//				case FILE:
+//					exporter.exportToFile();
+//					break;
+//				case CLIPBOARD:
+//					exporter.exportToClipboard();
+//					break;
+//			}
+//
+//			return true;
+//		} catch (Throwable err) {
+//			if (err instanceof InvocationTargetException) {
+//				err = ((InvocationTargetException) err).getTargetException();
+//			}
+//			Util.log(err);
+//			WidgetUtil.showError(EXPORT_ERROR_MESSAGE);
+//			return false;
+//		}
 	}
 
 	/**ExportTeiidDdlOutputPage
@@ -151,9 +147,5 @@ public class ExportTeiidDdlWizard extends AbstractWizard implements
 		this.ddlSummaryPage = new ExportTeiidShowDdlPage(exporter);
 		this.ddlSummaryPage.setPageComplete(false);
 		addPage(ddlSummaryPage);
-		
-		this.ddlOutputPage = new ExportTeiidDdlOutputPage(exporter);
-		this.ddlOutputPage.setPageComplete(false);
-		addPage(ddlOutputPage);
 	}
 }

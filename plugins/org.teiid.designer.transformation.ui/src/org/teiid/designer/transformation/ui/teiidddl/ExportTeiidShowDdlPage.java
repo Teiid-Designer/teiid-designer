@@ -276,39 +276,6 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
     public void setVisible( boolean visible ) {
         if (visible) {
         	String ddlString = exporter.generateDdl();
-//        	// When this page is show, ensure that differences page is set incomplete.
-//        	IWizard wizard = getWizard();
-//        	IWizardPage differencesPage = wizard.getPage("DdlImportDifferencesPage"); //$NON-NLS-1$
-//        	if(differencesPage instanceof DdlImportDifferencesPage) {
-//        		((DdlImportDifferencesPage)differencesPage).setPageComplete(false);
-//        	}
-//            if(importManager.isVdbDeployed() && importManager.shouldRedeploy()) {
-//                importManager.undeployDynamicVdb();
-//                importManager.deleteDdlTempFile();
-//        		importManager.setRedeploy(false);
-//            }
-//            
-//            if(importManager.isVdbDeployed() ) {
-//                String ddl = importManager.getDdl();
-//                if(ddl==null) ddl=EMPTY;
-//                this.ddlContentsBox.setText(ddl);
-//            } else {
-//                IStatus deployStatus = importManager.deployDynamicVdb();
-//                if(deployStatus == null) {
-//                    ddlContentsBox.setText(Util.getString("ExportTeiidShowDdlPage_vdbDeploymentErrorMsg"));  
-//                } else if(!deployStatus.isOK()) {
-//                	StringBuffer sb = new StringBuffer(deployStatus.getMessage());
-//                	sb.append("\n\n"+ Util.getString("ExportTeiidShowDdlPage_vdbDeploymentCheckServerLogMsg")); //$NON-NLS-1$
-//                    ddlContentsBox.setText(sb.toString());  
-//                } else {
-//                    String ddl = importManager.getDdl();
-//                    // Consider null DDL an error..
-//                    if(ddl==null) ddl=Messages.TeiidImportManager_getDdlErrorMsg;
-//                    
-//                    ddlContentsBox.setText(ddl);
-//                    ddlContentsBox.setTopIndex(0);
-//                }
-//            }
         	if( ddlString != null ) {
               ddlContentsBox.setText(ddlString);
               ddlContentsBox.setTopIndex(0);
@@ -325,23 +292,6 @@ public class ExportTeiidShowDdlPage extends AbstractWizardPage implements UiCons
      * Validate the page
      */
 	private boolean validatePage() {
-        // VDB deployment validation
-//        if(!this.importManager.isVdbDeployed()) {
-//            String errorMsg;
-//            IStatus deployStatus = importManager.getVdbDeploymentStatus();
-//            if(deployStatus!=null) {
-//                errorMsg = deployStatus.getMessage();
-//            } else {
-//                errorMsg = Util.getString("ExportTeiidShowDdlPage_vdbDeploymentErrorMsg");
-//            }
-//            setThisPageComplete(errorMsg, WARNING);
-//            return false;
-//        }
-//        String ddlStr = getDDL();
-//        if(ddlStr==null || ddlStr.trim().equals(Messages.TeiidImportManager_getDdlErrorMsg)) {
-//        	setThisPageComplete(Messages.TeiidImportManager_getDdlErrorMsg,WARNING);
-//        	return false;
-//        }
 
         setThisPageComplete(EMPTY, NONE);
 		return true;
