@@ -304,12 +304,12 @@ public class EmfModelGenerator {
         	modelResource.getEmfResource().getContents().add(newEObject);
         } break;
         case TYPES.PROCEDURE: {
-                if (relationalRef instanceof RelationalViewProcedure) {
-                    newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
-                } else {
-                    newEObject = createProcedure(relationalRef, modelResource);
-                    modelResource.getEmfResource().getContents().add(newEObject);
-                }
+        	if( relationalRef instanceof RelationalViewProcedure ) {
+        		newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+        	} else {
+        		newEObject = createProcedure(relationalRef, modelResource);
+        		modelResource.getEmfResource().getContents().add(newEObject);
+        	}
         } break;
 
         case TYPES.INDEX: {
@@ -1211,7 +1211,9 @@ public class EmfModelGenerator {
 		}
 
 		try {
-			assistant.setPropertyValue(eObject, namespacedId, propValue);
+			if( assistant.supportsProperty(eObject, propId) )  {
+				assistant.setPropertyValue(eObject, namespacedId, propValue);
+			}
 		} catch (Exception ex) {
             RelationalPlugin.Util.log(IStatus.ERROR,ex, 
                 	NLS.bind(Messages.emfModelGenerator_errorSettingPropertyValue, namespacedId));

@@ -209,6 +209,7 @@ public class DdlImporter {
         importManager.setRelationalModel(model);
         
         RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
+        targetRelationalModel.setModelType(importManager.getModelType().getValue());
         
         importManager.setProgressMonitor(monitor);
 

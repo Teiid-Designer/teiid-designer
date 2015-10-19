@@ -170,4 +170,7 @@ public abstract class ModelObjectExtensionAssistant extends ModelExtensionAssist
     public void applyMedIfNecessary(IResource model) throws Exception {
         // Do nothing by default
     }
+    
+    public abstract boolean supportsProperty(Object modelObject,
+    										 String propId ) throws Exception;
 }

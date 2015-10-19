@@ -270,4 +270,11 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         CoreArgCheck.isNotEmpty(proposedOperationName, "proposedOperationName is empty"); //$NON-NLS-1$
         return ExtensionConstants.MedOperations.SHOW_IN_REGISTRY.equals(proposedOperationName); // only show in registry
     }
+    
+
+    @Override
+    public boolean supportsProperty(Object modelObject, String propId)
+    	throws Exception {
+    	return getPropertyDefinition(modelObject, propId) != null;
+    }
 }
