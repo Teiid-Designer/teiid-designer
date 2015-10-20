@@ -350,5 +350,97 @@
 			</mediaobject>
 		</figure>
 	</section>
+	<section id="vdb-dynamic-import-export">
+		<title>Working with Dynamic VDBs</title>
+		<para>This section desribes the Designer features which allow generating a VDB archive with XMI models from existing dynamic
+		VDBs (*-vdb.xml) files and generating dynamic VDBs from existing VDB archives.</para>
+		<section id="generate-vdb-archive-from-dynamic-vdb">
+			<title>Generate VDB Archive</title>
+			<para>To generate a VDB archive and models from a dynamic vdb (*-vdb.xml) file in your workspace:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Step 1 </emphasis> - Import (or drag and drop) a dynamic vdb file into a model project or folder
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 2 </emphasis> - Select the dynamic vdb file in the <emphasis role="bold">Model Explorer</emphasis>, then
+						right-click and select the <emphasis role="bold">Modeling &gt; Generate Archive VDB and Models </emphasis> action.
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-archive-vdb-action.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 3 </emphasis> - The first page of thw wizard will show the <emphasis role="bold">Dynamic VDB Contents</emphasis>
+						 Verify the contents and click <emphasis role="bold">Next &gt;</emphasis>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-vdb-archive-page-1.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 4 </emphasis> - On the second page, specify details and options for yor VDB archive 
+						including actual VDB name, VDB archive file name and target location (project or folder). 
+						 Click <emphasis role="bold">Generate</emphasis> to create the VDB archive and associated models in your target location.
+						 Then click <emphasis role="bold">Finish</emphasis>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-vdb-archive-page-2.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+			</itemizedlist>
+			<para>The generated VDB and XMI models will now be visible in the <emphasis role="bold">Model Explorer</emphasis> view.</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="images/screencaps/generated-vdb-and-models-from-xml.png"/>
+				</imageobject>
+			</mediaobject>
+		</section>
+		<section id="generate-dynamic-vdb-from-vdb-archive">
+			<title>Generate Dynamic VDB</title>
+			<para>To generate a dynamic VDB from a VDB archive (*.vdb) in your workspace:</para>
+			<itemizedlist>
+				<listitem>
+					<para><emphasis role="bold">Step 1 </emphasis> - Select a VDB archive file in the <emphasis role="bold">Model Explorer</emphasis>, then
+						right-click and select the <emphasis role="bold">Modeling &gt; Generate Dynamic VDB </emphasis> action.
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-dynamic-vdb-action.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 2 </emphasis> - The first page of thw wizard will show the selected VDB archive file information.
+						You can also set the VDB name adn version as well as specify the target location and actual file name (*-vdb.xml).
+						 Click <emphasis role="bold">Next &gt;</emphasis>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-dynamic-vdb-page-1.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+				<listitem>
+					<para><emphasis role="bold">Step 3 </emphasis> - On the second page, click the <emphasis role="bold">Generate</emphasis> button. The 
+						XML contents will be displayed in the viewer which represents the same basic metadata from the origional VDB.
+						 Click <emphasis role="bold">Generate</emphasis> to create the VDB archive and associated models in your target location.
+						 Then click <emphasis role="bold">Finish</emphasis> to save the XML string to the file specified in Step 2.
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="images/screencaps/generate-dynamic-vdb-page-2.png"/>
+							</imageobject>
+						</mediaobject>
+					</para>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
 	
 </chapter>
