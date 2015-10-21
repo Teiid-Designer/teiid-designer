@@ -27,6 +27,7 @@ import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
@@ -302,7 +303,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 //			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
 //			String formatedSQL = formatter.getFormattedSql();
 //			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
-			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB + TAB).append(sqlString);
+			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(sqlString);
 			sb.append(SEMI_COLON + NEW_LINE);
 		}
 		
@@ -337,13 +338,46 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		List<ProcedureParameter> params = procedure.getParameters();
 		int nParams = params.size();
 		int count = 0;
+		
+		// Check for an "RETURN" parameter direction and cache it's datatype
+		String returnType = null;
+		
 		for( ProcedureParameter param : params ) {
+			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
+				returnType = resolveExportedDataType(param.getType());
+			}
 			String paramStr = getParameterDdl(param);
 			count++;
 			sb.append(paramStr);
 			if( count < nParams ) sb.append(COMMA + SPACE);
 		}
 		
+		sb.append(CLOSE_BRACKET);
+	
+		// Add the RETURNS clause to handle the result set
+		// CREATE VIRTUAL PROCEDURE testProc (p1 string(4000)) RETURNS TABLE ( xml_out xml)
+		// CREATE VIRTUAL PROCEDURE getTweets(query varchar) RETURNS (created_on varchar(25), from_user varchar(25), to_user varchar(25))
+		// CREATE FOREIGN PROCEDURE func (x integer, y integer) returns table (z integer);
+		// CREATE FOREIGN PROCEDURE func (x integer, y integer) returns integer;
+	    // CREATE VIRTUAL FUNCTION celsiusToFahrenheit(celsius decimal) RETURNS decimal OPTIONS (JAVA_CLASS 'org.something.TempConv',  JAVA_METHOD 'celsiusToFahrenheit');
+	    // CREATE VIRTUAL FUNCTION sumAll(arg integer) RETURNS integer OPTIONS (JAVA_CLASS 'org.something.SumAll',  JAVA_METHOD 'addInput', AGGREGATE 'true', VARARGS 'true', "NULL-ON-NULL" 'true');
+		
+		if( procedure.getResult() != null ) {
+			sb.append(SPACE + RETURNS + SPACE + TABLE + SPACE);
+			sb.append(OPEN_BRACKET);
+			count = 0;
+			int nCols = procedure.getResult().getColumns().size();
+			for( Object col : procedure.getResult().getColumns() ) {
+				Column nextCol = (Column)col;
+				count++;
+				String columnStr = getColumnDdl(nextCol);
+				sb.append(columnStr);
+				if( count < nCols ) sb.append(COMMA + SPACE);
+			}
+			sb.append(CLOSE_BRACKET);
+		} else if( returnType != null ) {
+			sb.append(SPACE + RETURNS + SPACE + returnType);
+		}
 		
 		String options = getProcedureOptions(procedure);
 		if( !StringUtilities.isEmpty(options)) {

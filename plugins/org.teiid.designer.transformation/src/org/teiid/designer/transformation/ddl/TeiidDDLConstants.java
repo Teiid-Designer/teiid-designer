@@ -89,5 +89,11 @@ public interface TeiidDDLConstants {
 		public static final String DETERMINISM_OPT_USER_DETERMINISTIC = "USER_DETERMINISTIC"; //$NON-NLS-1$
 		public static final String DETERMINISM_OPT_VDB_DETERMINISTIC = "VDB_DETERMINISTIC"; //$NON-NLS-1$
 		public static final String DETERMINISM_OPT_DETERMINISTIC = "DETERMINISTIC"; //$NON-NLS-1$
+		public static final String RETURNS = "RETURNS"; //$NON-NLS-1$
+		public static final String TABLE = "TABLE"; //$NON-NLS-1$
+		public static final String IN = "IN"; //$NON-NLS-1$
+		public static final String INOUT = "INOUT"; //$NON-NLS-1$
+		public static final String OUT = "OUT"; //$NON-NLS-1$
+		public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
 
 }
