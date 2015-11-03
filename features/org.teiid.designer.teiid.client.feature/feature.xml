@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.teiid.client.feature"
       label="Teiid Runtime Clients"
-      version="9.2.0.qualifier"
+      version="10.0.0.qualifier"
       provider-name="%providerName">
 
    <description url="www.jboss.org/projects/teiiddesigner">
@@ -24,7 +24,7 @@
    <requires>
       <import plugin="org.jboss.tools.locus.sf.saxon" version="9.5.1" match="compatible"/>
       <import feature="org.jboss.ide.eclipse.as.feature" version="3.0.0" match="compatible"/>
-      <import plugin="org.teiid.designer.spi" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="10.0.0" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.10.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.9.1" match="compatible"/>
       <import plugin="org.eclipse.wst.server.core" version="1.6.0" match="compatible"/>
@@ -32,8 +32,8 @@
       <import plugin="org.jboss.ide.eclipse.as.management.core" version="3.0.0" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity" version="1.2.11" match="compatible"/>
       <import plugin="org.eclipse.datatools.connectivity.ui" version="1.2.4" match="compatible"/>
-      <import plugin="org.teiid.datatools.connectivity" version="9.0.0" match="compatible"/>
-      <import plugin="org.teiid.datatools.connectivity.ui" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity" version="10.0.0" match="compatible"/>
+      <import plugin="org.teiid.datatools.connectivity.ui" version="10.0.0" match="compatible"/>
    </requires>
 
    <plugin

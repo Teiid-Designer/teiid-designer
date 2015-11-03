@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginProvider
 Bundle-SymbolicName: org.teiid.datatools.connectivity.ui.flatfile;singleton:=true
-Bundle-Version: 9.2.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Fragment-Host: org.eclipse.datatools.connectivity.oda.flatfile.ui;bundle-version="[3.1.7,4.0.0)"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
-Require-Bundle: org.teiid.datatools.connectivity.ui;bundle-version="[9.0.2,10.0.0)"
+Require-Bundle: org.teiid.datatools.connectivity.ui;bundle-version="[10.0.0,11.0.0)"

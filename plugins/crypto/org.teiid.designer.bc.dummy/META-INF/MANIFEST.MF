@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.bc.dummy;singleton:=true
-Bundle-Version: 9.2.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: %pluginProvider
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.apache.commons.codec
+Require-Bundle: org.apache.commons.codec;bundle-version="[1.6.0,2.0.0)"
 Export-Package: org.bouncycastle.asn1,
  org.bouncycastle.x509.extension
 

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.jboss.tools</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.2.0.Final-SNAPSHOT</version>
+		<version>4.3.0.Final-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
 	<artifactId>teiid</artifactId>
@@ -22,9 +22,9 @@
 
 		<td.tpc.groupId>org.jboss.tools.integration-stack</td.tpc.groupId>
 		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
-		<td.tpc.version>4.2.8.Final</td.tpc.version>
+		<td.tpc.version>4.3.0.Final</td.tpc.version>
 		<td.tpc.type>target</td.tpc.type>
-		<td.tpc.classifier>base</td.tpc.classifier>
+		<td.tpc.classifier>base-ea</td.tpc.classifier>
 
 	</properties>
 
@@ -101,7 +101,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.7</version>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<phase>validate</phase>

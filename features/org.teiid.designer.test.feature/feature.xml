@@ -2,7 +2,7 @@
 <feature
       id="org.teiid.designer.test.feature"
       label="Teiid Designer Test"
-      version="9.2.0.qualifier"
+      version="10.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
       image="feature.gif">
@@ -25,22 +25,22 @@
       <import plugin="org.hamcrest.library" version="1.3.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources" version="3.9.1" match="compatible"/>
       <import plugin="org.eclipse.core.runtime" version="3.10.0" match="compatible"/>
-      <import plugin="org.teiid.core.designer" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.core.designer" version="10.0.0" match="compatible"/>
       <import plugin="org.junit" version="4.11.0" match="compatible"/>
-      <import plugin="org.teiid.designer.core" version="9.0.0" match="compatible"/>
-      <import plugin="org.teiid.core.designer.test.framework" version="9.0.0" match="compatible"/>
-      <import plugin="org.teiid.designer.sdt" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.core" version="10.0.0" match="compatible"/>
+      <import plugin="org.teiid.core.designer.test.framework" version="10.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.sdt" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.compare"/>
       <import plugin="org.eclipse.emf.ecore" version="2.10.1" match="compatible"/>
       <import plugin="org.eclipse.emf.mapping" version="2.8.0" match="compatible"/>
-      <import plugin="org.teiid.designer.metamodels.core" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.metamodels.core" version="10.0.0" match="compatible"/>
       <import plugin="org.eclipse.xsd" version="2.10.0" match="compatible"/>
-      <import plugin="org.teiid.designer.legacy" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.legacy" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.core.xslt"/>
       <import plugin="org.eclipse.emf.ecore.xmi" version="2.10.1" match="compatible"/>
-      <import plugin="org.teiid.designer.jdbc" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.jdbc" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.mapping.ui"/>
-      <import plugin="org.teiid.designer.core.test.framework" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.core.test.framework" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.metamodels.relational"/>
       <import plugin="org.teiid.designer.metamodels.transformation"/>
       <import plugin="org.teiid.designer.metamodels.wsdl"/>
@@ -48,7 +48,7 @@
       <import plugin="org.teiid.designer.modelgenerator.salesforce"/>
       <import plugin="org.teiid.designer.modelgenerator"/>
       <import plugin="org.teiid.designer.modelgenerator.wsdl"/>
-      <import plugin="org.teiid.runtime.client" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.runtime.client" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.query.ui"/>
       <import plugin="org.teiid.designer.schema.tools"/>
       <import plugin="org.teiid.designer.transformation"/>
@@ -61,12 +61,12 @@
       <import plugin="org.teiid.designer.extension"/>
       <import plugin="org.teiid.designer.ddl.importer"/>
       <import plugin="org.teiid.designer.dqp"/>
-      <import plugin="org.teiid.designer.jdbc.test.framework" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.jdbc.test.framework" version="10.0.0" match="compatible"/>
       <import plugin="org.teiid.designer.jdbc.relational"/>
       <import plugin="org.teiid.designer.vdb"/>
       <import plugin="org.apache.ant" version="1.8.4" match="compatible"/>
       <import plugin="org.junit" version="4.11.0" match="greaterOrEqual"/>
-      <import plugin="org.teiid.designer.spi" version="9.0.0" match="compatible"/>
+      <import plugin="org.teiid.designer.spi" version="10.0.0" match="compatible"/>
    </requires>
 
    <plugin

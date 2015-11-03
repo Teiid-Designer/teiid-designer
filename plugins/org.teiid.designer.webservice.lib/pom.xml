@@ -8,7 +8,7 @@
 		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 	<groupId>org.jboss.tools</groupId>
-	<version>9.2.0-SNAPSHOT</version>
+	<version>10.0.0-SNAPSHOT</version>
 	<artifactId>org.teiid.designer.webservice.lib</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<properties>
@@ -47,8 +47,8 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tychoVersion}</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

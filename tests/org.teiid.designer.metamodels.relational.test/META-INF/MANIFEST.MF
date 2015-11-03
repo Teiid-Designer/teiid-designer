@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.metamodels.relational.test;singleton:=true
-Bundle-Version: 9.2.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.metamodels.relational
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Localization: plugin
 Export-Package: org.teiid.designer.metamodels.relational.aspects.validation.rules,
  org.teiid.designer.metamodels.relational.provider,
  org.teiid.designer.metamodels.relational.util
-Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.designer.core.test.framework;bundle-version="[9.0.2,10.0.0)"
+Require-Bundle: org.junit;bundle-version="[4.12.0,5.0.0)",
+ org.teiid.designer.core.test.framework;bundle-version="[10.0.0,11.0.0)"

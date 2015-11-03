@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.teiid.designer.ui.common.test;singleton:=true
-Bundle-Version: 9.2.0.qualifier
+Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Fragment-Host: org.teiid.designer.ui.common
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.teiid.designer.ui.common.actions,
  org.teiid.designer.ui.common.dialogs,
  org.teiid.designer.ui.common.eventsupport,
@@ -13,5 +13,5 @@ Export-Package: org.teiid.designer.ui.common.actions,
  org.teiid.designer.ui.common.util,
  org.teiid.designer.ui.common.viewsupport
 Bundle-Localization: plugin
-Require-Bundle: org.junit;bundle-version="[4.11.0,5.0.0)",
- org.teiid.core.designer.test.framework;bundle-version="[9.0.2,10.0.0)"
+Require-Bundle: org.junit;bundle-version="[4.12.0,5.0.0)",
+ org.teiid.core.designer.test.framework;bundle-version="[10.0.0,11.0.0)"

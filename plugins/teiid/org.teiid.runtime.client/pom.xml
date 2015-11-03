@@ -11,7 +11,7 @@
     <artifactId>org.teiid.runtime.client</artifactId>
     <packaging>eclipse-plugin</packaging>
     <name>teiid runtime client</name>
-	  <version>9.2.0-SNAPSHOT</version>
+	  <version>10.0.0-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
         <jbossas-version>7.5.0.Final-redhat-15</jbossas-version>
@@ -162,8 +162,8 @@
                 <version>${tychoVersion}</version>
                 <configuration>
                     <verbose>true</verbose>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
