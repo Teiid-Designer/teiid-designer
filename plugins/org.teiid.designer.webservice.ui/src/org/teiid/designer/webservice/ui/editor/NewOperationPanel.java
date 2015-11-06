@@ -252,7 +252,7 @@ public class NewOperationPanel extends Composite implements StringConstants {
 		}
 		
 		{ // Output Message
-			Composite outputMessagePanel = WidgetFactory.createGroup(thePanel,  getString("inputMessageGroup"), GridData.FILL_BOTH); //$NON-NLS-1$
+			Composite outputMessagePanel = WidgetFactory.createGroup(thePanel,  getString("outputMessageGroup"), GridData.FILL_BOTH); //$NON-NLS-1$
 	        GridDataFactory.fillDefaults().grab(true, false).applyTo(outputMessagePanel);
 	        GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false).margins(3, 3).applyTo(outputMessagePanel);
 	        
