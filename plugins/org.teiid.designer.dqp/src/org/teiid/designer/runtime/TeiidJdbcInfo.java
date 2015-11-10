@@ -80,7 +80,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
                           ITeiidJdbcInfo teiidJdbcInfo ) {
         this(vdbname, teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getSecureStorageProvider(), 
              teiidJdbcInfo.getPassword(), teiidJdbcInfo.isSecure());
-        setHostProvider(teiidJdbcInfo.getHostProvider());
+        setHostProvider(teiidJdbcInfo.getHostProvider(), true);
     }
     
     @Override
@@ -97,7 +97,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
     @Override
     public ITeiidJdbcInfo clone() {
         TeiidJdbcInfo cloned = new TeiidJdbcInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
-        cloned.setHostProvider(getHostProvider());
+        cloned.setHostProvider(getHostProvider(), true);
         return cloned;
     }
 

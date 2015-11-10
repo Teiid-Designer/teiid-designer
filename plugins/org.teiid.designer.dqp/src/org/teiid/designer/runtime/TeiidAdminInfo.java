@@ -43,7 +43,7 @@ public class TeiidAdminInfo extends TeiidConnectionInfo implements ITeiidAdminIn
     @Override
     public ITeiidAdminInfo clone() {
         TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
-        cloned.setHostProvider(getHostProvider());
+        cloned.setHostProvider(getHostProvider(), true);
         return cloned;
     }
     

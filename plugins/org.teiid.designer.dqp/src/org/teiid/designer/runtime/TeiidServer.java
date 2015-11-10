@@ -138,10 +138,10 @@ public class TeiidServer implements ITeiidServer {
          */
 
         this.teiidAdminInfo = adminInfo;
-        this.teiidAdminInfo.setHostProvider(this);
+        this.teiidAdminInfo.setHostProvider(this, false);
         
         this.teiidJdbcInfo = jdbcInfo;
-        this.teiidJdbcInfo.setHostProvider(this);
+        this.teiidJdbcInfo.setHostProvider(this, false);
 
         this.id = getUrl() + "-" + getServerVersion() + "-" + getParent().getId();  //$NON-NLS-1$//$NON-NLS-2$
         

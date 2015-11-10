@@ -79,9 +79,12 @@ public interface ITeiidConnectionInfo {
 
     /**
      * @param hostProvider the new value for host provider (never <code>null</code>)
+     * @param loadPasswords load passwords
      * @throws IllegalArgumentException if hostProvider is <code>null</code>
      */
-    void setHostProvider(HostProvider hostProvider);
+    void setHostProvider(HostProvider hostProvider, boolean loadPasswords);
+    
+    
 
     /**
      * @param password the new value for password (can be empty or <code>null</code>)

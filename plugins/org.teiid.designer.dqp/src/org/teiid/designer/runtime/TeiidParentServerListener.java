@@ -194,10 +194,13 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
              */
             private void tryConnecting(final IServer parentServer) throws Exception {
                 ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
+                // Note that teiidServer MAY BE NULL
                 if (teiidServer != null) {
                     // Places the teiid server is a connecting state which
                     // can be detected by the UI
                     teiidServer.startConnecting();
+                } else {
+                	return;
                 }
 
                 boolean parentConnected = false; 
@@ -217,7 +220,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                 while ( (!parentConnected || queryServer == null ) && attempts < 10) {
                     try {
                         attempts++;
-                        parentConnected = teiidServer != null && teiidServer.isParentConnected() && adaptServerOK(parentServer);
+                        parentConnected = teiidServer.isParentConnected() && adaptServerOK(parentServer);
                         if( parentConnected ) {
                         	queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
                         }                  
@@ -252,7 +255,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
                 } else {
                     // If the query server is null then this is not a Teiid-enabled JBoss Server but
-                    // a TeiidServer was cached in the registry, presumably due to an adaption
+                    // a TeiidServer may have been cached in the registry, presumably due to an adaption
                     // being made while the server was not started. Since we now know better, we
                     // can correct the registry.
                     DqpPlugin.getInstance().getServerManager().removeServer(teiidServer);

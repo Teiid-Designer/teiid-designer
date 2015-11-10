@@ -84,7 +84,7 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldSetHostProvider() {
-        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
+        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER, true);
         assertSame(this.connectionInfo.getHostProvider(), NEW_HOST_PROVIDER);
     }
 
@@ -254,7 +254,7 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldGetCorrectUrlAfterChangingHostProvider() {
-        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
+        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER, true);
         assertThat(this.connectionInfo.getUrl(), is("mms://" + NEW_HOST + ':' + INITIAL_PORT));
     }
 
@@ -279,7 +279,7 @@ public class TeiidConnectionInfoTest {
                                                                        NEW_USER,
                                                                        NEW_PSWD,
                                                                        !INITIAL_SECURE);
-        anotherConnectionInfo.setHostProvider(NEW_HOST_PROVIDER);
+        anotherConnectionInfo.setHostProvider(NEW_HOST_PROVIDER, true);
 
         this.connectionInfo.setAll(anotherConnectionInfo);
         assertSame(this.connectionInfo.getHostProvider(), NEW_HOST_PROVIDER);
@@ -440,7 +440,7 @@ public class TeiidConnectionInfoTest {
         
         defaultStorageProvider.clear();
 
-        connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
+        connectionInfo.setHostProvider(NEW_HOST_PROVIDER, true);
 
         assertFalse(defaultStorageProvider.existsInSecureStorage(providerKey, PASSWORD_KEY));
 

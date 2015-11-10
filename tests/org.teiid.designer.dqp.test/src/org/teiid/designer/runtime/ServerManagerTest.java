@@ -298,8 +298,8 @@ public class ServerManagerTest {
         ITeiidAdminInfo adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
         ITeiidJdbcInfo jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
         TeiidServer testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer1);
-        adminInfo.setHostProvider(testServer);
-        jdbcInfo.setHostProvider(testServer);
+        adminInfo.setHostProvider(testServer, true);
+        jdbcInfo.setHostProvider(testServer, true);
 
         ITeiidServer teiidServer = this.mgr.getServer(testServer.getId());
         assertThat(teiidServer, notNullValue());
@@ -333,8 +333,8 @@ public class ServerManagerTest {
         adminInfo = new TeiidAdminInfo(adminPort, adminUser, secureStorageProvider, adminPassword, adminSecure);
         jdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUser, secureStorageProvider, jdbcPassword, jdbcSecure);
         testServer = new TeiidServer(serverVersion, adminInfo, jdbcInfo, eventMgr, parentServer2);
-        adminInfo.setHostProvider(testServer);
-        jdbcInfo.setHostProvider(testServer);
+        adminInfo.setHostProvider(testServer, true);
+        jdbcInfo.setHostProvider(testServer, true);
 
         teiidServer = this.mgr.getServer(testServer.getId());
         assertThat(teiidServer, notNullValue());

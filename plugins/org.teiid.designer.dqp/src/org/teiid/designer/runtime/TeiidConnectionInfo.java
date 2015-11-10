@@ -346,7 +346,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setAll( ITeiidConnectionInfo info ) {
-        setHostProvider(info.getHostProvider());
+        setHostProvider(info.getHostProvider(), true);
         setPort(info.getPort());
         setUsername(info.getUsername());
         setSecure(info.isSecure());
@@ -358,25 +358,30 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
 
     /**
      * @param hostProvider the new value for host provider (never <code>null</code>)
+     * @param loadPasswords load passwords
      * @throws IllegalArgumentException if hostProvider is <code>null</code>
      */
     @Override
-    public void setHostProvider( HostProvider hostProvider ) {
+    public void setHostProvider( HostProvider hostProvider, boolean loadPasswords) {
         CoreArgCheck.isNotNull(hostProvider, "hostProvider"); //$NON-NLS-1$
 
-        /* 
-         * Before changing:
-         * Retrieve password from secure storage using old url if one has been set
-         */
-        boolean passwordExists = passwordExists();
-        String myPassword = null;
-        if (passwordExists)
-            myPassword = retrievePassword();
-
+        
         this.hostProvider = hostProvider;
 
-        if (passwordExists)
-            setPassword(myPassword);
+        if( loadPasswords ) {
+	        /* 
+	         * Before changing:
+	         * Retrieve password from secure storage using old url if one has been set
+	         */
+	        boolean passwordExists = passwordExists();
+	        String myPassword = null;
+	        if (passwordExists)
+	            myPassword = retrievePassword();
+	
+	        if (passwordExists)
+	            setPassword(myPassword);
+    	}
+
     }
 
     /**
