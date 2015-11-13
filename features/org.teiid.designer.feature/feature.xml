@@ -12,7 +12,9 @@
       version="10.0.0.qualifier"
       provider-name="%providerName"
       plugin="org.teiid.designer"
-      image="designer32.png">
+      image="designer32.png"
+      license-feature="org.jboss.tools.foundation.license.feature"
+      license-feature-version="0.0.0">
 
    <description url="www.jboss.org/projects/teiiddesigner">
       %description
