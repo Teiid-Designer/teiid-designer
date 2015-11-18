@@ -12,6 +12,7 @@
 package org.teiid.designer.core.index;
 
 import java.io.UTFDataFormatException;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * Uses prefix coding on words, and gamma coding of document numbers differences.
@@ -46,7 +47,7 @@ public class GammaCompressedIndexBlock extends IndexBlock {
 	}
 	protected void encodeEntry(WordEntry entry, char[] prevWord, CodeByteStream codeStream) {
 		char[] word= entry.getWord();
-		int prefixLen= prevWord == null ? 0 : Math.min(Util.prefixLength(prevWord, word), 255);
+		int prefixLen= prevWord == null ? 0 : Math.min(StringUtilities.prefixLength(prevWord, word), 255);
 		codeStream.writeByte(prefixLen);
 		codeStream.writeUTF(word, prefixLen, word.length);
 		int n= entry.getNumRefs();
