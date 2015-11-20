@@ -41,7 +41,8 @@ public class FileListBlock extends Block {
         String path = indexedFile.getPath();
         int prefixLen = prevPath == null ? 0 : StringUtilities.prefixLength(prevPath, path);
         int sizeEstimate = 2 + 2 + (path.length() - prefixLen) * 3;
-        if (offset + sizeEstimate > blockSize - 2) return false;
+        if (offset + sizeEstimate > blockSize - 2)
+            return false;
         field.putInt2(offset, prefixLen);
         offset += 2;
         char[] chars = new char[path.length() - prefixLen];

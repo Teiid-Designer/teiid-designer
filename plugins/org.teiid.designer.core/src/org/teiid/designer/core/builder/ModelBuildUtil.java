@@ -17,8 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -36,9 +34,11 @@ import org.teiid.core.designer.id.ObjectID;
 import org.teiid.core.designer.plugin.PluginUtilities;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.Stopwatch;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.container.Container;
 import org.teiid.designer.core.container.DuplicateResourceException;
+import org.teiid.designer.core.index.BlockIndexException;
 import org.teiid.designer.core.index.ModelIndexer;
 import org.teiid.designer.core.index.ModelSearchIndexer;
 import org.teiid.designer.core.index.ResourceIndexer;
@@ -304,15 +304,55 @@ public class ModelBuildUtil {
         final String sTask = ModelerCore.Util.getString("ModelBuildUtil.Creating_{0}_for_{1}_1", indexer.getIndexType(), iResource.getFullPath()); //$NON-NLS-1$
         //System.out.println("[ModelBuildUtil.indexResource TaskName is: " + sTask ); //$NON-NLS-1$
         monitor.setTaskName(sTask);
+
+        Throwable throwable = null;
         try {
             final Stopwatch totalWatch = new Stopwatch();
             totalWatch.start();
             indexer.indexResource(iResource, false, true);
             totalWatch.stop();
+        } catch (final ModelerCoreException e) {
+            throwable = e.getCause() != null ? e.getCause() : e;
         } catch (final Throwable e) {
-            ModelerCore.Util.log(IStatus.ERROR,
-                                 e,
-                                 ModelerCore.Util.getString("ModelBuilder.Error_indexing_model_resource_3", iResource.getFullPath())); //$NON-NLS-1$
+            throwable = e;
+        }
+
+        if (throwable == null)
+            return;
+
+        //
+        // Something went wrong so create a problem marker on the resource
+        //
+
+        StringBuffer buf = new StringBuffer(ModelerCore.Util.getString("ModelBuilder.Error_indexing_model_resource_3", iResource.getName())); //$NON-NLS-1$
+        buf.append(StringConstants.SPACE).append(StringConstants.COLON).append(StringConstants.NEW_LINE);
+        buf.append(throwable.getLocalizedMessage());
+
+        try {
+            IMarker[] markers = iResource.findMarkers(IMarker.PROBLEM, false, IResource.DEPTH_ONE);
+            if (markers != null) {
+                for (IMarker marker : markers) {
+                    if (buf.toString().equals(marker.getAttribute(IMarker.MESSAGE)))
+                        return; // A duplicate so already recorded
+                }
+            }
+
+            IMarker marker = iResource.createMarker(IMarker.PROBLEM);
+            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+            marker.setAttribute(IMarker.MESSAGE, buf.toString());
+
+            String location = iResource.getLocation().toOSString();
+            if (throwable instanceof BlockIndexException) {
+                BlockIndexException ex = (BlockIndexException) throwable;
+                location = ex.getWord();
+            }
+
+            marker.setAttribute(IMarker.LOCATION, location);
+
+            ModelerCore.Util.log(IStatus.ERROR, throwable, buf.toString());
+
+        } catch (CoreException ex) {
+            ModelerCore.Util.log(IStatus.ERROR, ex, "Failed to create a problem marker on the resource"); //$NON-NLS-1$
         }
     }
 
