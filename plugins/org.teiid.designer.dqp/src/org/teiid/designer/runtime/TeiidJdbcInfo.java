@@ -2,6 +2,7 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.HashCodeUtil;
@@ -34,12 +35,13 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
-    public TeiidJdbcInfo( String port,
+    public TeiidJdbcInfo( String host,
+    					  String port,
                           String username,
                           ISecureStorageProvider secureStorageProvider,
                           String password,
                           boolean secure ) {
-        this(VDB_PLACEHOLDER, port, username, secureStorageProvider, password, secure);
+        this(VDB_PLACEHOLDER, host, port, username, secureStorageProvider, password, secure);
     }
 
     /**
@@ -52,12 +54,13 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
      * @see #validate()
      */
     private TeiidJdbcInfo( String vdbname,
+    					   String host,
                            String port,
                            String username,
                            ISecureStorageProvider secureStorageProvider,
                            String password,
                            boolean secure ) {
-        super(port, username, secureStorageProvider, password, secure);
+        super(host, port, username, secureStorageProvider, password, secure);
         CoreArgCheck.isNotEmpty(vdbname, "vdbname"); //$NON-NLS-1$
 
         this.vdbname = vdbname;
@@ -67,7 +70,10 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
          * which is required in the formation of the passToken and the reference
          * to the password in secure storage
          */
-        initPassword(password);
+        
+        if( password != null ) {
+        	setPassword(password);
+        }
     }
 
     /**
@@ -78,9 +84,8 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
      */
     public TeiidJdbcInfo( String vdbname,
                           ITeiidJdbcInfo teiidJdbcInfo ) {
-        this(vdbname, teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getSecureStorageProvider(), 
+        this(vdbname, teiidJdbcInfo.getHost(), teiidJdbcInfo.getPort(), teiidJdbcInfo.getUsername(), teiidJdbcInfo.getSecureStorageProvider(), 
              teiidJdbcInfo.getPassword(), teiidJdbcInfo.isSecure());
-        setHostProvider(teiidJdbcInfo.getHostProvider(), true);
     }
     
     @Override
@@ -96,8 +101,7 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
     @SuppressWarnings( "javadoc" )
     @Override
     public ITeiidJdbcInfo clone() {
-        TeiidJdbcInfo cloned = new TeiidJdbcInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
-        cloned.setHostProvider(getHostProvider(), true);
+        TeiidJdbcInfo cloned = new TeiidJdbcInfo(getHost(), getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
         return cloned;
     }
 
@@ -124,21 +128,18 @@ public class TeiidJdbcInfo extends TeiidConnectionInfo implements ITeiidJdbcInfo
     public String getType() {
         return Util.getString("jdbcInfoType"); //$NON-NLS-1$
     }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * @see org.teiid.designer.runtime.TeiidConnectionInfo#getUrl()
-     */
+    
     @Override
-    public String getUrl() {
+    protected void generateUrl() {
+    	super.generateUrl();
+    	String superURL = super.getUrl();
         // jdbc:teiid:<vdbname>@mm<s>://host:port
         StringBuilder sb = new StringBuilder();
         sb.append(JDBC_TEIID_PREFIX);
         sb.append(this.vdbname);
         sb.append('@');
 
-        return sb.append(super.getUrl()).toString();
+        url = sb.append(superURL).toString();
     }
 
     /**

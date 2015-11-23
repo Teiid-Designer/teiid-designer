@@ -23,12 +23,22 @@ public interface ITeiidConnectionInfo {
      * Protocol address prefix for server connections
      */
     public static final String MM = "mm://"; //$NON-NLS-1$
+    
+    /**
+     * The default connection host. Value is {@value}.
+     */
+    String DEFAULT_HOST = "localhost"; //$NON-NLS-1$
 
     /**
      * @return the password (can be <code>null</code> or empty)
      */
     String getPassword();
 
+    /**
+     * @return the host (can be <code>null</code> or empty)
+     */
+    String getHost();
+    
     /**
      * @return the port (can be <code>null</code> or empty)
      */
@@ -44,11 +54,6 @@ public interface ITeiidConnectionInfo {
      * @return the connection type (never <code>null</code>)
      */
     String getType();
-    
-    /**
-     * @return the host provider (never <code>null</code>)
-     */
-    HostProvider getHostProvider();
     
     /**
      * @return the secureStorageProvider
@@ -76,15 +81,21 @@ public interface ITeiidConnectionInfo {
      * @param info the connection properties whose values are being used to update state
      */
     void setAll(ITeiidConnectionInfo info);
-
+    
     /**
-     * @param hostProvider the new value for host provider (never <code>null</code>)
+     * The port, password, user name, persisting password, secure protocol, and host provider are set.
+     * 
+     * @param info the connection properties whose values are being used to update state
+     */
+    void setAll(String host, String port, String username, String password, boolean isSecure );
+    
+    /**
+     * @param host the new value for host (never <code>null</code>)
      * @param loadPasswords load passwords
      * @throws IllegalArgumentException if hostProvider is <code>null</code>
      */
-    void setHostProvider(HostProvider hostProvider, boolean loadPasswords);
-    
-    
+    void setHost(String host);
+
 
     /**
      * @param password the new value for password (can be empty or <code>null</code>)
@@ -117,10 +128,4 @@ public interface ITeiidConnectionInfo {
      * @return the id referencing the password in secure storage
      */
     String getPassToken();
-
-    /**
-     * Set the pass token for this connection info
-     * @param passToken
-     */
-    void setPassToken(String passToken);
 }

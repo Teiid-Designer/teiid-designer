@@ -47,5 +47,14 @@ public interface ISecureStorageProvider {
      * @throws Exception
      */
     void storeInSecureStorage(String nodeKey, String key, String value) throws Exception;
+    
+    /**
+     * Remove the given node from eclipse's secure
+     * storage.
+     * 
+     * @param nodeKey 
+     * @throws Exception
+     */
+    void removeFromSecureStorage(String nodeKey) throws Exception;
 
 }

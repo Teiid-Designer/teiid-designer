@@ -9,15 +9,15 @@ package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import java.net.MalformedURLException;
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.HashCodeUtil;
-import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
-import org.teiid.designer.runtime.spi.HostProvider;
 import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
 
 /**
@@ -29,7 +29,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
 
     protected static final int DEFAULT_PORT_NUMBER = 0;
 
-    private HostProvider hostProvider;
     private ISecureStorageProvider secureStorageProvider;
 
     /*
@@ -37,11 +36,19 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      * then provides a unique reference to the password in the secure storage
      */
     private String passToken;
+    
+    private String passwordStorageKey;
+    
+    protected String url;
 
+    private String host;
     private String port;
     private int portNumber = DEFAULT_PORT_NUMBER;
     private boolean secure;
     private String username;
+
+    
+    boolean settingAllInfo = false;
 
     /**
      * @param port the connection port (can be <code>null</code> or empty)
@@ -51,11 +58,13 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
-    protected TeiidConnectionInfo( String port,
+    protected TeiidConnectionInfo( String host,
+    							   String port,
                                    String username,
                                    ISecureStorageProvider secureStorageProvider,
                                    String password,
                                    boolean secure) {
+    	this.host = host;
         this.port = port;
         try {
 			this.portNumber = Integer.parseInt(port);
@@ -66,16 +75,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
         this.secureStorageProvider = secureStorageProvider;
         this.secure = secure;
 
-        /*
-         * Password must be set last since it relies on getUrl() which is built from
-         * the other properties.
-         *
-         * When restoring from TeiidServerManager, the new TeiidConnectionInfo
-         * will have a pass token for newer models and password for older models
-         * so diverge at this point to ensure both situations are handled.
-         *
-         */
-        initPassword(password);
     }
 
     /**
@@ -91,10 +90,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
         if (password == null)
             return;
 
-        if (ConnectivityUtil.isPasswordToken(password))
-            setPassToken(password);
-        else
-            setPassword(password);
+        setPassword(password);
     }
     
     /**
@@ -126,8 +122,8 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
         TeiidConnectionInfo thatInfo = (TeiidConnectionInfo) object;
 
         // host
-        String thisHost = getHostProvider().getHost();
-        String thatHost = thatInfo.getHostProvider().getHost();
+        String thisHost = getHost();
+        String thatHost = thatInfo.getHost();
 
         if (thisHost == null) {
             if (thatHost != null) {
@@ -195,15 +191,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
 
         return true;
     }
-
-    @Override
-    public HostProvider getHostProvider() {
-        if (this.hostProvider == null) {
-            return HostProvider.DEFAULT_HOST_PROVIDER;
-        }
-
-        return this.hostProvider;
-    }
     
     @Override
     public ISecureStorageProvider getSecureStorageProvider() {
@@ -214,21 +201,21 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      * Get the key to be used for storing properties against for this connection.
      *
      * @return provider key used as reference to secure storage
+     * @throws Exception 
      */
-    private String getProviderKey() {
-        String key;
-        if (passToken == null)
-            key = ConnectivityUtil.buildSecureStorageKey(getClass(), getUrl());
-        else
-            key = ConnectivityUtil.buildSecureStorageKey(getClass(), getUrl(), passToken);
-
-        return key;
+    private void generateProviderKey() throws Exception {
+        if( this.passwordStorageKey == null ) {
+	        if (passToken == null) {
+	            throw new Exception("password token is NULL");
+	        } else {
+	            this.passwordStorageKey = ConnectivityUtil.buildSecureStorageKey(getClass(), getUrl(), passToken);
+	        }
+        }
     }
 
     private boolean passwordExists() {
         try {
-            String providerKey = getProviderKey();
-            boolean exists = secureStorageProvider.existsInSecureStorage(providerKey, getPasswordKey());
+            boolean exists = secureStorageProvider.existsInSecureStorage(this.passwordStorageKey, getPasswordKey());
             return exists;
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
@@ -237,9 +224,10 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     }
 
     private String retrievePassword() {
+    	if( this.passwordStorageKey == null ) return null;
+    	
         try {
-            String providerKey = getProviderKey();
-            return secureStorageProvider.getFromSecureStorage(providerKey, getPasswordKey());
+            return secureStorageProvider.getFromSecureStorage(this.passwordStorageKey, getPasswordKey());
         } catch (Exception ex) {
             DqpPlugin.Util.log(ex);
             return null;
@@ -249,10 +237,57 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     private void generatePasswordToken(String password) {
         try {
             this.passToken = ConnectivityUtil.generateHashToken(getUrl(), password);
-            String providerKey = getProviderKey();
-            secureStorageProvider.storeInSecureStorage(providerKey, getPasswordKey(), password);
         } catch (Exception e) {
             DqpPlugin.Util.log(e);
+        }
+    }
+    
+    private void storePassword(String password) {
+    	boolean restoring = false;
+        try {
+        	 if (passToken == null ) {
+        		 generateUrl();
+        		 if( ConnectivityUtil.isPasswordToken(password)) {
+        			 passToken = password;
+        			 restoring = true;
+        		 } else {
+        			 generatePasswordToken(password);
+        		 }
+        		 generateProviderKey();
+        	 }
+        	 if( !restoring && !passwordExists() ) {
+        		 secureStorageProvider.storeInSecureStorage(this.passwordStorageKey, getPasswordKey(), password);
+        	 }
+        } catch (Exception e) {
+            DqpPlugin.Util.log(e);
+        } finally {
+        	restoring = false;
+        }
+    }
+    
+    private void resetPassword() {
+    	if( settingAllInfo ) return;
+    	
+    	// If HOST or PORT changes, this method needs to be called to do the following
+    	
+    	// 1) get the current password from storage with current passwordStorageKey
+    	String currentPassword = retrievePassword();
+    	
+    	// 2) remove the node from storage
+        try {
+	    	if( this.passwordStorageKey != null ) {
+	        	// if passToken != null, need to remove old stored password so new one can be stored instead?
+	    		secureStorageProvider.removeFromSecureStorage(passwordStorageKey);
+	    	}
+	    } catch (Exception e) {
+	        DqpPlugin.Util.log(e);
+	    }
+        
+    	// 3) regenerate passToken
+    	// 4) regenerate passwordStorageKey
+    	// 5) restore password
+        if( currentPassword != null ) {
+        	setPassword(currentPassword);
         }
     }
 
@@ -263,12 +298,15 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     public String getPassword() {
         String password = retrievePassword();
 
-        if (passToken == null && password != null) {
-            // Password is pre-tokenisation algorithm so generate now and setup
-            generatePasswordToken(password);
-        }
-
         return password;
+    }
+    
+    /**
+     * @return the host (can be <code>null</code> or empty)
+     */
+    @Override
+    public String getHost() {
+        return this.host;
     }
 
     /**
@@ -293,20 +331,24 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public abstract String getType();
+    
+    protected void generateUrl() {
+        // mm<s>://host:port
+        StringBuilder sb = new StringBuilder();
+        sb.append(isSecure() ? MMS : MM);
+        sb.append(getHost());
+        sb.append(':');
+        sb.append(getPort());
+
+    	this.url = sb.toString();
+    }
 
     /**
      * @return the URL (never <code>null</code>)
      */
     @Override
     public String getUrl() {
-        // mm<s>://host:port
-        StringBuilder sb = new StringBuilder();
-        sb.append(isSecure() ? MMS : MM);
-        sb.append(getHostProvider().getHost());
-        sb.append(':');
-        sb.append(getPort());
-
-        return sb.toString();
+    	return this.url;
     }
 
     /**
@@ -325,7 +367,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     @Override
     public int hashCode() {
         return HashCodeUtil.hashCode(0,
-                                     getHostProvider().getHost(),
+                                     getHost(),
                                      getPort(),
                                      isSecure(),
                                      getUsername());
@@ -346,42 +388,33 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setAll( ITeiidConnectionInfo info ) {
-        setHostProvider(info.getHostProvider(), true);
+    	settingAllInfo = true;
+        setHost(info.getHost());
         setPort(info.getPort());
         setUsername(info.getUsername());
         setSecure(info.isSecure());
 
-        /* Do these last since the url is required for creation of the pass token */
-        setPassToken(info.getPassToken());
+        settingAllInfo = false;
+
         setPassword(info.getPassword());
     }
-
+    
     /**
-     * @param hostProvider the new value for host provider (never <code>null</code>)
-     * @param loadPasswords load passwords
-     * @throws IllegalArgumentException if hostProvider is <code>null</code>
+     * The port, password, user name, persisting password, secure protocol, and host provider are set.
+     * 
+     * @param info the connection properties whose values are being used to update state
      */
     @Override
-    public void setHostProvider( HostProvider hostProvider, boolean loadPasswords) {
-        CoreArgCheck.isNotNull(hostProvider, "hostProvider"); //$NON-NLS-1$
+    public void setAll(String host, String port, String username, String password, boolean isSecure ) {
+    	settingAllInfo = true;
+        setHost(host);
+        setPort(port);
+        setUsername(username);
+        setSecure(isSecure);
 
-        
-        this.hostProvider = hostProvider;
+        settingAllInfo = false;
 
-        if( loadPasswords ) {
-	        /* 
-	         * Before changing:
-	         * Retrieve password from secure storage using old url if one has been set
-	         */
-	        boolean passwordExists = passwordExists();
-	        String myPassword = null;
-	        if (passwordExists)
-	            myPassword = retrievePassword();
-	
-	        if (passwordExists)
-	            setPassword(myPassword);
-    	}
-
+        setPassword(password);
     }
 
     /**
@@ -392,14 +425,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
         return this.passToken;
     }
 
-    @Override
-    public void setPassToken(String passToken) {
-        /*
-         * Use the password token to fetch the password from
-         * secure storage.
-         */
-        this.passToken = passToken;
-    }
 
     /**
      * Note. Password can be set to null and this will be stored as the value in secure storage
@@ -408,11 +433,30 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setPassword( String password ) {
+    	if( settingAllInfo ) return;  // setAll() will be setting host/port/username/isSecure. Don't want to setPassword it's complete
+
         /*
          * Real password being passed into this method so generate a token
          * and use it to store the real password in secure storage
          */
-        generatePasswordToken(password);
+    	this.url = null;
+    	this.passToken = null;
+    	this.passwordStorageKey = null;
+    	
+    	if( password != null ) {
+    		storePassword(password);
+    	}
+    }
+    
+    /**
+     * @param port the new value for host (never empty or <code>null</code>)
+     * @see #validate()
+     */
+    @Override
+    public void setHost( String host ) {
+    	this.host = host;
+    	
+    	resetPassword();
     }
 
     /**
@@ -421,14 +465,6 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setPort( String port ) {
-        /* 
-         * Before changing:
-         * Retrieve password from secure storage using old url if one has been set
-         */
-        boolean passwordExists = passwordExists();
-        String myPassword = null;
-        if (passwordExists)
-            myPassword = retrievePassword();
 
         this.port = port;
         try {
@@ -437,8 +473,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
             this.portNumber = DEFAULT_PORT_NUMBER;
         }
 
-        if (passwordExists)
-            setPassword(myPassword);
+        resetPassword();
     }
 
     /**
@@ -446,19 +481,10 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
      */
     @Override
     public void setSecure( boolean secure ) {
-        /* 
-         * Before changing:
-         * Retrieve password from secure storage using old url if one has been set
-         */
-        boolean passwordExists = passwordExists();
-        String myPassword = null;
-        if (passwordExists)
-            myPassword = retrievePassword();
 
         this.secure = secure;
 
-        if (passwordExists)
-            setPassword(myPassword);
+        resetPassword();
     }
 
     /**
@@ -479,7 +505,7 @@ public abstract class TeiidConnectionInfo implements ITeiidConnectionInfo {
     public String toString() {
         return DqpPlugin.Util.getString("teiidConnectionInfoProperties", //$NON-NLS-1$
                                         getType(),
-                                        getHostProvider().getHost(),
+                                        getHost(),
                                         getPort(),
                                         getUsername(),
                                         getPassword(),

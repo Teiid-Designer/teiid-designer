@@ -29,7 +29,6 @@ import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.registry.TeiidRuntimeRegistry;
 import org.teiid.designer.runtime.spi.EventManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
-import org.teiid.designer.runtime.spi.HostProvider;
 import org.teiid.designer.runtime.spi.IExecutionAdmin;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
 import org.teiid.designer.runtime.spi.ITeiidDataSource;
@@ -115,10 +114,31 @@ public class TeiidServer implements ITeiidServer {
      * @throws IllegalArgumentException if any of the parameters are <code>null</code>
      */
     TeiidServer( ITeiidServerVersion serverVersion,
+    			   String host,
                    ITeiidAdminInfo adminInfo,
                    ITeiidJdbcInfo jdbcInfo,
                    EventManager eventManager,
                    IServer parentServer) {
+        this(serverVersion, host, adminInfo, jdbcInfo, eventManager, parentServer, false);
+    }
+    
+    /**
+     * Constructs on new <code>Server</code>.
+     * 
+     * @param serverVersion the version of the server
+     * @param adminInfo the server admin connection properties (never <code>null</code>)
+     * @param jdbcInfo the server JDBC connection properties (never <code>null</code>)
+     * @param eventManager the event manager (never <code>null</code>)
+     * @param parentServer the parent {@link IServer} (never <code>null</code>)
+     * @throws IllegalArgumentException if any of the parameters are <code>null</code>
+     */
+    TeiidServer( ITeiidServerVersion serverVersion,
+    			   String host,
+                   ITeiidAdminInfo adminInfo,
+                   ITeiidJdbcInfo jdbcInfo,
+                   EventManager eventManager,
+                   IServer parentServer,
+                   boolean loadPasswords) {
         CoreArgCheck.isNotNull(serverVersion, "serverVersion"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(adminInfo, "adminInfo"); //$NON-NLS-1$
         CoreArgCheck.isNotNull(jdbcInfo, "jdbcInfo"); //$NON-NLS-1$
@@ -129,7 +149,6 @@ public class TeiidServer implements ITeiidServer {
         this.serverVersion = serverVersion;
         this.eventManager = eventManager;
         this.parentServer = parentServer;
-
         /*
          * All fields must be set prior to calling setHostProvider
          * on TeiidConnectionInfo sub-classes since this calls
@@ -138,10 +157,8 @@ public class TeiidServer implements ITeiidServer {
          */
 
         this.teiidAdminInfo = adminInfo;
-        this.teiidAdminInfo.setHostProvider(this, false);
         
         this.teiidJdbcInfo = jdbcInfo;
-        this.teiidJdbcInfo.setHostProvider(this, false);
 
         this.id = getUrl() + "-" + getServerVersion() + "-" + getParent().getId();  //$NON-NLS-1$//$NON-NLS-2$
         
@@ -324,13 +341,7 @@ public class TeiidServer implements ITeiidServer {
 
     @Override
     public String getHost() {
-        String host = this.parentServer.getHost();
-
-        if (host == null) {
-            host = HostProvider.DEFAULT_HOST;
-        }
-
-        return host;
+        return this.teiidAdminInfo.getHost();
     }
 
     @Override
@@ -534,7 +545,7 @@ public class TeiidServer implements ITeiidServer {
     }
     
     private String getVdbDataSourceConnectionUrl(String vdbName) {
-    	String host = this.teiidJdbcInfo.getHostProvider().getHost();
+    	String host = this.teiidJdbcInfo.getHost();
 		String port = this.teiidJdbcInfo.getPort();
 		String protocol = this.teiidJdbcInfo.isSecure() ? "@mms" : "@mm"; //$NON-NLS-1$ //$NON-NLS-2$
 		return "jdbc:teiid:" + vdbName + protocol+"://"+host+":"+port;  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
