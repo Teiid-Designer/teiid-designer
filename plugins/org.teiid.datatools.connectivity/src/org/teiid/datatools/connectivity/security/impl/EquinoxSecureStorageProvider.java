@@ -109,7 +109,6 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
 	@Override
 	public void removeFromSecureStorage(String nodeKey) throws Exception {
         Assert.isNotNull(nodeKey);
-		System.out.println(" <4444> ESSP.removeFromSecureStorage()\n\tnodeKey = " + nodeKey);
 		ISecurePreferences node = getNode(nodeKey);
 		node.removeNode();
 	}
