@@ -141,7 +141,7 @@ public class VdbDataSourceInfo {
     public String getUrl() {
     	StringBuilder sb = new StringBuilder();
     	sb.append(TEIID_JDBC_URL_PREFIX).append(this.vdbName);
-    	String host = this.teiidServer.getTeiidJdbcInfo().getHostProvider().getHost();
+    	String host = this.teiidServer.getTeiidJdbcInfo().getHost();
 		String port = this.teiidServer.getTeiidJdbcInfo().getPort();
 		String protocol = this.teiidServer.getTeiidJdbcInfo().isSecure() ? SECURE_PROTOCOL : PROTOCOL;
 		sb.append(protocol).append(COLON).append(DELIMITER).append(host).append(COLON).append(port);

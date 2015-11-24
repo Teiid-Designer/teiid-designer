@@ -1,6 +1,7 @@
 package org.teiid.designer.runtime;
 
 import static org.teiid.designer.runtime.DqpPlugin.Util;
+
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
@@ -21,12 +22,26 @@ public class TeiidAdminInfo extends TeiidConnectionInfo implements ITeiidAdminIn
      * @param secure <code>true</code> if a secure connection should be used
      * @see #validate()
      */
-    public TeiidAdminInfo( String port,
+    public TeiidAdminInfo( String host,
+    					   String port,
                            String username,
                            ISecureStorageProvider secureStorageProvider,
                            String password,
                            boolean secure ) {
-        super(port, username, secureStorageProvider, password, secure);
+        super(host, port, username, secureStorageProvider, password, secure);
+        /*
+         * Password must be set last since it relies on getUrl() which is built from
+         * the other properties.
+         *
+         * When restoring from TeiidServerManager, the new TeiidConnectionInfo
+         * will have a pass token for newer models and password for older models
+         * so diverge at this point to ensure both situations are handled.
+         *
+         */
+        
+        if( password != null ) {
+        	setPassword(password);
+        }
     }
     
     @Override
@@ -42,8 +57,7 @@ public class TeiidAdminInfo extends TeiidConnectionInfo implements ITeiidAdminIn
     @SuppressWarnings( "javadoc" )
     @Override
     public ITeiidAdminInfo clone() {
-        TeiidAdminInfo cloned = new TeiidAdminInfo(getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
-        cloned.setHostProvider(getHostProvider());
+        TeiidAdminInfo cloned = new TeiidAdminInfo(getHost(), getPort(), getUsername(), getSecureStorageProvider(), getPassword(), isSecure());
         return cloned;
     }
     

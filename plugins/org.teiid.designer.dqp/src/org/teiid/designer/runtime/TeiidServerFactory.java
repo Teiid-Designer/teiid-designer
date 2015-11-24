@@ -10,8 +10,10 @@ package org.teiid.designer.runtime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.wst.server.core.IServer;
 import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
+import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
 import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
@@ -117,20 +119,36 @@ public class TeiidServerFactory {
                                                                String jdbcUserName,
                                                                String jdbcPassword,
                                                                ServerOptions... options) {
+        /* 
+         * In some cases we want to return a new Teiid Instance even if its in the registry
+         * Such Teiid Instances should be disposed of and not kept around.
+         */
         
-        ITeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(adminPort,
+        String adminPWD = adminPassword;
+        String jdbcPWD = jdbcPassword;
+        
+    	// Pre-set the host
+        String host = parentServer.getHost();
+
+        if (host == null) {
+            host = ITeiidConnectionInfo.DEFAULT_HOST;
+        }
+        
+        ITeiidAdminInfo teiidAdminInfo = new TeiidAdminInfo(host, 
+        													adminPort,
                                                             adminUserName,
                                                             serverManager.getSecureStorageProvider(),
-                                                            adminPassword,
+                                                            adminPWD,
                                                             false);
          
-         ITeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort,
+         ITeiidJdbcInfo teiidJdbcInfo = new TeiidJdbcInfo(host, 
+        		 										 jdbcPort,
                                                          jdbcUserName,
                                                          serverManager.getSecureStorageProvider(),
-                                                         jdbcPassword,
+                                                         jdbcPWD,
                                                          false);
 
-         ITeiidServer teiidServer = new TeiidServer(serverVersion, teiidAdminInfo, teiidJdbcInfo, serverManager, parentServer);
+         ITeiidServer teiidServer = new TeiidServer(serverVersion, host, teiidAdminInfo, teiidJdbcInfo, serverManager, parentServer, false);
          
          processOptions(teiidServer, serverManager, options);
          
@@ -148,13 +166,14 @@ public class TeiidServerFactory {
      * @return instance of {@link ITeiidServer}
      */
     public ITeiidServer createTeiidServer(ITeiidServerVersion serverVersion,
+    														   String host,
                                                                ITeiidAdminInfo teiidAdminInfo,
                                                                ITeiidJdbcInfo teiidJdbcInfo,
                                                                TeiidServerManager serverManager,
                                                                IServer parentServer,
                                                                ServerOptions... options) {
 
-        ITeiidServer teiidServer = new TeiidServer(serverVersion, teiidAdminInfo, teiidJdbcInfo, serverManager, parentServer);
+        ITeiidServer teiidServer = new TeiidServer(serverVersion, host, teiidAdminInfo, teiidJdbcInfo, serverManager, parentServer);
         processOptions(teiidServer, serverManager, options);
         
         return teiidServer;

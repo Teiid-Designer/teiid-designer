@@ -144,7 +144,7 @@ public class Admin8Factory {
                 return new AdminImpl(teiidVersion, newClient);
             }
             LOGGER.info(Messages.gs(Messages.TEIID.TEIID70051, host, port)); //$NON-NLS-1$ //$NON-NLS-2$
-        } catch (UnknownHostException e) {
+        } catch (Exception e) {
         	 throw new AdminProcessingException(Messages.gs(Messages.TEIID.TEIID70000, host, e.getLocalizedMessage()));
         }
         return null;

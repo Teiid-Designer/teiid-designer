@@ -14,7 +14,7 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
  * @since 8.0
  *
  */
-public interface ITeiidServer extends IExecutionAdmin, HostProvider {
+public interface ITeiidServer extends IExecutionAdmin {
 
     /**
      * @return the version information of this server
@@ -50,6 +50,11 @@ public interface ITeiidServer extends IExecutionAdmin, HostProvider {
      */
     EventManager getEventManager();
 
+    /**
+     * @return the host (never <code>null</code>)
+     */
+    String getHost();
+    
     /**
      * @return the host URL (never <code>null</code>)
      */

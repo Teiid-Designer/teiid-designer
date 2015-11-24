@@ -16,11 +16,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.runtime.IStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
-import org.teiid.designer.runtime.spi.HostProvider;
+import org.teiid.designer.runtime.spi.ITeiidConnectionInfo;
 
 /**
  * 
@@ -33,29 +34,33 @@ public class TeiidConnectionInfoTest {
     private static final boolean INITIAL_SECURE = true;
     private static final String INITIAL_USER = "user";
 
-    private static final HostProvider NEW_HOST_PROVIDER = new HostProvider() {
-        @Override
-        public String getHost() {
-            return NEW_HOST;
-        }
-    };
     private static final String NEW_HOST = "newHost";
     private static final String NEW_PORT = "31443";
     private static final String NEW_PSWD = "newPswd";
     private static final String NEW_USER = "newUser";
+    
+    private static final String EXTRA_URL_PARAMETER = "MyExtraUrlPrefix";
 
     static final String PASSWORD_KEY = ConnectionInfo.class.getName() + ".password";
 
     DefaultStorageProvider defaultStorageProvider;
 
-    class ConnectionInfo extends TeiidConnectionInfo {
+    class ConnectionInfo extends TeiidAdminInfo {
 
-        public ConnectionInfo( String port,
+        public ConnectionInfo( String host,
+        					   String port,
                                String username,
                                String password,
                                boolean secure ) {
-            super(port, username, defaultStorageProvider, password, secure);
+            super(host, port, username, defaultStorageProvider, password, secure);
         }
+        
+        public ConnectionInfo( String port,
+			                String username,
+			                String password,
+			                boolean secure ) {
+        	super(ITeiidConnectionInfo.DEFAULT_HOST, port, username, defaultStorageProvider, password, secure);
+		}
         
         @Override
         protected String getPasswordKey() {
@@ -71,6 +76,11 @@ public class TeiidConnectionInfoTest {
         public String getType() {
             return "Test";
         }
+        
+        @Override
+        public String getUrl() {
+            return super.getUrl();
+        }
 
     }
 
@@ -80,12 +90,6 @@ public class TeiidConnectionInfoTest {
     public void beforeEach() {
         defaultStorageProvider = new DefaultStorageProvider();
         this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
-    }
-
-    @Test
-    public void shouldSetHostProvider() {
-        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
-        assertSame(this.connectionInfo.getHostProvider(), NEW_HOST_PROVIDER);
     }
 
     @Test
@@ -249,19 +253,13 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldGetCorrectUrlAfterConstruction() {
-        assertThat(this.connectionInfo.getUrl(), is("mms://" + HostProvider.DEFAULT_HOST + ':' + INITIAL_PORT));
-    }
-
-    @Test
-    public void shouldGetCorrectUrlAfterChangingHostProvider() {
-        this.connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
-        assertThat(this.connectionInfo.getUrl(), is("mms://" + NEW_HOST + ':' + INITIAL_PORT));
+        assertThat(this.connectionInfo.getUrl(), is("mms://" + ITeiidConnectionInfo.DEFAULT_HOST + ':' + INITIAL_PORT));
     }
 
     @Test
     public void shouldGetCorrectUrlWithNotSecureAfterConstruction() {
         this.connectionInfo = new ConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, !INITIAL_SECURE);
-        assertThat(this.connectionInfo.getUrl(), is("mm://" + HostProvider.DEFAULT_HOST + ':' + INITIAL_PORT));
+        assertThat(this.connectionInfo.getUrl(), is("mm://" + ITeiidConnectionInfo.DEFAULT_HOST + ':' + INITIAL_PORT));
     }
 
     @Test
@@ -275,14 +273,13 @@ public class TeiidConnectionInfoTest {
 
     @Test
     public void shouldSetAll() {
-        TeiidConnectionInfo anotherConnectionInfo = new ConnectionInfo(NEW_PORT,
+        TeiidAdminInfo anotherConnectionInfo = new ConnectionInfo(NEW_HOST, NEW_PORT,
                                                                        NEW_USER,
                                                                        NEW_PSWD,
                                                                        !INITIAL_SECURE);
-        anotherConnectionInfo.setHostProvider(NEW_HOST_PROVIDER);
 
         this.connectionInfo.setAll(anotherConnectionInfo);
-        assertSame(this.connectionInfo.getHostProvider(), NEW_HOST_PROVIDER);
+        assertSame(this.connectionInfo.getHost(), NEW_HOST);
         assertThat(this.connectionInfo.getPort(), is(NEW_PORT));
         assertThat(this.connectionInfo.getUsername(), is(NEW_USER));
         assertThat(this.connectionInfo.getPassword(), is(NEW_PSWD));
@@ -332,45 +329,6 @@ public class TeiidConnectionInfoTest {
         assertThat(this.connectionInfo.equals(otherInfo), is(false));
     }
 
-    @Test
-    public void shouldFindPasswordUsingPassToken() throws Exception {
-        String myPassword = "FindMe";
-        String passToken = "MyPassToken";
-        String url = connectionInfo.getUrl();
-
-        String providerKey = ConnectivityUtil.buildSecureStorageKey(ConnectionInfo.class, url, passToken);
-        defaultStorageProvider.storeInSecureStorage(providerKey, PASSWORD_KEY, myPassword);
-
-        ConnectionInfo otherInfo = new ConnectionInfo(connectionInfo.getPort(), connectionInfo.getUsername(), null, connectionInfo.isSecure());
-        assertNull(otherInfo.getPassword());
-
-        otherInfo.setPassToken(passToken);
-        assertEquals(otherInfo.getPassToken(), passToken);
-
-        assertEquals(otherInfo.getPassword(), myPassword);
-    }
-
-    @Test
-    public void shouldFindLegacyPasswordsWithoutPassToken() throws Exception {
-        String myPassword = "FindMe";
-        String url = connectionInfo.getUrl();
-
-        ConnectionInfo otherInfo = new ConnectionInfo(connectionInfo.getPort(), connectionInfo.getUsername(), null, connectionInfo.isSecure());
-        assertNull(otherInfo.getPassToken());
-        assertNull(otherInfo.getPassword());
-
-        String providerKey = ConnectivityUtil.buildSecureStorageKey(ConnectionInfo.class, url);
-        defaultStorageProvider.storeInSecureStorage(providerKey, PASSWORD_KEY, myPassword);
-        assertEquals(otherInfo.getPassword(), myPassword);
-
-        /* Password should not be stored in the correct place with a new pass token */
-        assertNotNull(otherInfo.getPassToken());
-
-        providerKey = ConnectivityUtil.buildSecureStorageKey(ConnectionInfo.class, otherInfo.getUrl(), otherInfo.getPassToken());
-        String otherInfoPasswd = defaultStorageProvider.getFromSecureStorage(providerKey, PASSWORD_KEY);
-        assertEquals(myPassword, otherInfoPasswd);
-    }
-
     /**
      * Sub classes demonstrating that the password reference will be broken
      * if extra url parameter are set in the constructor and initPassword is
@@ -380,26 +338,22 @@ public class TeiidConnectionInfoTest {
      */
     private class LostPasswdSubConnectionInfo extends ConnectionInfo {
 
-        private String extraUrlParameter = null;
-
         public LostPasswdSubConnectionInfo(String port, String username, String password, boolean secure) {
             super(port, username, password, secure);
-            this.extraUrlParameter = "MyExtraUrlPrefix";
         }
 
         @Override
-        public String getUrl() {
-            return "<" + this.extraUrlParameter + ">" + super.getUrl();
+        protected void generateUrl() {
+        	super.generateUrl();
+        	
+            this.url = "<" + EXTRA_URL_PARAMETER + ">" + super.getUrl();
         }
     }
 
     private class FoundPasswdSubConnectionInfo extends ConnectionInfo {
 
-        private String extraUrlParameter = null;
-
         public FoundPasswdSubConnectionInfo(String port, String username, String password, boolean secure) {
             super(port, username, password, secure);
-            this.extraUrlParameter = "MyExtraUrlPrefix";
 
             /*
              * Note this init method has been called after the setting of the
@@ -407,12 +361,14 @@ public class TeiidConnectionInfoTest {
              * value of the url which is required for generating the pass token
              * used to reference the password in storage
              */
-            initPassword(password);
+            setPassword(password);
         }
 
         @Override
-        public String getUrl() {
-            return "<" + this.extraUrlParameter + ">" + super.getUrl();
+        protected void generateUrl() {
+        	super.generateUrl();
+        	
+            this.url = "<" + EXTRA_URL_PARAMETER + ">" + super.getUrl();
         }
     }
 
@@ -422,7 +378,7 @@ public class TeiidConnectionInfoTest {
          * Do it like this and we lose the link to the password!
          */
         LostPasswdSubConnectionInfo subInfo1 = new LostPasswdSubConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
-        assertNull(subInfo1.getPassword());
+        assertNotNull(subInfo1.getPassword());
 
         /*
          * Do it like this and the password link is maintained
@@ -430,25 +386,30 @@ public class TeiidConnectionInfoTest {
         FoundPasswdSubConnectionInfo subInfo2 = new FoundPasswdSubConnectionInfo(INITIAL_PORT, INITIAL_USER, INITIAL_PSWD, INITIAL_SECURE);
         assertEquals(INITIAL_PSWD, subInfo2.getPassword());
     }
-
+    
     @Test
-    public void updatingHostProviderShouldNotStoreNullPasswordIfNoPasswordExisted() throws Exception {
-        String myPassword = "FindMe";
+    public void shouldReplacePasswordWithHostChange() throws Exception {
 
-        String providerKey = ConnectivityUtil.buildSecureStorageKey(ConnectionInfo.class, connectionInfo.getUrl(), connectionInfo.getPassToken());
-        assertTrue(defaultStorageProvider.existsInSecureStorage(providerKey, PASSWORD_KEY));
+    	String originalToken = connectionInfo.getPassToken();
+    	String originalPWD = connectionInfo.getPassword();
+        connectionInfo.setHost(NEW_HOST);
         
-        defaultStorageProvider.clear();
+        assertNotNull(connectionInfo.getPassToken());
+        assertFalse(connectionInfo.getPassToken().equals(originalToken));
+        assertNotNull(connectionInfo.getPassword());
+        assertTrue(connectionInfo.getPassword().equals(originalPWD));
+    }
+    
+    @Test
+    public void shouldReplacePasswordWithPortChange() throws Exception {
 
-        connectionInfo.setHostProvider(NEW_HOST_PROVIDER);
-
-        assertFalse(defaultStorageProvider.existsInSecureStorage(providerKey, PASSWORD_KEY));
-
-        connectionInfo.setPassword(myPassword);
-
-        providerKey = ConnectivityUtil.buildSecureStorageKey(ConnectionInfo.class, connectionInfo.getUrl(), connectionInfo.getPassToken());
-        assertTrue(defaultStorageProvider.existsInSecureStorage(providerKey, PASSWORD_KEY));
-        assertEquals(defaultStorageProvider.getFromSecureStorage(providerKey, PASSWORD_KEY), myPassword);
-        assertEquals(connectionInfo.getPassword(), myPassword);
+    	String originalToken = connectionInfo.getPassToken();
+    	String originalPWD = connectionInfo.getPassword();
+        connectionInfo.setPort(NEW_PORT);
+        
+        assertNotNull(connectionInfo.getPassToken());
+        assertFalse(connectionInfo.getPassToken().equals(originalToken));
+        assertNotNull(connectionInfo.getPassword());
+        assertTrue(connectionInfo.getPassword().equals(originalPWD));
     }
 }

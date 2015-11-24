@@ -11,7 +11,6 @@ import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
 import static org.teiid.designer.runtime.DqpPlugin.Util;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,14 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,9 +36,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.server.core.IServer;
-import org.teiid.core.designer.util.Base64;
 import org.teiid.core.designer.util.CoreArgCheck;
-import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.datatools.connectivity.ConnectivityUtil;
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 import org.teiid.designer.core.util.KeyInValueHashMap;
@@ -57,26 +47,18 @@ import org.teiid.designer.runtime.importer.ImportManager;
 import org.teiid.designer.runtime.preview.PreviewManager;
 import org.teiid.designer.runtime.spi.ExecutionConfigurationEvent;
 import org.teiid.designer.runtime.spi.IExecutionConfigurationListener;
-import org.teiid.designer.runtime.spi.ITeiidAdminInfo;
-import org.teiid.designer.runtime.spi.ITeiidJdbcInfo;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
 import org.teiid.designer.runtime.spi.ITeiidServerVersionListener;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
-import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * The <code>ServerManager</code> class manages the creation, deletion, and editing of servers hosting Teiid Instances.
  *
  * @since 8.0
  */
-public final class TeiidServerManager implements ITeiidServerManager {
+public final class TeiidServerManager implements ITeiidServerManager, TeiidServerRegistryConstants {
 
     // ===========================================================================================================================
     // Constants
@@ -86,103 +68,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
      * Designer UI plugin id
      */
     private static final String DESIGNER_UI_PLUGIN_ID = "org.teiid.designer.ui"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's custom label. May not exist if server is not using a custom label.
-     */
-    private static final String CUSTOM_LABEL_ATTR = "customLabel"; //$NON-NLS-1$
-    
-    /**
-     * The attribute indicating if the server is currently the preview server.
-     */
-    private static final String DEFAULT_ATTR = "default"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's login password.
-     */
-    private static final String PASSWORD_ATTR = "password"; //$NON-NLS-1$
-
-    /**
-     * The file name used when persisting the server registry.
-     */
-    private static final String REGISTRY_FILE = "serverRegistry.xml"; //$NON-NLS-1$
-
-    /**
-     * The tag used when persisting a server.
-     */
-    private static final String SERVER_TAG = "server"; //$NON-NLS-1$
-
-    /**
-     * The server collection tag used when persisting the server registry.
-     */
-    private static final String SERVERS_TAG = "servers"; //$NON-NLS-1$
-    
-    /**
-     * The tag used when persisting admin connection info.
-     */
-    private static final String ADMIN_TAG = "admin"; //$NON-NLS-1$
-    
-    /**
-     * The tag used when persisting jdbc connection info.
-     */
-    private static final String JDBC_TAG = "jdbc"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's login user.
-     */
-    private static final String USER_ATTR = "user"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's host value.
-     */
-    private static final String HOST_ATTR = "host"; //$NON-NLS-1$
-
-    private static final String PARENT_SERVER_ID = "parentServerId"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's version value.
-     */
-    private static final String SERVER_VERSION = "version"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's port value.
-     */
-    private static final String PORT_ATTR = "port"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's secure value.
-     */
-    private static final String SECURE_ATTR = "secure"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's jdbc host value.
-     */
-    private static final String JDBC_HOST_ATTR = "jdbchost"; //$NON-NLS-1$
-
-    /**
-     * The attribute used to persist a server's jdbc port value.
-     */
-    private static final String JDBC_PORT_ATTR = "jdbcport"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's login user.
-     */
-    private static final String JDBC_USER_ATTR = "jdbcuser"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's login password.
-     */
-    private static final String JDBC_PASSWORD_ATTR = "jdbcpassword"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's secure value.
-     */
-    private static final String JDBC_SECURE_ATTR = "jdbcsecure"; //$NON-NLS-1$
-    
-    /**
-     * The attribute used to persist a server's jdbc port override value.
-     */
-    private static final String JDBC_PORT_OVERRIDE_ATTR = "jdbcportoverride"; //$NON-NLS-1$
 
     private class TeiidServerKeyValueAdapter implements KeyFromValueAdapter<String, ITeiidServer> {
 
@@ -242,7 +127,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
      */
     private ISecureStorageProvider secureStorageProvider;
     
-	public TeiidJdbcPortManager jdbcPortManager = new TeiidJdbcPortManager();;
+	public TeiidJdbcPortManager jdbcPortManager = new TeiidJdbcPortManager();
 
     /**
      * Flag indicating whether other open editors should be closed when the default server
@@ -433,7 +318,7 @@ public final class TeiidServerManager implements ITeiidServerManager {
     /**
      * @return the name of the state file that the server registry is persisted to or <code>null</code>
      */
-    private String getStateFileName() {
+    public final String getStateFileName() {
         String name = this.stateLocationPath;
 
         if (this.stateLocationPath != null) {
@@ -619,25 +504,6 @@ public final class TeiidServerManager implements ITeiidServerManager {
         }
     }
 
-    private IServer findParentServer(String host, String parentServerId, ITeiidAdminInfo teiidAdminInfo) throws OrphanedTeiidServerException {
-        IServer[] servers = parentServersProvider.getServers();
-        for (IServer server : servers) {
-            if (! host.equals(server.getHost()))
-                continue;
-
-            if (parentServerId != null && ! server.getId().equals(parentServerId)) {
-                // Double checks against the parent server id only if a parent server id was
-                // save. In the case of the old registry format, this was not possible so host
-                // comparison is sufficient
-                continue;
-            }
-
-            return server;
-        }
-
-        throw new OrphanedTeiidServerException(teiidAdminInfo);
-    }
-
     /**
      * Initialise those managers and listeners under the control of the server manager
      * that may well rely on it.
@@ -668,166 +534,25 @@ public final class TeiidServerManager implements ITeiidServerManager {
                 return;
             }
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            Document doc = docBuilder.parse(new File(getStateFileName()));
-            Node root = doc.getDocumentElement();
-            NodeList servers = root.getChildNodes();
+            // NOTE =================================================
+            // FOR DEBUGGING PURPOSES.. set boolean to TRUE below to print out the server attributes and properties
+            // to the console as they are loaded
+            
+            TeiidServerRegistryReader reader = 
+            		new TeiidServerRegistryReader( this, parentServersProvider, this.secureStorageProvider, false);
 
-            for (int size = servers.getLength(), i = 0; i < size; ++i) {
-                ITeiidAdminInfo teiidAdminInfo = null;
-                ITeiidJdbcInfo teiidJdbcInfo = null;
-                String jdbcOverridePort = null;
-                Node serverNode = servers.item(i);
-
-                // server attributes (host, custom label, default teiid instance)
-                NamedNodeMap serverAttributeMap = serverNode.getAttributes();
-
-                if (serverAttributeMap == null) {
-                    continue;
-                }
-
-                String host = null;
-                String parentServerId = null;
-                String customLabel = null;
-                boolean previewServer = false;
-
-                // version attribute
-                ITeiidServerVersion teiidServerVersion = Version.TEIID_DEFAULT.get();
-                Node versionNode = serverAttributeMap.getNamedItem(SERVER_VERSION);
-                if (versionNode != null) teiidServerVersion = new TeiidServerVersion(versionNode.getNodeValue());
-
-                // host attribute
-                Node hostNode = serverAttributeMap.getNamedItem(HOST_ATTR);
-
-                if (hostNode != null) {
-                    host = hostNode.getNodeValue();
-                }
-
-                Node parentServerNode = serverAttributeMap.getNamedItem(PARENT_SERVER_ID);
-
-                if (parentServerNode != null) {
-                    parentServerId = parentServerNode.getNodeValue();
-                }
-
-                // custom label attribute
-                Node customLabelNode = serverAttributeMap.getNamedItem(CUSTOM_LABEL_ATTR);
-
-                if (customLabelNode != null) {
-                    customLabel = customLabelNode.getNodeValue();
-                }
-
-                // default teiid instance attribute
-                Node defaultServerNode = serverAttributeMap.getNamedItem(DEFAULT_ATTR);
-
-                if (defaultServerNode != null) {
-                    previewServer = Boolean.parseBoolean(defaultServerNode.getNodeValue());
-                }
-
-                // Check for newer XML structure where server contains child nodes (admin & jdbc elements)
-                NodeList connectionNodes = serverNode.getChildNodes();
-
-                if (connectionNodes.getLength() > 0) {
-                    for (int connSize = connectionNodes.getLength(), j = 0; j < connSize; ++j) {
-                        Node connNode = connectionNodes.item(j);
-                        if (connNode.getNodeType() != Node.TEXT_NODE) {
-                            if (connNode.getNodeName().equalsIgnoreCase(ADMIN_TAG)) {
-                                NamedNodeMap attributeMap = connNode.getAttributes();
-                                if (attributeMap == null) continue;
-
-                                // if host is null than an older registry xml file is being used
-                                if (host == null) {
-                                    Node adminHostNode = attributeMap.getNamedItem(HOST_ATTR);
-                                    assert (adminHostNode != null);
-                                    host = adminHostNode.getNodeValue();
-                                }
-
-                                // port must be non-null/not empty to be valid server
-                                Node adminPortNode = attributeMap.getNamedItem(PORT_ATTR); // should always have one
-                                assert (adminPortNode != null);
-                                String adminPort = adminPortNode.getNodeValue();
-
-                                // username must be non-null/not empty to be valid server
-                                Node userNode = attributeMap.getNamedItem(USER_ATTR); // should always have one
-                                assert (userNode != null);
-                                String adminUsername = userNode.getNodeValue();
-                                Node passwordNode = attributeMap.getNamedItem(PASSWORD_ATTR);
-                                String adminPassword = ((passwordNode == null) ? null : new String(
-                                                                                                   Base64.decode(passwordNode.getNodeValue()),
-                                                                                                   "UTF-8")); //$NON-NLS-1$
-                                Node adminSecureNode = attributeMap.getNamedItem(SECURE_ATTR);
-                                String adminSecureStr = ((adminSecureNode == null) ? Boolean.FALSE.toString() : adminSecureNode.getNodeValue());
-
-                                teiidAdminInfo = new TeiidAdminInfo(adminPort, adminUsername, secureStorageProvider,
-                                                                    adminPassword, Boolean.parseBoolean(adminSecureStr));
-                            } else if (connNode.getNodeName().equalsIgnoreCase(JDBC_TAG)) {
-                                NamedNodeMap attributeMap = connNode.getAttributes();
-                                if (attributeMap == null) continue;
-
-                                // if host is null than an older registry xml file is being used
-                                if (host == null) {
-                                    Node jdbcHostNode = attributeMap.getNamedItem(JDBC_HOST_ATTR);
-                                    assert (jdbcHostNode != null);
-                                    host = jdbcHostNode.getNodeValue();
-                                }
-
-                                // port must be non-null/not empty to be valid server
-                                Node jdbcPortNode = attributeMap.getNamedItem(JDBC_PORT_ATTR);
-                                assert (jdbcPortNode != null);
-                                String jdbcPort = jdbcPortNode.getNodeValue();
-                                
-                                // port override must be non-null/not empty to be valid server
-                                Node jdbcPortOverrideNode = attributeMap.getNamedItem(JDBC_PORT_OVERRIDE_ATTR);
-                                if( jdbcPortOverrideNode != null ) {
-                                	jdbcOverridePort = jdbcPortOverrideNode.getNodeValue();
-                                	
-                                }
-                                
-
-                                // username must be non-null/not empty to be valid server
-                                Node jdbcUserNode = attributeMap.getNamedItem(JDBC_USER_ATTR);
-                                assert (jdbcUserNode != null);
-                                String jdbcUsername = jdbcUserNode.getNodeValue();
-
-                                Node jdbcPasswordNode = attributeMap.getNamedItem(JDBC_PASSWORD_ATTR);
-                                String jdbcPassword = ((jdbcPasswordNode == null) ? null : new String(
-                                                                                                      Base64.decode(jdbcPasswordNode.getNodeValue()),
-                                                                                                      "UTF-8")); //$NON-NLS-1$
-                                Node jdbcSecureNode = attributeMap.getNamedItem(JDBC_SECURE_ATTR);
-                                String jdbcSecureStr = ((jdbcSecureNode == null) ? Boolean.FALSE.toString() : jdbcSecureNode.getNodeValue());
-                                teiidJdbcInfo = new TeiidJdbcInfo(jdbcPort, jdbcUsername, secureStorageProvider, jdbcPassword,
-                                                                  Boolean.parseBoolean(jdbcSecureStr));
-                            }
-                        }
-                    }
-                }
-
-                // add server to registry
-                IServer parentServer = null;
-                try {
-                    parentServer = findParentServer(host, parentServerId, teiidAdminInfo);
-                } catch (OrphanedTeiidServerException ex) {
-                    // Cannot add the Teiid Instance since it has no parent
-                    continue;
-                }
-
-                TeiidServerFactory teiidServerFactory = new TeiidServerFactory();
-                ITeiidServer teiidServer = teiidServerFactory.createTeiidServer(teiidServerVersion,
-                                                                                teiidAdminInfo,
-                                                                                teiidJdbcInfo,
-                                                                                this,
-                                                                                parentServer);
-                teiidServer.setCustomLabel(customLabel);
-
-               addServerInternal(teiidServer, true);
-               if( !StringUtilities.isEmpty(jdbcOverridePort) ) {
-            	   this.jdbcPortManager.setPort(teiidServer, Integer.parseInt(jdbcOverridePort), true);
-               }
-
-                if (previewServer) {
-                    defaultServer = teiidServer;
-                }
+            Collection<ITeiidServer> loadedServers = reader.restoreServers();
+            for( ITeiidServer server: loadedServers ) {
+            	addServerInternal(server, true);
             }
+            
+            ITeiidServer loadedDefaultServer = reader.getDefaultServer();
+            if( loadedDefaultServer != null ) {
+            	defaultServer = loadedDefaultServer;
+            } else if( !loadedServers.isEmpty() ) {
+            	defaultServer = loadedServers.iterator().next();
+            }
+
         } catch (Exception e) {
             Util.log(e);
         } finally {
@@ -920,6 +645,10 @@ public final class TeiidServerManager implements ITeiidServerManager {
 	public String getJdbcPort(ITeiidServer server, boolean isOverride) {
     	return jdbcPortManager.getPort(server, isOverride);
 	}
+    
+    public final TeiidJdbcPortManager getJdbcPortManager() {
+    	return jdbcPortManager;
+    }
 
 	/**
      * Close editors associated with modelling projects
@@ -1001,101 +730,14 @@ public final class TeiidServerManager implements ITeiidServerManager {
 
             return;
         }
-
-        try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
-            Document doc = docBuilder.newDocument();
-
-            // create root element
-            Element root = doc.createElement(SERVERS_TAG);
-            doc.appendChild(root);
-
-            Collection<ITeiidServer> servers = teiidServers.values();
-            for (ITeiidServer teiidServer : servers) {
-                Element serverElement = doc.createElement(SERVER_TAG);
-                root.appendChild(serverElement);
-                    
-                { // Server Version
-                    serverElement.setAttribute(SERVER_VERSION, teiidServer.getServerVersion().toString());
-                }
-                    
-                { // Host
-                    serverElement.setAttribute(HOST_ATTR, teiidServer.getHost());
-                }
-                    
-                { // Parent Server Id
-                    serverElement.setAttribute(PARENT_SERVER_ID, teiidServer.getParent().getId());
-                }
-                    
-                { // CUSTOM LABEL
-                    if (!StringUtilities.isEmpty(teiidServer.getCustomLabel())) {
-                        serverElement.setAttribute(CUSTOM_LABEL_ATTR, teiidServer.getCustomLabel());
-                    }
-                }
-                    
-                { // ADMIN CONNECTION INFO
-                    Element adminElement = doc.createElement(ADMIN_TAG);
-                    serverElement.appendChild(adminElement);
-
-                    adminElement.setAttribute(PORT_ATTR, teiidServer.getTeiidAdminInfo().getPort());
-                    adminElement.setAttribute(USER_ATTR, teiidServer.getTeiidAdminInfo().getUsername());
-
-                    /* The token of the password is saved to file while the password is saved in the eclipse secure storage
-                     * Saving the token ensures that its possible to find the password again.
-                     */
-                    String passToken = teiidServer.getTeiidAdminInfo().getPassToken();
-                    if (passToken != null)
-                        adminElement.setAttribute(PASSWORD_ATTR, Base64.encodeBytes(passToken.getBytes("UTF-8"))); //$NON-NLS-1$
-
-                    adminElement.setAttribute(SECURE_ATTR, Boolean.toString(teiidServer.getTeiidAdminInfo().isSecure()));
-                }
-                    
-                { // JDBC CONNECTION INFO
-                    Element jdbcElement = doc.createElement(JDBC_TAG);
-                    serverElement.appendChild(jdbcElement);
-                    
-                    // Check if actual port is cached, else set to default
-                    String actualPort = jdbcPortManager.getPort(teiidServer, false);
-                    if( actualPort == null ) {
-                    	actualPort = ITeiidJdbcInfo.DEFAULT_PORT;
-                    }
-                    jdbcElement.setAttribute(JDBC_PORT_ATTR, actualPort);
-
-                    // check for port override
-                    String overridePort = jdbcPortManager.getPort(teiidServer, true);
-                    if( overridePort != null ) {
-                    	jdbcElement.setAttribute(JDBC_PORT_OVERRIDE_ATTR, overridePort);
-                    }
-                    jdbcElement.setAttribute(JDBC_USER_ATTR, teiidServer.getTeiidJdbcInfo().getUsername());
-                        
-                    /* The token of the password is saved to file while the password is saved in the eclipse secure storage
-                     * Saving the token ensures that its possible to find the password again.
-                     */
-                    String passToken = teiidServer.getTeiidJdbcInfo().getPassToken();
-                    if (passToken != null)
-                        jdbcElement.setAttribute(JDBC_PASSWORD_ATTR, Base64.encodeBytes(passToken.getBytes("UTF-8"))); //$NON-NLS-1$
-
-                    jdbcElement.setAttribute(JDBC_SECURE_ATTR, Boolean.toString(teiidServer.getTeiidJdbcInfo().isSecure()));
-                }
-                    
-                if ((defaultServer != null) && (defaultServer.equals(teiidServer))) {
-                    serverElement.setAttribute(DEFAULT_ATTR, Boolean.toString(true));
-                }
-            }
-
-            DOMSource source = new DOMSource(doc);
-            StreamResult resultXML = new StreamResult(new FileOutputStream(getStateFileName()));
-            TransformerFactory transFactory = TransformerFactory.newInstance();
-            Transformer transformer = transFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2"); //$NON-NLS-1$ //$NON-NLS-2$ 
-            transformer.transform(source, resultXML);
-        } catch (Exception e) {
-            IStatus status = new Status(IStatus.ERROR, PLUGIN_ID,
-                                        Util.getString("errorSavingServerRegistry", getStateFileName())); //$NON-NLS-1$
-            Util.log(status);
-        }
+        
+        // NOTE =================================================
+        // FOR DEBUGGING PURPOSES.. set boolean to TRUE below to print out the server attributes and properties
+        // to the console as they are written out
+        
+        TeiidServerRegistryWriter writer = new TeiidServerRegistryWriter( this, defaultServer, false); 
+        
+        writer.storeServers(teiidServers.values());
     }
 
     /**

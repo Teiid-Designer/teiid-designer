@@ -21,8 +21,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,6 +52,7 @@ import org.eclipse.wst.server.ui.editor.IServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.command.ServerCommand;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartInput;
 import org.eclipse.wst.server.ui.internal.editor.ServerResourceCommandManager;
+import org.jboss.ide.eclipse.as.core.server.internal.JBossServer;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.loading.ComponentLoadingManager;
@@ -161,11 +160,18 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                     switch (event.getEventType()) {
                         case REFRESH:
                         case UPDATE:
-                            refreshDisplayValues();
+                        	// Put the refesh on Swt thread
+                            Runnable runnable = new Runnable() {
+                                @Override
+                                public void run() {
+                                	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), 
+                                			teiidServer.getTeiidJdbcInfo().getPassword());
+                                }
+                            };
+                            UiUtil.runInSwtThread(runnable, true);
                             break;
                         case REMOVE:
                             disposeContents();
-                            manageLoad(new Properties());
                             break;
                         case DEFAULT:
                         case ADD:
@@ -231,7 +237,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
             if (! parentServer.equals(server))
                 return;
 
-            refreshDisplayValues();
+        	refreshDisplayValues(teiidServer.getTeiidAdminInfo().getPassword(), teiidServer.getTeiidJdbcInfo().getPassword());
         }
     };
 
@@ -292,17 +298,25 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
                 getServerManager().addListener(excutionConfigListener);
 
+                String adminPWD = null;
+                String jdbcPWD = null;
+                
                 try {
                     TeiidServerAdapterFactory adapterFactory = new TeiidServerAdapterFactory();
-                    if (parentServer.getServerState() == IServer.STATE_STARTED)
+                    if (parentServer.getServerState() == IServer.STATE_STARTED) {
                         // If server is started we can be more adventurous in what to display since we can ask
                         // the server whether teiid has been installed.
                         teiidServer = adapterFactory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
-                    else {
+                    	adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
+                    	jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
+                    } else {
                         // Cannot ask a lot except whether the server is a JBoss Server
                         teiidServer = adapterFactory.adaptServer(parentServer,
                                                              ServerOptions.NO_CHECK_CONNECTION,
                                                              ServerOptions.ADD_TO_REGISTRY);
+                        // password may still be a passToken only
+                        adminPWD = teiidServer.getTeiidAdminInfo().getPassword();
+                        jdbcPWD = teiidServer.getTeiidJdbcInfo().getPassword();
                     }
                 } catch (Exception ex) {
                     ErrorHandler.toExceptionDialog(ex);
@@ -320,6 +334,18 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
                 }
 
                 form.reflow(true);
+                if( teiidServer != null ) {
+                	final String aPWD = adminPWD;
+                	final String jPWD = jdbcPWD;
+                	// Put the refesh on Swt thread
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                        	refreshDisplayValues(aPWD, jPWD);
+                        }
+                    };
+                    UiUtil.runInSwtThread(runnable, true);
+                }
             }
         };
 
@@ -590,10 +616,12 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         commandManager.execute(command);
     }
 
-    private void refreshDisplayValues() {
+    private void refreshDisplayValues(final String adminPWD, final String jdbcPWD) {
         if (teiidServer == null || form.isDisposed())
             return;
 
+        if( hostNameLabel.isDisposed() ) return;
+        
         hostNameLabel.setText(teiidServer.getHost());
         String versionValue = teiidServer.getServerVersion().toString();
         if(! versionValueCombo.getText().equals(versionValue)){
@@ -605,14 +633,14 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
 
         ITeiidAdminInfo teiidAdminInfo = teiidServer.getTeiidAdminInfo();
         ITeiidJdbcInfo teiidJdbcInfo = teiidServer.getTeiidJdbcInfo();
-
+        
         if( isSevenServer() ) {
 	        if (adminUserNameText != null) {
 	            setIfDifferent(adminUserNameText, teiidAdminInfo.getUsername() != null ? teiidAdminInfo.getUsername() : EMPTY_STRING);
 	        }
 	
 	        if (adminPasswdText != null) {
-	            setIfDifferent(adminPasswdText, teiidAdminInfo.getPassword() != null ? teiidAdminInfo.getPassword() : EMPTY_STRING);
+	            setIfDifferent(adminPasswdText, adminPWD != null ? adminPWD : EMPTY_STRING);
 	        }
 	        
 	        String portValue = teiidAdminInfo.getPort() != null ? teiidAdminInfo.getPort() : EMPTY_STRING;
@@ -628,7 +656,7 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         }
 
         setIfDifferent(jdbcUserNameText, teiidJdbcInfo.getUsername() != null ? teiidJdbcInfo.getUsername() : EMPTY_STRING);
-        setIfDifferent(jdbcPasswdText, teiidJdbcInfo.getPassword() != null ? teiidJdbcInfo.getPassword() : EMPTY_STRING);
+        setIfDifferent(jdbcPasswdText, jdbcPWD != null ? jdbcPWD : EMPTY_STRING);
         
         if( isSevenServer() ) {
         	String portValue = teiidJdbcInfo.getPort() != null ? teiidJdbcInfo.getPort() : EMPTY_STRING;
@@ -729,19 +757,30 @@ public class TeiidServerEditor extends EditorPart implements IManagedLoading {
         }
         // =========================================================================
         
-        ITeiidServer newTeiidServer = teiidServerFactory.createTeiidServer(
-                                             newTeiidServerVersion,
-                                             getServerManager(),
-                                             teiidServer.getParent(),
-                                             teiidServer.getTeiidAdminInfo().getPort(),
-                                             adminUserNameText != null ? adminUserNameText.getText() : teiidServer.getTeiidAdminInfo().getUsername(),
-                                             adminPasswdText != null ? adminPasswdText.getText() : teiidServer.getTeiidAdminInfo().getPassword(),
-                                             finalJdbcPort, // <<<<<<<<< DETERMINED ABOVE
-                                             jdbcUserNameText.getText(),
-                                             jdbcPasswdText.getText(),
-                                             serverOptions.toArray(new ServerOptions[0]));
-
-        teiidServer.update(newTeiidServer);
+        String adminUname = null;
+        String adminPwd = null;
+        if( isSevenServer() )  {
+        	adminUname = adminUserNameText != null ? adminUserNameText.getText() : teiidServer.getTeiidAdminInfo().getUsername();
+        	adminPwd = adminPasswdText != null ? adminPasswdText.getText() : teiidServer.getTeiidAdminInfo().getPassword();
+        } else {
+        	JBossServer jb = (JBossServer) teiidServer.getParent().loadAdapter(JBossServer.class, null);
+        	adminUname = jb.getUsername();
+        	adminPwd = jb.getPassword();
+        }
+        
+        teiidServer.getTeiidAdminInfo().setAll(
+        		teiidServer.getTeiidAdminInfo().getHost(), 
+        		teiidServer.getTeiidAdminInfo().getPort(), 
+        		adminUname, 
+        		adminPwd, 
+        		teiidServer.getTeiidAdminInfo().isSecure());
+        
+        teiidServer.getTeiidJdbcInfo().setAll(
+        		teiidServer.getTeiidAdminInfo().getHost(), 
+        		finalJdbcPort, 
+        		jdbcUserNameText.getText(), 
+        		jdbcPasswdText.getText(), 
+        		teiidServer.getTeiidAdminInfo().isSecure());
 
         dirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
