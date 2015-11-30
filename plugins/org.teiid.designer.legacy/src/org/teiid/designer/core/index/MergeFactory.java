@@ -13,6 +13,7 @@ package org.teiid.designer.core.index;
 
 import java.io.IOException;
 import java.util.Map;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * A mergeFactory is used to merge 2 indexes into one. One of the indexes 
@@ -172,7 +173,7 @@ public class MergeFactory {
 			else if (word2 == null)
 				compare= -1;
 			else
-				compare= Util.compare(word1.getWord(), word2.getWord());
+				compare= StringUtilities.compare(word1.getWord(), word2.getWord());
 			if (compare < 0) {
 				word1.mapRefs(mappingOld);
 				mergeOutput.addWord(word1);

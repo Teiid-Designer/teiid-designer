@@ -14,8 +14,8 @@ package org.teiid.designer.core.index;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-
 import org.teiid.core.designer.util.CharOperation;
+import org.teiid.core.designer.util.StringUtilities;
 
 
 /**
@@ -131,7 +131,7 @@ public class IndexSummary {
 		while (min <= max) {
 			int mid= (min + max) / 2;
 			FirstWordInBlock entry= (FirstWordInBlock) firstWordsInBlocks.get(mid);
-			int compare= Util.compare(word, entry.word);
+			int compare= StringUtilities.compare(word, entry.word);
 			if (compare == 0)
 				return entry.blockNum;
 			if (compare < 0)
