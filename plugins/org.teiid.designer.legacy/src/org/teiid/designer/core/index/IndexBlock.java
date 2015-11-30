@@ -12,7 +12,6 @@
 package org.teiid.designer.core.index;
 
 import java.util.Arrays;
-
 import org.teiid.core.designer.util.CharOperation;
 
 /**
@@ -23,9 +22,33 @@ import org.teiid.core.designer.util.CharOperation;
 
 public abstract class IndexBlock extends Block {
 
+    private int offset= 0;
+
 	public IndexBlock(int blockSize) {
 		super(blockSize);
 	}
+
+	/**
+     * @return the offset
+     */
+    public int getOffset() {
+        return this.offset;
+    }
+
+	/**
+     * @param offset the offset to set
+     */
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    /**
+     * @return whether the block is empty or not (if it doesn't contain any wordEntry).
+     */
+    public boolean isEmpty() {
+        return getOffset() == 0;
+    }
+
 	/**
 	 * Adds the given wordEntry to the indexBlock.
 	 */
@@ -59,10 +82,6 @@ public abstract class IndexBlock extends Block {
 		}
 		return null;
 	}
-	/**
-	 * Returns whether the block is empty or not (if it doesn't contain any wordEntry).
-	 */
-	public abstract boolean isEmpty();
 
 	/**
 	 * Finds the next wordEntry and stores it in the given entry.
@@ -70,5 +89,6 @@ public abstract class IndexBlock extends Block {
 	public abstract boolean nextEntry(WordEntry entry);
 
 	public void reset() {
+	    setOffset(0);
 	}
 }
