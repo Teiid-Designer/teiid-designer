@@ -198,5 +198,10 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
 				procedure, viewProcedure.getRestMethod(), viewProcedure.getRestUri(),  viewProcedure.getRestCharSet(),  viewProcedure.getRestHeaders(), viewProcedure.getRestDescription());
 		super.applyProcedureExtensionProperties(procedureRef, procedure);
 	}
+	
+	public void addTransformation(BaseTable baseTable, RelationalViewTable viewTable) {
+        // Set the transformation SQL
+        TransformationHelper.createTransformation(baseTable, viewTable.getTransformationSQL());
+	}
 
 }
