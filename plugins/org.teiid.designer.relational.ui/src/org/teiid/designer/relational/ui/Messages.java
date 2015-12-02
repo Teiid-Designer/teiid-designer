@@ -87,6 +87,7 @@ public class Messages extends NLS {
     public static String primaryKeyLabel;
     public static String columnsLabel;
     public static String uniqueConstraintLabel;
+    public static String uniqueConstraintsLabel;
     public static String columnNameLabel;
     public static String parameterNameLabel;
     public static String dataTypeLabel;
@@ -134,6 +135,8 @@ public class Messages extends NLS {
 	public static String createIndexTitle;
 	public static String editIndexTitle;
 	public static String includeResultSetTooltip;
+	public static String createUniqueConstraintTitle;
+	public static String editUniqueConstraintTitle;
     		
     static {
         NLS.initializeMessages("org.teiid.designer.relational.ui.messages", Messages.class); //$NON-NLS-1$
