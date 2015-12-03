@@ -9,7 +9,9 @@ package org.teiid.designer.transformation.ddl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -38,6 +40,8 @@ import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
 import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
@@ -63,6 +67,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private RelationalModelExtensionAssistant assistant;
     
     private List<IStatus> issues = new ArrayList<IStatus>();
+    
+    private Set<String> namespaces = new HashSet<String>();
 
 	/**
 	 * @param modelResource
@@ -84,7 +90,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				append(StringConstants.NEW_LINE);
 			}
 		}
-		
+		if( ! namespaces.isEmpty() ) {
+			for( String namespace : namespaces ) {
+				ddlBuffer.insert(0, namespace + NEW_LINE);
+			}
+			ddlBuffer.insert(0, NEW_LINE);
+		}
 		return ddlBuffer.toString();
 	}
 	
@@ -393,11 +404,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		String options = getProcedureOptions(procedure);
 		if( !StringUtilities.isEmpty(options)) {
-			sb.append(NEW_LINE + CLOSE_BRACKET);
+			sb.append(NEW_LINE);
 			sb.append(SPACE).append(options);
-		} else {
-			sb.append(CLOSE_BRACKET);
 		}
+//		else {
+//			sb.append(CLOSE_BRACKET);
+//		}
 		
 		// Depending on the procedure type, need to append either one of the following:
 		//   > returns datatype
@@ -706,6 +718,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 					setBooleanProperty(DECOMPOSABLE_PROP, value, false, options);
 				}
 			}
+		} else {
+			// REST PROPERTIES??
+			String value =  getRestPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
+			if( value != null ) namespaces.add(REST_TEIID_SET_NAMESPACE);
+			
+			options.add(REST_URI, value, null);
+			
+			value =  getRestPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
+			if( value != null ) namespaces.add(REST_TEIID_SET_NAMESPACE);
+			
+			options.add(REST_METHOD, value, null);
 		}
 		
 		return options.toString();
@@ -723,6 +746,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     	try {
 			return getRelationalModelExtensionAssistant().getPropertyValue(eObj, propertyID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return null;
+    }
+    
+    private String getRestPropertyValue(EObject eObj, String propertyID ) {
+    	
+    	try {
+			return RestModelExtensionAssistant.getRestProperty(eObj, propertyID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

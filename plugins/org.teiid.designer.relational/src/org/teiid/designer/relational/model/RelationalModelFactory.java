@@ -1220,7 +1220,7 @@ public class RelationalModelFactory implements RelationalConstants {
         // find the assistant for the property
         for (ModelExtensionAssistant assistant : assistants) {
         	// Prepend the assistant namespace to the propertyId, since it doesnt have one
-        	String namespacedId = assistant.getNamespacePrefix()+':'+propId;
+        	String namespacedId = propId; // assistant.getNamespacePrefix()+':'+propId;
 
         	if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
                 return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);

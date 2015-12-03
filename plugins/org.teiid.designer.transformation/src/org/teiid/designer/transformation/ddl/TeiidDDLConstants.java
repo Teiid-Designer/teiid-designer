@@ -95,5 +95,20 @@ public interface TeiidDDLConstants {
 		public static final String INOUT = "INOUT"; //$NON-NLS-1$
 		public static final String OUT = "OUT"; //$NON-NLS-1$
 		public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
-
+		
+		/* REST EXTENSION PROPERTIES
+		METHOD 	HTTP Method to use 	Yes 	GET | POST| PUT | DELETE
+		URI 	URI of procedure 	Yes 	ex:/procedure
+		PRODUCES 	Type of content produced by the service 	no 	xml | json | plain | any text
+		CHARSET 	When procedure returns Blob, and content type text based, this character set to used to convert the data 	no 	US-ASCII | UTF-8 
+		*/
+		public static final String METHOD = "METHOD"; //$NON-NLS-1$
+		public static final String REST_METHOD = "REST:METHOD"; //$NON-NLS-1$
+		public static final String URI = "URI"; //$NON-NLS-1$
+		public static final String REST_URI = "REST:URI"; //$NON-NLS-1$
+		public static final String PRODUCES = "PRODUCES"; //$NON-NLS-1$
+		public static final String REST_PRODUCES = "REST:PRODUCES"; //$NON-NLS-1$
+		public static final String CHARSET = "CHARSET"; //$NON-NLS-1$
+		public static final String REST_CHARSET = "REST:CHARSET"; //$NON-NLS-1$
+		public static final String REST_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://teiid.org/rest' AS REST;"; //$NON-NLS-1$
 }

@@ -38,6 +38,7 @@ import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -78,6 +79,10 @@ public class TeiidDdlImporter extends StandardImporter {
     private static final String NS_DESIGNER_EXCEL = "excel"; //$NON-NLS-1$
     private static final String NS_DESIGNER_JPA = "jpa2"; //$NON-NLS-1$
     
+	private static final String REST_COLON_PREFIX= "REST:";  //$NON-NLS-1$
+	private static final String REST_URI = "URI";  //$NON-NLS-1$
+	private static final String REST_METHOD = "METHOD";  //$NON-NLS-1$
+	private static final String REST_CHARSET = "CHARSET";  //$NON-NLS-1$
     // Added to address TEIID-3629
     private static final String SF_PROPNAME_CALCULATED_BAD = "calculated"; //$NON-NLS-1$
     private static final String SF_PROPNAME_CALCULATED_GOOD = "Calculated"; //$NON-NLS-1$
@@ -1217,7 +1222,23 @@ public class TeiidDdlImporter extends StandardImporter {
 				}
 				String optionValueStr = (String)optionValue;
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
-					relationalEntity.addExtensionProperty(optionName, optionValueStr);
+					if( relationalEntity instanceof RelationalViewProcedure ) {
+						RelationalViewProcedure proc = (RelationalViewProcedure)relationalEntity;
+						// If REST property for Virtual Procedures.. process separately
+						if( optionName.startsWith(REST_COLON_PREFIX) ) {
+							if( optionName.toUpperCase().endsWith(REST_URI)) {
+								proc.setRestUri(optionValueStr);
+							} else if( optionName.toUpperCase().endsWith(REST_METHOD)) {
+								proc.setRestMethod(optionValueStr);
+							} else if( optionName.toUpperCase().endsWith(REST_CHARSET)) {
+								proc.setRestCharSet(optionValueStr);
+							} else {
+								relationalEntity.addExtensionProperty(optionName, optionValueStr);
+							}
+						}
+					} else {
+						relationalEntity.addExtensionProperty(optionName, optionValueStr);
+					}
 				}
 			}
 			nodeIter.remove();
