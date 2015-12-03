@@ -29,6 +29,9 @@ public class WebServiceOperation extends RelationalReference {
 
     private String transformationSQL;
     
+    private boolean includeInputMessage = true;
+    private boolean includeOutputMessage = true;
+    
     
 	public WebServiceOperation() {
 		super();
@@ -179,6 +182,22 @@ public class WebServiceOperation extends RelationalReference {
     	
     	return proposedName;
     }
+
+	public boolean isIncludeInputMessage() {
+		return includeInputMessage;
+	}
+
+	public void setIncludeInputMessage(boolean includeInputMessage) {
+		this.includeInputMessage = includeInputMessage;
+	}
+	
+	public boolean isIncludeOutputMessage() {
+		return includeOutputMessage;
+	}
+
+	public void setIncludeOutputMessage(boolean includeOutputMessage) {
+		this.includeOutputMessage = includeOutputMessage;
+	}
     
     
 }

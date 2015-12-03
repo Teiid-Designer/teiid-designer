@@ -971,16 +971,19 @@ public class OperationObjectEditorPage extends TransformationObjectEditorPage
     		}
     		
     		// Input
-    		Input input = factory.createInput();
-    		input.setName(operationData.getInputMessageName());
-    		operation.setInput(input);
-    		input.setContentElement(operationData.getInputContentViaElement());
-    		
-    		Output output = factory.createOutput();
-    		output.setName(operationData.getOutputMessageName());
-    		operation.setOutput(output);
-    		output.setContentElement(operationData.getOutputContentViaElement());
-    		output.setXmlDocument(operationData.getXmlDocument());
+    		if( operationData.isIncludeInputMessage() ) {
+	    		Input input = factory.createInput();
+	    		input.setName(operationData.getInputMessageName());
+	    		operation.setInput(input);
+	    		input.setContentElement(operationData.getInputContentViaElement());
+    		}
+    		if( operationData.isIncludeOutputMessage() ) {
+	    		Output output = factory.createOutput();
+	    		output.setName(operationData.getOutputMessageName());
+	    		operation.setOutput(output);
+	    		output.setContentElement(operationData.getOutputContentViaElement());
+	    		output.setXmlDocument(operationData.getXmlDocument());
+    		}
     		
 //        	MessageDialog.openInformation(getControl().getShell(), "Create New Operation", " < NOT YET IMPLEMENTED> ");
     	}

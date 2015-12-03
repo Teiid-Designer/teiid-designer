@@ -12,6 +12,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -62,6 +63,9 @@ public class NewOperationPanel extends Composite implements StringConstants {
 	private Text selectedOutputContentText;
 	private Button browseOutputXmlDocumentButton;
 	private Text selectedOutputXmlDocumentText;
+	
+	private Button includeInputMessageButton;
+	private Button includeOutputMessageButton;
     
     ModelResource modelResource;
     
@@ -208,6 +212,27 @@ public class NewOperationPanel extends Composite implements StringConstants {
 	        GridDataFactory.fillDefaults().grab(true, false).applyTo(inputMessagePanel);
 	        GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false).margins(3, 3).applyTo(inputMessagePanel);
 	        
+	        this.includeInputMessageButton = new Button(inputMessagePanel, SWT.CHECK);
+	        this.includeInputMessageButton.setText("Include Input Message");
+	        this.includeInputMessageButton.setSelection(operation.isIncludeInputMessage());
+	        GridDataFactory.fillDefaults().grab(true, false).span(3,1).applyTo(this.includeInputMessageButton);
+	        
+	        this.includeInputMessageButton.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean include = includeInputMessageButton.getSelection();
+					inputMsgText.setEnabled(include);
+					selectedInputContentText.setEnabled(include);
+					browseInputContentElementButton.setEnabled(include);
+					operation.setIncludeInputMessage(include);
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
+	        
 	        Label label = new Label(inputMessagePanel, SWT.NONE);
 	        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
 	        
@@ -255,6 +280,29 @@ public class NewOperationPanel extends Composite implements StringConstants {
 			Composite outputMessagePanel = WidgetFactory.createGroup(thePanel,  getString("outputMessageGroup"), GridData.FILL_BOTH); //$NON-NLS-1$
 	        GridDataFactory.fillDefaults().grab(true, false).applyTo(outputMessagePanel);
 	        GridLayoutFactory.fillDefaults().numColumns(3).equalWidth(false).margins(3, 3).applyTo(outputMessagePanel);
+	        
+	        this.includeOutputMessageButton = new Button(outputMessagePanel, SWT.CHECK);
+	        this.includeOutputMessageButton.setText("Include Output Message");
+	        this.includeOutputMessageButton.setSelection(operation.isIncludeOutputMessage());
+	        GridDataFactory.fillDefaults().grab(true, false).span(3,1).applyTo(this.includeOutputMessageButton);
+	        
+	        this.includeOutputMessageButton.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					boolean include = includeOutputMessageButton.getSelection();
+					outputMsgText.setEnabled(include);
+					selectedOutputContentText.setEnabled(include);
+					browseOutputContentElementButton.setEnabled(include);
+					selectedOutputXmlDocumentText.setEnabled(include);
+					browseOutputXmlDocumentButton.setEnabled(include);
+					operation.setIncludeOutputMessage(include);
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+			});
 	        
 	        Label label = new Label(outputMessagePanel, SWT.NONE);
 	        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
