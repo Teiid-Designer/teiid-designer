@@ -485,10 +485,13 @@ public class TeiidDdlImporter extends StandardImporter {
 	@Override
 	protected void setDataType(AstNode node, RelationalColumn column) throws Exception {
 		String datatype = node.getProperty(StandardDdlLexicon.DATATYPE_NAME).toString();
-//		column.setNativeType(datatype);
 
 		String teiidType = getTeiidDataTypeName(datatype);
-		column.setDatatype(teiidType);
+		if( teiidType.toUpperCase().equals(TYPES_UPPER.INTEGER)) {
+			column.setDatatype(TYPES_UPPER.INT.toLowerCase());
+		} else {
+			column.setDatatype(teiidType);
+		}
 
 		// Datatype length
 		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
