@@ -72,7 +72,7 @@ public class TeiidDdlImporter extends StandardImporter {
     private static final String NS_TEIID_JPA = "teiid_jpa"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_ODATA = "odata"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_WEBSERVICE= "ws"; //$NON-NLS-1$
-	private static final String NS_DESIGNER_MONGO = "mongo"; //$NON-NLS-1$
+	private static final String NS_DESIGNER_MONGO = "mongodb"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_SALESFORCE = "salesforce"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_RELATIONAL = "relational"; //$NON-NLS-1$
 	private static final String NS_DESIGNER_ACCUMULO = "accumulo"; //$NON-NLS-1$

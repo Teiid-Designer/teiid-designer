@@ -111,4 +111,21 @@ public interface TeiidDDLConstants {
 		public static final String CHARSET = "CHARSET"; //$NON-NLS-1$
 		public static final String REST_CHARSET = "REST:CHARSET"; //$NON-NLS-1$
 		public static final String REST_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://teiid.org/rest' AS REST;"; //$NON-NLS-1$
+		
+		public static String TEIID_SF_PREFIX = "teiid_sf";  //$NON-NLS-1$
+	    public static String SALESFORCE_PREFIX = "salesforce";  //$NON-NLS-1$
+	    
+		public static String TEIID_MONGO_PREFIX = "teiid_mongo";  //$NON-NLS-1$
+	    public static String MONGODB_PREFIX = "mongodb";  //$NON-NLS-1$";  //$NON-NLS-1$
+	    
+
+	    /*
+	     * Teiid's EXCEL extension properties
+	     */
+		public static String TEIID_EXCEL_PREFIX = "teiid_excel";  //$NON-NLS-1$
+	    public static String EXCEL_PREFIX = "excel";  //$NON-NLS-1$";  //$NON-NLS-1$
+	    public static String EXCEL_CELL_NUMBER = "CELL_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  COLUMN ONLY
+	    public static String EXCEL_FILE = "FILE";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+	    public static String EXCEL_FIRST_DATA_ROW_NUMBER = "FIRST_DATA_ROW_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+	    
 }

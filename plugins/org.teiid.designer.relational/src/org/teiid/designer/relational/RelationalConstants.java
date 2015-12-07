@@ -16,6 +16,9 @@ package org.teiid.designer.relational;
 public interface RelationalConstants {
     final static String XMI_EXT = ".xmi"; //$NON-NLS-1$
     
+    final static String TEIID_REL_PREFIX = "teiid_rel";  //$NON-NLS-1$
+    final static String RELATIONAL_PREFIX = "relational";  //$NON-NLS-1$
+    
     /**
      * Relational model object types
      */
