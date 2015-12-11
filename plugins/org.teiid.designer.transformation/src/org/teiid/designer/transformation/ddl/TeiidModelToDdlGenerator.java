@@ -151,7 +151,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		String runtimeTypeName = ModelerCore.getBuiltInTypesManager().getRuntimeTypeName(dataTypeEObject);
 		
-		if( runtimeTypeName.equalsIgnoreCase("XMLLITERAL")) {
+		if( runtimeTypeName == null) {
+			// Check with 
+			runtimeTypeName = ModelerCore.getDatatypeManager().getRuntimeTypeName(dataTypeEObject);
+		}
+		
+		if( runtimeTypeName != null && runtimeTypeName.equalsIgnoreCase("XMLLITERAL")) {
 			return DataTypeName.XML.name();
 		}
 		
@@ -411,6 +416,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				addOptionsForEObject(nextCol, sb);
 			}
 			sb.append(CLOSE_BRACKET);
+			addOptionsForEObject(procedure.getResult(), sb);
 		} else if( returnType != null ) {
 			sb.append(SPACE + RETURNS + SPACE + returnType);
 		}
@@ -462,8 +468,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         // DEFAULT
         //
         String defaultValue = col.getDefaultValue();
-        if (defaultValue != null)
+        if (!StringUtilities.isEmpty(defaultValue)) {
             sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
+        }
 
         //
         // AUTO_INCREMENT

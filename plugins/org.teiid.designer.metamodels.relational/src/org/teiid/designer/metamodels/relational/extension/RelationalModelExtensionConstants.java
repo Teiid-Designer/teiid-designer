@@ -58,6 +58,17 @@ public interface RelationalModelExtensionConstants {
         String UDF_JAR_PATH = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "udfJarPath"); //$NON-NLS-1$
         String NATIVE_TYPE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "native_type"); //$NON-NLS-1$
         String GLOBAL_TEMP_TABLE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "global-temp-table"); //$NON-NLS-1$
+        String ALLOW_MATVIEW_MANAGEMENT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "ALLOW_MATVIEW_MANAGEMENT"); //$NON-NLS-1$
+        String MATVIEW_STATUS_TABLE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_STATUS_TABLE"); //$NON-NLS-1$
+        String MATVIEW_BEFORE_LOAD_SCRIPT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_BEFORE_LOAD_SCRIPT"); //$NON-NLS-1$
+        String MATVIEW_LOAD_SCRIPT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_LOAD_SCRIPT"); //$NON-NLS-1$
+        String MATVIEW_AFTER_LOAD_SCRIPT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_AFTER_LOAD_SCRIPT"); //$NON-NLS-1$
+        String MATVIEW_SHARE_SCOPE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_SHARE_SCOPE"); //$NON-NLS-1$
+        String MATERIALIZED_STAGE_TABLE = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATERIALIZED_STAGE_TABLE"); //$NON-NLS-1$
+        String ON_VDB_START_SCRIPT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "ON_VDB_START_SCRIPT"); //$NON-NLS-1$
+        String ON_VDB_DROP_SCRIPT = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "ON_VDB_DROP_SCRIPT"); //$NON-NLS-1$
+        String MATVIEW_ONERROR_ACTION = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_ONERROR_ACTION"); //$NON-NLS-1$
+        String MATVIEW_TTL = ModelExtensionPropertyDefinition.Utils.getPropertyId(NAMESPACE_PROVIDER, "MATVIEW_TTL"); //$NON-NLS-1$
     }
     
     interface PropertyKeysNoPrefix {
@@ -80,7 +91,17 @@ public interface RelationalModelExtensionConstants {
         String ALLOW_JOIN = "allow-join"; //$NON-NLS-1$
         String NATIVE_TYPE = "native_type"; //$NON-NLS-1$
         String GLOBAL_TEMP_TABLE = "global-temp-table"; //$NON-NLS-1$
-
+        String ALLOW_MATVIEW_MANAGEMENT = "ALLOW_MATVIEW_MANAGEMENT"; //$NON-NLS-1$
+        String MATVIEW_STATUS_TABLE = "MATVIEW_STATUS_TABLE"; //$NON-NLS-1$
+        String MATVIEW_BEFORE_LOAD_SCRIPT = "MATVIEW_BEFORE_LOAD_SCRIPT"; //$NON-NLS-1$
+        String MATVIEW_LOAD_SCRIPT = "MATVIEW_LOAD_SCRIPT"; //$NON-NLS-1$
+        String MATVIEW_AFTER_LOAD_SCRIPT = "MATVIEW_AFTER_LOAD_SCRIPT"; //$NON-NLS-1$
+        String MATVIEW_SHARE_SCOPE = "MATVIEW_SHARE_SCOPE"; //$NON-NLS-1$
+        String MATERIALIZED_STAGE_TABLE = "MATERIALIZED_STAGE_TABLE"; //$NON-NLS-1$
+        String ON_VDB_START_SCRIPT = "ON_VDB_START_SCRIPT"; //$NON-NLS-1$
+        String ON_VDB_DROP_SCRIPT = "ON_VDB_DROP_SCRIPT"; //$NON-NLS-1$
+        String MATVIEW_ONERROR_ACTION = "MATVIEW_ONERROR_ACTION"; //$NON-NLS-1$
+        String MATVIEW_TTL = "MATVIEW_TTL"; //$NON-NLS-1$
     }
 
 }

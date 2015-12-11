@@ -55,7 +55,18 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         UDF_JAR_PATH(getPropertyId("udfJarPath")), //$NON-NLS-1$
         ALLOW_JOIN(getPropertyId("allow-join")), //$NON-NLS-1$
         NATIVE_TYPE(getPropertyId("native_type")), //$NON-NLS-1$
-        GLOBAL_TEMP_TABLE(getPropertyId("global-temp-table")); //$NON-NLS-1$
+        GLOBAL_TEMP_TABLE(getPropertyId("global-temp-table")), //$NON-NLS-1$
+        ALLOW_MATVIEW_MANAGEMENT(getPropertyId("ALLOW_MATVIEW_MANAGEMENT")), //$NON-NLS-1$
+        MATVIEW_STATUS_TABLE(getPropertyId("MATVIEW_STATUS_TABLE")), //$NON-NLS-1$
+        MATVIEW_BEFORE_LOAD_SCRIPT(getPropertyId("MATVIEW_BEFORE_LOAD_SCRIPT")), //$NON-NLS-1$
+        MATVIEW_LOAD_SCRIPT(getPropertyId("MATVIEW_LOAD_SCRIPT")), //$NON-NLS-1$
+        MATVIEW_AFTER_LOAD_SCRIPT(getPropertyId("MATVIEW_AFTER_LOAD_SCRIPT")), //$NON-NLS-1$
+        MATVIEW_SHARE_SCOPE(getPropertyId("MATVIEW_SHARE_SCOPE")), //$NON-NLS-1$
+        MATERIALIZED_STAGE_TABLE(getPropertyId("MATERIALIZED_STAGE_TABLE")), //$NON-NLS-1$
+        ON_VDB_START_SCRIPT(getPropertyId("ON_VDB_START_SCRIPT")), //$NON-NLS-1$
+        ON_VDB_DROP_SCRIPT(getPropertyId("ON_VDB_DROP_SCRIPT")), //$NON-NLS-1$
+        MATVIEW_ONERROR_ACTION(getPropertyId("MATVIEW_ONERROR_ACTION")), //$NON-NLS-1$
+        MATVIEW_TTL(getPropertyId("MATVIEW_TTL")); //$NON-NLS-1$
         
 
         public static boolean same(final PropertyName propName,
@@ -224,6 +235,33 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
 
                 // EObject should not have the requested property definition
                 return null;
+            }
+            
+            // MATERIALIZED VIEW PROPERTIES
+            if( ( modelObject instanceof Table )  && isPhysical) {
+            	// remove if physical table
+            	 if (  PropertyName.same(PropertyName.MATERIALIZED_STAGE_TABLE, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_AFTER_LOAD_SCRIPT, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_BEFORE_LOAD_SCRIPT, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_LOAD_SCRIPT, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_ONERROR_ACTION, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_SHARE_SCOPE, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_STATUS_TABLE, propId) || 
+            			 PropertyName.same(PropertyName.MATVIEW_TTL, propId) || 
+            			 PropertyName.same(PropertyName.ON_VDB_DROP_SCRIPT, propId) || 
+            			 PropertyName.same(PropertyName.ON_VDB_START_SCRIPT, propId) ) {
+            		 removeProperty(modelObject, PropertyName.MATERIALIZED_STAGE_TABLE.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_AFTER_LOAD_SCRIPT.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_BEFORE_LOAD_SCRIPT.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_LOAD_SCRIPT.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_ONERROR_ACTION.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_SHARE_SCOPE.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_STATUS_TABLE.toString());
+            		 removeProperty(modelObject, PropertyName.MATVIEW_TTL.toString());
+            		 removeProperty(modelObject, PropertyName.ON_VDB_DROP_SCRIPT.toString());
+            		 removeProperty(modelObject, PropertyName.ON_VDB_START_SCRIPT.toString());
+            	 }
+            	 return null;
             }
             
             return propDefn;
