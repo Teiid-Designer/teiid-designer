@@ -15,7 +15,9 @@ import org.teiid.designer.core.extension.EmfModelObjectExtensionAssistant;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.extension.ExtensionConstants;
+import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
+import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
@@ -89,6 +91,12 @@ public class RelationalModelExtensionAssistant extends EmfModelObjectExtensionAs
         public String toString() {
             return this.propName;
         }
+    }
+    
+    public static RelationalModelExtensionAssistant getRelationalAssistant() {
+    	final ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
+        final String prefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        return (RelationalModelExtensionAssistant)registry.getModelExtensionAssistant(prefix);
     }
 
     /**

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -22,6 +23,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
@@ -51,6 +53,7 @@ import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Procedure;
 import org.teiid.designer.metamodels.relational.RelationalPackage;
 import org.teiid.designer.metamodels.relational.View;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
 import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
@@ -355,6 +358,13 @@ public class DdlImporter {
             modelAnnotation.setPrimaryMetamodelUri(RelationalPackage.eNS_URI);
             modelAnnotation.setModelType(importManager.getModelType());
         }
+        
+        if( importManager.getModelType() == ModelType.VIRTUAL_LITERAL) {
+        	RestModelExtensionAssistant.getRestAssistant().applyMedIfNecessary(model.getCorrespondingResource());
+        }
+        model.save(new NullProgressMonitor(), true);
+        
+        // Let's save the model, then apply extension properties for relational and rest?
 
         // Update the model, based on difference report
         importStatus = EmfModelGenerator.INSTANCE.execute(diffReport, model, monitor, totalWork);

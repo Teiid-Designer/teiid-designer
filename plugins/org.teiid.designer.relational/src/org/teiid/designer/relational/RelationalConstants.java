@@ -126,7 +126,7 @@ public interface RelationalConstants {
     // IN, IN_OUT, OUT, RETURN, UNKNOWN
     class DIRECTION {
         public static final String IN = "IN"; //$NON-NLS-1$
-        public static final String IN_OUT = "IN_OUT"; //$NON-NLS-1$
+        public static final String IN_OUT = "INOUT"; //$NON-NLS-1$
         public static final String OUT = "OUT"; //$NON-NLS-1$
         public static final String RETURN = "RETURN"; //$NON-NLS-1$
         public static final String UNKNOWN = "UNKNOWN"; //$NON-NLS-1$

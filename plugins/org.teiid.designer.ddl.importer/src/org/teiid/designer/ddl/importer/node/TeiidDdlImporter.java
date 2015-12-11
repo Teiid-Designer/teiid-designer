@@ -38,7 +38,8 @@ import org.teiid.designer.ddl.importer.TeiidDDLConstants;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
-import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
+import org.teiid.designer.metamodels.core.ModelType;
+import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -493,19 +494,16 @@ public class TeiidDdlImporter extends StandardImporter {
 			column.setDatatype(teiidType);
 		}
 
-		// Datatype length
+		// Data type length
 		Object prop = node.getProperty(StandardDdlLexicon.DATATYPE_LENGTH);
 		if (prop != null) {
 			column.setLength(Integer.parseInt(prop.toString()));
 		} else {
 			// Length is not provided for type 'string', use the default length specified in preferences...
-			//String dtName = ModelerCore.getWorkspaceDatatypeManager().getName(type);
-			if(teiidType != null) {
-				if( teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
-					column.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
-				} else if( teiidType.equalsIgnoreCase(CHAR_TYPENAME) ) {
-					column.setLength(1);
-				}
+			if( teiidType.equalsIgnoreCase(STRING_TYPENAME)) {
+				column.setLength(ModelerCore.getTransformationPreferences().getDefaultStringLength());
+			} else if( teiidType.equalsIgnoreCase(CHAR_TYPENAME) ) {
+				column.setLength(1);
 			}
 		}
 
@@ -570,6 +568,12 @@ public class TeiidDdlImporter extends StandardImporter {
 		return procedure;
 	}
 
+	/**
+	 * @param procedureNode
+	 * @param model
+	 * @return procedure
+	 * @throws Exception
+	 */
 	protected RelationalProcedure createVirtualProcedure(AstNode procedureNode, RelationalModel model) throws Exception {
 		RelationalViewProcedure procedure = getFactory().createViewProcedure();
 		Info info = createInfo(procedureNode, model);
@@ -606,10 +610,10 @@ public class TeiidDdlImporter extends StandardImporter {
 					}
 				}
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
-				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
-				procedure.setResultSet(result);
-				initialize(result, procedureNode);
-				createColumn(child,result);
+				// Add a parameter with RETURN direction
+				RelationalParameter param = createProcedureParameter(child, procedure);
+				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
+				param.setName(TeiidDDLConstants.RETURNS);
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);
 			}
@@ -773,7 +777,7 @@ public class TeiidDdlImporter extends StandardImporter {
 					// Statement Options
 				} else if (is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 					optionNodes.add(child);
-					// Contraints
+					// Constraints
 				} else if (is(child, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)
 						|| is(child, TeiidDdlLexicon.Constraint.FOREIGN_KEY_CONSTRAINT)
 						|| is(child, TeiidDdlLexicon.Constraint.INDEX_CONSTRAINT)) {
@@ -793,7 +797,7 @@ public class TeiidDdlImporter extends StandardImporter {
 				|| is(node, TeiidDdlLexicon.CreateProcedure.FUNCTION_STATEMENT)) {
 			String modelType = (String)node.getProperty(TeiidDdlLexicon.SchemaElement.TYPE);
 			if( modelType != null ) {
-				if( modelType.equalsIgnoreCase("VIRTUAL")) {
+				if( modelType.equalsIgnoreCase(ModelType.VIRTUAL_LITERAL.toString())) {
 					createVirtualProcedure(node, model);
 				} else {
 					createProcedure(node, model);
