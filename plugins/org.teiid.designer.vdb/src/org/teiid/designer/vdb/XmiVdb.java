@@ -974,7 +974,7 @@ public final class XmiVdb extends BasicVdb {
                 model.setName(entry.getName());
                 model.setDescription(entry.getDescription());
 
-                for (Map.Entry<Object, Object> prop : getProperties().entrySet()) {
+                for (Map.Entry<Object, Object> prop : entry.getProperties().entrySet()) {
                     model.setProperty(prop.getKey().toString(), prop.getValue().toString());
                 }
 

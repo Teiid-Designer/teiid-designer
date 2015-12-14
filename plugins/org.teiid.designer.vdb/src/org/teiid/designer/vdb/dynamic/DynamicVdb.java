@@ -683,6 +683,11 @@ public class DynamicVdb extends BasicVdb {
                 for (VdbSource source : dynModel.getSources()) {
                     sourceInfo.add(source.getName(), source.getJndiName(), source.getTranslatorName());
                 }
+                
+                // copy any model properties into archive VDB
+                for (Map.Entry<Object, Object> entry : dynModel.getProperties().entrySet()) {
+                	modelEntry.setProperty(entry.getKey().toString(), entry.getValue().toString());
+                }
             }
 
             return xmiVdb;

@@ -8,12 +8,15 @@
 package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.core.designer.util.StringConstants.EMPTY_STRING;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.CellEditor;
@@ -34,6 +37,8 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,6 +50,7 @@ import org.eclipse.swt.widgets.Text;
 import org.teiid.designer.ui.common.UILabelUtil;
 import org.teiid.designer.ui.common.UiLabelConstants;
 import org.teiid.designer.ui.common.graphics.GlobalUiColorManager;
+import org.teiid.designer.ui.common.graphics.GlobalUiFontManager;
 import org.teiid.designer.ui.common.table.ResourceEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.text.StyledTextEditor;
@@ -79,6 +85,8 @@ public class ModelDetailsPanel {
     TableViewerBuilder problemsViewer;
     VdbModelEntry selectedVdbModelEntry;
     
+    ModelUserDefinedPropertiesPanel modelPropsPanel;
+    
     Vdb vdb;
 
 
@@ -99,6 +107,18 @@ public class ModelDetailsPanel {
 		Composite headerPanel = WidgetFactory.createPanel(mainPanel, SWT.NONE, GridData.FILL_HORIZONTAL, 1, 2);
 		headerPanel.setLayout(new GridLayout(2, false));
     	
+		Label summaryLabel = new Label(headerPanel, SWT.NONE);
+		summaryLabel.setText("Selected Model Summary"); //$NON-NLS-1$
+		summaryLabel.setBackground(headerPanel.getBackground());
+		summaryLabel.setForeground(GlobalUiColorManager.EMPHASIS_COLOR);
+		
+        Font fOld = summaryLabel.getFont();
+        FontData data = fOld.getFontData()[0];
+        data.setStyle(SWT.BOLD);
+        Font fNewFont = GlobalUiFontManager.getFont(data);
+        summaryLabel.setFont(fNewFont);
+		GridDataFactory.fillDefaults().span(2,  1).applyTo(summaryLabel);
+		
 		Label label = new Label(headerPanel, SWT.NONE);
 		label.setText("Name"); //$NON-NLS-1$
 
@@ -339,6 +359,18 @@ public class ModelDetailsPanel {
         	modelDescriptionEditor.setText(EMPTY_STRING);
         	modelDescriptionEditor.getTextViewer().setEditable(false);
 		}
+		
+		{
+			// User Defined Model Properties
+	        CTabItem propertiesTab = new CTabItem(tabFolder, SWT.NONE);
+	        propertiesTab.setText(Messages.modelDetailsPanel_propertiesTabLabel);
+	        propertiesTab.setToolTipText(Messages.modelDetailsPanel_propertiesTabTooltip);
+	
+			modelPropsPanel = new ModelUserDefinedPropertiesPanel(tabFolder);
+			modelPropsPanel.setLayout(new GridLayout(1, false));
+			modelPropsPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+			propertiesTab.setControl(modelPropsPanel);
+		}
         
 		
         CTabItem problemsTab = new CTabItem(tabFolder, SWT.NONE);
@@ -413,6 +445,7 @@ public class ModelDetailsPanel {
     		columnAliasText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
     		problemsViewer.getTable().removeAll();
     		modelDescriptionEditor.getTextViewer().setEditable(false);
+    		modelPropsPanel.setVdbModelEntry(null);
         } else {
         	modelNameText.setText(selectedVdbModelEntry.getName());
         	modelLocationText.setText(selectedVdbModelEntry.getPath().toOSString());
@@ -440,6 +473,8 @@ public class ModelDetailsPanel {
     		} else {
     			columnAliasText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
     		}
+    		
+    		modelPropsPanel.setVdbModelEntry(selectedVdbModelEntry);
         }
     	
     }

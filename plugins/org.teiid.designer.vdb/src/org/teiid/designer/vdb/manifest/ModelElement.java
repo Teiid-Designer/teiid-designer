@@ -136,6 +136,10 @@ public class ModelElement extends EntryElement {
         		props.add(new PropertyElement(MULTI_SOURCE_COLUMN_ALIAS, alias));
         	}
         }
+        
+        for( Object key : entry.getProperties().keySet() ) {
+        	props.add(new PropertyElement((String)key, (String)entry.getProperties().get(key)));
+        }
         for (final VdbEntry importedEntry : entry.getImports())
             props.add(new PropertyElement(IMPORTS, importedEntry.getName().toString()));
         for (final String importedVdbName : entry.getImportVdbNames())

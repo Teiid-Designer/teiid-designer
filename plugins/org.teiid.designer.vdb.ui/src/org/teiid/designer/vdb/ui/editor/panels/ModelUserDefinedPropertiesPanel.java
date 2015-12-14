@@ -2,9 +2,11 @@ package org.teiid.designer.vdb.ui.editor.panels;
 
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.ADD;
 import static org.teiid.designer.vdb.ui.VdbUiConstants.Images.REMOVE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -32,7 +34,9 @@ import org.teiid.core.designer.util.I18nUtil;
 import org.teiid.designer.core.translators.SimpleProperty;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
-import org.teiid.designer.vdb.Vdb;
+import org.teiid.designer.vdb.VdbModelEntry;
+import org.teiid.designer.vdb.manifest.EntryElement;
+import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.ui.VdbUiConstants;
 import org.teiid.designer.vdb.ui.VdbUiPlugin;
 
@@ -40,20 +44,14 @@ import org.teiid.designer.vdb.ui.VdbUiPlugin;
  * @author blafond
  *
  */
-public class UserDefinedPropertiesPanel {
-	static final String PREFIX = I18nUtil.getPropertyPrefix(UserDefinedPropertiesPanel.class);
-
-    
-	Vdb vdb;
+public class ModelUserDefinedPropertiesPanel extends Composite {
+	static final String PREFIX = I18nUtil.getPropertyPrefix(ModelUserDefinedPropertiesPanel.class);
 	
     TableViewerBuilder propertiesViewer;
 	Button addPropertyButton;
 	Button removePropertyButton;
-
 	
-    static String i18n( final String id ) {
-        return VdbUiConstants.Util.getString(id);
-    }
+	VdbModelEntry modelEntry ;
     
     static String prefixedI18n( final String id ) {
         return VdbUiConstants.Util.getString(PREFIX + id);
@@ -61,13 +59,11 @@ public class UserDefinedPropertiesPanel {
 	
 	/**
      * @param parent
-	 * @param vdb
      */
-    public UserDefinedPropertiesPanel(Composite parent, Vdb vdb) {
-    	super();
-    	this.vdb = vdb;
+    public ModelUserDefinedPropertiesPanel(Composite parent) {
+    	super(parent, SWT.NONE);
     	
-    	createPanel(parent);
+    	createPanel(this);
     }
     
 	private void createPanel(Composite parent) {
@@ -94,15 +90,26 @@ public class UserDefinedPropertiesPanel {
              */
             @Override
             public Object[] getElements( Object inputElement ) {
-                Properties props =  vdb.getProperties();
+                if (modelEntry == null ) return new Object[0];
 
-                if (props.isEmpty()) {
-                    return new Object[0];
-                }
+            	Properties props = modelEntry.getProperties();
+            	
+                if (props.isEmpty())return new Object[0];
                 
                 List<SimpleProperty> properties= new ArrayList<SimpleProperty>();
                 for( Object key : props.keySet() ) {
                     String keyStr = key.toString();
+                    if (ModelElement.BUILT_IN.equals(keyStr) ||
+	                    ModelElement.MODEL_CLASS.equals(keyStr) ||
+	                    ModelElement.MODEL_UUID.equals(keyStr) ||
+	                    ModelElement.IMPORT_VDB_REFERENCE.equals(keyStr) ||
+	                    ModelElement.SUPPORTS_MULTI_SOURCE.equals(keyStr) ||
+	                    ModelElement.MULTI_SOURCE_ADD_COLUMN.equals(keyStr) ||
+	                    ModelElement.MULTI_SOURCE_COLUMN_ALIAS.equals(keyStr) ||
+	                    EntryElement.CHECKSUM.equals(keyStr)||
+	                    EntryElement.INDEX_NAME.equals(keyStr) ) {
+                    	continue;
+                    }
                 	properties.add(new SimpleProperty(keyStr, props.getProperty(keyStr)));
                 }
                 return properties.toArray(new SimpleProperty[0]);
@@ -208,6 +215,15 @@ public class UserDefinedPropertiesPanel {
         this.propertiesViewer.setInput(this);
 	}
 	
+	/**
+	 * @param entry
+	 */
+	public void setVdbModelEntry(VdbModelEntry entry) {
+		this.modelEntry = entry;
+
+		this.propertiesViewer.setInput(this);
+	}
+	
 
 	void handlePropertySelected() {
 		boolean hasSelection = !this.propertiesViewer.getSelection().isEmpty();
@@ -228,14 +244,13 @@ public class UserDefinedPropertiesPanel {
         assert (!this.propertiesViewer.getSelection().isEmpty());
 
         AddGeneralPropertyDialog dialog = 
-        		new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), 
-        				vdb.getProperties());
+        		new AddGeneralPropertyDialog(propertiesViewer.getControl().getShell(), this.modelEntry.getProperties());
 
         if (dialog.open() == Window.OK) {
             // update model
             String name = dialog.getName();
             String value = dialog.getValue();
-            vdb.setProperty(name, value);
+            this.modelEntry.setProperty(name, value);
 
             // update UI from model
             this.propertiesViewer.refresh();
@@ -263,7 +278,7 @@ public class UserDefinedPropertiesPanel {
         assert (selectedProperty != null);
 
         // update model
-        this.vdb.removeProperty(selectedProperty.getName());
+        this.modelEntry.removeProperty(selectedProperty.getName());
 
         // update UI
         this.propertiesViewer.refresh();
@@ -361,8 +376,8 @@ public class UserDefinedPropertiesPanel {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newKey = (String)value;
 					if( newKey != null && newKey.length() > 0 && !newKey.equalsIgnoreCase(oldKey)) {
-						vdb.removeProperty(oldKey);
-						vdb.setProperty(newKey, oldValue);
+						modelEntry.removeProperty(oldKey);
+						modelEntry.setProperty(newKey, oldValue);
 						propertiesViewer.refresh();
 					}
 				} else if( columnID == 1 ) {
@@ -370,7 +385,7 @@ public class UserDefinedPropertiesPanel {
 					String oldValue = ((SimpleProperty)element).getValue();
 					String newValue = (String)value;
 					if( newValue != null && newValue.length() > 0 && !newValue.equalsIgnoreCase(oldValue)) {
-						vdb.setProperty(key, newValue);
+						modelEntry.setProperty(key, newValue);
 						propertiesViewer.refresh();
 					}
 				}
