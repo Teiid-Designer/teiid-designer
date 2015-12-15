@@ -79,6 +79,8 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -1043,7 +1045,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public Image getImage( final VdbEntry element ) {
-                                                      return workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                      Image img = workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                      if (img == null) {
+                                                          img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+                                                      }
+
+                                                      return img;
                                                   }
 
                                                   /**
@@ -1280,7 +1287,12 @@ public final class VdbEditor extends EditorPart implements IResourceChangeListen
                                                    */
                                                   @Override
                                                   public Image getImage( final VdbEntry element ) {
-                                                      return workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                      Image img = workbenchLabelProvider.getImage(element.findFileInWorkspace());
+                                                      if (img == null) {
+                                                          img = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
+                                                      }
+
+                                                      return img;
                                                   }
 
                                                   /**
