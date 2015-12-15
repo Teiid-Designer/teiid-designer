@@ -64,6 +64,12 @@ public interface ITeiidColumnInfo {
      * @return forOrdinality the column forOrdinality
      */
     boolean getOrdinality();
+    
+	/**
+	 * 
+	 * @return no trim value
+	 */
+	public boolean isNoTrim();
 
     /**
      * 

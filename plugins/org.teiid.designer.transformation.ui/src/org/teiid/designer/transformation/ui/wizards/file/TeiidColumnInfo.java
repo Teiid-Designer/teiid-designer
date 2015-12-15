@@ -77,6 +77,8 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 	 */
 	private XmlAttribute xmlAttribute;
 	
+	private boolean noTrim;
+	
 	/**
 	 * Current <code>IStatus</code> representing the state of the input values for this instance of
 	 * <code>TeiidColumnInfo</code>
@@ -389,6 +391,23 @@ public class TeiidColumnInfo implements ITeiidColumnInfo {
 		validate();
 	}
 	
+	/**
+	 * 
+	 * @return no trim value
+	 */
+	@Override
+	public boolean isNoTrim() {
+		return noTrim;
+	}
+
+	/**
+	 * 
+	 * @param noTrim
+	 */
+	public void setNoTrim(boolean noTrim) {
+		this.noTrim = noTrim;
+	}
+
 	/**
 	 * 
 	 * @return status the <code>IStatus</code> representing the validity of the data in this info object

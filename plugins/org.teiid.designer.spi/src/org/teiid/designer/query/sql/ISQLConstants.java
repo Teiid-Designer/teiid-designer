@@ -105,6 +105,10 @@ public interface ISQLConstants {
     String HEADER = "HEADER"; //$NON-NLS-1$
     String SKIP = "SKIP"; //$NON-NLS-1$
     String WIDTH = "width"; //$NON-NLS-1$
+    String NO_TRIM = "NO TRIM"; //$NON-NLS-1$
+    String ESCAPE_STR = "ESCAPE"; //$NON-NLS-1$
+    String QUOTE_STR = "QUOTE"; //$NON-NLS-1$
+    String DELIMITER_STR = "DELIMITER"; //$NON-NLS-1$
     
     interface INSERT_OPTIONS {
     	int REPLACE_ALL = 0;

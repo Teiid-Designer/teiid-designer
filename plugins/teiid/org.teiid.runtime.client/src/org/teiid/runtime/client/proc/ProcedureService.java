@@ -89,6 +89,9 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
             sb.append(columnStr.getSymbolName()).append(SPACE).append(columnStr.getDatatype());
             if( metadataFileInfo.isFixedWidthColumns()) {
                 sb.append(SPACE).append(WIDTH).append(SPACE).append(Integer.toString(columnStr.getWidth()));
+                if(columnStr.isNoTrim()) {
+                	sb.append(SPACE).append(NO_TRIM);
+                }
             }
             if(i < (nColumns-1)) {
                 sb.append(COMMA).append(SPACE);
@@ -116,26 +119,26 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         
         String delimiter = metadataFileInfo.getDelimiter();
         if( metadataFileInfo.doUseDelimitedColumns() && ! DEFAULT_DELIMITER.equals(delimiter) ) {
-            sb.append("DELIMITER"); //$NON-NLS-1$
+            sb.append(DELIMITER_STR); //$NON-NLS-1$
             sb.append(SPACE).append('\'').append(delimiter).append('\'');
         }
         
         if( metadataFileInfo.doIncludeQuote() ) {
             String quote = metadataFileInfo.getQuote();
             if( ! DEFAULT_QUOTE.equals(quote)) {
-                sb.append("QUOTE"); //$NON-NLS-1$
+                sb.append(QUOTE_STR); //$NON-NLS-1$
                 sb.append(SPACE).append('\'').append(quote).append('\'');
             }
         } else if(metadataFileInfo.doIncludeEscape() ) {
             String escape = metadataFileInfo.getEscape();
             if( ! DEFAULT_ESCAPE.equals(escape)) {
-                sb.append("ESCAPE"); //$NON-NLS-1$
+                sb.append(ESCAPE_STR); //$NON-NLS-1$
                 sb.append(SPACE).append('\'').append(escape).append('\'');
             }
         }
         
         if( metadataFileInfo.doIncludeHeader() ) {
-            sb.append(SPACE).append("HEADER"); //$NON-NLS-1$
+            sb.append(SPACE).append(HEADER); //$NON-NLS-1$
             if( metadataFileInfo.getHeaderLineNumber() > 1 ) {
                 sb.append(SPACE).append(Integer.toString(metadataFileInfo.getHeaderLineNumber()));
             }
@@ -143,12 +146,12 @@ public class ProcedureService implements IProcedureService, ISQLConstants {
         
         int firstDataRow = metadataFileInfo.getFirstDataRow();
         if( firstDataRow > 1 && (metadataFileInfo.doIncludeSkip() || metadataFileInfo.isFixedWidthColumns()) ) {
-            sb.append(SPACE).append("SKIP"); //$NON-NLS-1$
+            sb.append(SPACE).append(SKIP); //$NON-NLS-1$
             sb.append(SPACE).append(Integer.toString(firstDataRow-1));
         }
         
         if( metadataFileInfo.doIncludeNoTrim() && firstDataRow > 1 ) {
-            sb.append(SPACE).append("NO TRIM"); //$NON-NLS-1$
+            sb.append(SPACE).append(NO_TRIM); //$NON-NLS-1$
         }
         tokens.add(sb.toString());
         tokens.add(alias);
