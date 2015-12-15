@@ -34,4 +34,13 @@ public interface UiConstants {
         String REMOVE_PROPERTY = FOLDER + "remove_property.png";  //$NON-NLS-1$
     }
     
+    interface JdbcTranslatorKeys {
+    	String TABLE_TYPES = "importer.TableTypes";
+    	String USE_QUALIFIED_NAME = "importer.UseQualifiedName";
+    }
+    
+    interface JdbcTranslatorDefaults {
+    	String TABLE_TYPES = "TABLE";
+    	String USE_QUALIFIED_NAME = "false";
+    }
 }
