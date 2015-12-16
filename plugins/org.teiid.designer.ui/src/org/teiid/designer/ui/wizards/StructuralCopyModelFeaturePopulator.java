@@ -8,25 +8,33 @@
 package org.teiid.designer.ui.wizards;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.designer.core.ModelerCore;
+import org.teiid.designer.core.container.ResourceFinder;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.metamodels.core.ModelImport;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.transformation.TransformationContainer;
+import org.teiid.designer.transformation.aspects.sql.SqlTransformationMappingRootSqlAspect;
 import org.teiid.designer.ui.common.tree.TreeViewerUtil;
 import org.teiid.designer.ui.common.widget.InheritanceCheckboxTreeViewer;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
@@ -139,7 +147,7 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
     	// This method is being revoked due to inadequate design and implementation.
     	throw new UnsupportedOperationException();
     }
-    
+
     /**
      * Copy the model to the target, only copying those nodes selected in the tree viewer.
      * 
@@ -213,13 +221,59 @@ public class StructuralCopyModelFeaturePopulator implements IStructuralCopyTreeP
             throw ex;
         }
 
+        /*
+         * Replicating the model objects is not quite good enough since the transformations may
+         * still contain the name of the source model.
+         * Need to replace those references with the new name.
+         */
+        SqlTransformationMappingRootSqlAspect.replaceTransformationLiteral(
+                                                                           sourceFirstLevelChildrenCopies,
+                                                                           sourceModelResource.getItemName(),
+                                                                           targetModelResource.getItemName());
 
         // just add the nodes to the target:
         targetModelResource.getEmfResource().getContents().addAll(sourceFirstLevelChildrenCopies);
 
-
         // Need to re-set the model type here.
-        targetModelResource.getModelAnnotation().setModelType(targetModelType);
+        ModelAnnotation modelAnnotation = targetModelResource.getModelAnnotation();
+        modelAnnotation.setModelType(targetModelType);
+
+        /*
+         * Need to check that all the model imports are valid
+         * When a model is copied it seems to leave behind imports referencing
+         * models relative to the old location which can be invalid for the new location.
+         *
+         * Remove those import statements that are invalid for the new location.
+         */
+        EList imports = modelAnnotation.getModelImports();
+        if (imports != null) {
+            ResourceFinder resourceFinder;
+            try {
+                resourceFinder = ModelerCore.getModelContainer().getResourceFinder();
+            } catch (CoreException ex) {
+                throw new ModelerCoreException(ex);
+            }
+
+            //
+            // Iterator through the imports and use the resource finder
+            // to determine if the uri location of the import model is still
+            // valid relative to the target model resource location
+            //
+            List<Object> mImports = Arrays.asList(imports.toArray());
+            for (Object mImport : mImports) {
+                ModelImport modelImport = (ModelImport) mImport;
+                URI uri = URI.createURI(modelImport.getModelLocation());
+
+                if (resourceFinder.isBuiltInResource(uri))
+                    continue;
+
+                Resource resource = resourceFinder.findByWorkspaceUri(uri, targetModelResource.getEmfResource());
+                if (resource == null) {
+                    // The resource location is invalid so remove it
+                    imports.remove(mImport);
+                }
+            }
+        }
         
         // Now we need to check if virtual, then call the NewModelObjectHelper .....
         if (targetIsVirtual) {
