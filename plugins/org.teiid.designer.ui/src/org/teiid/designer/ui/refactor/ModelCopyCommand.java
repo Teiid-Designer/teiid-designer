@@ -5,7 +5,7 @@
  *
  * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
  */
-package org.teiid.designer.core.refactor;
+package org.teiid.designer.ui.refactor;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -39,11 +39,12 @@ import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDResourceImpl;
-import org.w3c.dom.Element;
 import org.teiid.core.designer.id.IDGenerator;
 import org.teiid.core.designer.plugin.PluginUtilities;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.builder.ModelBuildUtil;
+import org.teiid.designer.core.refactor.RefactorCommand;
+import org.teiid.designer.core.refactor.ReferenceUpdator;
 import org.teiid.designer.core.resource.EmfResource;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.util.ConcurrentModelVisitorProcessor;
@@ -55,6 +56,8 @@ import org.teiid.designer.core.validation.rules.CoreValidationRulesUtil;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
+import org.teiid.designer.transformation.aspects.sql.SqlTransformationMappingRootSqlAspect;
+import org.w3c.dom.Element;
 
 
 /**
@@ -602,6 +605,16 @@ public class ModelCopyCommand implements RefactorCommand {
             }
 
             final Collection targetRoots = this.copyEObject(sourceRootsToCopy, originalsToCopies);
+
+            /*
+             * Replicating the model objects is not quite good enough since the transformations may
+             * still contain the name of the source model.
+             * Need to replace those references with the new name.
+             */
+            SqlTransformationMappingRootSqlAspect.replaceTransformationLiteral(
+                                                                               targetRoots,
+                                                                               resourceToCopy.getItemName(),
+                                                                               modelResource.getItemName());
 
             // Process the copied root EObjects ...
             for (final Iterator iter = targetRoots.iterator(); iter.hasNext();) {
