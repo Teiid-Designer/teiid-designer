@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -92,7 +91,6 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
     // private TeiidDataSource teiidDataSource;
     String dataSourceName;
 
-    private WizardPage wizardPage;
     Combo modelsCombo;
     Button useModelCheckBox;
     Combo connectionProfilesCombo;
@@ -408,7 +406,7 @@ public class CreateDataSourceWizard extends ScrollableTitleAreaDialog implements
         }
 
         if (profileWorker.getProfiles().isEmpty() && !hasModelResources) {
-            wizardPage.setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
+            setErrorMessage(getString("noConnectionDataError.message")); //$NON-NLS-1$
         } else {
             setConnectionProperties();
         }
