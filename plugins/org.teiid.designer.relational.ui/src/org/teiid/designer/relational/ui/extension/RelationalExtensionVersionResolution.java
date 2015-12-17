@@ -13,20 +13,18 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMarkerResolution;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.extension.ExtensionPlugin;
 import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
 import org.teiid.designer.extension.definition.ModelExtensionAssistant;
 import org.teiid.designer.extension.definition.ModelExtensionDefinition;
-import org.teiid.designer.extension.definition.ModelExtensionDefinitionWriter;
 import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionConstants;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.relational.ui.Messages;
 import org.teiid.designer.relational.ui.UiConstants;
 import org.teiid.designer.relational.ui.UiPlugin;
-import org.teiid.designer.ui.common.util.UiUtil;
 import org.teiid.designer.ui.common.viewsupport.UiBusyIndicator;
 import org.teiid.designer.ui.editors.ModelEditor;
 import org.teiid.designer.ui.editors.ModelEditorManager;
@@ -34,8 +32,14 @@ import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
 public class RelationalExtensionVersionResolution  implements IMarkerResolution {
 
+	private String medID;
 
-    /* (non-Javadoc)
+    public RelationalExtensionVersionResolution(String medID) {
+		super();
+		this.medID = medID;
+	}
+
+	/* (non-Javadoc)
      * @see org.eclipse.ui.IMarkerResolution#getLabel()
      */
     @Override
@@ -135,12 +139,20 @@ public class RelationalExtensionVersionResolution  implements IMarkerResolution 
 
         boolean modelNeedsSave = false;
 
-        String relationalNSPrefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+        ModelExtensionAssistant assistant = null;
         
-        ModelExtensionAssistant assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(relationalNSPrefix);
+        if( medID.equalsIgnoreCase("relational") ) {
+	        String nsPrefix = RelationalModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+	        
+	        assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(nsPrefix);
+        } else if( medID.equalsIgnoreCase("rest") ) {
+        	String nsPrefix = RestModelExtensionConstants.NAMESPACE_PROVIDER.getNamespacePrefix();
+	        
+	        assistant = ExtensionPlugin.getInstance().getRegistry().getModelExtensionAssistant(nsPrefix);
+        }
         // if assistant is null, it couldn't find in registry. Create a default assistant.
         if (assistant == null) {
-        	UiConstants.Util.log(IStatus.ERROR, "Relational MED not found in model" + modelFile.getName()); //NLS.bind(Messages.relationalExtensionNotFoundInModel, modelFile.getName()));
+        	UiConstants.Util.log(IStatus.ERROR, medID + " MED not found in model" + modelFile.getName()); //NLS.bind(Messages.relationalExtensionNotFoundInModel, modelFile.getName()));
         	return;
         }
 

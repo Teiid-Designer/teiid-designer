@@ -130,5 +130,12 @@
 	      markerType="org.teiid.designer.extension.ui.medMarker"> 
           <attribute name="isOldRelationalMed" value="true"/>	   
        </markerResolutionGenerator> 
+	</extension>
+	<extension point="org.eclipse.ui.ide.markerResolution"> 
+	   <markerResolutionGenerator 
+	      class="org.teiid.designer.relational.ui.extension.RestExtensionMarkerResolutionGenerator" 
+	      markerType="org.teiid.designer.extension.ui.medMarker"> 
+          <attribute name="isOldRestVersionMed" value="true"/>	   
+       </markerResolutionGenerator> 
 	</extension> 
 </plugin>
