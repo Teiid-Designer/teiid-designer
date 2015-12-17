@@ -41,7 +41,6 @@
 					<excludes>
 						<plugin id="org.teiid.designer.json.lib"/>
 						<plugin id="org.teiid.designer.modelgenerator.salesforce.lib"/>
-						<plugin id="org.teiid.designer.webservice.lib"/>
 						<plugin id="org.jboss.tools.locus.mockito"/>
 						<plugin id="org.apache.directory.studio.slf4j-eclipselog"/>
 						<feature id="org.jboss.tools.foundation.security.linux.feature"/>
