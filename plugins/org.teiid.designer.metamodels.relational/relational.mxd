@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="5" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="6" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>
@@ -66,30 +66,30 @@
             <p:allowedValue>false</p:allowedValue>
             <p:allowedValue>true</p:allowedValue>
         </p:property>
-        <p:property advanced="false" defaultValue="false" index="false" masked="false" name="ALLOW_MATVIEW_MANAGEMENT" required="false" type="boolean">
+        <p:property advanced="false" defaultValue="false" index="true" masked="false" name="ALLOW_MATVIEW_MANAGEMENT" required="false" type="boolean">
             <p:display locale="en_US">Allow Teiid based management</p:display>
             <p:allowedValue>false</p:allowedValue>
             <p:allowedValue>true</p:allowedValue>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="MATVIEW_STATUS_TABLE" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="MATVIEW_STATUS_TABLE" required="false" type="string">
         <p:description locale="en_US">fully qualified Status Table Name</p:description>
             <p:display locale="en_US">Status Table Name</p:display>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="MATVIEW_BEFORE_LOAD_SCRIPT" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="MATVIEW_BEFORE_LOAD_SCRIPT" required="false" type="string">
         	<p:description locale="en_US">semi-colon(;) separated DDL/DML commands to run before the actual load of the cache, typically used to truncate staging table </p:description>
             <p:display locale="en_US">Materialize Before Load Script</p:display>
         </p:property>
-        <p:property advanced="false"  index="false" masked="false" name="MATVIEW_LOAD_SCRIPT" required="false" type="string">
+        <p:property advanced="false"  index="true" masked="false" name="MATVIEW_LOAD_SCRIPT" required="false" type="string">
         	<p:description locale="en_US">semi-colon(;) separated DDL/DML commands to run for loading of the cache</p:description>
             <p:display locale="en_US">Materialize Load Script</p:display>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="MATVIEW_AFTER_LOAD_SCRIPT" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="MATVIEW_AFTER_LOAD_SCRIPT" required="false" type="string">
         	<p:description locale="en_US">semi-colon(;) separated DDL/DML commands to run after the actual load of the cache. 
         		Typically used to rename staging table to actual cache table. Required when MATVIEW_LOAD_SCRIPT not defined to copy 
         		data from teiid_rel:MATVIEW_STAGE_TABLE to MATVIEW table </p:description>
             <p:display locale="en_US">Materialize After Load Script</p:display>
         </p:property>
-        <p:property advanced="false" defaultValue="NONE" index="false" masked="false" name="MATVIEW_SHARE_SCOPE" required="false" type="string">
+        <p:property advanced="false" defaultValue="NONE" index="true" masked="false" name="MATVIEW_SHARE_SCOPE" required="false" type="string">
         	<p:description locale="en_US"> 	Allowed values are {NONE, VDB, SCHEMA}, which define if the cached contents are shared among 
         		different VDB versions and different VDBs as long as schema names match </p:description>
             <p:display locale="en_US">Materialized Share Scope</p:display>
@@ -97,20 +97,20 @@
             <p:allowedValue>SCHEMA</p:allowedValue>
             <p:allowedValue>VDB</p:allowedValue>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="MATERIALIZED_STAGE_TABLE" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="MATERIALIZED_STAGE_TABLE" required="false" type="string">
         	<p:description locale="en_US">When MATVIEW_LOAD_SCRIPT property not defined, Teiid loads the cache contents 
         		into this table. Required when MATVIEW_LOAD_SCRIPT not defined </p:description>
             <p:display locale="en_US">Materialized Staging Table</p:display>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="ON_VDB_START_SCRIPT" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="ON_VDB_START_SCRIPT" required="false" type="string">
         	<p:description locale="en_US">DML commands to run start of vdb </p:description>
             <p:display locale="en_US">Commands To Run On VDB Start</p:display>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="ON_VDB_DROP_SCRIPT" required="false" type="string">
+        <p:property advanced="false" index="true" masked="false" name="ON_VDB_DROP_SCRIPT" required="false" type="string">
         	<p:description locale="en_US">DML commands to run at VDB un-deploy; typically used for cleaning the cache/status tables </p:description>
             <p:display locale="en_US">Commands To Run On VDB Drop</p:display>
         </p:property>
-        <p:property advanced="false" defaultValue="WAIT" index="false" masked="false" name="MATVIEW_ONERROR_ACTION" required="false" type="string">
+        <p:property advanced="false" defaultValue="WAIT" index="true" masked="false" name="MATVIEW_ONERROR_ACTION" required="false" type="string">
         	<p:description locale="en_US">Action to be taken when mat view contents are requested but cache is invalid. Allowed values are 
         	(THROW_EXCEPTION = throws an exception, 
         	 IGNORE = ignores the warning and supplied invalidated data, 
@@ -120,7 +120,7 @@
             <p:allowedValue>IGNORE</p:allowedValue>
             <p:allowedValue>THROW_EXCEPTION</p:allowedValue>
         </p:property>
-        <p:property advanced="false" index="false" masked="false" name="MATVIEW_TTL" required="false" type="boolean">
+        <p:property advanced="false" index="true" masked="false" name="MATVIEW_TTL" required="false" type="boolean">
         	<p:description locale="en_US">Time to live in milliseconds. Provide property or cache hint on view transformation - property takes precedence. </p:description>
             <p:display locale="en_US">Time To Live (ms)</p:display>
         </p:property>
