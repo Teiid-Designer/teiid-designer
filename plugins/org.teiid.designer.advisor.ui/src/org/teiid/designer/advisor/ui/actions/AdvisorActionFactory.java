@@ -307,11 +307,6 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         		COMMAND_LABELS_SHORT.DEFINE_TEIID_MODEL_PROJECT,
         		COMMAND_DESC.DEFINE_TEIID_MODEL_PROJECT);
         addActionHandler(
-        		COMMAND_IDS.NEW_OBJECT_VIEW_TABLE,
-                COMMAND_LABELS.NEW_OBJECT_VIEW_TABLE,
-                COMMAND_LABELS_SHORT.NEW_OBJECT_VIEW_TABLE,
-                COMMAND_DESC.NEW_OBJECT_VIEW_TABLE);
-        addActionHandler(
         		COMMAND_IDS.DEFINE_VIEW_TABLE,
                 COMMAND_LABELS.DEFINE_VIEW_TABLE,
                 COMMAND_LABELS_SHORT.DEFINE_VIEW_TABLE,
@@ -835,10 +830,6 @@ public class AdvisorActionFactory implements AdvisorUiConstants {
         if (id.equalsIgnoreCase(COMMAND_IDS.REFRESH_TEIID_SERVER)) {
             return Images.REFRESH_TEIID_SERVER;
         }
-		
-		if( id.equalsIgnoreCase(COMMAND_IDS.NEW_OBJECT_VIEW_TABLE)) {
-			return Images.NEW_VIRTUAL_TABLE_ICON;
-		}
 		
 		if( id.equalsIgnoreCase(COMMAND_IDS.DEFINE_VIEW_TABLE)) {
 			return Images.NEW_VIRTUAL_TABLE_ICON;

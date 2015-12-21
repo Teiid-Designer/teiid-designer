@@ -154,7 +154,6 @@ public interface AdvisorUiConstants {
 		String NEW_MODEL_MED = "org.teiid.designer.newModelMEDCommand";  //$NON-NLS-1$
 		
         String NEW_OBJECT_BASE_TABLE = "org.teiid.designer.newObjectBaseTable"; //$NON-NLS-1$
-        String NEW_OBJECT_VIEW_TABLE = "org.teiid.designer.newObjectViewTable"; //$NON-NLS-1$
         String DEFINE_VIEW_TABLE = "org.teiid.designer.defineViewTable"; //$NON-NLS-1$
         String DEFINE_VIEW_PROCEDURE = "org.teiid.designer.defineViewProcedure"; //$NON-NLS-1$
         String NEW_OBJECT_REST_PROCEDURE = "org.teiid.designer.newObjectRestProcedure"; //$NON-NLS-1$
