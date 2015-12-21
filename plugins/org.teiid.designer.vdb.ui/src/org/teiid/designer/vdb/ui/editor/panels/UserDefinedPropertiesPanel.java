@@ -263,7 +263,7 @@ public class UserDefinedPropertiesPanel {
         assert (selectedProperty != null);
 
         // update model
-        this.vdb.setProperty(selectedProperty.getName(), selectedProperty.getValue());
+        this.vdb.removeProperty(selectedProperty.getName());
 
         // update UI
         this.propertiesViewer.refresh();

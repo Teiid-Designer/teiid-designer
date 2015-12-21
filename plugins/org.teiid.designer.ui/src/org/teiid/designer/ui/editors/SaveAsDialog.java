@@ -28,7 +28,6 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.core.ModelerCore;
-import org.teiid.designer.core.refactor.ModelCopyCommand;
 import org.teiid.designer.core.validation.rules.StringNameValidator;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.ui.UiConstants;
@@ -36,6 +35,7 @@ import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.viewsupport.StatusInfo;
 import org.teiid.designer.ui.explorer.ModelExplorerContentProvider;
 import org.teiid.designer.ui.explorer.ModelExplorerLabelProvider;
+import org.teiid.designer.ui.refactor.ModelCopyCommand;
 import org.teiid.designer.ui.viewsupport.ModelingResourceFilter;
 
 

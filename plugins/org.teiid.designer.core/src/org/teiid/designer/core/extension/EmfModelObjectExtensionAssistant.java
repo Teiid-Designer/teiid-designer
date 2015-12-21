@@ -598,4 +598,10 @@ public class EmfModelObjectExtensionAssistant extends ModelObjectExtensionAssist
         return ModelExtensionUtils.isSupportedNamespace(modelResource, getNamespacePrefix());
     }
 
+	@Override
+	public boolean supportsProperty(Object modelObject, String propId)
+			throws Exception {
+		return getPropertyDefinition(modelObject, propId) != null;
+	}
+
 }

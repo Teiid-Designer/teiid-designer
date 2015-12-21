@@ -503,6 +503,13 @@
 				create a Teiid Connection Profile specific for that VDB, open the 
 				Database Development perspective and create a connection to your VDB. 
 				Continue with Step's 2 and 3 above.</para>
+			 <note>
+			     <para>You can deploy a dynamic VDB to the server, but the 
+			     	VDB may end up being INACTIVE if any referenced data source (JNDI name) is not already be deployed. 
+			     	Dynamic VDBs do not contain enough connection or data source information to automatically
+			     	find and/or deploy a data source.
+			     </para>
+            </note>
             <note>
 			     <para>If you do not have a Teiid instance defined or your default 
 					Teiid instance is disconnected, the following dialog will be displayed 

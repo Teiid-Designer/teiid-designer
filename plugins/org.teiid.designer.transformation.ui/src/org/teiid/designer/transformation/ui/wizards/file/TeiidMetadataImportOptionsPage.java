@@ -59,6 +59,7 @@ import org.teiid.designer.transformation.ui.UiPlugin;
 import org.teiid.designer.transformation.ui.editors.sqleditor.SqlTextViewer;
 import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.ui.common.graphics.ColorManager;
+import org.teiid.designer.ui.common.table.CheckBoxEditingSupport;
 import org.teiid.designer.ui.common.table.ComboBoxEditingSupport;
 import org.teiid.designer.ui.common.table.TableViewerBuilder;
 import org.teiid.designer.ui.common.util.WidgetFactory;
@@ -1004,6 +1005,11 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
         column.getColumn().setText(getString("width") + getSpaces(12)); //$NON-NLS-1$ 
         column.setLabelProvider(new ColumnDataLabelProvider(2));
         column.setEditingSupport(new ColumnWidthEditingSupport(this.fixedColumnsViewer.getTableViewer()));
+        
+        column = fixedColumnsViewer.createColumn(SWT.LEFT, 30, 50, true);
+        column.getColumn().setText(getString("noTrimLabel") + getSpaces(12)); //$NON-NLS-1$ 
+        column.setLabelProvider(new ColumnDataLabelProvider(3));
+        column.setEditingSupport(new NoTrimEditingSupport(this.fixedColumnsViewer.getTableViewer()));
     	
         if( this.dataFileInfo != null ) {
 	        for( ITeiidColumnInfo row : this.dataFileInfo.getColumnInfoList() ) {
@@ -1342,6 +1348,9 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
 					case 2: {
 						return Integer.toString(((ITeiidColumnInfo)element).getWidth());
 					}
+					case 3: {
+						return Boolean.toString(((ITeiidColumnInfo)element).isNoTrim());
+					}
 				}
 			}
 			return EMPTY;
@@ -1561,6 +1570,28 @@ public class TeiidMetadataImportOptionsPage  extends AbstractWizardPage implemen
             
             handleInfoChanged(false);
         }
+    }
+    
+    class NoTrimEditingSupport extends CheckBoxEditingSupport {
+    	
+    	public NoTrimEditingSupport(ColumnViewer viewer) {
+			super(viewer);
+		}
+
+		@Override
+		protected void setElementValue(Object element, Object newValue) {
+
+			if( element instanceof TeiidColumnInfo && newValue instanceof Boolean) {
+				TeiidColumnInfo info = (TeiidColumnInfo)element;
+				if(info.isNoTrim() ) {
+					info.setNoTrim(false);
+					handleInfoChanged(false);
+				} else {
+					info.setNoTrim(true);
+					handleInfoChanged(false);
+				}
+			}
+		}
     }
 
 }

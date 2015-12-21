@@ -567,6 +567,11 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Set Description
+        if( pkRef.getDescription() != null ) {
+            createAnnotation(primaryKey, pkRef.getDescription(), modelResource);
+        }
+        
         // Apply Extension Properties
         processExtensionProperties(modelResource,pkRef,primaryKey);
         
@@ -611,6 +616,11 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Set Description
+        if( fkRef.getDescription() != null ) {
+            createAnnotation(foreignKey, fkRef.getDescription(), modelResource);
+        }
+        
         // Apply Extension Properties
         processExtensionProperties(modelResource,fkRef,foreignKey);
         
@@ -637,6 +647,11 @@ public class RelationalModelFactory implements RelationalConstants {
             }
         }
         
+        // Set Description
+        if( apRef.getDescription() != null ) {
+            createAnnotation(accessPattern, apRef.getDescription(), modelResource);
+        }
+        
         // Apply Extension Properties
         processExtensionProperties(modelResource,apRef,accessPattern);
         
@@ -661,6 +676,11 @@ public class RelationalModelFactory implements RelationalConstants {
             if( column != null ) {
                 keyColumns.add(column);
             }
+        }
+        
+        // Set Description
+        if( ucRef.getDescription() != null ) {
+            createAnnotation(uniqueConstraint, ucRef.getDescription(), modelResource);
         }
         
         // Apply Extension Properties
@@ -1200,7 +1220,7 @@ public class RelationalModelFactory implements RelationalConstants {
         // find the assistant for the property
         for (ModelExtensionAssistant assistant : assistants) {
         	// Prepend the assistant namespace to the propertyId, since it doesnt have one
-        	String namespacedId = assistant.getNamespacePrefix()+':'+propId;
+        	String namespacedId = propId; // assistant.getNamespacePrefix()+':'+propId;
 
         	if(hasMatchingPropertyName(assistant.getModelExtensionDefinition(), eObjectClassName, namespacedId)) {
                 return ((assistant instanceof ModelObjectExtensionAssistant) ? (ModelObjectExtensionAssistant)assistant : null);

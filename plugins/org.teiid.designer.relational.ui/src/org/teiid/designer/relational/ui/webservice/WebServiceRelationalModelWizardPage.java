@@ -59,7 +59,7 @@ public class WebServiceRelationalModelWizardPage extends WizardPage implements U
             }
         });
         
-        invokeHttpCB = WidgetFactory.createCheckBox(optionsGroup, "invokeHttp(action in STRING, request in OBJECT, endpoint in STRING, stream in BOOLEAN, result out BLOB, contentType out STRING)", 0, 2, true); //$NON-NLS-1$
+        invokeHttpCB = WidgetFactory.createCheckBox(optionsGroup, "invokeHttp(action in STRING, request in OBJECT, endpoint in STRING, stream in BOOLEAN, result out BLOB, contentType out STRING, headers in CLOB)", 0, 2, true); //$NON-NLS-1$
         invokeHttpCB.addSelectionListener(new SelectionAdapter() {
 
             @Override

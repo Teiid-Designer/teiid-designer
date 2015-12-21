@@ -116,14 +116,14 @@ public final class ModelExtensionRegistry {
 
         // don't allow a namespace prefix that has already been registered
         if (!definition.isBuiltIn() && this.definitions.containsKey(namespacePrefix)) {
-            throw new Exception(NLS.bind(Messages.namespacePrefixAlreadyRegistered, namespacePrefix));
+        	ExtensionPlugin.Util.log(IStatus.WARNING, NLS.bind(Messages.namespacePrefixAlreadyRegistered, namespacePrefix));
         }
 
         String namespaceUri = definition.getNamespaceUri();
 
         // don't allow a namespace URI that has already been registered
         if (!definition.isBuiltIn() && this.namespaces.containsKey(namespaceUri)) {
-            throw new Exception(NLS.bind(Messages.namespaceUriAlreadyRegistered, namespaceUri));
+        	ExtensionPlugin.Util.log(IStatus.WARNING, NLS.bind(Messages.namespaceUriAlreadyRegistered, namespaceUri));
         }
 
         // Determine if the definition extends a valid Metamodel

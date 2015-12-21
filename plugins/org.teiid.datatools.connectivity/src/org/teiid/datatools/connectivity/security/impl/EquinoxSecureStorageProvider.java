@@ -11,6 +11,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
+
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.equinox.security.storage.EncodingUtils;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
@@ -103,4 +105,12 @@ public class EquinoxSecureStorageProvider implements ISecureStorageProvider {
 
         return root.node(encoded);
     }
+
+	@Override
+	public void removeFromSecureStorage(String nodeKey) throws Exception {
+        Assert.isNotNull(nodeKey);
+		ISecurePreferences node = getNode(nodeKey);
+		node.removeNode();
+	}
+
 }

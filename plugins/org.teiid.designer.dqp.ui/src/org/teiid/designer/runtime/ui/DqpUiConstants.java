@@ -130,6 +130,7 @@ public interface DqpUiConstants {
         public static final String DYNAMIC_VDB = PC.OBJ16 + "dynamic-vdb.png"; //$NON-NLS-1$
         public static final String DDL_VDB = PC.OBJ16 + "ddl-vdb.png"; //$NON-NLS-1$
         public static final String STANDARD_VDB = PC.OBJ16 + "standard-vdb.png"; //$NON-NLS-1$
+        public static final String SHOW_VDB_ERRORS = PC.CTOOL16 + "show-vdb-errors.png"; //$NON-NLS-1$
     }
 
     /**

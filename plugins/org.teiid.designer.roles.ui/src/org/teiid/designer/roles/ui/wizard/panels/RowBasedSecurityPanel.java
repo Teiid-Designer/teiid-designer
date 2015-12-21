@@ -573,6 +573,7 @@ public class RowBasedSecurityPanel extends DataRolePanel {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						// Open dialog to display models tree so user can select a column object
+						constraint = constraintButton.getSelection();
 						handleInputChanged();
 					}
 					

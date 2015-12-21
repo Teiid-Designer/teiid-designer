@@ -37,7 +37,7 @@ public class ModelExtensionAssistantAggregator {
         this.registry = registry;
     }
 
-    private ModelObjectExtensionAssistant getModelObjectExtensionAssistant( String namespacePrefix ) {
+    public ModelObjectExtensionAssistant getModelObjectExtensionAssistant( String namespacePrefix ) {
         ModelExtensionAssistant assistant = this.registry.getModelExtensionAssistant(namespacePrefix);
 
         if (assistant instanceof ModelObjectExtensionAssistant) {

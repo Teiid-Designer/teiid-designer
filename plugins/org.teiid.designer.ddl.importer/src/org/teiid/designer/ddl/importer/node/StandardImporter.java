@@ -558,6 +558,37 @@ public class StandardImporter extends AbstractImporter {
 
 		return procedure;
 	}
+	
+	/**
+	 * Create a RelationalProcedure
+	 * @param procedureNode the AstNode for the procedure
+	 * @param model the RelationalModel
+	 * @return the RelationalProcedure
+	 *
+	 * @throws Exception
+	 */
+	protected RelationalProcedure createViewProcedure( AstNode procedureNode, RelationalModel model) throws Exception {
+		RelationalProcedure procedure = getFactory().createViewProcedure();
+		Info info = createInfo(procedureNode, model);
+		if (info.getSchema() == null)
+			model.addChild(procedure);
+		else {
+			info.getSchema().getProcedures().add(procedure);
+			procedure.setParent(info.getSchema());
+		}
+
+		initialize(procedure, procedureNode, info.getName());
+		// TODO: determine how to handle Procedure StatementOption
+		// TODO: determine how to handle Procedure Statement
+
+		if (procedureNode.getProperty(StandardDdlLexicon.DATATYPE_NAME) != null) {
+			RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
+			procedure.setResultSet(result);
+			initialize(result, procedureNode);
+		}
+
+		return procedure;
+	}
 
 	/**
 	 * Perform the import

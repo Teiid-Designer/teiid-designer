@@ -38,7 +38,7 @@
          <subitem label="Create View Table" skip="true">
                 <action class="org.teiid.designer.advisor.ui.actions.LaunchDesignerCommandAction" 
             pluginId="org.teiid.designer.advisor.ui" 
-            param1="org.teiid.designer.newObjectViewTable"/>
+            param1="org.teiid.designer.defineViewTable"/>
         </subitem>
         <subitem skip="true" >
           <description>

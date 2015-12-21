@@ -262,6 +262,8 @@ public class VdbModelEntry extends VdbIndexedEntry {
             	sourceInfo.setAddColumn(Boolean.parseBoolean(property.getValue()));
             } else if( ModelElement.MULTI_SOURCE_COLUMN_ALIAS.equals(name)) {
             	sourceInfo.setColumnAlias(property.getValue());
+            } else {
+            	setProperty(name, property.getValue());
             }
         }
         this.builtIn = builtIn;

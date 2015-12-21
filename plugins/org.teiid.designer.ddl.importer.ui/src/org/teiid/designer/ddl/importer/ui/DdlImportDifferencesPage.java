@@ -378,7 +378,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         private final Image PROCEDURE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.PROCEDURE_ICON);
         private final Image INDEX_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_ICON);
         private final Image VIEW_TABLE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.VIRTUAL_TABLE_ICON);
-        
+        private final Image VIRTUAL_PROCEDURE_IMG = UiPlugin.getDefault().getImage(UiConstants.Images.VIRTUAL_PROCEDURE_ICON);
 
         @Override
         public Image getImage( final Object node ) {
@@ -397,6 +397,9 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
         			}
         			return VIEW_IMG;
         		} else if(type==RelationalConstants.TYPES.PROCEDURE) {
+        			if( importer.modelType() == ModelType.VIRTUAL_LITERAL) {
+        				return VIRTUAL_PROCEDURE_IMG;
+        			}
         			return PROCEDURE_IMG;
         		} else if(type==RelationalConstants.TYPES.INDEX) {
         			return INDEX_IMG;

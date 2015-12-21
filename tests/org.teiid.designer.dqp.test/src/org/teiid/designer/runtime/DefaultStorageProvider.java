@@ -9,6 +9,7 @@ package org.teiid.designer.runtime;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.teiid.datatools.connectivity.spi.ISecureStorageProvider;
 
 /**
@@ -51,4 +52,9 @@ public class DefaultStorageProvider implements ISecureStorageProvider {
     public void clear() {
         storageMap.clear();
     }
+
+	@Override
+	public void removeFromSecureStorage(String nodeKey) throws Exception {
+		storageMap.remove(nodeKey);
+	}
 }

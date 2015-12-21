@@ -12,6 +12,7 @@
 package org.teiid.designer.core.index;
 
 import java.util.Arrays;
+import org.teiid.core.designer.util.StringUtilities;
 
 
 /**
@@ -164,6 +165,6 @@ public class WordEntry implements Comparable<WordEntry> {
 	}
 	@Override
 	public int compareTo(WordEntry other) {
-		return Util.compare(this.fWord, other.fWord);
+		return StringUtilities.compare(this.fWord, other.fWord);
 	}
 }

@@ -228,6 +228,21 @@ public class SelectTranslatorPage extends AbstractWizardPage implements UiConsta
                  */
                 @Override
                 public Object[] getElements( Object inputElement ) {
+                	TranslatorOverrideProperty[] props = importManager.getTranslatorOverride().getProperties();
+                	for( TranslatorOverrideProperty top : props ) {
+//                		System.out.println(" TOP:  ID = " + top.getDefinition().getId());
+                		if( top.getDefinition().getId().equalsIgnoreCase(JdbcTranslatorKeys.TABLE_TYPES)) {
+                			if( top.getOverriddenValue() == null ) {
+                				top.setValue(JdbcTranslatorDefaults.TABLE_TYPES);
+                			}
+                		} else if( top.getDefinition().getId().equalsIgnoreCase(JdbcTranslatorKeys.USE_QUALIFIED_NAME)) {
+                			if( top.getOverriddenValue() == null || top.getOverriddenValue().equalsIgnoreCase(Boolean.toString(true)) ) {
+                				top.setValue(JdbcTranslatorDefaults.USE_QUALIFIED_NAME);
+                			}
+                		} 
+                		
+                	}
+                	
                     return importManager.getTranslatorOverride().getProperties();
                 }
 

@@ -8,6 +8,7 @@
 package org.teiid.designer.relational.ui;
 
 import java.util.ResourceBundle;
+
 import org.teiid.core.designer.PluginUtil;
 import org.teiid.core.designer.util.PluginUtilImpl;
 
@@ -108,4 +109,8 @@ public interface UiConstants {
      * @since 4.0
      */
     PluginUtil Util = new PluginUtilImpl(PLUGIN_ID, PC.I18N_NAME, ResourceBundle.getBundle(PC.I18N_NAME));
+    
+    interface ExtensionIds {
+        String MED_PROBLEM_MARKER = PLUGIN_ID + ".medMarker"; //$NON-NLS-1$";
+    }
 }

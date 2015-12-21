@@ -8,15 +8,18 @@
 package org.teiid.designer.transformation.aspects.sql;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.mapping.Mapping;
 import org.eclipse.emf.mapping.MappingHelper;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.CoreStringUtil;
+import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.index.IndexingContext;
@@ -35,6 +38,7 @@ import org.teiid.designer.metamodels.transformation.MappingClass;
 import org.teiid.designer.metamodels.transformation.MappingClassColumn;
 import org.teiid.designer.metamodels.transformation.SqlTransformation;
 import org.teiid.designer.metamodels.transformation.SqlTransformationMappingRoot;
+import org.teiid.designer.metamodels.transformation.TransformationContainer;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryParser;
@@ -480,13 +484,14 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
     @Override
 	public void updateObject( EObject targetObject,
                               EObject sourceObject ) {
+        // Nothing to do
     }
 
     /**
      * Get the User SqlTransformation from a SqlTransformationMappingRoot. This is the nested SqlTransformation that is used to
      * store the "user" (or non-uuid) SQL strings.
      * 
-     * @param transMappingRoot the transformation mapping root
+     * @param root the transformation mapping root
      * @return the mapping helper
      */
     public static SqlTransformation getUserSqlTransformation( final SqlTransformationMappingRoot root ) {
@@ -507,6 +512,92 @@ public class SqlTransformationMappingRootSqlAspect extends TransformationMapping
             }
         }
         return nestedSqlTrans;
+    }
+
+    /**
+     * Replaces all occurrences of oldModelName with newModelName in the given sql
+     *
+     * @param sql
+     * @param oldLiteral
+     * @param newLiteral
+     */
+    private static String updateSql(String sql, String oldLiteral, String newLiteral) {
+        if (sql == null)
+            return null;
+
+        if (oldLiteral == null || newLiteral == null)
+            return sql;
+
+        // Remove the xml extension if it exists
+        oldLiteral = oldLiteral.replace(StringConstants.DOT_XMI, StringConstants.EMPTY_STRING);
+        newLiteral = newLiteral.replace(StringConstants.DOT_XMI, StringConstants.EMPTY_STRING);
+
+        return sql.replace(oldLiteral, newLiteral);
+    }
+
+    /**
+     * Replaces the given old literal in the transformation SQL
+     * with the new literal
+     *
+     * @param mappingRoot the mapping root
+     * @param oldLiteral the old literal
+     * @param newLiteral the new literal
+     */
+    public static void replaceTransformationLiteral(SqlTransformationMappingRoot mappingRoot,
+                                                                                        String oldLiteral, String newLiteral) {
+        SqlTransformation sqlTransformation = getUserSqlTransformation(mappingRoot);
+        if (sqlTransformation == null)
+            return;
+
+        String selectSql = sqlTransformation.getSelectSql();
+        String deleteSql = sqlTransformation.getDeleteSql();
+        String updateSql = sqlTransformation.getUpdateSql();
+        String insertSql = sqlTransformation.getInsertSql();
+
+        selectSql = updateSql(selectSql, oldLiteral, newLiteral);
+        deleteSql = updateSql(deleteSql, oldLiteral, newLiteral);
+        updateSql = updateSql(updateSql, oldLiteral, newLiteral);
+        insertSql = updateSql(insertSql, oldLiteral, newLiteral);
+
+        if (selectSql != null)
+            sqlTransformation.setSelectSql(selectSql);
+        if (deleteSql != null)
+            sqlTransformation.setDeleteSql(deleteSql);
+        if (updateSql != null)
+            sqlTransformation.setUpdateSql(updateSql);
+        if (insertSql != null)
+            sqlTransformation.setInsertSql(insertSql);
+    }
+
+    /**
+     * Iterates the collection of target roots and replaces the given
+     * old literal in the transformation SQL with the new literal
+     *
+     * @param targetRoots collection of target roots
+     * @param oldLiteral the old literal
+     * @param newLiteral the new literal
+     */
+    public static void replaceTransformationLiteral(Collection targetRoots, String oldLiteral, String newLiteral) {
+        if (targetRoots == null)
+            return;
+
+        for (Object childCopy : targetRoots) {
+            if (! (childCopy instanceof TransformationContainer))
+                continue;
+
+            TransformationContainer trContainer = (TransformationContainer) childCopy;
+            EList mappings = trContainer.getTransformationMappings();
+            for (Object mapping : mappings.toArray()) {
+                if (! (mapping instanceof SqlTransformationMappingRoot))
+                    continue;
+
+                SqlTransformationMappingRoot mappingRoot = (SqlTransformationMappingRoot) mapping;
+                SqlTransformationMappingRootSqlAspect.replaceTransformationLiteral(
+                                                                                   mappingRoot,
+                                                                                   oldLiteral,
+                                                                                   newLiteral);
+            }
+        }
     }
 
     /**

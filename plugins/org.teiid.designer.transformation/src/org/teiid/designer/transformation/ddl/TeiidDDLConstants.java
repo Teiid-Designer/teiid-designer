@@ -89,5 +89,43 @@ public interface TeiidDDLConstants {
 		public static final String DETERMINISM_OPT_USER_DETERMINISTIC = "USER_DETERMINISTIC"; //$NON-NLS-1$
 		public static final String DETERMINISM_OPT_VDB_DETERMINISTIC = "VDB_DETERMINISTIC"; //$NON-NLS-1$
 		public static final String DETERMINISM_OPT_DETERMINISTIC = "DETERMINISTIC"; //$NON-NLS-1$
+		public static final String RETURNS = "RETURNS"; //$NON-NLS-1$
+		public static final String TABLE = "TABLE"; //$NON-NLS-1$
+		public static final String IN = "IN"; //$NON-NLS-1$
+		public static final String INOUT = "INOUT"; //$NON-NLS-1$
+		public static final String OUT = "OUT"; //$NON-NLS-1$
+		public static final String DEFAULT = "DEFAULT"; //$NON-NLS-1$
+		
+		/* REST EXTENSION PROPERTIES
+		METHOD 	HTTP Method to use 	Yes 	GET | POST| PUT | DELETE
+		URI 	URI of procedure 	Yes 	ex:/procedure
+		PRODUCES 	Type of content produced by the service 	no 	xml | json | plain | any text
+		CHARSET 	When procedure returns Blob, and content type text based, this character set to used to convert the data 	no 	US-ASCII | UTF-8 
+		*/
+		public static final String METHOD = "METHOD"; //$NON-NLS-1$
+		public static final String REST_METHOD = "REST:METHOD"; //$NON-NLS-1$
+		public static final String URI = "URI"; //$NON-NLS-1$
+		public static final String REST_URI = "REST:URI"; //$NON-NLS-1$
+		public static final String PRODUCES = "PRODUCES"; //$NON-NLS-1$
+		public static final String REST_PRODUCES = "REST:PRODUCES"; //$NON-NLS-1$
+		public static final String CHARSET = "CHARSET"; //$NON-NLS-1$
+		public static final String REST_CHARSET = "REST:CHARSET"; //$NON-NLS-1$
+		public static final String REST_TEIID_SET_NAMESPACE = "SET NAMESPACE 'http://teiid.org/rest' AS REST;"; //$NON-NLS-1$
+		
+		public static String TEIID_SF_PREFIX = "teiid_sf";  //$NON-NLS-1$
+	    public static String SALESFORCE_PREFIX = "salesforce";  //$NON-NLS-1$
+	    
+		public static String TEIID_MONGO_PREFIX = "teiid_mongo";  //$NON-NLS-1$
+	    public static String MONGODB_PREFIX = "mongodb";  //$NON-NLS-1$";  //$NON-NLS-1$
+	    
 
+	    /*
+	     * Teiid's EXCEL extension properties
+	     */
+		public static String TEIID_EXCEL_PREFIX = "teiid_excel";  //$NON-NLS-1$
+	    public static String EXCEL_PREFIX = "excel";  //$NON-NLS-1$";  //$NON-NLS-1$
+	    public static String EXCEL_CELL_NUMBER = "CELL_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  COLUMN ONLY
+	    public static String EXCEL_FILE = "FILE";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+	    public static String EXCEL_FIRST_DATA_ROW_NUMBER = "FIRST_DATA_ROW_NUMBER";  //$NON-NLS-1$";  //$NON-NLS-1$  TABLE
+	    
 }

@@ -188,20 +188,7 @@ public class EmfModelGenerator {
 				createPrimaryKey(pk, table, targetModelResource);  
 			}
 		}
-		if(!fkList.isEmpty()) {
-			for( DeferredPair item : fkList ) {
-				RelationalForeignKey fk = (RelationalForeignKey)item.getRelationalReference();
-				BaseTable table = (BaseTable)item.getEObject();
-				createForeignKey(fk, table, targetModelResource);  
-			}
-		}
-		if(!apList.isEmpty()) {
-			for( DeferredPair item : apList ) {
-				RelationalAccessPattern ap = (RelationalAccessPattern)item.getRelationalReference();
-				Table table = (Table)item.getEObject();
-				createAccessPattern(ap, table, targetModelResource);  
-			}
-		}
+		
 		if(!ucList.isEmpty()) {
 			for( DeferredPair item : ucList ) {
 				RelationalUniqueConstraint uc = (RelationalUniqueConstraint)item.getRelationalReference();
@@ -209,11 +196,29 @@ public class EmfModelGenerator {
 				createUniqueConstraint(uc, table, targetModelResource);  
 			}
 		}
+		
+		if(!apList.isEmpty()) {
+			for( DeferredPair item : apList ) {
+				RelationalAccessPattern ap = (RelationalAccessPattern)item.getRelationalReference();
+				Table table = (Table)item.getEObject();
+				createAccessPattern(ap, table, targetModelResource);  
+			}
+		}
+
 		if(!indexList.isEmpty()) {
 			for( RelationalIndex index : indexList ) {
 				createIndex(index, targetModelResource);  
 			}
 		}
+		
+		if(!fkList.isEmpty()) {
+			for( DeferredPair item : fkList ) {
+				RelationalForeignKey fk = (RelationalForeignKey)item.getRelationalReference();
+				BaseTable table = (BaseTable)item.getEObject();
+				createForeignKey(fk, table, targetModelResource);  
+			}
+		}
+		
 		progressMonitor.worked(workUnit);
 
 		// 5) Process all 'deferred' operations - Extension properties and descriptions...
@@ -293,7 +298,10 @@ public class EmfModelGenerator {
         } break;
         case TYPES.TABLE: {
         	if( relationalRef instanceof RelationalViewTable ) {
-        		newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+//        		newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+        		newEObject = createBaseTable(relationalRef, modelResource);
+        		modelResource.getEmfResource().getContents().add(newEObject);
+        		VIEW_MODEL_FACTORY.addTransformation((BaseTable)newEObject, (RelationalViewTable)relationalRef);
         	} else {
 	        	newEObject = createBaseTable(relationalRef, modelResource);
 	        	modelResource.getEmfResource().getContents().add(newEObject);
@@ -304,12 +312,12 @@ public class EmfModelGenerator {
         	modelResource.getEmfResource().getContents().add(newEObject);
         } break;
         case TYPES.PROCEDURE: {
-                if (relationalRef instanceof RelationalViewProcedure) {
-                    newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
-                } else {
-                    newEObject = createProcedure(relationalRef, modelResource);
-                    modelResource.getEmfResource().getContents().add(newEObject);
-                }
+        	if( relationalRef instanceof RelationalViewProcedure ) {
+        		newEObject = VIEW_MODEL_FACTORY.buildObject(relationalRef, modelResource, new NullProgressMonitor());
+        	} else {
+        		newEObject = createProcedure(relationalRef, modelResource);
+        		modelResource.getEmfResource().getContents().add(newEObject);
+        	}
         } break;
 
         case TYPES.INDEX: {
@@ -806,7 +814,7 @@ public class EmfModelGenerator {
         if( fkTable != null && ukRefName != null ) {
             if( fkTable.getPrimaryKey() != null && fkTable.getPrimaryKey().getName().equalsIgnoreCase(ukRefName)) {
                 foreignKey.setUniqueKey(fkTable.getPrimaryKey());
-            } else if( fkTable.getUniqueConstraints().isEmpty() ) {
+            } else if( ! fkTable.getUniqueConstraints().isEmpty() ) {
                 for( Object key : fkTable.getUniqueConstraints()) {
                     String keyName = this.getModelEditor().getName((UniqueKey)key);
                     if( keyName.equalsIgnoreCase(ukRefName) ) {
@@ -1211,7 +1219,9 @@ public class EmfModelGenerator {
 		}
 
 		try {
-			assistant.setPropertyValue(eObject, namespacedId, propValue);
+			if( assistant.supportsProperty(eObject, propId) )  {
+				assistant.setPropertyValue(eObject, namespacedId, propValue);
+			}
 		} catch (Exception ex) {
             RelationalPlugin.Util.log(IStatus.ERROR,ex, 
                 	NLS.bind(Messages.emfModelGenerator_errorSettingPropertyValue, namespacedId));

@@ -252,7 +252,13 @@ public class MockFileBuilder implements StringConstants {
         mockFileProperties(resource, realFile, wkspPath, IResource.FILE);
 
         IFile resourceFile = getResourceFile();
-        when(resourceFile.getContents()).thenReturn(new FileInputStream(realFile));
+        when(resourceFile.getContents()).thenAnswer(new Answer<InputStream>() {
+            @Override
+            public InputStream answer(InvocationOnMock invocation) throws Throwable {
+                assertNotNull(realFile);
+                return new FileInputStream(realFile);
+            }
+        });
     }
 
     /**

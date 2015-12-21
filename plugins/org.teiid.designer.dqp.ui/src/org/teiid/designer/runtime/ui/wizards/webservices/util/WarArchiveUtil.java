@@ -293,7 +293,7 @@ public class WarArchiveUtil {
                                                                                                     .getModelExtensionAssistant(NAMESPACE_PROVIDER.getNamespacePrefix());
             restMethod = assistant.getPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
 
-            if (CoreStringUtil.isEmpty(restMethod.trim())) {
+            if (restMethod != null && CoreStringUtil.isEmpty(restMethod.trim())) {
                 // try old way
                 restMethod = (String)ANNOTATION_HELPER.getPropertyValueAnyCase(procedure,
                                                                                ModelObjectAnnotationHelper.EXTENDED_PROPERTY_NAMESPACE

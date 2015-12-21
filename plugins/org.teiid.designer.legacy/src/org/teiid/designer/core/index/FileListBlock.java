@@ -13,6 +13,7 @@ package org.teiid.designer.core.index;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import org.teiid.core.designer.util.StringUtilities;
 
 /**
  * @since 8.0
@@ -38,9 +39,10 @@ public class FileListBlock extends Block {
             offset += 4;
         }
         String path = indexedFile.getPath();
-        int prefixLen = prevPath == null ? 0 : Util.prefixLength(prevPath, path);
+        int prefixLen = prevPath == null ? 0 : StringUtilities.prefixLength(prevPath, path);
         int sizeEstimate = 2 + 2 + (path.length() - prefixLen) * 3;
-        if (offset + sizeEstimate > blockSize - 2) return false;
+        if (offset + sizeEstimate > blockSize - 2)
+            return false;
         field.putInt2(offset, prefixLen);
         offset += 2;
         char[] chars = new char[path.length() - prefixLen];

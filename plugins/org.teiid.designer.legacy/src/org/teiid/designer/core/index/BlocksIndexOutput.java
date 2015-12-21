@@ -14,6 +14,7 @@ package org.teiid.designer.core.index;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import org.teiid.designer.legacy.Messages;
 
 /**
  * A blocksIndexOutput is used to save an index in a file with the given structure:<br>
@@ -39,6 +40,9 @@ public class BlocksIndexOutput extends IndexOutput {
 	protected boolean firstIndexBlock;
 	protected boolean firstFileListBlock;
 
+	/**
+	 * @param indexFile
+	 */
 	public BlocksIndexOutput(File indexFile) {
 		this.indexFile= indexFile;
 		summary= new IndexSummary();
@@ -89,10 +93,14 @@ public class BlocksIndexOutput extends IndexOutput {
 				firstInBlock= false;
 			}
 			numWords++;
-		} else {
-			if (indexBlock.isEmpty()) {
-				return;
-			}
+		} else { // Failed to add block
+		    if (indexBlock.getOffset() == 0) {
+		        //
+		        // An empty index block is too small to accommodate the word entry
+		        //
+		        throw new BlockIndexException(new String(entry.getWord()), Messages.blockSizeExceeded); 
+		    }
+
 			flushWords();
 			addWord(entry);
 		}

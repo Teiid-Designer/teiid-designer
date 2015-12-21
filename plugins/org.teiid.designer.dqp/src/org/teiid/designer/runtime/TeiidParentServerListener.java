@@ -11,9 +11,11 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
 import org.eclipse.wst.server.core.ServerEvent;
+import org.jboss.ide.eclipse.as.core.server.internal.v7.JBoss7Server;
 import org.jboss.ide.eclipse.as.management.core.JBoss7ManangerException;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.TeiidServerFactory.ServerOptions;
+import org.teiid.designer.runtime.adapter.JBoss7ServerUtil;
 import org.teiid.designer.runtime.adapter.TeiidServerAdapterFactory;
 import org.teiid.designer.runtime.spi.ITeiidServer;
 import org.teiid.designer.runtime.spi.ITeiidServerManager;
@@ -80,8 +82,6 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
             for (ITeiidServer teiidServer : serverManager.getServers()) {
                 if (! server.equals(teiidServer.getParent()))
                     continue;
-
-                ITeiidServer newTeiidServer = factory.adaptServer(server, ServerOptions.NO_CHECK_SERVER_REGISTRY, ServerOptions.NO_CHECK_CONNECTION);
             
                 /*
                  * Cannot use updateServer as it replaces rather than modifies the existing server
@@ -93,12 +93,22 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                  * of the jboss parent server. Thus, version 7 should not try and change these
                  * while version 8+ should.
                  */
-                if (teiidServer.getServerVersion().isGreaterThan(Version.TEIID_7_7)) {
-                    teiidServer.getTeiidAdminInfo().setAll(newTeiidServer.getTeiidAdminInfo());
+
+                if (teiidServer.getServerVersion().isGreaterThan(Version.TEIID_7_7.get())) {
+                    teiidServer.getTeiidAdminInfo().setAll(
+                    		teiidServer.getTeiidAdminInfo().getHost(), 
+                    		teiidServer.getTeiidAdminInfo().getPort(), 
+                    		teiidServer.getTeiidAdminInfo().getUsername(), 
+                    		teiidServer.getTeiidAdminInfo().getPassword(), 
+                    		teiidServer.getTeiidAdminInfo().isSecure());
                 }
                 String portNumber = serverManager.getJdbcPort(teiidServer, true);
                 if( StringUtilities.isEmpty(portNumber) ) {
-                    teiidServer.getTeiidJdbcInfo().setPort(newTeiidServer.getTeiidJdbcInfo().getPort());
+                    JBoss7Server jb7 = (JBoss7Server) server.loadAdapter(JBoss7Server.class, null);
+                    if (jb7 != null) {
+                    	portNumber = JBoss7ServerUtil.getJdbcPort(server, jb7);
+                    	teiidServer.getTeiidJdbcInfo().setPort(portNumber);
+                    }
                 }
 
                 teiidServer.notifyRefresh();

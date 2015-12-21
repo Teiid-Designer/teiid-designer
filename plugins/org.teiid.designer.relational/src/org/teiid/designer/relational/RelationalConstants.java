@@ -16,6 +16,9 @@ package org.teiid.designer.relational;
 public interface RelationalConstants {
     final static String XMI_EXT = ".xmi"; //$NON-NLS-1$
     
+    final static String TEIID_REL_PREFIX = "teiid_rel";  //$NON-NLS-1$
+    final static String RELATIONAL_PREFIX = "relational";  //$NON-NLS-1$
+    
     /**
      * Relational model object types
      */
@@ -123,7 +126,7 @@ public interface RelationalConstants {
     // IN, IN_OUT, OUT, RETURN, UNKNOWN
     class DIRECTION {
         public static final String IN = "IN"; //$NON-NLS-1$
-        public static final String IN_OUT = "IN_OUT"; //$NON-NLS-1$
+        public static final String IN_OUT = "INOUT"; //$NON-NLS-1$
         public static final String OUT = "OUT"; //$NON-NLS-1$
         public static final String RETURN = "RETURN"; //$NON-NLS-1$
         public static final String UNKNOWN = "UNKNOWN"; //$NON-NLS-1$

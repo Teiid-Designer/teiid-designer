@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.teiid.core.designer.util.CharOperation;
 import org.teiid.core.designer.util.LRUCache;
+import org.teiid.designer.legacy.Messages;
 
 /**
  * This input is used for reading indexes saved using a BlocksIndexOutput.
@@ -217,7 +218,7 @@ public class BlocksIndexInput extends IndexInput {
         if (!isOpen()) {
             raf = new SafeRandomAccessFile(indexFile, "r"); //$NON-NLS-1$
             String sig = raf.readUTF();
-            if (!sig.equals(IIndexConstants.SIGNATURE)) throw new IOException(Util.bind("exception.wrongFormat")); //$NON-NLS-1$
+            if (!sig.equals(IIndexConstants.SIGNATURE)) throw new IOException(Messages.wrongFormat); //$NON-NLS-1$
             int summaryBlockNum = raf.readInt();
             raf.seek(summaryBlockNum * (long)IIndexConstants.BLOCK_SIZE);
             summary = new IndexSummary();

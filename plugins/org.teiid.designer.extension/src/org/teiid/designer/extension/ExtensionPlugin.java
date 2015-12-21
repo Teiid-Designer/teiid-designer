@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
@@ -712,6 +713,17 @@ public class ExtensionPlugin extends Plugin implements ExtensionConstants {
         public boolean supportsMyNamespace( Object modelObject ) throws Exception {
             return false;
         }
+        
+        /**
+        * {@inheritDoc}
+        * 
+        */
+		@Override
+		public boolean supportsProperty(Object modelObject, String propId)
+				throws Exception {
+			// TODO Auto-generated method stub
+			return false;
+		}
 
     }
 

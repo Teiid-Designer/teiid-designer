@@ -10,7 +10,6 @@ package org.teiid.designer.vdb;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -624,6 +623,27 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     public String getValidationVersion() {
         return validationVersion;
     }
+    
+    /**
+     * @param key
+     * @param value
+     */
+    @Override
+    public void setProperty(String key, String value) {
+    	super.setProperty(key, value);
+    	setModified(this, Event.GENERAL_PROPERTY, null, value);
+    }
+
+    /**
+     * @param key
+     * @return removed property
+     */
+    @Override
+    public String removeProperty(String key) {
+    	String prop = super.removeProperty(key);
+    	setModified(this, Event.GENERAL_PROPERTY, null, prop);
+        return prop;
+    }
 
     /* (non-Javadoc)
      * @see org.teiid.designer.vdb.Vdb#notifyChangeListeners(java.lang.Object, java.lang.String, java.lang.Object, java.lang.Object)
@@ -709,7 +729,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     	// Note that at this time, the input VDB would have validation version and validation date defined as properties.
     	// So need to either copy them instead of generating them.
     	// {validationVersion=8.7.1, validationDateTime=Thu Aug 06 14:29:43 CDT 2015}
-    	Properties existingProps = vdb.getProperties();
+    	Properties existingProps = this.getProperties();
         vdb.setName(getName());
         vdb.setDescription(getDescription());
         String validationVersion = existingProps.getProperty("validationVersion");

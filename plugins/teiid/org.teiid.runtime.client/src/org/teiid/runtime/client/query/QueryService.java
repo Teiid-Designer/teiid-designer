@@ -167,12 +167,14 @@ public class QueryService implements IQueryService {
             }
 
             FunctionTree tree = functionTrees.get(descriptor.getSchema());
+            UDFSource udfSource = new UDFSource(Collections.EMPTY_LIST, getClass().getClassLoader());
+            
             if (tree == null) {
-                tree = new FunctionTree(teiidVersion, descriptor.getSchema(), new UDFSource(Collections.EMPTY_LIST, getClass().getClassLoader()), false);
+                tree = new FunctionTree(teiidVersion, descriptor.getSchema(), udfSource, false);
                 functionTrees.put(descriptor.getSchema(), tree);
             }
-
-            FunctionDescriptor fd = tree.addFunction(descriptor.getSchema(), null, fMethod, false);
+            
+            FunctionDescriptor fd = tree.addFunction(descriptor.getSchema(), udfSource, fMethod, false);
             fd.setMetadataID(descriptor.getMetadataID());
         }
 

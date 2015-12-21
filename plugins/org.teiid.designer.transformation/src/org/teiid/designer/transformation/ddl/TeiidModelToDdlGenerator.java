@@ -9,8 +9,10 @@ package org.teiid.designer.transformation.ddl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
@@ -27,8 +29,13 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.ModelContents;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelWorkspaceException;
+import org.teiid.designer.extension.ExtensionPlugin;
+import org.teiid.designer.extension.ModelExtensionAssistantAggregator;
+import org.teiid.designer.extension.definition.ModelObjectExtensionAssistant;
+import org.teiid.designer.extension.properties.ModelExtensionPropertyDefinition;
 import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.metamodels.relational.Column;
+import org.teiid.designer.metamodels.relational.DirectionKind;
 import org.teiid.designer.metamodels.relational.ForeignKey;
 import org.teiid.designer.metamodels.relational.NullableType;
 import org.teiid.designer.metamodels.relational.PrimaryKey;
@@ -37,7 +44,10 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
+import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionAssistant;
+import org.teiid.designer.metamodels.relational.extension.RestModelExtensionConstants;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
@@ -50,7 +60,7 @@ import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 /**
  * Generator for converting a teiid xmi model into DDL
  */
-public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReservedConstants  {
+public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReservedConstants, RelationalConstants  {
 	
 	private StringBuilder ddlBuffer = new StringBuilder();
 
@@ -63,6 +73,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private RelationalModelExtensionAssistant assistant;
     
     private List<IStatus> issues = new ArrayList<IStatus>();
+    
+    private Set<String> namespaces = new HashSet<String>();
+    
+    private ModelExtensionAssistantAggregator medAggregator = ExtensionPlugin.getInstance().getModelExtensionAssistantAggregator();
 
 	/**
 	 * @param modelResource
@@ -84,7 +98,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				append(StringConstants.NEW_LINE);
 			}
 		}
-		
+		if( ! namespaces.isEmpty() ) {
+			for( String namespace : namespaces ) {
+				ddlBuffer.insert(0, namespace + NEW_LINE);
+			}
+			ddlBuffer.insert(0, NEW_LINE);
+		}
 		return ddlBuffer.toString();
 	}
 	
@@ -132,7 +151,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		String runtimeTypeName = ModelerCore.getBuiltInTypesManager().getRuntimeTypeName(dataTypeEObject);
 		
-		if( runtimeTypeName.equalsIgnoreCase("XMLLITERAL")) {
+		if( runtimeTypeName == null) {
+			// Check with 
+			runtimeTypeName = ModelerCore.getDatatypeManager().getRuntimeTypeName(dataTypeEObject);
+		}
+		
+		if( runtimeTypeName != null && runtimeTypeName.equalsIgnoreCase("XMLLITERAL")) {
 			return DataTypeName.XML.name();
 		}
 		
@@ -304,7 +328,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 //			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
 //			String formatedSQL = formatter.getFormattedSql();
 //			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
-			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB + TAB).append(sqlString);
+			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(sqlString);
 			sb.append(SEMI_COLON + NEW_LINE);
 		}
 		
@@ -339,21 +363,72 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		List<ProcedureParameter> params = procedure.getParameters();
 		int nParams = params.size();
 		int count = 0;
+		
+		// Check for an "RETURN" parameter direction and cache it's datatype
+		String returnType = null;
+		
 		for( ProcedureParameter param : params ) {
+			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
+				returnType = resolveExportedDataType(param.getType());
+				break;
+			}
+		}
+		
+		if( returnType != null ) {
+			nParams = nParams-1;
+		}
+		
+		for( ProcedureParameter param : params ) {
+			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
+				continue;
+			}
 			String paramStr = getParameterDdl(param);
 			count++;
 			sb.append(paramStr);
+			
+			addOptionsForEObject(param, sb);
+			
 			if( count < nParams ) sb.append(COMMA + SPACE);
 		}
 		
+		sb.append(CLOSE_BRACKET);
+	
+		// Add the RETURNS clause to handle the result set
+		// CREATE VIRTUAL PROCEDURE testProc (p1 string(4000)) RETURNS TABLE ( xml_out xml)
+		// CREATE VIRTUAL PROCEDURE getTweets(query varchar) RETURNS (created_on varchar(25), from_user varchar(25), to_user varchar(25))
+		// CREATE FOREIGN PROCEDURE func (x integer, y integer) returns table (z integer);
+		// CREATE FOREIGN PROCEDURE func (x integer, y integer) returns integer;
+	    // CREATE VIRTUAL FUNCTION celsiusToFahrenheit(celsius decimal) RETURNS decimal OPTIONS (JAVA_CLASS 'org.something.TempConv',  JAVA_METHOD 'celsiusToFahrenheit');
+	    // CREATE VIRTUAL FUNCTION sumAll(arg integer) RETURNS integer OPTIONS (JAVA_CLASS 'org.something.SumAll',  JAVA_METHOD 'addInput', AGGREGATE 'true', VARARGS 'true', "NULL-ON-NULL" 'true');
+		
+		if( procedure.getResult() != null ) {
+			sb.append(SPACE + RETURNS + SPACE + TABLE + SPACE);
+			sb.append(OPEN_BRACKET);
+			count = 0;
+			int nCols = procedure.getResult().getColumns().size();
+			for( Object col : procedure.getResult().getColumns() ) {
+				Column nextCol = (Column)col;
+				count++;
+				String columnStr = getColumnDdl(nextCol);
+				sb.append(columnStr);
+				if( count < nCols ) sb.append(COMMA + SPACE);
+				
+				addOptionsForEObject(nextCol, sb);
+			}
+			sb.append(CLOSE_BRACKET);
+			addOptionsForEObject(procedure.getResult(), sb);
+		} else if( returnType != null ) {
+			sb.append(SPACE + RETURNS + SPACE + returnType);
+		}
 		
 		String options = getProcedureOptions(procedure);
 		if( !StringUtilities.isEmpty(options)) {
-			sb.append(NEW_LINE + CLOSE_BRACKET);
+			sb.append(NEW_LINE);
 			sb.append(SPACE).append(options);
-		} else {
-			sb.append(CLOSE_BRACKET);
 		}
+//		else {
+//			sb.append(CLOSE_BRACKET);
+//		}
 		
 		// Depending on the procedure type, need to append either one of the following:
 		//   > returns datatype
@@ -362,9 +437,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		//   > ???
 		if( isVirtual && !isFunction ) {
 			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
-			String sqlString = TransformationHelper.getSelectSqlString(tRoot);
+			String sqlString = TransformationHelper.getSelectSqlString(tRoot).replace(CREATE_VIRTUAL_PROCEDURE, StringConstants.EMPTY_STRING);
+			
 			if( sqlString != null ) {
-				sb.append(NEW_LINE + TAB).append(Reserved.AS).append(NEW_LINE + SPACE).append(sqlString);
+				if( sqlString.indexOf('\n') == 0 ) {
+					sqlString = sqlString.replace(StringConstants.NEW_LINE, StringConstants.EMPTY_STRING);
+				}
+				sb.append(NEW_LINE + TAB).append(Reserved.AS).append(NEW_LINE).append(sqlString);
 				if( ! sqlString.endsWith(SEMI_COLON)) sb.append(SEMI_COLON);
 				sb.append(NEW_LINE);
 			}
@@ -389,8 +468,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         // DEFAULT
         //
         String defaultValue = col.getDefaultValue();
-        if (defaultValue != null)
+        if (!StringUtilities.isEmpty(defaultValue)) {
             sb.append(TeiidSQLConstants.Reserved.DEFAULT).append(SPACE).append(defaultValue).append(SPACE);
+        }
 
         //
         // AUTO_INCREMENT
@@ -453,6 +533,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	if( !col.getSearchability().equals(SearchabilityType.SEARCHABLE) ) {
     		options.add(SEARCHABLE, col.getSearchability().getLiteral(), SearchabilityType.SEARCHABLE_LITERAL.toString());
     	}
+    	
+    	// Need to check with other assistants too
+    	try {
+			Map<String, String> props = getOptionsForObject(col);
+			for( String key : props.keySet() ) {
+				String value = props.get(key);
+				options.add(key, value, null);
+			}
+		} catch (Exception e) {
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(col), e)); //$NON-NLS-1$
+		}
 
     	return options.toString();
     }
@@ -510,19 +601,39 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				}
 				// REFERENCES
 				if( fk.getTable() != null ) {
-					BaseTable fkTableRef = (BaseTable)fk.getUniqueKey().getTable();
+					UniqueKey uk = fk.getUniqueKey();
+					BaseTable fkTableRef = (BaseTable)uk.getTable();
+					
 					String fkTableRefName = getName(fkTableRef);
 					theSB.append(SPACE).append(REFERENCES).append(SPACE).append(fkTableRefName);
-					PrimaryKey pkRef = fkTableRef.getPrimaryKey();
-					nColumns = pkRef.getColumns().size();
-					count = 0;
-					for( Object col : pkRef.getColumns() ) {
-						count++;
-						if( count == 1 ) theSB.append(OPEN_BRACKET);
-						theSB.append(getName((EObject)col));
-						if( count < nColumns ) theSB.append(COMMA + SPACE);
-						else theSB.append(CLOSE_BRACKET);
+					if( uk instanceof UniqueConstraint ) {
+						// Unique Constraint
+						UniqueConstraint ucRef = fkTableRef.getUniqueConstraints().get(0);
+						nColumns = ucRef.getColumns().size();
+						count = 0;
+						for( Object col : ucRef.getColumns() ) {
+							count++;
+							if( count == 1 ) theSB.append(OPEN_BRACKET);
+							theSB.append(getName((EObject)col));
+							if( count < nColumns ) theSB.append(COMMA + SPACE);
+							else theSB.append(CLOSE_BRACKET);
+						}
+						// TODO: Not sure how to handle the case where there are multiple UC's.
+						
+					} else { 
+						// Primary Key
+						PrimaryKey pkRef = fkTableRef.getPrimaryKey();
+						nColumns = pkRef.getColumns().size();
+						count = 0;
+						for( Object col : pkRef.getColumns() ) {
+							count++;
+							if( count == 1 ) theSB.append(OPEN_BRACKET);
+							theSB.append(getName((EObject)col));
+							if( count < nColumns ) theSB.append(COMMA + SPACE);
+							else theSB.append(CLOSE_BRACKET);
+						}
 					}
+
 				}
 				
 				sb.append(theSB.toString());
@@ -559,7 +670,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private String getTableOptions(Table table) {
     	OptionsStatement options = new OptionsStatement();
-    	
+
     	options.add(NAMEINSOURCE, table.getNameInSource(), null);
     	options.add(MATERIALIZED, Boolean.toString(table.isMaterialized()), Boolean.FALSE.toString());
     	options.add(UPDATABLE, Boolean.toString(table.isSupportsUpdate()), Boolean.TRUE.toString());
@@ -569,7 +680,18 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	if( table.getMaterializedTable() != null ) {
     		options.add(MATERIALIZED_TABLE, table.getMaterializedTable().getName(), null);
     	}
-
+    	
+    	// Need to check with other assistants too
+    	try {
+			Map<String, String> props = getOptionsForObject(table);
+			for( String key : props.keySet() ) {
+				String value = props.get(key);
+				options.add(key, value, null);
+			}
+		} catch (Exception e) {
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(table), e)); //$NON-NLS-1$
+		}
+    	
     	String desc = getDescription(table);
     	if( !StringUtilities.isEmpty(desc) ) {
     		options.add(ANNOTATION, desc, null);
@@ -578,66 +700,167 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	return options.toString();
     }
     
+    private Map<String, String> getOptionsForObject(EObject modelObject) throws Exception {
+    	Map<String, String> options = new HashMap<String, String>();
+
+    	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
+    	for( String ns : extensionNamespaces ) {
+    		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
+    		if( assistant != null ) {
+    			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
+
+    			// If relational, we're handling this via getPropetyValue()...
+    			if(ns.equals(RELATIONAL_PREFIX)) {
+    				String propId = BASE_TABLE_EXT_PROPERTIES.NATIVE_QUERY;
+    				String nativeQuery = assistant.getOverriddenValue(modelObject, propId);
+    				if(!CoreStringUtil.isEmpty(nativeQuery)) {
+    					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
+    					options.put(propId, nativeQuery);
+    				}
+    				propId = BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE;
+    				String globalTempTable = assistant.getOverriddenValue(modelObject, propId);
+    				if(!CoreStringUtil.isEmpty(globalTempTable)) {
+    					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
+    					options.put(propId, globalTempTable);
+    				}
+    			} else if(ns.equals(SALESFORCE_PREFIX) )  {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					propId = propId.replace(SALESFORCE_PREFIX, TEIID_SF_PREFIX);
+        					options.put(propId, value);
+        				}
+        			}
+    			} else if(ns.equals(MONGODB_PREFIX)) {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					propId = propId.replace(MONGODB_PREFIX, TEIID_MONGO_PREFIX);
+        					options.put(propId, value);
+        				}
+        			}
+    			} else if(ns.equals(EXCEL_PREFIX)) {
+        			for( ModelExtensionPropertyDefinition ext : defns) {
+        				String propId = ext.getId();
+        				String value = assistant.getOverriddenValue(modelObject, propId);
+
+        				if( value != null ) {
+        					propId = propId.replace(EXCEL_PREFIX, TEIID_EXCEL_PREFIX);
+        					options.put(propId, value);
+        				}
+        			}
+    			}
+
+    		}
+    	}
+    	
+    	return options;
+    	
+    }
+    
+    private void addOptionsForEObject(EObject eObj, StringBuilder sb) {
+    	// Need to check with other assistants too
+    	try {
+    		OptionsStatement options = new OptionsStatement();
+			Map<String, String> props = getOptionsForObject(eObj);
+			for( String key : props.keySet() ) {
+				String value = props.get(key);
+				options.add(key, value, null);
+			}
+			if( !StringUtilities.isEmpty(options.toString())) {
+				sb.append(SPACE).append(options);
+			}
+		} catch (Exception e) {
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(eObj), e)); //$NON-NLS-1$
+		}
+    }
+    
     private String getProcedureOptions(Procedure procedure) {
     	OptionsStatement options = new OptionsStatement();
     	
     	options.add(NAMEINSOURCE, procedure.getNameInSource(), null);
     	
-		String nativeQuery = getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY);
+		String nativeQuery = getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.NATIVE_QUERY);
 		if(!CoreStringUtil.isEmpty(nativeQuery)) {
 			options.add(NATIVE_QUERY_PROP, nativeQuery, null);
 		}
 		
 		// Physical Model only
 		if( !isVirtual ) {
-			String nonPreparedValue =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.NON_PREPARED);
+			String nonPreparedValue =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.NON_PREPARED);
 			setBooleanProperty(NON_PREPARED_PROP, nonPreparedValue, false, options);
 		}
 		// Functions have many additional extension properties
 		boolean isFunction = procedure.isFunction();
 		if(isFunction) {
-			String value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY);
+			String value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.FUNCTION_CATEGORY);
 			options.add(FUNCTION_CATEGORY_PROP, value, null);
 			
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.JAVA_CLASS);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.JAVA_CLASS);
 			options.add(JAVA_CLASS, value, null);
 			
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.JAVA_METHOD);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.JAVA_METHOD);
 			options.add(JAVA_METHOD, value, null);
 
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.VARARGS);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.VARARGS);
 			setBooleanProperty(VARARGS_PROP, value, false, options);
 
 			
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.NULL_ON_NULL);
 			setBooleanProperty(NULL_ON_NULL_PROP, value, false, options);
 
 			
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.DETERMINISTIC);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.DETERMINISTIC);
 			setBooleanProperty(DETERMINISM_PROP, value, false, options);
 
-			value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.AGGREGATE);
+			value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.AGGREGATE);
 			if( value != null ) {
 				boolean booleanValue = Boolean.getBoolean(value);
 				if( booleanValue ) {
 					setBooleanProperty(AGGREGATE_PROP, value, false, options);
 					
-					value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.ANALYTIC);
+					value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.ANALYTIC);
 					setBooleanProperty(ANALYTIC_PROP, value, false, options);
 					
-					value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY);
+					value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.ALLOWS_ORDER_BY);
 					setBooleanProperty(ALLOWS_ORDER_BY_PROP, value, false, options);
 					
-					value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS);
+					value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.USES_DISTINCT_ROWS);
 					setBooleanProperty(USES_DISTINCT_ROWS_PROP, value, false, options);
 					
-					value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT);
+					value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.ALLOWS_DISTINCT);
 					setBooleanProperty(ALLOWS_DISTINCT_PROP, value, false, options);
 					
-					value =  getPropertyValue(procedure, RelationalConstants.PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE);
+					value =  getPropertyValue(procedure, PROCEDURE_EXT_PROPERTIES.DECOMPOSABLE);
 					setBooleanProperty(DECOMPOSABLE_PROP, value, false, options);
 				}
 			}
+		} else {
+			// REST PROPERTIES??
+			String value =  getRestPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.URI);
+			if( value != null ) namespaces.add(REST_TEIID_SET_NAMESPACE);
+			
+			options.add(REST_URI, value, null);
+			
+			value =  getRestPropertyValue(procedure, RestModelExtensionConstants.PropertyIds.REST_METHOD);
+			if( value != null ) namespaces.add(REST_TEIID_SET_NAMESPACE);
+			
+			options.add(REST_METHOD, value, null);
+		}
+		
+    	// Need to check with other assistants too
+    	try {
+			Map<String, String> props = getOptionsForObject(procedure);
+			for( String key : props.keySet() ) {
+				String value = props.get(key);
+				options.add(key, value, null);
+			}
+		} catch (Exception e) {
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(procedure), e)); //$NON-NLS-1$
 		}
 		
 		return options.toString();
@@ -655,6 +878,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     	try {
 			return getRelationalModelExtensionAssistant().getPropertyValue(eObj, propertyID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    	return null;
+    }
+    
+    private String getRestPropertyValue(EObject eObj, String propertyID ) {
+    	
+    	try {
+			return RestModelExtensionAssistant.getRestProperty(eObj, propertyID);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -696,7 +930,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
      * Utility to check a unique constraint and determine if it is redundant. Basically if the uc columns match a PK with the same columns
      */
     private Collection<UniqueConstraint> getUniqueUniqueContraints(BaseTable table) {
-    	EList ucs = table.getUniqueConstraints();
+    	EList<?> ucs = table.getUniqueConstraints();
     	Collection<UniqueConstraint> uniqueConstraints = new ArrayList<UniqueConstraint>();
     	
     	PrimaryKey pk = table.getPrimaryKey();
@@ -704,8 +938,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	for( Object obj: ucs) {
     		UniqueConstraint uc = (UniqueConstraint)obj;
     		if( pk != null ) {
-	    		EList pkColumns = pk.getColumns();
-	    		EList ucColumns = uc.getColumns();
+	    		EList<?> pkColumns = pk.getColumns();
+	    		EList<?> ucColumns = uc.getColumns();
 	    		
 	    		if( pkColumns.size() == ucColumns.size() ) {
 	    			boolean matchesAll = true;

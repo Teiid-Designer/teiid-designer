@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.transformation;singleton:=true
-Bundle-Version: 9.2.0.qualifier
+Bundle-Version: 9.2.1.qualifier
 Bundle-Activator: org.teiid.designer.transformation.TransformationPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
@@ -38,6 +38,7 @@ Require-Bundle: org.teiid.designer.core;bundle-version="[9.0.2,10.0.0)",
  org.eclipse.emf.ecore.xmi;bundle-version="[2.10.2,3.0.0)",
  org.teiid.designer.metamodels.function;bundle-version="[9.0.2,10.0.0)",
  org.teiid.designer.relational;bundle-version="[9.0.2,10.0.0)",
- org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)"
+ org.teiid.designer.spi;bundle-version="[9.0.2,10.0.0)",
+ org.teiid.designer.extension;bundle-version="[9.0.2,10.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

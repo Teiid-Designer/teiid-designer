@@ -474,6 +474,62 @@ public class StringUtilities implements StringConstants {
     	System.out.println("  START NAME = " + startName + " UNIQUE NAME = " + newName);
     }
 
+    /**
+        * Compares two strings lexicographically. 
+        * The comparison is based on the Unicode value of each character in
+        * the strings. 
+     * @param str1
+     * @param str2 
+        *
+        * @return  the value <code>0</code> if the str1 is equal to str2;
+        *          a value less than <code>0</code> if str1
+        *          is lexicographically less than str2; 
+        *          and a value greater than <code>0</code> if str1 is
+        *          lexicographically greater than str2.
+        */
+    public static int compare(char[] str1, char[] str2) {
+        int len1 = str1.length;
+        int len2 = str2.length;
+        int n = Math.min(len1, len2);
+        int i = 0;
+        while (n-- != 0) {
+            char c1 = str1[i];
+            char c2 = str2[i++];
+            if (c1 != c2) {
+                return c1 - c2;
+            }
+        }
+        return len1 - len2;
+    }
+
+    /**
+        * Returns the length of the common prefix between s1 and s2.
+     * @param s1
+     * @param s2 
+     * @return length of the prefix
+        */
+    public static int prefixLength(char[] s1, char[] s2) {
+        int len = 0;
+        int max = Math.min(s1.length, s2.length);
+        for (int i = 0; i < max && s1[i] == s2[i]; ++i)
+            ++len;
+        return len;
+    }
+
+    /**
+     * Returns the length of the common prefix between s1 and s2.
+     * @param s1 
+     * @param s2 
+     * @return length of the prefix
+     */
+    public static int prefixLength(String s1, String s2) {
+        int len = 0;
+        int max = Math.min(s1.length(), s2.length());
+        for (int i = 0; i < max && s1.charAt(i) == s2.charAt(i); ++i)
+            ++len;
+        return len;
+    } 
+
     private StringUtilities() {
     }
 }

@@ -205,6 +205,10 @@ public class TranslatorHelper implements UiConstants {
             return INGRES;
         }
         
+        if(driverNameLC.startsWith("jconn")) { //$NON-NLS-1$
+            return SYBASE;
+        }
+        
         if(driverNameLC.contains("hive")) { //$NON-NLS-1$
             return HIVE;
         }

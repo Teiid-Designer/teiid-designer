@@ -107,10 +107,11 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	// column widgets
 	private Button addColumnButton, deleteColumnButton, upColumnButton, downColumnButton;
 	private Button changePkColumnsButton, changeUcColumnsButton, addFKButton, editFKButton, deleteFKButton;
+	private Button addUCButton, editUCButton, deleteUCButton;
 	private Button addIndexButton, deleteIndexButton, editIndexButton;
 	private TableViewerBuilder columnsViewer;
-	private TableViewerBuilder pkColumnsViewer, ucColumnsViewer, fkViewer;
-	private TableViewerBuilder indexesViewer;
+	private TableViewerBuilder pkColumnsViewer, fkViewer;  //ucColumnsViewer,
+	private TableViewerBuilder uniqueConstraintsViewer, indexesViewer;
 
 	private boolean finishedStartup = false;
 	private boolean validationPerformed = false;
@@ -384,42 +385,19 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
         if (uniqueConstraintTab == null)
             return;
 
-        if( getRelationalReference().getUniqueContraint() == null ) {
-        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, false)) {
-        		this.includeUniqueConstraintCB.setSelection(false);
-        	}
-        	this.uniqueConstraintNameText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNameText, EMPTY_STRING)) {
-        		this.uniqueConstraintNameText.setText(EMPTY_STRING);
-        	}
-        	this.uniqueConstraintNISText.setEnabled(false);
-        	if( WidgetUtil.widgetValueChanged(uniqueConstraintNISText, EMPTY_STRING)) {
-        		this.uniqueConstraintNISText.setText(EMPTY_STRING);
-        	}
-        	this.changeUcColumnsButton.setEnabled(false);
-        	this.ucColumnsViewer.getTable().removeAll();
-        	this.ucColumnsViewer.getTable().setEnabled(false);
+        if( getRelationalReference().getUniqueConstraints().isEmpty() ) {
+        	this.uniqueConstraintsViewer.getTable().removeAll();
+        	this.uniqueConstraintsViewer.getTable().setEnabled(false);
         } else {
-        	this.ucColumnsViewer.getTable().setEnabled(true);
-        	if( WidgetUtil.widgetValueChanged(includeUniqueConstraintCB, true)) {
-        		this.includeUniqueConstraintCB.setSelection(true);
-        	}
-        	this.uniqueConstraintNameText.setEnabled(true);
-        	if( getRelationalReference().getUniqueContraint().getName() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNameText, getRelationalReference().getUniqueContraint().getName())) {
-        		this.uniqueConstraintNameText.setText(getRelationalReference().getUniqueContraint().getName());
-        	}
-        	this.uniqueConstraintNISText.setEnabled(true);
-        	if( getRelationalReference().getUniqueContraint().getNameInSource() != null && WidgetUtil.widgetValueChanged(uniqueConstraintNISText, getRelationalReference().getUniqueContraint().getNameInSource())) {
-        		this.uniqueConstraintNISText.setText(getRelationalReference().getUniqueContraint().getName());
-        	}
+        	this.uniqueConstraintsViewer.getTable().setEnabled(true);
 
-        	this.ucColumnsViewer.getTable().removeAll();
-        	if( !getRelationalReference().getUniqueContraint().getColumns().isEmpty() ) {
-        		for( RelationalColumn column : getRelationalReference().getUniqueContraint().getColumns() ) {
-        			this.ucColumnsViewer.add(column);
+        	this.uniqueConstraintsViewer.getTable().removeAll();
+        	if( !getRelationalReference().getUniqueConstraints().isEmpty() ) {
+        		for( RelationalUniqueConstraint column : getRelationalReference().getUniqueConstraints() ) {
+        			this.uniqueConstraintsViewer.add(column);
         		}
         	}
-        	this.changeUcColumnsButton.setEnabled(true);
+
         	uniqueConstraintTab.setImage(RelationalUiUtil.getRelationalImage(TYPES.UC, getRelationalReference().getModelType(), getRelationalReference().getUniqueContraint().getStatus()));
         }
     }
@@ -475,14 +453,16 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	}
 	
 	private void setKeyTabsEnablement(boolean enable) {
-//		addFKButton.setEnabled(enable);
-//		editFKButton.setEnabled(enable);
-//		deleteFKButton.setEnabled(enable);
-//		includePrimaryKeyCB.setEnabled(enable);
-//		includeUniqueConstraintCB.setEnabled(enable);
-//		addIndexButton.setEnabled(enable);
-//		editIndexButton.setEnabled(enable);
-//		deleteIndexButton.setEnabled(enable);
+		addFKButton.setEnabled(enable);
+		editFKButton.setEnabled(enable);
+		deleteFKButton.setEnabled(enable);
+		includePrimaryKeyCB.setEnabled(enable);
+		addUCButton.setEnabled(enable);
+		editUCButton.setEnabled(enable);
+		deleteUCButton.setEnabled(enable);
+		addIndexButton.setEnabled(enable);
+		editIndexButton.setEnabled(enable);
+		deleteIndexButton.setEnabled(enable);
 	}
 
 	private Composite createPropertiesPanel(Composite parent) {
@@ -734,8 +714,11 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 	}
 	
 	private Composite createUniqueConstraintPanel(Composite parent) {
+		// TODO: This panel needs to operate like the Foreign Key panel to allow multiple Unique Constraints
+		// These constraints will behave just like Primary Keys so they won't need to referenced external columns/tables
+		
 	    Composite thePanel = WidgetFactory.createPanel(parent, SWT.NONE, 1, 2);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(10, 10).applyTo(thePanel);
+        GridLayoutFactory.fillDefaults().margins(10, 10).applyTo(thePanel);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(thePanel);
 
         if(isRelationalView()) {
@@ -745,116 +728,102 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
             GridDataFactory.fillDefaults().align(SWT.FILL, SWT.BEGINNING).hint(250, HEIGHT_HINT_80).span(2, 1).applyTo(ucHelpText);
             ucHelpText.setText(Messages.uniqueConstraintsNotSupportedForViews);
         }
+        
+    	// Create 1 panels
+    	// Top is just a Table of current FK with Add/Edit/Delete buttons
+    	
+    	// Bottom panel is the "Edit
+        
+        Composite buttonPanel = new Composite(thePanel, SWT.NONE);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(buttonPanel);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(buttonPanel);
 
-        this.includeUniqueConstraintCB = new Button(thePanel, SWT.CHECK | SWT.RIGHT);
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).span(2, 1).applyTo(this.includeUniqueConstraintCB);
-        this.includeUniqueConstraintCB.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.INCLUDE));
-        this.includeUniqueConstraintCB.addSelectionListener(new SelectionAdapter() {
-            /**            		
-             * {@inheritDoc}
-             * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-             */
-            @Override
-            public void widgetSelected( SelectionEvent e ) {
-            	if( includeUniqueConstraintCB.getSelection() ) {
-            		if( getRelationalReference().getUniqueContraint() == null ) {
-            			RelationalUniqueConstraint key = new RelationalUniqueConstraint();
-            			if( uniqueConstraintNameText.getText() != null ) {
-            				key.setName(uniqueConstraintNameText.getText());
-            			}
-            			getRelationalReference().setUniqueConstraint(key);
-            		}
-            	} else {
-            		getRelationalReference().setUniqueConstraint(null);
-            	}
-                handleInfoChanged();
-            }
-        });
-        
-        Label label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.NAME));
-        GridDataFactory.fillDefaults().applyTo(label);
-        
-        this.uniqueConstraintNameText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.uniqueConstraintNameText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().applyTo(this.uniqueConstraintNameText);
-        this.uniqueConstraintNameText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = uniqueConstraintNameText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-        		if( getRelationalReference().getUniqueContraint() != null ) {
-        			RelationalUniqueConstraint key = getRelationalReference().getUniqueContraint();
-        			key.setName(value);
-        		}
-    			
-        		handleInfoChanged();
-    		}
-        });
-        
-        label = new Label(thePanel, SWT.NONE | SWT.RIGHT);
-        label.setText(Messages.nameInSourceLabel);
-        GridDataFactory.fillDefaults().applyTo(label);
-        
-        this.uniqueConstraintNISText =  new Text(thePanel, SWT.BORDER | SWT.SINGLE);
-        this.uniqueConstraintNISText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-        GridDataFactory.fillDefaults().applyTo(this.uniqueConstraintNISText);
-        this.uniqueConstraintNISText.addModifyListener(new ModifyListener() {
-    		@Override
-			public void modifyText( final ModifyEvent event ) {
-    			String value = uniqueConstraintNISText.getText();
-    			if( value == null ) {
-    				value = EMPTY_STRING;
-    			}
-        		if( getRelationalReference().getUniqueContraint() != null ) {
-        			RelationalUniqueConstraint key = getRelationalReference().getUniqueContraint();
-        			key.setNameInSource(value);
-        		}
-    			
-        		handleInfoChanged();
-    		}
-        });
-        
-    	Composite buttonPanel = new Composite(thePanel, SWT.NONE);
-    	GridLayoutFactory.fillDefaults().applyTo(buttonPanel);
-    	GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.BEGINNING).applyTo(buttonPanel);
-
-    	this.changeUcColumnsButton = new Button(buttonPanel, SWT.PUSH);
-    	this.changeUcColumnsButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.CHANGE_ELIPSIS));
-    	GridDataFactory.fillDefaults().applyTo(this.changeUcColumnsButton);
-    	this.changeUcColumnsButton.addSelectionListener(new SelectionAdapter() {
+    	this.addUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.addUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.ADD));
+    	GridDataFactory.fillDefaults().applyTo(this.addUCButton);
+    	this.addUCButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-	    		SelectColumnsDialog dialog = new SelectColumnsDialog(getShell(), getRelationalReference(), false);
+				RelationalUniqueConstraint newUC = new RelationalUniqueConstraint();
+				
+				EditUniqueConstraintDialog dialog = new EditUniqueConstraintDialog(getShell(), getRelationalReference(), newUC, false);
 	        	
 	        	int result = dialog.open();
 	        	if( result == Window.OK) {
-	        		Collection<RelationalColumn> selectedColumns = dialog.getSelectedColumns();
-	        		if( !selectedColumns.isEmpty() ) {
-	        			getRelationalReference().getUniqueContraint().setColumns(selectedColumns);
-	        		} else {
-	        			getRelationalReference().getUniqueContraint().setColumns(Collections.<RelationalColumn> emptyList());
-	        		}
+	        		getRelationalReference().addUniqueConstraint(newUC);
 	        	}
 	        	handleInfoChanged();
 			}
     		
 		});
+    	
+    	this.editUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.editUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.EDIT_ELIPSIS));
+    	GridDataFactory.fillDefaults().applyTo(this.editUCButton);
+    	this.editUCButton.addSelectionListener(new SelectionAdapter() {
 
-        this.ucColumnsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.ucColumnsViewer.getTableComposite());        
+    		@Override
+			public void widgetSelected(SelectionEvent e) {
+    			RelationalUniqueConstraint uc = null;
+				
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalUniqueConstraint ) {
+						uc =  (RelationalUniqueConstraint) obj;
+						break;
+					}
+				}
+				if( uc != null ) {
+					
+					EditUniqueConstraintDialog dialog = new EditUniqueConstraintDialog(getShell(), getRelationalReference(), uc, true);
+		        	
+		        	int result = dialog.open();
+
+		        	handleInfoChanged();
+		        	
+		        	editUCButton.setEnabled(false);
+				}
+			}
+    		
+		});
+    	
+    	this.deleteUCButton = new Button(buttonPanel, SWT.PUSH);
+    	this.deleteUCButton.setText(UILabelUtil.getLabel(UiLabelConstants.LABEL_IDS.DELETE));
+    	GridDataFactory.fillDefaults().applyTo(this.deleteUCButton);
+    	this.deleteUCButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RelationalUniqueConstraint uc= null;
+				
+				IStructuredSelection selection = (IStructuredSelection)uniqueConstraintsViewer.getSelection();
+				for( Object obj : selection.toArray()) {
+					if( obj instanceof RelationalUniqueConstraint ) {
+						uc =  (RelationalUniqueConstraint) obj;
+						break;
+					}
+				}
+				if( uc != null ) {
+					getRelationalReference().removeUniqueConstraint(uc);
+					deleteFKButton.setEnabled(false);
+					handleInfoChanged();
+				}
+			}
+    		
+		});
+    	
+        this.uniqueConstraintsViewer = new TableViewerBuilder(thePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        GridDataFactory.fillDefaults().grab(true, true).hint(SWT.DEFAULT, HEIGHT_HINT_80).applyTo(this.uniqueConstraintsViewer.getTableComposite());
 
         // create columns
-        TableViewerColumn column = this.ucColumnsViewer.createColumn(SWT.LEFT, 100, 40, false);
-        column.getColumn().setText(Messages.columnNameLabel);
-        column.setLabelProvider(new ColumnDataLabelProvider(0));
+        TableViewerColumn column = uniqueConstraintsViewer.createColumn(SWT.LEFT, 100, 40, false);
+        column.getColumn().setText(Messages.uniqueConstraintsLabel);
+        column.setLabelProvider(new UniqueConstraintLabelProvider(0));
 
-        if( getRelationalReference() != null && getRelationalReference().getUniqueContraint() != null ) {
-	        for( RelationalColumn row : getRelationalReference().getUniqueContraint().getColumns() ) {
-	        	this.ucColumnsViewer.add(row);
+        if( getRelationalReference() != null && getRelationalReference().getUniqueConstraints() != null ) {
+	        for( RelationalUniqueConstraint row : getRelationalReference().getUniqueConstraints() ) {
+	        	this.uniqueConstraintsViewer.add(row);
 	        }
         }
 
@@ -1841,7 +1810,76 @@ public class RelationalTableEditorPanel extends RelationalEditorPanel implements
 		@Override
 		public Image getImage(Object element) {
 			if( this.columnNumber == 0 ) {
-				return UiPlugin.getDefault().getImage(UiConstants.Images.COLUMN_ICON);
+				return UiPlugin.getDefault().getImage(UiConstants.Images.INDEX_ICON);
+			}
+			return null;
+		}
+	}
+    
+    class UniqueConstraintLabelProvider extends ColumnLabelProvider {
+
+		private final int columnNumber;
+
+		public UniqueConstraintLabelProvider(int columnNumber) {
+			this.columnNumber = columnNumber;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+		 */
+		@Override
+		public String getText(Object element) {
+			if( element instanceof RelationalUniqueConstraint ) {
+				switch (this.columnNumber) {
+					case 0: {
+						if(element instanceof RelationalUniqueConstraint) {
+							RelationalUniqueConstraint index = (RelationalUniqueConstraint)element;
+							
+							String value = index.getName();
+							
+							if(! index.getColumns().isEmpty() ) {
+								int i=0;
+								value = value + " : "; //$NON-NLS-1$
+								for( RelationalColumn col : index.getColumns()) {
+									value += col.getName();
+									i++;
+									if( i < index.getColumns().size()) {
+										value += ", "; //$NON-NLS-1$
+									}
+								}
+							}
+							return value;
+						}
+					}
+				}
+			}
+			return EMPTY_STRING;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * 
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		@Override
+		public String getToolTipText(Object element) {
+			switch (this.columnNumber) {
+			case 0: {
+				return "Tooltip 1"; //getString("columnNameColumnTooltip"); //$NON-NLS-1$
+			}
+			case 1: {
+				return "Tooltip 2"; //getString("datatypeColumnTooltip"); //$NON-NLS-1$
+			}
+		}
+		return "unknown tooltip"; //$NON-NLS-1$
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if( this.columnNumber == 0 ) {
+				return UiPlugin.getDefault().getImage(UiConstants.Images.UC_ICON);
 			}
 			return null;
 		}

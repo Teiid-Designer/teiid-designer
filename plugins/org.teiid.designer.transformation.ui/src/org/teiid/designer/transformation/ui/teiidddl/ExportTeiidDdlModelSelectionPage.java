@@ -23,6 +23,7 @@ import org.teiid.core.designer.util.StringConstants;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.transformation.ui.Messages;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 import org.teiid.designer.ui.common.util.WidgetUtil;
@@ -45,18 +46,16 @@ import org.teiid.designer.ui.viewsupport.ModelWorkspaceViewerFilter;
 public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage implements UiConstants {
 	private static final String I18N_PREFIX = I18nUtil.getPropertyPrefix(ExportTeiidDdlModelSelectionPage.class);
 	
-	private static final String TITLE = "Export Model as Teiid DDL"; //getString("title"); //$NON-NLS-1$
-	private static final String OPTIONS_GROUP = "DDL Export Options"; //getString("optionsGroup"); //$NON-NLS-1$
-	private static final String USE_NAMES_IN_SOURCE_CHECKBOX = "Add Name In Source values as OPTIONS"; //getString("useNamesInSourceCheckBox"); //$NON-NLS-1$
-	private static final String USE_NATIVE_TYPE_CHECKBOX = "Add Native Type values as OPTIONS"; //getString("useNativeTypeCheckBox"); //$NON-NLS-1$
+	private static final String TITLE = Messages.ExportTeiidDdlModelSelectionPage_title;
+	private static final String OPTIONS_GROUP = Messages.ExportTeiidDdlModelSelectionPage_ddlExportOptions;
+	private static final String USE_NAMES_IN_SOURCE_CHECKBOX = Messages.ExportTeiidDdlModelSelectionPage_nameInSourceOption;
+	private static final String USE_NATIVE_TYPE_CHECKBOX = Messages.ExportTeiidDdlModelSelectionPage_nativeTypeOption;
 
 	private static String getString(final String id) {
 		return Util.getString(I18N_PREFIX + id);
 	}
 
 	private final TeiidDdlExporter exporter;
-	
-	private boolean creatingControl = false;
 	
 	private Text selectedFileText;
 
@@ -69,7 +68,6 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 
 	@Override
 	public void createControl(Composite parent) {
-		creatingControl = true;
 		// Create page
 		final Composite mainPanel = new Composite(parent, SWT.NONE);
 
@@ -80,15 +78,6 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 		setControl(mainPanel);
 
 		setMessage("Select target model for export and define available options");
-
-//		Label selectedFileLabel = new Label(mainPanel, SWT.NONE);
-//		selectedFileLabel.setText(getString("selectedXmlFile")); //$NON-NLS-1$
-//		
-//        selectedFileText = new Text(mainPanel, SWT.BORDER | SWT.SINGLE);
-//        selectedFileText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-//        selectedFileText.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_DARK_BLUE));
-//		selectedFileText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-//		selectedFileText.setEditable(false);
 		
 		new Label(mainPanel, SWT.NONE);
 		new Label(mainPanel, SWT.NONE);
@@ -96,8 +85,6 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 		createSelectModelGroup(mainPanel);
 		
 		createOptionsGroup(mainPanel);
-		
-		creatingControl = false;
 
 		setPageComplete(false);
 	}
@@ -107,19 +94,19 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 		super.setVisible(visible);
 
 		if (visible) {
-			
+			validatePage();
 		}
 	}
 	
 
 	private void createSelectModelGroup(Composite parent) {
-		Group viewGroup = WidgetFactory.createGroup(parent, "Select Model File", SWT.NONE, 2, 3); //$NON-NLS-1$
+		Group viewGroup = WidgetFactory.createGroup(parent, Messages.ExportTeiidDdlModelSelectionPage_modelGroupTitle, SWT.NONE, 2, 3);
 		GridData gd_vg = new GridData(GridData.FILL_HORIZONTAL);
 		gd_vg.horizontalSpan = 2;
 		viewGroup.setLayoutData(gd_vg);
 
 		Label fileLabel = new Label(viewGroup, SWT.NULL);
-		fileLabel.setText("Selected Model"); //getString("name")); //$NON-NLS-1$
+		fileLabel.setText(Messages.ExportTeiidDdlModelSelectionPage_fileLabel);
 
 		selectedFileText = new Text(viewGroup, SWT.BORDER | SWT.SINGLE);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -132,7 +119,7 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 		Button browseButton = new Button(viewGroup, SWT.PUSH);
 		gridData = new GridData();
 		browseButton.setLayoutData(gridData);
-		browseButton.setText("..."); //getString("browse")); //$NON-NLS-1$
+		browseButton.setText("..."); //$NON-NLS-1$
 		browseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -196,6 +183,19 @@ public class ExportTeiidDdlModelSelectionPage extends AbstractWizardPage impleme
 	
 	private boolean validatePage() {
 		IStatus status = exporter.validate();
+		if( status.isOK()) {
+			setMessage(null);
+			setPageComplete(true);
+			return true;
+		} else if( status.getSeverity() == IStatus.WARNING ){
+			setMessage(status.getMessage());
+			setPageComplete(true);
+			return true;
+		} else if( status.getSeverity() == IStatus.ERROR ) {
+			setErrorMessage(status.getMessage());
+			setPageComplete(false);
+			return false;
+		}
 		return true;
 	}
 	

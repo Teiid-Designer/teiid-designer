@@ -20,15 +20,9 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
-<<<<<<< HEAD
-    <releaseinfo>9.2.0
+    <releaseinfo>9.2.1
     </releaseinfo>
-    <productnumber>9.2.0
-=======
-    <releaseinfo>9.0.3
-    </releaseinfo>
-    <productnumber>9.0.3
->>>>>>> 9.0.x
+    <productnumber>9.2.1
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
