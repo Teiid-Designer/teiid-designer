@@ -7,6 +7,7 @@
  */
 package org.teiid.designer.ui.properties;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.ETypedElement;
@@ -54,7 +55,12 @@ public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
      */
     @Override
     public ILabelProvider getLabelProvider() {
-        Object feature = itemPropertyDescriptor.getFeature(object);
+        final Object feature = getFeature();
+
+        if ((feature instanceof EAttribute) && FloatAsIntPropertyEditorFactory.supports((EAttribute)feature)) {
+            return FloatAsIntPropertyEditorFactory.LABEL_PROVIDER;
+        }
+
         if (feature instanceof EReference) {
             int upperBound = ((EReference)feature).getUpperBound();
             if (upperBound > 1 || upperBound == ETypedElement.UNBOUNDED_MULTIPLICITY) {
@@ -66,7 +72,7 @@ public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
 
     /**
      * Obtains a <code>ILabelProvider</code> whose text of an {@link EObject} includes a location.
-     * 
+     *
      * @param theUseSuperFlag the flag indicating if the location label provider should be used
      * @return the label provider
      * @since 4.2
@@ -85,7 +91,7 @@ public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
 
     /**
      * The <code>ModelObjectLocationLabelProvider</code> provides location information for each <code>EObject</code>.
-     * 
+     *
      * @since 4.2
      */
     class ModelObjectLocationLabelProvider extends LabelProvider {
@@ -99,7 +105,7 @@ public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
 
     /**
      * Return the cell editor provided by EMF
-     * 
+     *
      * @param composite
      * @return
      * @since 4.2
@@ -130,6 +136,7 @@ public class ModelObjectPropertyDescriptor extends PropertyDescriptor {
         return PropertyEditorFactory.createPropertyEditor(composite, itemPropertyDescriptor, this, object, lazyLoadValues);
     }
 
+    @Override
     public Object getFeature() {
         return itemPropertyDescriptor.getFeature(object);
     }

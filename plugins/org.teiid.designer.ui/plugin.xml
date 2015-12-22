@@ -960,4 +960,10 @@
         name="org.teiid.designer.ui.actions.workers.RelationalReferenceNewModelObjectHelper">
       </class>
    </extension>
+   <extension
+         point="org.teiid.designer.ui.propertyEditorFactory">
+      <class
+            name="org.teiid.designer.ui.properties.FloatAsIntPropertyEditorFactory">
+      </class>
+   </extension>
 </plugin>

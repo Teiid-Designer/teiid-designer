@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -79,7 +78,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	private static final String NS_DESIGNER_ACCUMULO = "accumulo"; //$NON-NLS-1$
     private static final String NS_DESIGNER_EXCEL = "excel"; //$NON-NLS-1$
     private static final String NS_DESIGNER_JPA = "jpa2"; //$NON-NLS-1$
-    
+
 	private static final String REST_COLON_PREFIX= "REST:";  //$NON-NLS-1$
 	private static final String REST_URI = "URI";  //$NON-NLS-1$
 	private static final String REST_METHOD = "METHOD";  //$NON-NLS-1$
@@ -88,8 +87,8 @@ public class TeiidDdlImporter extends StandardImporter {
     private static final String SF_PROPNAME_CALCULATED_BAD = "calculated"; //$NON-NLS-1$
     private static final String SF_PROPNAME_CALCULATED_GOOD = "Calculated"; //$NON-NLS-1$
     private static final String XMLLITERAL_TYPE_NAME = DatatypeConstants.MetaMatrixExtendedBuiltInNames.XML_LITERAL;
-    
-	
+
+
 	interface TYPES_UPPER {
 		String ARRAY = "ARRAY"; //$NON-NLS-1$
 		String BIGDECIMAL = "BIGDECIMAL"; //$NON-NLS-1$
@@ -126,14 +125,14 @@ public class TeiidDdlImporter extends StandardImporter {
 		String TEXT = "TEXT"; //$NON-NLS-1$
 		String XML = DatatypeConstants.RuntimeTypeNames.XML;
 	}
-	
+
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
-	
+
 	/*
 	 *         return !(type == Types.LONGVARBINARY || type == Types.LONGVARCHAR || type == Types.VARBINARY || type == Types.VARCHAR
                  || type == Types.ARRAY || type == Types.BLOB || type == Types.CLOB);
 	 */
-	
+
 	private class TeiidInfo extends Info {
 
 		/**
@@ -146,7 +145,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			super(node, model);
 		}
 	}
-	
+
 	@Override
 	protected TeiidInfo createInfo(AstNode node, RelationalModel model) throws Exception {
 		return new TeiidInfo(node, model);
@@ -161,10 +160,10 @@ public class TeiidDdlImporter extends StandardImporter {
 		 * Get the Datatype for Teiid DDL.
 		 * First tries to match the datatype string with a teiid built-in type.
 		 * If a built-in type is not found, then attempt to use the relational mapping to find a match.
-		 * 
+		 *
 		 * Also an issue with Teiid's XML type.. this will map to XMLLiteral name
 		 */
-		
+
 		if( datatype.equalsIgnoreCase(TYPES_UPPER.XML) ) {
 			targetTypeName = XMLLITERAL_TYPE_NAME;
 		}
@@ -219,7 +218,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			assert false : "Unexpected constraint type of '" + type + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		
+
 		// Find all the Option properties
 		List<AstNode> optionNodes = new ArrayList<AstNode>();
 		List<AstNode> children = constraintNode.getChildren();
@@ -234,40 +233,40 @@ public class TeiidDdlImporter extends StandardImporter {
 			processOptions(optionNodes,key);
 		}
 	}
-	
+
 	private boolean columnsMatch(List<AstNode> columns_1, Collection<RelationalColumn> columns_2) {
 		if( columns_1 == null && columns_2 == null ) return true;
-		
+
 		if( columns_1 == null || columns_2 == null ) return false;
-		
+
 		// Neither can be NULL
 		if( columns_1.size() != columns_2.size() )  return false;
-		
+
 		// Size is the same
 		for( AstNode colOuter_1 : columns_1) {
 			boolean foundIt = false;
-			String columnName = colOuter_1.getName(); 
+			String columnName = colOuter_1.getName();
 			for( RelationalColumn colInner_2 : columns_2) {
 				if( columnName.equals(colInner_2.getName()) ) {
 					foundIt = true;
 				}
 			}
-			
+
 			if( !foundIt ) return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	protected void createPrimaryKey(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		RelationalPrimaryKey key = getFactory().createPrimaryKey();
 		table.setPrimaryKey(key);
 		initialize(key, node);
-		
+
 		// process referenced columns multi-valued property
 		List<AstNode> references = (List<AstNode>)node.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
-		
+
 		for (AstNode ref : references) {
 			try {
 				RelationalColumn column = find(RelationalColumn.class, ref, table, allRefs);
@@ -277,12 +276,12 @@ public class TeiidDdlImporter extends StandardImporter {
 			}
 		}
 	}
-	
+
 	private RelationalReference createUniqueConstraint(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		RelationalUniqueConstraint constraint = getFactory().createUniqueConstraint();
 		initialize(constraint, constraintNode);
 		table.addUniqueConstraint(constraint);
-		
+
 		// process referenced columns multi-valued property
 		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
 
@@ -296,15 +295,15 @@ public class TeiidDdlImporter extends StandardImporter {
 				addProgressMessage(error.getMessage());
 			}
 		}
-		
+
 		return constraint;
 	}
-	
+
 	private RelationalReference createAccessPattern(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		RelationalAccessPattern constraint = getFactory().createAccessPattern();
 		initialize(constraint, constraintNode);
 		table.addAccessPattern(constraint);
-		
+
 		// process referenced columns multi-valued property
 		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
 
@@ -321,12 +320,12 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		return constraint;
 	}
-	
+
 	private RelationalReference createIndex(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		RelationalIndex constraint = getFactory().createIndex();
 		initialize(constraint, constraintNode);
 		table.addIndex(constraint);
-		
+
 		// process referenced columns multi-valued property
 		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
 
@@ -343,15 +342,15 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		return constraint;
 	}
-	
+
 	private RelationalReference createForeignKey(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
 		RelationalForeignKey foreignKey = getFactory().createForeignKey();
 		initializeFK(table.getForeignKeys(), foreignKey, constraintNode);
 		table.addForeignKey(foreignKey);
-		
+
 		// process referenced columns multi-valued property
 		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
-		
+
 		for (AstNode ref : references) {
 			try {
 				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
@@ -362,31 +361,31 @@ public class TeiidDdlImporter extends StandardImporter {
 				addProgressMessage(error.getMessage());
 			}
 		}
-		
+
 		AstNode tableRefNode = (AstNode)constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE);
 		if(tableRefNode==null) {
 			addProgressMessage(DdlImporterI18n.FK_TABLE_REF_NOT_FOUND_MSG + " '"+ foreignKey.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
 			return foreignKey;
 		}
-		
+
 		try {
 			RelationalTable tableRef = find(RelationalTable.class, tableRefNode, null, allRefs);
-			
+
 			// Note that a REFERENCE table can have either a PK reference or a Unique Constraint reference.
 			// So get the RelationalReference object for each
-			
+
 			RelationalPrimaryKey tableRefPrimaryKey = tableRef.getPrimaryKey();
 			RelationalUniqueConstraint tableRefUC = null;
 			if( ! tableRef.getUniqueConstraints().isEmpty() ) {
 				tableRefUC =  tableRef.getUniqueConstraints().iterator().next();
 			}
-			
+
 			// check to see if foreign table columns are referenced
 			Object tempRefColumns = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE_REFERENCES);
 
 			// Create list of AstNode's
 			List<AstNode> foreignTableColumnNodes = (tempRefColumns==null) ? Collections.<AstNode>emptyList() : (List<AstNode>)tempRefColumns;
-			
+
 			// Get number of columns that are referenced
 			int numFKTableReferenceColumns = foreignTableColumnNodes.size();
 			if( numFKTableReferenceColumns == 0 ) {
@@ -400,8 +399,8 @@ public class TeiidDdlImporter extends StandardImporter {
 				// That's all we can do, there are no references
 				return foreignKey;
 			}
-			
-			
+
+
 			int numPKColumns = 0;
 			if( tableRefPrimaryKey != null ) {
 				numPKColumns = tableRefPrimaryKey.getColumns().size();
@@ -411,15 +410,15 @@ public class TeiidDdlImporter extends StandardImporter {
 				numUCColumns = tableRefUC.getColumns().size();
 			}
 			boolean constraintWasPK = false;
-			
+
 			// there are referenced columns in FK.
 			// Check if #PK columns matches
 			if( numFKTableReferenceColumns == numPKColumns ) {
 				// Check PK to see if the columns are found and match
 				// Assumes UC and PK can't reference the same keys
-				
+
 				// Need to compare the foreignTableColumnNodes (AstNode's) against the PK column names
-				
+
 				boolean columnsMatch = columnsMatch(foreignTableColumnNodes, tableRefPrimaryKey.getColumns());
 				if( columnsMatch ) {
 					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
@@ -475,13 +474,13 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		return column;
 	}
-	
+
 	/**
 	 * Create Column from the provided AstNode within ColumnSet
 	 * @param node the provided AstNode
-	 * @param column 
+	 * @param column
 	 *
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	protected void setDataType(AstNode node, RelationalColumn column) throws Exception {
@@ -526,7 +525,7 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		prop = node.getProperty(StandardDdlLexicon.NULLABLE);
 		if (prop != null)
-			column.setNullable(getRelRefNullable(prop.toString())); 
+			column.setNullable(getRelRefNullable(prop.toString()));
 
 		prop = node.getProperty(StandardDdlLexicon.DEFAULT_VALUE);
 		if (prop != null)
@@ -660,7 +659,7 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		return prm;
 	}
-	
+
 	/**
 	 * Perform the import
 	 * @param rootNode the rootNode of the DDL
@@ -679,7 +678,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		// (1) null = dont change anything.  (2) true = set all updatable to true  (3) false = set all updatable to false
 		String updatableOverride = (String)props.get(TeiidDDLConstants.DDL_IMPORT_TABLE_UPDATABLE_OVERRIDE);
 		getImporterManager().setTableUpdatableOverride(updatableOverride);
-		
+
 		// Create a RelationalModel for the imported DDL
 		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
 
@@ -698,7 +697,7 @@ public class TeiidDdlImporter extends StandardImporter {
 						deferredCreateMap.putAll(deferredMap);
 					}
 				}
-			} else if (is(node, TeiidDdlLexicon.OptionNamespace.STATEMENT)) { 
+			} else if (is(node, TeiidDdlLexicon.OptionNamespace.STATEMENT)) {
 				// No Objects created for Teiid Option namespace
 			} else {
 				Map<AstNode,RelationalReference> deferredMap = createObject(node, model, null);
@@ -710,11 +709,11 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		// Now process all the 'deferred' nodes.  These are nodes which reference other nodes (which are required to exist first)
 		createDeferredObjects(deferredCreateMap,model);
-		
+
 		String doFilterStr = (String)props.get(TeiidDDLConstants.DDL_IMPORT_FILTER_CONSTRAINTS);
 		if( doFilterStr != null ) {
 			boolean doIt = Boolean.parseBoolean(doFilterStr);
-			
+
 			if( doIt ) removeRedundantConstraints(model);
 		}
 
@@ -728,7 +727,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * @param model the RelationalModel being created
 	 * @param schema the schema
 	 * @return the map of AstNodes which need to be deferred
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
@@ -811,7 +810,7 @@ public class TeiidDdlImporter extends StandardImporter {
 				|| is(node, TeiidDdlLexicon.AlterOptions.PROCEDURE_STATEMENT)) {
 		} else {
 			// -----------------------------------------------------------------------
-			// All other Non-Teiid DDL 
+			// All other Non-Teiid DDL
 			// -----------------------------------------------------------------------
 			return super.createObject(node, model, schema);
 		}
@@ -823,7 +822,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	 * Create deferred objects using the supplied map
 	 * @param deferredNodes the map of deferred AstNodes
 	 * @param model the RelationalModel being created
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@Override
 	protected void createDeferredObjects(Map<AstNode,RelationalReference> deferredNodes, RelationalModel model) throws Exception {
@@ -835,7 +834,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			if (is(node, TeiidDdlLexicon.Constraint.TABLE_ELEMENT)) {
 				RelationalTable table = (RelationalTable)deferredNodes.get(node);
 				createConstraint(node, table, model, allRefs);
-			} 
+			}
 		}
 
 		// Second pass create FKs, options, others
@@ -899,7 +898,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			processTeiidColumnOptions(optionNodes,(RelationalColumn)relationalReference);
 		} else if(relationalReference instanceof RelationalProcedure) {
 			processTeiidProcedureOptions(optionNodes,(RelationalProcedure)relationalReference);
-		} 
+		}
 	}
 
 	/**
@@ -925,7 +924,7 @@ public class TeiidDdlImporter extends StandardImporter {
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.NAMEINSOURCE)) {
 						entity.setNameInSource(optionValueStr);
 						nodeIter.remove();
-					} 
+					}
 				}
 			}
 		}
@@ -934,8 +933,8 @@ public class TeiidDdlImporter extends StandardImporter {
 
 	/**
 	 * Handle the OPTION keys that may be set on Tables for Teiid DDL
-	 * @param optionNodes 
-	 * @param table 
+	 * @param optionNodes
+	 * @param table
 	 */
 	private void processTeiidTableOptions(List<AstNode> optionNodes, RelationalTable table) {
 		Iterator<AstNode> nodeIter = optionNodes.iterator();
@@ -947,7 +946,18 @@ public class TeiidDdlImporter extends StandardImporter {
 				String optionValueStr = (String)optionValue;
 				if(!CoreStringUtil.isEmpty(optionValueStr)) {
 					if(optionName.equalsIgnoreCase(TeiidDDLConstants.CARDINALITY)) {
-						table.setCardinality(Integer.parseInt(optionValueStr));
+                        final long value = Long.parseLong(optionValueStr);
+                        int cardinality = RelationalTable.DEFAULT_CARDINALITY;
+
+                        if ((value == -1) || (value < 0)) {
+                            cardinality = -1;
+                        } else if (value <= Integer.MAX_VALUE) {
+                            cardinality = (int)value;
+                        } else {
+                            cardinality = (Float.floatToRawIntBits(value) | 0x80000000);
+                        }
+
+                        table.setCardinality(cardinality);
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED)) {
 						table.setMaterialized(isTrue(optionValueStr));
@@ -969,14 +979,14 @@ public class TeiidDdlImporter extends StandardImporter {
 			table.setSupportsUpdate(getTableUpdatableOverride());
 		}
 	}
-	
+
 	/*
 	 * Determine if override of the table updatable property has been requested
 	 */
 	private boolean hasTableUpdatableOverride() {
 		return (getImporterManager().getTableUpdatableOverride()!=null);
 	}
-	
+
 	/*
 	 * Get the table updatable value (true or false) - if it has been specified.
 	 */
@@ -1068,17 +1078,17 @@ public class TeiidDdlImporter extends StandardImporter {
 
 	/**
 	 * Handle the OPTION keys that may be set on Columns for Teiid DDL
-	 * @param optionNodes 
-	 * @param column 
+	 * @param optionNodes
+	 * @param column
 	 */
 	private void processTeiidColumnOptions(List<AstNode> optionNodes, RelationalColumn column) {
 		// Need to pre-process a couple things
-		
+
 //		if( column.getNullValueCount() == 0 ) {
 //			// DDL Parser uses a default value of 0 so we need to check and convert to Teiid's expected null value of -1
 //			column.setNullValueCount(DEFAULT_NULL_VALUE_COUNT);
 //		}
-		
+
 		Iterator<AstNode> nodeIter = optionNodes.iterator();
 		while(nodeIter.hasNext()) {
 			AstNode optionNode = nodeIter.next();
@@ -1132,7 +1142,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			}
 		}
 	}
-	
+
 	private void resolveColumnDatatype(RelationalColumn column, String nativeType) {
 		if( (column.getDatatype().equalsIgnoreCase(TYPES_UPPER.INTEGER) || column.getDatatype().equalsIgnoreCase(TYPES_UPPER.BIGINTEGER))
 				&& nativeType.equalsIgnoreCase(TYPES_UPPER.INT) ) {
@@ -1161,18 +1171,18 @@ public class TeiidDdlImporter extends StandardImporter {
 				column.setPrecision(24);
 			}
 		}
-		
-		
+
+
 		// Not enough info in DDL to determine if fixed length data type so calling it here
 		column.setLengthFixed(isFixedLength(column.getNativeType()));
 	}
-	
+
     /**
      * Method that can identify if a data type is fixed length or not
      * (See <code>org.teiid.designer.jdbc.relational.impl.RelationalModelProcessorImpl</code> used for JDBC import)
      *
      * Note that SQL Server has an IMAGE native type that is treated like a blob, so is NOT fixed length
-     * @param typeName 
+     * @param typeName
      * @return True if the specified type should be considered fixed-length.
      * @since 4.2
      */
@@ -1209,7 +1219,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Save the Extension Option name-value info to the importerModel
 	 * @param optionNodes the list of statement option AstNodes
@@ -1251,10 +1261,10 @@ public class TeiidDdlImporter extends StandardImporter {
 			nodeIter.remove();
 		}
 	}
-	
+
 	private void removeRedundantConstraints(RelationalModel model) {
 		// walk the model's tables
-		
+
 		for( RelationalReference child : model.getChildren()) {
 			if( child instanceof RelationalTable ) {
 				RelationalPrimaryKey pk = ((RelationalTable) child).getPrimaryKey();
@@ -1277,14 +1287,14 @@ public class TeiidDdlImporter extends StandardImporter {
 						}
 					}
 				}
-				
+
 				if( deleteThisConstraint != null ) {
 					((RelationalTable) child).removeUniqueConstraint(deleteThisConstraint);
 				}
 			}
 		}
 	}
-	
+
     /**
 	 * Translate a namespaced extension property name, translating teiid namespaces to designer MED namespaces
 	 * @param namespacedPropName the extension property name, including namespace
@@ -1298,7 +1308,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		if(isUriNamespaced(namespacedPropName)) {
 			// Get the Namespace URI
 			String propNsUri = getExtensionPropertyNsUri(namespacedPropName);
-			
+
 			// Translate the uri to corresponding designer med prefix
 			designerNs = translateTeiidNsUriToDesignerNSPrefix(propNsUri);
 		// =========================================================================================
@@ -1307,10 +1317,10 @@ public class TeiidDdlImporter extends StandardImporter {
 		} else if(isPrefixNamespaced(namespacedPropName)) {
 			// Get the Namespace prefix
 			String propNsPrefix = getExtensionPropertyNsPrefix(namespacedPropName);
-			
+
 			designerNs = translateTeiidNSPrefixToDesignerNSPrefix(propNsPrefix);
 		}
-		
+
 		if(designerNs!=null) {
 			// Get name portion of incoming name
 			String propName = getExtensionPropertyName(namespacedPropName);
@@ -1319,7 +1329,7 @@ public class TeiidDdlImporter extends StandardImporter {
 			if(designerNs.equals(NS_DESIGNER_SALESFORCE) && propName.equals(SF_PROPNAME_CALCULATED_BAD)) {
 				propName = SF_PROPNAME_CALCULATED_GOOD;
 			}
-			
+
 			// return reassembled namespaced name
 			return designerNs+':'+propName;
 		}
@@ -1342,7 +1352,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return namespace;
 	}
-	
+
     /**
 	 * Get the Name from the extension property name.  If its not namespaced, just return the name.  Otherwise strip off the namespace
 	 * @param propName the extension property name, with or without namespace
@@ -1360,7 +1370,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return name;
 	}
-	
+
     /**
 	 * Get the Name from the extension property name.  If its not namespaced, just return the name.  Otherwise strip off the namespace
 	 * @param namespacedPropName the extension property name, with or without namespace
@@ -1368,7 +1378,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	 */
 	private String getExtensionPropertyName(String namespacedPropName) {
 		String name = namespacedPropName;
-		
+
 		if(isPrefixNamespaced(namespacedPropName)) {
 			int index = namespacedPropName.indexOf(':');
 			name = namespacedPropName.substring(index+1);
@@ -1376,10 +1386,10 @@ public class TeiidDdlImporter extends StandardImporter {
 			int index = namespacedPropName.indexOf('}');
 			name = namespacedPropName.substring(index+1);
 		}
-		
+
 		return name;
 	}
-	
+
     /**
 	 * Determine if the property name has a leading namespace prefix
 	 * @param propName the extension property name, including namespace
@@ -1392,7 +1402,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return isPrefixNamespaced;
 	}
-	
+
     /**
 	 * Determine if the property name has a leading namespace uri
 	 * @param propName the extension property name, including namespace uri
@@ -1405,7 +1415,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return isUriNamespaced;
 	}
-	
+
 	/**
 	 * Determine if the supplied property name has open and closed braces
 	 * @param propName the extension property name
@@ -1418,7 +1428,7 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 		return hasBoth;
 	}
-	
+
 	/**
 	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
 	 * @param teiidNamespace
@@ -1427,7 +1437,7 @@ public class TeiidDdlImporter extends StandardImporter {
 	private String translateTeiidNSPrefixToDesignerNSPrefix(String teiidNamespace) {
 		String designerNS = teiidNamespace;
 		if(NS_TEIID_ODATA.equals(teiidNamespace)) {
-			designerNS = NS_DESIGNER_ODATA; 
+			designerNS = NS_DESIGNER_ODATA;
 		} else if(NS_TEIID_RELATIONAL.equals(teiidNamespace)) {
 			designerNS = NS_DESIGNER_RELATIONAL;
 		} else if(NS_TEIID_WEBSERVICE.equals(teiidNamespace)) {
@@ -1442,10 +1452,10 @@ public class TeiidDdlImporter extends StandardImporter {
 			designerNS = NS_DESIGNER_EXCEL;
 		} else if(NS_TEIID_JPA.equals(teiidNamespace)) {
 			designerNS = NS_DESIGNER_JPA;
-		} 
+		}
 		return designerNS;
-	}  
-	
+	}
+
 	/**
 	 * Translate a Teiid ExtensionProperty namespace into the Designer equivalent.
 	 * @param teiidNsUri the teiid namespace uri
@@ -1453,21 +1463,21 @@ public class TeiidDdlImporter extends StandardImporter {
 	 */
 	private String translateTeiidNsUriToDesignerNSPrefix(String teiidNsUri) {
 		String designerNsPrefix = null;
-		
+
 		ModelExtensionRegistry registry = ExtensionPlugin.getInstance().getRegistry();
-		
+
 		Collection<ModelExtensionDefinition> meds = registry.getAllDefinitions();
 		for(ModelExtensionDefinition med : meds) {
 			String designerMedNsUri = med.getNamespaceUri();
 			String designerMedNsPrefix = med.getNamespacePrefix();
-			
+
 			if(!CoreStringUtil.isEmpty(designerMedNsUri) && designerMedNsUri.equals(teiidNsUri)) {
 				designerNsPrefix = designerMedNsPrefix;
 				break;
 			}
 		}
-		
+
 		return designerNsPrefix;
-	}        
-	
+	}
+
 }
