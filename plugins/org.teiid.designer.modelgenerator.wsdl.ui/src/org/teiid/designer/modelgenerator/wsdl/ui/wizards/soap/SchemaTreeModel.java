@@ -194,9 +194,16 @@ public class SchemaTreeModel {
 					name = ((XSDTypeDefinition)element).getAliasName();
 				}
 			}else 
-				if (element instanceof XSDParticleImpl &&
-				   ((XSDParticleImpl)element).getTerm() instanceof XSDElementDeclaration) {
-					XSDElementDeclaration xed = (XSDElementDeclaration) ((XSDParticleImpl)element).getTerm();
+				if ((element instanceof XSDParticleImpl &&
+				   ((XSDParticleImpl)element).getTerm() instanceof XSDElementDeclaration)  ||
+				   (element instanceof XSDElementDeclarationImpl))
+				   {
+					XSDElementDeclaration xed = null;
+					if (element instanceof XSDElementDeclarationImpl){
+						xed = (XSDElementDeclaration)element;
+					}else{
+						xed = (XSDElementDeclaration) ((XSDParticleImpl)element).getTerm();
+					}
 					name = (xed.getName() != null ? xed.getName() : xed.getAliasName());
 				}
 			
