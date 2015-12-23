@@ -1,0 +1,87 @@
+
+CREATE FOREIGN TABLE customer (
+	c_custkey long NOT NULL OPTIONS (NAMEINSOURCE '"c_custkey"', NATIVE_TYPE 'int4'),
+	c_name string(25) NOT NULL OPTIONS (NAMEINSOURCE '"c_name"', NATIVE_TYPE 'varchar'),
+	c_address string(40) NOT NULL OPTIONS (NAMEINSOURCE '"c_address"', NATIVE_TYPE 'varchar'),
+	c_nationkey long NOT NULL OPTIONS (NAMEINSOURCE '"c_nationkey"', NATIVE_TYPE 'int4'),
+	c_phone string(15) NOT NULL OPTIONS (NAMEINSOURCE '"c_phone"', NATIVE_TYPE 'bpchar'),
+	c_acctbal bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"c_acctbal"', NATIVE_TYPE 'numeric'),
+	c_mktsegment string(10) NOT NULL OPTIONS (NAMEINSOURCE '"c_mktsegment"', NATIVE_TYPE 'bpchar'),
+	c_comment string(117) NOT NULL OPTIONS (NAMEINSOURCE '"c_comment"', NATIVE_TYPE 'varchar'),
+	CONSTRAINT customer_pkey PRIMARY KEY(c_custkey),
+	CONSTRAINT customer_pkey UNIQUE(c_custkey)
+) OPTIONS (NAMEINSOURCE '"public"."customer"', UPDATABLE TRUE, CARDINALITY 150000000);
+
+CREATE FOREIGN TABLE lineitem (
+	l_orderkey long NOT NULL OPTIONS (NAMEINSOURCE '"l_orderkey"', NATIVE_TYPE 'int4'),
+	l_partkey long NOT NULL OPTIONS (NAMEINSOURCE '"l_partkey"', NATIVE_TYPE 'int4'),
+	l_suppkey long NOT NULL OPTIONS (NAMEINSOURCE '"l_suppkey"', NATIVE_TYPE 'int4'),
+	l_linenumber long NOT NULL OPTIONS (NAMEINSOURCE '"l_linenumber"', NATIVE_TYPE 'int4'),
+	l_quantity bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"l_quantity"', NATIVE_TYPE 'numeric'),
+	l_extendedprice bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"l_extendedprice"', NATIVE_TYPE 'numeric'),
+	l_discount bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"l_discount"', NATIVE_TYPE 'numeric'),
+	l_tax bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"l_tax"', NATIVE_TYPE 'numeric'),
+	l_returnflag string(1) NOT NULL OPTIONS (NAMEINSOURCE '"l_returnflag"', NATIVE_TYPE 'bpchar'),
+	l_linestatus string(1) NOT NULL OPTIONS (NAMEINSOURCE '"l_linestatus"', NATIVE_TYPE 'bpchar'),
+	l_shipdate date NOT NULL OPTIONS (NAMEINSOURCE '"l_shipdate"', NATIVE_TYPE 'date'),
+	l_commitdate date NOT NULL OPTIONS (NAMEINSOURCE '"l_commitdate"', NATIVE_TYPE 'date'),
+	l_receiptdate date NOT NULL OPTIONS (NAMEINSOURCE '"l_receiptdate"', NATIVE_TYPE 'date'),
+	l_shipinstruct string(25) NOT NULL OPTIONS (NAMEINSOURCE '"l_shipinstruct"', NATIVE_TYPE 'bpchar'),
+	l_shipmode string(10) NOT NULL OPTIONS (NAMEINSOURCE '"l_shipmode"', NATIVE_TYPE 'bpchar'),
+	l_comment string(44) NOT NULL OPTIONS (NAMEINSOURCE '"l_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."lineitem"', UPDATABLE TRUE, CARDINALITY 6000000000);
+
+CREATE FOREIGN TABLE nation (
+	n_nationkey long NOT NULL OPTIONS (NAMEINSOURCE '"n_nationkey"', NATIVE_TYPE 'int4'),
+	n_name string(25) NOT NULL OPTIONS (NAMEINSOURCE '"n_name"', NATIVE_TYPE 'bpchar'),
+	n_regionkey long NOT NULL OPTIONS (NAMEINSOURCE '"n_regionkey"', NATIVE_TYPE 'int4'),
+	n_comment string(152) OPTIONS (NAMEINSOURCE '"n_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."nation"', UPDATABLE TRUE, CARDINALITY 25);
+
+CREATE FOREIGN TABLE orders (
+	o_orderkey long NOT NULL OPTIONS (NAMEINSOURCE '"o_orderkey"', NATIVE_TYPE 'int4'),
+	o_custkey long NOT NULL OPTIONS (NAMEINSOURCE '"o_custkey"', NATIVE_TYPE 'int4'),
+	o_orderstatus string(1) NOT NULL OPTIONS (NAMEINSOURCE '"o_orderstatus"', NATIVE_TYPE 'bpchar'),
+	o_totalprice bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"o_totalprice"', NATIVE_TYPE 'numeric'),
+	o_orderdate date NOT NULL OPTIONS (NAMEINSOURCE '"o_orderdate"', NATIVE_TYPE 'date'),
+	o_orderpriority string(15) NOT NULL OPTIONS (NAMEINSOURCE '"o_orderpriority"', NATIVE_TYPE 'bpchar'),
+	o_clerk string(15) NOT NULL OPTIONS (NAMEINSOURCE '"o_clerk"', NATIVE_TYPE 'bpchar'),
+	o_shippriority long NOT NULL OPTIONS (NAMEINSOURCE '"o_shippriority"', NATIVE_TYPE 'int4'),
+	o_comment string(79) NOT NULL OPTIONS (NAMEINSOURCE '"o_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."orders"', UPDATABLE TRUE, CARDINALITY 1500000000);
+
+CREATE FOREIGN TABLE part (
+	p_partkey long NOT NULL OPTIONS (NAMEINSOURCE '"p_partkey"', NATIVE_TYPE 'int4'),
+	p_name string(55) NOT NULL OPTIONS (NAMEINSOURCE '"p_name"', NATIVE_TYPE 'varchar'),
+	p_mfgr string(25) NOT NULL OPTIONS (NAMEINSOURCE '"p_mfgr"', NATIVE_TYPE 'bpchar'),
+	p_brand string(10) NOT NULL OPTIONS (NAMEINSOURCE '"p_brand"', NATIVE_TYPE 'bpchar'),
+	p_type string(25) NOT NULL OPTIONS (NAMEINSOURCE '"p_type"', NATIVE_TYPE 'varchar'),
+	p_size long NOT NULL OPTIONS (NAMEINSOURCE '"p_size"', NATIVE_TYPE 'int4'),
+	p_container string(10) NOT NULL OPTIONS (NAMEINSOURCE '"p_container"', NATIVE_TYPE 'bpchar'),
+	p_retailprice bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"p_retailprice"', NATIVE_TYPE 'numeric'),
+	p_comment string(23) NOT NULL OPTIONS (NAMEINSOURCE '"p_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."part"', UPDATABLE TRUE, CARDINALITY 200000000);
+
+CREATE FOREIGN TABLE partsupp (
+	ps_partkey long NOT NULL OPTIONS (NAMEINSOURCE '"ps_partkey"', NATIVE_TYPE 'int4'),
+	ps_suppkey long NOT NULL OPTIONS (NAMEINSOURCE '"ps_suppkey"', NATIVE_TYPE 'int4'),
+	ps_availqty long NOT NULL OPTIONS (NAMEINSOURCE '"ps_availqty"', NATIVE_TYPE 'int4'),
+	ps_supplycost bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"ps_supplycost"', NATIVE_TYPE 'numeric'),
+	ps_comment string(199) NOT NULL OPTIONS (NAMEINSOURCE '"ps_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."partsupp"', UPDATABLE TRUE, CARDINALITY 800000000);
+
+CREATE FOREIGN TABLE region (
+	r_regionkey long NOT NULL OPTIONS (NAMEINSOURCE '"r_regionkey"', NATIVE_TYPE 'int4'),
+	r_name string(25) NOT NULL OPTIONS (NAMEINSOURCE '"r_name"', NATIVE_TYPE 'bpchar'),
+	r_comment string(152) OPTIONS (NAMEINSOURCE '"r_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."region"', UPDATABLE TRUE, CARDINALITY 5);
+
+CREATE FOREIGN TABLE supplier (
+	s_suppkey long NOT NULL OPTIONS (NAMEINSOURCE '"s_suppkey"', NATIVE_TYPE 'int4'),
+	s_name string(25) NOT NULL OPTIONS (NAMEINSOURCE '"s_name"', NATIVE_TYPE 'bpchar'),
+	s_address string(40) NOT NULL OPTIONS (NAMEINSOURCE '"s_address"', NATIVE_TYPE 'varchar'),
+	s_nationkey long NOT NULL OPTIONS (NAMEINSOURCE '"s_nationkey"', NATIVE_TYPE 'int4'),
+	s_phone string(15) NOT NULL OPTIONS (NAMEINSOURCE '"s_phone"', NATIVE_TYPE 'bpchar'),
+	s_acctbal bigdecimal(15,2) NOT NULL OPTIONS (NAMEINSOURCE '"s_acctbal"', NATIVE_TYPE 'numeric'),
+	s_comment string(101) NOT NULL OPTIONS (NAMEINSOURCE '"s_comment"', NATIVE_TYPE 'varchar')
+) OPTIONS (NAMEINSOURCE '"public"."supplier"', UPDATABLE TRUE, CARDINALITY 10000000);  
