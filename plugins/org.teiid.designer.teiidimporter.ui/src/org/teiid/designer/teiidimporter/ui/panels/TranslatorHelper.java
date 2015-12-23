@@ -94,7 +94,7 @@ public class TranslatorHelper implements UiConstants {
     public static final String URL_SQLSERVER = "jdbc:sqlserver://<host>:1433;databaseName=<dbName>"; //$NON-NLS-1$
     public static final String URL_TEIID = "jdbc:teiid:<vdbName>@mms://<host>:31000"; //$NON-NLS-1$
     public static final String URL_JDBC = "jdbc://<host>:<port>"; //$NON-NLS-1$
-    public static final String URL_SAP_HANA = "jdbc:sap://<host>:<port>"; //$NON-NLS-1$
+    public static final String URL_SAP_HANA = "jdbc:sap://<host>:3<instance number>15"; //$NON-NLS-1$
 	
     /**
      * Get the best fit translator, given the driverName and list of translator names
@@ -297,7 +297,7 @@ public class TranslatorHelper implements UiConstants {
         }
         
         
-        if( driverName.startsWith("sap") || driverName.contains("hgdbc")) {  //$NON-NLS-1$ //$NON-NLS-2$
+        if( driverName.startsWith("sap") || driverName.contains("ngdbc")) {  //$NON-NLS-1$ //$NON-NLS-2$
         	return URL_SAP_HANA;
         }
 
