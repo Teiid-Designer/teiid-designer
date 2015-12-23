@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
@@ -41,11 +40,6 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
     private class RelatedResourceCallback extends VdbResourceCallback {
 
         private final Set<IResource> indexedResources = new HashSet<IResource>();
-
-        @Override
-        public void checkValidFile(IFile relatedFile, RefactoringStatus status) {
-            checkResource(relatedFile, new NullProgressMonitor(), status);
-        }
 
         @Override
         public void indexFile(IResource resource, IFile relatedFile, RefactoringStatus status) throws Exception {
@@ -181,9 +175,6 @@ public class DeleteResourcesRefactoring extends AbstractResourcesRefactoring {
         if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkExtensionManager(resource, RefactorType.DELETE, progressMonitor, status);
-        if (status.getSeverity() > IStatus.WARNING) return;
-
-        RefactorResourcesUtils.checkModelResourceWritable(resource, status, readOnlyStatusLevel, readOnlyStatusMsg);
         if (status.getSeverity() > IStatus.WARNING) return;
 
         RefactorResourcesUtils.checkSavedResource(resource, status);
