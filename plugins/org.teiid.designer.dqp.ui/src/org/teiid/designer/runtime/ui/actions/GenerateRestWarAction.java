@@ -238,6 +238,7 @@ public class GenerateRestWarAction extends Action implements ISelectionListener,
         try {
             Vdb vdb = new XmiVdb(this.selectedVDB);
             Set<VdbModelEntry> modelEntrySet = vdb.getModelEntries();
+            restfulProcedureMap.clear();
             for (VdbModelEntry vdbModelEntry : modelEntrySet) {
                 final ModelResource modelResource = ModelerCore.getModelWorkspace().findModelResource(vdbModelEntry.getPath());
                 if (! ModelIdentifier.isVirtualModelType(modelResource))
