@@ -594,6 +594,12 @@
         </xs:annotation>
         <xs:restriction base="xs:base64Binary"/>
     </xs:simpleType>
+        <xs:simpleType mmedt:UUID="mmuuid:5a793100-1836-1ed0-ba0f-f2334f5fbf96" mmedt:runtimeDataType="geometry" mmedt:runtimeDataTypeFixed="false" name="geometry">
+        <xs:annotation>
+            <xs:appinfo/>
+        </xs:annotation>
+        <xs:restriction base="xs:base64Binary"/>
+    </xs:simpleType>
     <xs:simpleType mmedt:UUID="mmuuid:43f5274e-55e1-1f87-ba1c-eea49143eb32" mmedt:runtimeDataType="xml" mmedt:runtimeDataTypeFixed="false" name="XMLLiteral">
         <xs:annotation>
             <xs:appinfo/>

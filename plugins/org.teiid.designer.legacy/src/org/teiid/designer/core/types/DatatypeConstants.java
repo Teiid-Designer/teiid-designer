@@ -216,6 +216,7 @@ public class DatatypeConstants {
         public static final String UNSIGNED_INT         = "unsignedInt";//$NON-NLS-1$
         public static final String UNSIGNED_LONG        = "unsignedLong";//$NON-NLS-1$
         public static final String UNSIGNED_SHORT       = "unsignedShort";//$NON-NLS-1$
+        public static final String GEOMETRY          	= "geometry";
         // MetaMatrix extensions to the XML Schema of schema built-in types
         public static final String CHAR                 = MetaMatrixExtendedBuiltInNames.CHAR;
         public static final String BIG_INTEGER          = MetaMatrixExtendedBuiltInNames.BIG_INTEGER;
@@ -226,6 +227,7 @@ public class DatatypeConstants {
         public static final String BLOB                 = MetaMatrixExtendedBuiltInNames.BLOB;
         public static final String CLOB                 = MetaMatrixExtendedBuiltInNames.CLOB;
         public static final String XML_LITERAL          = MetaMatrixExtendedBuiltInNames.XML_LITERAL;
+
     }
 
     // all the runtime datatypes
@@ -249,6 +251,7 @@ public class DatatypeConstants {
         public static final String BLOB         = "blob"; //$NON-NLS-1$
         public static final String CLOB         = "clob"; //$NON-NLS-1$
         public static final String XML          = "xml"; //$NON-NLS-1$
+        public static final String GEOMETRY     = "geometry"; //$NON-NLS-1$
     }
 
     // ==================================================================================
@@ -323,6 +326,7 @@ public class DatatypeConstants {
         RUNTIME_TO_BUILTIN_MAP.put(RuntimeTypeNames.BLOB,        BuiltInNames.BLOB);
         RUNTIME_TO_BUILTIN_MAP.put(RuntimeTypeNames.CLOB,        BuiltInNames.CLOB);
         RUNTIME_TO_BUILTIN_MAP.put(RuntimeTypeNames.XML,         BuiltInNames.XML_LITERAL);
+        RUNTIME_TO_BUILTIN_MAP.put(RuntimeTypeNames.GEOMETRY,    BuiltInNames.GEOMETRY);
     }
     private static void loadRuntimeTypeNames() {
         RUNTIME_TYPE_NAMES.add(RuntimeTypeNames.STRING);
@@ -343,6 +347,7 @@ public class DatatypeConstants {
         RUNTIME_TYPE_NAMES.add(RuntimeTypeNames.BLOB);
         RUNTIME_TYPE_NAMES.add(RuntimeTypeNames.CLOB);
         RUNTIME_TYPE_NAMES.add(RuntimeTypeNames.XML);
+        RUNTIME_TYPE_NAMES.add(RuntimeTypeNames.GEOMETRY);
     }
     private static void loadMetaMatrixExtentedBuiltInTypeNames() {
         METAMATRIX_EXTENDED_BUILTIN_TYPE_NAMES.add(MetaMatrixExtendedBuiltInNames.CHAR);
@@ -432,6 +437,7 @@ public class DatatypeConstants {
         BUILTIN_TYPE_NAMES.add(BuiltInNames.UNSIGNED_LONG);
         BUILTIN_TYPE_NAMES.add(BuiltInNames.UNSIGNED_SHORT);
         BUILTIN_TYPE_NAMES.add(BuiltInNames.XML_LITERAL);
+        BUILTIN_TYPE_NAMES.add(BuiltInNames.GEOMETRY);
     }
 
     /**
