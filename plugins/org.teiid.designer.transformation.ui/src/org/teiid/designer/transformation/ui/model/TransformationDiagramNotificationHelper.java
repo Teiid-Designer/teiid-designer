@@ -9,14 +9,18 @@ package org.teiid.designer.transformation.ui.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.notification.util.NotificationUtilities;
 import org.teiid.designer.core.transaction.SourcedNotification;
 import org.teiid.designer.core.workspace.ModelResource;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.diagram.ui.model.DiagramModelNode;
 import org.teiid.designer.diagram.ui.notation.uml.model.UmlClassifierContainerNode;
 import org.teiid.designer.diagram.ui.notation.uml.model.UmlClassifierNode;
@@ -24,6 +28,7 @@ import org.teiid.designer.diagram.ui.util.DiagramUiUtilities;
 import org.teiid.designer.diagram.ui.util.RelationalUmlEObjectHelper;
 import org.teiid.designer.metamodels.diagram.Diagram;
 import org.teiid.designer.transformation.ui.PluginConstants;
+import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.ui.util.TransformationUmlEObjectHelper;
 import org.teiid.designer.ui.viewsupport.ModelUtilities;
 
@@ -76,6 +81,12 @@ public class TransformationDiagramNotificationHelper {
 
         ModelResource diagramMR = ModelUtilities.getModelResourceForModelObject(currentDiagram);
         if (diagramMR != null) {
+        	Collection dependentModels = Collections.EMPTY_LIST;
+        	try {
+				dependentModels = ModelUtilities.getDependentResources(diagramMR);
+			} catch (ModelWorkspaceException e) {
+				UiConstants.Util.log(IStatus.ERROR, e, e.getMessage());
+			}
             if (primaryNotification instanceof SourcedNotification) {
                 Object source = ((SourcedNotification)primaryNotification).getSource();
                 if (source == null || !source.equals(this)) {
@@ -88,7 +99,17 @@ public class TransformationDiagramNotificationHelper {
                         Object targetObject = ModelerCore.getModelEditor().getChangedObject(nextNotification);
                         if (targetObject != null && targetObject instanceof EObject
                             && !DiagramUiUtilities.isNonDrawingDiagramObject((EObject)targetObject)) {
-                            shouldHandle = true;
+                        	// NOTE transformation diagram receives a notification from another Model, we need to look
+                        	// at whether or not the target object is used in the T-Editor or not.
+                        	// IF SO, then shouldHandle == true
+                        	//   else
+                        	// If it's not, then check MR's for same model then shouldHandle == true
+                        	ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
+                            if (mr != null ) {
+                            	if( mr.equals(diagramMR) || dependentModels.contains(mr) ) {
+                            		shouldHandle = true;
+                            	}
+                            } 
                         } else if (targetObject instanceof Diagram && NotificationUtilities.isRemoved(nextNotification)) {
                             ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
                             if (mr != null && mr.equals(diagramMR)) {
@@ -101,7 +122,17 @@ public class TransformationDiagramNotificationHelper {
                 Object targetObject = ModelerCore.getModelEditor().getChangedObject(primaryNotification);
                 if (targetObject != null && targetObject instanceof EObject
                     && !DiagramUiUtilities.isNonDrawingDiagramObject((EObject)targetObject)) {
-                    shouldHandle = true;
+                	// NOTE transformation diagram receives a notification from another Model, we need to look
+                	// at whether or not the target object is used in the T-Editor or not.
+                	// IF SO, then shouldHandle == true
+                	//   else
+                	// If it's not, then check MR's for same model then shouldHandle == true
+                	ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
+                    if (mr != null ) {
+                    	if( mr.equals(diagramMR) || dependentModels.contains(mr) ) {
+                    		shouldHandle = true;
+                    	}
+                    } 
                 } else if (targetObject instanceof Diagram && NotificationUtilities.isRemoved(primaryNotification)) {
                     ModelResource mr = ModelUtilities.getModelResourceForModelObject((EObject)targetObject);
                     if (mr != null && mr.equals(diagramMR)) {
