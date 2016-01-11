@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.teiid.designer.diagram.ui;singleton:=true
-Bundle-Version: 9.0.4.qualifier
+Bundle-Version: 9.0.5.qualifier
 Bundle-Activator: org.teiid.designer.diagram.ui.DiagramUiPlugin
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin

@@ -11,7 +11,7 @@
     <artifactId>org.teiid.runtime.client</artifactId>
     <packaging>eclipse-plugin</packaging>
     <name>teiid runtime client</name>
-	  <version>9.0.4-SNAPSHOT</version>
+	  <version>9.0.5-SNAPSHOT</version>
     <description>Teiid SQL runtime client</description>
     <properties>
         <jbossas-version>7.2.0.Alpha1-redhat-4</jbossas-version>
