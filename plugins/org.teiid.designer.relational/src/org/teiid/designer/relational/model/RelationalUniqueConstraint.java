@@ -50,6 +50,32 @@ public class RelationalUniqueConstraint extends RelationalReference {
         this.columns = new ArrayList<RelationalColumn>();
         setNameValidator(new RelationalStringNameValidator(true, true));
     }
+    
+    @Override
+	public RelationalUniqueConstraint clone() {
+    	RelationalUniqueConstraint cloneUC = new RelationalUniqueConstraint(getName());
+    	cloneUC.setNameInSource(getNameInSource());
+    	cloneUC.setDescription(getDescription());
+    	cloneUC.setModelType(getModelType());
+    	for( RelationalColumn col : getColumns() ) {
+    		cloneUC.addColumn(col);
+    	}
+    	return cloneUC;
+    }
+    
+    @Override
+    public void inject(RelationalReference originalUC) {
+    	super.inject(originalUC);
+    	RelationalUniqueConstraint theUC = (RelationalUniqueConstraint)originalUC;
+    	setName(theUC.getName());
+    	setNameInSource(theUC.getNameInSource());
+    	setDescription(theUC.getDescription());
+    	setModelType(theUC.getModelType());
+    	getColumns().clear();
+    	for( RelationalColumn col : theUC.getColumns() ) {
+    		addColumn(col);
+    	}
+    }
  
     /**
      * @return columns

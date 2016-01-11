@@ -194,113 +194,25 @@ public class TeiidDdlImporter extends StandardImporter {
 	private void createConstraint(AstNode constraintNode, RelationalTable table, RelationalModel model, Collection<RelationalReference> allRefs) throws CoreException {
 
 		String type = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TYPE).toString();
-		boolean primaryKeyConstraint = false;
-		boolean uniqueConstraint = false;
-		boolean accessPatternConstraint = false;
-		boolean foreignKeyConstraint = false;
-		boolean indexConstraint = false;
+
 		RelationalReference key = null;
 
 		if (DdlConstants.PRIMARY_KEY.equals(type)) {
-			key = getFactory().createPrimaryKey();
-			initialize(key, constraintNode);
-			table.setPrimaryKey((RelationalPrimaryKey)key);
-			primaryKeyConstraint = true;
+			createPrimaryKey(constraintNode, table, allRefs);
+			key = table.getPrimaryKey();
 		} else if (DdlConstants.INDEX.equals(type)) {
 			// TODO need to process teiidddl:expression property
-			key = getFactory().createIndex();
-			initialize(key, constraintNode);
-			model.addChild(key);
-			indexConstraint = true;
+			key = createIndex(constraintNode, table, allRefs);
 		} else if (DdlConstants.UNIQUE.equals(type)) {
-			key = getFactory().createUniqueConstraint();
-			initialize(key, constraintNode);
-			table.getUniqueConstraints().add((RelationalUniqueConstraint)key);
-			uniqueConstraint = true;
+			key = createUniqueConstraint(constraintNode, table, allRefs);
 		} else if (TeiidDdlConstants.TeiidNonReservedWord.ACCESSPATTERN.toDdl().equals(type)) {
-			key = getFactory().createAccessPattern();
-			initialize(key, constraintNode);
-			table.getAccessPatterns().add((RelationalAccessPattern)key);
-			accessPatternConstraint = true;
+			key = createAccessPattern(constraintNode, table, allRefs);
 		} else if (DdlConstants.FOREIGN_KEY.equals(type)) {
-			key = getFactory().createForeignKey();
-			initializeFK(table.getForeignKeys(), (RelationalForeignKey)key, constraintNode);
-			table.getForeignKeys().add((RelationalForeignKey)key);
-			foreignKeyConstraint = true;
+			key = createForeignKey(constraintNode, table, allRefs);
 		} else {
 			assert false : "Unexpected constraint type of '" + type + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
-		// process referenced columns multi-valued property
-		Object temp = constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
-		List<AstNode> references = (List<AstNode>)temp;
-
-		for (AstNode ref : references) {
-			try {
-				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
-				if(col!=null) {
-					if (primaryKeyConstraint) {
-						((RelationalPrimaryKey)key).getColumns().add(col);
-					} else if (uniqueConstraint) {
-						((RelationalUniqueConstraint)key).getColumns().add(col);
-					} else if (accessPatternConstraint) {
-						((RelationalAccessPattern)key).getColumns().add(col);
-					} else if (foreignKeyConstraint) {
-						((RelationalForeignKey)key).getColumns().add(col);
-					} else if (indexConstraint) {
-						((RelationalIndex)key).getColumns().add(col);
-					}else {
-						assert false : "Unexpected constraint type of '" + type + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-					}
-				}
-			} catch (EntityNotFoundException error) {
-				addProgressMessage(error.getMessage());
-			}
-		}
-
-		// special processing for foreign key
-		if (foreignKeyConstraint) {
-			RelationalForeignKey foreignKey = (RelationalForeignKey)key;
-
-			AstNode tableRefNode = (AstNode)constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE);
-			if(tableRefNode==null) {
-				addProgressMessage(DdlImporterI18n.FK_TABLE_REF_NOT_FOUND_MSG+" '"+foreignKey.getName()+"'"); //$NON-NLS-1$ //$NON-NLS-2$
-				return;
-			}
-
-			try {
-				RelationalTable tableRef = find(RelationalTable.class, tableRefNode, null, allRefs);
-				RelationalPrimaryKey tableRefPrimaryKey = tableRef.getPrimaryKey();
-				Collection<RelationalColumn> primaryKeyColumns = tableRef.getColumns();
-				// check to see if foreign table columns are referenced
-				Object tempRefColumns = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE_REFERENCES);
-
-				List<AstNode> foreignTableColumnNodes = (tempRefColumns==null) ? Collections.<AstNode>emptyList() : (List<AstNode>)tempRefColumns;
-				int numPKColumns = primaryKeyColumns.size();
-				int numFKColumns = foreignTableColumnNodes.size();
-
-				//TODO: Can we just set PK object on the FK, instead of the Names???   
-				if( foreignTableColumnNodes.isEmpty() ) {
-					if(tableRefPrimaryKey!=null) {
-						foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
-						foreignKey.setUniqueKeyTableName(tableRef.getName());
-					}
-				} else if( numPKColumns == numFKColumns ) {
-					//TODO: not sure what this is doing
-					for(AstNode fTableColumn : foreignTableColumnNodes) {
-						find(RelationalColumn.class, fTableColumn, tableRef, allRefs);
-					}
-					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
-					foreignKey.setUniqueKeyTableName(tableRef.getName());
-				} else {
-					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
-					foreignKey.setUniqueKeyTableName(tableRef.getName());
-				}
-			} catch (EntityNotFoundException error) {
-				addProgressMessage(error.getMessage());
-			}
-		}
-		
 		// Find all the Option properties
 		List<AstNode> optionNodes = new ArrayList<AstNode>();
 		List<AstNode> children = constraintNode.getChildren();
@@ -311,7 +223,222 @@ public class TeiidDdlImporter extends StandardImporter {
 		}
 
 		// process the Column Options
-		processOptions(optionNodes,key);
+		if( ! optionNodes.isEmpty() ) {
+			processOptions(optionNodes,key);
+		}
+	}
+	
+	private boolean columnsMatch(List<AstNode> columns_1, Collection<RelationalColumn> columns_2) {
+		if( columns_1 == null && columns_2 == null ) return true;
+		
+		if( columns_1 == null || columns_2 == null ) return false;
+		
+		// Neither can be NULL
+		if( columns_1.size() != columns_2.size() )  return false;
+		
+		// Size is the same
+		for( AstNode colOuter_1 : columns_1) {
+			boolean foundIt = false;
+			String columnName = colOuter_1.getName(); 
+			for( RelationalColumn colInner_2 : columns_2) {
+				if( columnName.equals(colInner_2.getName()) ) {
+					foundIt = true;
+				}
+			}
+			
+			if( !foundIt ) return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
+	protected void createPrimaryKey(AstNode node, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		RelationalPrimaryKey key = getFactory().createPrimaryKey();
+		table.setPrimaryKey(key);
+		initialize(key, node);
+		
+		// process referenced columns multi-valued property
+		List<AstNode> references = (List<AstNode>)node.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+		
+		for (AstNode ref : references) {
+			try {
+				RelationalColumn column = find(RelationalColumn.class, ref, table, allRefs);
+				key.getColumns().add(column);
+			} catch (EntityNotFoundException error) {
+				addProgressMessage(error.getMessage());
+			}
+		}
+	}
+	
+	private RelationalReference createUniqueConstraint(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		RelationalUniqueConstraint constraint = getFactory().createUniqueConstraint();
+		initialize(constraint, constraintNode);
+		table.addUniqueConstraint(constraint);
+		
+		// process referenced columns multi-valued property
+		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+
+		for (AstNode ref : references) {
+			try {
+				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
+				if(col!=null) {
+					constraint.getColumns().add(col);
+				}
+			} catch (EntityNotFoundException error) {
+				addProgressMessage(error.getMessage());
+			}
+		}
+		
+		return constraint;
+	}
+	
+	private RelationalReference createAccessPattern(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		RelationalAccessPattern constraint = getFactory().createAccessPattern();
+		initialize(constraint, constraintNode);
+		table.addAccessPattern(constraint);
+		
+		// process referenced columns multi-valued property
+		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+
+		for (AstNode ref : references) {
+			try {
+				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
+				if(col!=null) {
+					constraint.getColumns().add(col);
+				}
+			} catch (EntityNotFoundException error) {
+				addProgressMessage(error.getMessage());
+			}
+		}
+
+		return constraint;
+	}
+	
+	private RelationalReference createIndex(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		RelationalIndex constraint = getFactory().createIndex();
+		initialize(constraint, constraintNode);
+		table.addIndex(constraint);
+		
+		// process referenced columns multi-valued property
+		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+
+		for (AstNode ref : references) {
+			try {
+				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
+				if(col!=null) {
+					constraint.getColumns().add(col);
+				}
+			} catch (EntityNotFoundException error) {
+				addProgressMessage(error.getMessage());
+			}
+		}
+
+		return constraint;
+	}
+	
+	private RelationalReference createForeignKey(AstNode constraintNode, RelationalTable table, Collection<RelationalReference> allRefs) throws CoreException {
+		RelationalForeignKey foreignKey = getFactory().createForeignKey();
+		initializeFK(table.getForeignKeys(), foreignKey, constraintNode);
+		table.addForeignKey(foreignKey);
+		
+		// process referenced columns multi-valued property
+		List<AstNode> references = (List<AstNode>)constraintNode.getProperty(TeiidDdlLexicon.Constraint.REFERENCES);
+		
+		for (AstNode ref : references) {
+			try {
+				RelationalColumn col = find(RelationalColumn.class, ref, table, allRefs);
+				if(col!=null) {
+					foreignKey.getColumns().add(col);
+				}
+			} catch (EntityNotFoundException error) {
+				addProgressMessage(error.getMessage());
+			}
+		}
+		
+		AstNode tableRefNode = (AstNode)constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE);
+		if(tableRefNode==null) {
+			addProgressMessage(DdlImporterI18n.FK_TABLE_REF_NOT_FOUND_MSG + " '"+ foreignKey.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+			return foreignKey;
+		}
+		
+		try {
+			RelationalTable tableRef = find(RelationalTable.class, tableRefNode, null, allRefs);
+			
+			// Note that a REFERENCE table can have either a PK reference or a Unique Constraint reference.
+			// So get the RelationalReference object for each
+			
+			RelationalPrimaryKey tableRefPrimaryKey = tableRef.getPrimaryKey();
+			RelationalUniqueConstraint tableRefUC = null;
+			if( ! tableRef.getUniqueConstraints().isEmpty() ) {
+				tableRefUC =  tableRef.getUniqueConstraints().iterator().next();
+			}
+			
+			// check to see if foreign table columns are referenced
+			Object tempRefColumns = constraintNode.getProperty(TeiidDdlLexicon.Constraint.TABLE_REFERENCE_REFERENCES);
+
+			// Create list of AstNode's
+			List<AstNode> foreignTableColumnNodes = (tempRefColumns==null) ? Collections.<AstNode>emptyList() : (List<AstNode>)tempRefColumns;
+			
+			// Get number of columns that are referenced
+			int numFKTableReferenceColumns = foreignTableColumnNodes.size();
+			if( numFKTableReferenceColumns == 0 ) {
+				if(tableRefPrimaryKey!=null) {
+					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
+					foreignKey.setUniqueKeyTableName(tableRef.getName());
+				} else if( tableRefUC != null ) {
+					foreignKey.setUniqueKeyName(tableRefUC.getName());
+					foreignKey.setUniqueKeyTableName(tableRef.getName());
+				}
+				// That's all we can do, there are no references
+				return foreignKey;
+			}
+			
+			
+			int numPKColumns = 0;
+			if( tableRefPrimaryKey != null ) {
+				numPKColumns = tableRefPrimaryKey.getColumns().size();
+			}
+			int numUCColumns = 0;
+			if( tableRefUC != null ) {
+				numUCColumns = tableRefUC.getColumns().size();
+			}
+			boolean constraintWasPK = false;
+			
+			// there are referenced columns in FK.
+			// Check if #PK columns matches
+			if( numFKTableReferenceColumns == numPKColumns ) {
+				// Check PK to see if the columns are found and match
+				// Assumes UC and PK can't reference the same keys
+				
+				// Need to compare the foreignTableColumnNodes (AstNode's) against the PK column names
+				
+				boolean columnsMatch = columnsMatch(foreignTableColumnNodes, tableRefPrimaryKey.getColumns());
+				if( columnsMatch ) {
+					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
+					foreignKey.setUniqueKeyTableName(tableRef.getName());
+					constraintWasPK = true;
+				}
+			}
+			if( ! constraintWasPK ) {
+				if( numUCColumns == numFKTableReferenceColumns ) {
+					// Check UC to see if the columns are found and match
+					// Assumes UC and PK can't reference the same keys
+					boolean columnsMatch = columnsMatch(foreignTableColumnNodes, tableRefUC.getColumns());
+					if( columnsMatch ) {
+						foreignKey.setUniqueKeyName(tableRefUC.getName());
+						foreignKey.setUniqueKeyTableName(tableRef.getName());
+					}
+				} else {
+					foreignKey.setUniqueKeyName(tableRefPrimaryKey.getName());
+					foreignKey.setUniqueKeyTableName(tableRef.getName());
+				}
+			}
+		} catch (EntityNotFoundException error) {
+			addProgressMessage(error.getMessage());
+		}
+
+		return foreignKey;
 	}
 
 	@Override
@@ -1110,9 +1237,10 @@ public class TeiidDdlImporter extends StandardImporter {
 				if( pk != null ) {
 					Collection<RelationalUniqueConstraint> constraints =  ((RelationalTable) child).getUniqueConstraints();
 					for( RelationalUniqueConstraint uc : constraints ) {
-						boolean same = true;
+						boolean same = false;
 						if( pk.getColumns().size() == uc.getColumns().size() ) {
 							// need to check all columns
+							same = true;
 							for(RelationalColumn col : pk.getColumns()) {
 								if( !uc.getColumns().contains(col) ) {
 									same = false;
