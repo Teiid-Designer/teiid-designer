@@ -47,7 +47,7 @@ public class FlatFileRelationalModelFactory implements UiConstants {
     public static final String ALL_INVOKE_PROCEDURES = "allInvokeProcedures"; //$NON-NLS-1$
     
     public static final int DEFAULT_STRING_LENGTH = 4000;
-    public static final int DEFAULT_PRECISION = 10;
+    public static final int DEFAULT_PRECISION = 0;
     
     public static final String INT_STR = "int";
     public static final String INTEGER_STR = "integer";

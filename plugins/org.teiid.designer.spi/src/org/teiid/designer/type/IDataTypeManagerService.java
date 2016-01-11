@@ -124,7 +124,7 @@ public interface IDataTypeManagerService {
 	 * see <code>org.teiid.core.types.JDBCSQLTypeInfo.java</code> for details
 	 * FLOAT, DOUBLE, BIG_DECIMAL all show 20 as the default precision
 	 */
-	int DEFAULT_PRECISION = 20; 
+	int DEFAULT_PRECISION = 0; 
 
     /**
      * Get the teiid instance specific name of the data source type

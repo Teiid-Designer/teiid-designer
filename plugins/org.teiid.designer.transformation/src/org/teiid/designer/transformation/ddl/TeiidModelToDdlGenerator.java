@@ -175,8 +175,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			if( length > 0 ) {
 				sb.append(OPEN_BRACKET).append(length).append(CLOSE_BRACKET);
 			}
-		} else if( isPrecisionType ) {
-			if( precision == 0 ) precision = IDataTypeManagerService.DEFAULT_PRECISION;
+		} else if( isPrecisionType && precision > 0 ) {
 			sb.append(OPEN_BRACKET).append(precision);
 			if( isScaleType && scale > 0 ) {
 				sb.append(COMMA).append(SPACE).append(scale).append(CLOSE_BRACKET);

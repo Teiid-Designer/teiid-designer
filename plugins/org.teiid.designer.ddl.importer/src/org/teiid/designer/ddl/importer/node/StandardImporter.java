@@ -90,7 +90,7 @@ public class StandardImporter extends AbstractImporter {
 	 * see <code>org.teiid.core.types.JDBCSQLTypeInfo.java</code> for details
 	 * FLOAT, DOUBLE, BIG_DECIMAL all show 20 as the default precision
 	 */
-	protected static final int DEFAULT_PRECISION = 20; 
+	protected static final int DEFAULT_PRECISION = 0; 
 
 	/**
 	 * Create new info object

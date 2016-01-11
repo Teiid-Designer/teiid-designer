@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -1174,7 +1175,8 @@ public class TeiidDdlImporter extends StandardImporter {
 
 
 		// Not enough info in DDL to determine if fixed length data type so calling it here
-		column.setLengthFixed(isFixedLength(column.getNativeType()));
+		// on importing DDL, the FIXED_LENGTH OPTIONS() value would be the determining factor.
+		//		column.setLengthFixed(isFixedLength(column.getNativeType()));
 	}
 
     /**

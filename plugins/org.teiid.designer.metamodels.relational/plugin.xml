@@ -137,7 +137,7 @@
             toolTip="Column precision missing for numeric type attrutes ?"
             name="missingColumnPrecision"
             label="%missingColumnPrecision"
-            default="warning"
+            default="ignore"
             category="Relational">
       </preference>      
       <preference
