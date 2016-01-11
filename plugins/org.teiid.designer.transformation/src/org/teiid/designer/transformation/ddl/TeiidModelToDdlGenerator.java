@@ -37,6 +37,7 @@ import org.teiid.designer.metamodels.relational.ProcedureParameter;
 import org.teiid.designer.metamodels.relational.SearchabilityType;
 import org.teiid.designer.metamodels.relational.Table;
 import org.teiid.designer.metamodels.relational.UniqueConstraint;
+import org.teiid.designer.metamodels.relational.UniqueKey;
 import org.teiid.designer.metamodels.relational.extension.RelationalModelExtensionAssistant;
 import org.teiid.designer.metamodels.relational.util.RelationalUtil;
 import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
@@ -510,19 +511,39 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				}
 				// REFERENCES
 				if( fk.getTable() != null ) {
-					BaseTable fkTableRef = (BaseTable)fk.getUniqueKey().getTable();
+					UniqueKey uk = fk.getUniqueKey();
+					BaseTable fkTableRef = (BaseTable)uk.getTable();
+					
 					String fkTableRefName = getName(fkTableRef);
 					theSB.append(SPACE).append(REFERENCES).append(SPACE).append(fkTableRefName);
-					PrimaryKey pkRef = fkTableRef.getPrimaryKey();
-					nColumns = pkRef.getColumns().size();
-					count = 0;
-					for( Object col : pkRef.getColumns() ) {
-						count++;
-						if( count == 1 ) theSB.append(OPEN_BRACKET);
-						theSB.append(getName((EObject)col));
-						if( count < nColumns ) theSB.append(COMMA + SPACE);
-						else theSB.append(CLOSE_BRACKET);
+					if( uk instanceof UniqueConstraint ) {
+						// Unique Constraint
+						UniqueConstraint ucRef = fkTableRef.getUniqueConstraints().get(0);
+						nColumns = ucRef.getColumns().size();
+						count = 0;
+						for( Object col : ucRef.getColumns() ) {
+							count++;
+							if( count == 1 ) theSB.append(OPEN_BRACKET);
+							theSB.append(getName((EObject)col));
+							if( count < nColumns ) theSB.append(COMMA + SPACE);
+							else theSB.append(CLOSE_BRACKET);
+						}
+						// TODO: Not sure how to handle the case where there are multiple UC's.
+						
+					} else { 
+						// Primary Key
+						PrimaryKey pkRef = fkTableRef.getPrimaryKey();
+						nColumns = pkRef.getColumns().size();
+						count = 0;
+						for( Object col : pkRef.getColumns() ) {
+							count++;
+							if( count == 1 ) theSB.append(OPEN_BRACKET);
+							theSB.append(getName((EObject)col));
+							if( count < nColumns ) theSB.append(COMMA + SPACE);
+							else theSB.append(CLOSE_BRACKET);
+						}
 					}
+
 				}
 				
 				sb.append(theSB.toString());
