@@ -775,7 +775,7 @@
             <xs:whiteSpace fixed="true" value="collapse"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType mmedt:UUID="mmuuid:606b7f4f-08a2-4072-86e2-9915f3952c7d" mmedt:runtimeDataType="string" mmedt:runtimeDataTypeFixed="false" name="varbinary">
+    <xs:simpleType mmedt:UUID="mmuuid:606b7f4f-08a2-4072-86e2-9915f3952c7d" mmedt:runtimeDataType="varbinary" mmedt:runtimeDataTypeFixed="false" name="varbinary">
         <xs:annotation>
             <xs:documentation> The runtime type is a byte[] wrapper called BinaryType</xs:documentation>
         </xs:annotation>
