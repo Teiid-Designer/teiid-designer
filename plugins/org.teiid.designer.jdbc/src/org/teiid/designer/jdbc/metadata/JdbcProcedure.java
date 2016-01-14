@@ -32,4 +32,16 @@ public interface JdbcProcedure extends JdbcNode {
      * @return the procedure type
      */
     public short getProcedureType();
+    
+    /**
+     * Get the property string array
+     * @return string array
+     */
+    public String[] getProperties();
+    
+    /**
+     * simple boolean check for oracle procedures
+     * @return true if Oracle, false if not
+     */
+    public boolean isOracle();
 }

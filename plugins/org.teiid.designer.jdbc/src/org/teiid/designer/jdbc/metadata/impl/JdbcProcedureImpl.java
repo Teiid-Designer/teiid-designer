@@ -8,6 +8,7 @@
 package org.teiid.designer.jdbc.metadata.impl;
 
 import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -33,6 +34,8 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
 
     private String remarks;
     private short procType;
+    private String[] properties;
+    private boolean isOracle = false;
 
     /**
      * Construct an instance of JdbcProcedureImpl.
@@ -88,7 +91,12 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     @Override
 	public String getFullyQualifiedName() {
         final StringBuffer sb = new StringBuffer();
-        final String prefix = this.getParent().getFullyQualifiedName();
+        String prefix = null;
+        if( isOracle && properties != null && properties.length > 0 && properties[0] != null) {
+        	prefix = getUnqualifiedPackageName(properties[0]);
+        } else {
+        	prefix = this.getParent().getFullyQualifiedName();
+        }
         if (prefix.length() != 0) {
             sb.append(prefix);
             sb.append(getQualifedNameDelimiter());
@@ -116,6 +124,32 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     	
         return super.getQualifedNameDelimiter();
     }
+    
+    /**
+     * @see org.teiid.designer.jdbc.metadata.JdbcNode#getUnqualifiedName(java.lang.String)
+     */
+	public String getUnqualifiedPackageName( final String packageName ) {
+        // Get the identifier quote string ...
+        String quoteString = null;
+        try {
+            quoteString = this.getJdbcDatabase().getCapabilities().getIdentifierQuoteString();
+        } catch (JdbcException e) {
+            JdbcPlugin.Util.log(e); // not expected, but log just in case
+        } catch (SQLException e) {
+            // ignore;
+        }
+        if (quoteString == null || quoteString.trim().length() == 0) {
+            return packageName;
+        }
+
+        final StringBuffer sb = new StringBuffer();
+        sb.append(quoteString);
+        sb.append(packageName);
+        sb.append(quoteString);
+
+        return sb.toString();
+    }
+
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcNode#getPathInSource()
@@ -197,6 +231,27 @@ public class JdbcProcedureImpl extends JdbcNodeImpl implements JdbcProcedure {
     public void setRemarks( String string ) {
         remarks = string;
     }
+    
+    /**
+     * @param string array
+     */
+    public void setProperties( String[] strings) {
+    	this.properties = strings;
+    }
+    
+    @Override
+    public String[] getProperties() {
+		return properties;
+	}
+    
+	public void setIsOracle(boolean value) {
+		isOracle = value;
+	}
+
+	@Override
+	public boolean isOracle() {
+		return isOracle;
+	}
 
     /* (non-Javadoc)
      * @See org.teiid.designer.jdbc.metadata.JdbcProcedure#getProcedureType()
