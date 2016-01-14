@@ -32,4 +32,9 @@ public interface JdbcProcedure extends JdbcNode {
      * @return the procedure type
      */
     public short getProcedureType();
+    
+    
+    public String[] getProperties();
+    
+    public boolean isOracle();
 }

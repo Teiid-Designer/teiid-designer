@@ -27,6 +27,7 @@ import org.teiid.designer.jdbc.metadata.JdbcProcedureType;
  */
 public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedureType {
     static final String SQL_SERVER_DB_METADATA = "SQLServerDatabaseMetaData"; //$NON-NLS-1$
+    static final String ORACLE_DB_METADATA = "OracleDatabaseMetaData"; //$NON-NLS-1$
     
     /**
      * Construct an instance of JdbcProcedureTypeImpl.
@@ -49,16 +50,24 @@ public class JdbcProcedureTypeImpl extends JdbcNodeImpl implements JdbcProcedure
         final String catalogName = getCatalogName(this);
         
         boolean isSqlServer = metadata.getClass().getName().endsWith(SQL_SERVER_DB_METADATA);
+        boolean isOracle = metadata.getClass().getName().endsWith(ORACLE_DB_METADATA);
         
         // Get the procedures ...
         ResultSet resultSet = null;
         try {
             resultSet = metadata.getProcedures(catalogName,schemaName,WILDCARD_PATTERN);
             while( resultSet.next() ) {
+            	final String str1 = resultSet.getString(1);
+            	final String str2 = resultSet.getString(2);
                 final String procName = resultSet.getString(3);
+                final String str4 = resultSet.getString(4);
+                final String str5 = resultSet.getString(5);
+                final String str6 = resultSet.getString(6);
                 final String remarks = resultSet.getString(7);
                 final short procType = resultSet.getShort(8);
                 final JdbcProcedureImpl proc = new JdbcProcedureImpl(this,procName);
+                proc.setProperties(new String[]{str1, str2, procName, str4, str5, str6, remarks});
+                proc.setIsOracle(isOracle);
                 proc.setRemarks(remarks);
                 proc.setProcedureType(procType);
                 children.add(proc);
