@@ -209,6 +209,20 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
     private ITeiidServer createJboss7TeiidServer(final IServer parentServer, final JBoss7Server jboss7Server, ServerOptions... options) 
             throws Exception {
         TeiidServerFactory factory = new TeiidServerFactory();
+        // Check if ADD_TO_REGISTRY option is set, then assume new server
+        // If so, then set default username/PWD to null
+        String defaultJdbcUsername =  ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME;
+        String defaultJdbcPassword =  ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD;
+        List<ServerOptions> optionList = Collections.emptyList(); 
+        if (options != null)
+            optionList = Arrays.asList(options);
+        
+        // If ADD_TO_REGISTRY exists, it's being added as part of a NEW SERVER action
+        // If so, then null out default username/pwd values
+        if (optionList.contains(ServerOptions.ADD_TO_REGISTRY)) {
+        	defaultJdbcUsername = null;
+        	defaultJdbcPassword = null;
+        }
         ITeiidServer teiidServer = factory.createTeiidServer(JBoss7ServerUtil.getTeiidRuntimeVersion(parentServer, jboss7Server),
                                                                                         getTeiidServerManager(),
                                                                                         parentServer, 
@@ -216,8 +230,8 @@ public class TeiidServerAdapterFactory implements IAdapterFactory {
                                                                                         jboss7Server.getUsername(), 
                                                                                         jboss7Server.getPassword(), 
                                                                                         JBoss7ServerUtil.getJdbcPort(parentServer, jboss7Server), 
-                                                                                        ITeiidJdbcInfo.DEFAULT_JDBC_USERNAME, 
-                                                                                        ITeiidJdbcInfo.DEFAULT_JDBC_PASSWORD, 
+                                                                                        defaultJdbcUsername, 
+                                                                                        defaultJdbcPassword, 
                                                                                         options);
        
         return teiidServer;
