@@ -26,15 +26,20 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtil;
 import org.teiid.core.designer.util.FileUtils;
@@ -63,6 +68,7 @@ import org.teiid.designer.vdb.manifest.ModelElement;
 import org.teiid.designer.vdb.manifest.PropertyElement;
 import org.teiid.designer.vdb.manifest.TranslatorElement;
 import org.teiid.designer.vdb.manifest.VdbElement;
+
 import net.jcip.annotations.ThreadSafe;
 
 /**
@@ -957,6 +963,7 @@ public final class XmiVdb extends BasicVdb {
 
             dynVdb.getProperties().remove(Xml.PREVIEW);
             this.getProperties().remove(Xml.PREVIEW);
+            dynVdb.setStatus(Status.OK_STATUS);
 
 
             //
@@ -969,6 +976,10 @@ public final class XmiVdb extends BasicVdb {
             //
             // Convert model entries to DynamicModels
             //
+            
+            boolean notAllModelsExported = false;
+            MultiStatus generateStatus = new MultiStatus(VdbConstants.PLUGIN_ID, IStatus.OK, "Export Dynamic VDB OK", null);
+            
             for (VdbModelEntry entry : getModelEntries()) {
                 VdbSourceInfo sourceInfo = entry.getSourceInfo();
 
@@ -991,6 +1002,8 @@ public final class XmiVdb extends BasicVdb {
                     model.addSource(clone);
                 }
 
+                boolean isNonRelationalModel = false;
+                
 				if( entry.getType().equals(ModelType.Type.VIRTUAL.getName()) || !excludeSourceMetadata ) {
 	
 	                TeiidModelToDdlGenerator generator = new TeiidModelToDdlGenerator();
@@ -1007,15 +1020,42 @@ public final class XmiVdb extends BasicVdb {
 	                
 	                if (modelResource == null)
 	                    throw new Exception("Failed to get model resource for " + entryFile.getLocation().toOSString()); //$NON-NLS-1$
-	
-	                String ddl = generator.generate(modelResource);
-	                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
-	                model.setMetadata(metadata);
+	                
+                	if( ModelUtil.URI_WEB_SERVICES_VIEW_MODEL.equalsIgnoreCase(modelResource.getPrimaryMetamodelUri()) || 
+                		ModelUtil.URI_FUNCTION_MODEL.equalsIgnoreCase(modelResource.getPrimaryMetamodelUri()) ||
+                		ModelUtil.URI_XML_SCHEMA_MODEL.equalsIgnoreCase(modelResource.getPrimaryMetamodelUri()) ||
+                		ModelUtil.URI_XML_VIEW_MODEL.equalsIgnoreCase(modelResource.getPrimaryMetamodelUri()) ||
+                		ModelUtil.URI_EXTENSION_MODEL.equalsIgnoreCase(modelResource.getPrimaryMetamodelUri())) {
+                		isNonRelationalModel = true;
+                		generateStatus.add(new Status(IStatus.WARNING, PLUGIN_ID, 
+                				VdbPlugin.UTIL.getString("XmiVdb.modelNotIncludedMessage",  entry.getName())) );
+                	}
+	                
+                	if( ! isNonRelationalModel ) {
+		                String ddl = generator.generate(modelResource);
+		                Metadata metadata = new Metadata(ddl, Metadata.Type.DDL);
+		                model.setMetadata(metadata);
+                	}
 	            }
-				
-                dynVdb.addDynamicModel(model);
+				if( ! isNonRelationalModel ) {
+					dynVdb.addDynamicModel(model);
+            	} else {
+            		notAllModelsExported = true;
+            	}
             }
 
+            if( notAllModelsExported ) {
+            	dynVdb.setStatus(generateStatus);
+            }
+            
+            // Check other Entries (Xsd, jars, etc...)
+            for (VdbEntry entry : getEntries()) {
+            	generateStatus.add(
+            			new Status(IStatus.WARNING, PLUGIN_ID, 
+            					VdbPlugin.UTIL.getString("XmiVdb.fileNotIncludedMessage", entry.getPath())));  //$NON-NLS-1$
+
+            }
+            
             return dynVdb;
         } finally {
             VdbPlugin.singleton().setConversionInProgress(false);

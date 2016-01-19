@@ -11,16 +11,22 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.StringUtilities;
 import org.teiid.designer.runtime.spi.ITeiidVdb;
+import org.teiid.designer.runtime.ui.DqpUiConstants;
 import org.teiid.designer.runtime.ui.Messages;
+import org.teiid.designer.ui.common.util.UiUtil;
+import org.teiid.designer.ui.common.widget.ListMessageDialog;
 import org.teiid.designer.ui.common.wizard.AbstractWizard;
 import org.teiid.designer.vdb.VdbPlugin;
 import org.teiid.designer.vdb.XmiVdb;
@@ -93,6 +99,36 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
                 	vdb.setVersion(Integer.parseInt(getVersion()));
                 	vdb.setName(getOutputVdbName());
                     setDynamicVdb(vdb);
+    	            final IStatus vdbStatus = getDynamicVdb().getStatus();
+            		
+    	            // Put on SWT THread
+		            if( ! vdbStatus.isOK() ) {
+		            	
+		            	UiUtil.runInSwtThread(new Runnable() {
+		        			@Override
+		        			public void run() {
+		        				List<String> messages = new ArrayList<String>();
+		        				for( IStatus status : vdbStatus.getChildren() ) {
+		        					messages.add(status.getMessage());
+		        				}
+		        				
+		        				String title = DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.generateDynamicVdbStatus");
+		        				
+				            	if( vdbStatus.getSeverity() == IStatus.WARNING ) {
+				            		ListMessageDialog.openWarning(
+				            				UiUtil.getWorkbenchShellOnlyIfUiThread(), 
+				            				title,
+				            				null,
+				            				DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.warningOneOrMoreModelsNotExported"),
+				            				messages,
+				            				null);
+				            	} else if( vdbStatus.getSeverity() == IStatus.ERROR ) {
+				            		ListMessageDialog.openError(Display.getCurrent().getActiveShell(), title, vdbStatus.getMessage());
+				            	}
+		        			}
+		        		}, false);
+
+		            }
                 }
             }
         };

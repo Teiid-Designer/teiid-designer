@@ -13,13 +13,17 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.teiid.designer.comments.CommentSets;
 import org.teiid.designer.roles.DataRole;
 import org.teiid.designer.vdb.dynamic.DynamicModel;
@@ -258,6 +262,12 @@ public interface Vdb extends VdbConstants {
      * @return the VDB validation date-time
      */
     String getAuthenticationType();
+    
+    /**
+     * @return the current status of the VDB
+     * 
+     */
+    IStatus getStatus();
 
     /**
      * @return <code>true</code> if all model entries in this VDB are either synchronized with their associated models or no
@@ -356,6 +366,12 @@ public interface Vdb extends VdbConstants {
      * @param valueInSeconds Sets query time-out to the specified value.
      */
     void setQueryTimeout(int valueInSeconds);
+    
+    /**
+     * @param status 
+     * 
+     */
+    void setStatus(IStatus status);
 
     /**
      * @param intVersion version of vdb

@@ -27,6 +27,8 @@ import javax.xml.validation.Schema;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.teiid.core.designer.util.CoreArgCheck;
 import org.teiid.core.designer.util.FileUtils;
 import org.teiid.core.designer.util.StringUtilities;
@@ -116,6 +118,8 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 	private KeyInValueHashMap<String, DataRole> dataRoles = new KeyInValueHashMap<String, DataRole>(new DataRoleKeyAdapter());
 
 	private final CopyOnWriteArrayList<PropertyChangeListener> listeners = new CopyOnWriteArrayList<PropertyChangeListener>();
+	
+	private IStatus currentStatus;
 
 	/**
 	 * Default constructor
@@ -147,6 +151,7 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
 		read(sourceFile);
 
 		setChanged(false);
+		currentStatus = Status.OK_STATUS;
 	}
 
 	/**
@@ -644,8 +649,24 @@ public abstract class BasicVdb extends AbstractVdbObject implements Vdb {
     	setModified(this, Event.GENERAL_PROPERTY, null, prop);
         return prop;
     }
-
+    
     /* (non-Javadoc)
+     * @see org.teiid.designer.vdb.Vdb#getStatus()
+     */
+    @Override
+    public IStatus getStatus() {
+		return currentStatus;
+	}
+    
+    /* (non-Javadoc)
+     * @see org.teiid.designer.vdb.Vdb#setStatus(org.eclipse.core.runtime.IStatus)
+     */
+    @Override
+	public void setStatus(IStatus currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+
+	/* (non-Javadoc)
      * @see org.teiid.designer.vdb.Vdb#notifyChangeListeners(java.lang.Object, java.lang.String, java.lang.Object, java.lang.Object)
      */
     @Override
