@@ -336,7 +336,9 @@ public final class XmiVdb extends BasicVdb {
 
                             // Vdb Import entries
                             for (final ImportVdbElement element : manifest.getImportVdbEntries()) {
-                                addImport(new VdbImportVdbEntry(XmiVdb.this, element));
+                            	if( getImportVdbEntry(element.getName()) == null ) {
+                            		addImport(new VdbImportVdbEntry(XmiVdb.this, element));
+                            	}
                             }
 
                             // load translator overrides
