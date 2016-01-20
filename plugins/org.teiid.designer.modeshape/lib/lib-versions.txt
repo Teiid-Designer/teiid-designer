@@ -1,5 +1,5 @@
-modeshape-common-4.4.0.Final
-modeshape-sequencer-ddl-4.4.0.Final
+modeshape-common-3.8.4.GA
+modeshape-sequencer-ddl-3.8.4.GA
 
 built from branch master
 

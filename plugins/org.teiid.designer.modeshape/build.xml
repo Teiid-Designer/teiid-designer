@@ -58,22 +58,25 @@
 	</target>
 
     <target name="generate" depends="init-ant-contrib, check-work, nothing-todo" if="should-generate">
-		<echo message="Generating from maven ..." />
+    	<echo message="Downloading of modeshape libraries disabled" />
+
+		<!-- <echo message="Generating from maven ..." /> -->
 
 		<!-- Build the target platform and install it -->
-		<echo message="=== Installing target platform ===" />
-		<mvn dir="${GIT-HOME}/target-platform" args="install" />
+    	<!-- <echo message="=== Installing target platform ===" /> -->
+		<!-- <mvn dir="${GIT-HOME}/target-platform" args="install" /> -->
 
 		<!-- Call the process sources goal -->
-		<echo message="=== Generating external libraries and sources ===" />
-		<mvn dir="." args="process-sources -P download-sources" />
+    	<!-- <echo message="=== Generating external libraries and sources ===" /> -->
+		<!-- <mvn dir="." args="process-sources -P download-sources" /> -->
 
 	</target>
 
 	<target name="clean" depends="init-ant-contrib">
+		<echo message="Downloading of modeshape libraries disabled" />
 
-		<echo message="Removing libraries from lib directories" />
-	    <mvn dir="." args="clean" />
+		<!-- <echo message="Removing libraries from lib directories" /> -->
+		<!-- <mvn dir="." args="clean" /> -->
 
 	</target>
 
