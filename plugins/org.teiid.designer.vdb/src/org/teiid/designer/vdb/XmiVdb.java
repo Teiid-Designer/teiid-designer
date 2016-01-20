@@ -978,7 +978,7 @@ public final class XmiVdb extends BasicVdb {
             //
             
             boolean notAllModelsExported = false;
-            MultiStatus generateStatus = new MultiStatus(VdbConstants.PLUGIN_ID, IStatus.OK, "Export Dynamic VDB OK", null);
+            MultiStatus generateStatus = new MultiStatus(VdbConstants.PLUGIN_ID, IStatus.OK, "Exported Dynamic VDB", null);
             
             for (VdbModelEntry entry : getModelEntries()) {
                 VdbSourceInfo sourceInfo = entry.getSourceInfo();

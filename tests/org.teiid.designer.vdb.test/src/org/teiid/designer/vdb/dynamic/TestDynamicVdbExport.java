@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,8 +129,31 @@ public class TestDynamicVdbExport implements VdbConstants {
             assertTrue(dynVdb.getDataRoles().contains(role));
         }
 
-        assertEquals(booksVdb.getModelEntries().size(), dynVdb.getDynamicModels().size());
+        // Should contain all relational model entries. Any model entries that are
+        // non-relational should be excluded and a warning placed in the status
         for (VdbModelEntry entry : booksVdb.getModelEntries()) {
+            String entryName = entry.getName();
+
+            // Check that the entry model has not been warned about
+            // so not exported
+            boolean nonRelational = false;
+            IStatus status = dynVdb.getStatus();
+            if (! status.isOK()) {
+                if (status instanceof MultiStatus) {
+                    IStatus[] children = status.getChildren();
+                    for (IStatus child : children) {
+                        String notIncMsg = " is not a relational model and was not included in the generated dynamic VDB";
+                        if (! child.isOK() && child.getMessage().contains(entryName + notIncMsg)) {
+                            // Model should NOT be included
+                            nonRelational = true;
+                        }
+                    }
+                }
+            }
+
+            if (nonRelational)
+                continue;
+
             VdbSourceInfo sourceInfo = entry.getSourceInfo();
             DynamicModel dynModel = null;
 
