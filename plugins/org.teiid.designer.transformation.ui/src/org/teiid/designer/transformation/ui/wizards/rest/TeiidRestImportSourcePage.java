@@ -648,11 +648,12 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 						|| IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY
 								.equalsIgnoreCase(keyStr)
 						|| IWSProfileConstants.PARAMETER_MAP
-								.equalsIgnoreCase(keyStr)) {
+								.equalsIgnoreCase(keyStr)
+						|| keyStr.startsWith(Parameter.PREFIX)) {
 					// do nothing;
 				} else {
-					httpConn.setRequestProperty(keyStr,
-							props.getProperty(keyStr));
+					httpConn.setRequestProperty(getKey(keyStr),
+							getValue(props.getProperty(keyStr)));
 				}
 			}
 
@@ -710,6 +711,24 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 		return xmlFile;
 	}
 
+	/**
+	 * @param keyStr
+	 * @return
+	 */
+	private String getKey(String keyStr) {
+		if (keyStr.startsWith(Parameter.HEADER_PREFIX)) keyStr = keyStr.substring(keyStr.indexOf(":")+1);
+		return keyStr;
+	}
+	
+	/**
+	 * @param value
+	 * @return
+	 */
+	private String getValue(String value) {
+		if (value.startsWith(Parameter.Type.Header.name())) value = value.substring(value.indexOf(":")+1);
+		return value;
+	}
+	
 	/**
 	 * @param jsonFile
 	 * @return
