@@ -15,94 +15,96 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
         <version.org.modeshape.sequencer.ddl>4.4.0.Final</version.org.modeshape.sequencer.ddl>
     </properties>
     <profiles>
-        <profile>
-            <!-- Profile that must be manually invoked to download and copy in -->
-            <!-- the source jars. Don't want the source in the build hence not -->
-            <!-- enabled by default. -->
-            <id>download-sources</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-dependencies-src</id>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.modeshape</groupId>
-                                            <artifactId>modeshape-common</artifactId>
-                                            <version>${version.org.modeshape.common}</version>
-                                            <classifier>sources</classifier>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>org.modeshape</groupId>
-                                            <artifactId>modeshape-sequencer-ddl</artifactId>
-                                            <version>${version.org.modeshape.sequencer.ddl}</version>
-                                            <classifier>sources</classifier>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <skip>false</skip>
-                                    <stripVersion>true</stripVersion>
-                                    <outputDirectory>${project.basedir}/libsrc</outputDirectory>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        <!-- Disabled due to jars being added to version codebase -->
+<!--         <profile> -->
+<!--             Profile that must be manually invoked to download and copy in -->
+<!--             the source jars. Don't want the source in the build hence not -->
+<!--             enabled by default. -->
+<!--             <id>download-sources</id> -->
+<!--             <build> -->
+<!--                 <plugins> -->
+<!--                     <plugin> -->
+<!--                         <groupId>org.apache.maven.plugins</groupId> -->
+<!--                         <artifactId>maven-dependency-plugin</artifactId> -->
+<!--                         <executions> -->
+<!--                             <execution> -->
+<!--                                 <id>copy-dependencies-src</id> -->
+<!--                                 <goals> -->
+<!--                                     <goal>copy</goal> -->
+<!--                                 </goals> -->
+<!--                                 <configuration> -->
+<!--                                     <artifactItems> -->
+<!--                                         <artifactItem> -->
+<!--                                             <groupId>org.modeshape</groupId> -->
+<!--                                             <artifactId>modeshape-common</artifactId> -->
+<!--                                             <version>${version.org.modeshape.common}</version> -->
+<!--                                             <classifier>sources</classifier> -->
+<!--                                         </artifactItem> -->
+<!--                                         <artifactItem> -->
+<!--                                             <groupId>org.modeshape</groupId> -->
+<!--                                             <artifactId>modeshape-sequencer-ddl</artifactId> -->
+<!--                                             <version>${version.org.modeshape.sequencer.ddl}</version> -->
+<!--                                             <classifier>sources</classifier> -->
+<!--                                         </artifactItem> -->
+<!--                                     </artifactItems> -->
+<!--                                     <skip>false</skip> -->
+<!--                                     <stripVersion>true</stripVersion> -->
+<!--                                     <outputDirectory>${project.basedir}/libsrc</outputDirectory> -->
+<!--                                 </configuration> -->
+<!--                             </execution> -->
+<!--                         </executions> -->
+<!--                     </plugin> -->
+<!--                 </plugins> -->
+<!--             </build> -->
+<!--         </profile> -->
     </profiles>
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.5</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>.</directory>
-                            <includes>
-                                <include>**/lib/*.jar</include>
-                                <include>**/libsrc/*.jar</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.modeshape</groupId>
-                                    <artifactId>modeshape-common</artifactId>
-                                    <version>${version.org.modeshape.common}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.modeshape</groupId>
-                                    <artifactId>modeshape-sequencer-ddl</artifactId>
-                                    <version>${version.org.modeshape.sequencer.ddl}</version>
-                                </artifactItem>
-                            </artifactItems>
-                            <skip>false</skip>
-                            <stripVersion>true</stripVersion>
-                            <outputDirectory>${project.basedir}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+            <!-- Disabled due to jars being added to version codebase -->
+<!--             <plugin> -->
+<!--                 <artifactId>maven-clean-plugin</artifactId> -->
+<!--                 <version>2.5</version> -->
+<!--                 <configuration> -->
+<!--                     <filesets> -->
+<!--                         <fileset> -->
+<!--                             <directory>.</directory> -->
+<!--                             <includes> -->
+<!--                                 <include>**/lib/*.jar</include> -->
+<!--                                 <include>**/libsrc/*.jar</include> -->
+<!--                             </includes> -->
+<!--                         </fileset> -->
+<!--                     </filesets> -->
+<!--                 </configuration> -->
+<!--             </plugin> -->
+<!--             <plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-dependency-plugin</artifactId> -->
+<!--                 <executions> -->
+<!--                     <execution> -->
+<!--                         <id>copy-dependencies</id> -->
+<!--                         <goals> -->
+<!--                             <goal>copy</goal> -->
+<!--                         </goals> -->
+<!--                         <configuration> -->
+<!--                             <artifactItems> -->
+<!--                                 <artifactItem> -->
+<!--                                     <groupId>org.modeshape</groupId> -->
+<!--                                     <artifactId>modeshape-common</artifactId> -->
+<!--                                     <version>${version.org.modeshape.common}</version> -->
+<!--                                 </artifactItem> -->
+<!--                                 <artifactItem> -->
+<!--                                     <groupId>org.modeshape</groupId> -->
+<!--                                     <artifactId>modeshape-sequencer-ddl</artifactId> -->
+<!--                                     <version>${version.org.modeshape.sequencer.ddl}</version> -->
+<!--                                 </artifactItem> -->
+<!--                             </artifactItems> -->
+<!--                             <skip>false</skip> -->
+<!--                             <stripVersion>true</stripVersion> -->
+<!--                             <outputDirectory>${project.basedir}/lib</outputDirectory> -->
+<!--                         </configuration> -->
+<!--                     </execution> -->
+<!--                 </executions> -->
+<!--             </plugin> -->
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
