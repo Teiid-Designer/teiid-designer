@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -119,7 +118,7 @@ public class GenerateDynamicVdbManager extends AbstractGenerateVdbManager {
 				            				UiUtil.getWorkbenchShellOnlyIfUiThread(), 
 				            				title,
 				            				null,
-				            				DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.warningOneOrMoreModelsNotExported"),
+				            				DqpUiConstants.UTIL.getString("GenerateDynamicVdbManager.warningsOnExport"),
 				            				messages,
 				            				null);
 				            	} else if( vdbStatus.getSeverity() == IStatus.ERROR ) {
