@@ -15,7 +15,7 @@ public interface IWsdlConstants {
     String KEY_REQUEST_PROCEDURE_NAME = "requestProcedureName"; //$NON-NLS-1$
     String KEY_RESPONSE_PROCEDURE_NAME = "responseProcedureName"; //$NON-NLS-1$
     String KEY_WRAPPER_PROCEDURE_NAME = "wrapperProcedureName"; //$NON-NLS-1$
-    String SQL_BEGIN = "CREATE VIRTUAL PROCEDURE\nBEGIN\n"; //$NON-NLS-1$
+    String SQL_BEGIN = "BEGIN\n"; //$NON-NLS-1$
     String SQL_END = "\nEND"; //$NON-NLS-1$
     String REQUEST = "REQUEST"; //$NON-NLS-1$
     String RESPONSE = "RESPONSE"; //$NON-NLS-1$

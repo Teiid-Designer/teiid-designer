@@ -54,7 +54,7 @@ public class TransformationNewModelObjectHelper implements INewModelObjectHelper
     /**
      *
      */
-    public static final String VIRTUAL_PROCEDURE_TEMPLATE_SQL = "CREATE VIRTUAL PROCEDURE\nBEGIN\n <--insert SQL here-->;\nEND"; //$NON-NLS-1$
+    public static final String VIRTUAL_PROCEDURE_TEMPLATE_SQL = "BEGIN\n <--insert SQL here-->;\nEND"; //$NON-NLS-1$
 
     /**
      * @since 4.3

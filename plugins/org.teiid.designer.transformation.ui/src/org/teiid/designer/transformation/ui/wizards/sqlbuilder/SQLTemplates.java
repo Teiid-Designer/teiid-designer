@@ -47,7 +47,7 @@ public class SQLTemplates {
     // ----------------------------------------
     // Templates valid for Procedure Targets
     // ----------------------------------------
-    public static String PROC_SIMPLE = "CREATE VIRTUAL PROCEDURE\nBEGIN\n" //$NON-NLS-1$
+    public static String PROC_SIMPLE = "BEGIN\n" //$NON-NLS-1$
             + "\tSELECT * FROM [TABLEA];\nEND"; //$NON-NLS-1$
     
     public static String PROC_INSERT_DEFAULT = "FOR EACH ROW BEGIN ATOMIC " //$NON-NLS-1$
@@ -59,17 +59,17 @@ public class SQLTemplates {
     public static String PROC_DELETE_DEFAULT = "FOR EACH ROW BEGIN " //$NON-NLS-1$
                                                + "DELETE FROM [TABLEA] WHERE [PK-KEY COL] = OLD.[PK-KEY-COL]; END"; //$NON-NLS-1$
 
-    public static String PROC_SOAP_WS_CREATE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
+    public static String PROC_SOAP_WS_CREATE = "BEGIN " //$NON-NLS-1$
                                                + "SELECT XMLELEMENT(NAME CapitalCity, XMLNAMESPACES(DEFAULT 'http://www.oorsprong.org/websamples.countryinfo'), " //$NON-NLS-1$
                                                + "XMLELEMENT(NAME sCountryISOCode, COUNTRYINFOSERVICEXML.CAPITALCITY.CREATE_CAPITALCITY.sCountryISOCode)) AS xml_out; END"; //$NON-NLS-1$
 
-    public static String PROC_SOAP_WS_EXTRACT = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
+    public static String PROC_SOAP_WS_EXTRACT = "BEGIN " //$NON-NLS-1$
                                                 + "SELECT employee.* FROM XMLTABLE(XMLNAMESPACES('http://teiid.org' as teiid), " //$NON-NLS-1$
                                                 + "'/teiid:getdepartmentResponse/return/employee' PASSING f.result " //$NON-NLS-1$
                                                 + "COLUMNS empID integer PATH '@id', firstname string PATH 'name/first', " //$NON-NLS-1$
                                                 + "lastname string PATH 'name/last') AS employee; END"; //$NON-NLS-1$
     
-    public static String REST_PROCEDURE = "CREATE VIRTUAL PROCEDURE BEGIN " //$NON-NLS-1$
+    public static String REST_PROCEDURE = "BEGIN " //$NON-NLS-1$
     											+ "SELECT XMLELEMENT(NAME authors, " //$NON-NLS-1$
     												+ "XMLAGG(XMLELEMENT(NAME author, " //$NON-NLS-1$
     												+ "XMLFOREST(MySqlBooks.AUTHORS.AUTHOR_ID, MySqlBooks.AUTHORS.FIRSTNAME, MySqlBooks.AUTHORS.LASTNAME, MySqlBooks.AUTHORS.MIDDLEINIT)))) " //$NON-NLS-1$
