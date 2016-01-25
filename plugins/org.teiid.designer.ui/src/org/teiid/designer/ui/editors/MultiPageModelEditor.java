@@ -448,24 +448,8 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
             @Override
             public void widgetSelected( final SelectionEvent e ) {
             	tabFolderSelectionInProgress = true;
-                // System.out.println("MultiPageModelEditor.createContainer()$SelectionAdapter.widgetSelected"); //$NON-NLS-1$
-                UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-
-                    @Override
-					public void run() {
-                        CTabItem item = (CTabItem)e.item;
-                        if( !item.isDisposed() ) {
-	                        IEditorPart editor = (IEditorPart)item.getData();
-	                        // see if this tab's IEditorPart has been initialized
-	                        if (!hasInitialized(editor)) {
-	                            initializePage(editor, item);
-	                        }
-	                        int newPageIndex = tabFolder.indexOf(item);
-	                        pageChange(newPageIndex);
-                        }
-                        tabFolderSelectionInProgress = false;
-                    }
-                });
+            	
+            	selectTab((CTabItem)e.item);
             }
         });
 
@@ -520,11 +504,35 @@ public abstract class MultiPageModelEditor extends EditorPart implements IGotoMa
             public void run() {
             	internalCreatePartControl();
                 managingLoading = false;
+                
+            	tabFolder.setSelection(0);
+            	selectTab(tabFolder.getItem(0));
             }
         };
 
         UiUtil.runInSwtThread(runnable, true);
 	}
+    
+    private void selectTab(final CTabItem item ) {
+    	tabFolderSelectionInProgress = true;
+        // System.out.println("MultiPageModelEditor.createContainer()$SelectionAdapter.widgetSelected"); //$NON-NLS-1$
+        UiBusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+
+            @Override
+			public void run() {
+                if( !item.isDisposed() ) {
+                    IEditorPart editor = (IEditorPart)item.getData();
+                    // see if this tab's IEditorPart has been initialized
+                    if (!hasInitialized(editor)) {
+                        initializePage(editor, item);
+                    }
+                    int newPageIndex = tabFolder.indexOf(item);
+                    pageChange(newPageIndex);
+                }
+                tabFolderSelectionInProgress = false;
+            }
+        });
+    }
 
     /**
      * Creates the site for the given nested editor. The <code>MultiPageEditorPart</code> implementation of this method creates an

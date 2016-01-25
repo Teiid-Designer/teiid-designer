@@ -180,6 +180,8 @@ public class DiagramEditor extends GraphicalEditor
 
     private Collection completionListeners;
     
+    private boolean openComplete;
+    
     private Control cntl;
 
     // cache adapters so that they can be reused
@@ -901,11 +903,15 @@ public class DiagramEditor extends GraphicalEditor
                       final IEditorInput iInput ) {
         setSite(iSite);
         setInput(iInput);
-
+        
         markerListener = new IResourceChangeListener() {
             @Override
 			public void resourceChanged( final IResourceChangeEvent event ) {
-
+            	// If open is not complete, then any resource events like "DELETE PREVIEW VBD's" etc... should be ignored.
+            	// This was resulting in non-applicable resource change events triggeting openContext()
+            	
+            	if( !openComplete )  return;
+            	
                 if (event.getType() == IResourceChangeEvent.POST_CHANGE) // Let's see if all dependencies are open in workspace.
                 if (getDiagram() != null && getDiagram().getTarget() != null
                     && !ModelObjectUtilities.isStale(getDiagram().getTarget())) {
@@ -1184,10 +1190,14 @@ public class DiagramEditor extends GraphicalEditor
      */
     @Override
 	public void openComplete() {
+    	openComplete = true;
+
         if (revealableEObject != null) {
             final EObject revealedObject = revealableEObject;
             getDiagramViewer().reveal(revealedObject);
             revealableEObject = null;
+        } else {
+        	openContext(getParent().getModelResource());
         }
     }
 
