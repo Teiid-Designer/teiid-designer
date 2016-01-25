@@ -278,6 +278,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
     private Label defaultServerStatusLabel;
     private Label defaultTeiidStatusLabel;
     
+    boolean actionServiceApplied = false;
+    
     /* Listen for change in default teiid instance */
     private ITeiidServerVersionListener teiidServerVersionListener = new ITeiidServerVersionListener() {
 
@@ -557,6 +559,8 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         for( IContributionItem item : itemsToRemove ) {
         	bars.getToolBarManager().remove(item);
         }
+        
+        actionServiceApplied = true;
     }
     
     /**
@@ -1141,7 +1145,12 @@ public class ModelExplorerResourceNavigator extends ResourceNavigator
         menuMgr.addMenuListener(new IMenuListener() {
             @Override
 			public void menuAboutToShow( IMenuManager theMenuMgr ) {
-                ModelExplorerResourceNavigator.this.fillContextMenu(theMenuMgr);
+            	// Because we're adding our own menu listener, need to make sure that Modeler
+            	// Action service is applied. fillContextMenu() is usually called directly from the
+            	// basic Edit Part/View framework. In this case ResourceNavigator
+            	if( actionServiceApplied ) {
+            		ModelExplorerResourceNavigator.this.fillContextMenu(theMenuMgr);
+            	}
             }
         });
 
