@@ -12,6 +12,7 @@ import java.util.Collections;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.teiid.core.designer.util.CoreArgCheck;
+import org.teiid.designer.annotation.AnnotationUtils;
 import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.query.IQueryFactory;
 import org.teiid.designer.query.IQueryService;
@@ -308,6 +309,8 @@ public final class BuilderUtils implements UiConstants {
         IDataTypeManagerService service = ModelerCore.getTeiidDataTypeManagerService();
         
         for (DataTypeName dataTypeName : DataTypeName.values()) {
+        	if( !AnnotationUtils.isApplicable(dataTypeName, ModelerCore.getTeiidServerVersion())) continue;
+        	
             if (theType.equals(service.getDefaultDataType(dataTypeName)))
                 return true;
         }
