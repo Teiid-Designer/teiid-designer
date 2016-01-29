@@ -22,7 +22,7 @@
 
 		<td.tpc.groupId>org.jboss.tools.integration-stack</td.tpc.groupId>
 		<td.tpc.artifactId>target-platform</td.tpc.artifactId>
-		<td.tpc.version>4.3.0.Final</td.tpc.version>
+		<td.tpc.version>4.3.1.Beta1-SNAPSHOT</td.tpc.version>
 		<td.tpc.type>target</td.tpc.type>
 		<td.tpc.classifier>base-ea</td.tpc.classifier>
 
