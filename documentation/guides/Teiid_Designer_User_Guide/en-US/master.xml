@@ -20,9 +20,15 @@
 <book>
   <bookinfo>
     <title>Teiid Designer User Guide</title>
+<<<<<<< HEAD
     <releaseinfo>9.2.1
     </releaseinfo>
     <productnumber>9.2.1
+=======
+    <releaseinfo>10.0.0
+    </releaseinfo>
+    <productnumber>10.0.0
+>>>>>>> 7be7b96... Eclipse MARS version upgrade
     </productnumber>
     <issuenum>1</issuenum>
     <mediaobject>
