@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
+import org.teiid.runtime.client.admin.StringConstants;
 
 /**
  * Base class for AST Nodes
  */
-public class SimpleNode implements Node, LanguageObject {
+public class SimpleNode implements Node, LanguageObject, StringConstants {
 
     protected Node parent;
     protected Node[] children;
@@ -58,6 +60,15 @@ public class SimpleNode implements Node, LanguageObject {
 
     protected boolean isTeiid87OrGreater() {
         return isTeiidVersionOrGreater(Version.TEIID_8_7);
+    }
+
+
+    /**
+     * @return the comments
+     */
+    @Override
+    public Set<Comment> getComments() {
+        return parser.getComments();
     }
 
     @Override

@@ -15,54 +15,65 @@ package org.teiid.query.ui.sqleditor.component;
  */
 public interface DisplayNodeConstants {
 
-	// Node String Constants
-    public static final String BLANK = ""; //$NON-NLS-1$
-    public static final String SPACE = " "; //$NON-NLS-1$
-    public static final String DBLSPACE = "  "; //$NON-NLS-1$
-    public static final String TAB = "\t"; //$NON-NLS-1$
-	public static final String CR = "\n"; //$NON-NLS-1$
-	public static final String COMMA = ","; //$NON-NLS-1$
-	public static final String COLON = ":"; //$NON-NLS-1$
-	public static final String SEMICOLON = ";"; //$NON-NLS-1$
-	public static final String LTPAREN = "("; //$NON-NLS-1$
-	public static final String RTPAREN = ")"; //$NON-NLS-1$
-    public static final String EQUALS = "="; //$NON-NLS-1$
-    public static final String ERROR = "ERROR"; //$NON-NLS-1$
-    public static final String GT = ">"; //$NON-NLS-1$
-    public static final String GE = ">="; //$NON-NLS-1$
-    public static final String LT = "<"; //$NON-NLS-1$
-    public static final String LE = "<="; //$NON-NLS-1$
-    public static final String NE = "<>"; //$NON-NLS-1$
-    public static final String NULL = "null"; //$NON-NLS-1$
-    public static final String UNKNOWN = "Unknown"; //$NON-NLS-1$
-    public static final String SELECT_STR = "SELECT"; //$NON-NLS-1$
-    public static final String FROM_STR = "FROM"; //$NON-NLS-1$
-    public static final String WHERE_STR = "WHERE"; //$NON-NLS-1$
-    public static final String OPTIONAL_COMMENTS = "/*+ optional */"; //$NON-NLS-1$
-    public static final String UNDEFINED = "<undefined>"; //$NON-NLS-1$
-    public static final String EXEC = "EXEC"; //$NON-NLS-1$
-    public static final String NAME = "NAME"; //$NON-NLS-1$
-    public static final char ID_ESCAPE_CHAR = '\"';
-    public static final String BEGIN_HINT = "/*+"; //$NON-NLS-1$
-    public static final String END_HINT = "*/"; //$NON-NLS-1$
+    // Node String Constants
+    String BLANK = ""; //$NON-NLS-1$
+    String SPACE = " "; //$NON-NLS-1$
+    String DBLSPACE = "  "; //$NON-NLS-1$
+    String TAB = "\t"; //$NON-NLS-1$
+    String CR = "\n"; //$NON-NLS-1$
+    String COMMA = ","; //$NON-NLS-1$
+    String COLON = ":"; //$NON-NLS-1$
+    String SEMICOLON = ";"; //$NON-NLS-1$
+    String LTPAREN = "("; //$NON-NLS-1$
+    String RTPAREN = ")"; //$NON-NLS-1$
+    String EQUALS = "="; //$NON-NLS-1$
+    String ERROR = "ERROR"; //$NON-NLS-1$
+    String GT = ">"; //$NON-NLS-1$
+    String GE = ">="; //$NON-NLS-1$
+    String LT = "<"; //$NON-NLS-1$
+    String LE = "<="; //$NON-NLS-1$
+    String NE = "<>"; //$NON-NLS-1$
+    String NULL = "null"; //$NON-NLS-1$
+    String UNKNOWN = "Unknown"; //$NON-NLS-1$
+    String SELECT_STR = "SELECT"; //$NON-NLS-1$
+    String FROM_STR = "FROM"; //$NON-NLS-1$
+    String WHERE_STR = "WHERE"; //$NON-NLS-1$
+    String OPTIONAL_COMMENTS = "/*+ optional */"; //$NON-NLS-1$
+    String UNDEFINED = "<undefined>"; //$NON-NLS-1$
+    String EXEC = "EXEC"; //$NON-NLS-1$
+    String NAME = "NAME"; //$NON-NLS-1$
+    char ID_ESCAPE_CHAR = '\"';
+    String BEGIN_HINT = "/*+"; //$NON-NLS-1$
+    String END_HINT = "*/"; //$NON-NLS-1$
+    String QMARK = "?"; //$NON-NLS-1$
+    String LTBRACE = "{"; //$NON-NLS-1$
+    String RTBRACE = "}"; //$NON-NLS-1$
+    String DOT = "."; //$NON-NLS-1$
+    String SPEECH_MARK = "\""; //$NON-NLS-1$
+    String QUOTE = "'"; //$NON-NLS-1$
+    String FORWARD_SLASH = "/"; //$NON-NLS-1$
+    String STAR = "*"; //$NON-NLS-1$
+    String PLUS = "+"; //$NON-NLS-1$
+    String PIPE = "|"; //$NON-NLS-1$
+    String ESCAPE = "\\"; //$NON-NLS-1$
+    String REGEX_ESCAPE = "\\\\"; //$NON-NLS-1$
 
-	// Node Type Identifiers
-    public static final int ELEMENT = 0;
-    public static final int GROUP = 1;
-    public static final int CRITERIA = 2;
-    public static final int EXPRESSION = 3;
-    public static final int COMMAND = 4;
-    public static final int CLAUSE = 5;
-    public static final int SELECT = 6;
-    public static final int INTO = 7;
-    public static final int FROM = 8;
-    public static final int WHERE = 9;
-    public static final int GROUPBY =10;
-    public static final int HAVING = 11;
-    public static final int ORDERBY = 12;
-    public static final int OPTION = 13;
-    public static final int EDITABLE_CRITERIA = 14;
-    public static final int SCALAR_SUBQUERY = 15;
-    
+    // Node Type Identifiers
+    int ELEMENT = 0;
+    int GROUP = 1;
+    int CRITERIA = 2;
+    int EXPRESSION = 3;
+    int COMMAND = 4;
+    int CLAUSE = 5;
+    int SELECT = 6;
+    int INTO = 7;
+    int FROM = 8;
+    int WHERE = 9;
+    int GROUPBY = 10;
+    int HAVING = 11;
+    int ORDERBY = 12;
+    int OPTION = 13;
+    int EDITABLE_CRITERIA = 14;
+    int SCALAR_SUBQUERY = 15;
+
 }
-

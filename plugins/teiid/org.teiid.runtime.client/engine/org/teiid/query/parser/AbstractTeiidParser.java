@@ -22,11 +22,15 @@
 
 package org.teiid.query.parser;
 
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.teiid.core.types.DataTypeManagerService;
@@ -57,13 +61,12 @@ import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.AlterTrigger;
 import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Comment;
 import org.teiid.query.sql.lang.LanguageObject;
-import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.SetQuery;
 import org.teiid.query.sql.lang.SourceHint;
 import org.teiid.query.sql.lang.StoredProcedure;
-import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.symbol.ElementSymbol;
 import org.teiid.query.sql.symbol.Expression;
 import org.teiid.query.sql.symbol.GroupSymbol;
@@ -88,6 +91,24 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 
     private MetadataFactory metadataFactory;
 
+    private Set<Comment> comments = new LinkedHashSet<Comment>();
+
+    /**
+     * Access to the javacc-generated Reinit method
+     *
+     * @param stream
+     */
+    protected abstract void ReInit(Reader stream);
+
+    /**
+     * @param sql
+     */
+    @Override
+    public void reset(Reader sql) {
+        this.ReInit(sql);
+        this.comments.clear();
+    }
+
     /**
      * @return teiid instance version
      */
@@ -99,6 +120,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     /**
      * @param teiidVersion
      */
+    @Override
     public void setVersion(ITeiidServerVersion teiidVersion) {
         this.version = teiidVersion;
     }
@@ -108,8 +130,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
      * or equal to the given version.
      *
      * @param requiredVersionEnum
+     * @return true if version less than required
      */
-    protected boolean versionLessThan(Version requiredVersionEnum) {
+    public boolean versionLessThan(Version requiredVersionEnum) {
         return getVersion().isLessThan(requiredVersionEnum.get());
     }
 
@@ -118,8 +141,9 @@ public abstract class AbstractTeiidParser implements TeiidParser {
      * or equal to the given version.
      *
      * @param requiredVersionEnum
+     * @return true if version at least required
      */
-    protected boolean versionAtLeast(Version requiredVersionEnum) {
+    public boolean versionAtLeast(Version requiredVersionEnum) {
         return ! versionLessThan(requiredVersionEnum);
     }
 
@@ -131,7 +155,23 @@ public abstract class AbstractTeiidParser implements TeiidParser {
     @Override
     public <T extends LanguageObject> T createASTNode(ASTNodes nodeType) {
         return TeiidNodeFactory.getInstance().create(this, nodeType);
-    };
+    }
+
+    /**
+     * @return comments
+     */
+    @Override
+    public Set<Comment> getComments() {
+        return Collections.unmodifiableSet(comments);
+    }
+
+    /**
+     * @param comment
+     */
+    @Override
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 
 	protected String prependSign(String sign, String literal) {
 		if (sign != null && sign.charAt(0) == '-') {
@@ -149,7 +189,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
 		}
 	}
 
-    private int parseNumericValue(CharSequence string, StringBuilder sb, int i, int value,
+    private static int parseNumericValue(CharSequence string, StringBuilder sb, int i, int value,
                                                                          int possibleDigits, int radixExp) {
         for (int j = 0; j < possibleDigits; j++) {
             if (i + 1 == string.length()) {
@@ -175,7 +215,7 @@ public abstract class AbstractTeiidParser implements TeiidParser {
      * @param sb a scratch buffer to use
      * @return
      */
-    private String unescape(CharSequence string, int quoteChar, boolean useAsciiEscapes, StringBuilder sb) {
+    private static String unescape(CharSequence string, int quoteChar, boolean useAsciiEscapes, StringBuilder sb) {
         boolean escaped = false;
         
         for (int i = 0; i < string.length(); i++) {
@@ -229,15 +269,19 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         return sb.toString();
     }
 
-	private String unescape(String string) {
+	private static String unescape(String string) {
         return unescape(string, -1, true, new StringBuilder());
     }
 
-	private String removeEscapeChars(String str, String tickChar) {
+	private static String removeEscapeChars(String str, String tickChar) {
         return StringUtil.replaceAll(str, tickChar + tickChar, tickChar);
     }
 
-	protected String normalizeStringLiteral(String s) {
+	/**
+	 * @param s
+	 * @return normalized version of s
+	 */
+	public static String normalizeStringLiteral(String s) {
 		int start = 1;
 		boolean unescape = false;
   		if (s.charAt(0) == 'N') {
@@ -332,66 +376,36 @@ public abstract class AbstractTeiidParser implements TeiidParser {
         }
         return id;
     }
-    
-    public LeadingComment getLeadingComment(String sql) {
-    	String trimmedSQL = sql.trim();
-    	if( trimmedSQL.startsWith(COMMENT_START) && trimmedSQL.indexOf(COMMENT_END) > -1) {
-    		if( trimmedSQL.charAt(2) != '+') {
-    			int beginIndex = sql.indexOf(COMMENT_START);
-    			int endIndex = sql.indexOf(COMMENT_END) + 2;
-    			return new LeadingComment(trimmedSQL.substring(beginIndex, endIndex));
-    		}
-    	}
-    	
-    	return null;
+
+    @Override
+    public SourceHint getSourceHint(String comment) {
+        Matcher matcher = SOURCE_HINT.matcher(comment);
+        if (!matcher.find()) {
+            return null;
+        }
+
+        SourceHint sourceHint = new SourceHint(this);
+        if (matcher.group(1) != null) {
+            sourceHint.setUseAliases(true);
+        }
+
+        String generalHint = matcher.group(2);
+        if (generalHint != null) {
+            sourceHint.setGeneralHint(normalizeStringLiteral(generalHint));
+        }
+
+        int end = matcher.end();
+        matcher = SOURCE_HINT_ARG.matcher(comment);
+        while (matcher.find(end)) {
+            end = matcher.end();
+            sourceHint.setSourceHint(matcher.group(1), normalizeStringLiteral(matcher.group(3)), matcher.group(2) != null);
+        }
+
+        return sourceHint;
     }
     
-    
-    public TrailingComment getTrailingComment(String sql) {
-    	String trimmedSQL = sql.trim();
-    	if( trimmedSQL.endsWith(COMMENT_END) && trimmedSQL.lastIndexOf(COMMENT_START) > -1) {
-    		if( trimmedSQL.charAt(2) != '+') {
-    			int beginIndex = sql.lastIndexOf(COMMENT_START);
-    			int endIndex = sql.lastIndexOf(COMMENT_END) + 2;
-    			return new TrailingComment(trimmedSQL.substring(beginIndex, endIndex));
-    		}
-    	}
-    	
-    	return null;
-    }
-    
-    public String removeComments(String sql, LeadingComment leadingComment, TrailingComment trailingComment) {
-    	int indexAfterLeadingComment = 0;
-    	int indexBeforeTrailingComment = sql.length()-1;
-    	if( leadingComment != null ) {
-        	if( sql.startsWith(COMMENT_START) && sql.indexOf(COMMENT_END) > -1) {
-        		if( sql.charAt(2) != '+') {
-        			indexAfterLeadingComment = sql.indexOf(COMMENT_END) + 2;
-        			String remainingStr = sql.substring(indexAfterLeadingComment, indexBeforeTrailingComment);
-	        			if( remainingStr.length() > 0 ) {
-	        			for( char nextChar : remainingStr.toCharArray() ) {
-	        				if( nextChar == ' ' ||
-	        					nextChar == '\n' ||
-	        					nextChar == '\t' ||
-	        					nextChar == '\r' ) {
-	        					indexAfterLeadingComment++;
-	        					continue;
-	        				}
-	        				break;
-	        			}
-        			}
-        		}
-        	}
-    	}
-    	if( trailingComment != null ) {
-    		indexBeforeTrailingComment = sql.lastIndexOf(COMMENT_START)-1;
-    	}
-    	
-    	return sql.substring(indexAfterLeadingComment, indexBeforeTrailingComment);
-    }
-    
-    
-	public CacheHint getQueryCacheOption(String query) {
+	@Override
+    public CacheHint getQueryCacheOption(String query) {
 	    Pattern cacheHint = CACHE_HINT;
 	    if (getVersion().isLessThan(Version.TEIID_8_11))
 	        cacheHint = CACHE_HINT_PRE_811;

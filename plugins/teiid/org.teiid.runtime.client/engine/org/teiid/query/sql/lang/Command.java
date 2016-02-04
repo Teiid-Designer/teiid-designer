@@ -39,12 +39,6 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     private transient GroupContext externalGroups;
 
     private SymbolMap correlatedReferences;
-    
-    private LeadingComment leadingComment;
-    
-    private TrailingComment trailingComment;
-    
-
 
     /**
      * All temporary group IDs discovered while resolving this 
@@ -150,22 +144,6 @@ public abstract class Command extends SimpleNode implements ICommand<Expression,
     
     public void setCacheHint(CacheHint cacheHint) {
 		this.cacheHint = cacheHint;
-	}
-
-    public LeadingComment getLeadingComment() {
-		return leadingComment;
-	}
-
-	public void setLeadingComment(LeadingComment leadingComment) {
-		this.leadingComment = leadingComment;
-	}
-
-	public TrailingComment getTrailingComment() {
-		return trailingComment;
-	}
-
-	public void setTrailingComment(TrailingComment trailingComment) {
-		this.trailingComment = trailingComment;
 	}
 
 	protected void copyMetadataState(Command copy) {

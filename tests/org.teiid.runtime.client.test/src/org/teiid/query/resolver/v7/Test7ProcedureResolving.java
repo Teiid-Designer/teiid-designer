@@ -983,7 +983,7 @@ public class Test7ProcedureResolving extends AbstractTestProcedureResolving {
 
         String userCommand = "UPDATE vm1.g1 SET e1='x'"; //$NON-NLS-1$
 
-        helpFailUpdateProcedure(procedure, userCommand, Table.TriggerEvent.UPDATE, "Group does not exist: Bert_MAP.BERT3.RACK"); //$NON-NLS-1$
+        helpFailUpdateProcedure(procedure, userCommand, Table.TriggerEvent.UPDATE, null); //$NON-NLS-1$
     }
 
     // addresses Cases 5474.  

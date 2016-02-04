@@ -42,6 +42,7 @@ public abstract class SQLConstants {
         String TICK = "'"; //$NON-NLS-1$
         @Since(Version.TEIID_8_0)
         String SEMICOLON = ";"; //$NON-NLS-1$
+        String QMARK = "?"; //$NON-NLS-1$
     }
 
     public interface NonReserved {

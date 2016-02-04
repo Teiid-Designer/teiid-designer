@@ -28,4 +28,10 @@ public interface ISQLStringVisitor<LO extends ILanguageObject> extends ILanguage
      * @return SQL string
      */
     String returnSQLString(LO languageObject);
+
+    /**
+     * @param token
+     * @return id tokens properly escaped
+     */
+    String displayName(IToken token);
 }

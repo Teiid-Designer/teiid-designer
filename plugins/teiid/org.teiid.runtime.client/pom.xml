@@ -152,6 +152,9 @@
                     <grammarEncoding>UTF-8</grammarEncoding>
                     <keepLineColumn>true</keepLineColumn>
                     <nodeDefaultVoid>true</nodeDefaultVoid>
+                    <commonTokenAction>true</commonTokenAction>
+                    <tokenManagerUserParser>true</tokenManagerUserParser>
+                    <tokenExtends>org.teiid.query.parser.AbstractToken</tokenExtends>
                     <interimDirectory>${project.basedir}/engine</interimDirectory>
                     <outputDirectory>${project.basedir}/engine</outputDirectory>
                 </configuration>

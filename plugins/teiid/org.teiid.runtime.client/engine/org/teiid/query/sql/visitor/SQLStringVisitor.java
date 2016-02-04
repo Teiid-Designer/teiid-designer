@@ -22,19 +22,26 @@
 
 package org.teiid.query.sql.visitor;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.sql.ISQLStringVisitor;
+import org.teiid.designer.query.sql.IToken;
+import org.teiid.designer.query.sql.lang.IComment;
 import org.teiid.designer.query.sql.symbol.IAggregateSymbol.Type;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -60,6 +67,7 @@ import org.teiid.query.sql.lang.AlterView;
 import org.teiid.query.sql.lang.ArrayTable;
 import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CacheHint;
+import org.teiid.query.sql.lang.Comment;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Create;
@@ -82,7 +90,6 @@ import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
 import org.teiid.query.sql.lang.Labeled;
 import org.teiid.query.sql.lang.LanguageObject;
-import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.Limit;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.NamespaceItem;
@@ -112,7 +119,6 @@ import org.teiid.query.sql.lang.SubqueryHint;
 import org.teiid.query.sql.lang.SubquerySetCriteria;
 import org.teiid.query.sql.lang.TextColumn;
 import org.teiid.query.sql.lang.TextTable;
-import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.lang.TranslateCriteria;
 import org.teiid.query.sql.lang.UnaryFromClause;
 import org.teiid.query.sql.lang.Update;
@@ -215,6 +221,16 @@ public class SQLStringVisitor extends LanguageVisitor
 
     private static final char ID_ESCAPE_CHAR = '\"';
 
+    /**
+     * Indicator for disabling comments across multiple instances of this class.
+     * Possibilities of calling new instances of this class from this class when
+     * calling append(LanguageObject). This will convert the LanguageObject to
+     * a String using a new instance of this class. Since we only want comments
+     * added by the single 'top-most' instance then this set must be empty for
+     * comments to be added.
+     */
+    private static Set<String> ALLOW_COMMENTS = new HashSet<String>();
+
     protected StringBuilder parts = new StringBuilder();
 
     private boolean shortNameOnly = false;
@@ -263,7 +279,7 @@ public class SQLStringVisitor extends LanguageVisitor
      * @return Complete SQL string for the visited nodes
      */
     public String getSQLString() {
-        return this.parts.toString();
+        return this.parts.toString().trim();
     }
 
     /**
@@ -296,7 +312,15 @@ public class SQLStringVisitor extends LanguageVisitor
     }
 
     protected void append(Object value) {
+        if (value instanceof LanguageObject) {
+            disableComments((LanguageObject) value);
+        }
+
         this.parts.append(value);
+
+        if (value instanceof LanguageObject) {
+            enableComments((LanguageObject) value);
+        }
     }
 
     protected void beginClause(int level) {
@@ -309,10 +333,233 @@ public class SQLStringVisitor extends LanguageVisitor
         return constant;
     }
 
+    private int nextAvailableSpace(String sql, int index) {
+        for (int i = index - 1; i < sql.length(); ++i) {
+            char c = sql.charAt(i);
+            if (Character.isWhitespace(c))
+                return i + 1;
+        }
+
+        return sql.length();
+    }
+
+    /**
+     * based on {@link #outputDisplayName(String)}
+     *
+     * @param name
+     * @return escaped version of name, eg. x.from.y becomes x."from".y
+     */
+    public String displayName(IToken token) {
+        if (! token.isId())
+            return token.getText();
+
+        StringBuffer buf = new StringBuffer();
+        String[] pathParts = token.getText().split("\\."); //$NON-NLS-1$
+        for (int i = 0; i < pathParts.length; i++) {
+            if (i > 0) {
+                buf.append(Symbol.SEPARATOR);
+            }
+            buf.append(escapeSinglePart(pathParts[i]));
+        }
+
+        return buf.toString();
+    }
+
+    private String escape(String text, String character, boolean optional) {
+        String target = StringUtil.Constants.ESCAPE + character;
+        String replacement = StringUtil.Constants.REGEX_ESCAPE + character + (optional ? StringUtil.Constants.QMARK : StringUtil.Constants.EMPTY_STRING);
+        text = text.replaceAll(target, replacement);
+        return text;
+    }
+
+    /**
+     * @param sql
+     * @param comment
+     * @return
+     */
+    private int calculateLocation(String sql, Comment comment) {
+        int cmtIdx = comment.getOffset();
+        LinkedList<IToken> preTokens = new LinkedList(comment.getPreTokens());
+
+        if (preTokens.isEmpty())
+            return cmtIdx; // can happen if offset is 0 and comment is at the start
+
+        // i : case-insensitive mode
+        // s: include line terminators in . matchings
+        StringBuffer regex = new StringBuffer("(?is)"); //$NON-NLS-1$
+        Iterator<IToken> iterator = preTokens.iterator();
+        while(iterator.hasNext()) {
+            IToken token = iterator.next();
+            String text = displayName(token);
+
+            // Must escape question marks first since optional is represented by question marks in regex
+            text = escape(text, SQLConstants.Tokens.QMARK, false);
+
+            text = escape(text, StringUtil.Constants.SPEECH_MARK, true);
+            text = escape(text, StringUtil.Constants.QUOTE, true);
+            text = escape(text, SQLConstants.Tokens.LPAREN, true);
+            text = escape(text, SQLConstants.Tokens.RPAREN, true);
+
+            // The zero at the end of a time is optional, eg. 19:00:02.50, so
+            // gets dropped by the production. Thus, need to make it
+            // optional. Have to do it prior to escaping DOT, otherwise the
+            // replace regex becomes consumed by backslashes!
+            String target = "([0-9][0-9]:[0-9][0-9]:[0-9][0-9]\\.[0-9])0"; //$NON-NLS-1$
+            String replacement = "$1[0-9]?'"; //$NON-NLS-1$
+            text = text.replaceAll(target, replacement);
+
+            // The source hint is parseable as /*+ sh ... */ but all spaces are removed
+            // between the + and sh upon conversion.
+            target = "\\/\\*\\+\\s*sh";
+            replacement = "/*+sh";
+            text = text.replaceAll(target, replacement);
+
+            text = escape(text, SQLConstants.Tokens.DOT, false);
+            text = escape(text, StringUtil.Constants.LBRACE, false);
+
+            // Makes right brace optional since fn{ is dropped as the prefix of functions
+            // and its closing brace will remain as a pre token
+            text = escape(text, StringUtil.Constants.RBRACE, true);
+            text = escape(text, StringUtil.Constants.FORWARD_SLASH, false);
+            text = escape(text, StringUtil.Constants.STAR, false);
+            text = escape(text, StringUtil.Constants.PLUS, false);
+            text = escape(text, StringUtil.Constants.PIPE, false);
+
+            regex.append(text);
+
+            if (iterator.hasNext())
+                regex.append(DOT).append(StringUtil.Constants.STAR).append(QMARK);
+        }
+
+        Pattern pattern = Pattern.compile(regex.toString());
+        Matcher matcher = pattern.matcher(sql);
+
+        //
+        // Find ALL the possible sub sequences that the matcher could match.
+        // Most of the time it should be only one but sometimes a SELECT subquery
+        // could have the same WHERE condition as the outer master query.
+        // WITH x AS (SELECT a FROM db.g WHERE b = aString /* Comment 1 */)
+        //                     SELECT a FROM db.g WHERE b = aString /* Comment 2 */
+        List<Integer> results = new ArrayList<Integer>();
+        boolean result = true;
+        while (result) {
+            result = matcher.find();
+            if (result) {
+                // We know that the matcher has succeeded once but is possible that
+                // since its a reluctant matcher it is in fact finding a result far earlier
+                // than required.
+                results.add(matcher.end());
+            }
+        }
+
+        if (results.isEmpty())
+            return -1;
+
+        //
+        // Loop through the candidates and choose the pair {start, end} which has an end
+        // value closest to the offset of the comment
+        //
+        Integer pref = results.get(0);
+        int diff = Math.abs(pref - cmtIdx);
+        for (Integer poss : results) {
+            int pdiff = Math.abs(poss - cmtIdx);
+            if (pdiff < diff)
+                pref = poss;
+        }
+
+        int offset = pref + 1;
+        if (offset != cmtIdx)
+            cmtIdx = offset;
+
+        //
+        // At this point, we have a location index for the comment.
+        // However, its still possible, despite best efforts that that index
+        // is within a term. Thus, check the index finally...
+        //
+        return nextAvailableSpace(sql, cmtIdx);
+    }
+
+    /*
+     * Only removes the exact id of this value
+     * from the set. Once the set is empty will
+     * adding comments be re-enabled.
+     */
+    private void enableComments(LanguageObject obj) {
+        ALLOW_COMMENTS.remove(obj.getClass().getSimpleName() + System.identityHashCode(obj));
+    }
+
+    /*
+     * Append the string value of a LanguageObject will
+     * launch a new instance of this SQLStringVisitor in
+     * order to produce the string version of the object.
+     *
+     * This will cause the comments to be inserted in the
+     * wrong positions so disable them and confine them
+     * to the SQLStringVisitor.
+     *
+     * Since this method can be called multiple times in
+     * 'child' SQLStringVisitors, need to be sure that we
+     * can identify what value caused the comments to
+     * be turned off hence using a set with the identity
+     * hashcode value of the object.
+     */
+    private void disableComments(LanguageObject obj) {
+        ALLOW_COMMENTS.add(obj.getClass().getSimpleName() + System.identityHashCode(obj));
+    }
+
+    private Set<IComment> seenComments = new HashSet<IComment>();
+
+    protected void addComments(LanguageObject obj) {
+        // Comments disabled if this set contains identity hashcodes
+        if (!ALLOW_COMMENTS.isEmpty())
+            return;
+
+        Set<Comment> comments = obj.getComments();
+
+        for (Comment comment : comments) {
+            if (seenComments.contains(comment))
+                continue;
+
+            String sql = parts.toString();
+            int insertIdx = calculateLocation(sql, comment);
+            if (insertIdx == -1)
+                continue;
+
+            // Handling trailing comments
+            if (insertIdx >= sql.length()) {
+                // insert index is the end of the sql string
+                if (! sql.endsWith(SPACE))
+                    parts.append(SPACE);
+
+                // avoid appending a space since the sql doesn't end with one
+                // so will most likely be added prior to the next token
+                parts.append(comment.getText());
+
+                if (! comment.isMultiLine())
+                    parts.append(NEWLINE);
+
+            } else {
+                // Most of the comments with be dealt with here
+                String text = comment.getText();
+                if (comment.isMultiLine())
+                    text = text + SPACE;
+                else
+                    text = text + NEWLINE;
+
+                parts.insert(insertIdx, text);
+            }
+
+            seenComments.add(comment);
+        }
+    }
+
     // ############ Visitor methods for language objects ####################
 
     @Override
     public void visit(BetweenCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getExpression());
         append(SPACE);
 
@@ -328,10 +575,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(AND);
         append(SPACE);
         visitNode(obj.getUpperExpression());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(CaseExpression obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(CASE);
         append(SPACE);
         visitNode(obj.getExpression());
@@ -355,10 +608,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
         append(END);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(CompareCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         Expression leftExpression = obj.getLeftExpression();
         visitNode(leftExpression);
         append(SPACE);
@@ -366,10 +625,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         Expression rightExpression = obj.getRightExpression();
         visitNode(rightExpression);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(CompoundCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         // Get operator string
         int operator = obj.getOperator();
         String operatorStr = ""; //$NON-NLS-1$
@@ -406,10 +671,16 @@ public class SQLStringVisitor extends LanguageVisitor
                 }
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Delete obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         // add delete clause
         append(DELETE);
         addSourceHint(obj.getSourceHint());
@@ -430,17 +701,29 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(0);
             visitNode(obj.getOption());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(From obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(FROM);
         beginClause(1);
         registerNodes(obj.getClauses(), 0);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(GroupBy obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(GROUP);
         append(SPACE);
         append(BY);
@@ -453,10 +736,16 @@ public class SQLStringVisitor extends LanguageVisitor
         if (isTeiidVersionOrGreater(Version.TEIID_8_5) && obj.isRollup()) {
         	append(Tokens.RPAREN);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Insert obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid8OrGreater() && obj.isMerge()) {
             append(MERGE);
         } else {
@@ -500,6 +789,9 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void visit7( Create obj ) {
@@ -1002,29 +1294,42 @@ public class SQLStringVisitor extends LanguageVisitor
                 }
             }
         }
-        
-        
     }
 
     @Override
     public void visit(Create obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid8OrGreater())
             visit8(obj);
         else
             visit7(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Drop obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(DROP);
         append(SPACE);
         append(TABLE);
         append(SPACE);
         visitNode(obj.getTable());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(IsNullCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         Expression expr = obj.getExpression();
         if (isTeiid8OrGreater())
             appendNested(expr);
@@ -1039,10 +1344,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
         append(NULL);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(JoinPredicate obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         addHintComment(obj);
 
         if (obj.hasHint()) {
@@ -1104,44 +1415,51 @@ public class SQLStringVisitor extends LanguageVisitor
         }
 
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void addHintComment(FromClause obj) {
-        if (obj.hasHint()) {
-            append(BEGIN_HINT);
-            append(SPACE);
-            if (obj.isOptional()) {
-                append(Option.OPTIONAL);
-                append(SPACE);
-            }
-            if (obj.getMakeDep() != null && obj.getMakeDep().isSimple()) {
-                append(Option.MAKEDEP);
-                append(SPACE);
-            }
-            if (obj.isMakeNotDep()) {
-                append(Option.MAKENOTDEP);
-                append(SPACE);
-            }
-            if (obj.isMakeInd()) {
-                append(FromClause.MAKEIND);
-                append(SPACE);
-            }
-            if (obj.isNoUnnest()) {
-                append(SubqueryHint.NOUNNEST);
-                append(SPACE);
-            }
+        if (! obj.hasHint())
+            return;
 
-            if (isTeiid8OrGreater() && obj.isPreserve()) {
-                append(FromClause.PRESERVE);
-                append(SPACE);
-            }
-            append(END_HINT);
+        append(BEGIN_HINT);
+        append(SPACE);
+        if (obj.isOptional()) {
+            append(Option.OPTIONAL);
             append(SPACE);
         }
+        if (obj.getMakeDep() != null && obj.getMakeDep().isSimple()) {
+            append(Option.MAKEDEP);
+            append(SPACE);
+        }
+        if (obj.isMakeNotDep()) {
+            append(Option.MAKENOTDEP);
+            append(SPACE);
+        }
+        if (obj.isMakeInd()) {
+            append(FromClause.MAKEIND);
+            append(SPACE);
+        }
+        if (obj.isNoUnnest()) {
+            append(SubqueryHint.NOUNNEST);
+            append(SPACE);
+        }
+
+        if (isTeiid8OrGreater() && obj.isPreserve()) {
+            append(FromClause.PRESERVE);
+            append(SPACE);
+        }
+        append(END_HINT);
+        append(SPACE);
     }
 
     @Override
     public void visit(JoinType obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         String[] output = null;
         switch (obj.getKind()) {
             case JOIN_ANTI_SEMI:
@@ -1175,10 +1493,16 @@ public class SQLStringVisitor extends LanguageVisitor
         for (String part : output) {
             append(part);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(MatchCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getLeftExpression());
 
         append(SPACE);
@@ -1215,18 +1539,30 @@ public class SQLStringVisitor extends LanguageVisitor
                 append("'"); //$NON-NLS-1$
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(NotCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(NOT);
         append(" ("); //$NON-NLS-1$
         visitNode(obj.getCriteria());
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Option obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(OPTION);
 
         Collection<String> groups = obj.getDependentGroups();
@@ -1286,6 +1622,8 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NOCACHE);
         }
 
+        enableComments(obj);
+        addComments(obj);
     }
 
     /**
@@ -1323,20 +1661,30 @@ public class SQLStringVisitor extends LanguageVisitor
         if (parens) {
             append(Tokens.RPAREN);
         }
+
         return this;
     }
 
     @Override
     public void visit(OrderBy obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(ORDER);
         append(SPACE);
         append(BY);
         append(SPACE);
         registerNodes(obj.getOrderByItems(), 0);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(OrderByItem obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         Expression ses = obj.getSymbol();
         if (ses instanceof AliasSymbol) {
             AliasSymbol as = (AliasSymbol)ses;
@@ -1354,10 +1702,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(obj.getNullOrdering().name());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(DynamicCommand obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(EXECUTE);
         append(SPACE);
         append(IMMEDIATE);
@@ -1403,10 +1757,16 @@ public class SQLStringVisitor extends LanguageVisitor
                 append("1"); //$NON-NLS-1$
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(SetClauseList obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         for (Iterator<SetClause> iterator = obj.getClauses().iterator(); iterator.hasNext();) {
             SetClause clause = iterator.next();
             visitNode(clause);
@@ -1414,18 +1774,30 @@ public class SQLStringVisitor extends LanguageVisitor
                 append(", "); //$NON-NLS-1$
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(SetClause obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         ElementSymbol symbol = obj.getSymbol();
         outputShortName(symbol);
         append(" = "); //$NON-NLS-1$
         visitNode(obj.getValue());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(WithQueryCommand obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getGroupSymbol());
         append(SPACE);
         if (obj.getColumns() != null && !obj.getColumns().isEmpty()) {
@@ -1445,11 +1817,16 @@ public class SQLStringVisitor extends LanguageVisitor
             visitNode(obj.getCommand());
         }
         append(Tokens.RPAREN);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Query obj) {
-    	addLeadingComment(obj.getLeadingComment());
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
     	addCacheHint(obj.getCacheHint());
         addWithClause(obj);
         append(SELECT);
@@ -1504,38 +1881,41 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
-        addTrailingComment(obj.getTrailingComment());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void addSourceHint(SourceHint sh) {
-        if (sh != null) {
+        if (sh == null)
+            return;
+
+        append(SPACE);
+        append(BEGIN_HINT);
+        append("sh"); //$NON-NLS-1$
+
+        if (isTeiid8OrGreater() && sh.isUseAliases()) {
             append(SPACE);
-            append(BEGIN_HINT);
-            append("sh"); //$NON-NLS-1$
-
-            if (isTeiid8OrGreater() && sh.isUseAliases()) {
-                append(SPACE);
-                append("KEEP ALIASES"); //$NON-NLS-1$
-            }
-
-            if (sh.getGeneralHint() != null) {
-                appendSourceHintValue(sh.getGeneralHint());
-        	} else {
-        		append(SPACE);
-            }
-            if (sh.getSpecificHints() != null) {
-                for (Map.Entry<String, SpecificHint> entry : sh.getSpecificHints().entrySet()) {
-                    append(entry.getKey());
-                    if (isTeiid8OrGreater() && entry.getValue().isUseAliases()) {
-                        append(SPACE);
-                        append("KEEP ALIASES"); //$NON-NLS-1$
-                    }
-
-                    appendSourceHintValue(entry.getValue().getHint());
-                }
-            }
-            append(END_HINT);
+            append("KEEP ALIASES"); //$NON-NLS-1$
         }
+
+        if (sh.getGeneralHint() != null) {
+            appendSourceHintValue(sh.getGeneralHint());
+        } else {
+            append(SPACE);
+        }
+        if (sh.getSpecificHints() != null) {
+            for (Map.Entry<String, SpecificHint> entry : sh.getSpecificHints().entrySet()) {
+                append(entry.getKey());
+                if (isTeiid8OrGreater() && entry.getValue().isUseAliases()) {
+                    append(SPACE);
+                    append("KEEP ALIASES"); //$NON-NLS-1$
+                }
+
+                appendSourceHintValue(entry.getValue().getHint());
+            }
+        }
+        append(END_HINT);
     }
 
     private void addWithClause(QueryCommand obj) {
@@ -1555,6 +1935,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(SearchedCaseExpression obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(CASE);
         for (int i = 0; i < obj.getWhenCount(); i++) {
             append(SPACE);
@@ -1574,10 +1957,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
         }
         append(END);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Select obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (obj.isDistinct()) {
             append(SPACE);
             append(DISTINCT);
@@ -1592,6 +1981,9 @@ public class SQLStringVisitor extends LanguageVisitor
                 append(", "); //$NON-NLS-1$
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void appendSourceHintValue(String sh) {
@@ -1604,6 +1996,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(SetCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         // variable
 
         if (isTeiid8OrGreater())
@@ -1638,6 +2033,9 @@ public class SQLStringVisitor extends LanguageVisitor
             }
         }
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     /**
@@ -1658,6 +2056,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(SetQuery obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
     	addCacheHint(obj.getCacheHint());
         addWithClause(obj);
         QueryCommand query = obj.getLeftQuery();
@@ -1688,6 +2089,9 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(0);
             visitNode(obj.getOption());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     protected void appendSetQuery(SetQuery parent, QueryCommand obj, boolean right) {
@@ -1700,10 +2104,16 @@ public class SQLStringVisitor extends LanguageVisitor
         } else {
             visitNode(obj);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(StoredProcedure obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
     	addCacheHint(obj.getCacheHint());
         if (obj.isCalledWithReturn()) {
             for (SPParameter param : obj.getParameters()) {
@@ -1756,6 +2166,9 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
     
     /**
@@ -1765,6 +2178,7 @@ public class SQLStringVisitor extends LanguageVisitor
         if (obj == null) {
             return;
         }
+
         append(BEGIN_HINT);
         append(SPACE);
         append(CacheHint.CACHE);
@@ -1820,34 +2234,12 @@ public class SQLStringVisitor extends LanguageVisitor
         append(END_HINT);
         beginClause(0);
     }
-    
-    /**
-     * @param comment
-     */
-    public void addLeadingComment(LeadingComment comment) {
-        if (comment == null) {
-            return;
-        }
-        append(comment.getComment());
-        append(SPACE);
-        append(NEWLINE);
-    }
-    
-    
-    /**
-     * @param comment
-     */
-    public void addTrailingComment(TrailingComment comment) {
-        if (comment == null) {
-            return;
-        }
-        append(NEWLINE);
-        append(SPACE);
-        append(comment.getComment());
-    }
 
     @Override
     public void visit(SubqueryFromClause obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         addHintComment(obj);
         if (obj.isTable()) {
             append(TABLE);
@@ -1864,10 +2256,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(groupSymbol.getOutputName());
 
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(SubquerySetCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         // variable
         visitNode(obj.getExpression());
 
@@ -1882,17 +2280,29 @@ public class SQLStringVisitor extends LanguageVisitor
         append(" ("); //$NON-NLS-1$
         visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(UnaryFromClause obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         addHintComment(obj);
         visitNode(obj.getGroup());
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Update obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         // Update clause
         append(UPDATE);
         addSourceHint(obj.getSourceHint());
@@ -1915,19 +2325,31 @@ public class SQLStringVisitor extends LanguageVisitor
             beginClause(1);
             visitNode(obj.getOption());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Into obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(INTO);
         append(SPACE);
         visitNode(obj.getGroup());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     // ############ Visitor methods for symbol objects ####################
 
     @Override
     public void visit(AggregateSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid8OrGreater())
             append(obj.getName());
         else
@@ -1968,19 +2390,31 @@ public class SQLStringVisitor extends LanguageVisitor
             append(obj.getCondition());
             append(Tokens.RPAREN);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(AliasSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getSymbol());
         append(SPACE);
         append(AS);
         append(SPACE);
         append(escapeSinglePart(obj.getOutputName()));
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(MultipleElementSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (obj.getGroup() == null) {
             append(Tokens.ALL_COLS);
         } else {
@@ -1988,6 +2422,9 @@ public class SQLStringVisitor extends LanguageVisitor
             append(Tokens.DOT);
             append(Tokens.ALL_COLS);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void visit7(Constant obj) {
@@ -2113,10 +2550,16 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(Constant obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid8OrGreater())
             visit8(obj);
         else
             visit7(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     /**
@@ -2131,8 +2574,14 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(ElementSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (obj.getDisplayMode().equals(ElementSymbol.DisplayMode.SHORT_OUTPUT_NAME) ||isShortNameOnly()) {
             outputShortName(obj);
+
+            enableComments(obj);
+            addComments(obj);
             return;
         }
         String name = obj.getOutputName();
@@ -2140,6 +2589,9 @@ public class SQLStringVisitor extends LanguageVisitor
             name = obj.getName();
         }
         outputDisplayName(name);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void outputShortName(ElementSymbol obj) {
@@ -2158,11 +2610,20 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(ExpressionSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getExpression());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Function obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         String name = obj.getName();
         Expression[] args = obj.getArgs();
         if (obj.isImplicit()) {
@@ -2243,6 +2704,9 @@ public class SQLStringVisitor extends LanguageVisitor
             registerNodes(args, 0);
             append(")"); //$NON-NLS-1$
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void registerNodes(LanguageObject[] objects, int begin) {
@@ -2263,6 +2727,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(GroupSymbol obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         String alias = null;
         String fullGroup = obj.getOutputName();
         if (obj.getOutputDefinition() != null) {
@@ -2278,15 +2745,24 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(escapeSinglePart(alias));
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Reference obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (!obj.isPositional() && obj.getExpression() != null) {
             visitNode(obj.getExpression());
         } else {
             append("?"); //$NON-NLS-1$
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     // ############ Visitor methods for storedprocedure language objects ####################
@@ -2348,10 +2824,16 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(Block block) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(block);
+
         if (isTeiid8OrGreater())
             visit8(block);
         else
             visit7(block);
+
+        enableComments(block);
+        addComments(block);
     }
 
     private void addLabel(Labeled obj) {
@@ -2372,6 +2854,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(CommandStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getCommand());
         if (isTeiid8OrGreater() && !obj.isReturnable()) {
             append(SPACE);
@@ -2380,12 +2865,17 @@ public class SQLStringVisitor extends LanguageVisitor
             append(RETURN);
         }
         append(";"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     @Removed(Version.TEIID_8_0)
     public void visit(CreateUpdateProcedureCommand obj) {
-    	addLeadingComment(obj.getLeadingComment());
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(CREATE);
         append(SPACE);
         if (!obj.isUpdateProcedure()) {
@@ -2396,13 +2886,17 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
-        addTrailingComment(obj.getTrailingComment());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(CreateProcedureCommand obj) {
-    	addLeadingComment(obj.getLeadingComment());
     	addCacheHint(obj.getCacheHint());
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isLessThanTeiidVersion(Version.TEIID_8_4)) {
             append(CREATE);
             append(SPACE);
@@ -2413,16 +2907,24 @@ public class SQLStringVisitor extends LanguageVisitor
             addTabs(0);
         }
         visitNode(obj.getBlock());
-        addTrailingComment(obj.getTrailingComment());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(DeclareStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(DECLARE);
         append(SPACE);
         append(obj.getVariableType());
         append(SPACE);
         createAssignment(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     /**
@@ -2436,10 +2938,15 @@ public class SQLStringVisitor extends LanguageVisitor
             visitNode(obj.getExpression());
         }
         append(";"); //$NON-NLS-1$
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(IfStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(IF);
         append("("); //$NON-NLS-1$
         visitNode(obj.getCondition());
@@ -2454,15 +2961,27 @@ public class SQLStringVisitor extends LanguageVisitor
             addTabs(0);
             visitNode(obj.getElseBlock());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(AssignmentStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         createAssignment(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(RaiseStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(NonReserved.RAISE);
         append(SPACE);
         if (obj.isWarning()) {
@@ -2471,17 +2990,29 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         visitNode(obj.getExpression());
         append(";"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(HasCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(HAS);
         append(SPACE);
         visitNode(obj.getSelector());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(TranslateCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(TRANSLATE);
         append(SPACE);
         visitNode(obj.getSelector());
@@ -2503,10 +3034,16 @@ public class SQLStringVisitor extends LanguageVisitor
                 }
             }
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(CriteriaSelector obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         switch (obj.getSelectorType()) {
             case EQ:
                 append("= "); //$NON-NLS-1$
@@ -2566,18 +3103,30 @@ public class SQLStringVisitor extends LanguageVisitor
             }
             append(")"); //$NON-NLS-1$
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(RaiseErrorStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(ERROR);
         append(SPACE);
         visitNode(obj.getExpression());
         append(";"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(ExceptionExpression exceptionExpression) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(exceptionExpression);
+
         append(SQLEXCEPTION);
         append(SPACE);
         visitNode(exceptionExpression.getMessage());
@@ -2598,20 +3147,32 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(exceptionExpression.getParent());
         }
+
+        enableComments(exceptionExpression);
+        addComments(exceptionExpression);
     }
 
     @Override
     public void visit(ReturnStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(RETURN);
         if (obj.getExpression() != null) {
             append(SPACE);
             visitNode(obj.getExpression());
         }
         append(Tokens.SEMICOLON);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(BranchingStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         switch (obj.getMode()) {
             case CONTINUE:
                 append(CONTINUE);
@@ -2628,10 +3189,16 @@ public class SQLStringVisitor extends LanguageVisitor
             outputDisplayName(obj.getLabel());
         }
         append(";"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(LoopStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         addLabel(obj);
         append(LOOP);
         append(" "); //$NON-NLS-1$
@@ -2649,10 +3216,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(WhileStatement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         addLabel(obj);
         append(WHILE);
         append("("); //$NON-NLS-1$
@@ -2660,10 +3233,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(")\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(ExistsCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (obj.isNegated()) {
             append(NOT);
             append(SPACE);
@@ -2673,6 +3252,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(" ("); //$NON-NLS-1$
         visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void addSubqueryHint(SubqueryHint hint) {
@@ -2702,6 +3284,9 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(SubqueryCompareCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         Expression leftExpression = obj.getLeftExpression();
         visitNode(leftExpression);
 
@@ -2723,10 +3308,16 @@ public class SQLStringVisitor extends LanguageVisitor
 
         visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
-    public void visit(ScalarSubquery obj) {        
+    public void visit(ScalarSubquery obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid810OrGreater()) {
             if (obj.getSubqueryHint().isDepJoin() || obj.getSubqueryHint().isMergeJoin() || obj.getSubqueryHint().isNoUnnest()) {
                 if (this.parts.charAt(this.parts.length() - 1) == ' ') {
@@ -2741,18 +3332,30 @@ public class SQLStringVisitor extends LanguageVisitor
         append("("); //$NON-NLS-1$
         visitNode(obj.getCommand());
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLAttributes obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLATTRIBUTES);
         append("("); //$NON-NLS-1$
         registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLElement obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLELEMENT);
         append("(NAME "); //$NON-NLS-1$
         outputDisplayName(obj.getName());
@@ -2769,10 +3372,16 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         registerNodes(obj.getContent(), 0);
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLForest obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLFOREST);
         append("("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
@@ -2781,18 +3390,30 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(JSONObject obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(NonReserved.JSONOBJECT);
         append("("); //$NON-NLS-1$
         registerNodes(obj.getArgs(), 0);
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(TextLine obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(FOR);
         append(SPACE);
         registerNodes(obj.getExpressions(), 0);
@@ -2819,10 +3440,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             outputDisplayName(obj.getEncoding());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLNamespaces obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLNAMESPACES);
         append("("); //$NON-NLS-1$
         for (Iterator<NamespaceItem> items = obj.getNamespaceItems().iterator(); items.hasNext();) {
@@ -2844,10 +3471,16 @@ public class SQLStringVisitor extends LanguageVisitor
             }
         }
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(Limit obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (!obj.isStrict()) {
             append(BEGIN_HINT);
             append(SPACE);
@@ -2862,6 +3495,9 @@ public class SQLStringVisitor extends LanguageVisitor
             visitNode(obj.getOffset());
             append(SPACE);
             append(ROWS);
+
+            enableComments(obj);
+            addComments(obj);
             return;
         }
         append(LIMIT);
@@ -2872,11 +3508,17 @@ public class SQLStringVisitor extends LanguageVisitor
         }
         append(SPACE);
         visitNode(obj.getRowLimit());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(TextTable obj) {
         addHintComment(obj);
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append("TEXTTABLE("); //$NON-NLS-1$
         visitNode(obj.getFile());
         if (isTeiid8OrGreater() && obj.getSelector() != null) {
@@ -2991,11 +3633,17 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLTable obj) {
         addHintComment(obj);
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append("XMLTABLE("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
             visitNode(obj.getNamespaces());
@@ -3049,11 +3697,17 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(ObjectTable obj) {
         addHintComment(obj);
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append("OBJECTTABLE("); //$NON-NLS-1$
         if (obj.getScriptingLanguage() != null) {
             append(LANGUAGE);
@@ -3094,10 +3748,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLQuery obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append("XMLQUERY("); //$NON-NLS-1$
         if (obj.getNamespaces() != null) {
             visitNode(obj.getNamespaces());
@@ -3124,11 +3784,17 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NonReserved.EMPTY);
         }
         append(")");//$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Since(Version.TEIID_8_10)
     @Override
     public void visit(XMLExists exists) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(exists);
+
         append("XMLEXISTS("); //$NON-NLS-1$
         XMLQuery obj = exists.getXmlQuery();
         if (obj.getNamespaces() != null) {
@@ -3149,11 +3815,17 @@ public class SQLStringVisitor extends LanguageVisitor
             registerNodes(obj.getPassing(), 0);
         }
         append(")");//$NON-NLS-1$
+
+        enableComments(exists);
+        addComments(exists);
     }
 
     @Since(Version.TEIID_8_10)
     @Override
     public void visit(XMLCast exists) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(exists);
+
         append("XMLCAST("); //$NON-NLS-1$
         append(exists.getExpression());
         append(Tokens.SPACE);
@@ -3161,10 +3833,16 @@ public class SQLStringVisitor extends LanguageVisitor
         append(Tokens.SPACE);
         append(getDataTypeManager().getDataTypeName(exists.getType()));
         append(")");//$NON-NLS-1$
+
+        enableComments(exists);
+        addComments(exists);
     }
 
     @Override
     public void visit(DerivedColumn obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getExpression());
         if (obj.getAlias() != null) {
             append(SPACE);
@@ -3172,10 +3850,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             outputDisplayName(obj.getAlias());
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLSerialize obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLSERIALIZE);
         append(Tokens.LPAREN);
         if (obj.getDocument() != null) {
@@ -3218,10 +3902,16 @@ public class SQLStringVisitor extends LanguageVisitor
             }
         }
         append(Tokens.RPAREN);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(QueryString obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(NonReserved.QUERYSTRING);
         append("("); //$NON-NLS-1$
         visitNode(obj.getPath());
@@ -3231,10 +3921,16 @@ public class SQLStringVisitor extends LanguageVisitor
             registerNodes(obj.getArgs(), 0);
         }
         append(")"); //$NON-NLS-1$
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(XMLParse obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(XMLPARSE);
         append(Tokens.LPAREN);
         if (obj.isDocument()) {
@@ -3249,16 +3945,27 @@ public class SQLStringVisitor extends LanguageVisitor
             append(NonReserved.WELLFORMED);
         }
         append(Tokens.RPAREN);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(ExpressionCriteria obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         visitNode(obj.getExpression());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(TriggerAction obj) {
-    	addLeadingComment(obj.getLeadingComment());
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(FOR);
         append(SPACE);
         append(EACH);
@@ -3267,12 +3974,17 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         visitNode(obj.getBlock());
-        addTrailingComment(obj.getTrailingComment());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(ArrayTable obj) {
         addHintComment(obj);
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append("ARRAYTABLE("); //$NON-NLS-1$
         visitNode(obj.getArrayValue());
         append(SPACE);
@@ -3295,6 +4007,9 @@ public class SQLStringVisitor extends LanguageVisitor
         append(SPACE);
         outputDisplayName(obj.getName());
         addMakeDep(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     private void addMakeDep(FromClause obj) {
@@ -3333,14 +4048,23 @@ public class SQLStringVisitor extends LanguageVisitor
 
     @Override
     public void visit(AlterProcedure obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (isTeiid8OrGreater())
             visit8(obj);
         else
             visit7(obj);
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(AlterTrigger obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         if (obj.isCreate()) {
             append(CREATE);
         } else {
@@ -3368,10 +4092,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(SPACE);
             append(obj.getEnabled() ? NonReserved.ENABLED : NonReserved.DISABLED);
         }
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(AlterView obj) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(obj);
+
         append(ALTER);
         append(SPACE);
         append(NonReserved.VIEW);
@@ -3382,19 +4112,31 @@ public class SQLStringVisitor extends LanguageVisitor
         append("\n"); //$NON-NLS-1$
         addTabs(0);
         append(obj.getDefinition());
+
+        enableComments(obj);
+        addComments(obj);
     }
 
     @Override
     public void visit(WindowFunction windowFunction) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(windowFunction);
+
         append(windowFunction.getFunction());
         append(SPACE);
         append(OVER);
         append(SPACE);
         append(windowFunction.getWindowSpecification());
+
+        enableComments(windowFunction);
+        addComments(windowFunction);
     }
 
     @Override
     public void visit(WindowSpecification windowSpecification) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(windowSpecification);
+
         append(Tokens.LPAREN);
         boolean needsSpace = false;
         if (windowSpecification.getPartition() != null) {
@@ -3412,10 +4154,16 @@ public class SQLStringVisitor extends LanguageVisitor
             append(windowSpecification.getOrderBy());
         }
         append(Tokens.RPAREN);
+
+        enableComments(windowSpecification);
+        addComments(windowSpecification);
     }
 
     @Override
     public void visit(Array array) {
+        // Turn off adding comments until the query is completely formed
+        disableComments(array);
+
         if (!array.isImplicit()) {
             append(Tokens.LPAREN);
         }
@@ -3426,6 +4174,9 @@ public class SQLStringVisitor extends LanguageVisitor
     		}
             append(Tokens.RPAREN);
         }
+
+        enableComments(array);
+        addComments(array);
     }
 
     private String escapeSinglePart(String part) {

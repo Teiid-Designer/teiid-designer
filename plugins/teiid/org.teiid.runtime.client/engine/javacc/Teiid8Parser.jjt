@@ -11,10 +11,14 @@ options {
     NODE_USES_PARSER = true;
     NODE_PACKAGE = "org.teiid.query.sql.lang";
     VISITOR = false;
+    VISITOR_RETURN_TYPE = "void";
     GRAMMAR_ENCODING="UTF-8";
     KEEP_LINE_COLUMN = true;
     NODE_FACTORY = "TeiidNodeFactory";
     NODE_DEFAULT_VOID = true;
+    TOKEN_MANAGER_USES_PARSER = true;
+    COMMON_TOKEN_ACTION = true;
+    TOKEN_EXTENDS = "org.teiid.query.parser.AbstractToken";
 }
 
 PARSER_BEGIN(Teiid8Parser)
@@ -24,6 +28,7 @@ package org.teiid.query.parser.v8;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.regex.Matcher;
+import java.io.Reader;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -32,6 +37,7 @@ import org.teiid.designer.query.sql.lang.IJoinType;
 import org.teiid.designer.query.sql.lang.ISetQuery;
 import org.teiid.runtime.client.Messages;
 import org.teiid.language.SortSpecification.NullOrdering;
+import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.BaseColumn;
 import org.teiid.metadata.BaseColumn.NullType;
@@ -42,6 +48,8 @@ import org.teiid.metadata.Procedure;
 import org.teiid.metadata.ProcedureParameter;
 import org.teiid.metadata.Table;
 import org.teiid.query.parser.AbstractTeiidParser;
+import org.teiid.query.parser.AbstractToken;
+import org.teiid.query.parser.LimitedQueue;
 import org.teiid.query.parser.ParsedDataType;
 import org.teiid.query.parser.ParseInfo;
 import org.teiid.query.parser.TeiidNodeFactory;
@@ -53,6 +61,7 @@ import org.teiid.query.sql.proc.*;
 import org.teiid.query.sql.symbol.*;
 import org.teiid.core.types.BinaryType;
 import org.teiid.core.types.DataTypeManagerService;
+import org.teiid.core.types.DataTypeManagerService.DefaultDataTypes;
 import org.teiid.core.util.StringUtil;
 
 /** 
@@ -97,32 +106,10 @@ public class Teiid8Parser extends AbstractTeiidParser {
 
     private SourceHint getSourceHint(Token t) {
         String comment = getHintComment(t);
-        Matcher matcher = SOURCE_HINT.matcher(comment);
-        if (!matcher.find()) {
-            return null;
-        }
-
-        SourceHint sourceHint = new SourceHint();
-        if (matcher.group(1) != null) {
-            sourceHint.setUseAliases(true);
-        }
-
-        String generalHint = matcher.group(2);
-        if (generalHint != null) {
-            sourceHint.setGeneralHint(normalizeStringLiteral(generalHint));
-        }
-
-        int end = matcher.end();
-        matcher = SOURCE_HINT_ARG.matcher(comment);
-        while (matcher.find(end)) {
-            end = matcher.end();
-            sourceHint.setSourceHint(matcher.group(1), normalizeStringLiteral(matcher.group(3)), matcher.group(2) != null);
-        }
-
-        return sourceHint;
+        return getSourceHint(comment);
     }
 
-    private SourceHint getSourceHint(Teiid8Parser parser) {
+    SourceHint getSourceHint(Teiid8Parser parser) {
        int index = 1;
        //scan for the first keyword
        Token t = null;
@@ -192,18 +179,305 @@ public class Teiid8Parser extends AbstractTeiidParser {
                 Messages.TeiidParser.teiid_version_atleast_failure, version.get().toString(), getVersion().toString()));
     }
 
+    @Override
+    public void reset(Reader sql) {
+        super.reset(sql);
+        token_source.reset();
+    }
 } // end class
 
 PARSER_END(Teiid8Parser)
 
 TOKEN_MGR_DECLS : 
 {
-    int commentNestingDepth; 
+    int commentNestingDepth;
+    Comment comment = null;
+    StringBuilder subComment = new StringBuilder();
+    LimitedQueue<Token> preTokens = new LimitedQueue(5);
+    int preTokenLength = 0;
+    int offset = 0;
+
+    void reset() {        comment = null;
+        subComment = new StringBuilder();
+        preTokens = new LimitedQueue(5);
+        preTokenLength = 0;
+        offset = 0;
+    }
+
+    void CommonTokenAction(Token t) {
+        // Calculate the offset for all normal tokens
+        calculateOffset(t);
+
+        trackToken(t);
+    }
+
+    /**
+     * Some tokens are mutated into different values when the sql is converted
+     * back; will generate the new token object accordingly.
+     *
+     * @param t
+     * @return a new token or the same token.
+     */
+    Token modifyToken(Token t) {
+        return t;
+    }
+
+    /**
+     * Track the previous token
+     */
+    void trackToken(Token t) {
+        if (t.doNotTrack())
+            return;
+
+        t.setText(t.image);
+        preTokens.add(t);
+    }
+
+    /**
+     * Creates a new token and tracks it in the comment sequence and offset
+     *
+     * @param kind
+     * @param image
+     * @param beginColumn
+     * @param beginLine
+     * @return new token
+     */
+    private Token appendToken(int kind, String image, int beginColumn, int beginLine) {
+        Token replacement = Token.newToken(kind, image);
+        replacement.beginColumn = beginColumn;
+        replacement.beginLine = beginLine;
+        replacement.endColumn = replacement.beginColumn + replacement.image.length();
+        replacement.endLine = beginLine;
+        calculateOffset(replacement);
+        trackToken(replacement);
+        return replacement;
+    }
+
+    /**
+     * Whether the given token should be ignored
+     */
+    private boolean ignoreToken(Token t) {
+        Token preToken = null;
+        if (!preTokens.isEmpty())
+            preToken = preTokens.getLast();
+
+        if (preToken != null) {
+            //
+            // Looks at the previous token in context with this token
+            //
+            switch (preToken.kind) {
+                case FALSE:
+                case TRUE:
+                case UNKNOWN:
+                    if (t.kind == RBRACE)
+                        return true;
+
+                    break;
+                case SELECT:
+                    // The term SELECT ALL drops the ALL and only uses SELECT
+                    if (t.kind == ALL)
+                        return true;
+
+                    break;
+                case ESCAPEDTYPE:
+                    if ("{b".equalsIgnoreCase(preToken.image)) {
+                        // The term {b'value'} gets replaced with TRUE/FALSE depending on value
+                        // so need to transform the pre token in the same manner so that the offset
+                        // and pre token lists are the same for the comment
+                        String oldImage = preToken.image;
+
+                        // Transforms {b'value'} into TRUE/FALSE in the same manner as the parser
+                        // and assigns the transformed value to preToken, replacing the original {b
+                        try {
+                            DefaultDataTypes escapeType = DataTypeManagerService.DefaultDataTypes.BOOLEAN;
+                            String value = AbstractTeiidParser.normalizeStringLiteral(t.image);
+                            Object transformValue = parser.getDataTypeService().transformValue(value, escapeType);
+                            if (transformValue == null) {
+                                preToken.kind = UNKNOWN;
+                                preToken.image = SQLConstants.Reserved.UNKNOWN;
+                            } else if (Boolean.valueOf(transformValue.toString())) {
+                                preToken.kind = TRUE;
+                                preToken.image = SQLConstants.Reserved.TRUE;
+                            } else if (! Boolean.valueOf(transformValue.toString())) {
+                                preToken.kind = FALSE;
+                                preToken.image = SQLConstants.Reserved.FALSE;
+                            }
+                        } catch (Exception ex) {
+                            throw new Error("Failed to transform boolean value while processing comments");
+                        }
+
+                        // Modify the text, offset and preTokenLength to reflect the changed value
+                        preToken.setText(preToken.image);
+                        preToken.endColumn = preToken.beginColumn + preToken.image.length();
+                        preTokenLength = preTokenLength - oldImage.length() + preToken.image.length();
+                        offset = offset - oldImage.length() + preToken.image.length();
+
+                        // Ignore this token since its no longer necessary. All the information has now been
+                        // added to preToken
+                        return true;
+                    }
+
+                    break;
+                case DOLLAR:
+                    preToken.image = SQLConstants.Tokens.QMARK;
+                    preToken.kind = QMARK;
+                    preToken.setText(preToken.image);
+
+                    // Ignore this token since its no longer necessary. All the information has now been
+                    // added to preToken
+                    return true;
+            }
+        }
+
+        //
+        // Looks only at this token regardless of the previous token
+        //
+        switch(t.kind) {
+            case ERROR:
+                //
+                // The token ERROR is converted into RAISE SQLEXCEPTION
+                //
+                Token raiseToken = appendToken(RAISE, SQLConstants.NonReserved.RAISE, t.beginColumn, t.beginLine);
+                appendToken(SQLEXCEPTION, SQLConstants.Reserved.SQLEXCEPTION, raiseToken.endColumn + 1, t.beginLine);
+
+                return true;
+            case NE2:
+                // Replace != version of not-equals with <>
+                appendToken(NE, SQLConstants.Tokens.NE, t.beginLine, t.beginColumn);
+                return true;
+            case TABLE:
+                //
+                // The token TABLE is converted into SELECT * FROM
+                //
+                Token selectToken = appendToken(SELECT, SQLConstants.Reserved.SELECT, t.beginColumn, t.beginLine);
+                Token starToken = appendToken(STAR, SQLConstants.Tokens.ALL_COLS, selectToken.endColumn + 1, t.beginLine);
+                appendToken(FROM, SQLConstants.Reserved.FROM, starToken.endColumn + 1, t.beginLine);
+
+                return true;
+            case ESCAPEDTYPE:
+                if ("{fn".equalsIgnoreCase(t.image) || "{oj".equalsIgnoreCase(t.image)) {
+                    // These are dropped by the parser
+                    return true;
+                }
+
+                break;
+            case JOIN:
+                switch (preToken.kind) {
+                    case INNER:
+                    case OUTER:
+                    case CROSS:
+                    case UNION:
+                        return false;
+                    default:
+                        // JOIN token is used but is actually an INNER JOIN and
+                        // will be printed as such when converted back to a string
+                        appendToken(INNER, SQLConstants.Reserved.INNER, t.beginColumn, t.beginLine);
+                        t.beginColumn = t.beginColumn + SQLConstants.Reserved.INNER.length() + 1;
+
+                        // Still want to keep this token but just inserted an extra one in front
+                        return false;
+                }
+            case SEMICOLON:
+                // ; are allowed at the end of the sequence but are dropped by the parser
+                return true;
+            case ID:
+                // Record whether this is an ID token
+                t.setId(true);
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * Calculate the absolute location of the start of the
+     * given token in the sql sequence
+     */
+    void calculateOffset(Token t) {
+        Token preToken = null;
+        if (! preTokens.isEmpty())
+            preToken = preTokens.getLast();
+
+        if (ignoreToken(t)) {
+            t.setDoNotTrack(true);
+            return;
+        }
+
+        t = modifyToken(t);
+        String text = t.image;
+        int tokenLength = text.length();
+
+        // Nested comments should not include a space
+        // after them since the space is already included
+        // by the closing star-slash
+        int space = commentNestingDepth == 0 ? 1 : 0;
+        if (space > 0 && preToken != null) {
+          // Opening brackets don't have space after them 
+          switch (preToken.kind) {
+              case LPAREN:
+              case LBRACE:
+              case LSBRACE:
+                  space = 0;
+          }
+        }
+
+        if (preTokenLength > 0)
+            offset += preTokenLength;
+
+        preTokenLength = tokenLength + space;
+
+        switch (t.kind) {
+            case RPAREN:
+            case RBRACE:
+            case RSBRACE:
+            case COMMA:
+                // Closing brackets/braces don't
+                // have spaces in front of them hence
+                offset--;
+        }
+
+        t.setOffset(offset);
+    }
+
+    void createComment(boolean multiLine, Token t) {
+        if (comment == null) {
+            // If comment starts with a /*+ then its a hint and will be handled
+            // by the parser itself.
+            String hint = t.image.substring(2, t.image.length() - 2);
+            if (hint.startsWith(StringUtil.Constants.PLUS))
+                return;
+
+            comment = new Comment();
+        }
+
+        comment.setMultiLine(multiLine);
+
+        if ( comment.getLine() < 0)
+            comment.setLine(t.beginLine);
+
+        if ( comment.getColumn() < 0)
+            comment.setColumn(t.beginColumn);
+
+        comment.setText(comment.getText() + t.image.toString());
+
+        if (comment.getPreTokens().isEmpty() && ! preTokens.isEmpty()) {
+            comment.setPreTokens(preTokens);
+        }
+
+        if (comment.getOffset() == -1)
+            comment.setOffset(offset);
+
+        if (commentNestingDepth == 0) {
+            parser.addComment(comment);
+            comment = null;
+        }
+    }
 } 
 
 SKIP :
 {
-	" " | "\t" | "\n" | "\r"
+	" " | "\t" | "\n" | "\r" {        calculateOffset(matchedToken);
+	}
 }
 
 MORE :
@@ -220,9 +494,17 @@ MORE :
 <IN_MULTI_LINE_COMMENT>
 SPECIAL_TOKEN : 
 {  
-  "*/" { 
-    commentNestingDepth -= 1;
-    SwitchTo( commentNestingDepth==0 ? DEFAULT : IN_MULTI_LINE_COMMENT ) ; 
+  "*/" {
+        commentNestingDepth -= 1;
+
+        // Calculates the offset for these special tokens
+        calculateOffset(matchedToken);
+
+        createComment(true, matchedToken);
+
+        trackToken(matchedToken);
+
+        SwitchTo( commentNestingDepth==0 ? DEFAULT : IN_MULTI_LINE_COMMENT ) ;
   }
 } 
 
@@ -234,7 +516,17 @@ MORE :
 
 SPECIAL_TOKEN:
 {
-   <LINE_COMMENT: "--"(~["\r","\n"])*>
+    <LINE_COMMENT: "--"(~["\r","\n"])*> {
+
+        if (parser.versionLessThan(Version.TEIID_8_10))
+            return;
+
+        // Calculates the offset for these special tokens
+        calculateOffset(matchedToken);
+
+        createComment(false, matchedToken);
+
+        trackToken(matchedToken);    }
 }
 
 TOKEN: /* Data types */

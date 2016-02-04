@@ -194,14 +194,19 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
     protected void helpTestExpression(String sql, String expectedString, Expression expected) throws Exception {
         Expression actual = parser.parseExpression(sql);
         String actualString = actual.toString();
-        assertEquals("Command objects do not match: ", expected, actual);
+        if (expected != null)
+            assertEquals("Command objects do not match: ", expected, actual);
+
         assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
     protected void helpStmtTest(String stmt, String expectedString, Statement expectedStmt) throws Exception {
         Statement actualStmt = parser.getTeiidParser(stmt).statement(new ParseInfo());
         String actualString = actualStmt.toString();
-        assertEquals("Language objects do not match: ", expectedStmt, actualStmt);
+
+        if (expectedStmt != null)
+            assertEquals("Language objects do not match: ", expectedStmt, actualStmt);
+
         assertEquals("SQL strings do not match: ", expectedString, actualString);
     }
 
@@ -4696,5 +4701,1762 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
     @Test
     public void testTrim1() {
         helpException("select trim('xy' from e1) from pm1.g1");
+    }
+
+    // #####################  COMMENTS ###############################
+
+    private void printIndexes(String text) {
+        int i = 0;
+        while(i < text.length()) {
+            StringBuffer indexes = new StringBuffer();
+            StringBuffer textBuffer= new StringBuffer();
+
+            int lineLength = 20;
+            for (int j = i; j <= (i + lineLength) && j < text.length(); ++j) {
+                char c = text.charAt(j);
+                indexes.append(j).append("\t");
+                textBuffer.append("'").append(c).append("'").append("\t");
+            }
+
+            textBuffer.append(NEW_LINE);
+
+            System.out.println(indexes);
+            System.out.println(textBuffer);
+
+            i += lineLength + 1;
+            
+        }
+    }
+
+    /** SELECT * FROM g1 cross join g2 */
+    @Test
+    public void testCrossJoinWithCommentsWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM g1 cross join g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1 CROSS JOIN g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM (g1 cross join g2), g3 */
+    @Test
+    public void testFromClausesWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM (g1 cross join g2), g3 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1 CROSS JOIN g2, g3 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM (g1 cross join g2) cross join g3 */
+    @Test
+    public void testMultiCrossJoinWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM (g1 cross join g2) cross join g3 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM (g1 CROSS JOIN g2) CROSS JOIN g3 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM (g1 cross join g2) cross join (g3 cross join g4) */
+    @Test
+    public void testMultiCrossJoin2WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM (g1 cross join g2) cross join (g3 cross join g4) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM (g1 CROSS JOIN g2) CROSS JOIN (g3 CROSS JOIN g4) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM g1 cross join (g2 cross join g3) */
+    @Test
+    public void testMultiCrossJoin3WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM g1 cross join (g2 cross join g3) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1 CROSS JOIN (g2 CROSS JOIN g3) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM g1 cross join (g2 cross join g3), g4 */
+    @Test
+    public void testMixedJoinWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM g1 cross join (g2 cross join g3), g4 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1 CROSS JOIN (g2 CROSS JOIN g3), g4 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM g1 cross join (g2 cross join g3), g4, g5 cross join g6 */
+    @Test
+    public void testMixedJoin2WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM g1 cross join (g2 cross join g3), g4, g5 cross join g6 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1 CROSS JOIN (g2 CROSS JOIN g3), g4, g5 CROSS JOIN g6 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM g1, g2 inner join g3 on g2.a=g3.a */
+    @Test
+    public void testMixedJoin3WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM g1, g2 inner join g3 on g2.a=g3.a /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM g1, g2 INNER JOIN g3 ON g2.a = g3.a /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select myG.a myA, myH.b from g myG right outer join h myH on myG.x=myH.x */
+    @Test
+    public void testRightOuterJoinWithAliasesWithComments() {
+        String sql = "/* Leading Comment */ Select myG.a myA, myH.b from g myG right outer join h myH on myG.x=myH.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a AS myA, myH.b FROM g AS myG RIGHT OUTER JOIN h AS myH ON myG.x = myH.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select myG.x myX, myH.y from g myG right join h myH on myG.x=myH.x */
+    @Test
+    public void testRightJoinWithAliasesWithComments() {
+        String sql = "/* Leading Comment */ Select myG.a myA, myH.b from g myG right join h myH on myG.x=myH.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a AS myA, myH.b FROM g AS myG RIGHT OUTER JOIN h AS myH ON myG.x = myH.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select myG.a myA, myH.b from g myG left outer join h myH on myG.x=myH.x */
+    @Test
+    public void testLeftOuterJoinWithAliasesWithComments() {
+        String sql = "/* Leading Comment */ Select myG.a myA, myH.b from g myG left outer join h myH on myG.x=myH.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a AS myA, myH.b FROM g AS myG LEFT OUTER JOIN h AS myH ON myG.x = myH.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select myG.a myA, myH.b from g myG left join h myH on myG.x=myH.x */
+    @Test
+    public void testLeftJoinWithAliasesWithComments() {
+        String sql = "/* Leading Comment */ Select myG.a myA, myH.b from g myG left join h myH on myG.x=myH.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a AS myA, myH.b FROM g AS myG LEFT OUTER JOIN h AS myH ON myG.x = myH.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select myG.a myA, myH.b from g myG full outer join h myH on myG.x=myH.x */
+    @Test
+    public void testFullOuterJoinWithAliasesWithComments() {
+        String sql = "/* Leading Comment */ Select myG.a myA, myH.b from g myG full outer join h myH on myG.x=myH.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a AS myA, myH.b FROM g AS myG FULL OUTER JOIN h AS myH ON myG.x = myH.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select g.a, h.b from g full join h on g.x=h.x */
+    @Test
+    public void testFullJoinWithComments() {
+        String sql = "/* Leading Comment */ Select g.a, h.b from g full join h on g.x=h.x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT g.a, h.b FROM g FULL OUTER JOIN h ON g.x = h.x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ======================= Convert ==============================================
+
+    /** SELECT CONVERT(a, string) FROM g */
+    @Test
+    public void testConversionFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT CONVERT(a, string) FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT CONVERT(a, string) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT CONVERT(CONVERT(a, timestamp), string) FROM g */
+    @Test
+    public void testConversionFunction2WithComments() {
+        String sql = "/* Leading Comment */ SELECT CONVERT(CONVERT(a, timestamp), string) FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT CONVERT(CONVERT(a, timestamp), string) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ======================= Functions ==============================================
+
+    /** SELECT 5 + length(concat(a, 'x')) FROM g */
+    @Test
+    public void testMultiFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 + length(concat(a, 'x')) FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (5 + length(concat(a, 'x'))) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT REPLACE(a, 'x', 'y') AS y FROM g */
+    @Test
+    public void testAliasedFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT REPLACE(a, 'x', 'y') AS y FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT REPLACE(a, 'x', 'y') AS y FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT cast(a as string) FROM g */
+    @Test
+    public void testCastFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT cast(a as string) FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT cast(a AS string) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT cast(cast(a as timestamp) as string) FROM g */
+    @Test
+    public void testMultiCastFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT cast(cast(a as timestamp) as string) FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT cast(cast(a AS timestamp) AS string) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT left(fullname, 3) as x FROM sys.groups */
+    @Test
+    public void testLeftFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT left(fullname, 3) as x FROM sys.groups /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT left(fullname, 3) AS x FROM sys.groups /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT right(fullname, 3) as x FROM sys.groups */
+    @Test
+    public void testRightFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT right(fullname, 3) as x FROM sys.groups /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT right(fullname, 3) AS x FROM sys.groups /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT char('x') AS x FROM sys.groups */
+    @Test
+    public void testCharFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT char('x') AS x FROM sys.groups /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT char('x') AS x FROM sys.groups /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT insert('x', 1, 'a') as x FROM sys.groups */
+    @Test
+    public void testInsertFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT insert('x', 1, 'a') AS x FROM sys.groups /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT insert('x', 1, 'a') AS x FROM sys.groups /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testInsertIntoSelectWithComments() {
+        String sql = "insert into tempA SELECT 1 /* Trailing Comment */";
+        String expectedSql = "INSERT INTO tempA SELECT 1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT translate('x', 'x', 'y') FROM sys.groups */
+    @Test
+    public void testTranslateFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT translate('x', 'x', 'y') FROM sys.groups /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT translate('x', 'x', 'y') FROM sys.groups /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_FRAC_SECOND, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionFracSecondWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_FRAC_SECOND, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_FRAC_SECOND, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_SECOND, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionSecondWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_SECOND, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_SECOND, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_MINUTE, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionMinuteWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_MINUTE, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_MINUTE, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_HOUR, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionHourWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_HOUR, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_HOUR, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_DAY, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionDayWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_DAY, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_DAY, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_WEEK, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionWeekWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_WEEK, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_WEEK, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_QUARTER, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionQuarterWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_QUARTER, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_QUARTER, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampadd(SQL_TSI_YEAR, 10, '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampaddFunctionYearWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_YEAR, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampadd(SQL_TSI_YEAR, 10, '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT timestampdiff(SQL_TSI_FRAC_SECOND, '2003-05-01 10:20:10', '2003-05-01 10:20:30') as x FROM my.group1 */
+    @Test
+    public void testTimestampdiffFunctionFracSecondWithComments() {
+        String sql = "/* Leading Comment */ SELECT timestampdiff(SQL_TSI_FRAC_SECOND, '2003-05-01 10:20:10', '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT timestampdiff(SQL_TSI_FRAC_SECOND, '2003-05-01 10:20:10', '2003-05-01 10:20:30') AS x FROM my.group1 /* Trailing Comment */";
+        helpTest(sql,
+                 expectedSql,
+                 null);
+    }
+
+    /** SELECT 5 + 2 + 3 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedence1WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 + 2 + 3 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((5 + 2) + 3) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 + 2 - 3 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedence2WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 + 2 - 3 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((5 + 2) - 3) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 + 2 * 3 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedence3WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 + 2 * 3 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (5 + (2 * 3)) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 * 2 + 3 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedence4WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 * 2 + 3 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((5 * 2) + 3) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 * 2 * 3 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedence5WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 * 2 * 3 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((5 * 2) * 3) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 1 + 2 * 3 + 4 * 5 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedenceMixed1WithComments() {
+        String sql = "/* Leading Comment */ SELECT 1 + 2 * 3 + 4 * 5 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((1 + (2 * 3)) + (4 * 5)) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 1 * 2 + 3 * 4 + 5 FROM g */
+    @Test
+    public void testArithmeticOperatorPrecedenceMixed2WithComments() {
+        String sql = "/* Leading Comment */ SELECT 1 * 2 + 3 * 4 + 5 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (((1 * 2) + (3 * 4)) + 5) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 - 4 - 3 - 2 FROM g --> SELECT ((5 - 4) - 3) - 2 FROM g */
+    @Test
+    public void testLeftAssociativeExpressions1WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 - 4 - 3 - 2 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (((5 - 4) - 3) - 2) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 5 / 4 / 3 / 2 FROM g --> SELECT ((5 / 4) / 3) / 2 FROM g */
+    @Test
+    public void testLeftAssociativeExpressions2WithComments() {
+        String sql = "/* Leading Comment */ SELECT 5 / 4 / 3 / 2 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (((5 / 4) / 3) / 2) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 'a' || 'b' || 'c' FROM g */
+    @Test
+    public void testConcatOperator1WithComments() {
+        String sql = "/* Leading Comment */ SELECT 'a' || 'b' || 'c' FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (('a' || 'b') || 'c') FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 2 + 3 || 5 + 1 * 2 FROM g */
+    @Test
+    public void testMixedOperators1WithComments() {
+        String sql = "/* Leading Comment */ SELECT 2 + 3 || 5 + 1 * 2 FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ((2 + 3) || (5 + (1 * 2))) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ======================= Group By ==============================================
+
+    /** SELECT a FROM m.g GROUP BY b, c */
+    @Test
+    public void testGroupByWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY b, c /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY b, c /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM m.g GROUP BY b, c HAVING b=5*/
+    @Test
+    public void testGroupByHavingWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY b, c HAVING b=5 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY b, c HAVING b = 5 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT COUNT(a) AS c FROM m.g */
+    @Test
+    public void testAggregateFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT COUNT(a) AS c FROM m.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT COUNT(a) AS c FROM m.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT (COUNT(a)) AS c FROM m.g - this kind of query is generated by ODBC sometimes */
+    @Test
+    public void testAggregateFunctionWithParensWithComments() {
+        String sql = "/* Leading Comment */ SELECT (COUNT(a)) AS c FROM m.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT COUNT(a) AS c FROM m.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM m.g GROUP BY a HAVING COUNT(b) > 0*/
+    @Test
+    public void testHavingFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY a HAVING COUNT(b) > 0 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY a HAVING COUNT(b) > 0 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM m.g GROUP BY a, b HAVING COUNT(b) > 0 AND b+5 > 0 */
+    @Test
+    public void testCompoundHavingWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY a, b HAVING COUNT(b) > 0 AND b+5 > 0 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM m.g GROUP BY a, b HAVING (COUNT(b) > 0) AND ((b + 5) > 0) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testFunctionOfAggregatesWithComments() {
+        String sql = "/* Leading Comment */ SELECT COUNT(a) * SUM(a) AS c FROM m.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (COUNT(a) * SUM(a)) AS c FROM m.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+
+    }
+
+    /** SELECT 5-null, a.g1.c1 FROM a.g1 */
+    @Test
+    public void testArithmeticNullFunctionWithComments() {
+        String sql = "/* Leading Comment */ SELECT 5-null, a.g1.c1 FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (5 - null), a.g1.c1 FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 'abc' FROM a.g1 */
+    @Test
+    public void testStringLiteralWithComments() {
+        String sql = "/* Leading Comment */ SELECT 'abc' FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 'abc' FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 'O''Leary' FROM a.g1 */
+    @Test
+    public void testStringLiteralEscapedTickWithComments() {
+        String sql = "/* Leading Comment */ SELECT 'O''Leary' FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 'O''Leary' FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT '''abc''' FROM a.g1 */
+    @Test
+    public void testStringLiteralEscapedTick2WithComments() {
+        String sql = "/* Leading Comment */ SELECT '''abc''' FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT '''abc''' FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 'a''b''c' FROM a.g1 */
+    @Test
+    public void testStringLiteralEscapedTick3WithComments() {
+        String sql = "/* Leading Comment */ SELECT 'a''b''c' FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 'a''b''c' FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT " "" " FROM a.g1 */
+    @Test
+    public void testStringLiteralEscapedTick4WithComments() {
+        String sql = "/* Leading Comment */ SELECT \" \"\" \" FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT \" \"\" \" FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 123456789012 FROM a.g1 */
+    @Test
+    public void testLongLiteralWithComments() {
+        String sql = "/* Leading Comment */ SELECT 123456789012 FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 123456789012 FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT 1000000000000000000000000 FROM a.g1 */
+    @Test
+    public void testBigIntegerLiteralWithComments() {
+        String sql = "/* Leading Comment */ SELECT 1000000000000000000000000 FROM a.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 1000000000000000000000000 FROM a.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {d'2002-10-02'} FROM m.g1 */
+    @Test
+    public void testDateLiteral1WithComments() {
+        String sql = "/* Leading Comment */ SELECT {d'2002-10-02'} FROM m.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT {d'2002-10-02'} FROM m.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {d'2002-9-1'} FROM m.g1 */
+    @Test
+    public void testDateLiteral2WithComments() {
+        String sql = "/* Leading Comment */ SELECT {d'2002-09-01'} FROM m.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT {d'2002-09-01'} FROM m.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {t '11:10:00' } FROM m.g1 */
+    @Test
+    public void testTimeLiteral1WithComments() {
+        String sql = "/* Leading Comment */ SELECT {t '11:10:00' } FROM m.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT {t'11:10:00'} FROM m.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {t '5:10:00'} FROM m.g1 */
+    @Test
+    public void testTimeLiteral2WithComments() {
+        String sql = "/* Leading Comment */ SELECT {t '05:10:00'} FROM m.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT {t'05:10:00'} FROM m.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {ts'2002-10-02 19:00:02.50'} FROM m.g1 */
+    @Test
+    public void testTimestampLiteralWithComments() {
+        String sql = "/* Leading Comment */ SELECT {ts'2002-10-02 09:00:02.50'} FROM m.g1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT {ts'2002-10-02 09:00:02.5'} FROM m.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {b'true'} FROM m.g1 */
+    @Test
+    public void testBooleanLiteralTrueWithComments() {
+        String sql = "/* Leading Comment */ SELECT {b'true'} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT TRUE /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT TRUE FROM m.g1 */
+    @Test
+    public void testBooleanLiteralTrue2WithComments() {
+        String sql = "/* Leading Comment */ SELECT TRUE /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT TRUE /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT {b'false'} FROM m.g1 */
+    @Test
+    public void testBooleanLiteralFalseWithComments() {
+        String sql = "/* Leading Comment */ SELECT {b'false'} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT FALSE /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT FALSE FROM m.g1 */
+    @Test
+    public void testBooleanLiteralFalse2WithComments() {
+        String sql = "/* Leading Comment */ SELECT {b'false'} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT FALSE /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testBooleanLiteralUnknownWithComments() {
+        String sql = "/* Leading Comment */ SELECT {b'unknown'} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT UNKNOWN /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testBooleanLiteralUnknown2WithComments() {
+        String sql = "/* Leading Comment */ SELECT UNKNOWN /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT UNKNOWN /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT DISTINCT a FROM g */
+    @Test
+    public void testSelectDistinctWithComments() {
+        String sql = "/* Leading Comment */ SELECT DISTINCT a /* Pre-From Comment */ FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT DISTINCT a /* Pre-From Comment */ FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT ALL a FROM g */
+    @Test
+    public void testSelectAllWithComments() {
+        String sql = "/* Leading Comment */ SELECT ALL a /* Pre-From Comment */ FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    //=========================Aliasing==============================================
+
+    /** SELECT a AS myA, b FROM g */
+    @Test
+    public void testAliasInSelectWithComments() {
+        String sql = "/* Leading Comment */ SELECT a AS myA, b FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a AS myA, b FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a myA, b FROM g, h */
+    @Test
+    public void testAliasInSelect2WithComments() {
+        String sql = "/* Leading Comment */ SELECT a myA, b FROM g, h /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a AS myA, b FROM g, h /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT myG.a FROM g AS myG */
+    @Test
+    public void testAliasInFromWithComments() {
+        String sql = "/* Leading Comment */ SELECT myG.a FROM g AS myG /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.a FROM g AS myG /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT myG.*, myH.b FROM g AS myG, h AS myH */
+    @Test
+    public void testAliasesInFromWithComments() {
+        String sql = "/* Leading Comment */ SELECT myG.*, myH.b FROM g AS myG, h AS myH /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.*, myH.b FROM g AS myG, h AS myH /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT myG.a, myH.b FROM g myG, h myH */
+    @Test
+    public void testHiddenAliasesInFromWithComments() {
+        String sql = "/* Leading Comment */ SELECT myG.*, myH.b FROM g myG, h myH /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT myG.*, myH.b FROM g AS myG, h AS myH /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ======================= Misc ==============================================
+
+    /** Select a From db.g Where a IS NULL */
+    @Test
+    public void testIsNullCriteria1WithComments() {
+        String sql = "/* Leading Comment */ Select a /* Pre-From Comment */ From db.g Where a IS NULL /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a IS NULL /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select a From db.g Where a IS NOT NULL */
+    @Test
+    public void testIsNullCriteria2WithComments() {
+        String sql = "/* Leading Comment */ Select a /* Pre-From Comment */ From db.g Where a IS NOT NULL /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a IS NOT NULL /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Select a From db.g Where Not a IS NULL */
+    @Test
+    public void testNotIsNullCriteriaWithComments() {
+        String sql = "/* Leading Comment */ Select a /* Pre-From Comment */ From db.g Where Not a IS NULL /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE NOT (a IS NULL) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a <> "value" */
+    @Test
+    public void testStringNotEqualDoubleTicksWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a <> \"value\" /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a <> \"value\" /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a != "value" */
+    @Test
+    public void testNotEquals2WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a != 'value' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a <> 'value' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db."g" where a = 5 */
+    @Test
+    public void testPartlyQuotedGroupWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.\"g\" where a = 5 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a = 5 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from "db"."g" where a = 5 */
+    @Test
+    public void testFullyQuotedGroupWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from \"db\".\"g\" where a = 5 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a = 5 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT "db".g.a from db.g */
+    @Test
+    public void testPartlyQuotedElement1WithComments() {
+        String sql = "/* Leading Comment */ SELECT \"db\".g.a from db.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT db.g.a FROM db.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT "db"."g".a from db.g */
+    @Test
+    public void testPartlyQuotedElement2WithComments() {
+        String sql = "/* Leading Comment */ SELECT \"db\".\"g\".a from db.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT db.g.a FROM db.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT "db"."g"."a" from db.g */
+    @Test
+    public void testPartlyQuotedElement3WithComments() {
+        String sql = "/* Leading Comment */ SELECT \"db\".\"g\".\"a\" from db.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT db.g.a FROM db.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT ""g"".""a" from db.g */
+    @Test
+    public void testStringLiteralLikeQuotedElementWithComments() {
+        String sql = "/* Leading Comment */ SELECT \"g\"\".\"\"a\" from g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT \"g\"\"\".\"\"\"a\" FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT g.x AS "select" FROM g */
+    @Test
+    public void testQuotedAliasWithComments() {
+        String sql = "/* Leading Comment */ SELECT g.x AS \"select\" FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT g.x AS \"select\" FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT g.x AS year FROM g */
+    @Test
+    public void testQuotedAlias2WithComments() {
+        String sql = "/* Leading Comment */ SELECT g.x AS \"year\" FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT g.x AS \"year\" FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testQuotedAlias3WithComments() {
+        String sql = "/* Leading Comment */ SELECT g.x AS \"some year\" FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT g.x AS \"some year\" FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT g."select" FROM g */
+    @Test
+    public void testReservedWordElement1WithComments() {
+        String sql = "/* Leading Comment */ SELECT g.\"select\" FROM g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT g.\"select\" FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet.x FROM newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet */
+    @Test
+    public void testReservedWordElement2WithComments() {
+        String sql = "/* Leading Comment */ SELECT newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet.x FROM newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT newModel5.ResultSetDocument.MappingClasses.\"from\".\"from\".Query1InputSet.x FROM newModel5.ResultSetDocument.MappingClasses.\"from\".\"from\".Query1InputSet /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet  */
+    @Test
+    public void testReservedWordGroup1WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM newModel5.ResultSetDocument.MappingClasses.from.from.Query1InputSet /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM newModel5.ResultSetDocument.MappingClasses.\"from\".\"from\".Query1InputSet /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM newModel5."ResultSetDocument.MappingClasses.from.from.Query1InputSet"  */
+    @Test
+    public void testReservedWordGroup2WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM newModel5.\"ResultSetDocument.MappingClasses.from.from.Query1InputSet\" /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM newModel5.ResultSetDocument.MappingClasses.\"from\".\"from\".Query1InputSet /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT * FROM model.doc WHERE ab.cd.@ef = 'abc' */
+    @Test
+    public void testXMLCriteriaWithAttributeWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM model.doc WHERE ab.cd.@ef = 'abc' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM model.doc WHERE ab.cd.@ef = 'abc' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a <> 'value' */
+    @Test
+    public void testStringNotEqualWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a <> 'value' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a <> 'value' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a BETWEEN 1000 AND 2000 */
+    @Test
+    public void testBetween1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a BETWEEN 1000 AND 2000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a BETWEEN 1000 AND 2000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a NOT BETWEEN 1000 AND 2000 */
+    @Test
+    public void testBetween2WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a NOT BETWEEN 1000 AND 2000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a NOT BETWEEN 1000 AND 2000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a < 1000 */
+    @Test
+    public void testCompareLTWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a < 1000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a < 1000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a > 1000 */
+    @Test
+    public void testCompareGTWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a > 1000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a > 1000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a <= 1000 */
+    @Test
+    public void testCompareLEWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a <= 1000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a <= 1000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where a >= 1000 */
+    @Test
+    public void testCompareGEWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where a >= 1000 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE a >= 1000 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b IN (1000,5000)*/
+    @Test
+    public void testSetCriteria0WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (1000,5000) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (1000, 5000) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b NOT IN (1000,5000)*/
+    @Test
+    public void testSetCriteria1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT IN (1000,5000) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT IN (1000, 5000) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ================================== order by ==================================
+
+    /** SELECT a FROM db.g WHERE b = aString order by c*/
+    @Test
+    public void testOrderByWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b = aString order by c desc*/
+    @Test
+    public void testOrderByDescWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c desc /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c DESC /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b = aString order by c,d*/
+    @Test
+    public void testOrderBysWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c,d /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c, d /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b = aString order by c desc,d desc*/
+    @Test
+    public void testOrderBysDescWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c desc,d desc /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c DESC, d DESC /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b = aString order by c desc,d*/
+    @Test
+    public void testMixedOrderBysWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c desc,d /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c DESC, d /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testOrderByNullOrderingWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c NULLS FIRST,d desc nulls last /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString ORDER BY c NULLS FIRST, d DESC NULLS LAST /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    // ================================== match ====================================
+
+    /** SELECT a FROM db.g WHERE b LIKE 'aString'*/
+    @Test
+    public void testLike0WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b LIKE 'aString' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b LIKE 'aString' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM db.g WHERE b NOT LIKE 'aString'*/
+    @Test
+    public void testLike1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT LIKE 'aString' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT LIKE 'aString' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where b like '#String' escape '#'*/
+    @Test
+    public void testLikeWithEscapeWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where b like '#String' escape '#' /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b LIKE '#String' ESCAPE '#' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT "date"."time" from db.g */
+    @Test
+    public void testReservedWordsInElementWithComments() {
+        String sql = "/* Leading Comment */ SELECT \"date\".\"time\" from db.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT \"date\".\"time\" FROM db.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+
+    }
+
+    /** SELECT a */
+    @Test
+    public void testNoFromClauseWithComments() {
+        String sql = "/* Leading Comment */ SELECT a, 5 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a, 5 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a or b from g */
+    @Test
+    public void testOrInSelectWithComments() {
+        String sql = "/* Leading Comment */ select a or b /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (a) OR (b) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a FROM g WHERE a LIKE x*/
+    @Test
+    public void testLikeWOConstantWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM g WHERE a LIKE x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM g WHERE a LIKE x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where b LIKE ? */
+    @Test
+    public void testParameter1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ from db.g where b LIKE ? /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b LIKE ? /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a from db.g where b LIKE ? */
+    @Test
+    public void testParameter2WithComments() {
+        String sql = "/* Leading Comment */ SELECT ? from db.g where b LIKE ? /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ? FROM db.g WHERE b LIKE ? /* Trailing Comment */";
+        printIndexes(sql);
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a, b FROM (SELECT c FROM m.g) AS y */
+    @Test
+    public void testSubquery1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a, b FROM (SELECT c /* Pre-From Comment */ FROM m.g) AS y /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a, b FROM (SELECT c /* Pre-From Comment */ FROM m.g) AS y /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a, b FROM ((SELECT c FROM m.g)) AS y */
+    @Test
+    public void testSubquery1aWithComments() {
+        String sql = "/* Leading Comment */ SELECT a, b FROM ((SELECT c /* Pre-From Comment */ FROM m.g)) AS y /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a, b FROM (SELECT c /* Pre-From Comment */ FROM m.g) AS y /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** SELECT a, b FROM m.g1 JOIN (SELECT c FROM m.g2) AS y ON m.g1.a = y.c */
+    @Test
+    public void testSubquery2WithComments() {
+        String sql = "/* Leading Comment */ SELECT a, b FROM m.g1 JOIN (SELECT c /* Pre-From Comment */ FROM m.g2) AS y ON m.g1.a = y.c /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a, b FROM m.g1 INNER JOIN (SELECT c /* Pre-From Comment */ FROM m.g2) AS y ON m.g1.a = y.c /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** INSERT INTO m.g (a) VALUES (?) */
+    @Test
+    public void testInsertWithReferenceWithComments() {
+        String sql = "INSERT INTO m.g (a) VALUES (?) /* Trailing Comment */";
+        String expectedSql = "INSERT INTO m.g (a) VALUES (?) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testStoredQueryWithNoParameterWithComments() {
+        String sql = "exec proc1() /* Trailing Comment */";
+        String expectedSql = "EXEC proc1() /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testStoredQueryWithNoParameter2WithComments() {
+        String sql = "/* Leading Comment */ SELECT X.A FROM (exec proc1()) AS X /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT X.A FROM (EXEC proc1()) AS X /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testStoredQueryWithComments() {
+        String sql = "Exec proc1('param1') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1('param1') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testStoredQuery2WithComments() {
+        String sql = "/* Leading Comment */ SELECT X.A FROM (exec proc1('param1')) AS X /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT X.A FROM (EXEC proc1('param1')) AS X /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testStoredQuery2SanityCheckWithComments() {
+        String sql = "exec proc1('param1') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1('param1') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testIfStatementWithComments() throws Exception {
+
+        helpStmtTest("IF(c = 5) BEGIN DECLARE short a; END ELSE BEGIN DECLARE short b; END",
+                     "IF(c = 5)" + "" + NEW_LINE + "BEGIN" + "" + NEW_LINE + "DECLARE short a;" + "" + NEW_LINE + "END" + ""
+                                                                                             + NEW_LINE + "ELSE" + "" + NEW_LINE
+                                                                                             + "BEGIN" + "" + NEW_LINE
+                                                                                             + "DECLARE short b;" + "\n" + "END",
+                     null);
+    }
+
+    @Test
+    public void testAssignStatementWithComments() throws Exception {
+
+        helpStmtTest("a = SELECT a1 FROM g WHERE a2 = 5;", "a = (SELECT a1 FROM g WHERE a2 = 5);", null);
+
+        helpStmtTest("a = 'aString';", "a = 'aString';", null);
+    }
+
+    @Test
+    public void testDeclareStatementWithComments() throws Exception {
+
+        helpStmtTest("DECLARE short a;", "DECLARE short a;", null);
+    }
+
+    @Test
+    public void testDeclareStatementWithAssignmentWithComments() throws Exception {
+
+        helpStmtTest("DECLARE short a = null;", "DECLARE short a = null;", null);
+    }
+
+    @Test
+    public void testDeclareStatementWithAssignment1WithComments() throws Exception {
+
+        helpStmtTest("DECLARE string a = SELECT a1 FROM g WHERE a2 = 5;",
+                     "DECLARE string a = (SELECT a1 FROM g WHERE a2 = 5);",
+                     null);
+    }
+
+    @Test
+    public void testStatementWithComments() throws Exception {
+        helpStmtTest("DECLARE short a;", "DECLARE short a;", null);
+    }
+
+    @Test
+    public void testCommandStatementWithComments() throws Exception {
+        helpStmtTest("SELECT a1 FROM g WHERE a2 = 5;", "SELECT a1 FROM g WHERE a2 = 5;", null);
+    }
+
+    @Test
+    public void testDynamicCommandStatementWithComments() throws Exception {
+        helpStmtTest("exec string 'SELECT a1 FROM g WHERE a2 = 5' as a1 string into #g;",
+                     "EXECUTE IMMEDIATE 'SELECT a1 FROM g WHERE a2 = 5' AS a1 string INTO #g;",
+                     null);
+    }
+
+    //sql is a variable, also uses the as, into, and update clauses
+    @Test
+    public void testDynamicCommandStatement1WithComments() throws Exception {
+        helpStmtTest("execute IMMEDIATE z as a1 string, a2 integer into #g update 1;",
+                     "EXECUTE IMMEDIATE z AS a1 string, a2 integer INTO #g UPDATE 1;",
+                     null);
+    }
+
+    @Test
+    public void testDynamicCommandStatementWithUsingWithComments() throws Exception {
+        helpStmtTest("execute immediate z using a=b;", "EXECUTE IMMEDIATE z USING a = b;", null);
+    }
+
+    @Test
+    public void testSubquerySetCriteria0WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (SELECT a /* Pre-From Comment */ FROM db.g WHERE a2 = 5) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (SELECT a /* Pre-From Comment */ FROM db.g WHERE a2 = 5) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSubquerySetCriteria1WithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT IN (SELECT a /* Pre-From Comment */ FROM db.g WHERE a2 = 5) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b NOT IN (SELECT a /* Pre-From Comment */ FROM db.g WHERE a2 = 5) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSubquerySetCriteriaWithExecWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (EXEC m.sq1()) /* Trailing Comment */";
+        // TODO
+        // Not a truly trailing comment since the as x gets inserted after the comment.
+        // However taking into account the 'as x' is nigh on impossible since it would require
+        // accounting for the IN, EXEC/CALL/EXECUTE keywords in the parser/token manager
+        // as well as trying to handle everything that comes after the EXEC keyword as well as
+        // the opening and closing brackets. Just not worth it at this stage for a mere comment!
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (SELECT * FROM (EXEC m.sq1()) /* Trailing Comment */ AS x)";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSubquerySetCriteriaWithUnionWithComments() {
+        String sql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (SELECT x1 FROM db.g2 UNION ALL SELECT x2 FROM db.g3) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a /* Pre-From Comment */ FROM db.g WHERE b IN (SELECT x1 FROM db.g2 UNION ALL SELECT x2 FROM db.g3) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testVariablesInExecWithComments() {
+        String sql = "Exec proc1(param1) /* Trailing Comment */";
+        String expectedSql = "EXEC proc1(param1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testExecSubqueryWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM newModel2.Table1, (EXEC NewVirtual.StoredQuery()) AS a /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM newModel2.Table1, (EXEC NewVirtual.StoredQuery()) AS a /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testEscapedFunction1WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = {fn concat('a', 'b')} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = concat('a', 'b') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testEscapedFunction2WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = {fn convert(5, string)} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = convert(5, string) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testEscapedFunction3WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = {fn cast(5 as string)} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = cast(5 AS string) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testEscapedFunction4WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = {fn concat({fn concat('a', 'b')}, 'c')} /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM a.thing WHERE e1 = concat(concat('a', 'b'), 'c') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testFunctionWithUnderscoreWithComments() {
+        String sql = "/* Leading Comment */ SELECT yowza_yowza() FROM a.thing /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT yowza_yowza() FROM a.thing /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testManyInnerJoins1WithComments() {
+        String sql = "/* Leading Comment */ SELECT * " + "FROM SQL1.dbo.Customers INNER JOIN SQL1.dbo.Orders "
+                     + "ON SQL1.dbo.Customers.CustomerID = SQL1.dbo.Orders.CustomerID " + "INNER JOIN SQL1.dbo.order_details "
+                     + "ON SQL1.dbo.Orders.OrderID = SQL1.dbo.order_details.OrderID";
+
+        String sqlExpected = "/* Leading Comment */ SELECT * " + "FROM (SQL1.dbo.Customers INNER JOIN SQL1.dbo.Orders "
+                             + "ON SQL1.dbo.Customers.CustomerID = SQL1.dbo.Orders.CustomerID) "
+                             + "INNER JOIN SQL1.dbo.order_details "
+                             + "ON SQL1.dbo.Orders.OrderID = SQL1.dbo.order_details.OrderID";
+        helpTest(sql, sqlExpected, null);
+    }
+
+    @Test
+    public void testManyInnerJoins2WithComments() {
+        String sql = "/* Leading Comment */ SELECT * " + "FROM A INNER JOIN (B RIGHT OUTER JOIN C ON b1 = c1) " + "ON a1 = b1 "
+                     + "INNER JOIN D " + "ON a1 = d1";
+
+        String sqlExpected = "/* Leading Comment */ SELECT * " + "FROM (A INNER JOIN (B RIGHT OUTER JOIN C ON b1 = c1) " + "ON a1 = b1) "
+                             + "INNER JOIN D " + "ON a1 = d1";
+        helpTest(sql, sqlExpected, null);
+    }
+
+    @Test
+    public void testManyInnerJoins3WithComments() {
+        String sql = "/* Leading Comment */ SELECT * " + "FROM A INNER JOIN " + "(B RIGHT OUTER JOIN C ON b1 = c1 "
+                     + "CROSS JOIN D) " + "ON a1 = d1";
+
+        String sqlExpected = "/* Leading Comment */ SELECT * " + "FROM A INNER JOIN " + "((B RIGHT OUTER JOIN C ON b1 = c1) " + "CROSS JOIN D) "
+                             + "ON a1 = d1";
+        helpTest(sql, sqlExpected, null);
+    }
+
+    @Test
+    public void testLoopStatementWithComments() throws Exception {
+        helpStmtTest("LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor BEGIN DECLARE integer x; x=mycursor.c1; END",
+                     "LOOP ON (SELECT c1, c2 FROM m.g) AS mycursor" + "" + NEW_LINE + "BEGIN" + "" + NEW_LINE + "DECLARE integer x;"
+                                                                                                                 + "\n"
+                                                                                                                 + "x = mycursor.c1;"
+                                                                                                                 + "" + NEW_LINE
+                                                                                                                 + "END",
+                     null);
+    }
+
+    @Test
+    public void testLoopStatementWithOrderByWithComments() throws Exception {
+        helpStmtTest("LOOP ON (SELECT c1, c2 FROM m.g ORDER BY c1) AS mycursor BEGIN DECLARE integer x; x=mycursor.c1; END",
+                     "LOOP ON (SELECT c1, c2 FROM m.g ORDER BY c1) AS mycursor" + "" + NEW_LINE + "BEGIN" + "" + NEW_LINE + "DECLARE integer x;"
+                                                                                                                             + "\n"
+                                                                                                                             + "x = mycursor.c1;"
+                                                                                                                             + "\n"
+                                                                                                                             + "END",
+                     null);
+    }
+
+    @Test
+    public void testWhileStatementWithComments() throws Exception {
+        helpStmtTest("WHILE (x < 100) BEGIN x=x+1; END",
+                     "WHILE(x < 100)" + "" + NEW_LINE + "BEGIN" + "" + NEW_LINE + "x = (x + 1);" + "" + NEW_LINE + "END",
+                     null);
+    }
+
+    @Test
+    public void testWhileStatement1WithComments() throws Exception {
+        helpStmtTest("WHILE (x < 100) \"1y\": BEGIN ATOMIC x=x+1; CONTINUE \"1y\"; END",
+                     "WHILE(x < 100)" + "" + NEW_LINE + "\"1y\" : BEGIN ATOMIC" + "" + NEW_LINE + "x = (x + 1);\nCONTINUE \"1y\";"
+                                                                                         + "" + NEW_LINE + "END",
+                     null);
+    }
+
+    @Test
+    public void testBreakStatementWithComments() throws Exception {
+        helpStmtTest("break;", "BREAK;", null);
+    }
+
+    @Test
+    public void testContinueStatementWithComments() throws Exception {
+        helpStmtTest("continue;", "CONTINUE;", null);
+    }
+
+    @Test
+    public void testContinueStatement1WithComments() throws Exception {
+        helpStmtTest("continue x;", "CONTINUE x;", null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInSelectWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1, (SELECT e1 FROM m.g1) FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, (SELECT e1 FROM m.g1) FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInSelect2WithComments() {
+        String sql = "/* Leading Comment */ SELECT (SELECT e1 FROM m.g1) FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (SELECT e1 FROM m.g1) FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInSelect3WithComments() {
+        String sql = "/* Leading Comment */ SELECT (SELECT e1 FROM m.g1), e1 FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT (SELECT e1 FROM m.g1), e1 FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionWithAliasWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1, (SELECT e1 FROM m.g1) as X FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, (SELECT e1 FROM m.g1) AS X FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInComplexExpressionWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT e1, ((SELECT e1 FROM m.g1) + 2) as X FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, ((SELECT e1 FROM m.g1) + 2) AS X FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInComplexExpression2WithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT e1, (3 + (SELECT e1 FROM m.g1)) as X FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, (3 + (SELECT e1 FROM m.g1)) AS X FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInComplexExpression3WithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT e1, ((SELECT e1 FROM m.g1) + (SELECT e3 FROM m.g3)) as X FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, ((SELECT e1 FROM m.g1) + (SELECT e3 FROM m.g3)) AS X FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryExpressionInFunctionWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT e1, length((SELECT e1 FROM m.g1)) as X FROM m.g2 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1, length((SELECT e1 FROM m.g1)) AS X FROM m.g2 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testExistsPredicateCriteriaWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE Exists (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE EXISTS (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAnyQuantifierSubqueryComparePredicateWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 >= ANY (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 >= ANY (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSomeQuantifierSubqueryComparePredicateWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 > some (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 > SOME (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAllQuantifierSubqueryComparePredicateWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 = all (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 = ALL (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryComparePredicateWithComments() {
+        String sql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 < (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT e1 FROM m.g2 WHERE e3 < (SELECT e1 FROM m.g1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+
+    }
+
+    @Test
+    public void testSelectIntoWithComments() {
+        String sql = "/* Leading Comment */ SELECT c1, c2 INTO #temp FROM m.g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT c1, c2 INTO #temp FROM m.g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAndOrPrecedence_1575WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM m.g1 WHERE e1=0 OR e2=1 AND e3=3 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM m.g1 WHERE (e1 = 0) OR ((e2 = 1) AND (e3 = 3)) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAndOrPrecedence2_1575WithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM m.g1 WHERE e1=0 AND e2=1 OR e3=3 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM m.g1 WHERE ((e1 = 0) AND (e2 = 1)) OR (e3 = 3) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCompoundNonJoinCriteria_defect15167_3WithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT A.alert_id, A.primary_entity_name, A.primary_entity_level_code, A.alert_description, A.create_date, A.alert_risk_score, S.scenario_name, A.alert_status_code, A.process_id, A.actual_values_text, S.SCENARIO_CATEGORY_DESC, A.primary_entity_number, A.scenario_id, A.primary_entity_key FROM (FSK_ALERT AS A LEFT OUTER JOIN FSK_SCENARIO AS S ON A.scenario_id = S.scenario_id) INNER JOIN FSC_ACCOUNT_DIM AS C ON (A.primary_entity_key = C.ACCOUNT_KEY AND (S.current_ind = 'Y' OR S.current_ind IS NULL)) WHERE (A.primary_entity_level_code = 'ACC') AND (C.ACCOUNT_KEY = 23923) AND (A.logical_delete_ind = 'N') /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT A.alert_id, A.primary_entity_name, A.primary_entity_level_code, A.alert_description, A.create_date, A.alert_risk_score, S.scenario_name, A.alert_status_code, A.process_id, A.actual_values_text, S.SCENARIO_CATEGORY_DESC, A.primary_entity_number, A.scenario_id, A.primary_entity_key FROM (FSK_ALERT AS A LEFT OUTER JOIN FSK_SCENARIO AS S ON A.scenario_id = S.scenario_id) INNER JOIN FSC_ACCOUNT_DIM AS C ON A.primary_entity_key = C.ACCOUNT_KEY AND ((S.current_ind = 'Y') OR (S.current_ind IS NULL)) WHERE (A.primary_entity_level_code = 'ACC') AND (C.ACCOUNT_KEY = 23923) AND (A.logical_delete_ind = 'N') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCompoundNonJoinCriteria_defect15167_4WithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT A.alert_id, A.primary_entity_name, A.primary_entity_level_code, A.alert_description, A.create_date, A.alert_risk_score, S.scenario_name, A.alert_status_code, A.process_id, A.actual_values_text, S.SCENARIO_CATEGORY_DESC, A.primary_entity_number, A.scenario_id, A.primary_entity_key FROM (FSK_ALERT AS A LEFT OUTER JOIN FSK_SCENARIO AS S ON A.scenario_id = S.scenario_id) INNER JOIN FSC_ACCOUNT_DIM AS C ON (A.primary_entity_key = C.ACCOUNT_KEY AND S.current_ind = 'Y' OR S.current_ind IS NULL) WHERE (A.primary_entity_level_code = 'ACC') AND (C.ACCOUNT_KEY = 23923) AND (A.logical_delete_ind = 'N') /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT A.alert_id, A.primary_entity_name, A.primary_entity_level_code, A.alert_description, A.create_date, A.alert_risk_score, S.scenario_name, A.alert_status_code, A.process_id, A.actual_values_text, S.SCENARIO_CATEGORY_DESC, A.primary_entity_number, A.scenario_id, A.primary_entity_key FROM (FSK_ALERT AS A LEFT OUTER JOIN FSK_SCENARIO AS S ON A.scenario_id = S.scenario_id) INNER JOIN FSC_ACCOUNT_DIM AS C ON (((A.primary_entity_key = C.ACCOUNT_KEY) AND (S.current_ind = 'Y')) OR (S.current_ind IS NULL)) WHERE (A.primary_entity_level_code = 'ACC') AND (C.ACCOUNT_KEY = 23923) AND (A.logical_delete_ind = 'N') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testScalarSubqueryWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT (SELECT 1) FROM x /* Trailing Comment */";
+        helpTest(sql, sql, null);
+    }
+
+    @Test
+    public void testElementInDoubleQuotesWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT \"foo\" /* Pre-From Comment */ FROM x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT foo /* Pre-From Comment */ FROM x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testElementInDoubleQuotes_InsertWithComments() throws Exception {
+        String sql = "insert into x (\"foo\") values ('bar') /* Trailing Comment */";
+        String expectedSql = "INSERT INTO x (foo) VALUES ('bar') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testElementInDoubleQuotes_UpdateWithComments() throws Exception {
+        String sql = "update x set \"foo\"='bar' /* Trailing Comment */";
+        String expectedSql = "UPDATE x SET foo = 'bar' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testElementInDoubleQuotes_deleteWithComments() throws Exception {
+        String sql = "delete from x where \"foo\"='bar' /* Trailing Comment */";
+        String expectedSql = "DELETE FROM x WHERE foo = 'bar' /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAliasInDoubleQuotesWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT fooKey AS \"fooAlias\" /* Pre-From Comment */ FROM x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT fooKey AS fooAlias /* Pre-From Comment */ FROM x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAliasInDoubleQuotesWithQuotedGroupWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT fooKey AS \"fooAlias\" /* Pre-From Comment */ FROM \"x.y\".z where x.\"y.z\".id = 10 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT fooKey AS fooAlias /* Pre-From Comment */ FROM x.y.z WHERE x.y.z.id = 10 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSingleQuotedConstantWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT 'fooString' FROM \"x.y.z\" /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT 'fooString' FROM x.y.z /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testOrderByWithNumbers_InQuotesWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT x, y from z order by \"1\" /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT x, y FROM z ORDER BY \"1\" /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testOrderByWithNumbers_AsIntWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT x, y FROM z order by 1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT x, y FROM z ORDER BY 1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCase3281NamedVariableWithComments() {
+        String sql = "Exec proc1(param1 = 'paramValue1') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1(param1 => 'paramValue1') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCase3281NamedVariablesWithComments() {
+        String sql = "Exec proc1(param1 = 'paramValue1', param2 = 'paramValue2') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1(param1 => 'paramValue1', param2 => 'paramValue2') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCase3281QuotedNamedVariableFails2WithComments() {
+        String sql = "Exec proc1('a' = 'b') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1(('a' = 'b')) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    /** Test what happens if the name of a parameter is a reserved word.  It must be quoted (double-ticks). */
+    @Test
+    public void testCase3281NamedVariablesReservedWordsWithComments() {
+        String sql = "Exec proc1(\"in\" = 'paramValue1', in2 = 'paramValue2') /* Trailing Comment */";
+        String expectedSql = "EXEC proc1(\"in\" => 'paramValue1', in2 => 'paramValue2') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testEscapedOuterJoinWithComments() {
+        String sql = "/* Leading Comment */ SELECT * FROM {oj A LEFT OUTER JOIN B ON (A.x=B.x)} /* Trailing Comment */";
+        String expected = "/* Leading Comment */ SELECT * FROM A LEFT OUTER JOIN B ON A.x = B.x /* Trailing Comment */";
+        helpTest(sql, expected, null);
+    }
+
+    @Test
+    public void testNameSpacedFunctionNameWithComments() {
+        String sql = "/* Leading Comment */ select a.x() /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT a.x() /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testUnionJoinWithComments() {
+        String sql = "/* Leading Comment */ select * from pm1.g1 union join pm1.g2 where g1.e1 = 1 /* Trailing Comment */";
+        String expected = "/* Leading Comment */ SELECT * FROM pm1.g1 UNION JOIN pm1.g2 WHERE g1.e1 = 1 /* Trailing Comment */";
+        helpTest(sql, expected, null);
+    }
+
+    @Test
+    public void testCommandWithSemicolonWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select * from pm1.g1; /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM pm1.g1 /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testLOBTypesWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select convert(null, blob), convert(null, clob), convert(null, xml) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT convert(null, blob), convert(null, clob), convert(null, xml) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testInsertWithoutColumnsWithComments() {
+        String sql = "INSERT INTO m.g VALUES ('a', 'b') /* Trailing Comment */";
+        String expectedSql = "INSERT INTO m.g VALUES ('a', 'b') /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testXmlElementWithComments() throws Exception {
+        helpTestExpression("xmlelement(name \"table\", 'x')", "XMLELEMENT(NAME \"table\", 'x')", null);
+    }
+
+    @Test
+    public void testXmlElement1WithComments() throws Exception {
+        helpTestExpression("xmlelement(\"table\", 'x')", "XMLELEMENT(NAME \"table\", 'x')", null);
+    }
+
+    @Test
+    public void testXmlElementWithAttributesWithComments() throws Exception {
+        helpTestExpression("xmlelement(y, xmlattributes('a' as val))", "XMLELEMENT(NAME y, XMLATTRIBUTES('a' AS val))", null);
+    }
+
+    @Test
+    public void testXmlForestWithComments() throws Exception {
+        helpTestExpression("xmlforest(a as \"table\")", "XMLFOREST(a AS \"table\")", null);
+    }
+
+    @Test
+    public void testXmlPiWithComments() throws Exception {
+        helpTestExpression("xmlpi(NAME a, val)", "xmlpi(NAME a, val)", null);
+    }
+
+    @Test
+    public void testXmlNamespacesWithComments() throws Exception {
+        helpTestExpression("xmlforest(xmlnamespaces(no default, 'http://foo' as x), a as \"table\")",
+                           "XMLFOREST(XMLNAMESPACES(NO DEFAULT, 'http://foo' AS x), a AS \"table\")",
+                           null);
+    }
+
+    @Test
+    public void testXmlAggWithOrderByWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT xmlAgg(1 order by e2) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT XMLAGG(1 ORDER BY e2) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testTextAggWithOrderByWithComments() throws Exception {
+
+        String sql = "/* Leading Comment */ SELECT TextAgg(FOR e1 as col1, e2 as col2 delimiter ',' header order by e2) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT TEXTAGG(FOR e1 AS col1, e2 AS col2 DELIMITER ',' HEADER ORDER BY e2) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testArrayAggWithOrderByWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT array_agg(1 order by e2) /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ARRAY_AGG(1 ORDER BY e2) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testArrayAggWithIndexingWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT (array_agg(1))[1] /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT array_get(ARRAY_AGG(1), 1) /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testNestedTableWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT * from TABLE(exec foo()) as x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM TABLE(EXEC foo()) AS x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testTextTableWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT * from texttable(file columns x string WIDTH 1, y date width 10 skip 10) as x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM TEXTTABLE(file COLUMNS x string WIDTH 1, y date WIDTH 10 SKIP 10) AS x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+
+        sql = "/* Leading Comment */ SELECT * from texttable(file columns x string, y date delimiter ',' escape '\"' header skip 10) as x";
+        expectedSql = "/* Leading Comment */ SELECT * FROM TEXTTABLE(file COLUMNS x string, y date DELIMITER ',' ESCAPE '\"' HEADER SKIP 10) AS x";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testXMLTableWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT * from xmltable(xmlnamespaces(no default), '/' columns x for ordinality, y date default {d'2000-01-01'} path '@date') as x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM XMLTABLE(XMLNAMESPACES(NO DEFAULT), '/' COLUMNS x FOR ORDINALITY, y date DEFAULT {d'2000-01-01'} PATH '@date') AS x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testXmlSerializeWithComments() throws Exception {
+        helpTestExpression("xmlserialize(document x as CLOB)", "XMLSERIALIZE(DOCUMENT x AS CLOB)", null);
+    }
+
+    @Test
+    public void testXmlQueryWithComments() throws Exception {
+        helpTestExpression("xmlquery('/x' passing foo null on empty)", "XMLQUERY('/x' PASSING foo NULL ON EMPTY)", null);
+    }
+
+    @Test
+    public void testXmlParseWithComments() throws Exception {
+        helpTestExpression("xmlparse(document x wellformed)", "XMLPARSE(DOCUMENT x WELLFORMED)", null);
+    }
+
+    @Test
+    public void testXmlSerialize1WithComments() throws Exception {
+        helpTestExpression("xmlserialize(x as CLOB)", "XMLSERIALIZE(x AS CLOB)", null);
+    }
+
+    @Test
+    public void testExpressionCriteriaWithComments() throws Exception {
+        helpTestExpression("case when x then y end", "CASE WHEN x THEN y END", null);
+    }
+
+    @Test
+    public void testExpressionCriteria1WithComments() throws Exception {
+        helpTestExpression("case when not x then y end", "CASE WHEN NOT (x) THEN y END", null);
+    }
+
+    @Test
+    public void testWithClauseWithComments() throws Exception {
+        String sql = "WITH x AS (SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString) SELECT a /* Pre-From Comment 2 */ FROM db.g WHERE b = aString /* Trailing Comment */";
+        String expectedSql = "WITH x AS (SELECT a /* Pre-From Comment */ FROM db.g WHERE b = aString) SELECT a /* Pre-From Comment 2 */ FROM db.g WHERE b = aString /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testExplicitTableWithComments() throws Exception {
+        String sql = "/* Leading Comment */ TABLE X /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM X /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testArrayTableWithComments() throws Exception {
+        String sql = "/* Leading Comment */ SELECT * from arraytable(null columns x string, y date) as x /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT * FROM ARRAYTABLE(null COLUMNS x string, y date) AS x /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testPositionalReferenceWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select $1 /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ? /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testNonReservedWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select count /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT count /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testAggFilterWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select count(*) filter (where x = 1) from g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT COUNT(*) FILTER(WHERE x = 1) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testWindowFunctionWithComments() throws Exception {
+        String sql = "/* Leading Comment */ select row_number() over (partition by x order by y) from g /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT ROW_NUMBER() OVER (PARTITION BY x ORDER BY y) FROM g /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testSubStringWithComments() {
+        String sql = "/* Leading Comment */ select substring(RTRIM(MED.BATDAT), 4, 4) from FCC.MEDMAS as MED /* Trailing Comment */";
+        String expectedSql = "/* Leading Comment */ SELECT substring(RTRIM(MED.BATDAT), 4, 4) FROM FCC.MEDMAS AS MED /* Trailing Comment */";
+        helpTest(sql, expectedSql, null);
     }
 }

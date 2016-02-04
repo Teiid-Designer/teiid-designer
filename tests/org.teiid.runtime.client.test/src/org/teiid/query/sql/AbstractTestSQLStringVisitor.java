@@ -811,7 +811,7 @@ public abstract class AbstractTestSQLStringVisitor extends AbstractTest<Command>
         Select select = getFactory().newSelect();
         select.addSymbol(getFactory().newElementSymbol("e1"));
 
-        helpTest(select, " e1");
+        helpTest(select, "e1");
     }
 
     @Test
@@ -820,7 +820,7 @@ public abstract class AbstractTestSQLStringVisitor extends AbstractTest<Command>
         select.setDistinct(true);
         select.addSymbol(getFactory().newElementSymbol("e1"));
 
-        helpTest(select, " DISTINCT e1");
+        helpTest(select, "DISTINCT e1");
     }
 
     @Test
@@ -829,7 +829,7 @@ public abstract class AbstractTestSQLStringVisitor extends AbstractTest<Command>
         select.addSymbol(getFactory().newElementSymbol("e1"));
         select.addSymbol(getFactory().newElementSymbol("e2"));
 
-        helpTest(select, " e1, e2");
+        helpTest(select, "e1, e2");
     }
 
     @Test
