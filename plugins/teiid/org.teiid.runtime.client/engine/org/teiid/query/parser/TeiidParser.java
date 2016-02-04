@@ -8,7 +8,7 @@
 package org.teiid.query.parser;
 
 import java.io.Reader;
-
+import java.util.Set;
 import org.teiid.core.types.DataTypeManagerService;
 import org.teiid.designer.annotation.Since;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
@@ -17,10 +17,10 @@ import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.sql.lang.CacheHint;
 import org.teiid.query.sql.lang.Command;
+import org.teiid.query.sql.lang.Comment;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.LanguageObject;
-import org.teiid.query.sql.lang.LeadingComment;
-import org.teiid.query.sql.lang.TrailingComment;
+import org.teiid.query.sql.lang.SourceHint;
 import org.teiid.query.sql.proc.Statement;
 import org.teiid.query.sql.symbol.Expression;
 
@@ -49,7 +49,7 @@ public interface TeiidParser {
      *
      * @param sql
      */
-    void ReInit(Reader sql);
+    void reset(Reader sql);
 
     /**
      * @param nodeType
@@ -140,12 +140,19 @@ public interface TeiidParser {
     @Since(Version.TEIID_8_0)
     CacheHint getQueryCacheOption(String sql);
 
-    @Since(Version.TEIID_8_0)
-    LeadingComment getLeadingComment(String sql);
+    /**
+     * @return comments collected from the parser
+     */
+    Set<Comment> getComments();
 
-    @Since(Version.TEIID_8_0)
-    TrailingComment getTrailingComment(String sql);
-    
-    @Since(Version.TEIID_8_0)
-    String removeComments(String sql, LeadingComment leadingComment, TrailingComment trailingComment);
+    /**
+     * @param comment
+     */
+    void addComment(Comment comment);
+
+    /**
+     * @param text
+     * @return try and generate a {@link SourceHint} from the given text 
+     */
+    SourceHint getSourceHint(String text);
 }

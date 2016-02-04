@@ -1736,4 +1736,33 @@ public class TestQuery7Parser extends AbstractTestQueryParser {
         command.setBlock(block3);
         helpTest(sql, expected, command);
     }
+
+    @Test
+    public void testCommentsSimple1() {
+        String sql = "/*+ cache(ttl:300000) */ " + // 25 
+                     "/* Comment 1 */ " + // 41
+                     "SELECT " + // 48
+                     "/*+ sh */ " + // 70 - note the space between the + and sh - this is parseable but removed!
+                     "* " + // 72
+                     "/* Comment 2 /* Comment 2.5 */ */ " + // 106
+                     "FROM " + // 111
+                     "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 " + "/* Comment 4 */";
+        String expectedSql = "/*+ cache(ttl:300000) */ " + // 25 
+                                            "/* Comment 1 */ " + // 41
+                                            "SELECT " + // 48
+                                            "/*+sh */ " + // 70
+                                            "* " + // 72
+                                            "/* Comment 2 /* Comment 2.5 */ */ " + // 106
+                                            "FROM " + // 111
+                                            "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 " + "/* Comment 4 */";
+        helpTest(sql, expectedSql, null);
+    }
+
+    @Test
+    public void testCommentsSimple2() {
+        String sql = "/*+ cache(ttl:300000) */ " + "/* Comment 1 */ " + "SELECT " + "/*+sh */ " + "a1 "
+                     + "/* Comment 2 */ " + "FROM " + "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 "
+                     + "/* Comment 4 */";
+        helpTest(sql, sql, null);
+    }
 }

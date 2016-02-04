@@ -7,13 +7,20 @@
 */
 package org.teiid.designer.query.sql.lang;
 
+import java.util.Set;
 import org.teiid.designer.query.sql.ILanguageVisitor;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 
 /**
- * @param <LV> 
+ * @param <LV>
  *
  */
 public interface ILanguageObject<LV extends ILanguageVisitor> {
+
+    /**
+     * @return teiid version of associated parser
+     */
+    ITeiidServerVersion getTeiidVersion();
 
     /**
      * Clone this language object
@@ -27,4 +34,8 @@ public interface ILanguageObject<LV extends ILanguageVisitor> {
      */
     void acceptVisitor(LV visitor);
 
+    /**
+     * @return comments
+     */
+    Set<? extends IComment> getComments();
 }

@@ -30,6 +30,7 @@ import java.util.StringTokenizer;
  */
 public final class StringUtil {
 
+    @SuppressWarnings( {"nls", "javadoc"} )
     public interface Constants {
         char CARRIAGE_RETURN_CHAR = '\r';
         char LINE_FEED_CHAR       = '\n';
@@ -37,15 +38,36 @@ public final class StringUtil {
         char SPACE_CHAR           = ' ';
         char DOT_CHAR           = '.';
         char TAB_CHAR             = '\t';
-        
+        char SPEECH_MARK_CHAR = '"';
+        char QUOTE_CHAR = '\'';
+        char STAR_CHAR = '*';
+        char QMARK_CHAR = '?';
+        char FORWARD_SLASH_CHAR = '/';
+        char LBRACE_CHAR = '{';
+        char RBRACE_CHAR = '}';
+        char PLUS_CHAR = '+';
+        char PIPE_CHAR = '|';
+
         String CARRIAGE_RETURN = String.valueOf(CARRIAGE_RETURN_CHAR);
-        String EMPTY_STRING    = ""; //$NON-NLS-1$
-        String DBL_SPACE       = "  "; //$NON-NLS-1$
+        String EMPTY_STRING    = "";
+        String DBL_SPACE       = "  ";
         String LINE_FEED       = String.valueOf(LINE_FEED_CHAR);
         String NEW_LINE        = String.valueOf(NEW_LINE_CHAR);
         String SPACE           = String.valueOf(SPACE_CHAR);
         String DOT             = String.valueOf(DOT_CHAR);
         String TAB             = String.valueOf(TAB_CHAR);
+        String SPEECH_MARK = String.valueOf(SPEECH_MARK_CHAR);
+        String QUOTE = String.valueOf(QUOTE_CHAR);
+        String STAR = String.valueOf(STAR_CHAR);
+        String FORWARD_SLASH = String.valueOf(FORWARD_SLASH_CHAR);
+        String LBRACE = String.valueOf(LBRACE_CHAR);
+        String RBRACE = String.valueOf(RBRACE_CHAR);
+        String PLUS = String.valueOf(PLUS_CHAR);
+        String PIPE = String.valueOf(PIPE_CHAR);
+
+        String ESCAPE = "\\";
+        String REGEX_ESCAPE = "\\\\";
+        String QMARK = String.valueOf(QMARK_CHAR);
 
         String[] EMPTY_STRING_ARRAY = new String[0];
     }
@@ -490,5 +512,20 @@ public final class StringUtil {
             //throw new FunctionExecutionException();
         //}
         return sb.toString();
+    }
+
+    /**
+     * @param haystack
+     * @param needle
+     * @return the number of occurrences of needle in haystack
+     */
+    public static int countOccurrences(String haystack, char needle) {
+        int count = 0;
+        for (int i = 0; i < haystack.length(); i++) {
+            if (haystack.charAt(i) == needle) {
+                count++;
+            }
+        }
+        return count;
     }
 }

@@ -22,8 +22,8 @@
 
 package org.teiid.query.sql.lang;
 
+import java.util.Set;
 import org.teiid.designer.query.sql.lang.ILanguageObject;
-import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.parser.TeiidParser;
 
@@ -39,9 +39,10 @@ public interface LanguageObject extends ILanguageObject<LanguageVisitor> {
     TeiidParser getTeiidParser();
 
     /**
-     * @return teiid version of associated parser
+     * @return ALL the comments related to this and all related objects
      */
-    ITeiidServerVersion getTeiidVersion();
+    @Override
+    Set<Comment> getComments();
 
     /**
      * @return copy of this language object

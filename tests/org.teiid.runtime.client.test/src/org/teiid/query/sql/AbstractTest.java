@@ -11,11 +11,12 @@ import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.sql.lang.LanguageObject;
+import org.teiid.runtime.client.admin.StringConstants;
 
 /**
  * @param <T>
  */
-public abstract class AbstractTest<T extends LanguageObject> {
+public abstract class AbstractTest<T extends LanguageObject> implements StringConstants {
 
     protected ITeiidServerVersion teiidVersion;
 

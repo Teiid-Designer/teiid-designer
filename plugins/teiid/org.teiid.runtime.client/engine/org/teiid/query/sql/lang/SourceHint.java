@@ -23,8 +23,11 @@
 package org.teiid.query.sql.lang;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import org.teiid.designer.query.sql.lang.ISourceHint;
+import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.query.parser.TeiidParser;
 
 /**
  *
@@ -62,11 +65,38 @@ public class SourceHint implements ISourceHint {
         }
     }
 
+    private final TeiidParser teiidParser;
+
     private boolean useAliases;
 
     private String generalHint;
 
     private Map<String, SpecificHint> sourceHints;
+
+    public SourceHint(TeiidParser teiidParser) {
+        this.teiidParser = teiidParser;
+    }
+
+    /**
+     * @return the teiidParser
+     */
+    public TeiidParser getTeiidParser() {
+        return this.teiidParser;
+    }
+
+    /**
+     * @return version
+     */
+    public ITeiidServerVersion getTeiidVersion() {
+        return this.getTeiidParser().getVersion();
+    }
+
+    /**
+     * @return comments from parser
+     */
+    public Set<Comment> getComments() {
+        return getTeiidParser().getComments();
+    }
 
     /**
      * @return general hint

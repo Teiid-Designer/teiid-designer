@@ -7,7 +7,6 @@
  */
 package org.teiid.query.sql.v8;
 
-import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import org.junit.Test;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
@@ -19,11 +18,9 @@ import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.CriteriaOperator;
 import org.teiid.query.sql.lang.CriteriaOperator.Operator;
 import org.teiid.query.sql.lang.From;
-import org.teiid.query.sql.lang.LeadingComment;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.Query;
 import org.teiid.query.sql.lang.Select;
-import org.teiid.query.sql.lang.TrailingComment;
 import org.teiid.query.sql.proc.AssignmentStatement;
 import org.teiid.query.sql.proc.Block;
 import org.teiid.query.sql.proc.BranchingStatement.BranchingMode;
@@ -328,33 +325,33 @@ public class TestQuery8Parser extends AbstractTestQueryParser {
         
         helpTest(sql, expected, query);
     }
-    
+
     @Test
-    public void testLeadingAndTrailingComments() {
-    	String sql 		= "/* leading comment */ SELECT column_1 FROM model_a.table_1 /* trailing comment */";
-    	String expected = "/* leading comment */ \nSELECT column_1 FROM model_a.table_1\n /* trailing comment */";
-    	
-    	GroupSymbol g = getFactory().newGroupSymbol("model_a.table_1");
-        From from = getFactory().newFrom();
-        from.addGroup(g);
-
-        Select select = getFactory().newSelect();
-        ElementSymbol a = getFactory().newElementSymbol("column_1");
-        select.addSymbol(a);
-
-        Query query = getFactory().newQuery(select, from);
-        query.setLeadingComment(new LeadingComment("/* leading comment */"));
-        query.setTrailingComment(new TrailingComment("/* trailing comment */"));
-        
-        helpTest(sql, expected, query);
+    public void testCommentsSimple1() {
+        String sql = "/*+ cache(ttl:300000) */ " + // 25 
+                     "/* Comment 1 */ " + // 41
+                     "SELECT " + // 48
+                     "/*+ sh KEEP ALIASES */ " + // 70 - note the space between the + and sh - this is parseable but removed!
+                     "* " + // 72
+                     "/* Comment 2 /* Comment 2.5 */ */ " + // 106
+                     "FROM " + // 111
+                     "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 " + "/* Comment 4 */";
+        String expectedSql = "/*+ cache(ttl:300000) */ " + // 25 
+                                            "/* Comment 1 */ " + // 41
+                                            "SELECT " + // 48
+                                            "/*+sh KEEP ALIASES */ " + // 70
+                                            "* " + // 72
+                                            "/* Comment 2 /* Comment 2.5 */ */ " + // 106
+                                            "FROM " + // 111
+                                            "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 " + "/* Comment 4 */";
+        helpTest(sql, expectedSql, null);
     }
-    
+
     @Test
-    public void testInvalidLeadingComment() {
-    	String sql 		= "/* leading comment  SELECT column_1 FROM model_a.table_1";
-    	LeadingComment comment = parser.getTeiidParser().getLeadingComment(sql);
-        
-        assertTrue("Leading comment in SQL is invalid", comment == null);
-        
+    public void testCommentsSimple2() {
+        String sql = "/*+ cache(ttl:300000) */ " + "/* Comment 1 */ " + "SELECT " + "/*+sh KEEP ALIASES */ " + "a1 "
+                     + "/* Comment 2 */ " + "FROM " + "/* Comment 3 */ " + "g1 INNER JOIN /*+ MAKEDEP */ g2 ON g1.a1 = g2.a2 "
+                     + "/* Comment 4 */";
+        helpTest(sql, sql, null);
     }
 }
