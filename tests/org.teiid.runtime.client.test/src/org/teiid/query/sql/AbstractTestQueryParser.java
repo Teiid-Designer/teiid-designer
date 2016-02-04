@@ -6459,4 +6459,11 @@ public abstract class AbstractTestQueryParser extends AbstractTest<Command> {
         String expectedSql = "/* Leading Comment */ SELECT substring(RTRIM(MED.BATDAT), 4, 4) FROM FCC.MEDMAS AS MED /* Trailing Comment */";
         helpTest(sql, expectedSql, null);
     }
+
+    @Test
+    public void testCommentsSimple() {
+        String sql = "/* Comment 1 */ SELECT * FROM TABLE_A";
+        String expectedSql = "/* Comment 1 */ SELECT * FROM TABLE_A";
+        helpTest(sql, expectedSql, null);
+    }
 }

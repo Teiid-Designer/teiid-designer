@@ -32,40 +32,55 @@ public class TestDisplayNodeWithComments implements StringConstants {
     }
 
     @Test
-    public void testSimple1() throws Exception {
-        String sql = "/*+ cache(ttl:300000) */" + NEW_LINE +
-                            "SELECT" + NEW_LINE +
-                            "/* Comment 1 */ " + "*" + NEW_LINE +
-                            "FROM" + NEW_LINE +
-                            "/* Comment 2 */ " + "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                            "/* Comment 3 */";
-        String expectedSql = "/*+ cache(ttl:300000) */" + NEW_LINE +
+    public void testCommentsSimple() throws Exception {
+        String sql = "/* Comment 1 */ SELECT * FROM TABLE_A";
+        String expectedSql = "/* Comment 1 */" + NEW_LINE +
                                             "SELECT" + NEW_LINE +
-                                            TAB + TAB + "/* Comment 1 */" + NEW_LINE +
                                             TAB + TAB + "*" + NEW_LINE +
                                             TAB + "FROM" + NEW_LINE +
-                                            TAB + TAB + "/* Comment 2 */" + NEW_LINE + 
+                                            TAB + TAB + "TABLE_A";
+        helpTest(sql, expectedSql);
+    }
+
+    @Test
+    public void testSimple1() throws Exception {
+        String sql = "/*+ cache(ttl:300000) */" + NEW_LINE +
+                            "/* Comment 1 */ " + NEW_LINE +
+                            "SELECT" + NEW_LINE +
+                            "/* Comment 2 */ " + "*" + NEW_LINE +
+                            "FROM" + NEW_LINE +
+                            "/* Comment 3 */ " + "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
+                            "/* Comment 4 */";
+        String expectedSql =  "/*+ cache(ttl:300000) */" + NEW_LINE +
+                                            "/* Comment 1 */" + NEW_LINE +
+                                            "SELECT" + NEW_LINE +
+                                            TAB + TAB + "/* Comment 2 */" + NEW_LINE +
+                                            TAB + TAB + "*" + NEW_LINE +
+                                            TAB + "FROM" + NEW_LINE +
+                                            TAB + TAB + "/* Comment 3 */" + NEW_LINE + 
                                             TAB + TAB + "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                                            "/* Comment 3 */";
+                                            "/* Comment 4 */";
         helpTest(sql, expectedSql);
     }
 
     @Test
     public void testSimple2() throws Exception {
         String sql = "/*+ cache(ttl:300000) */" + NEW_LINE +
+                            "/* Comment 1 */" + NEW_LINE +
                             "SELECT" + NEW_LINE +
-                            "/* Comment 1 */ " + "*" + NEW_LINE +
-                            "FROM /* Comment 2 */" + NEW_LINE +
+                            "/* Comment 2 */ " + "*" + NEW_LINE +
+                            "FROM /* Comment 3 */" + NEW_LINE +
                             "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                            "/* Comment 3 */";
+                            "/* Comment 4 */";
         String expectedSql = "/*+ cache(ttl:300000) */" + NEW_LINE +
+                                            "/* Comment 1 */" + NEW_LINE +
                                             "SELECT" + NEW_LINE +
-                                            TAB + TAB + "/* Comment 1 */" + NEW_LINE +
+                                            TAB + TAB + "/* Comment 2 */" + NEW_LINE +
                                             TAB + TAB + "*" + NEW_LINE +
                                             TAB + "FROM" + NEW_LINE +
-                                            TAB + TAB + "/* Comment 2 */" + NEW_LINE + 
+                                            TAB + TAB + "/* Comment 3 */" + NEW_LINE + 
                                             TAB + TAB + "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                                            "/* Comment 3 */";
+                                            "/* Comment 4 */";
 
         helpTest(sql, expectedSql);
     }
@@ -73,21 +88,23 @@ public class TestDisplayNodeWithComments implements StringConstants {
     @Test
     public void testLineComments() throws Exception {
         String sql = "/*+ cache(ttl:300000) */" + NEW_LINE +
-                            "SELECT" + NEW_LINE +
                             "-- Comment 1" + NEW_LINE +
+                            "SELECT" + NEW_LINE +
+                            "-- Comment 2" + NEW_LINE +
                             "*" + NEW_LINE +
                             "FROM" + NEW_LINE +
-                            "-- Comment 2" + NEW_LINE +
+                            "-- Comment 3" + NEW_LINE +
                             "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                            "-- Comment 3";
+                            "-- Comment 4";
         String expectedSql = "/*+ cache(ttl:300000) */" + NEW_LINE +
+                                            "-- Comment 1" + NEW_LINE +
                                             "SELECT" + NEW_LINE +
-                                            TAB + TAB + "-- Comment 1" + NEW_LINE +
+                                            TAB + TAB + "-- Comment 2" + NEW_LINE +
                                             TAB + TAB + "*" + NEW_LINE +
                                             TAB + "FROM" + NEW_LINE +
-                                            TAB + TAB + "-- Comment 2" + NEW_LINE + 
+                                            TAB + TAB + "-- Comment 3" + NEW_LINE + 
                                             TAB + TAB + "Products_SQL_Server.products.dbo.ProductData" + NEW_LINE +
-                                            "-- Comment 3" + NEW_LINE;
+                                            "-- Comment 4" + NEW_LINE;
 
         // Only compatible with Teiid 8.10+
         TestUtilities.setDefaultServerVersion(Version.TEIID_8_10.get());
