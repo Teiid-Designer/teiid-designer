@@ -30,6 +30,24 @@ public interface ISQLStringVisitor<LO extends ILanguageObject> extends ILanguage
     String returnSQLString(LO languageObject);
 
     /**
+     * Disables comments by adding an id from the given
+     * Object to the comments tag set. If any tags exist
+     * then comments are disabled. Thus, to re-enable
+     * comments the same object should be passed
+     * into {@link #enableComments(Object)}
+     *
+     */
+    void disableComments(Object obj);
+
+    /**
+     * Only removes the exact id of the object
+     * from the comment tag set. Only when
+     * the set is empty will comments be
+     * re-enabled.
+     */
+    void enableComments(Object obj);
+
+    /**
      * @param token
      * @return id tokens properly escaped
      */

@@ -479,31 +479,13 @@ public class SQLStringVisitor extends LanguageVisitor
         return nextAvailableSpace(sql, cmtIdx);
     }
 
-    /*
-     * Only removes the exact id of this value
-     * from the set. Once the set is empty will
-     * adding comments be re-enabled.
-     */
-    private void enableComments(LanguageObject obj) {
+    @Override
+    public void enableComments(Object obj) {
         ALLOW_COMMENTS.remove(obj.getClass().getSimpleName() + System.identityHashCode(obj));
     }
 
-    /*
-     * Append the string value of a LanguageObject will
-     * launch a new instance of this SQLStringVisitor in
-     * order to produce the string version of the object.
-     *
-     * This will cause the comments to be inserted in the
-     * wrong positions so disable them and confine them
-     * to the SQLStringVisitor.
-     *
-     * Since this method can be called multiple times in
-     * 'child' SQLStringVisitors, need to be sure that we
-     * can identify what value caused the comments to
-     * be turned off hence using a set with the identity
-     * hashcode value of the object.
-     */
-    private void disableComments(LanguageObject obj) {
+    @Override
+    public void disableComments(Object obj) {
         ALLOW_COMMENTS.add(obj.getClass().getSimpleName() + System.identityHashCode(obj));
     }
 

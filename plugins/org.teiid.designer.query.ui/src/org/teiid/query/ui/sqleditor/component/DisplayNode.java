@@ -239,15 +239,46 @@ public class DisplayNode implements DisplayNodeConstants {
     }
 
     private int findIndentLevel(String sql, int index) {
-        // Find the next set of tabs
+        if (index == 0)
+            return 0; // start of sequence has no tabs
+
+        if (index >= sql.length())
+            return 0; // end of sequence has no tabs
+
         int nextTabs = 0;
-        for (int i = index; i < sql.length(); ++i) {
-            char c = sql.charAt(i);
-            if ('\t' == c)
-                nextTabs++;
-            else if (nextTabs > 0)
-                // found all the next tabs available
+        char prevChar = sql.charAt(index - 1);
+        if (System.lineSeparator().equals(Character.toString(prevChar))) {
+            // The index is at the beginning of the line so the comment will be
+            // inserted as a previous line. In that case, need to find any tabs on
+            // THIS line as the next tabs
+            for (int i = index; i < sql.length(); ++i) {
+                char c = sql.charAt(i);
+                if (System.lineSeparator().equals(Character.toString(c)))
+                    break;
+
+                if ('\t' == c)
+                    nextTabs++;
+            }
+        } else {
+            boolean count = false;
+            for (int i = index; i < sql.length() && index > 0; ++i) {
+                char c = sql.charAt(i);
+                // Find the first instance of a new line character first
+                if (System.lineSeparator().equals(Character.toString(c))) {
+                    count = true;
+                    continue;
+                }
+
+                if (! count)
+                    continue;
+
+                if ('\t' == c) {
+                    nextTabs++;
+                    continue;
+                }
+
                 break;
+            }
         }
 
         // The index position is counted in the 'next' count above
@@ -307,11 +338,10 @@ public class DisplayNode implements DisplayNodeConstants {
         }
     }
 
-    /**
-     * @return The displayable String representation for this display node.
-     * @since 5.0.1
-     */
-    public String toDisplayString() {
+    private String generateString() {
+        ISQLStringVisitor sqlStringVisitor = ModelerCore.getTeiidQueryService().getSQLStringVisitor();
+        sqlStringVisitor.disableComments(this);
+
         StringBuffer sb = new StringBuffer();
         Iterator iter = displayNodeList.iterator();
         while (iter.hasNext()) {
@@ -320,7 +350,17 @@ public class DisplayNode implements DisplayNodeConstants {
 
         addComments(sb);
 
+        sqlStringVisitor.enableComments(this);
+
         return sb.toString();
+    }
+
+    /**
+     * @return The displayable String representation for this display node.
+     * @since 5.0.1
+     */
+    public String toDisplayString() {
+        return generateString();
     }
 
     /**
@@ -328,15 +368,7 @@ public class DisplayNode implements DisplayNodeConstants {
      */
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        Iterator iter = displayNodeList.iterator();
-        while (iter.hasNext()) {
-            sb.append(iter.next().toString());
-        }
-
-        addComments(sb);
-
-        return sb.toString();
+        return generateString();
     }
 
     /**
