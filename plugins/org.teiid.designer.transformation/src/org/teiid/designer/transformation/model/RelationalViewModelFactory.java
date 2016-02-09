@@ -99,9 +99,7 @@ public class RelationalViewModelFactory extends RelationalModelFactory {
                        IProgressMonitor progressMonitor ) {
 
         try {
-            RelationalViewModelFactory builder = new RelationalViewModelFactory();
-
-            builder.buildFullModel(model, modelResource, progressMonitor);
+            buildFullModel(model, modelResource, progressMonitor);
 
             modelResource.save(new NullProgressMonitor(), true);
         } catch (ModelerCoreException e) {
