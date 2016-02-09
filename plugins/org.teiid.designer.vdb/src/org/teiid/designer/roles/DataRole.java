@@ -71,7 +71,7 @@ public class DataRole extends VdbUnit {
      */
 
     // grant-all is an attribute associated with a data role in the vdb.xml definition
-    private Boolean grantAll;
+    private Boolean grantAll = Boolean.FALSE;
 
     private Set<String> roleNames;
 
@@ -113,7 +113,7 @@ public class DataRole extends VdbUnit {
         this(element.getName());
         setAnyAuthenticated(element.isAnyAuthenticated());
         setAllowCreateTempTables(element.allowCreateTempTables());
-        setGrantAll(element.doGrantAll());
+        setGrantAll(element.doGrantAll() == null ? Boolean.FALSE : element.doGrantAll());
         setDescription(element.getDescription() == null ? EMPTY_STRING : element.getDescription());
         setRoleNames(element.getMappedRoleNames());
 
