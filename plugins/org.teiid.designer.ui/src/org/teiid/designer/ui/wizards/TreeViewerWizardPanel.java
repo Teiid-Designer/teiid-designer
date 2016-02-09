@@ -146,13 +146,11 @@ public class TreeViewerWizardPanel extends Composite implements UiConstants {
      */
     protected void addOptions( Composite parent ) {
     	
-    	if( !targetIsVirtual || !isTransform ) {
-	        // add a checkbox to copy descriptions (annotations).
-	        copyAllDescriptions = new Button(this, SWT.CHECK);
-	        copyAllDescriptions.setSelection(true);
-	        copyAllDescriptions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
-	        copyAllDescriptions.setText(COPY_ALL_DESCRIPTIONS);
-    	}
+        // add a checkbox to copy descriptions (annotations).
+        copyAllDescriptions = new Button(this, SWT.CHECK);
+        copyAllDescriptions.setSelection(true);
+        copyAllDescriptions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+        copyAllDescriptions.setText(COPY_ALL_DESCRIPTIONS);
         
         if( targetIsVirtual ) {
 	        generateDefaultSQLCheckBox = new Button(this, SWT.CHECK);

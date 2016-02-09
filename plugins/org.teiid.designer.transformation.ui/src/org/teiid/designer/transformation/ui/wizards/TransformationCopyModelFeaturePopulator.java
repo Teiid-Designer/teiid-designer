@@ -23,6 +23,7 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.metamodels.core.AnnotationContainer;
+import org.teiid.designer.metamodels.relational.BaseTable;
 import org.teiid.designer.transformation.ui.UiConstants;
 import org.teiid.designer.transformation.util.TransformationHelper;
 import org.teiid.designer.ui.common.widget.InheritanceCheckboxTreeViewer;
@@ -137,18 +138,6 @@ public class TransformationCopyModelFeaturePopulator
         if( jdbcSourceIndex > -1) {
             sourceFirstLevelChildren.remove(jdbcSourceIndex);
         }
-        // JIRA Issue JBEDSP-257
-        // Add Descriptions to the sourceFirstLevelChildren if includeDescriptions = true
-        if( copyAllDescriptions ) {
-            List /*<EObject>*/ allRootContents = sourceModelResource.getEmfResource().getContents();
-            for( Iterator iter = allRootContents.iterator(); iter.hasNext(); ) {
-                EObject nextChild = (EObject)iter.next();
-                if( nextChild instanceof AnnotationContainer ) {
-                    sourceFirstLevelChildren.add(nextChild);
-                    break;
-                }
-            }
-        }
         
         Collection /*<EObject>*/ sourceFirstLevelChildrenCopies = null;
         final Map originalsToCopies = new HashMap();
@@ -161,7 +150,7 @@ public class TransformationCopyModelFeaturePopulator
         //What we really need is not a map of originals to copies, but a map of
         //copies to originals.  So create it.
         final Map copiesToOriginals = invertMap(originalsToCopies);
-        
+
         //Allow for any nodes already inserted into the target              
         List /*<EObject>*/targetFirstLevelChildren = targetModelResource.getEmfResource().getContents();
         int numInitialFirstLevelNodes = targetFirstLevelChildren.size();
@@ -179,7 +168,13 @@ public class TransformationCopyModelFeaturePopulator
         for (int i = numInitialFirstLevelNodes; i < copiedFirstLevelChildrenList.size(); i++) {
             modifiedCopiedFirstLevelChildrenList.add(copiedFirstLevelChildrenList.get(i));
         }
+        
         doTransformations(copiesToOriginals, modifiedCopiedFirstLevelChildrenList, extraProperties);
+        
+        if( copyAllDescriptions ) {
+        	copyDescriptions(copiesToOriginals, targetModelResource);
+        }
+        
     }
     
     private Map invertMap(Map originalsToCopies) {
@@ -336,5 +331,18 @@ public class TransformationCopyModelFeaturePopulator
             index++;
         }
         return descendantsFound;
+    }
+    
+    private void copyDescriptions(Map copiesToOriginals, ModelResource targetResource) throws ModelerCoreException {
+
+    	for( Object key : copiesToOriginals.keySet() ) {
+    		EObject eObj = (EObject)key;
+    		EObject originalEObj = (EObject)copiesToOriginals.get(key);
+    		String description = ModelerCore.getModelEditor().getDescription(originalEObj);
+    		if( description != null ) {
+    			ModelerCore.getModelEditor().setDescription(eObj, description);
+    		}
+    	}
+
     }
 }
