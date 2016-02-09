@@ -257,6 +257,15 @@
          label="%editTransformationAction.label">
       </resourceAction>
    </extension>
+      <extension
+		id="ConvertFunctionsAction"
+		name="%convertFunctionsAction.name"
+        point="org.teiid.designer.ui.modelResourceAction">
+      <resourceAction
+         name="org.teiid.designer.transformation.ui.actions.ConvertFunctionsToVirtualProceduresAction"
+         label="%convertFunctionsAction.label">
+      </resourceAction>
+   </extension>
 
    <!-- Action contributed to generate materialized views -->
    <extension

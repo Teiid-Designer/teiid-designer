@@ -92,12 +92,14 @@ public class RelationalModelFactory implements RelationalConstants {
 
 	private Map<String, Collection<ModelObjectExtensionAssistant>> classNameToMedAssistantsMap = new HashMap<String,Collection<ModelObjectExtensionAssistant>>();
 
+	private boolean allowsZeroStringLength;
 	/**
      * 
      */
     public RelationalModelFactory() {
         super();
         this.datatypeProcessor = new DatatypeProcessor();
+        allowsZeroStringLength = false;
     }
     
     protected RelationalModelExtensionAssistant getExtensionAssistant() {
@@ -501,7 +503,7 @@ public class RelationalModelFactory implements RelationalConstants {
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
             
             int datatypeLength = columnRef.getLength();
-            if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+            if( !allowsZeroStringLength && datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
                 columnRef.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
             } else {
             	columnRef.setLength(datatypeLength);
@@ -750,6 +752,7 @@ public class RelationalModelFactory implements RelationalConstants {
         parameter.setNameInSource(parameterRef.getNameInSource());
         parameter.setDefaultValue(parameterRef.getDefaultValue());
         parameter.setDirection(getDirectionKind(parameterRef.getDirection()));
+        parameter.setLength(parameterRef.getLength());
         parameter.setNativeType(parameterRef.getNativeType());
         parameter.setNullable(getNullableType(parameterRef.getNullable()));
         parameter.setPrecision(parameterRef.getPrecision());
@@ -767,11 +770,15 @@ public class RelationalModelFactory implements RelationalConstants {
             String dTypeName = ModelerCore.getModelEditor().getName(datatype);
             
             int datatypeLength = parameterRef.getLength();
-            if( datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
+            if( !allowsZeroStringLength && datatypeLength == 0 && DatatypeProcessor.DEFAULT_DATATYPE.equalsIgnoreCase(dTypeName) ) {
                 parameter.setLength(DatatypeProcessor.DEFAULT_DATATYPE_LENGTH);
             } else {
             	parameter.setLength(datatypeLength);
             }
+        }
+        
+        if( parameterRef.getDescription() != null) {
+        	createAnnotation(parameter, parameterRef.getDescription(), modelResource);
         }
        
         // Apply Extension Properties
@@ -1221,5 +1228,15 @@ public class RelationalModelFactory implements RelationalConstants {
 		ModelExtensionPropertyDefinition propDefn = med.getPropertyDefinition(metaclassName, propId);
 		return propDefn!=null ? true : false;
 	}
+
+	public boolean allowsZeroStringLength() {
+		return allowsZeroStringLength;
+	}
+
+	public void setAllowsZeroStringLength(boolean allowsZeroStringLength) {
+		this.allowsZeroStringLength = allowsZeroStringLength;
+	}
+	
+	
     
 }

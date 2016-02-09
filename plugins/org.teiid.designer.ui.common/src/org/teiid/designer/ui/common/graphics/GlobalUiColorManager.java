@@ -35,7 +35,7 @@ public class GlobalUiColorManager {
     
     private static Color varColor;
 
-    static Color getSystemColor(final int colorID) {
+    public static Color getSystemColor(final int colorID) {
     	varColor = null;
     	UiUtil.runInSwtThread(new Runnable() {
 			@Override
