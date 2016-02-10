@@ -9,6 +9,7 @@ package org.teiid.designer.transformation.ui.wizards.rest;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -681,6 +682,10 @@ public class TeiidRestImportSourcePage extends AbstractWizardPage implements
 					getString("protocolErrorTitle"), //$NON-NLS-1$
 					getString("protocolUrlErrorMessage") + ex.getMessage()); //$NON-NLS-1$
 
+		} catch (FileNotFoundException fnfex) {
+			Util.log(fnfex);
+			MessageDialog.openError(this.getShell(), getString("fileNotFoundTitle"), //$NON-NLS-1$
+					getString("fileNotFoundMessage") + fnfex.getMessage()); //$NON-NLS-1$
 		} catch (IOException ex) {
 			Util.log(ex);
 			MessageDialog.openError(this.getShell(), getString("ioErrorTitle"), //$NON-NLS-1$

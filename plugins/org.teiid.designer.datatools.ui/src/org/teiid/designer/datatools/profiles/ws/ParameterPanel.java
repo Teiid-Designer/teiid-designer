@@ -490,7 +490,13 @@ public class ParameterPanel implements DatatoolsUiConstants {
 				param.setType(Parameter.Type.fromValue(newType));
 				parameterMap.put(key,param);
 				propertiesViewer.refresh(param);
+				if( wsProfileDetailsWizardPage != null) {
+					wsProfileDetailsWizardPage.setParameterMap(parameterMap);
+				} else {
+					propertyPage.setParameterMap(parameterMap);
+				}
 			}
+
         }
     }
 

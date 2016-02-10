@@ -526,8 +526,9 @@ public class PropertyPage extends ProfileDetailsPropertyPage implements
         result.setProperty(ICredentialsCommon.PASSWORD_PROP_ID, passwordText.getText());
         result.setProperty(IWSProfileConstants.RESPONSE_TYPE_PROPERTY_KEY, responseTypeCombo.getText());
         
-        for( Object key : extraProperties.keySet() ) {
-        	result.put(key, extraProperties.get(key));
+        Properties extraProps = getExtraProperties();
+        for( Object key : extraProps.keySet() ) {
+        	result.put(key, extraProps.get(key));
         }
         
         return result;
