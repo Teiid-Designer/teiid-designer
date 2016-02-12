@@ -180,6 +180,9 @@ public abstract class WorkspacePreviewVdbJob extends WorkspaceJob implements Pre
         // Want to avoid generating previews during vdb conversion
         // since models can be in partial states
         //
+        
+        if( VdbPlugin.singleton() == null ) return false;
+        
         if (result)
             result = ! VdbPlugin.singleton().conversionInProgress();
 
