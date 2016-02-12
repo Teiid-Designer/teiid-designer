@@ -304,6 +304,43 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
 	}
 	
     void handleAddProperty() {
+//        assert (!this.propertiesViewer.getSelection().isEmpty());
+//        
+//        Set<String> keys = new HashSet<String>();
+//        for( Object key : profileProperties.keySet() ) {
+//        	keys.add((String)key);
+//        }
+//
+//
+//        AddHeaderPropertyDialog dialog = new AddHeaderPropertyDialog(propertiesViewer.getControl().getShell(), keys);
+//
+//        if (dialog.open() == Window.OK) {
+//            // update model
+//            String name = dialog.getName();
+//            String value = dialog.getValue();
+//            Parameter newParameter = new Parameter(name, value, Type.Header);
+//            newParameter.setType(Parameter.Type.Header);
+//            profileProperties.put(Parameter.HEADER_PREFIX+name, newParameter.getDefaultValue());
+//
+//            // update UI from model
+//            this.propertiesViewer.refresh();
+//
+//            // select the new property
+//            
+//            
+//            Parameter prop = null;
+//            
+//            for(TableItem item : this.propertiesViewer.getTable().getItems() ) {
+//            	if( item.getData() instanceof Parameter && ((Parameter)item.getData()).getName().equals(name) ) {
+//            		prop = (Parameter)item.getData();
+//            		break;
+//            	}
+//            }
+//
+//            if( prop != null ) {
+//                this.propertiesViewer.setSelection(new StructuredSelection(prop), true);
+//            }
+//        }
     	 assert (!this.propertiesViewer.getSelection().isEmpty());
          if (this.parameterMap == null) this.parameterMap = new LinkedHashMap<String, Parameter>();
          Set<String> keys = new HashSet<String>();
@@ -344,6 +381,14 @@ public class HeaderPropertiesPanel implements DatatoolsUiConstants {
     }
     
     void handleRemoveProperty() {
+//        Parameter selectedProperty = getSelectedProperty();
+//        assert (selectedProperty != null);
+//
+//        // update model
+//        profileProperties.remove(Parameter.HEADER_PREFIX+selectedProperty.getName());
+//
+//        // update UI
+//        this.propertiesViewer.refresh();
     	Parameter selectedProperty = getSelectedProperty();
         assert (selectedProperty != null);
 
