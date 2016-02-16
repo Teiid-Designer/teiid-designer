@@ -19,7 +19,8 @@
 
 	<!-- Comma-separated list of required libraries -->
 	<property name="libs" value="modeshape-common.jar,
-                                 modeshape-sequencer-ddl.jar"/>
+                                 modeshape-sequencer-ddl.jar,
+								 teiid-modeshape-sequencer-ddl.jar"/>
 
 	<!--
 	   Test whether all the required libraries are present
