@@ -1,5 +1,6 @@
 modeshape-common-3.8.4.GA
 modeshape-sequencer-ddl-3.8.4.GA
+teiid-modeshape-sequencer-ddl-0.0.1
 
 built from branch master
 

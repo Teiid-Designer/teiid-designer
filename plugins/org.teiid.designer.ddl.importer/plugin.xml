@@ -19,10 +19,6 @@
             class="org.teiid.designer.ddl.importer.node.PostgresImporter"
             dialect="Postgres">
       </importer>
-      <importer
-            class="org.teiid.designer.ddl.importer.node.TeiidDdlImporter"
-            dialect="Teiid">
-      </importer>
    </extension>
 
 </plugin>

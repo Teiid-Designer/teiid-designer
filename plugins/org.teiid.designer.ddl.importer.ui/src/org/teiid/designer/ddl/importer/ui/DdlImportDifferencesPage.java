@@ -266,7 +266,7 @@ public class DdlImportDifferencesPage extends WizardPage implements IPersistentW
                 if (offset > -1) {
                     StyledText styledText = ddlContentsArea.getTextWidget();
                     int line = styledText.getLineAtOffset(offset);
-                    if (line > -1) {
+                    if (line > -1 && styledText.getLineCount() > 1) {
                         int startIndx = styledText.getOffsetAtLine(line);
                         int endIndx = styledText.getOffsetAtLine(line + 1);
                         styledText.setSelection(startIndx, endIndx);

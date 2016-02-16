@@ -670,7 +670,10 @@ public class VdbUtil implements VdbConstants {
 						
 						Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
 						if( resources.size() == 1 ) {
-							resource = resources.iterator().next();
+							IFile someResource = resources.iterator().next();
+							if( ! ModelUtil.isVdbArchiveFile(someResource)) {
+								resource = someResource;
+							}
 						}
 						
 						if( resource != null ) {
@@ -683,8 +686,9 @@ public class VdbUtil implements VdbConstants {
 						if( resource == null ) {
 							// Find by name
 							Collection<IFile> resources = WorkspaceResourceFinderUtil.findIResourceInProjectByName(modelName, theProject);
-							if( resources.size() == 1 ) {
-								resource = resources.iterator().next();
+							IFile someResource = resources.iterator().next();
+							if( ! ModelUtil.isVdbArchiveFile(someResource)) {
+								resource = someResource;
 							}
 						}
 					}
@@ -696,9 +700,14 @@ public class VdbUtil implements VdbConstants {
 								VdbPlugin.UTIL.getString("vdbValidationWarning_noModelInWorkspace", modelName)) ); //$NON-NLS-1$
 					} else {
 						// check same name
+						// Check that resource is not a VDB 
 						String resourceName = FileUtils.getNameWithoutExtension(resource);
 						if( ! modelName.equals(resourceName) ) {
 							nameChanged = true;
+						} else {
+							if( ModelUtil.isVdbArchiveFile(resource) ) {
+								continue;
+							}
 						}
 
 						String path = model.getPath();

@@ -37,12 +37,13 @@ import org.teiid.designer.ui.viewsupport.ModelerUiViewUtils;
 
 
 /**
- * Wizard Imports DDL and generates a Relational Model
+ * @author blafond
+ *
  */
-public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
+public class TeiidDdlImporterWizard extends AbstractWizard implements IImportWizard {
 
     DdlImporter importer;
-    private DdlImporterPage srcPg;
+    private TeiidDdlImporterPage srcPg;
     private DdlImportDifferencesPage diffPage;
     
     private Properties options;
@@ -52,8 +53,8 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
     /**
      * DdlImporterWizard constructor
      */
-    public DdlImporterWizard() {
-        super(DdlImporterUiPlugin.singleton(), DdlImporterUiI18n.WIZARD_TITLE, DdlImporterUiPlugin.imageDescriptor("importWizard75x58.gif"));  //$NON-NLS-1$
+    public TeiidDdlImporterWizard() {
+        super(DdlImporterUiPlugin.singleton(), DdlImporterUiI18n.TEIID_WIZARD_TITLE, DdlImporterUiPlugin.imageDescriptor("importWizard75x58.gif"));  //$NON-NLS-1$
         
         final IDialogSettings pluginSettings = DdlImporterUiPlugin.singleton().getDialogSettings();
         final String sectionName = DdlImporterWizard.class.getSimpleName();
@@ -105,7 +106,7 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
         importer = new DdlImporter(projectArray);
         
         // First Page defines source DDL and target model
-        srcPg = new DdlImporterPage(importer, projectArray, finalSelection, options);
+        srcPg = new TeiidDdlImporterPage(importer, projectArray, finalSelection, options);
         
         // Second Page for presentation of differences - allows user selection
         diffPage = new DdlImportDifferencesPage(importer, options);
@@ -184,3 +185,4 @@ public class DdlImporterWizard extends AbstractWizard implements IImportWizard {
     }
     
 }
+

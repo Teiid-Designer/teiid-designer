@@ -71,6 +71,8 @@ class DdlImporterUiI18n {
     static final String DIFFERENCE_PAGE_IMPORT_COMPLETED_WITH_MESSAGES_MSG = i18n("differencePage.importCompletedWithMessages"); //$NON-NLS-1$
     static final String DIFFERENCE_PAGE_SEE_IMPORT_MESSAGES_MSG = i18n("differencePage.seeImportMessagesMsg"); //$NON-NLS-1$
     
+    static final String TEIID_WIZARD_TITLE = i18n("wizardTitleForTeiidDdl"); //$NON-NLS-1$
+    
     private DdlImporterUiI18n() {
     }
 }

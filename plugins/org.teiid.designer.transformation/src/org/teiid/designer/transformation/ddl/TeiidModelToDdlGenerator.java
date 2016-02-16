@@ -53,7 +53,6 @@ import org.teiid.designer.metamodels.transformation.TransformationMappingRoot;
 import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.transformation.TransformationPlugin;
 import org.teiid.designer.transformation.util.TransformationHelper;
-import org.teiid.designer.type.IDataTypeManagerService;
 import org.teiid.designer.type.IDataTypeManagerService.DataTypeName;
 //import org.teiid.query.ui.sqleditor.component.QueryDisplayFormatter;
 
@@ -132,6 +131,10 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
         sb.append(SPACE);
 
         String teiidDdlDataType = resolveExportedDataType(col.getType());
+        if( teiidDdlDataType == null ) {
+        	issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding " + getName(col.getType()) + ".  Type set to 'string'")); //$NON-NLS-1$
+        	teiidDdlDataType = DataTypeName.STRING.name();
+        }
         sb.append(getColumnDatatypeDdl(teiidDdlDataType, col.getLength(), col.getPrecision(), col.getScale()));
 
         String properties = getColumnProperties(col);
@@ -145,6 +148,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	
 	private String resolveExportedDataType(EObject dataTypeEObject) {
 		String dataTypeName = ModelerCore.getBuiltInTypesManager().getName(dataTypeEObject);
+		
+        if( dataTypeName == null ) {
+        	issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding " + getName(dataTypeEObject) + ".  Type set to 'string'")); //$NON-NLS-1$
+        	return DataTypeName.STRING.name();
+        }
+        
 		if( dataTypeName.equalsIgnoreCase(DataTypeName.VARBINARY.name()) ) {
 			return dataTypeName;
 		}
@@ -365,10 +374,18 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		
 		// Check for an "RETURN" parameter direction and cache it's datatype
 		String returnType = null;
+		ProcedureParameter returnParam = null;
+		int returnTypeLength = 0;
+		int returnTypeScale = 0;
+		int returnTypePrecision = 0;
 		
 		for( ProcedureParameter param : params ) {
 			if( param.getDirection() == DirectionKind.RETURN_LITERAL) {
 				returnType = resolveExportedDataType(param.getType());
+				returnTypeLength = param.getLength();
+				returnTypeScale = param.getScale();
+				returnTypePrecision = param.getPrecision();
+				returnParam = param;
 				break;
 			}
 		}
@@ -385,12 +402,21 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			count++;
 			sb.append(paramStr);
 			
-			addOptionsForEObject(param, sb);
+			String options = getOptions(param);
+			if( !StringUtilities.isEmpty(options)) {
+				sb.append(SPACE).append(options);
+			}
 			
 			if( count < nParams ) sb.append(COMMA + SPACE);
 		}
 		
 		sb.append(CLOSE_BRACKET);
+		
+		// Depending on the procedure type, need to append either one of the following:
+		//   > returns datatype
+		//   > returns a result set, either named or not
+		//   > an AS <SQL STATEMENT> if a virtual procedure
+		//   > ???
 	
 		// Add the RETURNS clause to handle the result set
 		// CREATE VIRTUAL PROCEDURE testProc (p1 string(4000)) RETURNS TABLE ( xml_out xml)
@@ -401,8 +427,17 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 	    // CREATE VIRTUAL FUNCTION sumAll(arg integer) RETURNS integer OPTIONS (JAVA_CLASS 'org.something.SumAll',  JAVA_METHOD 'addInput', AGGREGATE 'true', VARARGS 'true', "NULL-ON-NULL" 'true');
 		
 		if( procedure.getResult() != null ) {
-			sb.append(SPACE + RETURNS + SPACE + TABLE + SPACE);
+			sb.append(SPACE + RETURNS);
+			// Get options for RETURNS type
+			String options = getOptions(returnParam);
+			if( !StringUtilities.isEmpty(options)) {
+				sb.append(SPACE).append(options);
+			}
+			
+			sb.append(SPACE + TABLE + SPACE);
+			
 			sb.append(OPEN_BRACKET);
+			
 			count = 0;
 			int nCols = procedure.getResult().getColumns().size();
 			for( Object col : procedure.getResult().getColumns() ) {
@@ -412,12 +447,21 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(columnStr);
 				if( count < nCols ) sb.append(COMMA + SPACE);
 				
-				addOptionsForEObject(nextCol, sb);
+				options = getColumnOptions(nextCol);
+				if( !StringUtilities.isEmpty(options)) {
+					sb.append(SPACE).append(options);
+				}
 			}
 			sb.append(CLOSE_BRACKET);
-			addOptionsForEObject(procedure.getResult(), sb);
 		} else if( returnType != null ) {
-			sb.append(SPACE + RETURNS + SPACE + returnType);
+			sb.append(SPACE + RETURNS);
+			
+			// Get options for RETURNS type
+			String options = getOptions(returnParam);
+			if( !StringUtilities.isEmpty(options)) {
+				sb.append(SPACE).append(options).append(SPACE);
+			}
+			sb.append(getParameterDatatypeDdl(returnType, returnTypeLength, returnTypePrecision, returnTypeScale));
 		}
 		
 		String options = getProcedureOptions(procedure);
@@ -425,15 +469,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			sb.append(NEW_LINE);
 			sb.append(SPACE).append(options);
 		}
-//		else {
-//			sb.append(CLOSE_BRACKET);
-//		}
-		
-		// Depending on the procedure type, need to append either one of the following:
-		//   > returns datatype
-		//   > returns a result set, either named or not
-		//   > an AS <SQL STATEMENT> if a virtual procedure
-		//   > ???
+
+
 		if( isVirtual && !isFunction ) {
 			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(procedure);
 			String sqlString = TransformationHelper.getSelectSqlString(tRoot).replace(CREATE_VIRTUAL_PROCEDURE, StringConstants.EMPTY_STRING);
@@ -479,8 +516,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             sb.append(AUTO_INCREMENT).append(SPACE);
 
         if (col.getOwner() instanceof BaseTable) {
-            BaseTable table = (BaseTable) col.getOwner();
-
+//            BaseTable table = (BaseTable) col.getOwner();
+//
 //            //
 //            // PRIMARY KEY
 //            //
@@ -544,6 +581,28 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(col), e)); //$NON-NLS-1$
 		}
 
+    	return options.toString();
+    }
+    
+    private String getOptions(EObject eobject) {
+    	OptionsStatement options = new OptionsStatement();
+    	
+    	String desc = getDescription(eobject);
+    	if( !StringUtilities.isEmpty(desc) ) {
+    		options.add(ANNOTATION, desc, EMPTY_STRING);
+    	}
+    	
+    	// Need to check with other assistants too
+    	try {
+			Map<String, String> props = getOptionsForObject(eobject);
+			for( String key : props.keySet() ) {
+				String value = props.get(key);
+				options.add(key, value, null);
+			}
+		} catch (Exception e) {
+			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(eobject), e)); //$NON-NLS-1$
+		}
+    	
     	return options.toString();
     }
     
@@ -761,7 +820,8 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     }
     
-    private void addOptionsForEObject(EObject eObj, StringBuilder sb) {
+    @SuppressWarnings("unused")
+	private void addOptionsForEObject(EObject eObj, StringBuilder sb) {
     	// Need to check with other assistants too
     	try {
     		OptionsStatement options = new OptionsStatement();
@@ -780,6 +840,11 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     
     private String getProcedureOptions(Procedure procedure) {
     	OptionsStatement options = new OptionsStatement();
+    	
+    	String desc = getDescription(procedure);
+    	if( !StringUtilities.isEmpty(desc) ) {
+    		options.add(ANNOTATION, desc, EMPTY_STRING);
+    	}
     	
     	options.add(NAMEINSOURCE, procedure.getNameInSource(), null);
     	

@@ -6,7 +6,8 @@ Bundle-Version: 10.0.0.qualifier
 Bundle-Vendor: %pluginProvider
 Bundle-ClassPath: .,
  lib/modeshape-common.jar,
- lib/modeshape-sequencer-ddl.jar
+ lib/modeshape-sequencer-ddl.jar,
+ lib/teiid-modeshape-sequencer-ddl.jar
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.modeshape,
@@ -26,5 +27,7 @@ Export-Package: org.modeshape,
  org.modeshape.sequencer.ddl.dialect.mysql,
  org.modeshape.sequencer.ddl.dialect.oracle,
  org.modeshape.sequencer.ddl.dialect.postgres,
- org.modeshape.sequencer.ddl.dialect.teiid,
- org.modeshape.sequencer.ddl.node
+ org.modeshape.sequencer.ddl.node,
+ org.teiid.modeshape.sequencer.ddl,
+ org.teiid.modeshape.sequencer.ddl.datatype,
+ org.teiid.modeshape.sequencer.ddl.node

@@ -5,7 +5,7 @@
 *
 * See the AUTHORS.txt file distributed with this work for a full listing of individual contributors.
 */
-package org.teiid.designer.ddl.importer.node;
+package org.teiid.designer.ddl.importer.node.teiid;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,11 +20,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
-import org.modeshape.sequencer.ddl.DdlConstants;
-import org.modeshape.sequencer.ddl.StandardDdlLexicon;
-import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlConstants;
-import org.modeshape.sequencer.ddl.dialect.teiid.TeiidDdlLexicon;
-import org.modeshape.sequencer.ddl.node.AstNode;
 import org.teiid.core.designer.ModelerCoreException;
 import org.teiid.core.designer.util.CoreStringUtil;
 import org.teiid.core.designer.util.StringUtilities;
@@ -56,12 +51,17 @@ import org.teiid.designer.relational.model.RelationalUniqueConstraint;
 import org.teiid.designer.relational.model.RelationalViewProcedure;
 import org.teiid.designer.relational.model.RelationalViewTable;
 import org.teiid.designer.type.IDataTypeManagerService;
+import org.teiid.modeshape.sequencer.ddl.DdlConstants;
+import org.teiid.modeshape.sequencer.ddl.StandardDdlLexicon;
+import org.teiid.modeshape.sequencer.ddl.TeiidDdlConstants;
+import org.teiid.modeshape.sequencer.ddl.TeiidDdlLexicon;
+import org.teiid.modeshape.sequencer.ddl.node.AstNode;
 
 
 /**
  * Teiid DDL node importer
  */
-public class TeiidDdlImporter extends StandardImporter {
+public class TeiidDdlImporter extends TeiidStandardImporter {
 
 	private static final String NS_TEIID_ODATA = "teiid_odata"; //$NON-NLS-1$
 	private static final String NS_TEIID_WEBSERVICE= "teiid_ws"; //$NON-NLS-1$
@@ -553,10 +553,10 @@ public class TeiidDdlImporter extends StandardImporter {
 					}
 				}
 			} else if(is(child, TeiidDdlLexicon.CreateProcedure.RESULT_DATA_TYPE)) {
-				RelationalProcedureResultSet result = getFactory().createProcedureResultSet();
-				procedure.setResultSet(result);
-				initialize(result, procedureNode);
-				createColumn(child,result);
+				// Need to create a procedure parameter with return direction
+				RelationalParameter param = createProcedureParameter(child, procedure);
+				param.setName("resultParam");
+				param.setDirection(DirectionKind.RETURN_LITERAL.toString());
 			} else if(is(child, StandardDdlLexicon.TYPE_STATEMENT_OPTION)) {
 				procOptionNodes.add(child);
 			}
@@ -765,7 +765,16 @@ public class TeiidDdlImporter extends StandardImporter {
 
 		} else if (is(node, TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
 
-			RelationalViewTable viewTable = getFactory().createViewTable();
+			boolean isVirtual = model.getModelType() == ModelType.VIRTUAL;
+			
+			RelationalTable viewTable = null;
+			
+			if( isVirtual ) {
+				viewTable = getFactory().createViewTable();
+			} else {
+				viewTable = getFactory().createBaseTable();
+			}
+			
 			initializeTable(viewTable, node, model);
 
 			List<AstNode> optionNodes = new ArrayList<AstNode>();
@@ -788,9 +797,11 @@ public class TeiidDdlImporter extends StandardImporter {
 			if(!optionNodes.isEmpty()) {
 				processOptions(optionNodes,viewTable);
 			}
-			String queryExpression = (String)node.getProperty(TeiidDdlLexicon.CreateTable.QUERY_EXPRESSION);
-			if( ! StringUtilities.isEmpty(queryExpression) ) {
-				viewTable.setTransformationSQL(queryExpression);
+			if( isVirtual ) {
+				String queryExpression = (String)node.getProperty(TeiidDdlLexicon.CreateTable.QUERY_EXPRESSION);
+				if( ! StringUtilities.isEmpty(queryExpression) ) {
+					((RelationalViewTable)viewTable).setTransformationSQL(queryExpression);
+				}
 			}
 
 		} else if (is(node, TeiidDdlLexicon.CreateProcedure.PROCEDURE_STATEMENT)

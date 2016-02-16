@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.modeshape.common.text.ParsingException;
 import org.modeshape.common.text.Position;
+import org.modeshape.sequencer.ddl.DdlParserScorer;
 import org.modeshape.sequencer.ddl.DdlParsers;
 import org.modeshape.sequencer.ddl.StandardDdlLexicon;
 import org.modeshape.sequencer.ddl.node.AstNode;
@@ -45,7 +46,9 @@ import org.teiid.designer.core.workspace.ModelUtil;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
+import org.teiid.designer.ddl.TeiidDdlNodeImporter;
 import org.teiid.designer.ddl.importer.node.EmfModelGenerator;
+import org.teiid.designer.ddl.importer.node.teiid.TeiidDdlImporter;
 import org.teiid.designer.ddl.registry.DdlNodeImporterRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
 import org.teiid.designer.metamodels.core.ModelType;
@@ -58,6 +61,7 @@ import org.teiid.designer.relational.compare.DifferenceGenerator;
 import org.teiid.designer.relational.compare.DifferenceReport;
 import org.teiid.designer.relational.model.RelationalModel;
 import org.teiid.designer.relational.model.RelationalModelFactory;
+import org.teiid.modeshape.sequencer.ddl.TeiidDdlParser;
 
 /**
  * DdlImporter parses the provided DDL and generates a model containing the parsed entities
@@ -149,6 +153,11 @@ public class DdlImporter {
      * @throws Exception
      */
     public void importDdl(String ddl, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
+    	if( specifiedParser != null && specifiedParser.toUpperCase().equals("TEIID") ) {
+    		importTeiidDdl(ddl, monitor, totalWork, options);
+    		return;
+    	}
+    	
         this.ddlString = ddl;
 
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
@@ -167,8 +176,8 @@ public class DdlImporter {
         try {
         	if(!CoreStringUtil.isEmpty(specifiedParser)) {
         		rootNode = parsers.parseUsing(ddlString,specifiedParser);
-        		// No DDL parser is specified - user DdlParsers which will score the best fit
         	} else {
+        		// No DDL parser is specified - user DdlParsers which will score the best fit
         		rootNode = parsers.parse(ddlString, ddlFileName);
         	}
         // If parsing exception is encountered, throw DdlImportException
@@ -237,6 +246,89 @@ public class DdlImporter {
             throw new OperationCanceledException();
         monitor.worked(workUnit);
     }
+    
+    private void importTeiidDdl( String ddl, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
+        	        this.ddlString = ddl;
+
+        	        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+
+        	        int workUnit = totalWork / 3;
+
+        	        org.teiid.modeshape.sequencer.ddl.node.AstNode rootNode = null;
+        	        
+        	        // Use specified parser if it has been set
+        	        org.teiid.modeshape.sequencer.ddl.DdlParsers parsers = new org.teiid.modeshape.sequencer.ddl.DdlParsers();
+
+        	        if( CoreStringUtil.isEmpty(ddlString) ) {
+        	        	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
+        	        	this.noDdlImported = true;
+        	        }
+        	        
+        	        try {
+        	        	rootNode = parsers.parseUsing(ddlString,specifiedParser);
+        	        // If parsing exception is encountered, throw DdlImportException
+        	        } catch (ParsingException e) {
+        	        	String parseMessage = e.getMessage();
+        	        	importManager.getImportMessages().setParseErrorMessage(parseMessage);
+        	        	Position position = e.getPosition();
+        	        	importManager.getImportMessages().setHasParseError(true);
+        	        	importManager.getImportMessages().setParseErrorColNumber(position.getColumn());
+        	        	importManager.getImportMessages().setParseErrorLineNumber(position.getLine());
+        	        	importManager.getImportMessages().setParseErrorIndex(position.getIndexInContent());
+        	        	if(!CoreStringUtil.isEmpty(specifiedParser)) {
+        	            	importManager.getImportMessages().setParserId(specifiedParser);
+        	        	} else if(rootNode!=null) {
+        	                String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
+        	                importManager.getImportMessages().setParserId(parserId);
+        	        	}
+        	        	return;
+        	        }
+        	        String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
+
+        	        if (monitor.isCanceled())
+        	            throw new OperationCanceledException();
+        	        monitor.worked(workUnit);
+
+        	        // ------------------------------------------------------------------------------
+        	        // Set up DifferenceProcessor
+        	        //   - startingSelector -- existing model
+        	        //   - endingSelector   -- generated from parsed ddl nodes 
+        	        // ------------------------------------------------------------------------------
+        	        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
+        	        model = ModelerCore.create(modelFile);
+        	        
+        	        // Have to specifically set the metamodel type and properties and initialize the containers to anything downstream
+        	        // has a valid ModelResource
+        	        model.getModelAnnotation().setPrimaryMetamodelUri( RelationalModelFactory.RELATIONAL_PACKAGE_URI );
+        	        model.getModelAnnotation().setModelType(importManager.getModelType());
+        	        ModelerCore.getModelEditor().getAllContainers(model.getEmfResource());
+        	        model.save(monitor, false);
+        	        
+        	        importManager.setRelationalModel(model);
+        	        
+        	        RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
+        	        targetRelationalModel.setModelType(importManager.getModelType().getValue());
+        	        
+        	        importManager.setProgressMonitor(monitor);
+
+        	        TeiidDdlNodeImporter nodeImporter = new TeiidDdlImporter();
+
+        	        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager, options);
+        	        
+        	        if (monitor.isCanceled())
+        	            throw new OperationCanceledException();
+        	        monitor.worked(workUnit);
+
+        	        // ------------------------------------------------------------------------------
+        	        // Generate a DifferenceReport
+        	        // ------------------------------------------------------------------------------
+        	        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
+        	        diffReport = DifferenceGenerator.compare(ddlImportModel,targetRelationalModel);
+        	        
+        	        if (monitor.isCanceled())
+        	            throw new OperationCanceledException();
+        	        monitor.worked(workUnit);
+        	    }
 
     /**
      * @return the 'true' if has a failure mesage

@@ -24,4 +24,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.teiid.designer.ddl.importer,
- org.teiid.designer.ddl.importer.node
+ org.teiid.designer.ddl.importer.node,
+ org.teiid.designer.ddl.importer.node.teiid
