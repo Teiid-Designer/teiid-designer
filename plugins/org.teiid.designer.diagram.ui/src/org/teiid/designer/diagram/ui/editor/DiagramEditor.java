@@ -1190,15 +1190,21 @@ public class DiagramEditor extends GraphicalEditor
      */
     @Override
 	public void openComplete() {
-    	openComplete = true;
-
-        if (revealableEObject != null) {
+    	if( openComplete ) {
             final EObject revealedObject = revealableEObject;
             getDiagramViewer().reveal(revealedObject);
             revealableEObject = null;
-        } else {
-        	openContext(getParent().getModelResource());
-        }
+    	} else {
+    		openComplete = true;
+    		
+	        if (revealableEObject != null) {
+	            final EObject revealedObject = revealableEObject;
+	            getDiagramViewer().reveal(revealedObject);
+	            revealableEObject = null;
+	        } else if( currentModel == null){
+	        	openContext(getParent().getModelResource());
+	        }
+    	}
     }
 
     /*
