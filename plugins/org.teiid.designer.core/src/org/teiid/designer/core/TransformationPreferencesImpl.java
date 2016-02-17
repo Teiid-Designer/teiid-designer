@@ -19,7 +19,7 @@ public class TransformationPreferencesImpl implements TransformationPreferences 
 
     //Used to enable Unit Testing.
     public static boolean HEADLESS = false;
-    private static int DEFAULT_LENGTH = 10;
+    private static int DEFAULT_LENGTH = 0;
     private static int UPPER_RECURSION_LIMIT = 10;
     private static boolean DEFAULT_REMOVE_ATTRIBUTES_VALUE = false;
 

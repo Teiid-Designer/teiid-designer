@@ -33,6 +33,7 @@ public interface TeiidDDLConstants {
 		public static final String CREATE_VIEW = "CREATE VIEW";
 		public static final String CREATE_VIRTUAL_PROCEDURE = "CREATE VIRTUAL PROCEDURE";
 		public static final String CREATE_VIRTUAL_FUNCTION = "CREATE VIRTUAL FUNCTION";
+		public static final String CREATE_GLOBAL_TEMPORARY_TABLE = "CREATE GLOBAL TEMPORARY TABLE";
 		
 		public static final String JAVA_METHOD = "JAVA_METHOD";//$NON-NLS-1$
 		public static final String JAVA_CLASS = "JAVA_CLASS";//$NON-NLS-1$

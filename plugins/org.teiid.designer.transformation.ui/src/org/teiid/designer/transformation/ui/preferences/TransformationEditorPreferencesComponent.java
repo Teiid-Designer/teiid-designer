@@ -10,6 +10,7 @@ package org.teiid.designer.transformation.ui.preferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -54,8 +55,8 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
     	return org.teiid.designer.transformation.ui.UiConstants.Util.getString(key);
     }
     
-    private static int MAX_NUMBER = 255;
-    private static int MIN_NUMBER = 1;
+    private static int MAX_NUMBER = 4000;
+    private static int MIN_NUMBER = 0;
     private List<IEditorPreferencesValidationListener> validationListeners = new ArrayList<IEditorPreferencesValidationListener>();
 
     public TransformationEditorPreferencesComponent() {
@@ -143,6 +144,7 @@ public class TransformationEditorPreferencesComponent implements IEditorPreferen
         label = new Label(grpMisc, SWT.NONE);
         label.setText(defaultStringMessage);
         defaultStringLength = new Text(grpMisc, SWT.BORDER);
+        GridDataFactory.fillDefaults().minSize(40, 1).applyTo(defaultStringLength);
 
         defaultStringLength.addModifyListener(new ModifyListener() {
             @Override

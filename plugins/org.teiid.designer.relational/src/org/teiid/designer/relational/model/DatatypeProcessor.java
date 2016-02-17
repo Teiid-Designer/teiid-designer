@@ -52,7 +52,7 @@ public class DatatypeProcessor {
     
     
     public static final String DEFAULT_DATATYPE = "string"; //$NON-NLS-1$
-    public static final int DEFAULT_DATATYPE_LENGTH = 255;
+    public static final int DEFAULT_DATATYPE_LENGTH = 0;
     
     private DatatypeManager datatypeManager;
     

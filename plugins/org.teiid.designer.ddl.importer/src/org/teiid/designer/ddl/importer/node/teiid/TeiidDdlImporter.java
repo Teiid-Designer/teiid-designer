@@ -35,6 +35,7 @@ import org.teiid.designer.extension.definition.ModelExtensionDefinition;
 import org.teiid.designer.extension.registry.ModelExtensionRegistry;
 import org.teiid.designer.metamodels.core.ModelType;
 import org.teiid.designer.metamodels.relational.DirectionKind;
+import org.teiid.designer.relational.RelationalConstants;
 import org.teiid.designer.relational.model.RelationalAccessPattern;
 import org.teiid.designer.relational.model.RelationalColumn;
 import org.teiid.designer.relational.model.RelationalForeignKey;
@@ -682,6 +683,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 
 		// Create a RelationalModel for the imported DDL
 		RelationalModel model = getFactory().createModel("ddlImportedModel"); //$NON-NLS-1$
+		model.setModelType(importManager.getModelType().getValue());
 
 		// Map for holding deferred nodes, which much be created later
 		Map<AstNode,RelationalReference> deferredCreateMap = new HashMap<AstNode,RelationalReference>();
@@ -734,10 +736,14 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	protected Map<AstNode,RelationalReference> createObject(AstNode node, RelationalModel model, RelationalSchema schema) throws Exception {
 		Map<AstNode,RelationalReference> deferredMap = new HashMap<AstNode,RelationalReference>();
 
+		boolean isVirtual = model.getModelType() == ModelType.VIRTUAL;
+		
 		// -----------------------------------------------------------------------
 		// Handle Creation of Teiid Entities
 		// -----------------------------------------------------------------------
-		if (is(node, TeiidDdlLexicon.CreateTable.TABLE_STATEMENT) ) {
+		if (is(node, TeiidDdlLexicon.CreateTable.TABLE_STATEMENT) ||
+			is(node, TeiidDdlLexicon.CreateTable.GLOBAL_TEMP_TABLE_STATEMENT) ||
+			is(node, TeiidDdlLexicon.CreateTable.LOCAL_TEMP_TABLE_STATEMENT) ) {
 
 			RelationalTable baseTable = getFactory().createBaseTable();
 			initializeTable(baseTable, node, model);
@@ -762,10 +768,12 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 			if(!optionNodes.isEmpty()) {
 				processOptions(optionNodes,baseTable);
 			}
+			
+			if( isVirtual && is(node, TeiidDdlLexicon.CreateTable.GLOBAL_TEMP_TABLE_STATEMENT) ) {
+				baseTable.addExtensionProperty(RelationalConstants.BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE, Boolean.toString(true));
+			}
 
 		} else if (is(node, TeiidDdlLexicon.CreateTable.VIEW_STATEMENT)) {
-
-			boolean isVirtual = model.getModelType() == ModelType.VIRTUAL;
 			
 			RelationalTable viewTable = null;
 			

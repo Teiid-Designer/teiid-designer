@@ -132,7 +132,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 
         String teiidDdlDataType = resolveExportedDataType(col.getType());
         if( teiidDdlDataType == null ) {
-        	issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding " + getName(col.getType()) + ".  Type set to 'string'")); //$NON-NLS-1$
+        	addIssue(IStatus.ERROR, "Error finding " + getName(col.getType()) + ".  Type set to 'string'"); //$NON-NLS-1$
         	teiidDdlDataType = DataTypeName.STRING.name();
         }
         sb.append(getColumnDatatypeDdl(teiidDdlDataType, col.getLength(), col.getPrecision(), col.getScale()));
@@ -150,7 +150,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		String dataTypeName = ModelerCore.getBuiltInTypesManager().getName(dataTypeEObject);
 		
         if( dataTypeName == null ) {
-        	issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding " + getName(dataTypeEObject) + ".  Type set to 'string'")); //$NON-NLS-1$
+        	addIssue(IStatus.ERROR, "Error finding " + getName(dataTypeEObject) + ".  Type set to 'string'"); //$NON-NLS-1$
         	return DataTypeName.STRING.name();
         }
         
@@ -237,7 +237,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	try {
 			return ModelerCore.getModelEditor().getDescription(eObj);
 		} catch (ModelerCoreException e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding description for " + getName(eObj), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR, "Error finding description for " + getName(eObj), e); //$NON-NLS-1$
 		}
     	
     	return null;
@@ -252,9 +252,9 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
             return null;
         
         StringBuilder sb = new StringBuilder();
+        
+    	sb.append(CREATE_FOREIGN_TABLE).append(SPACE);
 
-		// generate DDL for a Table
-        sb.append(CREATE_FOREIGN_TABLE).append(SPACE);
         sb.append(getName(table));
         sb.append(SPACE + OPEN_BRACKET);
 		@SuppressWarnings("unchecked")
@@ -294,11 +294,30 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     private String view(Table table) {
         if (! includeTables)
             return null;
-
+        
+        boolean isGlobalTempTable = false;
+        
         StringBuilder sb = new StringBuilder();
+        
+    	try {
+            if( hasOption(table, BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE)) {
+            	String value = getOption(table, BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE);
+            	if( value.toLowerCase().equals(Boolean.TRUE.toString()) ) {
+            		isGlobalTempTable = true;
+            	}
+            }
+		} catch (Exception e) {
+			addIssue(IStatus.ERROR, "Error finding options for " + getName(table), e); //$NON-NLS-1$
+		}
 
-		// generate DDL for a View including SQL statement
-		sb.append(CREATE_VIEW).append(SPACE);
+		// generate DDL for a Table
+    	if( isGlobalTempTable ) {
+    		sb.append(CREATE_GLOBAL_TEMPORARY_TABLE).append(SPACE);
+    	} else {
+    		// generate DDL for a View including SQL statement
+    		sb.append(CREATE_VIEW).append(SPACE);
+    	}
+
         sb.append(getName(table));
         sb.append(SPACE + OPEN_BRACKET);
 		@SuppressWarnings("unchecked")
@@ -330,16 +349,18 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( !StringUtilities.isEmpty(options)) {
 			sb.append(SPACE).append(options);
 		}
-		TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
-		String sqlString = TransformationHelper.getSelectSqlString(tRoot);
-		if( sqlString != null ) {
-//			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
-//			String formatedSQL = formatter.getFormattedSql();
-//			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
-			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(sqlString);
-			sb.append(SEMI_COLON + NEW_LINE);
-		}
 		
+		if( !isGlobalTempTable ) {
+			TransformationMappingRoot tRoot = (TransformationMappingRoot)TransformationHelper.getTransformationMappingRoot(table);
+			String sqlString = TransformationHelper.getSelectSqlString(tRoot);
+			if( sqlString != null ) {
+	//			QueryDisplayFormatter formatter = new QueryDisplayFormatter(sqlString);
+	//			String formatedSQL = formatter.getFormattedSql();
+	//			sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(formatedSQL);
+				sb.append(SPACE).append(NEW_LINE + Reserved.AS).append(NEW_LINE + TAB).append(sqlString);
+				sb.append(SEMI_COLON + NEW_LINE);
+			}
+		}
 		return sb.toString();
     }
     
@@ -578,7 +599,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				options.add(key, value, null);
 			}
 		} catch (Exception e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(col), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR, "Error finding options for " + getName(col), e); //$NON-NLS-1$
 		}
 
     	return options.toString();
@@ -600,7 +621,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				options.add(key, value, null);
 			}
 		} catch (Exception e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(eobject), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR,  "Error finding options for " + getName(eobject), e); //$NON-NLS-1$
 		}
     	
     	return options.toString();
@@ -743,11 +764,13 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	try {
 			Map<String, String> props = getOptionsForObject(table);
 			for( String key : props.keySet() ) {
+				if( key.equals(BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE) ) continue;
+				
 				String value = props.get(key);
 				options.add(key, value, null);
 			}
 		} catch (Exception e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(table), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR, "Error finding options for " + getName(table), e); //$NON-NLS-1$
 		}
     	
     	String desc = getDescription(table);
@@ -775,12 +798,12 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
     					options.put(propId, nativeQuery);
     				}
-    				propId = BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE;
-    				String globalTempTable = assistant.getOverriddenValue(modelObject, propId);
-    				if(!CoreStringUtil.isEmpty(globalTempTable)) {
-    					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
-    					options.put(propId, globalTempTable);
-    				}
+//    				propId = BASE_TABLE_EXT_PROPERTIES.VIEW_TABLE_GLOBAL_TEMP_TABLE;
+//    				String globalTempTable = assistant.getOverriddenValue(modelObject, propId);
+//    				if(!CoreStringUtil.isEmpty(globalTempTable)) {
+//    					propId = propId.replace(RELATIONAL_PREFIX, TEIID_REL_PREFIX);
+//    					options.put(propId, globalTempTable);
+//    				}
     			} else if(ns.equals(SALESFORCE_PREFIX) )  {
         			for( ModelExtensionPropertyDefinition ext : defns) {
         				String propId = ext.getId();
@@ -820,6 +843,44 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	
     }
     
+    private boolean hasOption(EObject modelObject, String propId) throws Exception {
+
+    	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
+    	for( String ns : extensionNamespaces ) {
+    		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
+    		if( assistant != null ) {
+    			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
+
+    				String property = assistant.getOverriddenValue(modelObject, propId);
+    				if(!CoreStringUtil.isEmpty(property)) {
+    					return true;
+    				}
+
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    private String getOption(EObject modelObject, String propId) throws Exception {
+
+    	Collection<String> extensionNamespaces = medAggregator.getSupportedNamespacePrefixes(modelObject);
+    	for( String ns : extensionNamespaces ) {
+    		ModelObjectExtensionAssistant assistant = medAggregator.getModelObjectExtensionAssistant(ns);
+    		if( assistant != null ) {
+    			Collection<ModelExtensionPropertyDefinition> defns = assistant.getPropertyDefinitions(modelObject);
+
+    				String property = assistant.getOverriddenValue(modelObject, propId);
+    				if(!CoreStringUtil.isEmpty(property)) {
+    					return property;
+    				}
+
+    		}
+    	}
+    	
+    	return null;
+    }
+    
     @SuppressWarnings("unused")
 	private void addOptionsForEObject(EObject eObj, StringBuilder sb) {
     	// Need to check with other assistants too
@@ -834,7 +895,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				sb.append(SPACE).append(options);
 			}
 		} catch (Exception e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(eObj), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR, "Error finding options for " + getName(eObj), e); //$NON-NLS-1$
 		}
     }
     
@@ -924,7 +985,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 				options.add(key, value, null);
 			}
 		} catch (Exception e) {
-			issues.add(new Status(IStatus.ERROR, TransformationPlugin.PLUGIN_ID, "Error finding options for " + getName(procedure), e)); //$NON-NLS-1$
+			addIssue(IStatus.ERROR, "Error finding options for " + getName(procedure), e); //$NON-NLS-1$
 		}
 		
 		return options.toString();
@@ -1023,6 +1084,14 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
     	}
     	
     	return uniqueConstraints;
+    }
+    
+    private void addIssue(int severity, String message) {
+    	issues.add(new Status(severity, TransformationPlugin.PLUGIN_ID, message));
+    }
+    
+    private void addIssue(int severity, String message, Throwable e) {
+    	issues.add(new Status(severity, TransformationPlugin.PLUGIN_ID, message, e));
     }
     
     class OptionsStatement {
