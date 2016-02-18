@@ -52,6 +52,12 @@
             categoryId="dqpUiPreferenceCategory"
             class="org.teiid.designer.runtime.ui.preferences.TeiidImporterTimeoutPreferenceContributor">
       </preference>
+      <!-- Teiid Server Start-up Timeout Preference -->
+      <preference
+            id="teiidServerStartupTimeoutPreferenceContributor"
+            categoryId="dqpUiPreferenceCategory"
+            class="org.teiid.designer.runtime.ui.preferences.TeiidServerStartupTimeoutPreferenceContributor">
+      </preference>
       <!-- Enable QueryPlans Preference -->
       <preference
             id="enableQueryPlanPreferenceContributor"

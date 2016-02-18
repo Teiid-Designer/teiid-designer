@@ -7,6 +7,11 @@
 */
 package org.teiid.designer.runtime;
 
+import static org.teiid.designer.runtime.DqpPlugin.PLUGIN_ID;
+import static org.teiid.designer.runtime.DqpPlugin.Util;
+
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
 import org.eclipse.wst.server.core.IServerListener;
@@ -203,6 +208,8 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
              * @throws Exception
              */
             private void tryConnecting(final IServer parentServer) throws Exception {
+            	int waitTimeInMS = getTimeoutPrefSecs() * 1000;
+            	
                 ITeiidServer teiidServer = factory.adaptServer(parentServer, ServerOptions.ADD_TO_REGISTRY);
                 if (teiidServer != null) {
                     // Places the teiid server is a connecting state which
@@ -231,7 +238,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                         if( parentConnected ) {
                         	queryServer = factory.adaptServer(parentServer, ServerOptions.NO_CHECK_SERVER_REGISTRY);
                         }                  
-                        Thread.sleep(6000);
+                        Thread.sleep(waitTimeInMS);
                     } catch (Exception ex) {
                     	logThisException = ex;
                     }
@@ -260,7 +267,7 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 						// DO NOTHING
 					}
 
-                } else {
+                } else if( teiidServer != null ) {
                     // If the query server is null then this is not a Teiid-enabled JBoss Server but
                     // a TeiidServer was cached in the registry, presumably due to an adaption
                     // being made while the server was not started. Since we now know better, we
@@ -270,6 +277,10 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
                     	DqpPlugin.handleException(logThisException);
                     }
                     return;
+                } else {
+                    IStatus status = new Status(IStatus.WARNING, PLUGIN_ID,
+                            Util.getString("warningServerNotFullyStarted_RefreshServer", parentServer.getName())); //$NON-NLS-1$
+                    Util.log(status);
                 }
 
                 return;
@@ -278,6 +289,10 @@ public class TeiidParentServerListener implements IServerLifecycleListener, ISer
 
         startTeiidServerThread = new Thread(serverStartRunnable, "Teiid Server Starting Thread"); //$NON-NLS-1$
         startTeiidServerThread.start();
+    }
+    
+    private int getTimeoutPrefSecs() {
+        return DqpPlugin.getInstance().getPreferences().getInt(PreferenceConstants.TEIID_SERVER_STARTUP_TIMEOUT_SEC, PreferenceConstants.TEIID_SERVER_STARTUP_TIMEOUT_SEC_DEFAULT);
     }
     
     private boolean adaptServerOK(final IServer parentServer) throws Exception {

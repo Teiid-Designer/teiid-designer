@@ -78,4 +78,24 @@ public interface PreferenceConstants {
      * The default value for the {@link #JBOSS_REQUEST_EXECUTION_TIMEOUT} preference. Default value is {@value} .
      */
     int JBOSS_REQUEST_EXECUTION_TIMEOUT_SEC_DEFAULT = 10;
+    
+    /**
+     * The name of the preference indicating Teiid Importer timeout value (in Secs)
+     */
+    String TEIID_SERVER_STARTUP_TIMEOUT_SEC = PLUGIN_ID + ".preferences.TeiidServerStartupTimeoutSec"; //$NON-NLS-1$
+    
+    /**
+     * The default value for the {@link #TEIID_SERVER_STARTUP_TIMEOUT_SEC} preference. Default value is {@value} .
+     */
+    int TEIID_SERVER_STARTUP_TIMEOUT_SEC_DEFAULT = 120;
+    
+    /**
+     * The Min value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference.
+     */
+    int TEIID_SERVER_STARTUP_TIMEOUT_SEC_MIN = 0;
+
+    /**
+     * The Max value for the {@link #TEIID_IMPORTER_TIMEOUT_SEC} preference.
+     */
+    int TEIID_SERVER_STARTUP_TIMEOUT_SEC_MAX = 999;
 }
