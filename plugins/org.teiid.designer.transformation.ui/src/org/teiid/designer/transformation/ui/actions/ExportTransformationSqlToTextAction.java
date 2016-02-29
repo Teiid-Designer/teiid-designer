@@ -11,11 +11,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.ecore.EObject;
@@ -296,6 +295,7 @@ public class ExportTransformationSqlToTextAction extends SortableSelectionAction
         StringBuffer sb = new StringBuffer(relativeTablePath.length() + theSql.length() + 20);
         theSql = theSql.replaceAll("\\\\", Matcher.quoteReplacement("\\\\")); //$NON-NLS-1$ //$NON-NLS-2$
         theSql = theSql.replaceAll("\\n", Matcher.quoteReplacement("\\n")); //$NON-NLS-1$ //$NON-NLS-2$
+        theSql = theSql.replaceAll("\\r", Matcher.quoteReplacement("\\r")); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append(relativeTablePath).append(DELIMETER).append(getSqlTypeString(sqlType)).append(DELIMETER).append(theSql).append(CoreStringUtil.Constants.CARRIAGE_RETURN_CHAR);
         return sb.toString();
     }

@@ -361,6 +361,8 @@ public class ImportTransformationSqlFromTextAction extends SortableSelectionActi
                 escaped = false;
                 if (c == 'n') {
                     c = '\n';
+                } else if ( c == 'r') {
+                    c = '\r';
                 }
             } else if (c == '\\') {
                 escaped = true;
