@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="6" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
+<modelExtension xmlns:p="http://www.jboss.org/teiiddesigner/ext/2012" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" metamodelUri="http://www.metamatrix.com/metamodels/Relational" namespacePrefix="relational" namespaceUri="http://www.teiid.org/ext/relational/2012" version="7" xsi:schemaLocation="http://www.jboss.org/teiiddesigner/ext/2012 http://www.jboss.org/teiiddesigner/ext/2012/modelExtension.xsd" xmlns="http://www.jboss.org/teiiddesigner/ext/2012">
     <p:description>Relational metamodel extension properties</p:description>
     <p:modelType>PHYSICAL</p:modelType>
     <p:modelType>VIRTUAL</p:modelType>
@@ -120,7 +120,7 @@
             <p:allowedValue>IGNORE</p:allowedValue>
             <p:allowedValue>THROW_EXCEPTION</p:allowedValue>
         </p:property>
-        <p:property advanced="false" index="true" masked="false" name="MATVIEW_TTL" required="false" type="boolean">
+        <p:property advanced="false" index="true" masked="false" name="MATVIEW_TTL" required="false" type="integer">
         	<p:description locale="en_US">Time to live in milliseconds. Provide property or cache hint on view transformation - property takes precedence. </p:description>
             <p:display locale="en_US">Time To Live (ms)</p:display>
         </p:property>
