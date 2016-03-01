@@ -450,7 +450,7 @@ public class TeiidModelToDdlGenerator implements TeiidDDLConstants, TeiidReserve
 		if( procedure.getResult() != null ) {
 			sb.append(SPACE + RETURNS);
 			// Get options for RETURNS type
-			String options = getOptions(returnParam);
+			String options = getOptions(procedure.getResult());
 			if( !StringUtilities.isEmpty(options)) {
 				sb.append(SPACE).append(options);
 			}
