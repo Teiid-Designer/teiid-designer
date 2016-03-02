@@ -169,7 +169,7 @@ public class ColumnAspect extends RelationalEntityAspect implements SqlColumnAsp
      * @See org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     @Override
-	public Object getDefaultValue(EObject eObject) {
+	public String getDefaultValue(EObject eObject) {
         CoreArgCheck.isInstanceOf(Column.class, eObject); 
         Column column = (Column) eObject;       
         return column.getDefaultValue();

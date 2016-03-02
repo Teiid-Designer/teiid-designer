@@ -25,6 +25,7 @@ package org.teiid.metadata;
 import java.io.Reader;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import org.teiid.UserDefinedAggregate;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.core.types.DataTypeManagerService;
@@ -72,6 +74,8 @@ public class MetadataFactory implements Serializable {
     private static final String TEIID_HBASE = "teiid_hbase"; //$NON-NLS-1$
     @Since(Version.TEIID_8_10)
     private static final String TEIID_SPATIAL = "teiid_spatial"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_12_4)
+    private static final String TEIID_LDAP = "teiid_ldap"; //$NON-NLS-1$
 
 	private static final long serialVersionUID = 8590341087771685630L;
 
@@ -108,6 +112,8 @@ public class MetadataFactory implements Serializable {
     public static final String HBASE_URI = "{http://www.teiid.org/translator/hbase/2014}"; //$NON-NLS-1$
     @Since(Version.TEIID_8_10)
     public static final String SPATIAL_URI = "{http://www.teiid.org/translator/spatial/2015}"; //$NON-NLS-1$
+    @Since(Version.TEIID_8_12_4)
+    public static final String LDAP_URI = "{http://www.teiid.org/translator/ldap/2015}"; //$NON-NLS-1$
 
     /*
      * Converted from static field to function to allow version to be checked
@@ -129,6 +135,10 @@ public class MetadataFactory implements Serializable {
             map.put(TEIID_SPATIAL, SPATIAL_URI.substring(1, SPATIAL_URI.length()-1));
         }
 
+        if (version.isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
+            map.put(TEIID_LDAP, LDAP_URI.substring(1, LDAP_URI.length()-1));
+        }
+        
         return Collections.unmodifiableMap(map);
     }
 
@@ -265,7 +275,7 @@ public class MetadataFactory implements Serializable {
         if (this.autoCorrectColumnNames) {
             name.replace(AbstractMetadataRecord.NAME_DELIM_CHAR, '_');
         } else if (name.indexOf(AbstractMetadataRecord.NAME_DELIM_CHAR) != -1) {
-            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60008, name));
+            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60008, table.getFullName(), name));
         }
         if (table.getColumnByName(name) != null) {
             throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60016, table.getFullName() + AbstractMetadataRecord.NAME_DELIM_CHAR + name));
@@ -431,7 +441,7 @@ public class MetadataFactory implements Serializable {
     private void assignColumn(Table table, ColumnSet<?> columns, String columnName) {
         Column column = table.getColumnByName(columnName);
         if (column == null) {
-            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60011, columnName));
+            throw new RuntimeException(Messages.gs(Messages.TEIID.TEIID60011, table.getFullName(), columnName));
         }
         columns.getColumns().add(column);
     }
@@ -615,7 +625,31 @@ public class MetadataFactory implements Serializable {
 
     public static FunctionMethod createFunctionFromMethod(ITeiidServerVersion teiidVersion, String name, Method method) {
         DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(teiidVersion);
-        String returnType = dataTypeManager.getDataTypeName(method.getReturnType());
+        String returnType;
+        AggregateAttributes aa = null;
+        if (Version.TEIID_8_12_4.get().isLessThan(teiidVersion))
+            returnType = dataTypeManager.getDataTypeName(method.getReturnType());
+        else {
+            Class<?> returnTypeClass = method.getReturnType();
+            //handle user defined aggregates
+            if ((method.getModifiers() & Modifier.STATIC) == 0 && UserDefinedAggregate.class.isAssignableFrom(method.getDeclaringClass())) {
+                aa = new AggregateAttributes();
+                Method m;
+                try {
+                    m = method.getDeclaringClass().getMethod("getResult", CommandContext.class); //$NON-NLS-1$
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                } catch (SecurityException e) {
+                    throw new RuntimeException(e);
+                }
+                returnTypeClass = m.getReturnType();
+            }
+            if (returnTypeClass.isPrimitive()) {
+                returnTypeClass = convertPrimitiveToObject(returnTypeClass);
+            }
+            returnType = dataTypeManager.getDataTypeName(returnTypeClass);
+        }
+
         Class<?>[] params = method.getParameterTypes();
         String[] paramTypes = new String[params.length];
         boolean nullOnNull = false;
@@ -635,6 +669,9 @@ public class MetadataFactory implements Serializable {
             paramTypes = Arrays.copyOfRange(paramTypes, 1, paramTypes.length);
         }
         FunctionMethod func = FunctionMethod.createFunctionMethod(teiidVersion, name, null, null, returnType, paramTypes);
+        if (aa != null) // Only applicable for teiid version 8.12+
+            func.setAggregateAttributes(aa);
+
         func.setInvocationMethod(method.getName());
         func.setPushdown(PushDown.CANNOT_PUSHDOWN);
         func.setMethod(method);

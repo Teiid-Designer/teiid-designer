@@ -14,10 +14,10 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect;
-import org.teiid.designer.metadata.runtime.MetadataConstants;
-import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 import org.teiid.designer.core.types.DatatypeConstants;
 import org.teiid.designer.core.types.DatatypeManager;
+import org.teiid.designer.metadata.runtime.MetadataConstants;
+import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 
 
 /**
@@ -37,7 +37,7 @@ public class SampleMessagesAspect extends WebServiceComponentAspect implements S
     private final static boolean FIXED_LENGTH = false;
     private final static boolean TRANSFORMATION_INPUT_PARAMETER = false;
     private final static int SEARCH_TYPE = MetadataConstants.SEARCH_TYPES.UNSEARCHABLE; // not searcheable
-    private final static Object DEFAULT_VALUE = null;
+    private final static String DEFAULT_VALUE = null;
     private final static Object MIN_VALUE = null;
     private final static Object MAX_VALUE = null;
     private final static int LENGTH = 0;
@@ -141,7 +141,7 @@ public class SampleMessagesAspect extends WebServiceComponentAspect implements S
      * @since 4.2
      */
     @Override
-	public Object getDefaultValue(EObject eObject) {
+	public String getDefaultValue(EObject eObject) {
         return DEFAULT_VALUE;
     }
 

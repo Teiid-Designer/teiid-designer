@@ -16,12 +16,12 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.index.IndexConstants;
 import org.teiid.designer.core.metamodel.aspect.MetamodelEntity;
 import org.teiid.designer.core.metamodel.aspect.sql.SqlProcedureParameterAspect;
+import org.teiid.designer.core.types.DatatypeConstants;
+import org.teiid.designer.core.types.DatatypeManager;
 import org.teiid.designer.metadata.runtime.MetadataConstants;
 import org.teiid.designer.metamodels.webservice.Input;
 import org.teiid.designer.metamodels.webservice.WebServiceMetamodelPlugin;
 import org.teiid.designer.metamodels.webservice.WebServicePackage;
-import org.teiid.designer.core.types.DatatypeConstants;
-import org.teiid.designer.core.types.DatatypeManager;
 
 
 
@@ -30,7 +30,7 @@ import org.teiid.designer.core.types.DatatypeManager;
  */
 public class InputAspect extends WebServiceComponentAspect implements SqlProcedureParameterAspect {
 
-    private final static Object DEFAULT_VALUE = null;
+    private final static String DEFAULT_VALUE = null;
     private final static int LENGTH = 0;
     private final static int SCALE = 0;
     private final static int NULL_TYPE = MetadataConstants.NULL_TYPES.NULLABLE; // nullable
@@ -101,7 +101,7 @@ public class InputAspect extends WebServiceComponentAspect implements SqlProcedu
      * @since 4.2
      */
     @Override
-	public Object getDefaultValue(final EObject eObject) {
+	public String getDefaultValue(final EObject eObject) {
         CoreArgCheck.isInstanceOf(Input.class, eObject);
         return DEFAULT_VALUE;
     }

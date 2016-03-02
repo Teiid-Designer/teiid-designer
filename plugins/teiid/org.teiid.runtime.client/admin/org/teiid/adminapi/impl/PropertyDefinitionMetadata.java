@@ -25,8 +25,9 @@ package org.teiid.adminapi.impl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
 import org.teiid.adminapi.PropertyDefinition;
+import org.teiid.designer.annotation.Since;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 
 
 
@@ -42,8 +43,8 @@ public class PropertyDefinitionMetadata extends AdminObjectImpl implements Prope
     private boolean masked = false;
     private boolean modifiable = true;
     private boolean required = false;
-    
-    
+    private String category;
+
     /**
      * @see java.lang.Object#toString()
      */
@@ -59,6 +60,7 @@ public class PropertyDefinitionMetadata extends AdminObjectImpl implements Prope
         result.append(" Required:").append(isRequired()); //$NON-NLS-1$
         result.append(" Expert:").append(isAdvanced()); //$NON-NLS-1$
         result.append(" Masked:").append(isMasked()); //$NON-NLS-1$
+        result.append(" Category:").append(getCategory()); //$NON-NLS-1$
         result.append(" Modifiable:").append(isModifiable()); //$NON-NLS-1$
         result.append(" RequiresRestart:").append(getRequiresRestart()); //$NON-NLS-1$
         return result.toString();
@@ -212,4 +214,15 @@ public class PropertyDefinitionMetadata extends AdminObjectImpl implements Prope
 	public boolean isConstrainedToAllowedValues() {
 		return allowedValues != null && !allowedValues.isEmpty();
 	}
+
+	@Since(Version.TEIID_8_12_4)
+	@Override
+    public String getCategory() {
+        return this.category;
+    }
+
+	@Since(Version.TEIID_8_12_4)
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

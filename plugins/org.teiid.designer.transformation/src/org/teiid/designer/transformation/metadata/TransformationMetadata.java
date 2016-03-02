@@ -280,7 +280,7 @@ public class TransformationMetadata implements IQueryMetadataInterface {
     }
 
     @Override
-    public Object getDefaultValue(final Object elementID) {
+    public String getDefaultValue(final Object elementID) {
         if (elementID instanceof ColumnRecord) {
             return ((ColumnRecord)elementID).getDefaultValue();
         } else if (elementID instanceof ProcedureParameterRecord) {
@@ -1938,6 +1938,11 @@ public class TransformationMetadata implements IQueryMetadataInterface {
 
     @Override
     public boolean useOutputName() {
+        return false;
+    }
+
+    @Override
+    public boolean widenComparisonToString() {
         return false;
     }
 }

@@ -158,6 +158,7 @@ public abstract class SQLConstants {
         String LONG = "LONG"; //$NON-NLS-1$
         String LOOP = "LOOP"; //$NON-NLS-1$
         String MAKEDEP = "MAKEDEP"; //$NON-NLS-1$
+        String MAKEIND = "MAKEIND"; //$NON-NLS-1$
         String MAKENOTDEP = "MAKENOTDEP"; //$NON-NLS-1$
         String NOCACHE = "NOCACHE"; //$NON-NLS-1$
         String STRING = "STRING"; //$NON-NLS-1$

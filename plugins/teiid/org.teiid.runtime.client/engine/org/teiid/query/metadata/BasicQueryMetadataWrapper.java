@@ -28,10 +28,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import javax.script.ScriptEngine;
+import org.teiid.designer.annotation.Since;
 import org.teiid.designer.query.metadata.IQueryMetadataInterface;
 import org.teiid.designer.query.metadata.IQueryNode;
 import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
+import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
 import org.teiid.designer.xml.IMappingNode;
 import org.teiid.query.sql.symbol.Expression;
@@ -89,7 +91,7 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
 	}
 
 	@Override
-    public Object getDefaultValue(Object elementID)
+    public String getDefaultValue(Object elementID)
 			throws Exception {
 		return actualMetadata.getDefaultValue(elementID);
 	}
@@ -516,5 +518,10 @@ public class BasicQueryMetadataWrapper implements IQueryMetadataInterface {
     public String getModeledPrimitiveType(Object elementID) throws Exception {
         return null;
     }
-	
+
+    @Override
+    @Since(Version.TEIID_8_12_4)
+    public boolean widenComparisonToString() {
+        return actualMetadata.widenComparisonToString();
+    }
 }

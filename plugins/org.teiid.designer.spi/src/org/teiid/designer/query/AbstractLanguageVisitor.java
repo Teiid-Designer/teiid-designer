@@ -26,6 +26,7 @@ import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.query.sql.lang.IIsDistinctCriteria;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType;
@@ -248,6 +249,10 @@ public abstract class AbstractLanguageVisitor implements ILanguageVisitor {
 
     @Override
     public void visit(IExpressionSymbol obj) {
+    }
+
+    @Override
+    public void visit(IIsDistinctCriteria obj) {
     }
 
     @Override

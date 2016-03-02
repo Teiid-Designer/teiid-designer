@@ -336,7 +336,9 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
         // Remove link from connection to statement
         this.driverConnection.closeStatement(this);
 
-        logger.fine(Messages.getString(Messages.JDBC.MMStatement_Close_stmt_success));
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine(Messages.getString(Messages.JDBC.MMStatement_Close_stmt_success));
+        }
     }
 
     /**
@@ -346,6 +348,7 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
      */
     protected void checkStatement() throws SQLException {
         //Check to see the connection is closed and proceed if it is not
+        driverConnection.checkConnection();
         if ( isClosed ) {
             throw new SQLException(Messages.getString(Messages.JDBC.MMStatement_Stmt_closed));
         }
@@ -549,7 +552,7 @@ public class StatementImpl extends WrapperImpl implements TeiidStatement {
         			}
         		} else if (command.equalsIgnoreCase("rollback")) { //$NON-NLS-1$
         			commit = false;
-        			if (synch) {
+        			if (synch || !this.getConnection().isInLocalTxn()) {
         				this.getConnection().rollback(false);
         			}
         		}

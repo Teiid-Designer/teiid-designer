@@ -31,6 +31,7 @@ import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.LanguageVisitor;
 import org.teiid.query.sql.lang.ExistsCriteria;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.SPParameter;
 import org.teiid.query.sql.lang.StoredProcedure;
@@ -210,7 +211,12 @@ public class EvaluatableVisitor extends LanguageVisitor {
     public void visit(SubqueryCompareCriteria obj) {
 		evaluationNotPossible(EvaluationLevel.PUSH_DOWN);
     }
-    
+
+    @Override
+    public void visit(IsDistinctCriteria isDistinctCriteria) {
+        evaluationNotPossible(EvaluationLevel.PROCESSING);
+    }
+
     private boolean isEvaluationPossible() {
     	if (levels.isEmpty()) {
     		return true;

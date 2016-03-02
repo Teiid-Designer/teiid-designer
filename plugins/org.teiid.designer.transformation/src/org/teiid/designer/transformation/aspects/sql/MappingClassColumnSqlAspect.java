@@ -184,7 +184,7 @@ public class MappingClassColumnSqlAspect extends MappingClassObjectSqlAspect imp
      * @see org.teiid.designer.core.metamodel.aspect.sql.SqlColumnAspect#getDefaultValue(org.eclipse.emf.ecore.EObject)
      */
     @Override
-	public Object getDefaultValue( EObject eObject ) {
+	public String getDefaultValue( EObject eObject ) {
         CoreArgCheck.isInstanceOf(MappingClassColumn.class, eObject);
 
         List elements = getElementsFromMappingClassColumn((MappingClassColumn)eObject);

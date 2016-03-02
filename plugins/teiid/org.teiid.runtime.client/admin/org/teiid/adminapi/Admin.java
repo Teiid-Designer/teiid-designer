@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Properties;
 import java.util.Set;
-
 import org.teiid.adminapi.VDB.ConnectionType;
 import org.teiid.designer.annotation.Removed;
 import org.teiid.designer.annotation.Since;
@@ -39,7 +38,8 @@ public interface Admin {
 
 	public enum SchemaObjectType {TABLES, PROCEDURES, FUNCTIONS};
 
-	public enum TranlatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA};
+	@Since(Version.TEIID_8_11)
+	public enum TranlatorPropertyType{IMPORT, OVERRIDE, EXTENSION_METADATA, ALL};
 
     /**
      * Assign a {@link Translator} and Data source to a {@link VDB}'s Model

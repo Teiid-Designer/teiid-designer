@@ -83,8 +83,8 @@ public interface ColumnRecord extends MetadataRecord {
      * Get the default value of the column
      * @return column's default value
      */
-    Object getDefaultValue();
-    
+    String getDefaultValue();
+
     /**
      * Get the minimum value of the column
      * @return column's minimum value

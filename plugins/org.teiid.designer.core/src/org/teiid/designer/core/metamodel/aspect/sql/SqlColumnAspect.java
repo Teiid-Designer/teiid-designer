@@ -95,7 +95,7 @@ public interface SqlColumnAspect extends SqlAspect, SqlDatatypeCheckerAspect {
      * @param eObject The <code>EObject</code> for which defaultValue prop is obtained 
      * @return column's default value
      */
-    Object getDefaultValue(EObject eObject);
+    String getDefaultValue(EObject eObject);
     
     /**
      * Get the minimum value of the column

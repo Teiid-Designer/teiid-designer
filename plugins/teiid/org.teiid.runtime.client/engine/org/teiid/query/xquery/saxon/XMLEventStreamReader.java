@@ -17,7 +17,6 @@
 package org.teiid.query.xquery.saxon;
 
 import java.util.Iterator;
-
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
@@ -74,8 +73,9 @@ class XMLEventStreamReader extends AbstractXMLStreamReader {
 	public String getText() {
 		if (event.isCharacters()) {
 			return event.asCharacters().getData();
-		}
-		else {
+		} else if (event.getEventType() == COMMENT) {
+            return event.toString().substring(4, event.toString().length()-3);
+        } else {
 			throw new IllegalStateException();
 		}
 	}

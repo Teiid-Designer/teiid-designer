@@ -24,7 +24,8 @@ public class FakeSqlColumnAspect implements SqlColumnAspect {
     public EObject datatype;
     public boolean selectable, updatable, autoIncrementable;
     public boolean caseSensitive, signed, currency, fixedLength, tranformationInputParameter;
-    public Object defaultValue, minValue, maxValue, uuid, parentUuid;
+    public String defaultValue;
+    public Object minValue, maxValue, uuid, parentUuid;
     public int length, scale, precision, charOctetLength, radix, nullType, searchType, position, nullValues, distinctValues;
         
     @Override
@@ -46,7 +47,7 @@ public class FakeSqlColumnAspect implements SqlColumnAspect {
 	public String getDatatypeObjectID(EObject eObject) {return datatypeUUID;}
     
     @Override
-	public Object getDefaultValue(EObject eObject) { return defaultValue; }
+	public String getDefaultValue(EObject eObject) { return defaultValue; }
     
     @Override
 	public int getLength(EObject eObject) { return length; }

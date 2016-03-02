@@ -278,6 +278,7 @@ public class Messages {
         MMStatement_Bad_timeout_value,
         MMStatement_Close_stmt_success,
         MMStatement_Error_timing_out,
+        MMStatement_In_XA_Transaction,
         MMStatement_Invalid_During_Transaction,
         MMStatement_Invalid_fetch_size,
         MMStatement_Invalid_field_size,
@@ -449,6 +450,8 @@ public class Messages {
 
     @SuppressWarnings( "javadoc" )
     public enum ValidationVisitor {
+        aggregate_type,
+        distinct_orderby_agg,
         select_into_no_implicit_conversion,
         excpet_intersect_all,
         element_updates_not_allowed,
@@ -500,6 +503,7 @@ public class Messages {
         xml_namespaces_invalid,
         xml_attributes_reserved,
         xml_content_type,
+        text_content_type,
         xml_invalid_qname,
         context_item_type,
         passing_requires_name,
@@ -1218,6 +1222,7 @@ public class Messages {
         TEIID20034,
         TEIID20035,
         TEIID20036,
+        TEIID20037,
         TEIID30001,
         TEIID30002,
         TEIID30003,
@@ -1586,6 +1591,9 @@ public class Messages {
         TEIID31167,
         TEIID31168,
         TEIID31169,
+        TEIID31170,
+        TEIID31171,
+        TEIID31172,
         TEIID60001,
         TEIID60004,
         TEIID60008,
@@ -1608,7 +1616,8 @@ public class Messages {
         TEIID70051,
         TEIID70053,
         TEIID70054,
-        TEIID70055;
+        TEIID70055,
+        TEIID70056;
 
         @Override
         public String toString() {

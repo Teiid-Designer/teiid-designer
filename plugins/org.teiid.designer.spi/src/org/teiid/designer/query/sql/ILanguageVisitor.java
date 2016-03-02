@@ -25,6 +25,7 @@ import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.query.sql.lang.IIsDistinctCriteria;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType;
@@ -144,6 +145,10 @@ public interface ILanguageVisitor {
     void visit(IConstant obj);
     void visit(IElementSymbol obj);
     void visit(IExpressionSymbol obj);
+
+    @Since(Version.TEIID_8_12_4)
+    void visit(IIsDistinctCriteria obj);
+
     void visit(IFunction obj);
     void visit(IGroupSymbol obj);
     void visit(IReference obj);

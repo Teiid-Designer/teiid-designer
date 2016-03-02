@@ -87,7 +87,7 @@ public class DelegatingQueryMetadataInterface implements IQueryMetadataInterface
     }
 
     @Override
-    public Object getDefaultValue(Object elementID) throws Exception {
+    public String getDefaultValue(Object elementID) throws Exception {
         return this.delegate.getDefaultValue(elementID);
     }
 
@@ -424,6 +424,11 @@ public class DelegatingQueryMetadataInterface implements IQueryMetadataInterface
     @Override
     public boolean findShortName() {
         return this.delegate.findShortName();
+    }
+
+    @Override
+    public boolean widenComparisonToString() {
+        return this.delegate.widenComparisonToString();
     }
 
 }

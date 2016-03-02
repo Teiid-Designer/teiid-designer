@@ -58,6 +58,7 @@ import org.teiid.query.sql.lang.BetweenCriteria;
 import org.teiid.query.sql.lang.CompareCriteria;
 import org.teiid.query.sql.lang.ExpressionCriteria;
 import org.teiid.query.sql.lang.GroupContext;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.LanguageObject;
 import org.teiid.query.sql.lang.MatchCriteria;
@@ -356,7 +357,17 @@ public class ResolverVisitor extends LanguageVisitor
             handleException(e);
         }
     }
-    
+
+    @Override
+    public void visit(IsDistinctCriteria isDistinctCriteria) {
+        try {
+            ResolverUtil.resolveGroup(isDistinctCriteria.getLeftRowValue(), metadata);
+            ResolverUtil.resolveGroup(isDistinctCriteria.getRightRowValue(), metadata);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
     @Override
     public void visit(Function obj) {
         try {
@@ -390,17 +401,23 @@ public class ResolverVisitor extends LanguageVisitor
 	    			}
 	    		}
 	    	} else {
-	    	    Class<?> type = null;
+                Class<?> type = null;
                 for (int i = 0; i < array.getExpressions().size(); i++) {
                     Expression expr = array.getExpressions().get(i);
-                    if (type == null) {
-                        type = expr.getType();
-                    } else if (type != expr.getType()) {
-                        type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
+                    Class<?> baseType = expr.getType();
+                    while (baseType != null && baseType.isArray()) {
+                        baseType = baseType.getComponentType();
+                    }
+                    if (baseType != DefaultDataTypes.NULL.getTypeClass()) {
+                        if (type == null) {
+                            type = expr.getType();
+                        } else if (type != expr.getType()) {
+                            type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
+                        }
                     }
                 }
                 if (type == null) {
-                    type = DataTypeManagerService.DefaultDataTypes.OBJECT.getTypeClass();
+                    type = DefaultDataTypes.NULL.getTypeClass();
                 }
                 array.setComponentType(type);
             }
@@ -557,9 +574,9 @@ public class ResolverVisitor extends LanguageVisitor
 						if (isBinary(arg1)) {
 							type = DefaultDataTypes.BLOB.getTypeClass();
 						}
-					} else if (isCharacter(arg)) {
+					} else if (isCharacter(arg, false)) {
 						setDesiredType(arg1, DefaultDataTypes.CLOB.getTypeClass(), obj);
-						if (isCharacter(arg1)) {
+						if (isCharacter(arg1, false)) {
 							type = DefaultDataTypes.CLOB.getTypeClass();
 						}
 					} else if (arg.getType() == null) {
@@ -568,9 +585,9 @@ public class ResolverVisitor extends LanguageVisitor
 							if (isBinary(arg)) {
 								type = DefaultDataTypes.BLOB.getTypeClass();
 							}
-						} else if (isCharacter(arg1)) {
+						} else if (isCharacter(arg1, false)) {
 							setDesiredType(arg, DefaultDataTypes.CLOB.getTypeClass(), obj);
-							if (isCharacter(arg)) {
+							if (isCharacter(arg, false)) {
 								type = DefaultDataTypes.CLOB.getTypeClass();
 							}
 						}
@@ -587,10 +604,16 @@ public class ResolverVisitor extends LanguageVisitor
     	}
     }
 
-	private boolean isCharacter(Expression arg) {
-		return arg.getType() == DefaultDataTypes.STRING.getTypeClass()
-				|| arg.getType() == DefaultDataTypes.CLOB.getTypeClass();
+	private boolean isCharacter(Expression arg, boolean includeChar) {
+	    Class<?> type = arg.getType();
+        return isCharacter(type, includeChar);
 	}
+
+	static boolean isCharacter(Class<?> type, boolean includeChar) {
+        return type == DefaultDataTypes.STRING.getTypeClass()
+                || type == DefaultDataTypes.CLOB.getTypeClass()
+        || (includeChar && type == DefaultDataTypes.CHAR.getTypeClass());
+    }
 
 	private boolean isBinary(Expression arg) {
 		return arg.getType() == DefaultDataTypes.VARBINARY.getTypeClass()
@@ -719,7 +742,7 @@ public class ResolverVisitor extends LanguageVisitor
 			ResolverUtil.ResolvedLookup lookup = ResolverUtil.resolveLookup(function, metadata);
 			fd = library.copyFunctionChangeReturnType(fd, lookup.getReturnElement().getType());
 	    } else if (fd.isSystemFunction(IFunctionLibrary.FunctionName.ARRAY_GET) && args[0].getType().isArray()) {
-			if (args[0].getType().isArray()) {
+	        if (args[0].getType() != null && args[0].getType().isArray()) {
 	    		//hack to use typed array values
 				fd = library.copyFunctionChangeReturnType(fd, args[0].getType().getComponentType());
 	    	} else {
@@ -786,7 +809,12 @@ public class ResolverVisitor extends LanguageVisitor
 		                                
 		            //only currently typed expressions need conversions
 		            if (types[i] != null && newType != DefaultDataTypes.OBJECT.getTypeClass()) {
-		                function.insertConversion(i, conversions[i]);
+	                      //directly resolve constants
+                        if (args[i] instanceof Constant && newType == DefaultDataTypes.TIMESTAMP.getTypeClass()) {
+                            args[i] = ResolverUtil.getProperlyTypedConstant(((Constant)args[i]).getValue(), newType, getTeiidParser());
+                        } else {
+                            function.insertConversion(i, conversions[i]);
+                        }
 		            }
 		        } 
 
@@ -830,23 +858,102 @@ public class ResolverVisitor extends LanguageVisitor
 	    setDesiredType(lower, exp.getType(), criteria);
 	    setDesiredType(upper, exp.getType(), criteria);
 	    // invariants: none of the types is null
-	
-	    String expTypeName = getDataTypeManager().getDataTypeName(exp.getType());
-	    String lowerTypeName = getDataTypeManager().getDataTypeName(lower.getType());
-	    String upperTypeName = getDataTypeManager().getDataTypeName(upper.getType());
+
 	    if (exp.getType().equals(lower.getType()) && exp.getType().equals(upper.getType())) {
 	        return;
 	    }
-	
-	    String commonType = ResolverUtil.getCommonType(getTeiidVersion(), new String[] {expTypeName, lowerTypeName, upperTypeName});
+
+	    String expTypeName = getDataTypeManager().getDataTypeName(exp.getType());
+	    String lowerTypeName = getDataTypeManager().getDataTypeName(lower.getType());
+	    String upperTypeName = getDataTypeManager().getDataTypeName(upper.getType());
+
+	    //check if all types are the same, or if there is a common type
+        String[] types = new String[2];
+        types[0] = lowerTypeName;
+        types[1] = upperTypeName;
+        Class<?> type = null;
+        
+        String commonType = ResolverUtil.getCommonType(getTeiidVersion(), types);
 	    if (commonType != null) {
-	        criteria.setExpression(ResolverUtil.convertExpression(exp, expTypeName, commonType, metadata));
-	        criteria.setLowerExpression(ResolverUtil.convertExpression(lower, lowerTypeName, commonType, metadata));
-	        criteria.setUpperExpression(ResolverUtil.convertExpression(upper, upperTypeName, commonType, metadata));
-	    } else {
+	        type = getDataTypeManager().getDataTypeClass(commonType);
+	    }
+
+	    boolean exprChar = isCharacter(exp, true);
+        
+        if (exp.getType() != DefaultDataTypes.NULL.getTypeClass()) {
+            boolean success = true;
+            // try to apply cast
+            // Apply cast and replace current value
+            if (!exprChar || metadata.widenComparisonToString() || isCharacter(lower, true)) { 
+                try {
+                    criteria.setLowerExpression(ResolverUtil.convertExpression(lower, lowerTypeName, expTypeName, metadata) );
+                    lower = criteria.getLowerExpression();
+                    lowerTypeName = getDataTypeManager().getDataTypeName(lower.getType());
+                } catch (QueryResolverException e) {
+                    if (lower instanceof Constant && isCharacter(lower, true) && !metadata.widenComparisonToString()) {
+                        throw e;
+                    }
+                    if (type == null) {
+                        type = lower.getType();
+                    }
+                    success = false;
+                }
+            } else {
+                success = false;
+            }
+            // try to apply cast
+            // Apply cast and replace current value
+            if (!exprChar || metadata.widenComparisonToString() || isCharacter(upper, true)) {
+                try {
+                    criteria.setUpperExpression(ResolverUtil.convertExpression(upper, upperTypeName, expTypeName, metadata) );
+                    upper = criteria.getUpperExpression();
+                    upperTypeName = getDataTypeManager().getDataTypeName(upper.getType());
+                } catch (QueryResolverException e) {
+                    if (lower instanceof Constant && isCharacter(lower, true) && !metadata.widenComparisonToString()) {
+                        throw e;
+                    }
+                    if (type == null) {
+                        type = upper.getType();
+                    }
+                    success = false;
+                }
+            } else {
+                success = false;
+            }
+            if (success) {
+                return;
+            }
+        }
+    
+        // If no convert found for first element, check whether everything in the
+        // set is the same and the convert can be placed on the left side
+        if (type == null) {
 	        // Couldn't find a common type to implicitly convert to
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30072, expTypeName, lowerTypeName, criteria));
 	    }
+
+     // Is there a possible conversion from left to right?
+        String typeName = getDataTypeManager().getDataTypeName(type);
+        
+        if (!isCharacter(type, true) || metadata.widenComparisonToString() || exp.getType() == DefaultDataTypes.NULL.getTypeClass()) {
+            criteria.setExpression(ResolverUtil.convertExpression(exp, expTypeName, typeName, metadata));
+        } else if (type != exp.getType()) {
+            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, criteria));
+        }
+        
+        if(lower.getType() != type) {
+            if (!metadata.widenComparisonToString() && exprChar ^ isCharacter(lower, true)) {
+                throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, criteria));
+            }
+            criteria.setLowerExpression(ResolverUtil.convertExpression(lower, lowerTypeName, typeName, metadata));
+        }
+        if(upper.getType() != type) {
+            if (!metadata.widenComparisonToString() && exprChar ^ isCharacter(lower, true)) {
+                throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, criteria));
+            }
+            criteria.setUpperExpression(ResolverUtil.convertExpression(upper, upperTypeName, typeName, metadata));
+        }
+
 	    // invariants: exp.getType() == lower.getType() == upper.getType()
 	}
 
@@ -860,7 +967,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    setDesiredType(leftExpression, rightExpression.getType(), ccrit);
 	    setDesiredType(rightExpression, leftExpression.getType(), ccrit);
 	
-		if(leftExpression.getType().equals(rightExpression.getType()) ) {
+		if(leftExpression.getType() == rightExpression.getType()) {
 			return;
 		}
 	
@@ -868,30 +975,50 @@ public class ResolverVisitor extends LanguageVisitor
 		String leftTypeName = getDataTypeManager().getDataTypeName(leftExpression.getType());
 		String rightTypeName = getDataTypeManager().getDataTypeName(rightExpression.getType());
 	
+		if (leftExpression.getType() == DefaultDataTypes.NULL.getTypeClass()) {
+            ccrit.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata) );
+            return;
+        }
+        if (rightExpression.getType() == DefaultDataTypes.NULL.getTypeClass()) {
+            ccrit.setRightExpression(ResolverUtil.convertExpression(rightExpression, rightTypeName, leftTypeName, metadata) );
+            return;
+        }
+        
+        boolean leftChar = isCharacter(leftExpression, true);
+        boolean rightChar = isCharacter(rightExpression, true);
+
 	    // Special cases when right expression is a constant
-	    if(rightExpression instanceof Constant) {
+	    if(rightExpression instanceof Constant && !leftChar) {
 	        // Auto-convert constant string on right to expected type on left
 	        try {
 	            ccrit.setRightExpression(ResolverUtil.convertExpression(rightExpression, rightTypeName, leftTypeName, metadata));
 	            return;
 	        } catch (Exception qre) {
-	            //ignore
+	            if (rightChar && !metadata.widenComparisonToString()) {
+                    throw qre;
+                }
 	        }
-	    } 
+	    }
 	    
 	    // Special cases when left expression is a constant
-	    if(leftExpression instanceof Constant) {
+	    if(leftExpression instanceof Constant && !rightChar) {
 	        // Auto-convert constant string on left to expected type on right
 	        try {
 	            ccrit.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata));
 	            return;                                           
 	        } catch (Exception qre) {
-	            //ignore
+	            if (leftChar && !metadata.widenComparisonToString()) {
+                    throw qre;
+                }
 	        }
 	    }
 	
 	    // Try to apply a conversion generically
-		
+
+	    if ((rightChar ^ leftChar) && !metadata.widenComparisonToString()) {
+            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, ccrit));
+        }
+
 	    if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), leftTypeName, rightTypeName)) {
 			ccrit.setLeftExpression(ResolverUtil.convertExpression(leftExpression, leftTypeName, rightTypeName, metadata) );
 			return;
@@ -935,8 +1062,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    String type = getDataTypeManager().getDataTypeName(expr.getType());
 	    Expression result = expr;
 	    if(type != null) {
-	        if (! type.equals(DefaultDataTypes.STRING) &&
-	            ! type.equals(DefaultDataTypes.CLOB)) {
+	        if (!isCharacter(expr, false)) {
 	                
 	            if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), type, DefaultDataTypes.STRING.getId())) {
 	
@@ -963,61 +1089,102 @@ public class ResolverVisitor extends LanguageVisitor
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, scrit.getExpression()));
 	    }
 	
+	  //check if all types are the same, or if there is a common type
+        boolean same = true;
+        Iterator valIter = scrit.getValues().iterator();
+        String[] types = new String[scrit.getValues().size()];
+        int i = 0;
+        Class<?> type = null;
+        while(valIter.hasNext()) {
+            Expression value = (Expression) valIter.next();
+            if (value.getType() != exprType) {
+                same = false;
+            }
+            types[i++] = getDataTypeManager().getDataTypeName(value.getType());
+            type = value.getType();
+        }
+        if (same && type == exprType) {
+            return;
+        }
+        
+        if (!same) {
+            String commonType = ResolverUtil.getCommonType(getTeiidVersion(), types);
+            if (commonType != null) {
+                type = getDataTypeManager().getDataTypeClass(commonType);
+            } else {
+                type = null;
+            }
+        }
+
 	    String exprTypeName = getDataTypeManager().getDataTypeName(exprType);
-	    boolean changed = false;
-	    List<Expression> newVals = new ArrayList<Expression>();
-	
-	    boolean convertLeft = false;
-	    Class<?> setType = null;
-	
-	    Iterator valIter = scrit.getValues().iterator();
-	    while(valIter.hasNext()) {
-	        Expression value = (Expression) valIter.next();
-	        setDesiredType(value, exprType, scrit);
-	        if(! value.getType().equals(exprType)) {
-	            // try to apply cast
-	            String valTypeName = getDataTypeManager().getDataTypeName(value.getType());
-	            if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), valTypeName, exprTypeName)) {
-	                // Apply cast and replace current value
-	                newVals.add(ResolverUtil.convertExpression(value, valTypeName, exprTypeName, metadata) );
-	                changed = true;
-	            } else {
-	                convertLeft = true;
-	                setType = value.getType();
-	                break;
-	            }
-	        } else {
-	            newVals.add(value);
-	        }
-	    }
-	
-	    // If no convert found for first element, check whether everything in the
-	    // set is the same and the convert can be placed on the left side
-	    if(convertLeft) {
-	        // Is there a possible conversion from left to right?
-	        String setTypeName = getDataTypeManager().getDataTypeName(setType);
-	        if(ResolverUtil.canImplicitlyConvert(getTeiidVersion(), exprTypeName, setTypeName)) {
-	            valIter = scrit.getValues().iterator();
-	            while(valIter.hasNext()) {
-	                Expression value = (Expression) valIter.next();
-	                if(value.getType() == null) {
-	                     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, value));
-	                } else if(! value.getType().equals(setType)) {
-	                     throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30077, scrit));
-	                }
-	            }
-	
-	            // Convert left expression to type of values in the set
-	            scrit.setExpression(ResolverUtil.convertExpression(scrit.getExpression(), exprTypeName, setTypeName, metadata));
-	
-	        } else {
-	             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30077, scrit));
-	        }
-	    }
-	
-	    if(changed) {
-	        scrit.setValues(newVals);
-	    }
+	    boolean attemptConvert = !isCharacter(exprType, true) || metadata.widenComparisonToString();
+        
+        List<Expression> newVals = new ArrayList<Expression>(scrit.getValues().size());
+        if (scrit.getExpression().getType() != DefaultDataTypes.NULL.getTypeClass()) {
+            valIter = scrit.getValues().iterator();
+            while(valIter.hasNext()) {
+                Expression value = (Expression) valIter.next();
+                setDesiredType(value, exprType, scrit);
+                if(value.getType() != exprType) {
+                    String valTypeName = getDataTypeManager().getDataTypeName(value.getType());
+                    // try to apply cast
+                    // Apply cast and replace current value
+                    if (attemptConvert || isCharacter(value.getType(), true)) {
+                        try {
+                            newVals.add(ResolverUtil.convertExpression(value, valTypeName, exprTypeName, metadata) );
+                        } catch (QueryResolverException e) {
+                            if (value instanceof Constant && isCharacter(value, true) && !metadata.widenComparisonToString()) {
+                                throw e;
+                            }
+                            if (type == null) {
+                                type = value.getType();
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    newVals.add(value);
+                }
+            }
+            if (newVals.size() == scrit.getValues().size()) {
+                scrit.setValues(newVals);
+                return;
+            }
+        }
+    
+        // If no convert found for first element, check whether everything in the
+        // set is the same and the convert can be placed on the left side
+        if (type == null) {
+             throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30077, scrit));
+        }
+        
+        // Is there a possible conversion from left to right?
+        String setTypeName = getDataTypeManager().getDataTypeName(type);
+        
+        if (!isCharacter(type, true) || metadata.widenComparisonToString() || scrit.getExpression().getType() == DefaultDataTypes.NULL.getTypeClass()) {
+            scrit.setExpression(ResolverUtil.convertExpression(scrit.getExpression(), exprTypeName, setTypeName, metadata));
+        } else if (type != scrit.getExpression().getType()) {
+            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, scrit));
+        }
+        
+        boolean exprChar = isCharacter(scrit.getExpression(), true);
+
+        newVals.clear();
+        valIter = scrit.getValues().iterator();
+        while(valIter.hasNext()) {
+            Expression value = (Expression) valIter.next();
+            if(value.getType() == null) {
+                throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30075, value));
+            } else if(value.getType() != type) {
+                if (!metadata.widenComparisonToString() && exprChar ^ isCharacter(value, true)) {
+                    throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, scrit));
+                }
+                value = ResolverUtil.convertExpression(value, setTypeName, metadata);
+            }
+            newVals.add(value);
+        }
+
+        scrit.setValues(newVals);
 	}
 
 	void resolveCaseExpression(CaseExpression obj) throws Exception {
@@ -1058,6 +1225,7 @@ public class ResolverVisitor extends LanguageVisitor
 	    Expression when = null;
 	    Expression then = null;
 	    // Set the types of the WHEN and THEN parts
+	    boolean whenNotChar = false;
 	    for (int i = 0; i < whenCount; i++) {
 	        when = obj.getWhenExpression(i);
 	        then = obj.getThenExpression(i);
@@ -1068,6 +1236,9 @@ public class ResolverVisitor extends LanguageVisitor
 	        if (!whenTypeNames.contains(getDataTypeManager().getDataTypeName(when.getType()))) {
 	            whenTypeNames.add(getDataTypeManager().getDataTypeName(when.getType()));
 	        }
+	        if (!isCharacter(when.getType(), true)) {
+                whenNotChar = true;
+            }
 	        if (!thenTypeNames.contains(getDataTypeManager().getDataTypeName(then.getType()))) {
 	            thenTypeNames.add(getDataTypeManager().getDataTypeName(then.getType()));
 	        }
@@ -1087,6 +1258,9 @@ public class ResolverVisitor extends LanguageVisitor
 	    if (whenTypeName == null) {
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30079, "WHEN", obj));//$NON-NLS-1$
 	    }
+	    if (!metadata.widenComparisonToString() && whenNotChar && isCharacter(getDataTypeManager().getDataTypeClass(whenTypeName), true)) {
+            throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31172, obj));
+        }
 	    String thenTypeName = ResolverUtil.getCommonType(getTeiidVersion(), thenTypeNames.toArray(new String[thenTypeNames.size()]));
 	    if (thenTypeName == null) {
 	         throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30079, "THEN/ELSE", obj));//$NON-NLS-1$

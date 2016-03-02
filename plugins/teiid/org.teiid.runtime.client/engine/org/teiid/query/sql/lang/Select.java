@@ -3,6 +3,7 @@
 package org.teiid.query.sql.lang;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.teiid.designer.query.sql.lang.ISelect;
 import org.teiid.query.parser.LanguageVisitor;
@@ -69,7 +70,7 @@ public class Select extends SimpleNode implements ISelect<Expression, LanguageVi
      * @param symbols list of SelectSymbol in SELECT
      */
     @Override
-    public void setSymbols(List<? extends Expression> symbols) {
+    public void setSymbols(Collection<? extends Expression> symbols) {
         this.symbols.clear();
         if (symbols != null) {
             for (Expression expression : symbols) {

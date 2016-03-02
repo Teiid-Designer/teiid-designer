@@ -31,7 +31,7 @@ public abstract class AbstractTest {
      * @param teiidVersion
      */
     public AbstractTest(Version teiidVersion) {
-        this.teiidVersion = teiidVersion.get();;
+        this.teiidVersion = teiidVersion.get();
         this.dataTypeManager = DataTypeManagerService.getInstance(this.teiidVersion);
         this.queryParser = new QueryParser(this.teiidVersion);
         this.metadataFactory = new RealMetadataFactory(this.teiidVersion);

@@ -33,6 +33,7 @@ import org.teiid.designer.query.sql.lang.IFrom;
 import org.teiid.designer.query.sql.lang.IGroupBy;
 import org.teiid.designer.query.sql.lang.IInsert;
 import org.teiid.designer.query.sql.lang.IInto;
+import org.teiid.designer.query.sql.lang.IIsDistinctCriteria;
 import org.teiid.designer.query.sql.lang.IIsNullCriteria;
 import org.teiid.designer.query.sql.lang.IJoinPredicate;
 import org.teiid.designer.query.sql.lang.IJoinType;
@@ -127,6 +128,7 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
@@ -271,6 +273,10 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         return maxVersion.isLessThan(teiidVersion.get());
     }
 
+    protected boolean isLessThanTeiid8124() {
+        return isLessThanTeiidVersion(Version.TEIID_8_12_4);
+    }
+
     protected boolean isTeiid8OrGreater() {
         return isTeiidVersionOrGreater(Version.TEIID_8_0);
     }
@@ -289,6 +295,10 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
 
     protected boolean isTeiid811OrGreater() {
         return isTeiidVersionOrGreater(Version.TEIID_8_11);
+    }
+
+    protected boolean isTeiid8124OrGreater() {
+        return isTeiidVersionOrGreater(Version.TEIID_8_12_4);
     }
 
     /**
@@ -681,6 +691,11 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
         isApplicable(node);
     }
 
+    @Since(Version.TEIID_8_12_4)
+    public void visit(IsDistinctCriteria node) {
+        isApplicable(node);
+    }
+
     public void visit(Function node) {
         isApplicable(node);
     }
@@ -971,6 +986,11 @@ public abstract class LanguageVisitor extends AbstractLanguageVisitor {
     @Override
     public void visit(IExpressionSymbol obj) {
         visit((ExpressionSymbol) obj);
+    }
+
+    @Override
+    public void visit(IIsDistinctCriteria obj) {
+        visit((IsDistinctCriteria) obj);
     }
 
     @Override

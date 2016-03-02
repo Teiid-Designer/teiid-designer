@@ -31,7 +31,6 @@ import java.io.OptionalDataException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
-
 import org.teiid.core.util.ExternalizeUtil;
 
 
@@ -115,11 +114,17 @@ public class LogonResult implements Externalizable {
 			ClassNotFoundException {
 		vdbName = (String)in.readObject();
 		sessionToken = (SessionToken)in.readObject();
-		timeZone = (TimeZone)in.readObject();
+		try {
+		    timeZone = (TimeZone)in.readObject();
+		} catch (Exception e) {
+            //could be a sun.util object
+        }
 		clusterName = (String)in.readObject();
 		vdbVersion = in.readInt();
 		try {
 			addtionalProperties = ExternalizeUtil.readMap(in);
+			String tzId = in.readUTF(); //not sent until 8.12.3
+            timeZone = TimeZone.getTimeZone(tzId);
 		} catch (EOFException e) {
 			
 		} catch (OptionalDataException e) {
@@ -135,6 +140,8 @@ public class LogonResult implements Externalizable {
 		out.writeObject(clusterName);
 		out.writeInt(vdbVersion);
 		ExternalizeUtil.writeMap(out, addtionalProperties);
+		if (timeZone != null)
+		    out.writeUTF(timeZone.getID());
 	}
     
 }

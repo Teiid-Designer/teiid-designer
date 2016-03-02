@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.io.StreamCorruptedException;
+import org.teiid.core.util.ObjectInputStreamWithClassloader;
 
 /**
  * @author The Netty Project (netty-dev@lists.jboss.org)
@@ -93,6 +94,12 @@ public class CompactObjectInputStream extends ObjectInputStream {
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
         String name = desc.getName();
+        try {
+            ObjectInputStreamWithClassloader.checkClass(name);
+        } catch (ClassNotFoundException e) {
+            throw e;
+        }
+
         try {
             return Class.forName(name, false, classLoader);
         } catch (ClassNotFoundException ex) {

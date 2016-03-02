@@ -46,6 +46,7 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
@@ -934,6 +935,16 @@ public class PreOrPostOrderNavigator extends AbstractNavigator {
     public void visit(ReturnStatement obj) {
         preVisitVisitor(obj);
         visitNode(obj.getExpression());
+        postVisitVisitor(obj);
+    }
+
+    @Override
+    @Since(Version.TEIID_8_12_4)
+    public void visit(IsDistinctCriteria obj) {
+        preVisitVisitor(obj);
+        //don't visit as that will fail the validation that scalar/row value groupsymbols can't be referenced
+        //visitNode(obj.getLeftRowValue());
+        //visitNode(obj.getRightRowValue());
         postVisitVisitor(obj);
     }
 

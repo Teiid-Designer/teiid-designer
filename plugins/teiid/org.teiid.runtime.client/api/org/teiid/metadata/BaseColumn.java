@@ -34,6 +34,8 @@ public abstract class BaseColumn extends AbstractMetadataRecord {
 	
 	private static final long serialVersionUID = 6382258617714856616L;
 
+	public static final String DEFAULT_HANDLING = AbstractMetadataRecord.RELATIONAL_URI + "default_handling"; //$NON-NLS-1$
+
 	public enum NullType {
 		No_Nulls {
 			@Override

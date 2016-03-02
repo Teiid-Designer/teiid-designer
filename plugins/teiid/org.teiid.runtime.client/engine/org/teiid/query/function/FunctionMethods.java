@@ -1398,7 +1398,13 @@ public final class FunctionMethods {
     public static Object session_id(CommandContext context) {
         return context.getConnectionId();
     }
-    
+
+    @Since(Version.TEIID_8_12_4)
+    @TeiidFunction(category=FunctionCategoryConstants.MISCELLANEOUS)
+    public static Object node_id() {
+        return System.getProperty("jboss.node.name"); //$NON-NLS-1$
+    }
+
     // ================= Function - MODIFYTIMEZONE ========================
     
     public static Object modifyTimeZone(Timestamp value, String originalTimezoneString, String targetTimezoneString) {

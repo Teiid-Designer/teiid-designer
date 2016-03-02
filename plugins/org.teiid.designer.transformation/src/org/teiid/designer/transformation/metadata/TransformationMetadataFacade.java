@@ -750,7 +750,7 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     }
 
     @Override
-    public Object getDefaultValue(Object elementID) throws Exception {
+    public String getDefaultValue(Object elementID) throws Exception {
         return null;
     }
 
@@ -1009,6 +1009,11 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
 
     @Override
     public boolean useOutputName() {
+        return false;
+    }
+
+    @Override
+    public boolean widenComparisonToString() {
         return false;
     }
 }

@@ -60,6 +60,8 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
 
 	private Determinism[] determinismLevel = new Determinism[] {Determinism.DETERMINISTIC};
 
+	private VariableContext variableContext = new VariableContext();
+
     private final ITeiidServerVersion teiidVersion;
 
     public CommandContext(ITeiidServerVersion teiidVersion) {
@@ -71,6 +73,10 @@ public class CommandContext implements Cloneable, org.teiid.CommandContext {
      */
     public ITeiidServerVersion getTeiidVersion() {
         return teiidVersion;
+    }
+
+    public VariableContext getVariableContext() {
+        return variableContext;
     }
 
     public Determinism getDeterminismLevel() {

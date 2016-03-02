@@ -350,6 +350,7 @@ public class TextTable extends TableFunctionReference implements ITextTable<Lang
             clone.setName(getName());
         clone.setOptional(isOptional());
         clone.setMakeInd(isMakeInd());
+        clone.setMakeInd(getMakeInd());
         clone.setNoUnnest(isNoUnnest());
         clone.setMakeDep(isMakeDep());
         clone.setMakeNotDep(isMakeNotDep());

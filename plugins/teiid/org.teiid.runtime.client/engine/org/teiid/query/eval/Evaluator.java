@@ -57,8 +57,10 @@ import org.teiid.core.types.XMLType.Type;
 import org.teiid.core.types.basic.StringToSQLXMLTransform;
 import org.teiid.core.util.StringUtil;
 import org.teiid.designer.annotation.Since;
+import org.teiid.designer.annotation.Updated;
 import org.teiid.designer.query.sql.lang.ICompareCriteria;
 import org.teiid.designer.query.sql.lang.IMatchCriteria.MatchMode;
+import org.teiid.designer.query.sql.symbol.IElementSymbol;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
 import org.teiid.designer.udf.IFunctionLibrary;
@@ -68,11 +70,11 @@ import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.JSONFunctionMethods.JSONBuilder;
 import org.teiid.query.function.source.XMLSystemFunctions;
 import org.teiid.query.function.source.XMLSystemFunctions.XmlConcat;
+import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.parser.TeiidNodeFactory;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.processor.relational.XMLTableNode;
-import org.teiid.query.sql.lang.AbstractCompareCriteria;
 import org.teiid.query.sql.lang.AbstractSetCriteria;
 import org.teiid.query.sql.lang.CollectionValueIterator;
 import org.teiid.query.sql.lang.CompareCriteria;
@@ -80,6 +82,7 @@ import org.teiid.query.sql.lang.CompoundCriteria;
 import org.teiid.query.sql.lang.Criteria;
 import org.teiid.query.sql.lang.ExistsCriteria;
 import org.teiid.query.sql.lang.ExpressionCriteria;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.MatchCriteria;
 import org.teiid.query.sql.lang.NamespaceItem;
@@ -118,12 +121,14 @@ import org.teiid.query.sql.symbol.XMLSerialize;
 import org.teiid.query.sql.util.ValueIterator;
 import org.teiid.query.sql.visitor.ValueIteratorProviderCollectorVisitor;
 import org.teiid.query.util.CommandContext;
+import org.teiid.query.util.VariableContext;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression.Result;
 import org.teiid.query.xquery.saxon.SaxonXQueryExpression.RowProcessor;
 import org.teiid.query.xquery.saxon.XQueryEvaluator;
 import org.teiid.runtime.client.Messages;
 import org.teiid.runtime.client.TeiidClientException;
+import org.teiid.runtime.client.query.SyntaxFactory;
 import org.teiid.translator.SourceSystemFunctions;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.om.Item;
@@ -329,6 +334,62 @@ public class Evaluator {
         	return (Boolean)evaluate(((ExpressionCriteria)criteria).getExpression());
         } else if (criteria instanceof XMLExists) {
             return (Boolean) evaluateXMLQuery(((XMLExists)criteria).getXmlQuery(), true);
+        } else if (criteria instanceof IsDistinctCriteria) {
+            IsDistinctCriteria idc = (IsDistinctCriteria)criteria;
+            TempMetadataID left = (TempMetadataID)idc.getLeftRowValue().getMetadataID();
+            TempMetadataID right = (TempMetadataID)idc.getRightRowValue().getMetadataID();
+            VariableContext vc = this.context.getVariableContext();
+            List<TempMetadataID> cols = left.getElements();
+            List<TempMetadataID> colsOther = right.getElements();
+            if (cols.size() != colsOther.size()) {
+                return !idc.isNegated();
+            }
+            SyntaxFactory factory = new SyntaxFactory(criteria.getTeiidParser());
+            for (int i = 0; i < cols.size(); i++) {
+                IElementSymbol symbol1 = factory.createElementSymbol(cols.get(i).getName());
+                symbol1.setGroupSymbol(idc.getLeftRowValue());
+                Object l = vc.getValue(symbol1);
+
+                IElementSymbol symbol2 = factory.createElementSymbol(colsOther.get(i).getName());
+                symbol1.setGroupSymbol(idc.getRightRowValue());                
+                Object r = vc.getValue(symbol2);
+                if (l == null) {
+                    if (r != null) {
+                        if (idc.isNegated()) {
+                            return false;
+                        } 
+                        return true;
+                    }
+                } else if (r == null) {
+                    if (idc.isNegated()) {
+                        return false;
+                    } 
+                    return true;
+                }
+                try {
+                    Boolean b = compare(CompareCriteria.EQ, l, r);
+                    if (b == null) {
+                        continue; //shouldn't happen
+                    }
+                    if (!b) {
+                        if (idc.isNegated()) {
+                            return false;
+                        } 
+                        return true;
+                    }
+                } catch (Exception e) {
+                    //we'll consider this a difference
+                    //more than likely they are different types
+                    if (idc.isNegated()) {
+                        return false;
+                    } 
+                    return true;
+                }
+            }
+            if (idc.isNegated()) {
+                return true;
+            } 
+            return false;
 		} else {
              throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30311, criteria));
 		}
@@ -400,7 +461,7 @@ public class Evaluator {
 		}
 
 		// Compare two non-null values using specified operator
-		return compare(criteria, leftValue, rightValue);
+		return compare(criteria.getOperator(), leftValue, rightValue);
 	}
 
 	private Boolean evaluate(MatchCriteria criteria)
@@ -602,41 +663,56 @@ public class Evaluator {
             }
 
             if(value != null) {
-            	result = compare(criteria, leftValue, value);
+                Boolean comp = compare(criteria.getOperator(), leftValue, value);
 
                 switch(criteria.getPredicateQuantifier()) {
                     case ALL:
-                        if (Boolean.FALSE.equals(result)){
+                        if (Boolean.FALSE.equals(comp)){
                             return Boolean.FALSE;
                         }
                         break;
                     case SOME:
-                        if (Boolean.TRUE.equals(result)){
+                        if (Boolean.TRUE.equals(comp)){
                             return Boolean.TRUE;
                         }
                         break;
                     default:
-                         throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
+                        throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
                 }
-
             } else { // value is null
-                result = null;
+                if (getTeiidVersion().isLessThan(Version.TEIID_8_12_4))
+                    result = null;
+                else {
+                    switch(criteria.getPredicateQuantifier()) {
+                        case ALL:
+                            if (Boolean.TRUE.equals(result)){
+                                result = null;
+                            }
+                            break;
+                        case SOME:
+                            if (Boolean.FALSE.equals(result)){
+                                result = null;
+                            }
+                            break;
+                        default:
+                            throw new TeiidClientException(Messages.gs(Messages.TEIID.TEIID30326, criteria.getPredicateQuantifier()));
+                    }
+                }
             }
-
-
         } //end value iteration
 
         return result;
     }
 
 	/**
-	 * @param criteria
+	 * @param operator type
 	 * @param leftValue
 	 * @param value
 	 * @return true if left value matches the value according to the criteria
 	 * @throws AssertionError
 	 */
-	public static Boolean compare(AbstractCompareCriteria criteria, Object leftValue,
+    @Updated(version=Version.TEIID_8_12_4)
+	public static Boolean compare(int operator, Object leftValue,
 			Object value) throws AssertionError {
 		int compare = 0;
 		//TODO: we follow oracle style array comparison
@@ -655,7 +731,7 @@ public class Evaluator {
 		}
 		// Compare two non-null values using specified operator
 		Boolean result = null;
-		switch(criteria.getOperator()) {
+		switch(operator) {
 		    case ICompareCriteria.EQ:
 		        result = Boolean.valueOf(compare == 0);
 		        break;
@@ -1340,14 +1416,15 @@ public class Evaluator {
 			String name = symbol.getAlias();
 			Expression ex = symbol.getExpression();
 			if (name == null && ex instanceof ElementSymbol) {
-				name = ((ElementSymbol)ex).getShortName();
-				if (xmlNames) {
-					name = XMLSystemFunctions.escapeName(name, true);
-				}
-			}
-			if (!xmlNames && name == null) {
-				name = "expr" + (i+1); //$NON-NLS-1$
-			}
+                name = ((ElementSymbol)ex).getShortName();
+            }
+            if (name != null) {
+                if (xmlNames) {
+                    name = XMLSystemFunctions.escapeName(name, true);
+                }
+            } else if (!xmlNames) {
+                name = "expr" + (i+1); //$NON-NLS-1$
+            }
 			nameValuePairs[i] = new Evaluator.NameValuePair<Object>(name, eval?internalEvaluate(ex):ex);
 		}
 		return nameValuePairs;

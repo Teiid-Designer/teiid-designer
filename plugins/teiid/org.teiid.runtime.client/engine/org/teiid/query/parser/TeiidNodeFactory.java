@@ -41,6 +41,7 @@ import org.teiid.query.sql.lang.GroupBy;
 import org.teiid.query.sql.lang.HasCriteria;
 import org.teiid.query.sql.lang.Insert;
 import org.teiid.query.sql.lang.Into;
+import org.teiid.query.sql.lang.IsDistinctCriteria;
 import org.teiid.query.sql.lang.IsNullCriteria;
 import org.teiid.query.sql.lang.JoinPredicate;
 import org.teiid.query.sql.lang.JoinType;
@@ -1082,7 +1083,13 @@ public class TeiidNodeFactory {
         * XMLCast
         * @generated
         */
-       XML_CAST("XMLCast"); //$NON-NLS-1$
+       XML_CAST("XMLCast"), //$NON-NLS-1$
+
+       /**
+        * IsDistinctCriteria
+        * @generated
+        */
+       IS_DISTINCT_CRITERIA("IsDistinctCriteria"); //$NON-NLS-1$
 
        private String name;
 
@@ -2179,6 +2186,18 @@ public class TeiidNodeFactory {
    }
 
    /**
+    *
+    * @generated
+    *
+    * @param teiidParser
+    * @param nodeType
+    * @return
+    */
+   private IsDistinctCriteria createIsDistinctCriteria(TeiidParser teiidParser, int nodeType) {
+       return new IsDistinctCriteria(teiidParser, nodeType);
+   }
+
+   /**
     * Create a version 7 teiid parser node for the given node type.
     *
     * @generated
@@ -2547,6 +2566,8 @@ public class TeiidNodeFactory {
                return (T) createArray(teiidParser, nodeType);
            case Teiid8ParserTreeConstants.JJTXMLCAST:
                return (T) createXMLCast(teiidParser, nodeType);
+           case Teiid8ParserTreeConstants.JJTISDISTINCTCRITERIA:
+               return (T) createIsDistinctCriteria(teiidParser, nodeType);
            default:
                throw new IllegalArgumentException(Messages.getString(Messages.TeiidParser.invalidNodeType, nodeType, teiidParser.getVersion()));
        }

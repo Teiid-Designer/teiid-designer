@@ -772,12 +772,19 @@ public class SystemSource extends UDFSource implements FunctionCategoryConstants
 	    if (teiidVersion.getMinimumVersion().isLessThan(Version.TEIID_8_0))
             return;
 
+	    FunctionParameter param1 = null;
+	    if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4))
+            param1 = new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.BOOLEAN, Messages.getString(Messages.SystemSource.endswith_result));                 //$NON-NLS-1$ //$NON-NLS-2$
+        else
+            param1 = new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_result));                 //$NON-NLS-1$ //$NON-NLS-2$
+
         FunctionMethod f =
             new FunctionMethod(SourceSystemFunctions.ENDSWITH, Messages.getString(Messages.SystemSource.endswith_description), STRING, FUNCTION_CLASS, "endsWith", //$NON-NLS-1$ //$NON-NLS-2$ 
                 new FunctionParameter[] {
                     new FunctionParameter(teiidVersion, "substring", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_arg1)), //$NON-NLS-1$ //$NON-NLS-2$
                     new FunctionParameter(teiidVersion, "string", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_arg2))}, //$NON-NLS-1$ //$NON-NLS-2$
-                new FunctionParameter(teiidVersion, "result", DataTypeManagerService.DefaultDataTypes.STRING, Messages.getString(Messages.SystemSource.endswith_result)) );                 //$NON-NLS-1$ //$NON-NLS-2$
+                    param1);
+
         functions.add(f);
     }    
 

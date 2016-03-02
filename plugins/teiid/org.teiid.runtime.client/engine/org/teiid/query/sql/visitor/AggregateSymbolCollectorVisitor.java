@@ -55,9 +55,20 @@ public class AggregateSymbolCollectorVisitor extends LanguageVisitor {
         }
         
         public void visit(AggregateSymbol obj) {
-            // Visit aggregate symbol but do not dive into it's expression
-            preVisitVisitor(obj);
-            postVisitVisitor(obj);
+            if (isLessThanTeiid8124()) {
+                // Visit aggregate symbol but do not dive into it's expression
+                preVisitVisitor(obj);
+                postVisitVisitor(obj);
+                return;
+            }
+
+            if (!obj.isWindowed()) {
+                // Visit aggregate symbol but do not dive into it's expression
+                preVisitVisitor(obj);
+                postVisitVisitor(obj);
+            } else {
+                super.visit(obj);
+            }
         }
         
         @Override

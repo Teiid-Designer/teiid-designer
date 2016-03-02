@@ -23,7 +23,8 @@ public class FakeSqlProcedureParamAspect implements SqlProcedureParameterAspect 
     public String name, fullName, nameInSource, datatypeName, runtimeType, datatypeUUID;
     public IPath path;
     public EObject datatype;
-    public Object defaultValue, uuid, parentUuid;
+    public String defaultValue;
+    public Object uuid, parentUuid;
     public int length, scale, precision, position, type, radix, nullType;
     public boolean optional;
 
@@ -40,7 +41,7 @@ public class FakeSqlProcedureParamAspect implements SqlProcedureParameterAspect 
 	public String getRuntimeType(EObject eObject) { return runtimeType; }
 
     @Override
-	public Object getDefaultValue(EObject eObject) { return defaultValue; }
+	public String getDefaultValue(EObject eObject) { return defaultValue; }
 
     @Override
 	public int getNullType(EObject eObject) { return nullType; }

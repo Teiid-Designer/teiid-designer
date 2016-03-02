@@ -22,10 +22,12 @@
 
 package org.teiid.query.resolver.util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,6 +49,7 @@ import org.teiid.designer.query.metadata.IStoredProcedureInfo;
 import org.teiid.designer.query.sql.lang.IJoinType.Types;
 import org.teiid.designer.runtime.version.spi.ITeiidServerVersion;
 import org.teiid.designer.runtime.version.spi.TeiidServerVersion.Version;
+import org.teiid.metadata.BaseColumn;
 import org.teiid.metadata.ForeignKey;
 import org.teiid.query.function.FunctionDescriptor;
 import org.teiid.query.function.FunctionLibrary;
@@ -54,6 +57,7 @@ import org.teiid.query.metadata.GroupInfo;
 import org.teiid.query.metadata.TempMetadataAdapter;
 import org.teiid.query.metadata.TempMetadataID;
 import org.teiid.query.metadata.TempMetadataStore;
+import org.teiid.query.parser.QueryParser;
 import org.teiid.query.parser.TeiidNodeFactory.ASTNodes;
 import org.teiid.query.parser.TeiidParser;
 import org.teiid.query.resolver.QueryResolver;
@@ -251,9 +255,18 @@ public class ResolverUtil {
             return sourceExpression;
         }
         
-        if(canImplicitlyConvert(sourceExpression.getTeiidVersion(), sourceTypeName, targetTypeName) 
-                        || (sourceExpression instanceof Constant && convertConstant(sourceTypeName, targetTypeName, (Constant)sourceExpression) != null)) {
+        if(canImplicitlyConvert(sourceExpression.getTeiidVersion(), sourceTypeName, targetTypeName)) {
             return getConversion(sourceExpression, sourceTypeName, targetTypeName, true, (FunctionLibrary) metadata.getFunctionLibrary());
+        }
+
+        if (sourceExpression instanceof Constant) {
+            Expression result = convertConstant(sourceTypeName, targetTypeName, (Constant)sourceExpression);
+            if (result != null) {
+                if (result.getType() == DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass()) {
+                    return result;
+                }
+                return getConversion(sourceExpression, sourceTypeName, targetTypeName, true, (FunctionLibrary) metadata.getFunctionLibrary());
+            }
         }
 
         //Expression is wrong type and can't convert
@@ -543,13 +556,34 @@ public class ResolverUtil {
         //Check if there is a default value, if so use it
 		Object mid = symbol.getMetadataID();
     	Class<?> type = symbol.getType();
-		
-        Object defaultValue = metadata.getDefaultValue(mid);
+    	ITeiidServerVersion teiidVersion = symbol.getTeiidVersion();
+        String defaultValue = metadata.getDefaultValue(mid);
         
         if (defaultValue == null && !metadata.elementSupports(mid, SupportConstants.Element.NULL)) {
              throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID30089, symbol.getOutputName()));
         }
-        
+
+        if (teiidVersion.isGreaterThanOrEqualTo(Version.TEIID_8_12_4) && "expression".equalsIgnoreCase(metadata.getExtensionProperty(mid,  BaseColumn.DEFAULT_HANDLING, false))) { //$NON-NLS-1$
+            Expression ex = null;
+            
+            try {
+                QueryParser parser = new QueryParser(teiidVersion);
+                ex = parser.parseExpression(defaultValue);
+            } catch (Exception e) {
+                //TODO: also validate this at load time
+                throw new QueryResolverException(Messages.gs(Messages.TEIID.TEIID31170, symbol));
+            }
+            ValueIteratorProviderCollectorVisitor visitor = new ValueIteratorProviderCollectorVisitor(teiidVersion);
+            List<SubqueryContainer> subqueries = visitor.getValueIteratorProviders(ex);
+            ResolverVisitor resolverVisitor = new ResolverVisitor(teiidVersion);
+            resolverVisitor.resolveLanguageObject(ex, metadata);
+            for (SubqueryContainer<?> container : subqueries) {
+                QueryResolver queryResolver = new QueryResolver(teiidVersion);
+                queryResolver.resolveCommand(container.getCommand(), metadata);
+            }
+            return ResolverUtil.convertExpression(ex, DataTypeManagerService.getInstance(teiidVersion).getDataTypeName(type), metadata);
+        }
+
         return getProperlyTypedConstant(defaultValue, type, symbol.getTeiidParser());
 	}    
 	
@@ -571,15 +605,32 @@ public class ResolverUtil {
      * @throws Exception if TransformationException is encountered
      * @since 4.3
      */
-    private static Constant getProperlyTypedConstant(Object defaultValue, Class<?> parameterType, TeiidParser teiidParser)
+    public static Constant getProperlyTypedConstant(Object defaultValue, Class<?> parameterType, TeiidParser teiidParser)
         throws QueryResolverException{
-        try {
-            Object newValue = DataTypeManagerService.getInstance(teiidParser.getVersion()).transformValue(defaultValue, parameterType);
+        ITeiidServerVersion version = teiidParser.getVersion();
+        DataTypeManagerService dataTypeManager = DataTypeManagerService.getInstance(version);
+
+        try {            
+            Object newValue = dataTypeManager.transformValue(defaultValue, parameterType);
             Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
             constant.setValue(newValue);
             constant.setType(parameterType);
             return constant;
         } catch (Exception e) {
+            if (version.isGreaterThanOrEqualTo(Version.TEIID_8_12_4)) {
+                //timestamp literals also allow date format
+                if (parameterType == DataTypeManagerService.DefaultDataTypes.TIMESTAMP.getTypeClass()) {
+                    try {
+                        Object newValue = dataTypeManager.transformValue(defaultValue,
+                                                                         DataTypeManagerService.DefaultDataTypes.DATE);
+                        Constant constant = teiidParser.createASTNode(ASTNodes.CONSTANT);
+                        constant.setValue(new Timestamp(((Date)newValue).getTime()));
+                        constant.setType(parameterType);
+                        return constant;
+                    } catch (Exception e1) {
+                    }
+                }
+            }
              throw new QueryResolverException(e, Messages.gs(Messages.TEIID.TEIID30090, defaultValue, defaultValue.getClass(), parameterType));
         }
     }
