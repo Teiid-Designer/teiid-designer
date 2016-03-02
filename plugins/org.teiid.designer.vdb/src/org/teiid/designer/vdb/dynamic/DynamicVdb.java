@@ -552,6 +552,18 @@ public class DynamicVdb extends BasicVdb {
             if (! dynamicModels.isEmpty())
                 Collections.sort(dynamicModels, new DynamicModelComparator());
 
+            // NOTE that objects in one model may have references to objects in another model
+            // Example is a Materialized Table Reference
+            // So we'll need to:
+            //  - capture these references (simple model name and object name?) in each DdlImporter
+            //  - keep a map of all DdlImporters and their resulting ModelResource
+            //  - AFTER all models are created and saved
+            //  - Get the deferred reference objects for each importer
+            //     - If they exist, then run a utility to find the reference object and the target View and set the EMF reference
+            
+            Map<ModelResource, DdlImporter> importerModelMap = new HashMap<ModelResource, DdlImporter>();
+            
+            
             for (DynamicModel dynModel : dynamicModels) {
                 IFile sourceFile = this.getSourceFile();
                 IContainer parent = sourceFile.getParent();
@@ -661,6 +673,8 @@ public class DynamicVdb extends BasicVdb {
                     }
 
                     modelResource = importer.model();
+                    
+                    importerModelMap.put(modelResource, importer);
                 }
 
                 VdbModelEntry modelEntry = xmiVdb.addEntry(modelFile.getFullPath());
@@ -689,6 +703,12 @@ public class DynamicVdb extends BasicVdb {
                 	modelEntry.setProperty(entry.getKey().toString(), entry.getValue().toString());
                 }
             }
+            
+            // Now process any materialized table references
+            for( DdlImporter importer : importerModelMap.values() ) {
+            	importer.setMaterializedTableReferences(importerModelMap.keySet());
+            }
+            
 
             return xmiVdb;
         } finally {

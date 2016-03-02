@@ -11,8 +11,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -43,11 +45,13 @@ import org.teiid.designer.core.ModelerCore;
 import org.teiid.designer.core.util.NewModelObjectHelperManager;
 import org.teiid.designer.core.workspace.ModelResource;
 import org.teiid.designer.core.workspace.ModelUtil;
+import org.teiid.designer.core.workspace.ModelWorkspaceException;
 import org.teiid.designer.core.xmi.XMIHeader;
 import org.teiid.designer.ddl.DdlImporterManager;
 import org.teiid.designer.ddl.DdlNodeImporter;
 import org.teiid.designer.ddl.TeiidDdlNodeImporter;
 import org.teiid.designer.ddl.importer.node.EmfModelGenerator;
+import org.teiid.designer.ddl.importer.node.teiid.MaterializedTableReferenceInfo;
 import org.teiid.designer.ddl.importer.node.teiid.TeiidDdlImporter;
 import org.teiid.designer.ddl.registry.DdlNodeImporterRegistry;
 import org.teiid.designer.metamodels.core.ModelAnnotation;
@@ -83,6 +87,8 @@ public class DdlImporter {
     private boolean noDdlImported;
 
 	private DdlImporterManager importManager = new DdlImporterManager();
+	
+	private Set<MaterializedTableReferenceInfo> matTableReferences = new HashSet<MaterializedTableReferenceInfo>();
 
     /**
      * DdlImporter constructor
@@ -248,87 +254,89 @@ public class DdlImporter {
     }
     
     private void importTeiidDdl( String ddl, IProgressMonitor monitor, int totalWork, Properties options) throws Exception {
-        	        this.ddlString = ddl;
+        this.ddlString = ddl;
 
-        	        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
-        	        int workUnit = totalWork / 3;
+        int workUnit = totalWork / 3;
 
-        	        org.teiid.modeshape.sequencer.ddl.node.AstNode rootNode = null;
-        	        
-        	        // Use specified parser if it has been set
-        	        org.teiid.modeshape.sequencer.ddl.DdlParsers parsers = new org.teiid.modeshape.sequencer.ddl.DdlParsers();
+        org.teiid.modeshape.sequencer.ddl.node.AstNode rootNode = null;
+        
+        // Use specified parser if it has been set
+        org.teiid.modeshape.sequencer.ddl.DdlParsers parsers = new org.teiid.modeshape.sequencer.ddl.DdlParsers();
 
-        	        if( CoreStringUtil.isEmpty(ddlString) ) {
-        	        	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
-        	        	this.noDdlImported = true;
-        	        }
-        	        
-        	        try {
-        	        	rootNode = parsers.parseUsing(ddlString,specifiedParser);
-        	        // If parsing exception is encountered, throw DdlImportException
-        	        } catch (ParsingException e) {
-        	        	String parseMessage = e.getMessage();
-        	        	importManager.getImportMessages().setParseErrorMessage(parseMessage);
-        	        	Position position = e.getPosition();
-        	        	importManager.getImportMessages().setHasParseError(true);
-        	        	importManager.getImportMessages().setParseErrorColNumber(position.getColumn());
-        	        	importManager.getImportMessages().setParseErrorLineNumber(position.getLine());
-        	        	importManager.getImportMessages().setParseErrorIndex(position.getIndexInContent());
-        	        	if(!CoreStringUtil.isEmpty(specifiedParser)) {
-        	            	importManager.getImportMessages().setParserId(specifiedParser);
-        	        	} else if(rootNode!=null) {
-        	                String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
-        	                importManager.getImportMessages().setParserId(parserId);
-        	        	}
-        	        	return;
-        	        }
-        	        String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
+        if( CoreStringUtil.isEmpty(ddlString) ) {
+        	ddlString = "-- No DDL Returned"; //$NON-NLS-1$
+        	this.noDdlImported = true;
+        }
+        
+        try {
+        	rootNode = parsers.parseUsing(ddlString,specifiedParser);
+        // If parsing exception is encountered, throw DdlImportException
+        } catch (ParsingException e) {
+        	String parseMessage = e.getMessage();
+        	importManager.getImportMessages().setParseErrorMessage(parseMessage);
+        	Position position = e.getPosition();
+        	importManager.getImportMessages().setHasParseError(true);
+        	importManager.getImportMessages().setParseErrorColNumber(position.getColumn());
+        	importManager.getImportMessages().setParseErrorLineNumber(position.getLine());
+        	importManager.getImportMessages().setParseErrorIndex(position.getIndexInContent());
+        	if(!CoreStringUtil.isEmpty(specifiedParser)) {
+            	importManager.getImportMessages().setParserId(specifiedParser);
+        	} else if(rootNode!=null) {
+                String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
+                importManager.getImportMessages().setParserId(parserId);
+        	}
+        	return;
+        }
+        String parserId = (String) rootNode.getProperty(StandardDdlLexicon.PARSER_ID);
 
-        	        if (monitor.isCanceled())
-        	            throw new OperationCanceledException();
-        	        monitor.worked(workUnit);
+        if (monitor.isCanceled())
+            throw new OperationCanceledException();
+        monitor.worked(workUnit);
 
-        	        // ------------------------------------------------------------------------------
-        	        // Set up DifferenceProcessor
-        	        //   - startingSelector -- existing model
-        	        //   - endingSelector   -- generated from parsed ddl nodes 
-        	        // ------------------------------------------------------------------------------
-        	        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
-        	        model = ModelerCore.create(modelFile);
-        	        
-        	        // Have to specifically set the metamodel type and properties and initialize the containers to anything downstream
-        	        // has a valid ModelResource
-        	        model.getModelAnnotation().setPrimaryMetamodelUri( RelationalModelFactory.RELATIONAL_PACKAGE_URI );
-        	        model.getModelAnnotation().setModelType(importManager.getModelType());
-        	        ModelerCore.getModelEditor().getAllContainers(model.getEmfResource());
-        	        model.save(monitor, false);
-        	        
-        	        importManager.setRelationalModel(model);
-        	        
-        	        RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
-        	        targetRelationalModel.setModelType(importManager.getModelType().getValue());
-        	        
-        	        importManager.setProgressMonitor(monitor);
+        // ------------------------------------------------------------------------------
+        // Set up DifferenceProcessor
+        //   - startingSelector -- existing model
+        //   - endingSelector   -- generated from parsed ddl nodes 
+        // ------------------------------------------------------------------------------
+        monitor.subTask(DdlImporterI18n.CREATING_MODEL_MSG);
+        model = ModelerCore.create(modelFile);
+        
+        // Have to specifically set the metamodel type and properties and initialize the containers to anything downstream
+        // has a valid ModelResource
+        model.getModelAnnotation().setPrimaryMetamodelUri( RelationalModelFactory.RELATIONAL_PACKAGE_URI );
+        model.getModelAnnotation().setModelType(importManager.getModelType());
+        ModelerCore.getModelEditor().getAllContainers(model.getEmfResource());
+        model.save(monitor, false);
+        
+        importManager.setRelationalModel(model);
+        
+        RelationalModel targetRelationalModel = importManager.getObjectFactory().createRelationalModel(model);
+        targetRelationalModel.setModelType(importManager.getModelType().getValue());
+        
+        importManager.setProgressMonitor(monitor);
 
-        	        TeiidDdlNodeImporter nodeImporter = new TeiidDdlImporter();
+        TeiidDdlNodeImporter nodeImporter = new TeiidDdlImporter();
 
-        	        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager, options);
-        	        
-        	        if (monitor.isCanceled())
-        	            throw new OperationCanceledException();
-        	        monitor.worked(workUnit);
+        RelationalModel ddlImportModel = nodeImporter.importNode(rootNode,importManager, options);
+        
+        if (monitor.isCanceled())
+            throw new OperationCanceledException();
+        monitor.worked(workUnit);
 
-        	        // ------------------------------------------------------------------------------
-        	        // Generate a DifferenceReport
-        	        // ------------------------------------------------------------------------------
-        	        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
-        	        diffReport = DifferenceGenerator.compare(ddlImportModel,targetRelationalModel);
-        	        
-        	        if (monitor.isCanceled())
-        	            throw new OperationCanceledException();
-        	        monitor.worked(workUnit);
-        	    }
+        // ------------------------------------------------------------------------------
+        // Generate a DifferenceReport
+        // ------------------------------------------------------------------------------
+        monitor.subTask(DdlImporterI18n.CREATING_CHANGE_REPORT_MSG);
+        diffReport = DifferenceGenerator.compare(ddlImportModel,targetRelationalModel);
+        
+        if (monitor.isCanceled())
+            throw new OperationCanceledException();
+        monitor.worked(workUnit);
+        
+        matTableReferences = ((TeiidDdlImporter)nodeImporter).getMaterializedTableReferences();
+    }
 
     /**
      * @return the 'true' if has a failure mesage
@@ -647,4 +655,60 @@ public class DdlImporter {
     public void undoImport() {
     	diffReport = null;
     }
+    
+	/**
+	 * @param modelResources 
+	 * @throws ModelWorkspaceException 
+	 */
+	public void setMaterializedTableReferences(Set<ModelResource> modelResources) throws ModelWorkspaceException {
+		for( MaterializedTableReferenceInfo info : matTableReferences) {
+			// We know the virtual model is this importers model
+			// Need to find the view reference in the info
+			for( final Object eObj : model.getAllRootEObjects()) {
+				if( eObj instanceof BaseTable ) {
+	                final BaseTable table = (BaseTable)eObj;
+	                if( table.getName().equals(info.getTargetViewName()) ) {
+		                BaseTable matTable = getMaterializedTable(
+		                		info.getMaterializedTableName(),
+		                		info.getSourceModelName(),
+		                		modelResources);
+		                if( matTable != null ) {
+		                	table.setMaterializedTable(matTable);
+		                }
+	                }
+				}
+			}
+		}
+	}
+	
+	private BaseTable getMaterializedTable(String tableName, String modelName, Set<ModelResource> modelResources) throws ModelWorkspaceException {
+		ModelResource sourceModel = getModelForName(modelName, modelResources);
+		if( sourceModel != null ) {
+			return getTableInModel(tableName, sourceModel);
+		}
+		
+		return null;
+	}
+	
+	private ModelResource getModelForName(String name, Set<ModelResource> modelResources) {
+		for( ModelResource mr : modelResources ) {
+			if( mr.getItemName().startsWith(name + ".xmi")) { //$NON-NLS-1$
+				return mr;
+			}
+		}
+		
+		return null;
+	}
+	
+	private BaseTable getTableInModel(String tableName, ModelResource mr) throws ModelWorkspaceException {
+		for( final Object eObj : mr.getAllRootEObjects()) {
+			if( eObj instanceof BaseTable ) {
+                final BaseTable table = (BaseTable)eObj;
+                if( table.getName().equals(tableName)) {
+                	return table;
+                }
+			}
+		}
+		return null;
+	}
 }

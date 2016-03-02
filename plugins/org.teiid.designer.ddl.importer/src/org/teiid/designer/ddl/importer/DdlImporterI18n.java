@@ -35,4 +35,5 @@ public interface DdlImporterI18n {
     String ERROR_SETTING_PROPERTY_VALUE = i18n("errorSettingProperty"); //$NON-NLS-1$
     String WARNING_ASSISTANT_FOR_METACLASS_NOT_FOUND = i18n("assistantForMetaclassNotFound"); //$NON-NLS-1$
     String WARNING_ASSISTANT_FOR_PROPERTY_NOT_FOUND = i18n("assistantForPropertyNotFound"); //$NON-NLS-1$
+    String MAT_VIEW_TABLE_REF_NOT_FOUND_MSG = "matViewTableRefNotFoundMsg"; //$NON-NLS-1$
 }

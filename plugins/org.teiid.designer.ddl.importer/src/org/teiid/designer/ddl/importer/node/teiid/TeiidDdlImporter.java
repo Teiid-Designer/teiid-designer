@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -129,6 +130,8 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 	}
 
 	static int DEFAULT_NULL_VALUE_COUNT = -1;
+	
+	private Map<AstNode, RelationalViewTable> deferredMatViewReferences = new HashMap<AstNode, RelationalViewTable>();
 
 	/*
 	 *         return !(type == Types.LONGVARBINARY || type == Types.LONGVARCHAR || type == Types.VARBINARY || type == Types.VARCHAR
@@ -983,9 +986,7 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 						table.setMaterialized(isTrue(optionValueStr));
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE)) {
-						//Table mattable = new Table();
-						//mattable.setName(value);
-						//table.setMaterializedTable(mattable);
+						deferredMatViewReferences.put(optionNode, (RelationalViewTable)table);
 						nodeIter.remove();
 					} else if(optionName.equalsIgnoreCase(TeiidDDLConstants.UPDATABLE)) {
 						table.setSupportsUpdate(isTrue(optionValueStr));
@@ -1499,6 +1500,30 @@ public class TeiidDdlImporter extends TeiidStandardImporter {
 		}
 
 		return designerNsPrefix;
+	}
+	
+	/**
+	 * @return the set of materialized table reference info objects
+	 */
+	public Set<MaterializedTableReferenceInfo> getMaterializedTableReferences() {
+		Set<MaterializedTableReferenceInfo> matTableReferences = new HashSet<MaterializedTableReferenceInfo>();
+		for( AstNode tableRefNode : deferredMatViewReferences.keySet()) {
+			String optionName = tableRefNode.getName(); // Should be 
+			String fullTableName = (String)tableRefNode.getProperty(StandardDdlLexicon.VALUE);
+			
+			int modelNameLength = fullTableName.indexOf('.');
+			int fullTableNameLength = fullTableName.length();
+			String sourceModelName = fullTableName.substring(0, modelNameLength);
+			String tableName = fullTableName.substring(modelNameLength+1, fullTableNameLength);
+
+			if(!CoreStringUtil.isEmpty(tableName) && optionName.equalsIgnoreCase(TeiidDDLConstants.MATERIALIZED_TABLE) ) {
+				RelationalViewTable table = deferredMatViewReferences.get(tableRefNode);
+				
+				matTableReferences.add(new MaterializedTableReferenceInfo(getImporterManager().getModelName(), sourceModelName, table.getName(), tableName));
+			}
+		}
+		
+		return matTableReferences;
 	}
 
 }
