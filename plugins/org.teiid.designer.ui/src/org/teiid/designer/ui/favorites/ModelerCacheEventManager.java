@@ -164,7 +164,8 @@ class ModelerCacheEventManager
             while (iter.hasNext()) {
                 eObj = (EObject)iter.next();
                 mr = getModelEditor().findModelResource(eObj);
-                if (modelResource != null && modelResource.equals(mr)) result.add(eObj);
+                if (modelResource.equals(mr))
+                    result.add(eObj);
             }
         }
 

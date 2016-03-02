@@ -167,7 +167,6 @@ public interface ColumnRecord extends MetadataRecord {
     /**
      * Get the number of null values this column has in the table. 
      * @return null values for the column
-     * @return
      * @since 4.3
      */
     int getNullValues();

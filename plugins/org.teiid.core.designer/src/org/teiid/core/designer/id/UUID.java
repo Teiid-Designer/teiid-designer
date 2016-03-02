@@ -37,6 +37,10 @@ import org.teiid.core.designer.util.CoreArgCheck;
  */
 public class UUID implements ObjectID, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private static final String NOT_UUID_MESSAGE = CoreModelerPlugin.Util.getString("UUID.ID_must_be_of_type_UUID_1"); //$NON-NLS-1$
     private static final String UNPARSABLE_MESSAGE = CoreModelerPlugin.Util.getString("UUID.ID_must_be_of_type_UUID_to_parse_2"); //$NON-NLS-1$
     /**

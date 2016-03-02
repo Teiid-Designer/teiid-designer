@@ -686,14 +686,13 @@ public class WebServiceBuilderHelper {
             // ---------------------------------------------------------
             // Save Model
             // ---------------------------------------------------------
-            if (saveModel && model != null) try {
-
-                model.save(monitor, true);
-            } catch (final Exception e) {
-                final String saveError = getString("createWebService.errSave"); //$NON-NLS-1$
-                addStatus(saveError, IStatus.ERROR, e);
-            }
-
+            if (saveModel)
+                try {
+                    model.save(monitor, true);
+                } catch (final Exception e) {
+                    final String saveError = getString("createWebService.errSave"); //$NON-NLS-1$
+                    addStatus(saveError, IStatus.ERROR, e);
+                }
         } catch (final Exception e) {
             final String err = getString("createWebService.errMsg"); //$NON-NLS-1$
             addStatus(err, IStatus.ERROR, e);
@@ -1300,4 +1299,3 @@ public class WebServiceBuilderHelper {
     	}
     }
 }
-;

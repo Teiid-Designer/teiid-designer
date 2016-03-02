@@ -30,6 +30,11 @@ import org.teiid.core.designer.util.CoreArgCheck;
  * @since 8.0
  */
 public class StringID implements ObjectID, Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public static final String PROTOCOL = "strid"; //$NON-NLS-1$
 
     private String id;

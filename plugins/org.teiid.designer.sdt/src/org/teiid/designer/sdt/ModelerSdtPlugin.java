@@ -171,8 +171,9 @@ public class ModelerSdtPlugin extends Plugin {
                 addLogicalToPhysicalUriMapping(rs, r);
             } else if (zipFile.exists()) {
                 InputStream is = null;
+                ZipFile archive = null;
                 try {
-                    ZipFile archive = new ZipFile(zipFile);
+                    archive = new ZipFile(zipFile);
                     ZipEntry entry = archive.getEntry(DatatypeConstants.DATATYPES_MODEL_FILE_NAME);
                     if (entry != null) {
                         is = archive.getInputStream(entry);
@@ -184,8 +185,11 @@ public class ModelerSdtPlugin extends Plugin {
                         try {
                             is.close();
                         } catch (IOException ignored) {
+                            // Nothing to do
                         }
                     }
+                    if (archive != null)
+                        archive.close();
                 }
 
                 uri = URI.createFileURI(xsdFile.getAbsolutePath());

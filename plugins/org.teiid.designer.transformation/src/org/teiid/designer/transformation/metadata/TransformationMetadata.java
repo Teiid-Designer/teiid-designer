@@ -830,6 +830,7 @@ public class TransformationMetadata implements IQueryMetadataInterface {
                 try {
                     inputStream.close();
                 } catch (Exception e) {
+                    // Ignore
                 }
             }
         }

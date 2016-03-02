@@ -92,12 +92,10 @@ public class PreviewWsdlAction extends SortableSelectionAction {
             MessageDialog.openInformation(null, WSDL_GENERATION, WSDL_GENERATION_ERROR + e.getMessage());
             throw new RuntimeException(e.getMessage());
         } finally {
-            if ( stream != null ) {
-                try {
-					stream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage());
-				}
+            try {
+                stream.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
             }
         }
         

@@ -56,21 +56,23 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
      * will not be many so limiting this cachesize to 100.
      */
     public static final int DEFAULT_SPACELIMIT_PARTIAL_NAME_CACHE = 100;
-
-    private static final int GROUP_INFO_CACHE_SIZE = 500;
     
-    private static final String GROUP_INFO_CACHE_PREFIX = "groupinfo/"; //$NON-NLS-1$
-
     private final TransformationMetadata metadata;
     private final Map<String, Object> nameToIdCache;
     private final Map<Object, MetadataRecord> idToRecordCache;
     private final Map<String, String> partialNameToFullNameCache;
-    private final Map groupInfoCache = Collections.synchronizedMap(new LRUCache(GROUP_INFO_CACHE_SIZE));
 
+    /**
+     * @param delegate
+     */
     public TransformationMetadataFacade( final TransformationMetadata delegate ) {
         this(delegate, DEFAULT_SPACELIMIT);
     }
 
+    /**
+     * @param delegate
+     * @param cacheSize
+     */
     public TransformationMetadataFacade( final TransformationMetadata delegate,
                                          int cacheSize ) {
         CoreArgCheck.isNotNull(delegate);
@@ -667,7 +669,7 @@ public class TransformationMetadataFacade implements IQueryMetadataInterface {
     /**
      * Return the IndexSelector reference
      * 
-     * @return
+     * @return delegate
      */
     public TransformationMetadata getDelegate() {
         return this.metadata;

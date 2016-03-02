@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -237,7 +236,7 @@ public final class NewVdbWizard extends AbstractWizard
 					} catch (NumberFormatException e) {
 						// Do nothing.. shouldn't get here and swallow anyway cause version == 1 is back-up
 					}
-					newVdb.setVersion(version);;
+					newVdb.setVersion(version);
             		
                     newVdb.save();
                     NewVdbWizard.this.folder.refreshLocal(IResource.DEPTH_INFINITE, monitor);

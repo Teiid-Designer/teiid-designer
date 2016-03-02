@@ -462,7 +462,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
                 exception = ex;
                 hasException = true;
                 lastException = true;
-                boolean isClosed = cstmt == null || getConnection() == null;
+                boolean isClosed = getConnection() == null;
                 if (!isClosed)
                 {
                     try
@@ -499,7 +499,7 @@ public class TeiidAdHocScriptRunnable extends SimpleSQLResultRunnable {
             exception = ex;
             hasException = true;
             lastException = true;
-            boolean isClosed = cstmt == null || getConnection() == null;
+            boolean isClosed = getConnection() == null;
             if (!isClosed)
             {
                 try

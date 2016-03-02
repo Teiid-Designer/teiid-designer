@@ -56,10 +56,10 @@ public class ViewProcedureValidationRule  implements ObjectValidationRule {
 			return;
 		}
         
-        if( mr == null || !modelType.equals(ModelType.VIRTUAL_LITERAL)) {
+        if(!modelType.equals(ModelType.VIRTUAL_LITERAL)) {
         	return;
         }
-        
+
         // Check Rest Properties
         
         // Get REST METHOD and REST URI values

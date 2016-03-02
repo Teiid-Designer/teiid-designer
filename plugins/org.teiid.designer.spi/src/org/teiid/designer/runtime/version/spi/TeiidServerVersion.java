@@ -426,29 +426,6 @@ public class TeiidServerVersion implements ITeiidServerVersion {
         return isLessThan(otherVersion.get());
     }
 
-    private int isOtherNumberLessThan(String myNumber, String otherNumber) {
-        int myValue = -1;
-        int otherValue = -1;
-
-        try {
-            myValue = Integer.parseInt(myNumber);
-        } catch (NumberFormatException e) {
-            myValue = -1;
-        }
-
-        try {
-            otherValue = Integer.parseInt(otherNumber);
-        } catch (NumberFormatException e) {
-            otherValue = -1;
-        }
-
-        if (myValue < 0 || otherValue < 0) {
-            return myNumber.compareTo(otherNumber);
-        } else {
-            return myValue - otherValue;
-        }
-    }
-
     private int isOtherNumberGreaterThan(String myNumber, String otherNumber) {
         int myValue = -1;
         int otherValue = -1;

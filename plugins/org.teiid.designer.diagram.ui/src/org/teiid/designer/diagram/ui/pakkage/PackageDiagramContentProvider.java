@@ -199,7 +199,7 @@ final public class PackageDiagramContentProvider implements ITreeContentProvider
 			try {
 				packageDiagram = DiagramUiPlugin.getDiagramTypeManager().getPackageDiagram(modelResource, modelResource.getModelAnnotation(), false);
 			} catch (ModelWorkspaceException e) {
-                if (modelResource != null && !modelResource.hasErrors()) {
+                if (!modelResource.hasErrors()) {
                     DiagramUiConstants.Util.log(IStatus.ERROR, e, e.getLocalizedMessage());
                 }
 			}

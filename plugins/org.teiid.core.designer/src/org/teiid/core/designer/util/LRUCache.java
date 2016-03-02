@@ -17,6 +17,11 @@ import java.util.Map.Entry;
 public class LRUCache<K, V> extends LinkedHashMap<K, V> {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
      * Default amount of space in the cache
      */
     protected static final int DEFAULT_SPACELIMIT = 100;

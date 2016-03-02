@@ -9,12 +9,12 @@ package org.teiid.core.designer.plugin;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -200,15 +200,26 @@ public abstract class PluginUtilities {
             final String bootJarPath = new File(bootPluginFolders[0], BOOT_JAR).getAbsolutePath().replace(File.separatorChar, '/');
             // Load the BootLoader class from the boot.jar file
             final URL bootUrl = new URL(PROTOCOL, null, bootJarPath);
-            final Class bootLoader = new URLClassLoader(new URL[] {bootUrl}, null).loadClass(BOOT_LOADER);
-            // Initialize boot loader, again using reflection since the class is defined in a plugin, by passing the metadata
-            // directory to the startup method. This initializes the files Eclipse needs in the metadata directory and performs
-            // initial processing of the plugins directory (whatever that entails). The plugins directory is apparently located
-            // based upon the path used to load the boot.jar.
-            final Method startupMeth = bootLoader.getMethod(STARTUP_METHOD, new Class[] {URL.class, String.class, String[].class});
-            startupMeth.invoke(bootLoader, new Object[] {null, metadataPath, PluginUtilities.startupArgs});
-            // Get access to boot loader's getRunnableMethod for future instantiations of application extensions
-            PluginUtilities.bootLoader = bootLoader;
+            URLClassLoader loader = null;
+            try {
+                loader = new URLClassLoader(new URL[] {bootUrl}, null);
+                final Class bootLoader = loader.loadClass(BOOT_LOADER);
+                // Initialize boot loader, again using reflection since the class is defined in a plugin, by passing the metadata
+                // directory to the startup method. This initializes the files Eclipse needs in the metadata directory and performs
+                // initial processing of the plugins directory (whatever that entails). The plugins directory is apparently located
+                // based upon the path used to load the boot.jar.
+                final Method startupMeth = bootLoader.getMethod(STARTUP_METHOD, new Class[] {URL.class, String.class, String[].class});
+                startupMeth.invoke(bootLoader, new Object[] {null, metadataPath, PluginUtilities.startupArgs});
+                // Get access to boot loader's getRunnableMethod for future instantiations of application extensions
+                PluginUtilities.bootLoader = bootLoader;
+            } finally {
+                if (loader != null)
+                    try {
+                        loader.close();
+                    } catch (IOException ex) {
+                        //Nothing to do
+                    }
+            }
         }
     }
 }

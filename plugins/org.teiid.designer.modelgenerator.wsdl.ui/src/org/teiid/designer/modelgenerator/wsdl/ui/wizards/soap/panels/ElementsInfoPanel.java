@@ -26,6 +26,7 @@ import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ColumnInfo;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.OperationsDetailsPage;
 import org.teiid.designer.modelgenerator.wsdl.ui.wizards.soap.ProcedureInfo;
 import org.teiid.designer.query.proc.wsdl.IWsdlAttributeInfo;
+import org.teiid.designer.query.proc.wsdl.IWsdlConstants;
 import org.teiid.designer.ui.common.util.WidgetFactory;
 
 
@@ -119,30 +120,26 @@ public class ElementsInfoPanel {
 				Object selectedObject = editElementsPanel.getSelectedObject();
 				if( selectedObject instanceof ColumnInfo) {
 					ColumnInfo info = (ColumnInfo)selectedObject;
-					if (info != null) {
-						if( type == ProcedureInfo.TYPE_BODY ) {
-							detailsPage.getProcedureGenerator().getRequestInfo().removeBodyColumn(info);
-						} else {
-							detailsPage.getProcedureGenerator().getRequestInfo().removeHeaderColumn(info);
-						}
-	
-						deleteButton.setEnabled(false);
-						editElementsPanel.selectRow(-1);
-						editElementsPanel.refresh();
-						notifyColumnDataChanged();
+					if( type == IWsdlConstants.TYPE_BODY ) {
+					    detailsPage.getProcedureGenerator().getRequestInfo().removeBodyColumn(info);
+					} else {
+					    detailsPage.getProcedureGenerator().getRequestInfo().removeHeaderColumn(info);
 					}
+
+					deleteButton.setEnabled(false);
+					editElementsPanel.selectRow(-1);
+					editElementsPanel.refresh();
+					notifyColumnDataChanged();
 				} else if( selectedObject instanceof IWsdlAttributeInfo) {
 					AttributeInfo info = (AttributeInfo)selectedObject;
-					if (info != null) {
-						ColumnInfo parentColumnInfo = info.getColumnInfo();
-						parentColumnInfo.removeAttributeInfo(info);
-	
-						deleteButton.setEnabled(false);
-						editElementsPanel.selectRow(-1);
-						editElementsPanel.refresh();
-						
-						notifyColumnDataChanged();
-					}
+					ColumnInfo parentColumnInfo = info.getColumnInfo();
+					parentColumnInfo.removeAttributeInfo(info);
+
+					deleteButton.setEnabled(false);
+					editElementsPanel.selectRow(-1);
+					editElementsPanel.refresh();
+
+					notifyColumnDataChanged();
 				}
 			}
 

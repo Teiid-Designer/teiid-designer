@@ -195,7 +195,7 @@ public abstract class AbstractGenerateVdbManager implements UiConstants, StringC
 
     private Properties conversionOptions = new Properties();
     
-    private boolean overwriteExistingFiles = true;;
+    private boolean overwriteExistingFiles = true;
 
     /**
      * @param wizard

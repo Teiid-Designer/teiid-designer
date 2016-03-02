@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -345,7 +344,7 @@ public class FunctionModelNotificationHandler implements IModelNotificationHandl
 	        					    }	   
 	        					}
 	        	            	
-	        	            	if( dependentModelChanged && modelResource != null ) {
+	        	            	if( dependentModelChanged) {
 	        	            		changedMRs.add(modelResource);
 	        	            	}
 	                    	}
